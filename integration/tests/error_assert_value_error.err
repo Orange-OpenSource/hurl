@@ -1,0 +1,24 @@
+[1;31merror[0m: Assert Failure
+  --> tests/error_assert_value_error.hurl:4:0
+   |
+ 4 | header "content-type" equals "XXX"
+   |   actual:   string <text/html; charset=utf-8>
+   |   expected: string <XXX>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_assert_value_error.hurl:5:0
+   |
+ 5 | jsonpath "$.id" equals "000001"
+   |   actual:   none
+   |   expected: string <000001>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_assert_value_error.hurl:6:0
+   |
+ 6 | jsonpath "$.values" includes 100
+   |   actual:   [int <1>, int <2>, int <3>]
+   |   expected: includes int <100>
+   |
+

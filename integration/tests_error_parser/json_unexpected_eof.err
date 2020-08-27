@@ -1,0 +1,6 @@
+[1;31merror[0m: Parsing json
+  --> tests_error_parser/json_unexpected_eof.hurl:2:10
+   |
+ 2 | { "name":
+   |          ^ json error
+   |

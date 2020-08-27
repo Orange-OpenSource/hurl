@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing section
+  --> tests_error_parser/invalid_section.hurl:2:1
+   |
+ 2 | [Asserts]
+   | ^ This is not a valid section for a request
+   |
+

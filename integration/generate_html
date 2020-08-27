@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+mkdir -p target
+find tests -name "*.hurl" | while read -r hurl_file; do
+    echo "$hurl_file"
+    html_file=target/"${hurl_file%.*}".html
+    echo "Generating $html_file"
+    mkdir -p "$(dirname "$html_file")"
+    hurlfmt --html --standalone "$hurl_file" > "$html_file"
+done
+
+

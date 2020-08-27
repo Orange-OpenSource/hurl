@@ -1,0 +1,37 @@
+{
+  "from": 0,
+  "size": 2000,
+  "sort": [
+    {
+      "@timestamp": "desc"
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "tag.env": "prod"
+          }
+        },
+        {
+          "match": {
+            "data.r_code": "500"
+          }
+        },
+        {
+          "match": {
+            "data.q_client-dns": "m.shop.sosh.fr"
+          }
+        },
+        {
+          "match": {
+            "@timestamp": {
+              "query": "{{date}}"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

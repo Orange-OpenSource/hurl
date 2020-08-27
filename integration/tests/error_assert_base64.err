@@ -1,0 +1,7 @@
+[1;31merror[0m: Assert Body Value
+  --> tests/error_assert_base64.hurl:12:8
+   |
+12 | base64,bGluZTEKbGluZTIKbGluZTMK;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^ actual value is <Bytes([6c, 69, 6e, 65, 31, a, 6c, 69, 6e, 65, 32, d, a, 6c, 69, 6e, 65, 33, a])>
+   |
+

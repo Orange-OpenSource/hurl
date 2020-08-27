@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing literal
+  --> tests_error_parser/invalid_url.hurl:1:26
+   |
+ 1 | GET http://localhost:8000> #
+   |                          ^ expecting 'line_terminator'
+   |
+

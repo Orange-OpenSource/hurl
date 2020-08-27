@@ -1,0 +1,55 @@
+query = "$" selector*
+
+#
+# selector
+# only for array?
+# ..book[0] first book if book an array
+
+selector = name-child-selector
+         | array-index-selector
+         | filter-selector
+         | recursive-key-selector
+
+
+name-child-selector = "[" string-value "]"
+
+array-index-selector = "[" integer "]"
+
+filter-selector = "[?(" predicate ")]"
+
+recursive-key-selector = ".." key-name
+
+
+#
+# predicate
+# @.price<10
+#
+
+predicate = predicate-key predicate-func
+
+predicate-key = "@." key-name
+
+predicate-func = key-exist-predicate-func
+               | equal-string-predicate-func
+               | equal-number-predicate-func
+               | greater-than-predicate-func
+               | greater-or-equal-than-predicate-func
+
+
+equal-string-predicate-func = "=" string-value
+
+equal-number-predicate-func- = "=" number
+
+
+#
+# Primitives
+#
+
+key-name = <alpha + "-" + "_">
+
+string-value = "'" <alphanum> "'"
+
+number = <floating-point number>
+
+
+

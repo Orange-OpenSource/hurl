@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing predicate value
+  --> tests_error_parser/predicate_count_equal_value.hurl:3:28
+   |
+ 3 | xpath "//user" countEquals true
+   |                            ^ invalid predicate value
+   |
+

@@ -1,0 +1,7 @@
+[1;31merror[0m: Error { pos: Pos { line: 2, column: 1 }, recoverable: false, inner: Xml }
+  --> tests_error_parser/xml.hurl:2:1
+   |
+ 2 | <users><user>
+   | ^ Error { pos: Pos { line: 2, column: 1 }, recoverable: false, inner: Xml }
+   |
+

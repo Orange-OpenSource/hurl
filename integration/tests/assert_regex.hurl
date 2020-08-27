@@ -1,0 +1,6 @@
+GET http://localhost:8000/assert-regex
+
+HTTP/1.0 200
+[Asserts]
+regex "Hello ([0-9]+)!" not exists
+regex "Hello ([a-zA-Z]+)!" equals "World"

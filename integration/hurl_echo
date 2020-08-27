@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+for input_file in "$@"; do
+    echo "$input_file"
+    output_file="/tmp/$(basename "$input_file")"
+    hurlfmt --no-format "$input_file" >"$output_file"
+
+    expected=$(cat "$input_file")
+    actual=$(cat "$output_file")
+    if [ "$actual" != "$expected" ]; then
+	echo "=> Difference!"
+        diff "$output_file" "$input_file"
+	exit &
+    fi
+done

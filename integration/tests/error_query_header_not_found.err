@@ -1,0 +1,7 @@
+[1;31merror[0m: Header not Found
+  --> tests/error_query_header_not_found.hurl:3:1
+   |
+ 3 | Custom: XXX
+   | ^^^^^^ This header has not been found in the response
+   |
+

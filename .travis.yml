@@ -1,0 +1,47 @@
+language: rust
+sudo: true
+rust:
+    - 1.42.0
+
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+
+      #cache: cargo
+
+before_install:
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update && brew install libxml2 jq; fi
+    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update && sudo apt install python3-pip; fi
+
+before_script:
+    - rustup component add clippy
+    - cargo clippy --version
+    - cargo install cargo-deb
+    - which python3
+    - python3 -V
+    - pip3 install Flask
+    - cd integration && python3 server.py&
+    - sleep 2
+    - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
+
+script:
+    - ./build.sh
+    - cargo build --release --verbose
+    - strip $PWD/target/release/hurl
+    - strip $PWD/target/release/hurlfmt
+    - export PATH="$PWD/target/release:$PATH"
+    - integration/integration.sh
+    - ci/create_tarballs target/upload "$TRAVIS_OS_NAME"
+    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cargo deb && cp target/debian/*.deb target/upload; fi
+
+
+deploy:
+  provider: script
+  script: ci/deploy.sh
+  skip_cleanup: true
+  on:
+    all_branch: true
+  tags: true
+

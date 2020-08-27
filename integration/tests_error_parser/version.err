@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing Version
+  --> tests_error_parser/version.hurl:2:6
+   |
+ 2 | HTTP/11 200
+   |      ^ The http version must be 1.0, 1.1, 2 or *
+   |
+

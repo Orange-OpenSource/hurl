@@ -1,0 +1,6119 @@
+[
+  {
+    "filename": "tests/assert_base64.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-base64",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "19"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:16 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 9,
+                "column": 6
+              },
+              "end": {
+                "line": 9,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": true,
+    "time": 19,
+    "cookies": []
+  },
+  {
+    "filename": "tests/assert_header.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-header",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "value1"
+            },
+            {
+              "name": "cookie2",
+              "value": "value2"
+            },
+            {
+              "name": "cookie3",
+              "value": "value3"
+            }
+          ],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "header1",
+              "value": "value1"
+            },
+            {
+              "name": "set-cookie",
+              "value": "cookie1=value1; Path=/"
+            },
+            {
+              "name": "set-cookie",
+              "value": "cookie2=value2; Path=/"
+            },
+            {
+              "name": "set-cookie",
+              "value": "cookie3=value3; Path=/"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": true,
+    "time": 23,
+    "cookies": [
+      {
+        "name": "cookie1",
+        "value": "value1",
+        "domain": "localhost",
+        "path": "/",
+        "include_subdomain": false
+      },
+      {
+        "name": "cookie2",
+        "value": "value2",
+        "domain": "localhost",
+        "path": "/",
+        "include_subdomain": false
+      },
+      {
+        "name": "cookie3",
+        "value": "value3",
+        "domain": "localhost",
+        "path": "/",
+        "include_subdomain": false
+      }
+    ]
+  },
+  {
+    "filename": "tests/assert_json.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "content-length",
+              "value": "146"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-json/index",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "1"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "index",
+            "value": "1"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 27,
+                "column": 6
+              },
+              "end": {
+                "line": 27,
+                "column": 7
+              }
+            },
+            "actual": "1.0",
+            "expected": "*"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "content-length",
+              "value": "146"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 32,
+                "column": 6
+              },
+              "end": {
+                "line": 32,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 24
+      }
+    ],
+    "success": true,
+    "time": 73,
+    "cookies": []
+  },
+  {
+    "filename": "tests/assert_match.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-match",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "content-length",
+              "value": "53"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": true,
+    "time": 49,
+    "cookies": []
+  },
+  {
+    "filename": "tests/assert_regex.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-regex",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": true,
+    "time": 25,
+    "cookies": []
+  },
+  {
+    "filename": "tests/assert_xpath.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-xpath",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "18"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": true,
+    "time": 23,
+    "cookies": []
+  },
+  {
+    "filename": "tests/bytes.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/bytes",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/octet-stream"
+            },
+            {
+              "name": "content-length",
+              "value": "1"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": true,
+    "time": 20,
+    "cookies": []
+  },
+  {
+    "filename": "tests/capture_and_assert.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/capture-and-assert",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "content_type",
+            "value": "text/html; charset=utf-8"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 19
+      }
+    ],
+    "success": true,
+    "time": 22,
+    "cookies": []
+  },
+  {
+    "filename": "tests/captures.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/captures",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "header1",
+              "value": "value1"
+            },
+            {
+              "name": "header2",
+              "value": "Hello Bob!"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "param1",
+            "value": "value1"
+          },
+          {
+            "name": "param2",
+            "value": "Bob"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 25
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/captures-check?param1=value1&param2=Bob",
+          "queryString": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
+            {
+              "name": "param2",
+              "value": "Bob"
+            }
+          ],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 16,
+                "column": 6
+              },
+              "end": {
+                "line": 16,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 20
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/captures-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "135"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "an_object",
+            "value": {
+              "id": "123"
+            }
+          },
+          {
+            "name": "a_list",
+            "value": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "a_null",
+            "value": null
+          },
+          {
+            "name": "an_integer",
+            "value": 1
+          },
+          {
+            "name": "a_float",
+            "value": 1.1
+          },
+          {
+            "name": "a_bool",
+            "value": true
+          },
+          {
+            "name": "a_string",
+            "value": "hello"
+          },
+          {
+            "name": "all",
+            "value": {
+              "a_bool": true,
+              "a_float": 1.1,
+              "a_list": [
+                1,
+                2,
+                3
+              ],
+              "a_null": null,
+              "a_string": "hello",
+              "an_integer": 1,
+              "an_object": {
+                "id": "123"
+              }
+            }
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 20,
+                "column": 6
+              },
+              "end": {
+                "line": 20,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 24
+      }
+    ],
+    "success": true,
+    "time": 78,
+    "cookies": []
+  },
+  {
+    "filename": "tests/cookies.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/set-request-cookie1-valueA",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 6,
+                "column": 6
+              },
+              "end": {
+                "line": 6,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 38
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/set-session-cookie2-valueA",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [
+            {
+              "name": "cookie2",
+              "value": "valueA"
+            }
+          ],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "set-cookie",
+              "value": "cookie2=valueA; Path=/"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 18,
+                "column": 6
+              },
+              "end": {
+                "line": 18,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 22
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueA",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA; cookie2=valueA"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            },
+            {
+              "name": "cookie2",
+              "value": "valueA",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 23,
+                "column": 6
+              },
+              "end": {
+                "line": 23,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 22
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://127.0.0.1:8000/cookies/assert-that-cookie2-is-not-in-session",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "127.0.0.1"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 28,
+                "column": 6
+              },
+              "end": {
+                "line": 28,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 24
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/set-request-cookie2-valueB",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie2=valueB; cookie1=valueA"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie2",
+              "value": "valueB",
+              "domain": "localhost"
+            },
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 34,
+                "column": 6
+              },
+              "end": {
+                "line": 34,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueB",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA; cookie2=valueB"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            },
+            {
+              "name": "cookie2",
+              "value": "valueB",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 40,
+                "column": 6
+              },
+              "end": {
+                "line": 40,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 63
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/delete-cookie2",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA; cookie2=valueB"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            },
+            {
+              "name": "cookie2",
+              "value": "valueB",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [
+            {
+              "name": "cookie2",
+              "value": ""
+            }
+          ],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "set-cookie",
+              "value": "cookie2=; Expires=Wed, 26-Aug-2020 09:50:17 GMT; Max-Age=0; Path=/"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 43,
+                "column": 6
+              },
+              "end": {
+                "line": 43,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 27
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/set",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA",
+              "domain": "localhost"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [
+            {
+              "name": "LSID",
+              "value": "DQAAAKEaem_vYg"
+            },
+            {
+              "name": "HSID",
+              "value": "AYQEVnDKrdst",
+              "domain": "foo.com"
+            },
+            {
+              "name": "SSID",
+              "value": "Ap4PGTEq",
+              "domain": "foo.com"
+            }
+          ],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "set-cookie",
+              "value": "LSID=DQAAAKEaem_vYg; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/accounts"
+            },
+            {
+              "name": "set-cookie",
+              "value": "HSID=AYQEVnDKrdst; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/"
+            },
+            {
+              "name": "set-cookie",
+              "value": "SSID=Ap4PGTEq; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 53,
+                "column": 6
+              },
+              "end": {
+                "line": 53,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 28
+      }
+    ],
+    "success": true,
+    "time": 256,
+    "cookies": [
+      {
+        "name": "cookie1",
+        "value": "valueA",
+        "domain": "localhost",
+        "path": "/",
+        "include_subdomain": true
+      },
+      {
+        "name": "LSID",
+        "value": "DQAAAKEaem_vYg",
+        "domain": "localhost",
+        "path": "/accounts",
+        "include_subdomain": false
+      },
+      {
+        "name": "HSID",
+        "value": "AYQEVnDKrdst",
+        "domain": "foo.com",
+        "path": "/",
+        "include_subdomain": true
+      },
+      {
+        "name": "SSID",
+        "value": "Ap4PGTEq",
+        "domain": "foo.com",
+        "path": "/",
+        "include_subdomain": true
+      }
+    ]
+  },
+  {
+    "filename": "tests/delete.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "DELETE",
+          "url": "http://localhost:8000/delete",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 32
+      }
+    ],
+    "success": true,
+    "time": 33,
+    "cookies": []
+  },
+  {
+    "filename": "tests/empty.hurl",
+    "entries": [],
+    "success": true,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/encoding.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/encoding/utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "5"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 24
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/encoding/latin1",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=ISO-8859-1"
+            },
+            {
+              "name": "content-length",
+              "value": "4"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 9,
+                "column": 6
+              },
+              "end": {
+                "line": 9,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 30
+      }
+    ],
+    "success": true,
+    "time": 59,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_base64.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-base64",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "19"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 11,
+                "column": 6
+              },
+              "end": {
+                "line": 11,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 49
+      }
+    ],
+    "success": false,
+    "time": 52,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_file.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-file",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "5"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 7,
+                "column": 6
+              },
+              "end": {
+                "line": 7,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 22
+      }
+    ],
+    "success": false,
+    "time": 25,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_header_not_found.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-header-not-found",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 24
+      }
+    ],
+    "success": false,
+    "time": 28,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_header_value.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-header-value",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 22
+      }
+    ],
+    "success": false,
+    "time": 25,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_http_version.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert/http-version",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 7
+              }
+            },
+            "actual": "1.0",
+            "expected": "2"
+          },
+          {}
+        ],
+        "time": 24
+      }
+    ],
+    "success": false,
+    "time": 25,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_invalid_predicate_type.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-invalid-predicate-type",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": false,
+    "time": 20,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_match_utf8.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert/match-utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "1"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 19
+      }
+    ],
+    "success": false,
+    "time": 22,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_query_invalid_regex.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-query-invalid-regex",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": false,
+    "time": 18,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_query_invalid_xpath.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "18"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 18
+      }
+    ],
+    "success": false,
+    "time": 21,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_status.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/not_found",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 404,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html"
+            },
+            {
+              "name": "content-length",
+              "value": "232"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 17
+      }
+    ],
+    "success": false,
+    "time": 19,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_template_variable_not_found.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-template-variable-not-found",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 26
+      }
+    ],
+    "success": false,
+    "time": 27,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_value_error.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-value",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "20"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": false,
+    "time": 30,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_variable.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-variable",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "status",
+            "value": 200
+          },
+          {
+            "name": "length",
+            "value": "0"
+          },
+          {
+            "name": "type",
+            "value": "text/html; charset=utf-8"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 18
+      }
+    ],
+    "success": false,
+    "time": 25,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_file_read_access.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_invalid_jsonpath.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-invalid-jsonpath",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "content-length",
+              "value": "60"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 40
+      }
+    ],
+    "success": false,
+    "time": 43,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_invalid_url.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_invalid_xml.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-invalid-xml",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 34
+      }
+    ],
+    "success": false,
+    "time": 36,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_multipart_form_data.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_predicate.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/predicate/error/type",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "74"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 25
+      }
+    ],
+    "success": false,
+    "time": 60,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_query_header_not_found.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-query-header-not-found",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 30
+      }
+    ],
+    "success": false,
+    "time": 33,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_query_invalid_json.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-query-invalid-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 19
+      }
+    ],
+    "success": false,
+    "time": 22,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_query_invalid_utf8.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-query-invalid-utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "1"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": false,
+    "time": 24,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_template_variable_not_found.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_template_variable_not_renderable.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/get-list",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "18"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "list",
+            "value": [
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 21,
+    "cookies": []
+  },
+  {
+    "filename": "tests/form_params.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/form-params",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "format_params": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
+            {
+              "name": "param2",
+              "value": ""
+            },
+            {
+              "name": "param3",
+              "value": "a=b"
+            },
+            {
+              "name": "param4",
+              "value": "a%3db"
+            }
+          ],
+          "body": "cGFyYW0xPXZhbHVlMSZwYXJhbTI9JnBhcmFtMz1hJTNkYiZwYXJhbTQ9YSUyNTNkYg=="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 20
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/form-params",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "format_params": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
+            {
+              "name": "param2",
+              "value": ""
+            },
+            {
+              "name": "param3",
+              "value": "a=b"
+            },
+            {
+              "name": "param4",
+              "value": "a%3db"
+            }
+          ],
+          "body": "cGFyYW0xPXZhbHVlMSZwYXJhbTI9JnBhcmFtMz1hJTNkYiZwYXJhbTQ9YSUyNTNkYg=="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 15,
+                "column": 6
+              },
+              "end": {
+                "line": 15,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 19
+      }
+    ],
+    "success": true,
+    "time": 45,
+    "cookies": []
+  },
+  {
+    "filename": "tests/headers.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/default-headers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 22
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/default-headers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.0"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 24
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/default-headers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.0"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 15,
+                "column": 6
+              },
+              "end": {
+                "line": 15,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/custom-headers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Fruit",
+              "value": "Raspberry"
+            },
+            {
+              "name": "Fruit",
+              "value": "Apple"
+            },
+            {
+              "name": "Fruit",
+              "value": "Banana"
+            },
+            {
+              "name": "Fruit",
+              "value": "Grape"
+            },
+            {
+              "name": "Color",
+              "value": "Green"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 23,
+                "column": 6
+              },
+              "end": {
+                "line": 23,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 26
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/custom-headers-utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Beverage",
+              "value": "café"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 27,
+                "column": 6
+              },
+              "end": {
+                "line": 27,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 19
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/response-headers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "beverage",
+              "value": "cafe"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 30,
+                "column": 6
+              },
+              "end": {
+                "line": 30,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 23
+      }
+    ],
+    "success": true,
+    "time": 140,
+    "cookies": []
+  },
+  {
+    "filename": "tests/hello.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 19
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 9,
+                "column": 6
+              },
+              "end": {
+                "line": 9,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": true,
+    "time": 46,
+    "cookies": []
+  },
+  {
+    "filename": "tests/multipart_form_data.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/multipart-form-data",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 9,
+                "column": 6
+              },
+              "end": {
+                "line": 9,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 23
+      }
+    ],
+    "success": true,
+    "time": 24,
+    "cookies": []
+  },
+  {
+    "filename": "tests/no_entry.hurl",
+    "entries": [],
+    "success": true,
+    "time": 0,
+    "cookies": []
+  },
+  {
+    "filename": "tests/output.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/output/endpoint1",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "eyAidXNlciI6ICJib2IiIH0="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "date",
+              "value": "DATE1"
+            },
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "19"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 4,
+                "column": 6
+              },
+              "end": {
+                "line": 4,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 26
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/output/endpoint2",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "date",
+              "value": "DATE2"
+            },
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "19"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 19
+      }
+    ],
+    "success": true,
+    "time": 52,
+    "cookies": []
+  },
+  {
+    "filename": "tests/patch.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "PATCH",
+          "url": "http://localhost:8000/patch/file.txt",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "www.example.com"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/example"
+            },
+            {
+              "name": "If-Match",
+              "value": "\"e0023aa4e\""
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 204,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-location",
+              "value": "/file.txt"
+            },
+            {
+              "name": "etag",
+              "value": "\"e0023aa4f\""
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 22
+      }
+    ],
+    "success": true,
+    "time": 23,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_base64.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-base64",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "SGVsbG8gV29ybGQh"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 4,
+                "column": 6
+              },
+              "end": {
+                "line": 4,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 25
+      }
+    ],
+    "success": true,
+    "time": 27,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_file.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-file",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "SGVsbG8gV29ybGQh"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 4,
+                "column": 6
+              },
+              "end": {
+                "line": 4,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      }
+    ],
+    "success": true,
+    "time": 20,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_json.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 37
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json-array",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "WzEsMiwzXQ=="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 13,
+                "column": 6
+              },
+              "end": {
+                "line": 13,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 32
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json-string",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "IkhlbGxvIg=="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 18,
+                "column": 6
+              },
+              "end": {
+                "line": 18,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 41
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json-number",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "MTAw"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 23,
+                "column": 6
+              },
+              "end": {
+                "line": 23,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 35
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json-numbers",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "ewogICAgIm5hdHVyYWwiOiAxMDAsCiAgICAibmVnYXRpdmUiOiAtMSwKICAgICJmbG9hdCI6ICIzLjMzMzMzMzMzMzMzMzMzMyIsCiAgICAiZXhwb25lbnQiOiAxMDBlMTAwCn0="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 34,
+                "column": 6
+              },
+              "end": {
+                "line": 34,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json-boolean",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "dHJ1ZQ=="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 39,
+                "column": 6
+              },
+              "end": {
+                "line": 39,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 30
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/get-name",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "3"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "name",
+            "value": "Bob"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 45,
+                "column": 6
+              },
+              "end": {
+                "line": 45,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 43
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-json",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 32
+      }
+    ],
+    "success": true,
+    "time": 294,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_multilines.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-multilines",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 18
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/get-bob-age",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "2"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [
+          {
+            "name": "bob_age",
+            "value": "10"
+          }
+        ],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 12,
+                "column": 6
+              },
+              "end": {
+                "line": 12,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 25
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-multilines",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 23,
+                "column": 6
+              },
+              "end": {
+                "line": 23,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 26
+      }
+    ],
+    "success": true,
+    "time": 78,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_xml.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-xml",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxkcmluaz5jYWbDqTwvZHJpbms+"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 5,
+                "column": 6
+              },
+              "end": {
+                "line": 5,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 31
+      },
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-xml-no-prolog",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": "PGRyaW5rPmNhZsOpPC9kcmluaz4="
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 11,
+                "column": 6
+              },
+              "end": {
+                "line": 11,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 32
+      }
+    ],
+    "success": true,
+    "time": 68,
+    "cookies": []
+  },
+  {
+    "filename": "tests/predicates-string.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/predicates-string",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "12"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 28
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/predicates-string-empty",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 12,
+                "column": 6
+              },
+              "end": {
+                "line": 12,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 13
+      }
+    ],
+    "success": true,
+    "time": 45,
+    "cookies": []
+  },
+  {
+    "filename": "tests/put.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "PUT",
+          "url": "http://localhost:8000/put",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 23
+      }
+    ],
+    "success": true,
+    "time": 24,
+    "cookies": []
+  },
+  {
+    "filename": "tests/querystring_params.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1,2,3",
+          "queryString": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
+            {
+              "name": "param2",
+              "value": ""
+            },
+            {
+              "name": "param3",
+              "value": "a=b"
+            },
+            {
+              "name": "param4",
+              "value": "1,2,3"
+            }
+          ],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 7,
+                "column": 6
+              },
+              "end": {
+                "line": 7,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 38
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 13,
+                "column": 6
+              },
+              "end": {
+                "line": 13,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 22
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/querystring-params?param1=value1&&param2=&param3=a%3Db&param4=1,2,3",
+          "queryString": [
+            {
+              "name": "param2",
+              "value": ""
+            },
+            {
+              "name": "param3",
+              "value": "a=b"
+            },
+            {
+              "name": "param4",
+              "value": "1,2,3"
+            }
+          ],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 22,
+                "column": 6
+              },
+              "end": {
+                "line": 22,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 33
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F&&value3=%2F",
+          "queryString": [
+            {
+              "name": "value3",
+              "value": "/"
+            }
+          ],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 29,
+                "column": 6
+              },
+              "end": {
+                "line": 29,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 21
+      }
+    ],
+    "success": true,
+    "time": 120,
+    "cookies": []
+  },
+  {
+    "filename": "tests/redirect.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/redirect",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 302,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "271"
+            },
+            {
+              "name": "location",
+              "value": "http://localhost:8000/redirected"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 19
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/redirected",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "0"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 6,
+                "column": 6
+              },
+              "end": {
+                "line": 6,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {}
+        ],
+        "time": 39
+      }
+    ],
+    "success": true,
+    "time": 62,
+    "cookies": []
+  },
+  {
+    "filename": "tests/utf8.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/utf8",
+          "queryString": [],
+          "headers": [
+            {
+              "name": "User-Agent",
+              "value": "hurl/0.99.12"
+            },
+            {
+              "name": "Host",
+              "value": "localhost"
+            }
+          ],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "18"
+            },
+            {
+              "name": "server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "date",
+              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 3,
+                "column": 6
+              },
+              "end": {
+                "line": 3,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {}
+        ],
+        "time": 32
+      }
+    ],
+    "success": true,
+    "time": 35,
+    "cookies": []
+  }
+]

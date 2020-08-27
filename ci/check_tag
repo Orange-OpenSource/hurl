@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+set -u
+
+VERSION=$1
+
+echo check git tag
+TAG=$(git tag --points-at HEAD |tr -d '\n')
+if [ "$TAG" == "" ]; then
+        echo "Tag is not set"
+        exit 0
+fi
+
+if [ "$TAG" != "$VERSION" ]; then
+        echo "Tag '$TAG' does not match version '$VERSION'"
+        exit 1
+fi
+echo tag matches version
+
+

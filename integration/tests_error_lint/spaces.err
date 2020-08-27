@@ -1,0 +1,14 @@
+[0;33mwarning[0m: One space 
+  --> tests_error_lint/spaces.hurl:1:4
+   |
+ 1 | GET    http://localhost:8000/hello 
+   |    ^ Use only one space
+   |
+
+[0;33mwarning[0m: Unnecessary space
+  --> tests_error_lint/spaces.hurl:1:32
+   |
+ 1 | GET    http://localhost:8000/hello 
+   |                                   ^ Remove space
+   |
+

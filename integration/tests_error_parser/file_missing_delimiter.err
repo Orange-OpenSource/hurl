@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing literal
+  --> tests_error_parser/file_missing_delimiter.hurl:2:16
+   |
+ 2 | file, data.bin ?
+   |                ^ expecting ';'
+   |
+

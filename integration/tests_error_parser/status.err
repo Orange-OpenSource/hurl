@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing Status
+  --> tests_error_parser/status.hurl:2:10
+   |
+ 2 | HTTP/1.1 oa0
+   |          ^ The http status is not valid
+   |
+

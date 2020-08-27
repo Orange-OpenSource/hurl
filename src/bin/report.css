@@ -1,0 +1,20 @@
+.date {
+    margin-bottom: 10px;
+}
+
+thead {
+    font-weight: bolder;
+}
+
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
+
+
+
+
+

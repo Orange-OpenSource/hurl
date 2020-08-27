@@ -1,0 +1,7 @@
+[1;31merror[0m: Parsing section name
+  --> tests_error_parser/section_name.hurl:2:2
+   |
+ 2 | [Unknown]
+   |  ^ the section Unknown is not valid
+   |
+

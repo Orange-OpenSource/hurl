@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*.pyc
+
+target/
+.idea/

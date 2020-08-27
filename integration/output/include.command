@@ -1,0 +1,1 @@
+hurl --include tests/output.hurl

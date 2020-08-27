@@ -1,0 +1,88 @@
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:4:0
+   |
+ 4 | jsonpath "$.status" equals "true"
+   |   actual:   bool <true>
+   |   expected: string <true>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:6:0
+   |
+ 6 | jsonpath "$.count" equals 0
+   |   actual:   int <1>
+   |   expected: int <0>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:7:0
+   |
+ 7 | jsonpath "$.message" equals 0
+   |   actual:   string <0>
+   |   expected: int <0>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:8:0
+   |
+ 8 | jsonpath "$.empty" equals 0
+   |   actual:   string <>
+   |   expected: int <0>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:9:0
+   |
+ 9 | jsonpath "$.number" equals 1.1
+   |   actual:   float <1.0>
+   |   expected: float <1.100000000000000000>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:10:0
+   |
+10 | jsonpath "$.message" startsWith "hi"
+   |   actual:   string <0>
+   |   expected: starts with string <hi>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:11:0
+   |
+11 | jsonpath "$.message" contains "hi"
+   |   actual:   string <0>
+   |   expected: contains string <hi>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:12:0
+   |
+12 | jsonpath "$.message" matches "hi"
+   |   actual:   string <0>
+   |   expected: matches regex <hi>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:13:0
+   |
+13 | jsonpath "$.message" countEquals 1
+   |   actual:   string <0>
+   |   expected: count equals to <1>
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:14:0
+   |
+14 | jsonpath "$.toto" exists
+   |   actual:   none
+   |   expected: something
+   |
+
+[1;31merror[0m: Assert Failure
+  --> tests/error_predicate.hurl:15:0
+   |
+15 | jsonpath "$.message" not exists
+   |   actual:   string <0>
+   |   expected: not something
+   |
+
