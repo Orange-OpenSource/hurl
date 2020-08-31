@@ -52,8 +52,8 @@ header "Set-Cookie" contains "Max-Age=0"   # TODO replace by cookie query
 GET http://localhost:8000/cookies/set
 HTTP/1.0 200
 Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/accounts
-Set-Cookie: HSID=AYQEVnDKrdst; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/
-Set-Cookie: SSID=Ap4PGTEq; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/
+Set-Cookie: HSID=AYQEVnDKrdst; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/
+Set-Cookie: SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/
 
 [Asserts]
 header "Set-Cookie" countEquals 3

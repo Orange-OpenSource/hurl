@@ -77,14 +77,14 @@ def set_session_cookie2_valuea_subdomain2():
 
 
 # Set-Cookie: LSID=; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
-# Set-Cookie: HSID=AYQEVn…DKrdst; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly
-# Set-Cookie: SSID=Ap4P…GTEq; Domain=foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
+# Set-Cookie: HSID=AYQEVn…DKrdst; Domain=.localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly
+# Set-Cookie: SSID=Ap4P…GTEq; Domain=.localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
 @app.route("/cookies/set")
 def set_cookies():
     resp = make_response()
     resp.set_cookie('LSID', 'DQAAAKEaem_vYg', path='/accounts', secure=True, httponly=True, expires='Wed, 13 Jan 2021 22:23:01 GMT')
-    resp.set_cookie('HSID', 'AYQEVnDKrdst', domain='.foo.com', path='/', expires='Wed, 13 Jan 2021 22:23:01 GMT', httponly=True)
-    resp.set_cookie('SSID', 'Ap4PGTEq',domain='.foo.com', path='/', expires='Wed, 13 Jan 2021 22:23:01 GMT', secure=True, httponly=True)
+    resp.set_cookie('HSID', 'AYQEVnDKrdst', domain='.localhost', path='/', expires='Wed, 13 Jan 2021 22:23:01 GMT', httponly=True)
+    resp.set_cookie('SSID', 'Ap4PGTEq', domain='.localhost', path='/', expires='Wed, 13 Jan 2021 22:23:01 GMT', secure=True, httponly=True)
     return resp
 
 
