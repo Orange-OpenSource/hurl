@@ -12,7 +12,7 @@ jobs:
       #cache: cargo
 
 before_install:
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update && brew install libxml2 jq; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update && brew install libxml2 jq mitmproxy; fi
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update && sudo apt install python3-pip; fi
 
 before_script:
@@ -23,7 +23,11 @@ before_script:
     - python3 -V
     - pip3 install Flask
     - cd integration && python3 server.py&
+    - wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz
+    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz; ./mitmdump & fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then mitmdump & fi
     - sleep 2
+    - netstat -an | grep LISTEN | egrep '8000|8080'
     - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
 
 script:
