@@ -238,7 +238,7 @@ Use the specified proxy.
 
 
 
-### --variable <name=value> {#variables}
+### --variable <name=value> {#variable}
 
 Define variable (name/value) to be used in Hurl templates.
 Only string values can be defined.
