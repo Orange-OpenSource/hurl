@@ -32,6 +32,7 @@ pub struct Request {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
+    pub version: Version,
     pub status: u32,
     pub headers: Vec<Header>,
     pub body: Vec<u8>,
@@ -49,6 +50,13 @@ pub enum Method {
     Options,
     Trace,
     Patch,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Version {
+    Http10,
+    Http11,
+    Http2,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -96,12 +104,9 @@ pub struct Cookie {
 }
 
 
-
-
-
 impl fmt::Display for RequestCookie {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,  "{}={}", self.name, self.value)
+        write!(f, "{}={}", self.name, self.value)
     }
 }
 
@@ -111,22 +116,18 @@ pub enum HttpError {
     CouldNotResolveProxyName,
     CouldNotResolveHost,
     FailToConnect,
-    TooManyRedirect
+    TooManyRedirect,
+    CouldNotParseResponse,
 }
 
 
 impl Response {
-
     ///
     /// return a list of headers values for the given header name
     ///
     pub fn get_header_values(&self, expected_name: String) -> Vec<String> {
-        self.headers
-            .iter()
-            .filter_map(|Header{ name, value}| if name.clone() == expected_name { Some(value.to_string())} else { None })
-            .collect()
+        get_header_values(self.headers.clone(), expected_name)
     }
-
 }
 
 
@@ -136,27 +137,38 @@ impl Response {
 pub fn get_header_values(headers: Vec<Header>, expected_name: String) -> Vec<String> {
     headers
         .iter()
-        .filter_map(|Header{ name, value}| if name.clone() == expected_name { Some(value.to_string())} else { None })
+        .filter_map(|Header { name, value }| if name.clone() == expected_name { Some(value.to_string()) } else { None })
         .collect()
 }
 
 #[cfg(test)]
-mod tests {
-
+pub mod tests {
     use super::*;
 
     #[test]
     fn get_header_values() {
         let response = Response {
+            version: Version::Http10,
             status: 200,
             headers: vec![
                 Header { name: "Content-Length".to_string(), value: "12".to_string() }
             ],
-            body: vec![]
+            body: vec![],
         };
         assert_eq!(response.get_header_values("Content-Length".to_string()), vec!["12".to_string()]);
         assert!(response.get_header_values("Unknown".to_string()).is_empty());
-
     }
 
+    pub fn hello_http_request() -> Request {
+        Request {
+            method: Method::Get,
+            url: "http://localhost:8000/hello".to_string(),
+            querystring: vec![],
+            headers: vec![],
+            cookies: vec![],
+            body: vec![],
+            multipart: vec![],
+            form: vec![],
+        }
+    }
 }
