@@ -88,6 +88,7 @@ fn test_hello() {
     let mut client = default_client();
     let request = default_get_request("http://localhost:8000/hello".to_string());
     let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.version, Version::Http10);
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
 
@@ -95,7 +96,6 @@ fn test_hello() {
     assert!(response.headers.contains(&Header { name: "Content-Length".to_string(), value: "12".to_string() }));
     assert!(response.headers.contains(&Header { name: "Content-Type".to_string(), value: "text/html; charset=utf-8".to_string() }));
     assert_eq!(response.get_header_values("Date".to_string()).len(), 1);
-
 }
 
 // endregion

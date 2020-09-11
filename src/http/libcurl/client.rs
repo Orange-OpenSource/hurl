@@ -48,7 +48,6 @@ pub struct ClientOptions {
 
 
 impl Client {
-
     ///
     /// Init HTTP hurl client
     ///
@@ -107,7 +106,7 @@ impl Client {
                     }
                 }
                 easy::InfoType::HeaderIn => {
-                    eprint!("< {}",  str::from_utf8(data).unwrap());
+                    eprint!("< {}", str::from_utf8(data).unwrap());
                 }
                 _ => {}
             }
@@ -147,7 +146,10 @@ impl Client {
         }
 
         let status = self.handle.response_code().unwrap();
+        let first_line = lines.remove(0);    // remove the status line
+        let version = self.parse_response_version(first_line)?;
         let headers = self.parse_response_headers(&mut lines);
+
 
         if let Some(url) = self.get_follow_location(headers.clone()) {
             let request = Request {
@@ -173,6 +175,7 @@ impl Client {
         self.redirect_count = redirect_count;
 
         Ok(Response {
+            version,
             status,
             headers,
             body,
@@ -203,7 +206,7 @@ impl Client {
     ///
     fn set_method(&mut self, method: &Method) {
         match method {
-            Method::Get =>  self.handle.custom_request("GET").unwrap(),
+            Method::Get => self.handle.custom_request("GET").unwrap(),
             Method::Post => self.handle.custom_request("POST").unwrap(),
             Method::Put => self.handle.custom_request("PUT").unwrap(),
             Method::Head => self.handle.custom_request("HEAD").unwrap(),
@@ -309,11 +312,26 @@ impl Client {
 
 
     ///
+    /// parse response version
+    ///
+    fn parse_response_version(&mut self, line: String) -> Result<Version, HttpError> {
+        if line.starts_with("HTTP/1.0") {
+            Ok(Version::Http10)
+        } else if line.starts_with("HTTP/1.1") {
+            Ok(Version::Http11)
+        } else if line.starts_with("HTTP/2") {
+            Ok(Version::Http2)
+        } else {
+            Err(HttpError::CouldNotParseResponse)
+        }
+    }
+
+
+    ///
     /// parse headers from libcurl responses
     ///
     fn parse_response_headers(&mut self, lines: &mut Vec<String>) -> Vec<Header> {
         let mut headers: Vec<Header> = vec![];
-        lines.remove(0);    // remove the status line
         lines.pop();               // remove the blank line between headers and body
         for line in lines {
             if let Some(header) = Header::parse(line.to_string()) {
@@ -398,7 +416,6 @@ impl Header {
 }
 
 
-
 ///
 /// Split an array of bytes into http lines (\r\n separator)
 ///
@@ -448,6 +465,5 @@ mod tests {
         assert_eq!(lines.get(0).unwrap().as_str(), "GET /hello HTTP/1.1");
         assert_eq!(lines.get(1).unwrap().as_str(), "Host: localhost:8000");
         assert_eq!(lines.get(2).unwrap().as_str(), "");
-
     }
 }
