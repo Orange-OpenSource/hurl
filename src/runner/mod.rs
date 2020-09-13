@@ -26,6 +26,7 @@
 mod assert;
 mod body;
 mod capture;
+mod cookie;
 pub mod core;
 mod entry;
 pub mod file;
