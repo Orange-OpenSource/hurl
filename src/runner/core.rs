@@ -105,6 +105,7 @@ pub enum RunnerError {
     //??CaptureError {},
     InvalidUtf8,
     InvalidDecoding { charset: String },
+    InvalidCharset { charset: String },
 
     // Query
     QueryHeaderNotFound,
@@ -160,10 +161,12 @@ impl FormatError for Error {
             RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid jsonpath".to_string(),
             RunnerError::PredicateType { .. } => "Assert - Inconsistent predicate type".to_string(),
             RunnerError::SubqueryInvalidInput { .. } => "Subquery error".to_string(),
-            RunnerError::InvalidDecoding { .. } => "Invalid Decoding".to_string(),
+            RunnerError::InvalidDecoding { ..} => "Invalid Decoding".to_string(),
+            RunnerError::InvalidCharset { ..} =>  "Invalid Charset".to_string(),
             RunnerError::AssertFailure { .. } => "Assert Failure".to_string(),
             RunnerError::UnrenderableVariable { .. } => "Unrenderable Variable".to_string(),
             RunnerError::NoQueryResult { .. } => "No query result".to_string(),
+
         }
     }
 
@@ -189,6 +192,7 @@ impl FormatError for Error {
             RunnerError::PredicateType { .. } => "predicate type inconsistent with value return by query".to_string(),
             RunnerError::SubqueryInvalidInput => "Type from query result and subquery do not match".to_string(),
             RunnerError::InvalidDecoding { charset } => format!("The body can not be decoded with charset '{}'", charset),
+            RunnerError::InvalidCharset { charset } => format!("The charset '{}' is not valid", charset),
             RunnerError::AssertFailure { actual, expected, .. } => format!("actual:   {}\nexpected: {}", actual, expected),
             RunnerError::VariableNotDefined { name } => format!("You must set the variable {}", name),
             RunnerError::UnrenderableVariable { value } => format!("value {} can not be rendered", value),
