@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing Filename
+error: Parsing Filename
   --> tests_error_parser/file.hurl:2:6
    |
  2 | file,

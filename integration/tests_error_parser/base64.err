@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing literal
+error: Parsing literal
   --> tests_error_parser/base64.hurl:2:14
    |
  2 | base64, aaaaa?

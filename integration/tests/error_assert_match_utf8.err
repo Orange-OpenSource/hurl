@@ -1,4 +1,4 @@
-[1;31merror[0m: Invalid Utf8
+error: Invalid Utf8
   --> tests/error_assert_match_utf8.hurl:4:1
    |
  4 | body matches ".*"

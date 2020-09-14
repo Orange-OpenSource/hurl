@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing predicate
+error: Parsing predicate
   --> tests_error_parser/predicate.hurl:3:15
    |
  3 | header "toto" tata startsWith "hello"

@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing section
+error: Parsing section
   --> tests_error_parser/invalid_section.hurl:2:1
    |
  2 | [Asserts]

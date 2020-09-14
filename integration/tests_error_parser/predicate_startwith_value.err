@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing literal
+error: Parsing literal
   --> tests_error_parser/predicate_startwith_value.hurl:3:26
    |
  3 | header "toto" startsWith 1
