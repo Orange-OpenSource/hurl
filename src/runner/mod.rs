@@ -30,6 +30,7 @@ mod cookie;
 pub mod core;
 mod entry;
 pub mod file;
+mod http_response;
 mod json;
 pub mod log;
 mod predicate;
