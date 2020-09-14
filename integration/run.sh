@@ -3,9 +3,17 @@ set -u
 set -e
 
 for hurl_file in "$@"; do
-    echo "$hurl_file";
     set +e
-    hurl "$hurl_file" --color 2>/tmp/test.stderr >/tmp/test.stdout
+
+    options=("--color")
+    if test -f "${hurl_file%.*}.options"; then
+        options+=("$(cat "${hurl_file%.*}.options")")
+    fi
+
+    cmd="hurl $hurl_file ${options[@]}"
+    echo "$cmd"
+
+    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
     EXITCODE_ACTUAL=$?
     set -e
 
