@@ -25,6 +25,18 @@
 /// and not by the http client.
 ///
 
+use crate::http::libcurl::core::Response;
+
+impl Response {
+    pub fn cookies(&self) -> Vec<ResponseCookie> {
+        self.headers
+            .iter()
+            .filter(|&h| h.name.to_lowercase() == "set-cookie")
+            .filter_map(|h| ResponseCookie::parse(h.value.clone()))
+            .collect()
+    }
+}
+
 ///
 /// Cookie return from HTTP Response
 /// It contains arbitrary attributes.
