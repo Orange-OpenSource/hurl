@@ -28,7 +28,27 @@ pub struct Request {
     pub multipart: Vec<MultipartParam>,
     pub cookies: Vec<RequestCookie>,
     pub body: Vec<u8>,
+    pub content_type: Option<String>,
 }
+
+
+//impl Request {
+//
+//    ///
+//    /// Get implicit content-type from request
+//    /// Note that for multipart, the content-type is not returned because it is generated at runtime by the client
+//    ///
+//    pub fn content_type(&self) -> Option<String> {
+//        if self.form.is_empty() {
+//            Some("application/x-www-form-urlencoded".to_string())
+//       // } else if self..mform.is_empty() {
+//       //     Some("application/x-www-form-urlencoded".to_string())
+//        } else {
+//            None
+//        }
+//    }
+//}
+
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
@@ -76,10 +96,27 @@ pub enum Version {
     Http2,
 }
 
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let value = match self {
+            Version::Http10 => "1.0",
+            Version::Http11 => "1.1",
+            Version::Http2 => "2",
+        };
+        write!(f, "{}", value)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Header {
     pub name: String,
     pub value: String,
+}
+
+impl fmt::Display for Header {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}: {}", self.name, self.value)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -88,10 +125,25 @@ pub struct Param {
     pub value: String,
 }
 
+impl fmt::Display for Param {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}: {}", self.name, self.value)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultipartParam {
     Param(Param),
     FileParam(FileParam),
+}
+
+impl fmt::Display for MultipartParam {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            MultipartParam::Param(param) => write!(f, "{}", param.to_string()),
+            MultipartParam::FileParam(param) => write!(f, "{}", param.to_string()),
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -100,6 +152,12 @@ pub struct FileParam {
     pub filename: String,
     pub data: Vec<u8>,
     pub content_type: String,
+}
+
+impl fmt::Display for FileParam {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}: file,{}; {}", self.name, self.filename, self.content_type)
+    }
 }
 
 
@@ -120,6 +178,12 @@ pub struct Cookie {
     pub value: String,
 }
 
+impl fmt::Display for Cookie {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}\t{}\t{}\t{}\t{}\t{}\t{}", self.domain, self.include_subdomain, self.path, self.https, self.expires, self.name, self.value)
+    }
+}
+
 
 impl fmt::Display for RequestCookie {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -135,6 +199,7 @@ pub enum HttpError {
     FailToConnect,
     TooManyRedirect,
     CouldNotParseResponse,
+    SSLCertificate,
 }
 
 
@@ -162,6 +227,7 @@ pub fn get_header_values(headers: Vec<Header>, expected_name: String) -> Vec<Str
 pub mod tests {
     use super::*;
 
+
     #[test]
     fn get_header_values() {
         let response = Response {
@@ -186,6 +252,7 @@ pub mod tests {
             body: vec![],
             multipart: vec![],
             form: vec![],
+            content_type: None,
         }
     }
 
@@ -211,6 +278,25 @@ pub mod tests {
             body: vec![],
             multipart: vec![],
             form: vec![],
+            content_type: None,
+        }
+    }
+
+    // GET http://localhost:8000/querystring-params?param1=value1&param2
+    pub fn query_http_request() -> Request {
+        Request {
+            method: Method::Get,
+            url: "http://localhost:8000/querystring-params".to_string(),
+            querystring: vec![
+                Param { name: String::from("param1"), value: String::from("value1") },
+                Param { name: String::from("param2"), value: String::from("a b") },
+            ],
+            headers: vec![],
+            cookies: vec![],
+            body: vec![],
+            multipart: vec![],
+            form: vec![],
+            content_type: None,
         }
     }
 
@@ -226,7 +312,112 @@ pub mod tests {
             cookies: vec![],
             body: "param1=value1&param2=&param3=a%3db&param4=a%253db".to_string().into_bytes(),
             multipart: vec![],
-            form: vec![]
+            form: vec![],
+            content_type: Some("multipart/form-data".to_string()),
+        }
+    }
+
+    pub fn hello_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
+                Header { name: String::from("Content-Length"), value: String::from("12") },
+            ],
+            body: String::into_bytes(String::from("Hello World!")),
+        }
+    }
+
+    pub fn html_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
+            ],
+            body: String::into_bytes(String::from("<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>")),
+        }
+    }
+
+    pub fn xml_invalid_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
+                Header { name: String::from("Content-Length"), value: String::from("12") },
+            ],
+            body: String::into_bytes(r#"
+xxx
+"#.to_string()),
+        }
+    }
+
+    pub fn xml_two_users_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
+                Header { name: String::from("Content-Length"), value: String::from("12") },
+            ],
+            body: String::into_bytes(r#"
+<?xml version="1.0"?>
+<users>
+  <user id="1">Bob</user>
+  <user id="2">Bill</user>
+</users>
+"#.to_string()),
+        }
+    }
+
+    pub fn xml_three_users_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
+                Header { name: String::from("Content-Length"), value: String::from("12") },
+            ],
+            body: String::into_bytes(r#"
+<?xml version="1.0"?>
+<users>
+  <user id="1">Bob</user>
+  <user id="2">Bill</user>
+  <user id="3">Bruce</user>
+</users>
+"#.to_string()),
+        }
+    }
+
+    pub fn json_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 0,
+            headers: vec![],
+            body: String::into_bytes(r#"
+{
+  "success":false,
+  "errors": [
+    { "id": "error1"},
+    {"id": "error2"}
+  ],
+  "duration": 1.5
+}
+"#.to_string()),
+        }
+    }
+
+    pub fn bytes_http_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("application/octet-stream") },
+                Header { name: String::from("Content-Length"), value: String::from("1") },
+            ],
+            body: vec![255],
         }
     }
 }

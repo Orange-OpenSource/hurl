@@ -18,19 +18,16 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-use encoding::{DecoderTrap, Encoding};
-use encoding::all::ISO_8859_1;
 
 use crate::core::ast::*;
 use crate::core::common::SourceInfo;
 use crate::core::common::Value;
-use crate::http;
-use crate::http::cookie::CookieJar;
+use crate::http::libcurl;
+
 
 use super::core::*;
 use super::core::{Error, RunnerError};
 use crate::format::logger::Logger;
-
 
 
 /// Run an entry with the hurl http client
@@ -42,26 +39,23 @@ use crate::format::logger::Logger;
 /// use hurl::runner;
 ///
 /// // Create an http client
-/// let client = http::client::Client::init(http::client::ClientOptions {
-///        noproxy_hosts: vec![],
-///        insecure: false,
-///        redirect: http::client::Redirect::None,
-///        http_proxy: None,
-///        https_proxy: None,
-///        all_proxy: None
-///    });
+//// let client = http::client::Client::init(http::client::ClientOptions {
+////        noproxy_hosts: vec![],
+////        insecure: false,
+////        redirect: http::client::Redirect::None,
+////        http_proxy: None,
+////        https_proxy: None,
+////        all_proxy: None
+////    });
 /// ```
-pub fn run(entry: Entry, http_client: &http::client::Client,
+pub fn run(entry: Entry,
+           http_client: &mut libcurl::client::Client,
            entry_index: usize,
            variables: &mut HashMap<String, Value>,
-           cookiejar: &mut CookieJar,
            context_dir: String,
            logger: &Logger,
 ) -> EntryResult {
-
-    //let mut entry_log_builder = EntryLogBuilder::init();
-
-    let mut http_request = match entry.clone().request.eval(variables, context_dir.clone()) {
+    let http_request = match entry.clone().request.eval(variables, context_dir.clone()) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
@@ -75,27 +69,44 @@ pub fn run(entry: Entry, http_client: &http::client::Client,
             };
         }
     };
-    let cookies = cookiejar.clone().get_cookies(http_request.clone().host(), String::from("/"));
-    http_request.add_session_cookies(cookies);
 
     logger.verbose("------------------------------------------------------------------------------");
     logger.verbose(format!("executing entry {}", entry_index + 1).as_str());
-    for line in http_request.verbose_output() {
-        logger.send(line);
-    }
-    if let Some(params) = http_request.clone().form_params() {
-        logger.verbose("Form Params");
-        for param in params {
-            logger.verbose(format!("   {}={}", param.name, param.value).as_str());
+
+    // Temporary - add cookie from request to the cookie store
+    // should be set explicitly
+    // url should be valid at the point
+    // do not use cookie from request
+    use url::Url;
+    if let Ok(url) = Url::parse(http_request.url.as_str()) {
+        for c in http_request.cookies.clone() {
+            let cookie = libcurl::core::Cookie {
+                domain: url.host_str().unwrap().to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "0".to_string(),
+                name: c.name,
+                value: c.value,
+            };
+            http_client.add_cookie(cookie);
         }
-    };
+    }
+
+    logger.verbose("");
+    logger.verbose("Cookie store:");
+    for cookie in http_client.get_cookie_storage() {
+        logger.verbose(cookie.to_string().as_str());
+    }
+    logger.verbose("");
+    log_request(logger, &http_request);
 
     let start = Instant::now();
-    let http_response = match http_client.execute(&http_request) {
+    let http_response = match http_client.execute(&http_request, 0) {
         Ok(response) => response,
-        Err(e) => {
+        Err(_) => {
             return EntryResult {
-                request: Some(http_request),
+                request: Some(http_request.clone()),
                 response: None,
                 captures: vec![],
                 asserts: vec![],
@@ -106,8 +117,8 @@ pub fn run(entry: Entry, http_client: &http::client::Client,
                             end: entry.clone().request.url.source_info.end,
                         },
                         inner: RunnerError::HttpConnection {
-                            message: e.message,
-                            url: e.url,
+                            message: "".to_string(),
+                            url: http_request.url,
                         },
                         assert: false,
                     }],
@@ -115,15 +126,10 @@ pub fn run(entry: Entry, http_client: &http::client::Client,
             };
         }
     };
+
     let time_in_ms = start.elapsed().as_millis();
-    for line in http_response.verbose_output() {
-        logger.receive(line);
-    }
+    logger.verbose(format!("Response Time: {}ms", time_in_ms).as_str());
 
-
-    //entry_log_builder.response(http_response.clone(), verbose);
-
-    //hurl_log.entries.push(log_builder.build());
     let captures = match entry.response.clone() {
         None => vec![],
         Some(response) => match response.eval_captures(http_response.clone(), variables) {
@@ -146,56 +152,24 @@ pub fn run(entry: Entry, http_client: &http::client::Client,
         variables.insert(capture_result.name, capture_result.value);
     }
 
-
     let asserts = match entry.response {
         None => vec![],
         Some(response) => response.eval_asserts(variables, http_response.clone(), context_dir)
     };
-
     let errors = asserts
         .iter()
         .filter_map(|assert| assert.clone().error())
         .map(|Error { source_info, inner, .. }| Error { source_info, inner, assert: true })
         .collect();
 
-
-    // update cookies
-    // for the domain
-    let domain = http_request.clone().host();
-    //let mut cookies = cookie_store.get_cookies(host);
-
-    // TEMPORARY also update store from request cookie
-    // TODO - DO BE REMOVED - add explicit directive in hurl file to interract with cookiejar
-    for cookie in http_request.clone().cookies {
-        cookiejar.update_cookies(
-            domain.clone(),
-            http_request.clone().url.path,
-            cookie,
-        );
-    }
-
-
-    for cookie in http_response.cookies() {
-        cookiejar.update_cookies(
-            domain.clone(),
-            http_request.clone().url.path,
-            cookie,
-        );
-    }
-
-
     if !captures.is_empty() {
         logger.verbose("Captures");
         for capture in captures.clone() {
-            logger.verbose(format!("{}: {:?}", capture.name, capture.value).as_str());
+            logger.verbose(format!("{}: {}", capture.name, capture.value).as_str());
         }
     }
-    if !cookiejar.clone().cookies().is_empty() {
-        logger.verbose("CookieJar");
-        for cookie in cookiejar.clone().cookies() {
-            logger.verbose(cookie.to_string().as_str());
-        }
-    }
+
+    logger.verbose("");
 
     EntryResult {
         request: Some(http_request),
@@ -208,76 +182,39 @@ pub fn run(entry: Entry, http_client: &http::client::Client,
 }
 
 
-
-
-// cookies
-// for all domains
-
-// but only pass cookies for one domain for the request
-
-fn decode_bytes(bytes: Vec<u8>, encoding: http::core::Encoding) -> Result<String, RunnerError> {
-    match encoding {
-        http::core::Encoding::Utf8 {} => match String::from_utf8(bytes) {
-            Ok(s) => Ok(s),
-            Err(_) => Err(RunnerError::InvalidDecoding { charset: encoding.to_string() }),
-        },
-        http::core::Encoding::Latin1 {} => match ISO_8859_1.decode(&bytes, DecoderTrap::Strict) {
-            Ok(s) => Ok(s),
-            Err(_) => Err(RunnerError::InvalidDecoding { charset: encoding.to_string() }),
-        },
+pub fn log_request(logger: &Logger, request: &libcurl::core::Request) {
+    logger.verbose("Request");
+    logger.verbose(format!("{} {}", request.method, request.url).as_str());
+    for header in request.headers.clone() {
+        logger.verbose(header.to_string().as_str());
     }
-}
-
-
-impl http::request::Request {
-    pub fn verbose_output(&self) -> Vec<String> {
-        let mut lines = vec![];
-        lines.push(format!("{} {}", self.clone().method.to_text(), self.clone().url()));
-        for header in self.clone().headers() {
-            lines.push(header.to_string());
+    if !request.querystring.is_empty() {
+        logger.verbose("[QueryStringParams]");
+        for param in request.querystring.clone() {
+            logger.verbose(param.to_string().as_str());
         }
-        lines.push("".to_string());
-        if !self.body.is_empty() {
-            let body = match decode_bytes(self.body.clone(), self.encoding()) {
-                Ok(s) => s,
-                Err(_) => format!("{:x?}", self.body)
-            };
-            let body_lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-                .unwrap()
-                .split(&body)
-                .collect();
-            for line in body_lines {
-                lines.push(line.to_string());
-            }
-        }
-        lines
     }
-}
-
-impl http::response::Response {
-    pub fn verbose_output(&self) -> Vec<String> {
-        let mut lines = vec![];
-        lines.push(format!("HTTP/{} {}", self.version.to_text(), self.status));
-        for header in self.clone().headers {
-            lines.push(header.to_string());
+    if !request.form.is_empty() {
+        logger.verbose("[FormParams]");
+        for param in request.form.clone() {
+            logger.verbose(param.to_string().as_str());
         }
-        lines.push("".to_string());
-        if !self.body.is_empty() {
-
-            //let body = body_text(self.clone().body, get_header_value(self.clone().headers, "content-type"));
-            //let body = substring(body.as_str(), 0, limit_body);
-            let body = match decode_bytes(self.body.clone(), self.encoding()) {
-                Ok(s) => s,
-                Err(_) => format!("{:x?}", self.body)
-            };
-            let body_lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-                .unwrap()
-                .split(&body)
-                .collect();
-            for line in body_lines {
-                lines.push(line.to_string());
-            }
-        }
-        lines
     }
+    if !request.multipart.is_empty() {
+        logger.verbose("[MultipartFormData]");
+        for param in request.multipart.clone() {
+            logger.verbose(param.to_string().as_str());
+        }
+    }
+    if !request.cookies.is_empty() {
+        logger.verbose("[Cookies]");
+        for cookie in request.cookies.clone() {
+            logger.verbose(cookie.to_string().as_str());
+        }
+    }
+    if let Some(s) = request.content_type.clone() {
+        logger.verbose("");
+        logger.verbose(format!("implicit content-type={}", s).as_str());
+    }
+    logger.verbose("");
 }

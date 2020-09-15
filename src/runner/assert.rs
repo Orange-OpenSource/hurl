@@ -19,7 +19,7 @@
 use std::collections::HashMap;
 
 use crate::core::common::Value;
-use crate::http;
+use crate::http::libcurl;
 
 use super::core::{Error, RunnerError};
 use super::core::*;
@@ -107,7 +107,7 @@ impl AssertResult {
 }
 
 impl Assert {
-    pub fn eval(self, http_response: http::response::Response, variables: &HashMap<String, Value>) -> AssertResult {
+    pub fn eval(self, http_response: libcurl::core::Response, variables: &HashMap<String, Value>) -> AssertResult {
         let actual = self.query.eval(variables, http_response);
         let source_info = self.predicate.clone().predicate_func.source_info;
         let predicate_result = match actual.clone() {
@@ -162,7 +162,7 @@ pub mod tests {
     fn test_eval() {
         let variables = HashMap::new();
         assert_eq!(
-            assert_count_user().eval(http::response::tests::xml_three_users_http_response(), &variables),
+            assert_count_user().eval(libcurl::core::tests::xml_three_users_http_response(), &variables),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Nodeset(3))),
                 source_info: SourceInfo::init(1, 14, 1, 27),

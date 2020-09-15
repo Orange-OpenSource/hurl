@@ -21,7 +21,7 @@ use hurl::core::ast;
 use hurl::core::common::{Pos, SourceInfo};
 use hurl::runner;
 use hurl::format;
-use hurl::http;
+use hurl::http::libcurl;
 use std::collections::HashMap;
 use hurl::core::ast::{Template, TemplateElement, EncodedString};
 use hurl::runner::core::RunnerOptions;
@@ -30,7 +30,6 @@ use hurl::runner::core::RunnerOptions;
 // can be used for debugging
 #[test]
 fn test_hurl_file() {
-    let mut cookie_store = http::cookie::CookieJar::init(vec![]);
     //let filename = "integration/tests/post_json.hurl";
     //let filename = "integration/tests/error_assert_match_utf8.hurl";
     let filename = "integration/tests/error_template_variable_not_renderable.hurl";
@@ -38,14 +37,16 @@ fn test_hurl_file() {
     let content = std::fs::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = hurl::parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
-    let client = http::client::Client::init(http::client::ClientOptions {
-        noproxy_hosts: vec![],
+    let options = libcurl::client::ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
         insecure: false,
-        redirect: http::client::Redirect::None,
-        http_proxy: None,
-        https_proxy: None,
-        all_proxy: None
-    });
+    };
+    let mut client = libcurl::client::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(&content)
@@ -68,10 +69,9 @@ fn test_hurl_file() {
 
     let _hurl_log = runner::file::run(
         hurl_file,
-        client,
+        &mut client,
         //&mut variables,
         filename.to_string(),
-        &mut cookie_store,
         "current_dir".to_string(),
         options,
         logger
@@ -144,15 +144,16 @@ fn hello_request() -> ast::Request {
 
 #[test]
 fn test_hello() {
-    let mut cookie_store = http::cookie::CookieJar::init(vec![]);
-    let client = http::client::Client::init(http::client::ClientOptions {
-        noproxy_hosts: vec![],
+    let options = libcurl::client::ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
         insecure: false,
-        redirect: http::client::Redirect::None,
-        http_proxy: None,
-        https_proxy: None,
-        all_proxy: None
-    });
+    };
+    let mut client = libcurl::client::Client::init(options);
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
         end: Pos { line: 1, column: 1 },
@@ -207,9 +208,8 @@ fn test_hello() {
     };
     let _hurl_log = runner::file::run(
         hurl_file,
-        client,
+        &mut client,
         String::from("filename"),
-        &mut cookie_store,
         "current_dir".to_string(),
         options,
         logger

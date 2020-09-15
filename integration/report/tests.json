@@ -7,16 +7,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-base64",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -26,20 +17,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "19"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:16 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -62,11 +53,11 @@
           {},
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": true,
-    "time": 19,
+    "time": 2,
     "cookies": []
   },
   {
@@ -77,16 +68,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-header",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -96,49 +78,52 @@
           "cookies": [
             {
               "name": "cookie1",
-              "value": "value1"
+              "value": "value1",
+              "path": "/"
             },
             {
               "name": "cookie2",
-              "value": "value2"
+              "value": "value2",
+              "path": "/"
             },
             {
               "name": "cookie3",
-              "value": "value3"
+              "value": "value3",
+              "path": "/"
             }
           ],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "header1",
+              "name": "Header1",
               "value": "value1"
             },
             {
-              "name": "set-cookie",
+              "name": "Set-Cookie",
               "value": "cookie1=value1; Path=/"
             },
             {
-              "name": "set-cookie",
+              "name": "Set-Cookie",
               "value": "cookie2=value2; Path=/"
             },
             {
-              "name": "set-cookie",
+              "name": "Set-Cookie",
               "value": "cookie3=value3; Path=/"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -170,32 +155,38 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 2
       }
     ],
     "success": true,
-    "time": 23,
+    "time": 2,
     "cookies": [
       {
+        "domain": "localhost",
+        "include_subdomain": "FALSE",
+        "path": "/",
+        "https": "FALSE",
+        "expires": "0",
         "name": "cookie1",
-        "value": "value1",
-        "domain": "localhost",
-        "path": "/",
-        "include_subdomain": false
+        "value": "value1"
       },
       {
+        "domain": "localhost",
+        "include_subdomain": "FALSE",
+        "path": "/",
+        "https": "FALSE",
+        "expires": "0",
         "name": "cookie2",
-        "value": "value2",
-        "domain": "localhost",
-        "path": "/",
-        "include_subdomain": false
+        "value": "value2"
       },
       {
-        "name": "cookie3",
-        "value": "value3",
         "domain": "localhost",
+        "include_subdomain": "FALSE",
         "path": "/",
-        "include_subdomain": false
+        "https": "FALSE",
+        "expires": "0",
+        "name": "cookie3",
+        "value": "value3"
       }
     ]
   },
@@ -207,16 +198,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -226,20 +208,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "application/json"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "146"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -274,23 +256,14 @@
           {},
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json/index",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -300,20 +273,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "1"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -340,23 +313,14 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -366,20 +330,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "application/json"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "146"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -405,11 +369,11 @@
           {},
           {}
         ],
-        "time": 24
+        "time": 1
       }
     ],
     "success": true,
-    "time": 73,
+    "time": 8,
     "cookies": []
   },
   {
@@ -420,16 +384,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-match",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -439,20 +394,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "application/json"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "53"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -478,11 +433,11 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": true,
-    "time": 49,
+    "time": 16,
     "cookies": []
   },
   {
@@ -493,16 +448,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-regex",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -512,20 +458,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -549,11 +495,11 @@
           {},
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": true,
-    "time": 25,
+    "time": 4,
     "cookies": []
   },
   {
@@ -564,16 +510,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-xpath",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -583,20 +520,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "18"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -622,11 +559,11 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": true,
-    "time": 23,
+    "time": 2,
     "cookies": []
   },
   {
@@ -637,16 +574,7 @@
           "method": "GET",
           "url": "http://localhost:8000/bytes",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -656,20 +584,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "application/octet-stream"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "1"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -692,11 +620,11 @@
           {},
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": true,
-    "time": 20,
+    "time": 1,
     "cookies": []
   },
   {
@@ -707,16 +635,7 @@
           "method": "GET",
           "url": "http://localhost:8000/capture-and-assert",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -726,20 +645,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -767,11 +686,11 @@
           {},
           {}
         ],
-        "time": 19
+        "time": 1
       }
     ],
     "success": true,
-    "time": 22,
+    "time": 2,
     "cookies": []
   },
   {
@@ -782,16 +701,7 @@
           "method": "GET",
           "url": "http://localhost:8000/captures",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -801,28 +711,28 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "header1",
+              "name": "Header1",
               "value": "value1"
             },
             {
-              "name": "header2",
+              "name": "Header2",
               "value": "Hello Bob!"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:47 GMT"
             }
           ]
         },
@@ -855,12 +765,12 @@
           {},
           {}
         ],
-        "time": 25
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/captures-check?param1=value1&param2=Bob",
+          "url": "http://localhost:8000/captures-check",
           "queryString": [
             {
               "name": "param1",
@@ -871,16 +781,7 @@
               "value": "Bob"
             }
           ],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -890,20 +791,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -925,23 +826,14 @@
           },
           {}
         ],
-        "time": 20
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/captures-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -951,20 +843,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "135"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1047,11 +939,11 @@
           {},
           {}
         ],
-        "time": 24
+        "time": 1
       }
     ],
     "success": true,
-    "time": 78,
+    "time": 8,
     "cookies": []
   },
   {
@@ -1062,25 +954,11 @@
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-request-cookie1-valueA",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA"
-            }
-          ],
+          "headers": [],
           "cookies": [
             {
               "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
+              "value": "valueA"
             }
           ],
           "body": ""
@@ -1091,20 +969,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1126,34 +1004,15 @@
           },
           {}
         ],
-        "time": 38
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-session-cookie2-valueA",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA"
-            }
-          ],
-          "cookies": [
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
-            }
-          ],
+          "headers": [],
+          "cookies": [],
           "body": ""
         },
         "response": {
@@ -1162,29 +1021,30 @@
           "cookies": [
             {
               "name": "cookie2",
-              "value": "valueA"
+              "value": "valueA",
+              "path": "/"
             }
           ],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "set-cookie",
+              "name": "Set-Cookie",
               "value": "cookie2=valueA; Path=/"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1207,39 +1067,15 @@
           {},
           {}
         ],
-        "time": 22
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueA",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA; cookie2=valueA"
-            }
-          ],
-          "cookies": [
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
-            },
-            {
-              "name": "cookie2",
-              "value": "valueA",
-              "domain": "localhost"
-            }
-          ],
+          "headers": [],
+          "cookies": [],
           "body": ""
         },
         "response": {
@@ -1248,20 +1084,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1283,23 +1119,14 @@
           },
           {}
         ],
-        "time": 22
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://127.0.0.1:8000/cookies/assert-that-cookie2-is-not-in-session",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "127.0.0.1"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -1309,20 +1136,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1344,37 +1171,18 @@
           },
           {}
         ],
-        "time": 24
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-request-cookie2-valueB",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie2=valueB; cookie1=valueA"
-            }
-          ],
+          "headers": [],
           "cookies": [
             {
               "name": "cookie2",
-              "value": "valueB",
-              "domain": "localhost"
-            },
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
+              "value": "valueB"
             }
           ],
           "body": ""
@@ -1385,20 +1193,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1420,39 +1228,15 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueB",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA; cookie2=valueB"
-            }
-          ],
-          "cookies": [
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
-            },
-            {
-              "name": "cookie2",
-              "value": "valueB",
-              "domain": "localhost"
-            }
-          ],
+          "headers": [],
+          "cookies": [],
           "body": ""
         },
         "response": {
@@ -1461,20 +1245,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1496,39 +1280,15 @@
           },
           {}
         ],
-        "time": 63
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/delete-cookie2",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA; cookie2=valueB"
-            }
-          ],
-          "cookies": [
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
-            },
-            {
-              "name": "cookie2",
-              "value": "valueB",
-              "domain": "localhost"
-            }
-          ],
+          "headers": [],
+          "cookies": [],
           "body": ""
         },
         "response": {
@@ -1537,29 +1297,32 @@
           "cookies": [
             {
               "name": "cookie2",
-              "value": ""
+              "value": "",
+              "expires": "Thu, 17-Sep-2020 13:58:48 GMT",
+              "max_age": 0,
+              "path": "/"
             }
           ],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "set-cookie",
-              "value": "cookie2=; Expires=Wed, 26-Aug-2020 09:50:17 GMT; Max-Age=0; Path=/"
+              "name": "Set-Cookie",
+              "value": "cookie2=; Expires=Thu, 17-Sep-2020 13:58:48 GMT; Max-Age=0; Path=/"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1582,34 +1345,15 @@
           {},
           {}
         ],
-        "time": 27
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Cookie",
-              "value": "cookie1=valueA"
-            }
-          ],
-          "cookies": [
-            {
-              "name": "cookie1",
-              "value": "valueA",
-              "domain": "localhost"
-            }
-          ],
+          "headers": [],
+          "cookies": [],
           "body": ""
         },
         "response": {
@@ -1618,47 +1362,58 @@
           "cookies": [
             {
               "name": "LSID",
-              "value": "DQAAAKEaem_vYg"
+              "value": "DQAAAKEaem_vYg",
+              "expires": "Wed, 13 Jan 2021 22:23:01 GMT",
+              "path": "/accounts",
+              "secure": true,
+              "httponly": true
             },
             {
               "name": "HSID",
               "value": "AYQEVnDKrdst",
-              "domain": "foo.com"
+              "expires": "Wed, 13 Jan 2021 22:23:01 GMT",
+              "domain": ".localhost",
+              "path": "/",
+              "httponly": true
             },
             {
               "name": "SSID",
               "value": "Ap4PGTEq",
-              "domain": "foo.com"
+              "expires": "Wed, 13 Jan 2021 22:23:01 GMT",
+              "domain": ".localhost",
+              "path": "/",
+              "secure": true,
+              "httponly": true
             }
           ],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "set-cookie",
+              "name": "Set-Cookie",
               "value": "LSID=DQAAAKEaem_vYg; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/accounts"
             },
             {
-              "name": "set-cookie",
-              "value": "HSID=AYQEVnDKrdst; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/"
+              "name": "Set-Cookie",
+              "value": "HSID=AYQEVnDKrdst; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/"
             },
             {
-              "name": "set-cookie",
-              "value": "SSID=Ap4PGTEq; Domain=.foo.com; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/"
+              "name": "Set-Cookie",
+              "value": "SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1694,39 +1449,29 @@
           {},
           {}
         ],
-        "time": 28
+        "time": 1
       }
     ],
     "success": true,
-    "time": 256,
+    "time": 17,
     "cookies": [
       {
+        "domain": "localhost",
+        "include_subdomain": "FALSE",
+        "path": "/",
+        "https": "FALSE",
+        "expires": "0",
         "name": "cookie1",
-        "value": "valueA",
-        "domain": "localhost",
+        "value": "valueA"
+      },
+      {
+        "domain": "#HttpOnly_.localhost",
+        "include_subdomain": "TRUE",
         "path": "/",
-        "include_subdomain": true
-      },
-      {
-        "name": "LSID",
-        "value": "DQAAAKEaem_vYg",
-        "domain": "localhost",
-        "path": "/accounts",
-        "include_subdomain": false
-      },
-      {
+        "https": "FALSE",
+        "expires": "1610576581",
         "name": "HSID",
-        "value": "AYQEVnDKrdst",
-        "domain": "foo.com",
-        "path": "/",
-        "include_subdomain": true
-      },
-      {
-        "name": "SSID",
-        "value": "Ap4PGTEq",
-        "domain": "foo.com",
-        "path": "/",
-        "include_subdomain": true
+        "value": "AYQEVnDKrdst"
       }
     ]
   },
@@ -1738,16 +1483,7 @@
           "method": "DELETE",
           "url": "http://localhost:8000/delete",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -1757,20 +1493,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1792,11 +1528,11 @@
           },
           {}
         ],
-        "time": 32
+        "time": 1
       }
     ],
     "success": true,
-    "time": 33,
+    "time": 1,
     "cookies": []
   },
   {
@@ -1814,16 +1550,7 @@
           "method": "GET",
           "url": "http://localhost:8000/encoding/utf8",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -1833,20 +1560,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "5"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1870,23 +1597,14 @@
           {},
           {}
         ],
-        "time": 24
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/encoding/latin1",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -1896,20 +1614,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=ISO-8859-1"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "4"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:17 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -1933,11 +1651,11 @@
           {},
           {}
         ],
-        "time": 30
+        "time": 1
       }
     ],
     "success": true,
-    "time": 59,
+    "time": 4,
     "cookies": []
   },
   {
@@ -1948,16 +1666,7 @@
           "method": "GET",
           "url": "http://localhost:8000/assert-base64",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -1967,20 +1676,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "19"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2003,11 +1712,11 @@
           {},
           {}
         ],
-        "time": 49
+        "time": 1
       }
     ],
     "success": false,
-    "time": 52,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2018,16 +1727,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-file",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2037,20 +1737,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "5"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2073,11 +1773,11 @@
           {},
           {}
         ],
-        "time": 22
+        "time": 1
       }
     ],
     "success": false,
-    "time": 25,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2088,16 +1788,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-header-not-found",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2107,20 +1798,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2143,11 +1834,11 @@
           {},
           {}
         ],
-        "time": 24
+        "time": 1
       }
     ],
     "success": false,
-    "time": 28,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2158,16 +1849,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-header-value",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2177,20 +1859,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2213,11 +1895,11 @@
           {},
           {}
         ],
-        "time": 22
+        "time": 1
       }
     ],
     "success": false,
-    "time": 25,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2228,16 +1910,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert/http-version",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2247,20 +1920,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2282,11 +1955,11 @@
           },
           {}
         ],
-        "time": 24
+        "time": 1
       }
     ],
     "success": false,
-    "time": 25,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2297,16 +1970,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-invalid-predicate-type",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2316,20 +1980,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2352,11 +2016,11 @@
           {},
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": false,
-    "time": 20,
+    "time": 3,
     "cookies": []
   },
   {
@@ -2367,16 +2031,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert/match-utf8",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2386,20 +2041,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "1"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2422,11 +2077,11 @@
           {},
           {}
         ],
-        "time": 19
+        "time": 1
       }
     ],
     "success": false,
-    "time": 22,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2437,16 +2092,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-query-invalid-regex",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2456,20 +2102,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2492,11 +2138,11 @@
           {},
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": false,
-    "time": 18,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2507,16 +2153,7 @@
           "method": "GET",
           "url": "http://localhost:8000/utf8",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2526,20 +2163,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "18"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2562,11 +2199,11 @@
           {},
           {}
         ],
-        "time": 18
+        "time": 1
       }
     ],
     "success": false,
-    "time": 21,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2577,16 +2214,7 @@
           "method": "GET",
           "url": "http://localhost:8000/not_found",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2596,20 +2224,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "232"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2631,11 +2259,11 @@
           },
           {}
         ],
-        "time": 17
+        "time": 1
       }
     ],
     "success": false,
-    "time": 19,
+    "time": 2,
     "cookies": []
   },
   {
@@ -2646,16 +2274,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-template-variable-not-found",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2665,20 +2284,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2701,11 +2320,11 @@
           {},
           {}
         ],
-        "time": 26
+        "time": 1
       }
     ],
     "success": false,
-    "time": 27,
+    "time": 1,
     "cookies": []
   },
   {
@@ -2716,16 +2335,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-value",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2735,20 +2345,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "20"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2773,11 +2383,11 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": false,
-    "time": 30,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2788,16 +2398,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-assert-variable",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2807,20 +2408,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2859,11 +2460,11 @@
           {},
           {}
         ],
-        "time": 18
+        "time": 1
       }
     ],
     "success": false,
-    "time": 25,
+    "time": 4,
     "cookies": []
   },
   {
@@ -2887,16 +2488,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-invalid-jsonpath",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2906,20 +2498,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "application/json"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "60"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -2942,24 +2534,32 @@
           {},
           {}
         ],
-        "time": 40
+        "time": 1
       }
     ],
     "success": false,
-    "time": 43,
+    "time": 2,
     "cookies": []
   },
   {
     "filename": "tests/error_invalid_url.hurl",
     "entries": [
       {
+        "request": {
+          "method": "GET",
+          "url": "unknown",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "body": ""
+        },
         "captures": [],
         "asserts": [],
         "time": 0
       }
     ],
     "success": false,
-    "time": 0,
+    "time": 74,
     "cookies": []
   },
   {
@@ -2970,16 +2570,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-invalid-xml",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -2989,20 +2580,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3025,11 +2616,11 @@
           {},
           {}
         ],
-        "time": 34
+        "time": 1
       }
     ],
     "success": false,
-    "time": 36,
+    "time": 2,
     "cookies": []
   },
   {
@@ -3053,16 +2644,7 @@
           "method": "GET",
           "url": "http://localhost:8000/predicate/error/type",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3072,20 +2654,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "74"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:18 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3118,11 +2700,11 @@
           {},
           {}
         ],
-        "time": 25
+        "time": 1
       }
     ],
     "success": false,
-    "time": 60,
+    "time": 13,
     "cookies": []
   },
   {
@@ -3133,16 +2715,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-query-header-not-found",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3152,20 +2725,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3188,11 +2761,11 @@
           {},
           {}
         ],
-        "time": 30
+        "time": 1
       }
     ],
     "success": false,
-    "time": 33,
+    "time": 2,
     "cookies": []
   },
   {
@@ -3203,16 +2776,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-query-invalid-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3222,20 +2786,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3258,11 +2822,11 @@
           {},
           {}
         ],
-        "time": 19
+        "time": 1
       }
     ],
     "success": false,
-    "time": 22,
+    "time": 2,
     "cookies": []
   },
   {
@@ -3273,16 +2837,7 @@
           "method": "GET",
           "url": "http://localhost:8000/error-query-invalid-utf8",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3292,20 +2847,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "1"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3328,11 +2883,11 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": false,
-    "time": 24,
+    "time": 2,
     "cookies": []
   },
   {
@@ -3356,16 +2911,7 @@
           "method": "GET",
           "url": "http://localhost:8000/get-list",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3375,20 +2921,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "18"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3419,7 +2965,7 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "captures": [],
@@ -3428,7 +2974,72 @@
       }
     ],
     "success": false,
-    "time": 21,
+    "time": 2,
+    "cookies": []
+  },
+  {
+    "filename": "tests/follow_redirect.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/follow-redirect",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 302,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "287"
+            },
+            {
+              "name": "Location",
+              "value": "http://localhost:8000/following-redirect"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "source_info": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 9
+              }
+            },
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 1
+      }
+    ],
+    "success": false,
+    "time": 2,
     "cookies": []
   },
   {
@@ -3439,22 +3050,9 @@
           "method": "POST",
           "url": "http://localhost:8000/form-params",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/x-www-form-urlencoded"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
-          "format_params": [
+          "form": [
             {
               "name": "param1",
               "value": "value1"
@@ -3472,7 +3070,7 @@
               "value": "a%3db"
             }
           ],
-          "body": "cGFyYW0xPXZhbHVlMSZwYXJhbTI9JnBhcmFtMz1hJTNkYiZwYXJhbTQ9YSUyNTNkYg=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3480,20 +3078,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3515,7 +3113,7 @@
           },
           {}
         ],
-        "time": 20
+        "time": 2
       },
       {
         "request": {
@@ -3526,35 +3124,9 @@
             {
               "name": "Content-Type",
               "value": "application/x-www-form-urlencoded"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
             }
           ],
           "cookies": [],
-          "format_params": [
-            {
-              "name": "param1",
-              "value": "value1"
-            },
-            {
-              "name": "param2",
-              "value": ""
-            },
-            {
-              "name": "param3",
-              "value": "a=b"
-            },
-            {
-              "name": "param4",
-              "value": "a%3db"
-            }
-          ],
           "body": "cGFyYW0xPXZhbHVlMSZwYXJhbTI9JnBhcmFtMz1hJTNkYiZwYXJhbTQ9YSUyNTNkYg=="
         },
         "response": {
@@ -3563,20 +3135,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3598,11 +3170,11 @@
           },
           {}
         ],
-        "time": 19
+        "time": 1
       }
     ],
     "success": true,
-    "time": 45,
+    "time": 4,
     "cookies": []
   },
   {
@@ -3613,16 +3185,7 @@
           "method": "GET",
           "url": "http://localhost:8000/default-headers",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3632,20 +3195,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3667,7 +3230,7 @@
           },
           {}
         ],
-        "time": 22
+        "time": 1
       },
       {
         "request": {
@@ -3681,11 +3244,7 @@
             },
             {
               "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
+              "value": "localhost:8000"
             }
           ],
           "cookies": [],
@@ -3697,20 +3256,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3719,11 +3278,11 @@
           {
             "source_info": {
               "start": {
-                "line": 8,
+                "line": 7,
                 "column": 6
               },
               "end": {
-                "line": 8,
+                "line": 7,
                 "column": 9
               }
             },
@@ -3732,7 +3291,7 @@
           },
           {}
         ],
-        "time": 24
+        "time": 1
       },
       {
         "request": {
@@ -3746,11 +3305,7 @@
             },
             {
               "name": "Host",
-              "value": "localhost"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
+              "value": "localhost:8000"
             }
           ],
           "cookies": [],
@@ -3762,20 +3317,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3784,11 +3339,11 @@
           {
             "source_info": {
               "start": {
-                "line": 15,
+                "line": 13,
                 "column": 6
               },
               "end": {
-                "line": 15,
+                "line": 13,
                 "column": 9
               }
             },
@@ -3797,7 +3352,7 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
@@ -3824,14 +3379,6 @@
             {
               "name": "Color",
               "value": "Green"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
             }
           ],
           "cookies": [],
@@ -3843,20 +3390,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3865,11 +3412,11 @@
           {
             "source_info": {
               "start": {
-                "line": 23,
+                "line": 21,
                 "column": 6
               },
               "end": {
-                "line": 23,
+                "line": 21,
                 "column": 9
               }
             },
@@ -3878,7 +3425,7 @@
           },
           {}
         ],
-        "time": 26
+        "time": 1
       },
       {
         "request": {
@@ -3889,14 +3436,6 @@
             {
               "name": "Beverage",
               "value": "café"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
             }
           ],
           "cookies": [],
@@ -3908,20 +3447,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3930,11 +3469,11 @@
           {
             "source_info": {
               "start": {
-                "line": 27,
+                "line": 25,
                 "column": 6
               },
               "end": {
-                "line": 27,
+                "line": 25,
                 "column": 9
               }
             },
@@ -3943,23 +3482,14 @@
           },
           {}
         ],
-        "time": 19
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/response-headers",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -3969,24 +3499,24 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "beverage",
+              "name": "Beverage",
               "value": "cafe"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -3995,11 +3525,11 @@
           {
             "source_info": {
               "start": {
-                "line": 30,
+                "line": 28,
                 "column": 6
               },
               "end": {
-                "line": 30,
+                "line": 28,
                 "column": 9
               }
             },
@@ -4009,11 +3539,11 @@
           {},
           {}
         ],
-        "time": 23
+        "time": 1
       }
     ],
     "success": true,
-    "time": 140,
+    "time": 11,
     "cookies": []
   },
   {
@@ -4024,16 +3554,7 @@
           "method": "GET",
           "url": "http://localhost:8000/hello",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -4043,20 +3564,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4079,23 +3600,14 @@
           {},
           {}
         ],
-        "time": 19
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/hello",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -4105,20 +3617,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4141,11 +3653,11 @@
           {},
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": true,
-    "time": 46,
+    "time": 3,
     "cookies": []
   },
   {
@@ -4156,16 +3668,7 @@
           "method": "POST",
           "url": "http://localhost:8000/multipart-form-data",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -4175,20 +3678,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4210,11 +3713,11 @@
           },
           {}
         ],
-        "time": 23
+        "time": 2
       }
     ],
     "success": true,
-    "time": 24,
+    "time": 2,
     "cookies": []
   },
   {
@@ -4232,20 +3735,7 @@
           "method": "POST",
           "url": "http://localhost:8000/output/endpoint1",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "eyAidXNlciI6ICJib2IiIH0="
         },
@@ -4259,15 +3749,15 @@
               "value": "DATE1"
             },
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "19"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             }
           ]
@@ -4290,23 +3780,14 @@
           },
           {}
         ],
-        "time": 26
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/output/endpoint2",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -4320,15 +3801,15 @@
               "value": "DATE2"
             },
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "19"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             }
           ]
@@ -4351,11 +3832,11 @@
           },
           {}
         ],
-        "time": 19
+        "time": 1
       }
     ],
     "success": true,
-    "time": 52,
+    "time": 3,
     "cookies": []
   },
   {
@@ -4378,10 +3859,6 @@
             {
               "name": "If-Match",
               "value": "\"e0023aa4e\""
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
             }
           ],
           "cookies": [],
@@ -4393,24 +3870,24 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-location",
+              "name": "Content-Location",
               "value": "/file.txt"
             },
             {
-              "name": "etag",
+              "name": "ETag",
               "value": "\"e0023aa4f\""
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4434,11 +3911,11 @@
           {},
           {}
         ],
-        "time": 22
+        "time": 1
       }
     ],
     "success": true,
-    "time": 23,
+    "time": 2,
     "cookies": []
   },
   {
@@ -4449,16 +3926,7 @@
           "method": "POST",
           "url": "http://localhost:8000/post-base64",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "SGVsbG8gV29ybGQh"
         },
@@ -4468,20 +3936,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4503,11 +3971,11 @@
           },
           {}
         ],
-        "time": 25
+        "time": 1
       }
     ],
     "success": true,
-    "time": 27,
+    "time": 2,
     "cookies": []
   },
   {
@@ -4518,16 +3986,7 @@
           "method": "POST",
           "url": "http://localhost:8000/post-file",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "SGVsbG8gV29ybGQh"
         },
@@ -4537,20 +3996,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4572,11 +4031,11 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       }
     ],
     "success": true,
-    "time": 20,
+    "time": 2,
     "cookies": []
   },
   {
@@ -4587,20 +4046,7 @@
           "method": "POST",
           "url": "http://localhost:8000/post-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
         },
@@ -4610,20 +4056,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4645,27 +4091,14 @@
           },
           {}
         ],
-        "time": 37
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-array",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "WzEsMiwzXQ=="
         },
@@ -4675,20 +4108,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4710,27 +4143,14 @@
           },
           {}
         ],
-        "time": 32
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-string",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "IkhlbGxvIg=="
         },
@@ -4740,20 +4160,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4775,27 +4195,14 @@
           },
           {}
         ],
-        "time": 41
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-number",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "MTAw"
         },
@@ -4805,20 +4212,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4840,27 +4247,14 @@
           },
           {}
         ],
-        "time": 35
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-numbers",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "ewogICAgIm5hdHVyYWwiOiAxMDAsCiAgICAibmVnYXRpdmUiOiAtMSwKICAgICJmbG9hdCI6ICIzLjMzMzMzMzMzMzMzMzMzMyIsCiAgICAiZXhwb25lbnQiOiAxMDBlMTAwCn0="
         },
@@ -4870,20 +4264,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:19 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4905,27 +4299,14 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-boolean",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "dHJ1ZQ=="
         },
@@ -4935,20 +4316,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -4970,23 +4351,14 @@
           },
           {}
         ],
-        "time": 30
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/get-name",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -4996,20 +4368,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "3"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5036,27 +4408,14 @@
           },
           {}
         ],
-        "time": 43
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json",
           "queryString": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
         },
@@ -5066,30 +4425,30 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
         "captures": [],
         "asserts": [],
-        "time": 32
+        "time": 1
       }
     ],
     "success": true,
-    "time": 294,
+    "time": 16,
     "cookies": []
   },
   {
@@ -5100,16 +4459,7 @@
           "method": "POST",
           "url": "http://localhost:8000/post-multilines",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
         },
@@ -5119,20 +4469,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5154,23 +4504,14 @@
           },
           {}
         ],
-        "time": 18
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/get-bob-age",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5180,20 +4521,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "2"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5220,23 +4561,14 @@
           },
           {}
         ],
-        "time": 25
+        "time": 1
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-multilines",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
         },
@@ -5246,20 +4578,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5281,11 +4613,11 @@
           },
           {}
         ],
-        "time": 26
+        "time": 1
       }
     ],
     "success": true,
-    "time": 78,
+    "time": 5,
     "cookies": []
   },
   {
@@ -5296,16 +4628,7 @@
           "method": "POST",
           "url": "http://localhost:8000/post-xml",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxkcmluaz5jYWbDqTwvZHJpbms+"
         },
@@ -5315,20 +4638,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5350,23 +4673,14 @@
           },
           {}
         ],
-        "time": 31
+        "time": 2
       },
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-xml-no-prolog",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": "PGRyaW5rPmNhZsOpPC9kcmluaz4="
         },
@@ -5376,20 +4690,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5411,11 +4725,11 @@
           },
           {}
         ],
-        "time": 32
+        "time": 1
       }
     ],
     "success": true,
-    "time": 68,
+    "time": 4,
     "cookies": []
   },
   {
@@ -5426,16 +4740,7 @@
           "method": "GET",
           "url": "http://localhost:8000/predicates-string",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5445,20 +4750,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "12"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5484,23 +4789,14 @@
           {},
           {}
         ],
-        "time": 28
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/predicates-string-empty",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5510,20 +4806,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5547,11 +4843,11 @@
           {},
           {}
         ],
-        "time": 13
+        "time": 1
       }
     ],
     "success": true,
-    "time": 45,
+    "time": 4,
     "cookies": []
   },
   {
@@ -5562,16 +4858,7 @@
           "method": "PUT",
           "url": "http://localhost:8000/put",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5581,20 +4868,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5616,11 +4903,11 @@
           },
           {}
         ],
-        "time": 23
+        "time": 1
       }
     ],
     "success": true,
-    "time": 24,
+    "time": 1,
     "cookies": []
   },
   {
@@ -5629,7 +4916,7 @@
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1,2,3",
+          "url": "http://localhost:8000/querystring-params",
           "queryString": [
             {
               "name": "param1",
@@ -5648,16 +4935,7 @@
               "value": "1,2,3"
             }
           ],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5667,20 +4945,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5702,23 +4980,14 @@
           },
           {}
         ],
-        "time": 38
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5728,20 +4997,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5763,12 +5032,12 @@
           },
           {}
         ],
-        "time": 22
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/querystring-params?param1=value1&&param2=&param3=a%3Db&param4=1,2,3",
+          "url": "http://localhost:8000/querystring-params?param1=value1",
           "queryString": [
             {
               "name": "param2",
@@ -5783,16 +5052,7 @@
               "value": "1,2,3"
             }
           ],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5802,20 +5062,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5837,28 +5097,19 @@
           },
           {}
         ],
-        "time": 33
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F&&value3=%2F",
+          "url": "http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F",
           "queryString": [
             {
               "name": "value3",
               "value": "/"
             }
           ],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5868,20 +5119,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5903,11 +5154,11 @@
           },
           {}
         ],
-        "time": 21
+        "time": 1
       }
     ],
     "success": true,
-    "time": 120,
+    "time": 8,
     "cookies": []
   },
   {
@@ -5918,16 +5169,7 @@
           "method": "GET",
           "url": "http://localhost:8000/redirect",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -5937,24 +5179,24 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "271"
             },
             {
-              "name": "location",
+              "name": "Location",
               "value": "http://localhost:8000/redirected"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -5977,23 +5219,14 @@
           {},
           {}
         ],
-        "time": 19
+        "time": 1
       },
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/redirected",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -6003,20 +5236,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -6038,11 +5271,11 @@
           },
           {}
         ],
-        "time": 39
+        "time": 1
       }
     ],
     "success": true,
-    "time": 62,
+    "time": 3,
     "cookies": []
   },
   {
@@ -6053,16 +5286,7 @@
           "method": "GET",
           "url": "http://localhost:8000/utf8",
           "queryString": [],
-          "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/0.99.12"
-            },
-            {
-              "name": "Host",
-              "value": "localhost"
-            }
-          ],
+          "headers": [],
           "cookies": [],
           "body": ""
         },
@@ -6072,20 +5296,20 @@
           "cookies": [],
           "headers": [
             {
-              "name": "content-type",
+              "name": "Content-Type",
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "content-length",
+              "name": "Content-Length",
               "value": "18"
             },
             {
-              "name": "server",
+              "name": "Server",
               "value": "Werkzeug/0.16.1 Python/3.5.3"
             },
             {
-              "name": "date",
-              "value": "Wed, 26 Aug 2020 09:50:20 GMT"
+              "name": "Date",
+              "value": "Thu, 17 Sep 2020 13:58:48 GMT"
             }
           ]
         },
@@ -6109,11 +5333,11 @@
           {},
           {}
         ],
-        "time": 32
+        "time": 1
       }
     ],
     "success": true,
-    "time": 35,
+    "time": 2,
     "cookies": []
   }
 ]

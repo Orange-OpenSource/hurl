@@ -20,8 +20,7 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 use crate::core::common::{FormatError, SourceInfo, Value};
-use crate::http;
-use crate::http::cookie::Cookie;
+use crate::http::libcurl;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
@@ -31,15 +30,13 @@ pub struct RunnerOptions {
 }
 
 
-//region resultlet noproxy_hosts = noproxy_host(matches.clone());
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
     pub filename: String,
     pub entries: Vec<EntryResult>,
     pub time_in_ms: u128,
     pub success: bool,
-    pub cookies: Vec<Cookie>,
+    pub cookies: Vec<libcurl::core::Cookie>,
 }
 
 impl HurlResult {
@@ -54,8 +51,8 @@ impl HurlResult {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryResult {
-    pub request: Option<http::request::Request>,
-    pub response: Option<http::response::Response>,
+    pub request: Option<libcurl::core::Request>,
+    pub response: Option<libcurl::core::Response>,
     //pub captures: Vec<(String, Value)>,
     pub captures: Vec<CaptureResult>,
     pub asserts: Vec<AssertResult>,
@@ -99,11 +96,6 @@ pub enum RunnerError {
     InvalidURL(String),
     HttpConnection { url: String, message: String },
     FileReadAccess { value: String },
-
-    // Capture
-    //CaptureNonScalarUnsupported,
-    //??CaptureError {},
-    InvalidUtf8,
     InvalidDecoding { charset: String },
     InvalidCharset { charset: String },
 
@@ -157,7 +149,6 @@ impl FormatError for Error {
             RunnerError::AssertVersion { .. } => "Assert Http Version".to_string(),
             RunnerError::AssertStatus { .. } => "Assert Status".to_string(),
             RunnerError::QueryInvalidJson { .. } => "Invalid Json".to_string(),
-            RunnerError::InvalidUtf8 { .. } => "Invalid Utf8".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid jsonpath".to_string(),
             RunnerError::PredicateType { .. } => "Assert - Inconsistent predicate type".to_string(),
             RunnerError::SubqueryInvalidInput { .. } => "Subquery error".to_string(),
@@ -174,7 +165,7 @@ impl FormatError for Error {
         match &self.inner {
             RunnerError::InvalidURL(url) => format!("Invalid url <{}>", url),
             RunnerError::TemplateVariableNotDefined { name } => format!("You must set the variable {}", name),
-            RunnerError::HttpConnection { url, message } => format!("can not connect to {} ({})", url, message),
+            RunnerError::HttpConnection { url, .. } => format!("can not connect to {}", url),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => format!("actual value is <{}>", value.to_string()),
@@ -187,7 +178,6 @@ impl FormatError for Error {
             RunnerError::AssertHeaderValueError { actual } => format!("actual value is <{}>", actual),
             RunnerError::AssertBodyValueError { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::QueryInvalidJson { .. } => "The http response is not a valid json".to_string(),
-            RunnerError::InvalidUtf8 { .. } => "The http response is not a valid utf8 string".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { value } => format!("the jsonpath expression '{}' is not valid", value),
             RunnerError::PredicateType { .. } => "predicate type inconsistent with value return by query".to_string(),
             RunnerError::SubqueryInvalidInput => "Type from query result and subquery do not match".to_string(),

@@ -22,6 +22,8 @@ use curl::easy;
 
 use super::core::*;
 use std::io::Read;
+use encoding::{Encoding, DecoderTrap};
+use encoding::all::ISO_8859_1;
 
 
 #[derive(Debug)]
@@ -34,20 +36,23 @@ pub struct Client {
     pub follow_location: bool,
     pub redirect_count: usize,
     pub max_redirect: Option<usize>,
+    pub verbose: bool,
 }
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
     pub follow_location: bool,
     pub max_redirect: Option<usize>,
-    pub cookie_file: Option<String>,
-    pub cookie_jar: Option<String>,
+    pub cookie_input_file: Option<String>,
     pub proxy: Option<String>,
+    pub no_proxy: Option<String>,
     pub verbose: bool,
+    pub insecure: bool,
 }
 
 
 impl Client {
+
     ///
     /// Init HTTP hurl client
     ///
@@ -56,27 +61,34 @@ impl Client {
 
         // Activate cookie storage
         // with or without persistence (empty string)
-        h.cookie_file(options.cookie_file.unwrap_or_else(|| "".to_string()).as_str()).unwrap();
-
-
-        if let Some(cookie_jar) = options.cookie_jar {
-            h.cookie_jar(cookie_jar.as_str()).unwrap();
-        }
+        h.cookie_file(options.cookie_input_file.unwrap_or_else(|| "".to_string()).as_str()).unwrap();
 
         if let Some(proxy) = options.proxy {
             h.proxy(proxy.as_str()).unwrap();
         }
-
+        if let Some(s) = options.no_proxy {
+            h.noproxy(s.as_str()).unwrap();
+        }
         h.verbose(options.verbose).unwrap();
+        h.ssl_verify_host(options.insecure).unwrap();
+        h.ssl_verify_peer(options.insecure).unwrap();
 
         Client {
             handle: Box::new(h),
             follow_location: options.follow_location,
             max_redirect: options.max_redirect,
             redirect_count: 0,
+            verbose: options.verbose,
         }
     }
 
+    ///
+    /// reset HTTP hurl client
+    ///
+    pub fn reset(&mut self) {
+        self.handle.reset();
+        self.handle.verbose(self.verbose).unwrap();
+    }
 
     ///
     /// Execute an http request
@@ -93,7 +105,8 @@ impl Client {
         let b = request.body.clone();
         let mut data: &[u8] = b.as_ref();
         self.set_body(data);
-        self.set_headers(&request.headers, data.is_empty());
+        self.set_headers(&request);
+
 
         self.handle.debug_function(|info_type, data|
             match info_type {
@@ -106,7 +119,9 @@ impl Client {
                     }
                 }
                 easy::InfoType::HeaderIn => {
-                    eprint!("< {}", str::from_utf8(data).unwrap());
+                    if let Some(s) = decode_header(data) {
+                        eprint!("< {}", s);
+                    }
                 }
                 _ => {}
             }
@@ -123,9 +138,8 @@ impl Client {
             }
 
             transfer.header_function(|h| {
-                match str::from_utf8(h) {
-                    Ok(s) => lines.push(s.to_string()),
-                    Err(e) => println!("Error decoding header {:?}", e),
+                if let Some(s) = decode_header(h) {
+                    lines.push(s)
                 }
                 true
             }).unwrap();
@@ -140,6 +154,7 @@ impl Client {
                     5 => return Err(HttpError::CouldNotResolveProxyName),
                     6 => return Err(HttpError::CouldNotResolveHost),
                     7 => return Err(HttpError::FailToConnect),
+                    60 => return Err(HttpError::SSLCertificate),
                     _ => panic!("{:#?}", e),
                 }
             }
@@ -161,6 +176,7 @@ impl Client {
                 multipart: vec![],
                 cookies: vec![],
                 body: vec![],
+                content_type: None,
             };
 
             let redirect_count = redirect_count + 1;
@@ -173,6 +189,7 @@ impl Client {
             return self.execute(&request, redirect_count);
         }
         self.redirect_count = redirect_count;
+        self.reset();
 
         Ok(Response {
             version,
@@ -191,6 +208,8 @@ impl Client {
         } else {
             let url = if url.ends_with('?') {
                 url.to_string()
+            } else if url.contains('?') {
+                format!("{}&", url)
             } else {
                 format!("{}?", url)
             };
@@ -218,32 +237,44 @@ impl Client {
         }
     }
 
+
     ///
     /// set request headers
     ///
-    fn set_headers(&mut self, headers: &[Header], default_content_type: bool) {
+    fn set_headers(&mut self, request: &Request) {
         let mut list = easy::List::new();
 
-        for header in headers.to_owned() {
+        for header in request.headers.clone() {
             list.append(format!("{}: {}", header.name, header.value).as_str()).unwrap();
         }
 
-        if get_header_values(headers.to_vec(), "Content-Type".to_string()).is_empty() && !default_content_type {
-            list.append("Content-Type:").unwrap();
+        if get_header_values(request.headers.clone(), "Content-Type".to_string()).is_empty() {
+            if let Some(s) = request.content_type.clone() {
+                list.append(format!("Content-Type: {}", s).as_str()).unwrap();
+            } else {
+                list.append("Content-Type:").unwrap();  // remove header Content-Type
+            }
         }
 
-        list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str()).unwrap();
+//        if request.form.is_empty() && request.multipart.is_empty() && request.body.is_empty() {
+//            list.append("Content-Length:").unwrap();
+//        }
+
+        if get_header_values(request.headers.clone(), "User-Agent".to_string()).is_empty() {
+            list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str()).unwrap();
+        }
 
         self.handle.http_headers(list).unwrap();
     }
 
+
     ///
     /// set request cookies
     ///
-    fn set_cookies(&mut self, cookies: &[RequestCookie]) {
-        for cookie in cookies {
-            self.handle.cookie(cookie.to_string().as_str()).unwrap();
-        }
+    fn set_cookies(&mut self, _cookies: &[RequestCookie]) {
+        //for cookie in cookies {
+        //self.handle.cookie(cookie.to_string().as_str()).unwrap();  // added in the store beforehand
+        //}
     }
 
 
@@ -393,6 +424,17 @@ impl Client {
         }
         cookies
     }
+
+    ///
+    /// Add cookie to Cookiejar
+    /// TODO check domain/path,...
+    pub fn add_cookie(&mut self, cookie: Cookie) {
+        if self.verbose {
+            eprintln!("* add to cookie store: {}", cookie);
+            //self.handle.cookie_list(format!("Set-Cookie: {}={}", cookie.name, cookie.value).as_str()).unwrap();
+        }
+        self.handle.cookie_list(cookie.to_string().as_str()).unwrap();
+    }
 }
 
 
@@ -435,6 +477,25 @@ fn split_lines(data: &[u8]) -> Vec<String> {
         }
     }
     lines
+}
+
+
+///
+/// Decode optionally header value as text with utf8 or iso-8859-1 encoding
+///
+pub fn decode_header(data: &[u8]) -> Option<String> {
+    match str::from_utf8(data) {
+        Ok(s) => Some(s.to_string()),
+        Err(_) => {
+            match ISO_8859_1.decode(data, DecoderTrap::Strict) {
+                Ok(s) => Some(s),
+                Err(_) => {
+                    println!("Error decoding header both utf8 and iso-8859-1 {:?}", data);
+                    None
+                }
+            }
+        }
+    }
 }
 
 

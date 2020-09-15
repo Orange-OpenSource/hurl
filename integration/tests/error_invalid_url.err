@@ -1,7 +1,7 @@
-error: Invalid url
+error: Http Connection
   --> tests/error_invalid_url.hurl:1:5
    |
  1 | GET unknown
-   |     ^^^^^^^ Invalid url <unknown>
+   |     ^^^^^^^ can not connect to unknown
    |
 
