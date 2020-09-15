@@ -52,6 +52,23 @@ pub enum Method {
     Patch,
 }
 
+impl fmt::Display for Method {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let value = match self {
+            Method::Get => "GET",
+            Method::Head => "HEAD",
+            Method::Post => "POST",
+            Method::Put => "PUT",
+            Method::Delete => "DELETE",
+            Method::Connect => "CONNECT",
+            Method::Options => "OPTIONS",
+            Method::Trace => "TRACE",
+            Method::Patch => "PATCH"
+        };
+        write!(f, "{}", value)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Version {
     Http10,
@@ -169,6 +186,47 @@ pub mod tests {
             body: vec![],
             multipart: vec![],
             form: vec![],
+        }
+    }
+
+    pub fn custom_http_request() -> Request {
+        Request {
+            method: Method::Get,
+            url: "http://localhost/custom".to_string(),
+            querystring: vec![],
+            headers: vec![
+                Header { name: String::from("User-Agent"), value: String::from("iPhone") },
+                Header { name: String::from("Foo"), value: String::from("Bar") },
+            ],
+            cookies: vec![
+                RequestCookie {
+                    name: String::from("theme"),
+                    value: String::from("light"),
+                },
+                RequestCookie {
+                    name: String::from("sessionToken"),
+                    value: String::from("abc123"),
+                }
+            ],
+            body: vec![],
+            multipart: vec![],
+            form: vec![],
+        }
+    }
+
+
+    pub fn form_http_request() -> Request {
+        Request {
+            method: Method::Post,
+            url: "http://localhost/form-params".to_string(),
+            querystring: vec![],
+            headers: vec![
+                Header { name: String::from("Content-Type"), value: String::from("application/x-www-form-urlencoded") },
+            ],
+            cookies: vec![],
+            body: "param1=value1&param2=&param3=a%3db&param4=a%253db".to_string().into_bytes(),
+            multipart: vec![],
+            form: vec![]
         }
     }
 }

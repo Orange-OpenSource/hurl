@@ -34,7 +34,7 @@ use hurl::http;
 use hurl::parser;
 use hurl::runner;
 use hurl::runner::core::*;
-use hurl::runner::log;
+use hurl::runner::{log_deserialize};
 use hurl::format;
 
 
@@ -207,7 +207,7 @@ fn json_file(matches: ArgMatches, logger: format::logger::Logger) -> (Vec<HurlRe
                     std::process::exit(127);
                 }
             };
-            match log::parse_results(v) {
+            match log_deserialize::parse_results(v) {
                 Err(msg) => {
                     logger.error_message(format!("Existing Hurl json can not be parsed! -  {}", msg));
                     std::process::exit(127);
