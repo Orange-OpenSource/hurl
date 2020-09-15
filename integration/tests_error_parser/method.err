@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing Method
+error: Parsing Method
   --> tests_error_parser/method.hurl:1:1
    |
  1 | GeT http://localhost:8000/hello

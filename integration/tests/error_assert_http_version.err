@@ -1,4 +1,4 @@
-[1;31merror[0m: Assert Http Version
+error: Assert Http Version
   --> tests/error_assert_http_version.hurl:2:6
    |
  2 | HTTP/2 200

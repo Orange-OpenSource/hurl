@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing predicate value
+error: Parsing predicate value
   --> tests_error_parser/predicate_equal_value.hurl:3:22
    |
  3 | header "toto" equals xx

@@ -1,4 +1,4 @@
-[1;31merror[0m: Parsing literal
+error: Parsing literal
   --> tests_error_parser/invalid_xpath.hurl:4:7
    |
  4 | xpath ?? equals 1

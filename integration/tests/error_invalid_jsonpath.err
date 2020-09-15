@@ -1,4 +1,4 @@
-[1;31merror[0m: Invalid jsonpath
+error: Invalid jsonpath
   --> tests/error_invalid_jsonpath.hurl:4:10
    |
  4 | jsonpath "" equals false

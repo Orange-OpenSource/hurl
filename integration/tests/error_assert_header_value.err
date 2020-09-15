@@ -1,4 +1,4 @@
-[1;31merror[0m: Assert Header Value
+error: Assert Header Value
   --> tests/error_assert_header_value.hurl:3:15
    |
  3 | Content-Type: ???

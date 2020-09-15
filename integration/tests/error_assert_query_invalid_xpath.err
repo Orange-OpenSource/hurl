@@ -1,4 +1,4 @@
-[1;31merror[0m: Invalid xpath expression
+error: Invalid xpath expression
   --> tests/error_assert_query_invalid_xpath.hurl:4:7
    |
  4 | xpath "//" equals 1
