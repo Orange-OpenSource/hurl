@@ -21,7 +21,7 @@ use hurl::core::ast;
 use hurl::core::common::{Pos, SourceInfo};
 use hurl::runner;
 use hurl::format;
-use hurl::http::libcurl;
+use hurl::http;
 use std::collections::HashMap;
 use hurl::core::ast::{Template, TemplateElement, EncodedString};
 use hurl::runner::core::RunnerOptions;
@@ -37,7 +37,7 @@ fn test_hurl_file() {
     let content = std::fs::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = hurl::parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
-    let options = libcurl::client::ClientOptions {
+    let options = http::ClientOptions {
         follow_location: false,
         max_redirect: None,
         cookie_input_file: None,
@@ -46,7 +46,7 @@ fn test_hurl_file() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(&content)
@@ -144,7 +144,7 @@ fn hello_request() -> ast::Request {
 
 #[test]
 fn test_hello() {
-    let options = libcurl::client::ClientOptions {
+    let options = http::ClientOptions {
         follow_location: false,
         max_redirect: None,
         cookie_input_file: None,
@@ -153,7 +153,7 @@ fn test_hello() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = http::Client::init(options);
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
         end: Pos { line: 1, column: 1 },

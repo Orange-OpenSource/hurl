@@ -30,7 +30,7 @@ use clap::{AppSettings, ArgMatches};
 use hurl::cli;
 use hurl::core::common::FormatError;
 use hurl::html;
-use hurl::http::libcurl;
+use hurl::http;
 use hurl::parser;
 use hurl::runner;
 use hurl::runner::core::*;
@@ -109,7 +109,7 @@ fn execute(filename: &str,
             let proxy = cli_options.proxy;
             let no_proxy = cli_options.no_proxy;
             let cookie_input_file = cli_options.cookie_input_file;
-            let options = libcurl::client::ClientOptions {
+            let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
                 cookie_input_file,
@@ -118,7 +118,7 @@ fn execute(filename: &str,
                 verbose,
                 insecure,
             };
-            let mut client = libcurl::client::Client::init(options);
+            let mut client = http::Client::init(options);
 
 
             let context_dir = match file_root {

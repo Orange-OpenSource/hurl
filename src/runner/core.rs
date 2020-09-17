@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 
 use crate::core::common::{FormatError, SourceInfo, Value};
-use crate::http::libcurl;
+use crate::http;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
@@ -35,7 +35,7 @@ pub struct HurlResult {
     pub entries: Vec<EntryResult>,
     pub time_in_ms: u128,
     pub success: bool,
-    pub cookies: Vec<libcurl::core::Cookie>,
+    pub cookies: Vec<http::Cookie>,
 }
 
 impl HurlResult {
@@ -50,8 +50,8 @@ impl HurlResult {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryResult {
-    pub request: Option<libcurl::core::Request>,
-    pub response: Option<libcurl::core::Response>,
+    pub request: Option<http::Request>,
+    pub response: Option<http::Response>,
     //pub captures: Vec<(String, Value)>,
     pub captures: Vec<CaptureResult>,
     pub asserts: Vec<AssertResult>,

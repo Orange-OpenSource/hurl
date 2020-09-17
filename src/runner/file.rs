@@ -20,7 +20,7 @@ use std::time::Instant;
 
 use crate::core::ast::*;
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 
 
 use super::core::*;
@@ -35,7 +35,7 @@ use crate::core::common::FormatError;
 /// # Example
 ///
 /// ```
-/// use hurl::http::libcurl;
+/// use hurl::http;
 /// use hurl::runner;
 /// use hurl::format;
 ///
@@ -48,7 +48,7 @@ use crate::core::common::FormatError;
 /// let hurl_file = hurl::parser::parse_hurl_file(s).unwrap();
 ///
 /// // Create an http client
-/// let options = libcurl::client::ClientOptions {
+/// let options = http::ClientOptions {
 ///        follow_location: false,
 ///        max_redirect: None,
 ///        cookie_input_file: None,
@@ -57,7 +57,7 @@ use crate::core::common::FormatError;
 ///        verbose: false,
 ///        insecure: false,
 /// };
-/// let mut client = libcurl::client::Client::init(options);
+/// let mut client = http::Client::init(options);
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
@@ -92,7 +92,7 @@ use crate::core::common::FormatError;
 /// ```
 pub fn run(
     hurl_file: HurlFile,
-    http_client: &mut libcurl::client::Client,
+    http_client: &mut http::Client,
     filename: String,
     context_dir: String,
     options: RunnerOptions,

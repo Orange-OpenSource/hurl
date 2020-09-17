@@ -25,7 +25,7 @@ use std::io::prelude::*;
 
 use crate::core::ast::*;
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 
 use super::core::Error;
 
@@ -33,38 +33,38 @@ impl Request {
     pub fn eval(self,
                 variables: &HashMap<String, Value>,
                 context_dir: String,
-    ) -> Result<libcurl::core::Request, Error> {
+    ) -> Result<http::Request, Error> {
         let method = self.method.clone().eval();
 
         let url = self.clone().url.eval(&variables)?;
 
 
         // headers
-        let mut headers: Vec<libcurl::core::Header> = vec![];
+        let mut headers: Vec<http::Header> = vec![];
         for header in self.clone().headers {
             let name = header.key.value;
             let value = header.value.eval(variables)?;
-            headers.push(libcurl::core::Header {
+            headers.push(http::Header {
                 name,
                 value,
             });
         }
 
-        let mut querystring: Vec<libcurl::core::Param> = vec![];
+        let mut querystring: Vec<http::Param> = vec![];
         for param in self.clone().querystring_params() {
             let name = param.key.value;
             let value = param.value.eval(variables)?;
-            querystring.push(libcurl::core::Param { name, value });
+            querystring.push(http::Param { name, value });
         }
 
-        let mut form: Vec<libcurl::core::Param> = vec![];
+        let mut form: Vec<http::Param> = vec![];
         for param in self.clone().form_params() {
             let name = param.key.value;
             let value = param.value.eval(variables)?;
-            form.push(libcurl::core::Param { name, value });
+            form.push(http::Param { name, value });
         }
 //        if !self.clone().form_params().is_empty() {
-//            headers.push(libcurl::core::Header {
+//            headers.push(http::core::Header {
 //                name: String::from("Content-Type"),
 //                value: String::from("application/x-www-form-urlencoded"),
 //            });
@@ -72,7 +72,7 @@ impl Request {
 
         let mut cookies = vec![];
         for cookie in self.clone().cookies() {
-            let cookie = libcurl::core::RequestCookie {
+            let cookie = http::RequestCookie {
                 name: cookie.clone().name.value,
                 value: cookie.clone().value.value,
             };
@@ -104,7 +104,7 @@ impl Request {
 //        if self.content_type().is_none() {
 //            if let Some(body) = self.body {
 //                if let Bytes::Json { .. } = body.value {
-//                    headers.push(libcurl::core::Header {
+//                    headers.push(http::core::Header {
 //                        name: String::from("Content-Type"),
 //                        value: String::from("application/json"),
 //                    });
@@ -112,7 +112,7 @@ impl Request {
 //            }
 //        }
 
-        Ok(libcurl::core::Request {
+        Ok(http::Request {
             method,
             url,
             querystring,
@@ -136,42 +136,42 @@ impl Request {
 }
 
 impl Method {
-    fn eval(self) -> libcurl::core::Method {
+    fn eval(self) -> http::Method {
         match self {
-            Method::Get => libcurl::core::Method::Get,
-            Method::Head => libcurl::core::Method::Head,
-            Method::Post => libcurl::core::Method::Post,
-            Method::Put => libcurl::core::Method::Put,
-            Method::Delete => libcurl::core::Method::Delete,
-            Method::Connect => libcurl::core::Method::Connect,
-            Method::Options => libcurl::core::Method::Options,
-            Method::Trace => libcurl::core::Method::Trace,
-            Method::Patch => libcurl::core::Method::Patch,
+            Method::Get => http::Method::Get,
+            Method::Head => http::Method::Head,
+            Method::Post => http::Method::Post,
+            Method::Put => http::Method::Put,
+            Method::Delete => http::Method::Delete,
+            Method::Connect => http::Method::Connect,
+            Method::Options => http::Method::Options,
+            Method::Trace => http::Method::Trace,
+            Method::Patch => http::Method::Patch,
         }
     }
 }
 
-pub fn split_url(url: String) -> (String, Vec<libcurl::core::Param>) {
-    match url.find('?') {
-        None => (url, vec![]),
-        Some(index) => {
-            let (url, params) = url.split_at(index);
-            let params: Vec<libcurl::core::Param> = params[1..].split('&')
-                .map(|s| {
-                    match s.find('=') {
-                        None => libcurl::core::Param { name: s.to_string(), value: String::from("") },
-                        Some(index) => {
-                            let (name, value) = s.split_at(index);
-                            libcurl::core::Param { name: name.to_string(), value: value[1..].to_string() }
-                        }
-                    }
-                })
-                .collect();
-
-            (url.to_string(), params)
-        }
-    }
-}
+//pub fn split_url(url: String) -> (String, Vec<http::Param>) {
+//    match url.find('?') {
+//        None => (url, vec![]),
+//        Some(index) => {
+//            let (url, params) = url.split_at(index);
+//            let params: Vec<http::Param> = params[1..].split('&')
+//                .map(|s| {
+//                    match s.find('=') {
+//                        None => http::Param { name: s.to_string(), value: String::from("") },
+//                        Some(index) => {
+//                            let (name, value) = s.split_at(index);
+//                            http::Param { name: name.to_string(), value: value[1..].to_string() }
+//                        }
+//                    }
+//                })
+//                .collect();
+//
+//            (url.to_string(), params)
+//        }
+//    }
+//}
 
 
 #[cfg(test)]
@@ -333,7 +333,7 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert(String::from("base_url"), Value::String(String::from("http://localhost:8000")));
         let http_request = hello_request().eval(&variables, "current_dir".to_string()).unwrap();
-        assert_eq!(http_request, libcurl::core::tests::hello_http_request());
+        assert_eq!(http_request, http::hello_http_request());
     }
 
     #[test]
@@ -341,6 +341,6 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert(String::from("param1"), Value::String(String::from("value1")));
         let http_request = query_request().eval(&variables, "current_dir".to_string()).unwrap();
-        assert_eq!(http_request, libcurl::core::tests::query_http_request());
+        assert_eq!(http_request, http::query_http_request());
     }
 }
