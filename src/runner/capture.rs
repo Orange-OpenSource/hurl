@@ -20,14 +20,15 @@ use std::collections::HashMap;
 use regex::Regex;
 
 use crate::core::common::Value;
-use crate::http;
+use crate::http::libcurl;
 
 use super::core::{CaptureResult, Error};
 use super::core::RunnerError;
 use super::super::core::ast::*;
 
 impl Capture {
-    pub fn eval(self, variables: &HashMap<String, Value>, http_response: http::response::Response) -> Result<CaptureResult, Error> {
+
+    pub fn eval(self, variables: &HashMap<String, Value>, http_response: libcurl::core::Response) -> Result<CaptureResult, Error> {
         let name = self.name.value;
         let value = self.query.clone().eval(variables, http_response)?;
         let value = match value {
@@ -183,7 +184,7 @@ pub mod tests {
             },
         };
 
-        let error = capture.eval(&variables, http::response::tests::xml_three_users_http_response()).err().unwrap();
+        let error = capture.eval(&variables, libcurl::core::tests::xml_three_users_http_response()).err().unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval)
     }
@@ -238,13 +239,13 @@ pub mod tests {
     #[test]
     fn test_capture() {
         let variables = HashMap::new();
-        assert_eq!(user_count_capture().eval(&variables, http::response::tests::xml_three_users_http_response()).unwrap(),
+        assert_eq!(user_count_capture().eval(&variables, libcurl::core::tests::xml_three_users_http_response()).unwrap(),
                    CaptureResult {
                        name: "UserCount".to_string(),
                        value: Value::from_f64(3.0),
                    });
 
-        assert_eq!(duration_capture().eval(&variables, http::response::tests::json_http_response()).unwrap(),
+        assert_eq!(duration_capture().eval(&variables, libcurl::core::tests::json_http_response()).unwrap(),
                    CaptureResult {
                        name: "duration".to_string(),
                        value: Value::from_f64(1.5),

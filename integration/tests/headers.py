@@ -6,8 +6,8 @@ from tests import app
 def default_headers():
     print('> host:' + request.headers['Host'] + "'")
     assert 'hurl' in request.headers['User-Agent']
-    assert request.headers['Host'] == 'localhost'
-    assert int(request.headers['Content-Length']) == 0
+    assert request.headers['Host'] == 'localhost:8000'
+    assert 'Content-Length' not in request.headers
     return ''
 
 

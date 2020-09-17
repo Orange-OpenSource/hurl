@@ -3,15 +3,13 @@ HTTP/1.0 200
 
 GET http://localhost:8000/default-headers
 User-Agent: hurl/1.0
-Host: localhost  # comment
-Content-Length: 0
+Host: localhost:8000  # comment
 HTTP/1.0 200
 
 
 GET http://localhost:8000/default-headers
 User-Agent: hurl/1.0
-Host: localhost  # comment
-Content-Length: 0
+Host: localhost:8000  # comment
 HTTP/1.0 200
 
 GET http://localhost:8000/custom-headers

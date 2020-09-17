@@ -64,8 +64,8 @@ impl Serialize for AssertResult {
             S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
-        if let AssertResult::Version { source_info, actual, expected } = self {
-            state.serialize_field("source_info", source_info)?;
+        if let AssertResult::Version {  actual, expected,.. } = self {
+            //state.serialize_field("source_info", source_info)?;
             state.serialize_field("actual", actual)?;
             state.serialize_field("expected", expected)?;
         };
@@ -123,16 +123,6 @@ impl Serialize for Response {
         state.serialize_field("headers", &self.clone().headers)?;
 
         // TODO  Serialize body
-//        let content_type = self.get_header("content_type", true);
-//        if let Some(value) = content_type.first() {
-//            if value.as_str() == "application/json; charset=UTF-8" {
-//                let s = String::from_utf8(self.body.clone()).expect("Found invalid UTF-8");
-//                let result: Result<serde_json::Value, serde_json::Error> = serde_json::from_str(s.as_str());
-//                if let Ok(v) = result {
-//                    state.serialize_field("json", &v)?;
-//                }
-//            }
-//        }
         state.end()
     }
 }
@@ -172,22 +162,6 @@ impl Serialize for RequestCookie {
         state.end()
     }
 }
-
-//impl Serialize for Cookie {
-//    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//        where
-//            S: Serializer,
-//    {
-//        let mut state = serializer.serialize_struct("InternalCookie", 3)?;
-//        state.serialize_field("name", &self.clone().name)?;
-//        state.serialize_field("value", &self.clone().value)?;
-//        state.serialize_field("domain", &self.clone().domain)?;
-//        state.serialize_field("path", &self.clone().path)?;
-//        state.serialize_field("include_subdomain", &self.clone().subdomains)?;
-//        state.end()
-//    }
-//}
-
 
 impl Serialize for Version {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -235,3 +209,20 @@ impl Serialize for ResponseCookie {
     }
 }
 
+
+impl Serialize for Cookie {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Cookie", 3)?;
+        state.serialize_field("domain", &self.clone().domain)?;
+        state.serialize_field("include_subdomain", &self.clone().include_subdomain)?;
+        state.serialize_field("path", &self.clone().path)?;
+        state.serialize_field("https", &self.clone().https)?;
+        state.serialize_field("expires", &self.clone().expires)?;
+        state.serialize_field("name", &self.clone().name)?;
+        state.serialize_field("value", &self.clone().value)?;
+        state.end()
+    }
+}

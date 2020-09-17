@@ -17,7 +17,7 @@
  */
 use std::fmt;
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde::ser::Serializer;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -31,7 +31,7 @@ pub enum DeprecatedValue {
     ListInt(Vec<i32>),
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 //#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Value {
     Bool(bool),
@@ -130,13 +130,13 @@ impl Value {
 }
 
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Pos {
     pub line: usize,
     pub column: usize,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SourceInfo {
     pub start: Pos,
     pub end: Pos,

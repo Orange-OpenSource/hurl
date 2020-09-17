@@ -99,7 +99,6 @@ impl ResponseCookie {
     ///
     pub fn max_age(&self) -> Option<i64> {
         for attr in self.attributes.clone() {
-            eprintln!("{:#?}", attr);
             if attr.name.as_str() == "Max-Age" {
                 if let Some(v) = attr.value {
                     if let Ok(v2) = v.as_str().parse::<i64>() {

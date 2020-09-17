@@ -17,38 +17,33 @@
  */
 use std::collections::HashMap;
 
-use encoding::{DecoderTrap, Encoding};
-use encoding::all::ISO_8859_1;
 
 use crate::core::common::{Pos, SourceInfo};
 use crate::core::common::Value;
-use crate::http;
+use crate::http::libcurl;
 use crate::runner::core::RunnerError;
 
 use super::core::*;
 use super::core::Error;
 use super::super::core::ast::*;
 
-pub fn decode_bytes(bytes: Vec<u8>, encoding: http::core::Encoding) -> Result<String, RunnerError> {
-    match encoding {
-        http::core::Encoding::Utf8 {} => match String::from_utf8(bytes) {
-            Ok(s) => Ok(s),
-            Err(_) => Err(RunnerError::InvalidDecoding { charset: encoding.to_string() }),
-        },
-        http::core::Encoding::Latin1 {} => match ISO_8859_1.decode(&bytes, DecoderTrap::Strict) {
-            Ok(s) => Ok(s),
-            Err(_) => Err(RunnerError::InvalidDecoding { charset: encoding.to_string() }),
-        },
+impl libcurl::core::Response {
+    pub fn get_header(&self, name: String) -> Vec<String> {
+        self.headers
+            .iter()
+            .filter(|&h| h.name.to_lowercase() == name.to_lowercase())
+            .map(|h| h.value.clone())
+            .collect()
     }
 }
 
 impl Response {
-    pub fn eval_asserts(self, variables: &HashMap<String, Value>, http_response: http::response::Response, context_dir: String) -> Vec<AssertResult> {
+    pub fn eval_asserts(self, variables: &HashMap<String, Value>, http_response: libcurl::core::Response, context_dir: String) -> Vec<AssertResult> {
         let mut asserts = vec![];
 
         let version = self.clone().version;
         asserts.push(AssertResult::Version {
-            actual: http_response.version.to_text(),
+            actual: http_response.version.to_string(),
             expected: version.value.as_str().to_string(),
             source_info: version.source_info,
         });
@@ -71,7 +66,7 @@ impl Response {
                 }
                 Ok(expected) => {
                     let header_name = header.key.value.clone();
-                    let actuals = http_response.get_header(header_name.as_str(), false);
+                    let actuals = http_response.get_header(header_name);
                     if actuals.is_empty() {
                         asserts.push(AssertResult::Header {
                             actual: Err(Error {
@@ -119,7 +114,7 @@ impl Response {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(e),
                     };
-                    let actual = match decode_bytes(http_response.body.clone(), http_response.encoding()) {
+                    let actual = match http_response.text() {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
@@ -138,7 +133,7 @@ impl Response {
                 }
                 Bytes::Xml { value } => {
                     let expected = Ok(Value::String(value));
-                    let actual = match decode_bytes(http_response.body.clone(), http_response.encoding()) {
+                    let actual = match http_response.text() {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
@@ -160,7 +155,7 @@ impl Response {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(e),
                     };
-                    let actual = match decode_bytes(http_response.body.clone(), http_response.encoding()) {
+                    let actual = match http_response.text() {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
@@ -205,7 +200,7 @@ impl Response {
         asserts
     }
 
-    pub fn eval_captures(self, http_response: http::response::Response, variables: &HashMap<String, Value>) -> Result<Vec<CaptureResult>, Error> {
+    pub fn eval_captures(self, http_response: libcurl::core::Response, variables: &HashMap<String, Value>) -> Result<Vec<CaptureResult>, Error> {
         let mut captures = vec![];
         for capture in self.captures() {
             let capture_result = capture.eval(variables, http_response.clone())?;
@@ -273,7 +268,7 @@ mod tests {
         let variables = HashMap::new();
         let context_dir = "undefined".to_string();
         assert_eq!(
-            user_response().eval_asserts(&variables, http::response::tests::xml_two_users_http_response(), context_dir),
+            user_response().eval_asserts(&variables, libcurl::core::tests::xml_two_users_http_response(), context_dir),
             vec![
                 AssertResult::Version {
                     actual: String::from("1.0"),
@@ -306,7 +301,7 @@ mod tests {
     pub fn test_eval_captures() {
         let variables = HashMap::new();
         assert_eq!(
-            user_response().eval_captures(http::response::tests::xml_two_users_http_response(), &variables).unwrap(),
+            user_response().eval_captures(libcurl::core::tests::xml_two_users_http_response(), &variables).unwrap(),
             vec![
                 CaptureResult {
                     name: "UserCount".to_string(),

@@ -17,7 +17,6 @@
  */
 
 
-use crate::http;
 use crate::http::libcurl::core::*;
 
 use super::cookie::*;
@@ -77,14 +76,14 @@ fn parse_entry_result(value: serde_json::Value) -> Result<EntryResult, String> {
     let request = match value.get("request") {
         None => None,
         Some(v) => {
-            let r = http::import::parse_request(v.clone())?;
+            let r = parse_request(v.clone())?;
             Some(r)
         }
     };
     let response = match value.get("response") {
         None => None,
         Some(v) => {
-            let r = http::import::parse_response(v.clone())?;
+            let r = parse_response(v.clone())?;
             Some(r)
         }
     };
@@ -162,6 +161,7 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
         // TODO
         let multipart = vec![];
         let body = vec![];
+        let content_type = None;
 
         Ok(Request {
             method,
@@ -172,6 +172,7 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
             body,
             multipart,
             form,
+            content_type,
         })
     } else {
         Err("expecting an object for the request".to_string())
@@ -376,6 +377,7 @@ mod tests {
             body: vec![],
             form: vec![],
             multipart: vec![],
+            content_type: None,
         });
 
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-//use hurl::parser::error::ParseError;
+
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -30,11 +30,11 @@ use clap::{AppSettings, ArgMatches};
 use hurl::cli;
 use hurl::core::common::FormatError;
 use hurl::html;
-use hurl::http;
+use hurl::http::libcurl;
 use hurl::parser;
 use hurl::runner;
 use hurl::runner::core::*;
-use hurl::runner::{log_deserialize};
+use hurl::runner::log_deserialize;
 use hurl::format;
 
 
@@ -46,11 +46,11 @@ pub struct CLIOptions {
     pub insecure: bool,
     pub variables: HashMap<String, String>,
     pub to_entry: Option<usize>,
-    pub redirect: http::client::Redirect,
-    pub http_proxy: Option<String>,
-    pub https_proxy: Option<String>,
-    pub all_proxy: Option<String>,
-    pub noproxy_hosts: Vec<String>,
+    pub follow_location: bool,
+    pub max_redirect: Option<usize>,
+    pub proxy: Option<String>,
+    pub no_proxy: Option<String>,
+    pub cookie_input_file: Option<String>,
 }
 
 
@@ -58,12 +58,9 @@ fn execute(filename: &str,
            contents: String,
            current_dir: &Path,
            file_root: Option<String>,
-           cookies: Vec<http::cookie::Cookie>,
            cli_options: CLIOptions,
            logger: format::logger::Logger,
 ) -> HurlResult {
-    let mut cookiejar = http::cookie::CookieJar::init(cookies);
-
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
             let error = hurl::format::error::Error {
@@ -79,26 +76,23 @@ fn execute(filename: &str,
             std::process::exit(2);
         }
         Ok(hurl_file) => {
-            logger.verbose(format!("Fail fast: {}", cli_options.fail_fast).as_str());
-            logger.verbose(format!("variables: {:?}", cli_options.variables).as_str());
-            if let Some(proxy) = cli_options.http_proxy.clone() {
-                logger.verbose(format!("http_proxy: {}", proxy).as_str());
+            logger.verbose(format!("fail fast: {}", cli_options.fail_fast).as_str());
+            logger.verbose(format!("insecure: {}", cli_options.insecure).as_str());
+            logger.verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
+            if let Some(n) = cli_options.max_redirect {
+                logger.verbose(format!("max redirect: {}", n).as_str());
             }
-            if let Some(proxy) = cli_options.https_proxy.clone() {
-                logger.verbose(format!("https_proxy: {}", proxy).as_str());
-            }
-            if let Some(proxy) = cli_options.all_proxy.clone() {
-                logger.verbose(format!("all_proxy: {}", proxy).as_str());
-            }
-            if !cli_options.noproxy_hosts.is_empty() {
-                logger.verbose(format!("noproxy: {}", cli_options.noproxy_hosts.join(", ")).as_str());
+            if let Some(proxy) = cli_options.proxy.clone() {
+                logger.verbose(format!("proxy: {}", proxy).as_str());
             }
 
-            match cli_options.redirect {
-                http::client::Redirect::None {} => {}
-                http::client::Redirect::Limited(n) => logger.verbose(format!("follow redirect (max: {})", n).as_str()),
-                http::client::Redirect::Unlimited {} => logger.verbose("follow redirect"),
-            };
+            if !cli_options.variables.is_empty() {
+                logger.verbose("variables:");
+                for (name, value) in cli_options.variables.clone() {
+                    logger.verbose(format!("    {}={}", name, value).as_str());
+                }
+            }
+
 
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
@@ -108,16 +102,24 @@ fn execute(filename: &str,
                 }
             }
 
-            let noproxy_hosts = cli_options.noproxy_hosts.clone();
-            let redirect = cli_options.redirect.clone();
-            let client = http::client::Client::init(http::client::ClientOptions {
-                noproxy_hosts,
-                insecure: cli_options.insecure,
-                redirect,
-                http_proxy: cli_options.http_proxy.clone(),
-                https_proxy: cli_options.https_proxy.clone(),
-                all_proxy: cli_options.all_proxy.clone(),
-            });
+            let follow_location = cli_options.follow_location;
+            let verbose = cli_options.verbose;
+            let insecure = cli_options.insecure;
+            let max_redirect = cli_options.max_redirect;
+            let proxy = cli_options.proxy;
+            let no_proxy = cli_options.no_proxy;
+            let cookie_input_file = cli_options.cookie_input_file;
+            let options = libcurl::client::ClientOptions {
+                follow_location,
+                max_redirect,
+                cookie_input_file,
+                proxy,
+                no_proxy,
+                verbose,
+                insecure,
+            };
+            let mut client = libcurl::client::Client::init(options);
+
 
             let context_dir = match file_root {
                 None => {
@@ -140,9 +142,8 @@ fn execute(filename: &str,
                 to_entry: cli_options.to_entry,
             };
             runner::file::run(hurl_file,
-                              client,
+                              &mut client,
                               filename.to_string(),
-                              &mut cookiejar,
                               context_dir,
                               options,
                               logger,
@@ -162,19 +163,6 @@ fn output_color(matches: ArgMatches) -> bool {
     }
 }
 
-
-fn noproxy_host(matches: ArgMatches) -> Vec<String> {
-    match matches.value_of("noproxy") {
-        Some(value) => {
-            value.split(',').map(|e| e.trim().to_string()).collect()
-        }
-        _ => if let Ok(v) = std::env::var("no_proxy") {
-            v.split(',').map(|e| e.trim().to_string()).collect()
-        } else {
-            vec![]
-        }
-    }
-}
 
 fn to_entry(matches: ArgMatches, logger: format::logger::Logger) -> Option<usize> {
     match matches.value_of("to_entry") {
@@ -352,7 +340,7 @@ fn app() -> clap::App<'static, 'static> {
         )
 
         .arg(
-            clap::Arg::with_name("redirect")
+            clap::Arg::with_name("follow_location")
                 .short("L")
                 .long("location")
                 .help("Follow redirects"),
@@ -361,7 +349,6 @@ fn app() -> clap::App<'static, 'static> {
             clap::Arg::with_name("max_redirects")
                 .long("max-redirs")
                 .value_name("NUM")
-                .default_value("50")
                 .allow_hyphen_values(true)
                 .help("Maximum number of redirects allowed"),
         )
@@ -431,12 +418,22 @@ fn parse_options(matches: ArgMatches, logger: format::logger::Logger) -> Result<
     let fail_fast = !matches.is_present("fail_at_end");
     let variables = variables(matches.clone(), logger.clone());
     let to_entry = to_entry(matches.clone(), logger);
-    let redirect = cli::options::redirect(matches.is_present("redirect"), matches.value_of("max_redirects").unwrap_or_default())?;
-    let http_proxy = cli::options::proxy(matches.value_of("proxy"), env::var("http_proxy").ok())?;
-    let https_proxy = cli::options::proxy(matches.value_of("proxy"), env::var("https_proxy").ok())?;
-    let all_proxy = cli::options::proxy(matches.value_of("proxy"), env::var("all_proxy").ok())?;
-    let noproxy_hosts = noproxy_host(matches.clone());
+    let proxy = matches.value_of("proxy").map(|x| x.to_string());
+    let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
     let insecure = matches.is_present("insecure");
+    let follow_location = matches.is_present("follow_location");
+    let cookie_input_file = matches.value_of("cookie_input_file").map(|x| x.to_string());
+    let max_redirect = match matches.value_of("max_redirects") {
+        None => Some(50),
+        Some("-1") => None,
+        Some(s) => {
+            match s.parse::<usize>() {
+                Ok(x) => Some(x),
+                Err(_) => return Err(cli::Error{ message: "max_redirs option can not be parsed".to_string() })
+            }
+        }
+    };
+
     Ok(CLIOptions {
         verbose,
         color,
@@ -444,11 +441,11 @@ fn parse_options(matches: ArgMatches, logger: format::logger::Logger) -> Result<
         insecure,
         variables,
         to_entry,
-        redirect,
-        http_proxy,
-        https_proxy,
-        all_proxy,
-        noproxy_hosts,
+        follow_location,
+        max_redirect,
+        proxy,
+        no_proxy,
+        cookie_input_file,
     })
 }
 
@@ -484,12 +481,6 @@ fn main() -> Result<(), cli::Error> {
         verbose: matches.is_present("verbose"),
         color: output_color(matches.clone()),
     };
-
-    let cookies = match matches.value_of("cookies_input_file") {
-        Some(filename) => unwrap_or_exit(cli::options::cookies(filename), logger.clone()),
-        None => vec![],
-    };
-
 
 
     let (mut hurl_results, json_file) = json_file(matches.clone(), logger.clone());
@@ -536,7 +527,6 @@ fn main() -> Result<(), cli::Error> {
             contents,
             current_dir,
             file_root.clone(),
-            cookies.clone(),
             cli_options.clone(),
             logger.clone(),
         );
@@ -661,7 +651,7 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>, logger:
         }
         Some(result) => {
             for cookie in result.cookies.clone() {
-                s.push_str(cookie.to_netscape().as_str());
+                s.push_str(cookie.to_string().as_str());
                 s.push('\n');
             }
         }

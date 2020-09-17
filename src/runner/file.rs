@@ -20,7 +20,8 @@ use std::time::Instant;
 
 use crate::core::ast::*;
 use crate::core::common::Value;
-use crate::http;
+use crate::http::libcurl;
+
 
 use super::core::*;
 use super::super::format;
@@ -34,7 +35,7 @@ use crate::core::common::FormatError;
 /// # Example
 ///
 /// ```
-/// use hurl::http;
+/// use hurl::http::libcurl;
 /// use hurl::runner;
 /// use hurl::format;
 ///
@@ -47,15 +48,16 @@ use crate::core::common::FormatError;
 /// let hurl_file = hurl::parser::parse_hurl_file(s).unwrap();
 ///
 /// // Create an http client
-/// let mut cookie_store = http::cookie::CookieJar::init(vec![]);
-/// let client = http::client::Client::init(http::client::ClientOptions {
-///        noproxy_hosts: vec![],
+/// let options = libcurl::client::ClientOptions {
+///        follow_location: false,
+///        max_redirect: None,
+///        cookie_input_file: None,
+///        proxy: None,
+///        no_proxy: None,
+///        verbose: false,
 ///        insecure: false,
-///        redirect: http::client::Redirect::None,
-///        http_proxy: None,
-///        https_proxy: None,
-///        all_proxy: None
-///    });
+/// };
+/// let mut client = libcurl::client::Client::init(options);
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
@@ -79,9 +81,8 @@ use crate::core::common::FormatError;
 /// let context_dir = "current_dir".to_string();
 /// let hurl_results = runner::file::run(
 ///     hurl_file,
-///     client,
+///     &mut client,
 ///     filename,
-///     &mut cookie_store,
 ///     context_dir,
 ///     options,
 ///     logger
@@ -91,9 +92,8 @@ use crate::core::common::FormatError;
 /// ```
 pub fn run(
     hurl_file: HurlFile,
-    http_client: http::client::Client,
+    http_client: &mut libcurl::client::Client,
     filename: String,
-    cookiejar: &mut http::cookie::CookieJar,
     context_dir: String,
     options: RunnerOptions,
     logger: format::logger::Logger,
@@ -113,7 +113,7 @@ pub fn run(
 
     let start = Instant::now();
     for (entry_index, entry) in hurl_file.entries.iter().take(n).cloned().enumerate().collect::<Vec<(usize, Entry)>>() {
-        let entry_result = entry::run(entry, &http_client, entry_index, &mut variables, cookiejar, context_dir.clone(), &logger);
+        let entry_result = entry::run(entry, http_client, entry_index, &mut variables, context_dir.clone(), &logger);
         entries.push(entry_result.clone());
         for e in entry_result.errors.clone() {
             let error = format::error::Error {
@@ -135,7 +135,7 @@ pub fn run(
     let time_in_ms = start.elapsed().as_millis();
     let success = entries.iter().flat_map(|e| e.errors.clone()).next().is_none();
 
-    let cookies = cookiejar.clone().cookies();
+    let cookies = http_client.get_cookie_storage();
     HurlResult {
         filename,
         entries,

@@ -34,12 +34,12 @@ mod http_response;
 mod json;
 pub mod log_serialize;
 pub mod log_deserialize;
+mod multipart;
 mod predicate;
 mod query;
 pub mod request;
 mod response;
 mod template;
-mod text;
 mod xpath;
 mod expr;
 
