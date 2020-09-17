@@ -40,7 +40,6 @@ mod query;
 pub mod request;
 mod response;
 mod template;
-mod text;
 mod xpath;
 mod expr;
 

@@ -17,7 +17,6 @@
  */
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
 
 use crate::core::common::{FormatError, SourceInfo, Value};
 use crate::http::libcurl;
@@ -82,14 +81,14 @@ pub type PredicateResult = Result<(), Error>;
 
 // region error
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {
     pub source_info: SourceInfo,
     pub inner: RunnerError,
     pub assert: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum RunnerError {
     TemplateVariableNotDefined { name: String },
     VariableNotDefined { name: String },

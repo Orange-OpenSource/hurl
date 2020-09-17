@@ -64,8 +64,8 @@ impl Serialize for AssertResult {
             S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
-        if let AssertResult::Version { source_info, actual, expected } = self {
-            state.serialize_field("source_info", source_info)?;
+        if let AssertResult::Version {  actual, expected,.. } = self {
+            //state.serialize_field("source_info", source_info)?;
             state.serialize_field("actual", actual)?;
             state.serialize_field("expected", expected)?;
         };
