@@ -20,25 +20,17 @@ use std::collections::HashMap;
 
 use crate::core::common::{Pos, SourceInfo};
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 use crate::runner::core::RunnerError;
 
 use super::core::*;
 use super::core::Error;
 use super::super::core::ast::*;
 
-impl libcurl::core::Response {
-    pub fn get_header(&self, name: String) -> Vec<String> {
-        self.headers
-            .iter()
-            .filter(|&h| h.name.to_lowercase() == name.to_lowercase())
-            .map(|h| h.value.clone())
-            .collect()
-    }
-}
+
 
 impl Response {
-    pub fn eval_asserts(self, variables: &HashMap<String, Value>, http_response: libcurl::core::Response, context_dir: String) -> Vec<AssertResult> {
+    pub fn eval_asserts(self, variables: &HashMap<String, Value>, http_response: http::Response, context_dir: String) -> Vec<AssertResult> {
         let mut asserts = vec![];
 
         let version = self.clone().version;
@@ -200,7 +192,7 @@ impl Response {
         asserts
     }
 
-    pub fn eval_captures(self, http_response: libcurl::core::Response, variables: &HashMap<String, Value>) -> Result<Vec<CaptureResult>, Error> {
+    pub fn eval_captures(self, http_response: http::Response, variables: &HashMap<String, Value>) -> Result<Vec<CaptureResult>, Error> {
         let mut captures = vec![];
         for capture in self.captures() {
             let capture_result = capture.eval(variables, http_response.clone())?;
@@ -268,7 +260,7 @@ mod tests {
         let variables = HashMap::new();
         let context_dir = "undefined".to_string();
         assert_eq!(
-            user_response().eval_asserts(&variables, libcurl::core::tests::xml_two_users_http_response(), context_dir),
+            user_response().eval_asserts(&variables, http::xml_two_users_http_response(), context_dir),
             vec![
                 AssertResult::Version {
                     actual: String::from("1.0"),
@@ -301,7 +293,7 @@ mod tests {
     pub fn test_eval_captures() {
         let variables = HashMap::new();
         assert_eq!(
-            user_response().eval_captures(libcurl::core::tests::xml_two_users_http_response(), &variables).unwrap(),
+            user_response().eval_captures(http::xml_two_users_http_response(), &variables).unwrap(),
             vec![
                 CaptureResult {
                     name: "UserCount".to_string(),

@@ -21,7 +21,7 @@ use std::collections::HashMap;
 use regex::Regex;
 
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 use crate::jsonpath;
 
 use super::cookie;
@@ -32,29 +32,8 @@ use super::xpath;
 pub type QueryResult = Result<Option<Value>, Error>;
 
 
-impl libcurl::core::Response {
-    pub fn is_html(&self) -> bool {
-        for header in self.headers.clone() {
-            if header.name.to_lowercase() == "content-type" {
-                return header.value.contains("html");
-            }
-        }
-        false
-    }
-
-    pub fn get_cookie(&self, name: String) -> Option<cookie::ResponseCookie> {
-        for cookie in self.cookies() {
-            if cookie.name == name {
-                return Some(cookie);
-            }
-        }
-        None
-    }
-}
-
-
 impl Query {
-    pub fn eval(self, variables: &HashMap<String, Value>, http_response: libcurl::core::Response) -> QueryResult {
+    pub fn eval(self, variables: &HashMap<String, Value>, http_response: http::Response) -> QueryResult {
         match self.value {
             QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
             QueryValue::Header { name, .. } => {
@@ -224,7 +203,6 @@ impl CookieAttributeName {
 #[cfg(test)]
 pub mod tests {
     use crate::core::common::{Pos, SourceInfo};
-
     use super::*;
 
     pub fn xpath_invalid_query() -> Query {
@@ -297,9 +275,9 @@ pub mod tests {
         }
     }
 
-    pub fn json_http_response() -> libcurl::core::Response {
-        libcurl::core::Response {
-            version: libcurl::core::Version::Http10,
+    pub fn json_http_response() -> http::Response {
+        http::Response {
+            version: http::Version::Http10,
             status: 0,
             headers: vec![],
             body: String::into_bytes(r#"
@@ -436,7 +414,7 @@ pub mod tests {
     fn test_query_status() {
         let variables = HashMap::new();
         assert_eq!(
-            Query { source_info: SourceInfo::init(0, 0, 0, 0), value: QueryValue::Status {} }.eval(&variables, libcurl::core::tests::hello_http_response()).unwrap().unwrap(),
+            Query { source_info: SourceInfo::init(0, 0, 0, 0), value: QueryValue::Status {} }.eval(&variables, http::hello_http_response()).unwrap().unwrap(),
             Value::Integer(200)
         );
     }
@@ -464,7 +442,7 @@ pub mod tests {
 //    let error = query_header.eval(http::hello_http_response()).err().unwrap();
 //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
 //    assert_eq!(error.inner, RunnerError::QueryHeaderNotFound);
-        assert_eq!(query_header.eval(&variables, libcurl::core::tests::hello_http_response()).unwrap(), None);
+        assert_eq!(query_header.eval(&variables, http::hello_http_response()).unwrap(), None);
     }
 
     #[test]
@@ -488,7 +466,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            query_header.eval(&variables, libcurl::core::tests::hello_http_response()).unwrap().unwrap(),
+            query_header.eval(&variables, http::hello_http_response()).unwrap().unwrap(),
             Value::String(String::from("text/html; charset=utf-8"))
         );
     }
@@ -500,11 +478,11 @@ pub mod tests {
             value: String::from(""),
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
-        let response = libcurl::core::Response {
-            version: libcurl::core::Version::Http10,
+        let response = http::Response {
+            version: http::Version::Http10,
             status: 0,
             headers: vec![
-                libcurl::core::Header {
+                http::Header {
                     name: "Set-Cookie".to_string(),
                     value: "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly".to_string(),
                 }
@@ -649,22 +627,22 @@ pub mod tests {
             Query {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: QueryValue::Body {},
-            }.eval(&variables, libcurl::core::tests::hello_http_response()).unwrap().unwrap(),
+            }.eval(&variables, http::hello_http_response()).unwrap().unwrap(),
             Value::String(String::from("Hello World!"))
         );
         let error = Query {
             source_info: SourceInfo::init(1, 1, 1, 2),
             value: QueryValue::Body {},
-        }.eval(&variables, libcurl::core::tests::bytes_http_response()).err().unwrap();
+        }.eval(&variables, http::bytes_http_response()).err().unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 2));
-        assert_eq!(error.inner, RunnerError::InvalidDecoding { charset: "utf-8".to_string()});
+        assert_eq!(error.inner, RunnerError::InvalidDecoding { charset: "utf-8".to_string() });
     }
 
     #[test]
     fn test_query_invalid_utf8() {
         let variables = HashMap::new();
-        let http_response = libcurl::core::Response {
-            version: libcurl::core::Version::Http10,
+        let http_response = http::Response {
+            version: http::Version::Http10,
             status: 0,
             headers: vec![],
             body: vec![200],
@@ -697,7 +675,7 @@ pub mod tests {
                 },
             },
         };
-        let error = query.eval(&variables, libcurl::core::tests::xml_two_users_http_response()).err().unwrap();
+        let error = query.eval(&variables, http::xml_two_users_http_response()).err().unwrap();
         assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval);
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
     }
@@ -706,8 +684,8 @@ pub mod tests {
     fn test_query_xpath() {
         let variables = HashMap::new();
 
-        assert_eq!(xpath_users().eval(&variables, libcurl::core::tests::xml_two_users_http_response()).unwrap().unwrap(), Value::Nodeset(2));
-        assert_eq!(xpath_count_user_query().eval(&variables, libcurl::core::tests::xml_two_users_http_response()).unwrap().unwrap(), Value::Float(2, 0));
+        assert_eq!(xpath_users().eval(&variables, http::xml_two_users_http_response()).unwrap().unwrap(), Value::Nodeset(2));
+        assert_eq!(xpath_count_user_query().eval(&variables, http::xml_two_users_http_response()).unwrap().unwrap(), Value::Float(2, 0));
     }
 
     #[cfg(test)]
@@ -738,7 +716,7 @@ pub mod tests {
     #[test]
     fn test_query_xpath_with_html() {
         let variables = HashMap::new();
-        assert_eq!(xpath_html_charset().eval(&variables, libcurl::core::tests::html_http_response()).unwrap().unwrap(), Value::String(String::from("UTF-8")));
+        assert_eq!(xpath_html_charset().eval(&variables, http::html_http_response()).unwrap().unwrap(), Value::String(String::from("UTF-8")));
     }
 
     #[test]
@@ -775,8 +753,8 @@ pub mod tests {
     #[test]
     fn test_query_invalid_json() {
         let variables = HashMap::new();
-        let http_response = libcurl::core::Response {
-            version: libcurl::core::Version::Http10,
+        let http_response = http::Response {
+            version: http::Version::Http10,
             status: 0,
             headers: vec![],
             body: String::into_bytes(String::from("xxx")),
@@ -789,8 +767,8 @@ pub mod tests {
     #[test]
     fn test_query_json_not_found() {
         let variables = HashMap::new();
-        let http_response = libcurl::core::Response {
-            version: libcurl::core::Version::Http10,
+        let http_response = http::Response {
+            version: http::Version::Http10,
             status: 0,
             headers: vec![],
             body: String::into_bytes(String::from("{}")),
@@ -819,11 +797,11 @@ pub mod tests {
     fn test_query_regex() {
         let variables = HashMap::new();
         assert_eq!(
-            regex_name().eval(&variables, libcurl::core::tests::hello_http_response()).unwrap().unwrap(),
+            regex_name().eval(&variables, http::hello_http_response()).unwrap().unwrap(),
             Value::String("World".to_string())
         );
 
-        let error = regex_invalid().eval(&variables, libcurl::core::tests::hello_http_response()).err().unwrap();
+        let error = regex_invalid().eval(&variables, http::hello_http_response()).err().unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 10));
         assert_eq!(error.inner, RunnerError::InvalidRegex());
     }

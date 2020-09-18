@@ -16,32 +16,24 @@
  *
  */
 
-use crate::http::libcurl::core::Response;
+use crate::http::Response;
 use super::core::RunnerError;
+use super::cookie::ResponseCookie;
 use encoding::{EncodingRef, DecoderTrap};
 
 
-///
-/// get body content as text from http response
-/// used by query
-///
 
-#[allow(dead_code)]
+
 impl Response {
 
 
-    ///
-    /// Return optional Content-type header value
-    ///
-    fn content_type(&self) -> Option<String> {
-        for header in self.headers.clone() {
-            if header.name.to_lowercase() == "content-type" {
-                return Some(header.value);
-            }
-        }
-        None
+    pub fn cookies(&self) -> Vec<ResponseCookie> {
+        self.headers
+            .iter()
+            .filter(|&h| h.name.to_lowercase().as_str() == "set-cookie")
+            .filter_map(|h| ResponseCookie::parse(h.value.clone()))
+            .collect()
     }
-
 
     ///
     /// Return encoding of the response
@@ -61,6 +53,9 @@ impl Response {
         }
     }
 
+    ///
+    /// return response body as text
+    ///
     pub fn text(&self) -> Result<String, RunnerError> {
         let encoding = self.encoding()?;
         match encoding.decode(&self.body, DecoderTrap::Strict) {
@@ -68,6 +63,30 @@ impl Response {
             Err(_) => Err(RunnerError::InvalidDecoding { charset: encoding.name().to_string() })
         }
     }
+
+    ///
+    /// return true if response is an html response
+    ///
+    pub fn is_html(&self) -> bool {
+        match self.content_type() {
+            None => false,
+            Some(s) => s.starts_with("text/html")
+        }
+    }
+
+
+    ///
+    /// Return option cookie from response
+    ///
+    pub fn get_cookie(&self, name: String) -> Option<ResponseCookie> {
+        for cookie in self.cookies() {
+            if cookie.name == name {
+                return Some(cookie);
+            }
+        }
+        None
+    }
+
 }
 
 ///
@@ -86,7 +105,7 @@ fn mime_charset(mime_type: String) -> Option<String> {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::http::libcurl::core::{Version, Header};
+    use crate::http::*;
 
     #[test]
     pub fn test_charset() {

@@ -28,7 +28,7 @@ use std::path::Path;
 
 use crate::core::ast::*;
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 
 use super::core::{Error, RunnerError};
 
@@ -38,23 +38,23 @@ impl MultipartParam {
     pub fn eval(self,
                 variables: &HashMap<String, Value>,
                 context_dir: String,
-    ) -> Result<libcurl::core::MultipartParam, Error> {
+    ) -> Result<http::MultipartParam, Error> {
         match self {
             MultipartParam::Param(KeyValue { key, value, .. }) => {
                 let name = key.value;
                 let value = value.eval(variables)?;
-                Ok(libcurl::core::MultipartParam::Param(libcurl::core::Param { name, value }))
+                Ok(http::MultipartParam::Param(http::Param { name, value }))
             }
             MultipartParam::FileParam(param) => {
                 let file_param = param.eval(context_dir)?;
-                Ok(libcurl::core::MultipartParam::FileParam(file_param))
+                Ok(http::MultipartParam::FileParam(file_param))
             }
         }
     }
 }
 
 impl FileParam {
-    pub fn eval(self, context_dir: String) -> Result<libcurl::core::FileParam, Error> {
+    pub fn eval(self, context_dir: String) -> Result<http::FileParam, Error> {
         let name = self.key.value;
 
         let filename = self.value.filename.clone();
@@ -93,7 +93,7 @@ impl FileParam {
         }
 
         let content_type = self.value.content_type();
-        Ok(libcurl::core::FileParam {
+        Ok(http::FileParam {
             name,
             filename: filename.value,
             data,
@@ -166,7 +166,7 @@ mod tests {
             },
             line_terminator0: line_terminator,
         }.eval("integration/tests".to_string()).unwrap(),
-                   libcurl::core::FileParam {
+                   http::FileParam {
                        name: "upload1".to_string(),
                        filename: "hello.txt".to_string(),
                        data: b"Hello World!".to_vec(),

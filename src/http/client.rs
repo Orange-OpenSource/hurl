@@ -16,15 +16,26 @@
  *
  */
 
+use std::io::Read;
 use std::str;
 
 use curl::easy;
+use encoding::all::ISO_8859_1;
+use encoding::{DecoderTrap, Encoding};
 
 use super::core::*;
-use std::io::Read;
-use encoding::{Encoding, DecoderTrap};
-use encoding::all::ISO_8859_1;
+use super::request::*;
+use super::response::*;
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum HttpError {
+    CouldNotResolveProxyName,
+    CouldNotResolveHost,
+    FailToConnect,
+    TooManyRedirect,
+    CouldNotParseResponse,
+    SSLCertificate,
+}
 
 #[derive(Debug)]
 pub struct Client {
@@ -50,9 +61,7 @@ pub struct ClientOptions {
     pub insecure: bool,
 }
 
-
 impl Client {
-
     ///
     /// Init HTTP hurl client
     ///
@@ -61,7 +70,13 @@ impl Client {
 
         // Activate cookie storage
         // with or without persistence (empty string)
-        h.cookie_file(options.cookie_input_file.unwrap_or_else(|| "".to_string()).as_str()).unwrap();
+        h.cookie_file(
+            options
+                .cookie_input_file
+                .unwrap_or_else(|| "".to_string())
+                .as_str(),
+        )
+        .unwrap();
 
         if let Some(proxy) = options.proxy {
             h.proxy(proxy.as_str()).unwrap();
@@ -93,7 +108,11 @@ impl Client {
     ///
     /// Execute an http request
     ///
-    pub fn execute(&mut self, request: &Request, redirect_count: usize) -> Result<Response, HttpError> {
+    pub fn execute(
+        &mut self,
+        request: &Request,
+        redirect_count: usize,
+    ) -> Result<Response, HttpError> {
         self.set_url(&request.url, &request.querystring);
         self.set_method(&request.method);
 
@@ -101,16 +120,13 @@ impl Client {
         self.set_form(&request.form);
         self.set_multipart(&request.multipart);
 
-
         let b = request.body.clone();
         let mut data: &[u8] = b.as_ref();
         self.set_body(data);
         self.set_headers(&request);
 
-
-        self.handle.debug_function(|info_type, data|
-            match info_type {
-
+        self.handle
+            .debug_function(|info_type, data| match info_type {
                 // return all request headers (not one by one)
                 easy::InfoType::HeaderOut => {
                     let lines = split_lines(data);
@@ -124,30 +140,34 @@ impl Client {
                     }
                 }
                 _ => {}
-            }
-        ).unwrap();
+            })
+            .unwrap();
 
         let mut lines = vec![];
         let mut body = Vec::<u8>::new();
         {
             let mut transfer = self.handle.transfer();
             if !data.is_empty() {
-                transfer.read_function(|buf| {
-                    Ok(data.read(buf).unwrap_or(0))
-                }).unwrap();
+                transfer
+                    .read_function(|buf| Ok(data.read(buf).unwrap_or(0)))
+                    .unwrap();
             }
 
-            transfer.header_function(|h| {
-                if let Some(s) = decode_header(h) {
-                    lines.push(s)
-                }
-                true
-            }).unwrap();
+            transfer
+                .header_function(|h| {
+                    if let Some(s) = decode_header(h) {
+                        lines.push(s)
+                    }
+                    true
+                })
+                .unwrap();
 
-            transfer.write_function(|data| {
-                body.extend(data);
-                Ok(data.len())
-            }).unwrap();
+            transfer
+                .write_function(|data| {
+                    body.extend(data);
+                    Ok(data.len())
+                })
+                .unwrap();
 
             if let Err(e) = transfer.perform() {
                 match e.code() {
@@ -161,10 +181,9 @@ impl Client {
         }
 
         let status = self.handle.response_code().unwrap();
-        let first_line = lines.remove(0);    // remove the status line
+        let first_line = lines.remove(0); // remove the status line
         let version = self.parse_response_version(first_line)?;
         let headers = self.parse_response_headers(&mut lines);
-
 
         if let Some(url) = self.get_follow_location(headers.clone()) {
             let request = Request {
@@ -219,7 +238,6 @@ impl Client {
         self.handle.url(url.as_str()).unwrap();
     }
 
-
     ///
     /// set method
     ///
@@ -237,7 +255,6 @@ impl Client {
         }
     }
 
-
     ///
     /// set request headers
     ///
@@ -245,28 +262,30 @@ impl Client {
         let mut list = easy::List::new();
 
         for header in request.headers.clone() {
-            list.append(format!("{}: {}", header.name, header.value).as_str()).unwrap();
+            list.append(format!("{}: {}", header.name, header.value).as_str())
+                .unwrap();
         }
 
         if get_header_values(request.headers.clone(), "Content-Type".to_string()).is_empty() {
             if let Some(s) = request.content_type.clone() {
-                list.append(format!("Content-Type: {}", s).as_str()).unwrap();
+                list.append(format!("Content-Type: {}", s).as_str())
+                    .unwrap();
             } else {
-                list.append("Content-Type:").unwrap();  // remove header Content-Type
+                list.append("Content-Type:").unwrap(); // remove header Content-Type
             }
         }
 
-//        if request.form.is_empty() && request.multipart.is_empty() && request.body.is_empty() {
-//            list.append("Content-Length:").unwrap();
-//        }
+        //        if request.form.is_empty() && request.multipart.is_empty() && request.body.is_empty() {
+        //            list.append("Content-Length:").unwrap();
+        //        }
 
         if get_header_values(request.headers.clone(), "User-Agent".to_string()).is_empty() {
-            list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str()).unwrap();
+            list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str())
+                .unwrap();
         }
 
         self.handle.http_headers(list).unwrap();
     }
-
 
     ///
     /// set request cookies
@@ -276,7 +295,6 @@ impl Client {
         //self.handle.cookie(cookie.to_string().as_str()).unwrap();  // added in the store beforehand
         //}
     }
-
 
     ///
     /// set form
@@ -289,7 +307,6 @@ impl Client {
         }
     }
 
-
     ///
     /// set form
     ///
@@ -299,18 +316,19 @@ impl Client {
             for param in params {
                 match param {
                     MultipartParam::Param(Param { name, value }) => {
-                        form.part(name)
-                            .contents(value.as_bytes())
-                            .add()
-                            .unwrap()
+                        form.part(name).contents(value.as_bytes()).add().unwrap()
                     }
-                    MultipartParam::FileParam(FileParam { name, filename, data, content_type }) => {
-                        form.part(name)
-                            .buffer(filename, data.clone())
-                            .content_type(content_type)
-                            .add()
-                            .unwrap()
-                    }
+                    MultipartParam::FileParam(FileParam {
+                        name,
+                        filename,
+                        data,
+                        content_type,
+                    }) => form
+                        .part(name)
+                        .buffer(filename, data.clone())
+                        .content_type(content_type)
+                        .add()
+                        .unwrap(),
                 }
             }
             self.handle.httppost(form).unwrap();
@@ -341,7 +359,6 @@ impl Client {
             .join("&")
     }
 
-
     ///
     /// parse response version
     ///
@@ -357,13 +374,12 @@ impl Client {
         }
     }
 
-
     ///
     /// parse headers from libcurl responses
     ///
     fn parse_response_headers(&mut self, lines: &mut Vec<String>) -> Vec<Header> {
         let mut headers: Vec<Header> = vec![];
-        lines.pop();               // remove the blank line between headers and body
+        lines.pop(); // remove the blank line between headers and body
         for line in lines {
             if let Some(header) = Header::parse(line.to_string()) {
                 headers.push(header);
@@ -371,7 +387,6 @@ impl Client {
         }
         headers
     }
-
 
     ///
     /// retrieve an optional location to follow
@@ -402,7 +417,6 @@ impl Client {
         }
     }
 
-
     ///
     /// get cookie storage
     ///
@@ -420,7 +434,15 @@ impl Client {
             let expires = fields.get(4).unwrap().to_string();
             let name = fields.get(5).unwrap().to_string();
             let value = fields.get(6).unwrap().to_string();
-            cookies.push(Cookie { domain, include_subdomain, path, https, expires, name, value });
+            cookies.push(Cookie {
+                domain,
+                include_subdomain,
+                path,
+                https,
+                expires,
+                name,
+                value,
+            });
         }
         cookies
     }
@@ -433,10 +455,11 @@ impl Client {
             eprintln!("* add to cookie store: {}", cookie);
             //self.handle.cookie_list(format!("Set-Cookie: {}={}", cookie.name, cookie.value).as_str()).unwrap();
         }
-        self.handle.cookie_list(cookie.to_string().as_str()).unwrap();
+        self.handle
+            .cookie_list(cookie.to_string().as_str())
+            .unwrap();
     }
 }
-
 
 impl Header {
     ///
@@ -456,7 +479,6 @@ impl Header {
         }
     }
 }
-
 
 ///
 /// Split an array of bytes into http lines (\r\n separator)
@@ -479,25 +501,21 @@ fn split_lines(data: &[u8]) -> Vec<String> {
     lines
 }
 
-
 ///
 /// Decode optionally header value as text with utf8 or iso-8859-1 encoding
 ///
 pub fn decode_header(data: &[u8]) -> Option<String> {
     match str::from_utf8(data) {
         Ok(s) => Some(s.to_string()),
-        Err(_) => {
-            match ISO_8859_1.decode(data, DecoderTrap::Strict) {
-                Ok(s) => Some(s),
-                Err(_) => {
-                    println!("Error decoding header both utf8 and iso-8859-1 {:?}", data);
-                    None
-                }
+        Err(_) => match ISO_8859_1.decode(data, DecoderTrap::Strict) {
+            Ok(s) => Some(s),
+            Err(_) => {
+                println!("Error decoding header both utf8 and iso-8859-1 {:?}", data);
+                None
             }
-        }
+        },
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -505,16 +523,20 @@ mod tests {
 
     #[test]
     fn test_parse_header() {
-        assert_eq!(Header::parse("Foo: Bar\r\n".to_string()).unwrap(),
-                   Header {
-                       name: "Foo".to_string(),
-                       value: "Bar".to_string(),
-                   });
-        assert_eq!(Header::parse("Location: http://localhost:8000/redirected\r\n".to_string()).unwrap(),
-                   Header {
-                       name: "Location".to_string(),
-                       value: "http://localhost:8000/redirected".to_string(),
-                   });
+        assert_eq!(
+            Header::parse("Foo: Bar\r\n".to_string()).unwrap(),
+            Header {
+                name: "Foo".to_string(),
+                value: "Bar".to_string(),
+            }
+        );
+        assert_eq!(
+            Header::parse("Location: http://localhost:8000/redirected\r\n".to_string()).unwrap(),
+            Header {
+                name: "Location".to_string(),
+                value: "http://localhost:8000/redirected".to_string(),
+            }
+        );
         assert!(Header::parse("Foo".to_string()).is_none());
     }
 

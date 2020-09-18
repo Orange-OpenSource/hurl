@@ -22,7 +22,7 @@ use std::time::Instant;
 use crate::core::ast::*;
 use crate::core::common::SourceInfo;
 use crate::core::common::Value;
-use crate::http::libcurl;
+use crate::http;
 
 
 use super::core::*;
@@ -49,7 +49,7 @@ use crate::format::logger::Logger;
 ////    });
 /// ```
 pub fn run(entry: Entry,
-           http_client: &mut libcurl::client::Client,
+           http_client: &mut http::Client,
            entry_index: usize,
            variables: &mut HashMap<String, Value>,
            context_dir: String,
@@ -80,7 +80,7 @@ pub fn run(entry: Entry,
     use url::Url;
     if let Ok(url) = Url::parse(http_request.url.as_str()) {
         for c in http_request.cookies.clone() {
-            let cookie = libcurl::core::Cookie {
+            let cookie = http::Cookie {
                 domain: url.host_str().unwrap().to_string(),
                 include_subdomain: "FALSE".to_string(),
                 path: "/".to_string(),
@@ -182,7 +182,7 @@ pub fn run(entry: Entry,
 }
 
 
-pub fn log_request(logger: &Logger, request: &libcurl::core::Request) {
+pub fn log_request(logger: &Logger, request: &http::Request) {
     logger.verbose("Request");
     logger.verbose(format!("{} {}", request.method, request.url).as_str());
     for header in request.headers.clone() {

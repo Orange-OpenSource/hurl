@@ -19,7 +19,8 @@
 use serde::ser::{Serializer, SerializeStruct};
 use serde::Serialize;
 
-use crate::http::libcurl::core::*;
+use crate::http::*;
+
 
 use super::cookie::*;
 use super::core::*;

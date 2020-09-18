@@ -3,9 +3,10 @@ use std::io::prelude::*;
 
 use curl::easy::Easy;
 
-use hurl::http::libcurl;
-use hurl::http::libcurl::client::ClientOptions;
-use hurl::http::libcurl::core::*;
+
+use hurl::http::*;
+
+
 use server::Server;
 
 macro_rules! t {
@@ -55,7 +56,7 @@ fn get_easy() {
 }
 
 
-fn default_client() -> libcurl::client::Client {
+fn default_client() -> Client {
     let options = ClientOptions {
         follow_location: false,
         max_redirect: None,
@@ -65,7 +66,7 @@ fn default_client() -> libcurl::client::Client {
         verbose: true,
         insecure: false,
     };
-    libcurl::client::Client::init(options)
+    Client::init(options)
 }
 
 fn default_get_request(url: String) -> Request {
@@ -121,12 +122,10 @@ fn test_put() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 #[test]
 fn test_patch() {
-
     let mut client = default_client();
     let request = Request {
         method: Method::Patch,
@@ -146,7 +145,6 @@ fn test_patch() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 204);
     assert!(response.body.is_empty());
-
 }
 
 // endregion
@@ -176,7 +174,6 @@ fn test_custom_headers() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 // endregion
@@ -205,7 +202,6 @@ fn test_querystring_params() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 // endregion
@@ -241,7 +237,6 @@ fn test_form_params() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
-
 }
 
 // endregion
@@ -266,9 +261,9 @@ fn test_follow_location() {
         proxy: None,
         no_proxy: None,
         verbose: false,
-        insecure: false
+        insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.get_header_values("Content-Length".to_string()).get(0).unwrap(), "0");
@@ -295,7 +290,7 @@ fn test_max_redirect() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
     let response = client.execute(&request, 5).unwrap();
     assert_eq!(response.status, 200);
@@ -303,7 +298,6 @@ fn test_max_redirect() {
 
     let error = client.execute(&request, 11).err().unwrap();
     assert_eq!(error, HttpError::TooManyRedirect);
-
 }
 
 // endregion
@@ -312,7 +306,6 @@ fn test_max_redirect() {
 
 #[test]
 fn test_multipart_form_data() {
-
     let mut client = default_client();
     let request = Request {
         method: Method::Post,
@@ -321,27 +314,27 @@ fn test_multipart_form_data() {
         querystring: vec![],
         form: vec![],
         multipart: vec![
-            MultipartParam::Param(Param{
+            MultipartParam::Param(Param {
                 name: "key1".to_string(),
-                value: "value1".to_string()
+                value: "value1".to_string(),
             }),
-            MultipartParam::FileParam(FileParam{
+            MultipartParam::FileParam(FileParam {
                 name: "upload1".to_string(),
                 filename: "hello.txt".to_string(),
                 data: b"Hello World!".to_vec(),
-                content_type: "text/plain".to_string()
+                content_type: "text/plain".to_string(),
             }),
-            MultipartParam::FileParam(FileParam{
+            MultipartParam::FileParam(FileParam {
                 name: "upload2".to_string(),
                 filename: "hello.html".to_string(),
                 data: b"Hello <b>World</b>!".to_vec(),
-                content_type: "text/html".to_string()
+                content_type: "text/html".to_string(),
             }),
-            MultipartParam::FileParam(FileParam{
+            MultipartParam::FileParam(FileParam {
                 name: "upload3".to_string(),
                 filename: "hello.txt".to_string(),
                 data: b"Hello World!".to_vec(),
-                content_type: "text/html".to_string()
+                content_type: "text/html".to_string(),
             }),
         ],
         cookies: vec![],
@@ -358,7 +351,6 @@ fn test_multipart_form_data() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
-
 }
 
 // endregion
@@ -367,7 +359,6 @@ fn test_multipart_form_data() {
 
 #[test]
 fn test_post_bytes() {
-
     let mut client = default_client();
     let request = Request {
         method: Method::Post,
@@ -378,12 +369,11 @@ fn test_post_bytes() {
         multipart: vec![],
         cookies: vec![],
         body: b"Hello World!".to_vec(),
-        content_type: None
+        content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 // endregion
@@ -394,7 +384,7 @@ fn test_post_bytes() {
 fn test_error_could_not_resolve_host() {
     let mut client = default_client();
     let request = default_get_request("http://unknown".to_string());
-    let error =  client.execute(&request, 0).err().unwrap();
+    let error = client.execute(&request, 0).err().unwrap();
 
     assert_eq!(error, HttpError::CouldNotResolveHost);
 }
@@ -403,7 +393,7 @@ fn test_error_could_not_resolve_host() {
 fn test_error_fail_to_connect() {
     let mut client = default_client();
     let request = default_get_request("http://localhost:9999".to_string());
-    let error =  client.execute(&request, 0).err().unwrap();
+    let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::FailToConnect);
 
 
@@ -416,11 +406,10 @@ fn test_error_fail_to_connect() {
         verbose: true,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
-    let error =  client.execute(&request, 0).err().unwrap();
+    let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::FailToConnect);
-
 }
 
 
@@ -435,7 +424,7 @@ fn test_error_could_not_resolve_proxy_name() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::CouldNotResolveProxyName);
@@ -486,7 +475,6 @@ fn test_cookie() {
     // let response = client.execute(&request, 0).unwrap();
     // assert_eq!(response.status, 200);
     // assert!(response.body.is_empty());
-
 }
 
 #[test]
@@ -512,7 +500,6 @@ fn test_cookie_storage() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 
@@ -531,12 +518,11 @@ fn test_cookie_file() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string());
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 }
 
 // endregion
@@ -555,7 +541,7 @@ fn test_proxy() {
         verbose: false,
         insecure: false,
     };
-    let mut client = libcurl::client::Client::init(options);
+    let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);

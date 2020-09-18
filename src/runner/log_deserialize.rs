@@ -17,8 +17,7 @@
  */
 
 
-use crate::http::libcurl::core::*;
-
+use crate::http::*;
 use super::cookie::*;
 use super::core::*;
 
@@ -350,8 +349,6 @@ fn parse_version(s: String) -> Result<Version, ParseError> {
 
 #[cfg(test)]
 mod tests {
-    use crate::http::libcurl::core::tests::*;
-
     use super::*;
 
     #[test]
