@@ -190,7 +190,6 @@ fn template_element_string(char_parser: CharParser, reader: &mut Reader) -> Pars
     loop {
         match char_parser(reader) {
             Err(e) => {
-                //eprintln!(">>error {:?}", e);
                 if e.recoverable {
                     break;
                 } else {
@@ -198,7 +197,6 @@ fn template_element_string(char_parser: CharParser, reader: &mut Reader) -> Pars
                 }
             }
             Ok((c, s)) => {
-                //eprintln!(">> {:?}", (c, s.clone()));
                 if s == "{" && bracket {
                     break;
                 } else if s == "{" && !bracket {

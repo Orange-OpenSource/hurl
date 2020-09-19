@@ -229,7 +229,7 @@ mod tests {
             String::from("[Asserts]\n"),
             String::from("jsonpath \"$.message\" startsWith \"hello\"")
         ];
-        let error = Error {
+        let _error = Error {
             source_info: SourceInfo::init(3, 0, 3, 0),
             description: String::from("Assert Error"),
             fixme: String::from("actual:   string <tutu>\nexpected: starts with string <toto>"),
@@ -238,8 +238,6 @@ mod tests {
             warning: false,
             color: false,
         };
-
-        eprintln!("{}", error.format());
 
         //assert_eq!(1,2);
     }
