@@ -10,6 +10,7 @@ jobs:
       before_script:
         - ci/setup.sh
       script:
+        - ci/check.sh
         - ./build.sh
         - export PATH="$PWD/target/debug:$PATH"
         - integration/integration.sh
