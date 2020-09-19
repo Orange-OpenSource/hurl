@@ -5,7 +5,8 @@ rust:
 
 jobs:
   include:
-    - os: linux
+    - stage: "Build"
+      os: linux
       dist: bionic
       before_script:
         - ci/setup.sh
@@ -15,7 +16,8 @@ jobs:
         - export PATH="$PWD/target/debug:$PATH"
         - integration/integration.sh
 
-    - os: linux
+    - stage: "Release"
+      os: linux
       dist: bionic
       before_script:
          - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
@@ -31,7 +33,9 @@ jobs:
           on:
               all_branch: true
           tags: true
-    - os: osx
+
+    - stage: "Release"
+      os: osx
       before_script:
          - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
       script:
