@@ -159,8 +159,7 @@ impl PredicateFunc {
             }
             PredicateFuncValue::EqualExpression { value: expected, .. } => {
                 let expected = expected.eval(variables)?;
-                eprintln!(">> {:?}", expected);
-                todo!()
+                todo!(">> {:?}", expected)
             }
             PredicateFuncValue::CountEqual { value: expected, .. } => {
                 let expected = expected.to_string();

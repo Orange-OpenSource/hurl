@@ -18,8 +18,8 @@ for hurl_file in "$@"; do
     fi
 
     STDERR_ACTUAL=$(cat /tmp/test.stderr)
-    STDERR_EXPECTED=$(cat ${hurl_file%%.*}.err)
-    diff ${hurl_file%%.*}.err /tmp/test.stderr
+    STDERR_EXPECTED=$(cat "${hurl_file%%.*}.err")
+    diff "${hurl_file%%.*}.err" /tmp/test.stderr
     if [ "$STDERR_ACTUAL" != "$STDERR_EXPECTED" ]; then
         echo "ERROR stderr"
         echo "  expected:"
@@ -31,7 +31,7 @@ for hurl_file in "$@"; do
 
     hurlfmt "$hurl_file" --no-color >/tmp/test.lint
     LINT_ACTUAL=$(cat /tmp/test.lint)
-    LINT_EXPECTED=$(cat ${hurl_file%%.*}.hurl.lint)
+    LINT_EXPECTED=$(cat "${hurl_file%%.*}.hurl.lint")
     if [ "$LINT_ACTUAL" != "$LINT_EXPECTED" ]; then
         echo "ERROR linting"
         echo "  expected:"

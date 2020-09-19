@@ -2,8 +2,8 @@
 
 for command_file in "$@"; do
     echo "$command_file"
-    command=$(cat $command_file)
-    expected=$(cat ${command_file%.*}.output)
+    command=$(cat "$command_file")
+    expected=$(cat "${command_file%.*}.output")
     output="$($command 2>&1)"
 
    if [ "$output" != "$expected" ]; then

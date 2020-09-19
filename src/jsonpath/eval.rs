@@ -66,7 +66,6 @@ impl Selector {
                             elements.push(elem.clone());
                         }
                         for value in obj.values() {
-                            eprintln!(">> value = {:?}", value);
                             for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {
                                 elements.push(element);
                             };
@@ -89,7 +88,6 @@ impl Selector {
 
 impl Predicate {
     pub fn eval(&self, elem: serde_json::Value) -> bool {
-        //eprintln!("eval elem {:?}", elem);
         match elem {
             serde_json::Value::Object(ref obj) => match (obj.get(self.key.as_str()), self.func.clone()) {
                 (Some(serde_json::Value::Number(v)), PredicateFunc::Equal(ref num))
