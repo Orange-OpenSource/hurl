@@ -10,7 +10,7 @@ for hurl_file in "$@"; do
         options+=("$(cat "${hurl_file%.*}.options")")
     fi
 
-    cmd="hurl $hurl_file ${options[@]}"
+    cmd="hurl $hurl_file ${options[*]}"
     echo "$cmd"
 
     $cmd 2>/tmp/test.stderr >/tmp/test.stdout
