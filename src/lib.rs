@@ -20,12 +20,12 @@
 #[macro_use]
 extern crate float_cmp;
 
+pub mod cli;
 pub mod core;
 pub mod format;
+pub mod html;
+pub mod http;
+pub mod jsonpath;
 pub mod linter;
 pub mod parser;
 pub mod runner;
-pub mod http;
-pub mod jsonpath;
-pub mod html;
-pub mod cli;

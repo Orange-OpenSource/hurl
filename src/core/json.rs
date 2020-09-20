@@ -22,8 +22,14 @@ pub enum Value {
     Number(String),
     String(Template),
     Boolean(bool),
-    List { space0: String, elements: Vec<ListElement> },
-    Object { space0: String, elements: Vec<ObjectElement> },
+    List {
+        space0: String,
+        elements: Vec<ListElement>,
+    },
+    Object {
+        space0: String,
+        elements: Vec<ObjectElement>,
+    },
     Null {},
 }
 
@@ -57,35 +63,30 @@ pub struct ObjectElement {
     pub space3: String,
 }
 
-
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use super::super::ast::{Expr, TemplateElement, Variable, Whitespace};
     use super::super::common::SourceInfo;
+    use super::*;
 
     pub fn person_value() -> Value {
         Value::Object {
             space0: "\n    ".to_string(),
-            elements: vec![
-                ObjectElement {
-                    space0: "".to_string(),
-                    name: "firstName".to_string(),
-                    space1: "".to_string(),
-                    space2: " ".to_string(),
-                    value: Value::String(Template {
-                        quotes: false,
-                        elements: vec![
-                            TemplateElement::String {
-                                value: "John".to_string(),
-                                encoded: "John".to_string(),
-                            }
-                        ],
-                        source_info: SourceInfo::init(1, 1, 1, 1),
-                    }),
-                    space3: "\n".to_string(),
-                },
-            ],
+            elements: vec![ObjectElement {
+                space0: "".to_string(),
+                name: "firstName".to_string(),
+                space1: "".to_string(),
+                space2: " ".to_string(),
+                value: Value::String(Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "John".to_string(),
+                        encoded: "John".to_string(),
+                    }],
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                }),
+                space3: "\n".to_string(),
+            }],
         }
     }
 
@@ -99,9 +100,18 @@ pub mod tests {
                     encoded: "Hello\\u0020".to_string(),
                 },
                 TemplateElement::Expression(Expr {
-                    space0: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 15, 1, 15) },
-                    variable: Variable { name: "name".to_string(), source_info: SourceInfo::init(1, 15, 1, 19) },
-                    space1: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 19, 1, 19) },
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 15, 1, 15),
+                    },
+                    variable: Variable {
+                        name: "name".to_string(),
+                        source_info: SourceInfo::init(1, 15, 1, 19),
+                    },
+                    space1: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 19, 1, 19),
+                    },
                 }),
                 TemplateElement::String {
                     value: "!".to_string(),

@@ -19,8 +19,8 @@
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-use std::io::{self, Read};
 use std::io::prelude::*;
+use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 
 use atty::Stream;
@@ -29,14 +29,13 @@ use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
 use hurl::core::common::FormatError;
+use hurl::format;
 use hurl::html;
 use hurl::http;
 use hurl::parser;
 use hurl::runner;
 use hurl::runner::core::*;
 use hurl::runner::log_deserialize;
-use hurl::format;
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CLIOptions {
@@ -53,13 +52,13 @@ pub struct CLIOptions {
     pub cookie_input_file: Option<String>,
 }
 
-
-fn execute(filename: &str,
-           contents: String,
-           current_dir: &Path,
-           file_root: Option<String>,
-           cli_options: CLIOptions,
-           logger: format::logger::Logger,
+fn execute(
+    filename: &str,
+    contents: String,
+    current_dir: &Path,
+    file_root: Option<String>,
+    cli_options: CLIOptions,
+    logger: format::logger::Logger,
 ) -> HurlResult {
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
@@ -93,10 +92,16 @@ fn execute(filename: &str,
                 }
             }
 
-
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
-                    logger.verbose(format!("executing {}/{} entries", to_entry.to_string(), hurl_file.entries.len()).as_str());
+                    logger.verbose(
+                        format!(
+                            "executing {}/{} entries",
+                            to_entry.to_string(),
+                            hurl_file.entries.len()
+                        )
+                        .as_str(),
+                    );
                 } else {
                     logger.verbose("executing all entries");
                 }
@@ -120,7 +125,6 @@ fn execute(filename: &str,
             };
             let mut client = http::Client::init(options);
 
-
             let context_dir = match file_root {
                 None => {
                     if filename == "-" {
@@ -131,9 +135,7 @@ fn execute(filename: &str,
                         parent.unwrap().to_str().unwrap().to_string()
                     }
                 }
-                Some(filename) => {
-                    filename
-                }
+                Some(filename) => filename,
             };
 
             let options = RunnerOptions {
@@ -141,17 +143,17 @@ fn execute(filename: &str,
                 variables: cli_options.variables,
                 to_entry: cli_options.to_entry,
             };
-            runner::file::run(hurl_file,
-                              &mut client,
-                              filename.to_string(),
-                              context_dir,
-                              options,
-                              logger,
+            runner::file::run(
+                hurl_file,
+                &mut client,
+                filename.to_string(),
+                context_dir,
+                options,
+                logger,
             )
         }
     }
 }
-
 
 fn output_color(matches: ArgMatches) -> bool {
     if matches.is_present("color") {
@@ -163,24 +165,25 @@ fn output_color(matches: ArgMatches) -> bool {
     }
 }
 
-
 fn to_entry(matches: ArgMatches, logger: format::logger::Logger) -> Option<usize> {
     match matches.value_of("to_entry") {
-        Some(value) => {
-            match value.parse() {
-                Ok(v) => Some(v),
-                Err(_) => {
-                    logger.error_message("Invalid value for option --to-entry - must be a positive integer!".to_string());
-                    std::process::exit(1);
-                }
+        Some(value) => match value.parse() {
+            Ok(v) => Some(v),
+            Err(_) => {
+                logger.error_message(
+                    "Invalid value for option --to-entry - must be a positive integer!".to_string(),
+                );
+                std::process::exit(1);
             }
-        }
+        },
         None => None,
     }
 }
 
-
-fn json_file(matches: ArgMatches, logger: format::logger::Logger) -> (Vec<HurlResult>, Option<std::path::PathBuf>) {
+fn json_file(
+    matches: ArgMatches,
+    logger: format::logger::Logger,
+) -> (Vec<HurlResult>, Option<std::path::PathBuf>) {
     if let Some(filename) = matches.value_of("json") {
         let path = Path::new(filename);
 
@@ -191,16 +194,20 @@ fn json_file(matches: ArgMatches, logger: format::logger::Logger) -> (Vec<HurlRe
             let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
                 Ok(v) => v,
                 Err(_) => {
-                    logger.error_message(format!("The file {} is not a valid json file", path.display()));
+                    logger.error_message(format!(
+                        "The file {} is not a valid json file",
+                        path.display()
+                    ));
                     std::process::exit(127);
                 }
             };
             match log_deserialize::parse_results(v) {
                 Err(msg) => {
-                    logger.error_message(format!("Existing Hurl json can not be parsed! -  {}", msg));
+                    logger
+                        .error_message(format!("Existing Hurl json can not be parsed! -  {}", msg));
                     std::process::exit(127);
                 }
-                Ok(results) => results
+                Ok(results) => results,
             }
         } else {
             if matches.is_present("verbose") {
@@ -214,13 +221,19 @@ fn json_file(matches: ArgMatches, logger: format::logger::Logger) -> (Vec<HurlRe
     }
 }
 
-
 fn html_report(matches: ArgMatches, logger: format::logger::Logger) -> Option<std::path::PathBuf> {
     if let Some(dir) = matches.value_of("html_report") {
         let path = Path::new(dir);
         if std::path::Path::new(&path).exists() {
-            if !path.read_dir().map(|mut i| i.next().is_none()).unwrap_or(false) {
-                logger.error_message(format!("Html dir {} already exists and is not empty", path.display()));
+            if !path
+                .read_dir()
+                .map(|mut i| i.next().is_none())
+                .unwrap_or(false)
+            {
+                logger.error_message(format!(
+                    "Html dir {} already exists and is not empty",
+                    path.display()
+                ));
                 std::process::exit(127)
             }
             Some(path.to_path_buf())
@@ -230,14 +243,13 @@ fn html_report(matches: ArgMatches, logger: format::logger::Logger) -> Option<st
                     logger.error_message(format!("Html dir {} can not be created", path.display()));
                     std::process::exit(127)
                 }
-                Ok(_) => Some(path.to_path_buf())
+                Ok(_) => Some(path.to_path_buf()),
             }
         }
     } else {
         None
     }
 }
-
 
 fn variables(matches: ArgMatches, logger: format::logger::Logger) -> HashMap<String, String> {
     let mut variables = HashMap::new();
@@ -262,10 +274,9 @@ fn variables(matches: ArgMatches, logger: format::logger::Logger) -> HashMap<Str
     variables
 }
 
-
 fn app() -> clap::App<'static, 'static> {
     clap::App::new("hurl")
-//.author(clap::crate_authors!())
+        //.author(clap::crate_authors!())
         .version(clap::crate_version!())
         .about("Run hurl FILE(s) or standard input")
         .setting(AppSettings::DeriveDisplayOrder)
@@ -274,12 +285,12 @@ fn app() -> clap::App<'static, 'static> {
             clap::Arg::with_name("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
-                .multiple(true)
+                .multiple(true),
         )
-
-        .arg(clap::Arg::with_name("append")
-            .long("append")
-            .help("Append sessions to json output")
+        .arg(
+            clap::Arg::with_name("append")
+                .long("append")
+                .help("Append sessions to json output"),
         )
         .arg(
             clap::Arg::with_name("color")
@@ -299,26 +310,28 @@ fn app() -> clap::App<'static, 'static> {
                 .short("c")
                 .long("cookie-jar")
                 .value_name("FILE")
-                .help("Write cookies to FILE after running the session (only for one session)")
+                .help("Write cookies to FILE after running the session (only for one session)"),
         )
-        .arg(clap::Arg::with_name("fail_at_end")
-            .long("fail-at-end")
-            .help("Fail at end")
-            .takes_value(false)
+        .arg(
+            clap::Arg::with_name("fail_at_end")
+                .long("fail-at-end")
+                .help("Fail at end")
+                .takes_value(false),
         )
-        .arg(clap::Arg::with_name("file_root")
-            .long("file-root")
-            .value_name("DIR")
-            .help("set root filesystem to import file in hurl (default is current directory)")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("file_root")
+                .long("file-root")
+                .value_name("DIR")
+                .help("set root filesystem to import file in hurl (default is current directory)")
+                .takes_value(true),
         )
-        .arg(clap::Arg::with_name("html_report")
-            .long("html")
-            .value_name("DIR")
-            .help("Generate html report to dir")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("html_report")
+                .long("html")
+                .value_name("DIR")
+                .help("Generate html report to dir")
+                .takes_value(true),
         )
-
         .arg(
             clap::Arg::with_name("include")
                 .short("i")
@@ -331,14 +344,13 @@ fn app() -> clap::App<'static, 'static> {
                 .long("insecure")
                 .help("Allow insecure SSl connections"),
         )
-
-        .arg(clap::Arg::with_name("json")
-            .long("json")
-            .value_name("FILE")
-            .help("Write full session(s) to json file")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("json")
+                .long("json")
+                .value_name("FILE")
+                .help("Write full session(s) to json file")
+                .takes_value(true),
         )
-
         .arg(
             clap::Arg::with_name("follow_location")
                 .short("L")
@@ -358,11 +370,12 @@ fn app() -> clap::App<'static, 'static> {
                 .conflicts_with("color")
                 .help("Do not colorize Output"),
         )
-        .arg(clap::Arg::with_name("noproxy")
-            .long("noproxy")
-            .value_name("HOST(S)")
-            .help("List of hosts which do not use proxy")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("noproxy")
+                .long("noproxy")
+                .value_name("HOST(S)")
+                .help("List of hosts which do not use proxy")
+                .takes_value(true),
         )
         .arg(
             clap::Arg::with_name("output")
@@ -378,19 +391,21 @@ fn app() -> clap::App<'static, 'static> {
                 .value_name("[PROTOCOL://]HOST[:PORT]")
                 .help("Use proxy on given protocol/host/port"),
         )
-        .arg(clap::Arg::with_name("to_entry")
-            .long("to-entry")
-            .value_name("ENTRY_NUMBER")
-            .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("to_entry")
+                .long("to-entry")
+                .value_name("ENTRY_NUMBER")
+                .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
+                .takes_value(true),
         )
-        .arg(clap::Arg::with_name("variable")
-            .long("variable")
-            .value_name("NAME=VALUE")
-            .multiple(true)
-            .number_of_values(1)
-            .help("Define a variable")
-            .takes_value(true)
+        .arg(
+            clap::Arg::with_name("variable")
+                .long("variable")
+                .value_name("NAME=VALUE")
+                .multiple(true)
+                .number_of_values(1)
+                .help("Define a variable")
+                .takes_value(true),
         )
         .arg(
             clap::Arg::with_name("verbose")
@@ -399,7 +414,6 @@ fn app() -> clap::App<'static, 'static> {
                 .help("Turn on verbose output"),
         )
 }
-
 
 pub fn unwrap_or_exit<T>(result: Result<T, cli::Error>, logger: format::logger::Logger) -> T {
     match result {
@@ -411,8 +425,10 @@ pub fn unwrap_or_exit<T>(result: Result<T, cli::Error>, logger: format::logger::
     }
 }
 
-
-fn parse_options(matches: ArgMatches, logger: format::logger::Logger) -> Result<CLIOptions, cli::Error> {
+fn parse_options(
+    matches: ArgMatches,
+    logger: format::logger::Logger,
+) -> Result<CLIOptions, cli::Error> {
     let verbose = matches.is_present("verbose");
     let color = output_color(matches.clone());
     let fail_fast = !matches.is_present("fail_at_end");
@@ -426,12 +442,14 @@ fn parse_options(matches: ArgMatches, logger: format::logger::Logger) -> Result<
     let max_redirect = match matches.value_of("max_redirects") {
         None => Some(50),
         Some("-1") => None,
-        Some(s) => {
-            match s.parse::<usize>() {
-                Ok(x) => Some(x),
-                Err(_) => return Err(cli::Error{ message: "max_redirs option can not be parsed".to_string() })
+        Some(s) => match s.parse::<usize>() {
+            Ok(x) => Some(x),
+            Err(_) => {
+                return Err(cli::Error {
+                    message: "max_redirs option can not be parsed".to_string(),
+                })
             }
-        }
+        },
     };
 
     Ok(CLIOptions {
@@ -449,20 +467,20 @@ fn parse_options(matches: ArgMatches, logger: format::logger::Logger) -> Result<
     })
 }
 
-
 fn main() -> Result<(), cli::Error> {
     let app = app();
     let matches = app.clone().get_matches();
 
     let mut filenames = match matches.values_of("INPUT") {
         None => vec![],
-        Some(v) => v.collect()
+        Some(v) => v.collect(),
     };
 
     if filenames.is_empty() && atty::is(Stream::Stdin) {
         if app.clone().print_help().is_err() {
             std::process::exit(1);
-        } else {}
+        } else {
+        }
     } else if filenames.is_empty() {
         filenames.push("-");
     }
@@ -472,7 +490,7 @@ fn main() -> Result<(), cli::Error> {
 
     let file_root = match matches.value_of("file_root") {
         Some(value) => Some(value.to_string()),
-        _ => None
+        _ => None,
     };
 
     let logger = format::logger::Logger {
@@ -482,18 +500,23 @@ fn main() -> Result<(), cli::Error> {
         color: output_color(matches.clone()),
     };
 
-
     let (mut hurl_results, json_file) = json_file(matches.clone(), logger.clone());
     let html_report = html_report(matches.clone(), logger.clone());
     let cookies_output_file = match matches.value_of("cookies_output_file") {
         None => None,
         Some(filename) => {
-            let filename = unwrap_or_exit(cli::options::cookies_output_file(filename.to_string(), filenames.len()), logger.clone());
+            let filename = unwrap_or_exit(
+                cli::options::cookies_output_file(filename.to_string(), filenames.len()),
+                logger.clone(),
+            );
             Some(filename)
         }
     };
 
-    let cli_options = unwrap_or_exit(parse_options(matches.clone(), logger.clone()), logger.clone());
+    let cli_options = unwrap_or_exit(
+        parse_options(matches.clone(), logger.clone()),
+        logger.clone(),
+    );
 
     for filename in filenames {
         let contents = if filename == "-" {
@@ -521,7 +544,6 @@ fn main() -> Result<(), cli::Error> {
             color: cli_options.color,
         };
 
-
         let hurl_result = execute(
             filename,
             contents,
@@ -537,7 +559,14 @@ fn main() -> Result<(), cli::Error> {
             if let Some(entry_result) = hurl_result.entries.last() {
                 if let Some(response) = entry_result.response.clone() {
                     if matches.is_present("include") {
-                        logger.info(format!("HTTP/{} {}", response.version.to_string(), response.status.to_string()).as_str());
+                        logger.info(
+                            format!(
+                                "HTTP/{} {}",
+                                response.version.to_string(),
+                                response.status.to_string()
+                            )
+                            .as_str(),
+                        );
                         for header in response.headers.clone() {
                             logger.info(format!("{}: {}", header.name, header.value).as_str());
                         }
@@ -549,26 +578,39 @@ fn main() -> Result<(), cli::Error> {
                     logger.warning_message("no response has been received".to_string());
                 }
             } else {
-                logger.warning_message(format!("warning: no entry have been executed {}", if filename == "-" { "".to_string() } else { format!("for file {}", filename) }));
+                logger.warning_message(format!(
+                    "warning: no entry have been executed {}",
+                    if filename == "-" {
+                        "".to_string()
+                    } else {
+                        format!("for file {}", filename)
+                    }
+                ));
             };
         }
-
 
         hurl_results.push(hurl_result.clone());
     }
 
-
     if let Some(file_path) = json_file {
         let mut file = match std::fs::File::create(&file_path) {
             Err(why) => {
-                logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+                logger.error_message(format!(
+                    "Issue writing to {}: {:?}",
+                    file_path.display(),
+                    why
+                ));
                 std::process::exit(127)
             }
             Ok(file) => file,
         };
         let serialized = serde_json::to_string_pretty(&hurl_results).unwrap();
         if let Err(why) = file.write_all(serialized.as_bytes()) {
-            logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+            logger.error_message(format!(
+                "Issue writing to {}: {:?}",
+                file_path.display(),
+                why
+            ));
             std::process::exit(127)
         }
     }
@@ -586,14 +628,20 @@ fn main() -> Result<(), cli::Error> {
     std::process::exit(exit_code(hurl_results));
 }
 
-
 fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for hurl_result in hurl_results.clone() {
-        let runner_errors: Vec<runner::core::Error> = hurl_result.clone().errors().iter().filter(|e| !e.assert).cloned().collect();
+        let runner_errors: Vec<runner::core::Error> = hurl_result
+            .clone()
+            .errors()
+            .iter()
+            .filter(|e| !e.assert)
+            .cloned()
+            .collect();
 
-        if hurl_result.clone().errors().is_empty() {} else if runner_errors.is_empty() {
+        if hurl_result.clone().errors().is_empty() {
+        } else if runner_errors.is_empty() {
             count_errors_assert += 1;
         } else {
             count_errors_runner += 1;
@@ -614,7 +662,8 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>, logger: format::logger::
             let stdout = io::stdout();
             let mut handle = stdout.lock();
 
-            handle.write_all(bytes.as_slice())
+            handle
+                .write_all(bytes.as_slice())
                 .expect("writing bytes to console");
         }
         Some(filename) => {
@@ -626,16 +675,24 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>, logger: format::logger::
                 }
                 Ok(file) => file,
             };
-            file.write_all(bytes.as_slice()).expect("writing bytes to file");
+            file.write_all(bytes.as_slice())
+                .expect("writing bytes to file");
         }
     }
 }
 
-
-fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>, logger: format::logger::Logger) {
+fn write_cookies_file(
+    file_path: PathBuf,
+    hurl_results: Vec<HurlResult>,
+    logger: format::logger::Logger,
+) {
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+            logger.error_message(format!(
+                "Issue writing to {}: {:?}",
+                file_path.display(),
+                why
+            ));
             std::process::exit(127)
         }
         Ok(file) => file,
@@ -643,7 +700,8 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>, logger:
     let mut s = r#"# Netscape HTTP Cookie File
 # This file was generated by hurl
 
-"#.to_string();
+"#
+    .to_string();
     match hurl_results.first() {
         None => {
             logger.error_message("Issue fetching results".to_string());
@@ -658,14 +716,21 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>, logger:
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+        logger.error_message(format!(
+            "Issue writing to {}: {:?}",
+            file_path.display(),
+            why
+        ));
         std::process::exit(127)
     }
 }
 
-
-fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>, logger: format::logger::Logger) {
-//let now: DateTime<Utc> = Utc::now();
+fn write_html_report(
+    dir_path: PathBuf,
+    hurl_results: Vec<HurlResult>,
+    logger: format::logger::Logger,
+) {
+    //let now: DateTime<Utc> = Utc::now();
     let now: DateTime<Local> = Local::now();
     let html = create_html_index(now.to_rfc2822(), hurl_results);
     let s = html.render();
@@ -673,31 +738,45 @@ fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>, logger: f
     let file_path = dir_path.join("index.html");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+            logger.error_message(format!(
+                "Issue writing to {}: {:?}",
+                file_path.display(),
+                why
+            ));
             std::process::exit(127)
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(s.as_bytes()) {
-        logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+        logger.error_message(format!(
+            "Issue writing to {}: {:?}",
+            file_path.display(),
+            why
+        ));
         std::process::exit(127)
     }
-
 
     let file_path = dir_path.join("report.css");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+            logger.error_message(format!(
+                "Issue writing to {}: {:?}",
+                file_path.display(),
+                why
+            ));
             std::process::exit(127)
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(include_bytes!("report.css")) {
-        logger.error_message(format!("Issue writing to {}: {:?}", file_path.display(), why));
+        logger.error_message(format!(
+            "Issue writing to {}: {:?}",
+            file_path.display(),
+            why
+        ));
         std::process::exit(127)
     }
 }
-
 
 fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::ast::Html {
     let head = html::ast::Head {
@@ -710,27 +789,22 @@ fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::ast::H
             html::ast::Element::NodeElement {
                 name: "h2".to_string(),
                 attributes: vec![],
-                children: vec![
-                    html::ast::Element::TextElement("Hurl Report".to_string())
-                ],
+                children: vec![html::ast::Element::TextElement("Hurl Report".to_string())],
             },
             html::ast::Element::NodeElement {
                 name: "div".to_string(),
-                attributes: vec![
-                    html::ast::Attribute::Class("date".to_string())
-                ],
-                children: vec![
-                    html::ast::Element::TextElement(now)
-                ],
-            }, html::ast::Element::NodeElement {
+                attributes: vec![html::ast::Attribute::Class("date".to_string())],
+                children: vec![html::ast::Element::TextElement(now)],
+            },
+            html::ast::Element::NodeElement {
                 name: "table".to_string(),
                 attributes: vec![],
                 children: vec![
                     create_html_table_header(),
                     create_html_table_body(hurl_results),
                 ],
-            }
-        ]
+            },
+        ],
     };
     html::ast::Html { head, body }
 }
@@ -739,28 +813,22 @@ fn create_html_table_header() -> html::ast::Element {
     html::ast::Element::NodeElement {
         name: "thead".to_string(),
         attributes: vec![],
-        children: vec![
-            html::ast::Element::NodeElement {
-                name: "tr".to_string(),
-                attributes: vec![],
-                children: vec![
-                    html::ast::Element::NodeElement {
-                        name: "td".to_string(),
-                        attributes: vec![],
-                        children: vec![
-                            html::ast::Element::TextElement("filename".to_string())
-                        ],
-                    },
-                    html::ast::Element::NodeElement {
-                        name: "td".to_string(),
-                        attributes: vec![],
-                        children: vec![
-                            html::ast::Element::TextElement("duration".to_string())
-                        ],
-                    }
-                ],
-            }
-        ],
+        children: vec![html::ast::Element::NodeElement {
+            name: "tr".to_string(),
+            attributes: vec![],
+            children: vec![
+                html::ast::Element::NodeElement {
+                    name: "td".to_string(),
+                    attributes: vec![],
+                    children: vec![html::ast::Element::TextElement("filename".to_string())],
+                },
+                html::ast::Element::NodeElement {
+                    name: "td".to_string(),
+                    attributes: vec![],
+                    children: vec![html::ast::Element::TextElement("duration".to_string())],
+                },
+            ],
+        }],
     }
 }
 
@@ -777,7 +845,6 @@ fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::ast::Element {
     }
 }
 
-
 fn create_html_result(result: HurlResult) -> html::ast::Element {
     let status = if result.success {
         "success".to_string()
@@ -790,20 +857,17 @@ fn create_html_result(result: HurlResult) -> html::ast::Element {
         children: vec![
             html::ast::Element::NodeElement {
                 name: "td".to_string(),
-                attributes: vec![
-                    html::ast::Attribute::Class(status)
-                ],
-                children: vec![
-                    html::ast::Element::TextElement(result.filename.clone())
-                ],
+                attributes: vec![html::ast::Attribute::Class(status)],
+                children: vec![html::ast::Element::TextElement(result.filename.clone())],
             },
             html::ast::Element::NodeElement {
                 name: "td".to_string(),
                 attributes: vec![],
-                children: vec![
-                    html::ast::Element::TextElement(format!("{}s", result.time_in_ms as f64 / 1000.0))
-                ],
-            }
+                children: vec![html::ast::Element::TextElement(format!(
+                    "{}s",
+                    result.time_in_ms as f64 / 1000.0
+                ))],
+            },
         ],
     }
 }

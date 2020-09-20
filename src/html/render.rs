@@ -19,7 +19,11 @@ use super::ast::*;
 
 impl Html {
     pub fn render(self) -> String {
-        format!("<!DOCTYPE html>\n<html>{}{}</html>", self.head.render(), self.body.render())
+        format!(
+            "<!DOCTYPE html>\n<html>{}{}</html>",
+            self.head.render(),
+            self.body.render()
+        )
     }
 }
 
@@ -28,7 +32,13 @@ impl Head {
         let mut s = "".to_string();
         s.push_str(format!("<title>{}</title>", self.title).as_str());
         if let Some(filename) = self.stylesheet {
-            s.push_str(format!("<link rel=\"stylesheet\" type=\"text/css\" href=\"{}\">", filename).as_str());
+            s.push_str(
+                format!(
+                    "<link rel=\"stylesheet\" type=\"text/css\" href=\"{}\">",
+                    filename
+                )
+                .as_str(),
+            );
         }
         format!("<head>{}</head>", s)
     }
@@ -44,16 +54,27 @@ impl Body {
 impl Element {
     fn render(self) -> String {
         match self {
-            Element::NodeElement { name, children, attributes } => {
+            Element::NodeElement {
+                name,
+                children,
+                attributes,
+            } => {
                 let attributes = if attributes.is_empty() {
                     "".to_string()
                 } else {
-                    format!(" {}", attributes.iter().map(|a| a.clone().render()).collect::<Vec<String>>().join(""))
+                    format!(
+                        " {}",
+                        attributes
+                            .iter()
+                            .map(|a| a.clone().render())
+                            .collect::<Vec<String>>()
+                            .join("")
+                    )
                 };
                 let children: Vec<String> = children.iter().map(|e| e.clone().render()).collect();
                 format!("<{}{}>{}</{}>", name, attributes, children.join(""), name)
             }
-            Element::TextElement(s) => s
+            Element::TextElement(s) => s,
         }
     }
 }
@@ -67,24 +88,22 @@ impl Attribute {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     pub fn sample_html() -> Html {
         Html {
-            head: Head { title: "This is a title".to_string(), stylesheet: None },
+            head: Head {
+                title: "This is a title".to_string(),
+                stylesheet: None,
+            },
             body: Body {
-                children: vec![
-                    Element::NodeElement {
-                        name: "p".to_string(),
-                        attributes: vec![],
-                        children: vec![
-                            Element::TextElement("Hello world!".to_string())
-                        ],
-                    }
-                ]
+                children: vec![Element::NodeElement {
+                    name: "p".to_string(),
+                    attributes: vec![],
+                    children: vec![Element::TextElement("Hello world!".to_string())],
+                }],
             },
         }
     }
@@ -97,15 +116,16 @@ mod tests {
     pub fn sample_div() -> Element {
         Element::NodeElement {
             name: "div".to_string(),
-            attributes: vec![
-                Attribute::Class("request".to_string())
-            ],
+            attributes: vec![Attribute::Class("request".to_string())],
             children: vec![],
         }
     }
 
     #[test]
     fn test_render_div() {
-        assert_eq!(sample_div().render(), "<div class=\"request\"></div>".to_string());
+        assert_eq!(
+            sample_div().render(),
+            "<div class=\"request\"></div>".to_string()
+        );
     }
 }

@@ -4,10 +4,10 @@ use crate::core::common::SourceInfo;
 use super::combinators::*;
 use super::error::*;
 use super::expr;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::Reader;
 use super::string::*;
+use super::ParseResult;
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<'static, Predicate> {
     let (not, space0) = match try_literal("not", reader) {
@@ -55,7 +55,9 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
         ],
         reader,
     ) {
-        Err(Error { recoverable: true, .. }) => Err(Error {
+        Err(Error {
+            recoverable: true, ..
+        }) => Err(Error {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::Predicate,
@@ -75,17 +77,20 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
         Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::EqualBool { space0, value }),
         Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::EqualInt { space0, value }),
         Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::EqualFloat { space0, value }),
-        Ok(PredicateValue::Expression { value }) => Ok(PredicateFuncValue::EqualExpression { space0, value }),
-        Ok(PredicateValue::Template { value }) => Ok(PredicateFuncValue::EqualString { space0, value }),
-        Err(e) =>
-            match e.inner {
-                ParseError::EscapeChar {} => Err(e),
-                _ => Err(Error {
-                    pos: start.pos,
-                    recoverable: false,
-                    inner: ParseError::PredicateValue {},
-                })
-            }
+        Ok(PredicateValue::Expression { value }) => {
+            Ok(PredicateFuncValue::EqualExpression { space0, value })
+        }
+        Ok(PredicateValue::Template { value }) => {
+            Ok(PredicateFuncValue::EqualString { space0, value })
+        }
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
     }
 }
 
@@ -94,12 +99,14 @@ fn count_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateF
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
     let value = match natural(reader) {
-        Err(_) => return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue {},
-        }),
-        Ok(value) => value
+        Err(_) => {
+            return Err(Error {
+                pos: save.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            })
+        }
+        Ok(value) => value,
     };
     Ok(PredicateFuncValue::CountEqual { space0, value })
 }
@@ -126,18 +133,23 @@ fn include_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
         Ok(PredicateValue::Null {}) => Ok(PredicateFuncValue::IncludeNull { space0 }),
         Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::IncludeBool { space0, value }),
         Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::IncludeInt { space0, value }),
-        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::IncludeFloat { space0, value }),
-        Ok(PredicateValue::Template { value }) => Ok(PredicateFuncValue::IncludeString { space0, value }),
-        Ok(PredicateValue::Expression { value }) => Ok(PredicateFuncValue::IncludeExpression { space0, value }),
-        Err(e) =>
-            match e.inner {
-                ParseError::EscapeChar {} => Err(e),
-                _ => Err(Error {
-                    pos: start.pos,
-                    recoverable: false,
-                    inner: ParseError::PredicateValue {},
-                })
-            }
+        Ok(PredicateValue::Float { value }) => {
+            Ok(PredicateFuncValue::IncludeFloat { space0, value })
+        }
+        Ok(PredicateValue::Template { value }) => {
+            Ok(PredicateFuncValue::IncludeString { space0, value })
+        }
+        Ok(PredicateValue::Expression { value }) => {
+            Ok(PredicateFuncValue::IncludeExpression { space0, value })
+        }
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
     }
 }
 
@@ -152,7 +164,6 @@ fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
     try_literal("exists", reader)?;
     Ok(PredicateFuncValue::Exist {})
 }
-
 
 /* internal to the parser */
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -192,12 +203,10 @@ fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateValue> 
                 Ok(value) => Ok(PredicateValue::Template { value }),
                 Err(e) => Err(e),
             },
-
         ],
         reader,
     )
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -234,7 +243,13 @@ mod tests {
     fn test_predicate_error() {
         let mut reader = Reader::init("countEquals true");
         let error = predicate(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 13 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 13
+            }
+        );
         assert_eq!(error.recoverable, false);
         assert_eq!(error.inner, ParseError::PredicateValue {});
     }
@@ -266,7 +281,11 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::EqualFloat {
-                value: Float { int: 1, decimal: 100_000_000_000_000_000, decimal_digits: 1 },
+                value: Float {
+                    int: 1,
+                    decimal: 100_000_000_000_000_000,
+                    decimal_digits: 1
+                },
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::init(1, 7, 1, 8),
@@ -292,12 +311,10 @@ mod tests {
             PredicateFuncValue::EqualString {
                 value: Template {
                     quotes: true,
-                    elements: vec![
-                        TemplateElement::String {
-                            value: "Bob".to_string(),
-                            encoded: "Bob".to_string(),
-                        }
-                    ],
+                    elements: vec![TemplateElement::String {
+                        value: "Bob".to_string(),
+                        encoded: "Bob".to_string(),
+                    }],
                     source_info: SourceInfo::init(1, 8, 1, 13),
                 },
                 space0: Whitespace {
@@ -352,7 +369,13 @@ mod tests {
 
         let mut reader = Reader::init("countEquals true");
         let error = count_equal_predicate(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 13 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 13
+            }
+        );
         assert_eq!(error.recoverable, false);
         assert_eq!(error.inner, ParseError::PredicateValue {});
     }
@@ -361,9 +384,20 @@ mod tests {
     fn test_start_with_predicate() {
         let mut reader = Reader::init("startsWith 2");
         let error = start_with_predicate(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 12 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 12
+            }
+        );
         assert_eq!(error.recoverable, false);
-        assert_eq!(error.inner, ParseError::Expecting { value: "\"".to_string() });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "\"".to_string()
+            }
+        );
     }
 
     #[test]
@@ -384,7 +418,11 @@ mod tests {
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Float {
-                value: Float { int: 1, decimal: 100_000_000_000_000_000, decimal_digits: 1 }
+                value: Float {
+                    int: 1,
+                    decimal: 100_000_000_000_000_000,
+                    decimal_digits: 1
+                }
             }
         );
     }

@@ -23,17 +23,25 @@ use std::path::Path;
 
 use crate::core::common::Value;
 
-use super::core::{Error, RunnerError};
 use super::super::core::ast::*;
+use super::core::{Error, RunnerError};
 
 impl Body {
-    pub fn eval(self, variables: &HashMap<String, Value>, context_dir: String) -> Result<Vec<u8>, Error> {
+    pub fn eval(
+        self,
+        variables: &HashMap<String, Value>,
+        context_dir: String,
+    ) -> Result<Vec<u8>, Error> {
         self.value.eval(variables, context_dir)
     }
 }
 
 impl Bytes {
-    pub fn eval(self, variables: &HashMap<String, Value>, context_dir: String) -> Result<Vec<u8>, Error> {
+    pub fn eval(
+        self,
+        variables: &HashMap<String, Value>,
+        context_dir: String,
+    ) -> Result<Vec<u8>, Error> {
         match self {
             Bytes::RawString { value, .. } => {
                 let value = value.eval(variables)?;
@@ -50,7 +58,11 @@ impl Bytes {
                 let absolute_filename = if path.is_absolute() {
                     filename.clone().value
                 } else {
-                    Path::new(context_dir.as_str()).join(filename.value).to_str().unwrap().to_string()
+                    Path::new(context_dir.as_str())
+                        .join(filename.value)
+                        .to_str()
+                        .unwrap()
+                        .to_string()
                 };
                 match File::open(absolute_filename.clone()) {
                     Ok(f) => {
@@ -62,15 +74,16 @@ impl Bytes {
                     }
                     Err(_) => Err(Error {
                         source_info: filename.source_info,
-                        inner: RunnerError::FileReadAccess { value: absolute_filename },
+                        inner: RunnerError::FileReadAccess {
+                            value: absolute_filename,
+                        },
                         assert: false,
-                    })
+                    }),
                 }
             }
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -88,7 +101,7 @@ mod tests {
                 Ok(mut file) => match file.write_all(b"Hello World!") {
                     Err(why) => panic!("couldn't write to {}: {:?}", display, why),
                     Ok(_) => println!("successfully wrote to {}", display),
-                }
+                },
             }
         }
     }
@@ -105,12 +118,18 @@ mod tests {
 
         let bytes = Bytes::File {
             space0: whitespace.clone(),
-            filename: Filename { value: String::from("/tmp/data.bin"), source_info: SourceInfo::init(1, 7, 1, 15) },
+            filename: Filename {
+                value: String::from("/tmp/data.bin"),
+                source_info: SourceInfo::init(1, 7, 1, 15),
+            },
             space1: whitespace.clone(),
         };
 
         let variables = HashMap::new();
-        assert_eq!(bytes.eval(&variables, "current_dir".to_string()).unwrap(), b"Hello World!");
+        assert_eq!(
+            bytes.eval(&variables, "current_dir".to_string()).unwrap(),
+            b"Hello World!"
+        );
     }
 
     #[test]
@@ -123,14 +142,25 @@ mod tests {
 
         let bytes = Bytes::File {
             space0: whitespace.clone(),
-            filename: Filename { value: String::from("data.bin"), source_info: SourceInfo::init(1, 7, 1, 15) },
+            filename: Filename {
+                value: String::from("data.bin"),
+                source_info: SourceInfo::init(1, 7, 1, 15),
+            },
             space1: whitespace.clone(),
         };
 
         let variables = HashMap::new();
 
-        let error = bytes.eval(&variables, "current_dir".to_string()).err().unwrap();
-        assert_eq!(error.inner, RunnerError::FileReadAccess { value: String::from("current_dir/data.bin") });
+        let error = bytes
+            .eval(&variables, "current_dir".to_string())
+            .err()
+            .unwrap();
+        assert_eq!(
+            error.inner,
+            RunnerError::FileReadAccess {
+                value: String::from("current_dir/data.bin")
+            }
+        );
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
     }
 }

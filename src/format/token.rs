@@ -75,7 +75,9 @@ impl Tokenizable for Entry {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         add_tokens(&mut tokens, self.request.tokenize());
-        if let Some(response) = self.clone().response { add_tokens(&mut tokens, response.tokenize()) }
+        if let Some(response) = self.clone().response {
+            add_tokens(&mut tokens, response.tokenize())
+        }
         tokens
     }
 }
@@ -103,7 +105,9 @@ impl Tokenizable for Request {
             &mut tokens,
             self.sections.iter().flat_map(|e| e.tokenize()).collect(),
         );
-        if let Some(body) = self.clone().body { add_tokens(&mut tokens, body.tokenize()) }
+        if let Some(body) = self.clone().body {
+            add_tokens(&mut tokens, body.tokenize())
+        }
         tokens
     }
 }
@@ -131,7 +135,9 @@ impl Tokenizable for Response {
             &mut tokens,
             self.sections.iter().flat_map(|e| e.tokenize()).collect(),
         );
-        if let Some(body) = self.clone().body { add_tokens(&mut tokens, body.tokenize()) }
+        if let Some(body) = self.clone().body {
+            add_tokens(&mut tokens, body.tokenize())
+        }
         tokens
     }
 }
@@ -177,7 +183,7 @@ impl Tokenizable for Bytes {
             Bytes::Xml { value } => {
                 tokens.push(Token::String(value.to_string()));
             }
-//            Bytes::MultilineString { value: _ } => {}
+            //            Bytes::MultilineString { value: _ } => {}
             Bytes::RawString { newline0, value } => {
                 tokens.push(Token::Keyword(String::from("```")));
                 add_tokens(&mut tokens, newline0.tokenize());
@@ -384,7 +390,9 @@ impl Tokenizable for Capture {
         add_tokens(&mut tokens, self.space2.tokenize());
         add_tokens(&mut tokens, self.query.tokenize());
         add_tokens(&mut tokens, self.space3.tokenize());
-        if let Some(subquery) = self.clone().subquery { add_tokens(&mut tokens, subquery.tokenize()) }
+        if let Some(subquery) = self.clone().subquery {
+            add_tokens(&mut tokens, subquery.tokenize())
+        }
         add_tokens(&mut tokens, self.line_terminator0.tokenize());
         tokens
     }
@@ -605,12 +613,16 @@ impl Tokenizable for EncodedString {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         if self.quotes {
-            tokens.push(Token::Quote(if self.clone().quotes { "\"" } else { "" }.to_string()));
+            tokens.push(Token::Quote(
+                if self.clone().quotes { "\"" } else { "" }.to_string(),
+            ));
         }
         tokens.push(Token::String(self.encoded.clone()));
 
         if self.quotes {
-            tokens.push(Token::Quote(if self.clone().quotes { "\"" } else { "" }.to_string()));
+            tokens.push(Token::Quote(
+                if self.clone().quotes { "\"" } else { "" }.to_string(),
+            ));
         }
         tokens
     }
@@ -620,14 +632,18 @@ impl Tokenizable for Template {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         if self.quotes {
-            tokens.push(Token::Quote(if self.clone().quotes { "\"" } else { "" }.to_string()));
+            tokens.push(Token::Quote(
+                if self.clone().quotes { "\"" } else { "" }.to_string(),
+            ));
         }
         for element in self.elements.clone() {
             add_tokens(&mut tokens, element.tokenize());
         }
 
         if self.quotes {
-            tokens.push(Token::Quote(if self.clone().quotes { "\"" } else { "" }.to_string()));
+            tokens.push(Token::Quote(
+                if self.clone().quotes { "\"" } else { "" }.to_string(),
+            ));
         }
         tokens
     }

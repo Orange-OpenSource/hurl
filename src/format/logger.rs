@@ -16,8 +16,8 @@
  *
  */
 
-use super::error::Error;
 use super::color::TerminalColor;
+use super::error::Error;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Logger {
@@ -27,9 +27,7 @@ pub struct Logger {
     pub color: bool,
 }
 
-
 impl Logger {
-
     pub fn info(&self, s: &str) {
         println!("{}", s);
     }
@@ -105,12 +103,16 @@ impl Logger {
         eprintln!("{} |", " ".repeat(line_number_size));
 
         let line = self.lines.get(err.source_info.start.line - 1).unwrap();
-        let line = str::replace(line, "\t", "    ");    // replace all your tabs with 4 characters
+        let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
         eprintln!(
             "{line_number:>width$} |{line}",
             line_number = err.source_info.start.line,
             width = line_number_size,
-            line = if line.is_empty() { line } else { format!(" {}", line) }
+            line = if line.is_empty() {
+                line
+            } else {
+                format!(" {}", line)
+            }
         );
 
         // TODO: to clean/Refacto
@@ -134,7 +136,9 @@ impl Logger {
 
             let mut tab_shift = 0;
             for (i, c) in line.chars().enumerate() {
-                if i >= err.source_info.start.column - 1 { break; };
+                if i >= err.source_info.start.column - 1 {
+                    break;
+                };
                 if c == '\t' {
                     tab_shift += 1;
                 }

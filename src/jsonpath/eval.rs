@@ -21,12 +21,14 @@ use super::ast::*;
 
 pub type JsonpathResult = Vec<serde_json::Value>;
 
-
 impl Query {
     pub fn eval(self, value: serde_json::Value) -> JsonpathResult {
         let mut results = vec![value];
         for selector in self.selectors {
-            results = results.iter().flat_map(|value| selector.clone().eval(value.clone())).collect();
+            results = results
+                .iter()
+                .flat_map(|value| selector.clone().eval(value.clone()))
+                .collect();
         }
         results
     }
@@ -35,29 +37,22 @@ impl Query {
 impl Selector {
     pub fn eval(self, root: serde_json::Value) -> JsonpathResult {
         match self {
-            Selector::NameChild(field) =>
-                match root.get(field) {
-                    None => vec![],
-                    Some(value) => vec![value.clone()],
-                }
-            ,
-            Selector::ArrayIndex(index) =>
-                match root.get(index) {
-                    None => vec![],
-                    Some(value) => vec![value.clone()],
-                }
-            Selector::Filter(predicate) => {
-                match root {
-                    serde_json::Value::Array(elements) => {
-                        elements
-                            .iter()
-                            .filter(|&e| predicate.eval(e.clone()))
-                            .cloned()
-                            .collect()
-                    }
-                    _ => vec![],
-                }
-            }
+            Selector::NameChild(field) => match root.get(field) {
+                None => vec![],
+                Some(value) => vec![value.clone()],
+            },
+            Selector::ArrayIndex(index) => match root.get(index) {
+                None => vec![],
+                Some(value) => vec![value.clone()],
+            },
+            Selector::Filter(predicate) => match root {
+                serde_json::Value::Array(elements) => elements
+                    .iter()
+                    .filter(|&e| predicate.eval(e.clone()))
+                    .cloned()
+                    .collect(),
+                _ => vec![],
+            },
             Selector::RecursiveKey(key) => {
                 let mut elements = vec![];
                 match root {
@@ -68,14 +63,14 @@ impl Selector {
                         for value in obj.values() {
                             for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {
                                 elements.push(element);
-                            };
+                            }
                         }
                     }
                     serde_json::Value::Array(values) => {
                         for value in values {
                             for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {
                                 elements.push(element);
-                            };
+                            }
                         }
                     }
                     _ => {}
@@ -89,21 +84,35 @@ impl Selector {
 impl Predicate {
     pub fn eval(&self, elem: serde_json::Value) -> bool {
         match elem {
-            serde_json::Value::Object(ref obj) => match (obj.get(self.key.as_str()), self.func.clone()) {
-                (Some(serde_json::Value::Number(v)), PredicateFunc::Equal(ref num))
-                => approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2), //v.as_f64().unwrap() == num.to_f64(),
-                (Some(serde_json::Value::Number(v)), PredicateFunc::GreaterThan(ref num)) => v.as_f64().unwrap() > num.to_f64(),
-                (Some(serde_json::Value::Number(v)), PredicateFunc::GreaterThanOrEqual(ref num)) => v.as_f64().unwrap() >= num.to_f64(),
-                (Some(serde_json::Value::Number(v)), PredicateFunc::LessThan(ref num)) => v.as_f64().unwrap() < num.to_f64(),
-                (Some(serde_json::Value::Number(v)), PredicateFunc::LessThanOrEqual(ref num)) => v.as_f64().unwrap() <= num.to_f64(),
-                (Some(serde_json::Value::String(v)), PredicateFunc::EqualString(ref s)) => v == s,
-                _ => false,
-            },
+            serde_json::Value::Object(ref obj) => {
+                match (obj.get(self.key.as_str()), self.func.clone()) {
+                    (Some(serde_json::Value::Number(v)), PredicateFunc::Equal(ref num)) => {
+                        approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
+                    } //v.as_f64().unwrap() == num.to_f64(),
+                    (Some(serde_json::Value::Number(v)), PredicateFunc::GreaterThan(ref num)) => {
+                        v.as_f64().unwrap() > num.to_f64()
+                    }
+                    (
+                        Some(serde_json::Value::Number(v)),
+                        PredicateFunc::GreaterThanOrEqual(ref num),
+                    ) => v.as_f64().unwrap() >= num.to_f64(),
+                    (Some(serde_json::Value::Number(v)), PredicateFunc::LessThan(ref num)) => {
+                        v.as_f64().unwrap() < num.to_f64()
+                    }
+                    (
+                        Some(serde_json::Value::Number(v)),
+                        PredicateFunc::LessThanOrEqual(ref num),
+                    ) => v.as_f64().unwrap() <= num.to_f64(),
+                    (Some(serde_json::Value::String(v)), PredicateFunc::EqualString(ref s)) => {
+                        v == s
+                    }
+                    _ => false,
+                }
+            }
             _ => false,
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -112,23 +121,24 @@ mod tests {
     use super::*;
 
     pub fn json_root() -> serde_json::Value {
-        json!({
-        "store": json_store()
-    })
+        json!({ "store": json_store() })
     }
 
     pub fn json_store() -> serde_json::Value {
         json!({
-        "book": json_books(),
-        "bicycle": [
+            "book": json_books(),
+            "bicycle": [
 
-        ]
-    })
+            ]
+        })
     }
 
     pub fn json_books() -> serde_json::Value {
         json!([
-              json_first_book(), json_second_book(), json_third_book(), json_fourth_book()
+            json_first_book(),
+            json_second_book(),
+            json_third_book(),
+            json_fourth_book()
         ])
     }
 
@@ -143,36 +153,43 @@ mod tests {
 
     pub fn json_second_book() -> serde_json::Value {
         json!(              { "category": "fiction",
-                "author": "Evelyn Waugh",
-                "title": "Sword of Honour",
-                "price": 12.99
-              })
+          "author": "Evelyn Waugh",
+          "title": "Sword of Honour",
+          "price": 12.99
+        })
     }
 
     pub fn json_third_book() -> serde_json::Value {
         json!(              { "category": "fiction",
-                            "author": "Herman Melville",
-                            "title": "Moby Dick",
-                            "isbn": "0-553-21311-3",
-                            "price": 8.99
-                        })
+            "author": "Herman Melville",
+            "title": "Moby Dick",
+            "isbn": "0-553-21311-3",
+            "price": 8.99
+        })
     }
 
     pub fn json_fourth_book() -> serde_json::Value {
         json!({ "category": "fiction",
-                "author": "J. R. R. Tolkien",
-                "title": "The Lord of the Rings",
-                "isbn": "0-395-19395-8",
-                "price": 22.99
-              })
+          "author": "J. R. R. Tolkien",
+          "title": "The Lord of the Rings",
+          "isbn": "0-395-19395-8",
+          "price": 22.99
+        })
     }
 
     #[test]
     pub fn test_query() {
-        assert_eq!(Query { selectors: vec![] }.eval(json_root()), vec![json_root()]);
+        assert_eq!(
+            Query { selectors: vec![] }.eval(json_root()),
+            vec![json_root()]
+        );
 
-        assert_eq!(Query { selectors: vec![Selector::NameChild("store".to_string())] }.eval(json_root()),
-                   vec![json_store()]
+        assert_eq!(
+            Query {
+                selectors: vec![Selector::NameChild("store".to_string())]
+            }
+            .eval(json_root()),
+            vec![json_store()]
         );
 
         let query = Query {
@@ -181,10 +198,11 @@ mod tests {
                 Selector::NameChild("book".to_string()),
                 Selector::ArrayIndex(0),
                 Selector::NameChild("title".to_string()),
-            ]
+            ],
         };
-        assert_eq!(query.eval(json_root()),
-                   vec![json!("Sayings of the Century")]
+        assert_eq!(
+            query.eval(json_root()),
+            vec![json!("Sayings of the Century")]
         );
 
         // $.store.book[?(@.price<10)].title
@@ -194,60 +212,74 @@ mod tests {
                 Selector::NameChild("book".to_string()),
                 Selector::Filter(Predicate {
                     key: "price".to_string(),
-                    func: PredicateFunc::LessThan(Number { int: 10, decimal: 0 }),
+                    func: PredicateFunc::LessThan(Number {
+                        int: 10,
+                        decimal: 0,
+                    }),
                 }),
                 Selector::NameChild("title".to_string()),
-            ]
+            ],
         };
-        assert_eq!(query.eval(json_root()),
-                   vec![json!("Sayings of the Century"), json!("Moby Dick")]
+        assert_eq!(
+            query.eval(json_root()),
+            vec![json!("Sayings of the Century"), json!("Moby Dick")]
         );
 
         // $..author
         let query = Query {
-            selectors: vec![
-                Selector::RecursiveKey("author".to_string())
-            ]
+            selectors: vec![Selector::RecursiveKey("author".to_string())],
         };
-        assert_eq!(query.eval(json_root()),
-                   vec![json!("Nigel Rees"), json!("Evelyn Waugh"), json!("Herman Melville"), json!("J. R. R. Tolkien")]
+        assert_eq!(
+            query.eval(json_root()),
+            vec![
+                json!("Nigel Rees"),
+                json!("Evelyn Waugh"),
+                json!("Herman Melville"),
+                json!("J. R. R. Tolkien")
+            ]
         );
     }
 
     #[test]
     pub fn test_bookstore() {
-//    assert_eq!(Selector::NameChild("store".to_string()).eval(json_root()),
-//               vec![json_store()]
-//    );
-//    assert_eq!(Selector::NameChild("book".to_string()).eval(json_store()),
-//               vec![json_books()]
-//    );
-//
-//    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
-//               vec![json_first_book()]
-//    );
-//
-//    assert_eq!(Selector::NameChild("title".to_string()).eval(json_first_book()),
-//               vec![json!("Sayings of the Century")]
-//    );
-//
-//    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
-//               vec![json_first_book()]
-//    );
-//    assert_eq!(Selector::Filter(Predicate::KeyEqualStringValue("category".to_string(), "reference".to_string())).eval(json_books()),
-//               vec![json_first_book()]
-//    );
-//
-//    assert_eq!(Selector::Filter(Predicate::KeySmallerThanIntValue("price".to_string(), 10)).eval(json_books()),
-//               vec![json_first_book(), json_third_book()]
-//    );
-//
-//    assert_eq!(Selector::RecursiveKey("book".to_string()).eval(json_root()),
-//              vec![json_books()]
-//    );
+        //    assert_eq!(Selector::NameChild("store".to_string()).eval(json_root()),
+        //               vec![json_store()]
+        //    );
+        //    assert_eq!(Selector::NameChild("book".to_string()).eval(json_store()),
+        //               vec![json_books()]
+        //    );
+        //
+        //    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
+        //               vec![json_first_book()]
+        //    );
+        //
+        //    assert_eq!(Selector::NameChild("title".to_string()).eval(json_first_book()),
+        //               vec![json!("Sayings of the Century")]
+        //    );
+        //
+        //    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
+        //               vec![json_first_book()]
+        //    );
+        //    assert_eq!(Selector::Filter(Predicate::KeyEqualStringValue("category".to_string(), "reference".to_string())).eval(json_books()),
+        //               vec![json_first_book()]
+        //    );
+        //
+        //    assert_eq!(Selector::Filter(Predicate::KeySmallerThanIntValue("price".to_string(), 10)).eval(json_books()),
+        //               vec![json_first_book(), json_third_book()]
+        //    );
+        //
+        //    assert_eq!(Selector::RecursiveKey("book".to_string()).eval(json_root()),
+        //              vec![json_books()]
+        //    );
 
-        assert_eq!(Selector::RecursiveKey("author".to_string()).eval(json_root()),
-                   vec![json!("Nigel Rees"), json!("Evelyn Waugh"), json!("Herman Melville"), json!("J. R. R. Tolkien")]
+        assert_eq!(
+            Selector::RecursiveKey("author".to_string()).eval(json_root()),
+            vec![
+                json!("Nigel Rees"),
+                json!("Evelyn Waugh"),
+                json!("Herman Melville"),
+                json!("J. R. R. Tolkien")
+            ]
         );
     }
 
@@ -255,41 +287,66 @@ mod tests {
     #[test]
     pub fn test_array_index() {
         let value = json!(["first", "second", "third", "forth", "fifth"]);
-        assert_eq!(Selector::ArrayIndex(2).eval(value),
-                   vec![json!("third")]
-        );
+        assert_eq!(Selector::ArrayIndex(2).eval(value), vec![json!("third")]);
     }
 
     #[test]
     pub fn test_predicate() {
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::EqualString("value".to_string()),
-        }.eval(json!({"key": "value"})), true);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::EqualString("value".to_string()),
+            }
+            .eval(json!({"key": "value"})),
+            true
+        );
 
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::EqualString("value".to_string()),
-        }.eval(json!({"key": "some"})), false);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::EqualString("value".to_string()),
+            }
+            .eval(json!({"key": "some"})),
+            false
+        );
 
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-        }.eval(json!({"key": 1})), true);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+            }
+            .eval(json!({"key": 1})),
+            true
+        );
 
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-        }.eval(json!({"key": 2})), false);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+            }
+            .eval(json!({"key": 2})),
+            false
+        );
 
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-        }.eval(json!({"key": "1"})), false);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+            }
+            .eval(json!({"key": "1"})),
+            false
+        );
 
-        assert_eq!(Predicate {
-            key: "key".to_string(),
-            func: PredicateFunc::LessThan(Number { int: 10, decimal: 0 }),
-        }.eval(json!({"key": 1})), true);
+        assert_eq!(
+            Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::LessThan(Number {
+                    int: 10,
+                    decimal: 0
+                }),
+            }
+            .eval(json!({"key": 1})),
+            true
+        );
     }
 }

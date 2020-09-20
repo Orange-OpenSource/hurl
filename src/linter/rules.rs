@@ -270,8 +270,14 @@ impl Lintable<QueryValue> for QueryValue {
     fn lint(&self) -> QueryValue {
         match self {
             QueryValue::Status {} => QueryValue::Status {},
-            QueryValue::Header { name, .. } => QueryValue::Header { name: name.clone(), space0: one_whitespace() },
-            QueryValue::Cookie { expr: CookiePath { name, attribute }, .. } => {
+            QueryValue::Header { name, .. } => QueryValue::Header {
+                name: name.clone(),
+                space0: one_whitespace(),
+            },
+            QueryValue::Cookie {
+                expr: CookiePath { name, attribute },
+                ..
+            } => {
                 let attribute = if let Some(attribute) = attribute {
                     Some(attribute.lint())
                 } else {
@@ -279,14 +285,29 @@ impl Lintable<QueryValue> for QueryValue {
                 };
                 QueryValue::Cookie {
                     space0: one_whitespace(),
-                    expr: CookiePath { name: name.clone(), attribute },
+                    expr: CookiePath {
+                        name: name.clone(),
+                        attribute,
+                    },
                 }
             }
             QueryValue::Body {} => QueryValue::Body {},
-            QueryValue::Xpath { expr, .. } => QueryValue::Xpath { expr: expr.clone(), space0: one_whitespace() },
-            QueryValue::Jsonpath { expr, .. } => QueryValue::Jsonpath { expr: expr.clone(), space0: one_whitespace() },
-            QueryValue::Regex { expr, .. } => QueryValue::Regex { expr: expr.clone(), space0: one_whitespace() },
-            QueryValue::Variable { name, .. } => QueryValue::Variable { name: name.clone(), space0: one_whitespace() },
+            QueryValue::Xpath { expr, .. } => QueryValue::Xpath {
+                expr: expr.clone(),
+                space0: one_whitespace(),
+            },
+            QueryValue::Jsonpath { expr, .. } => QueryValue::Jsonpath {
+                expr: expr.clone(),
+                space0: one_whitespace(),
+            },
+            QueryValue::Regex { expr, .. } => QueryValue::Regex {
+                expr: expr.clone(),
+                space0: one_whitespace(),
+            },
+            QueryValue::Variable { name, .. } => QueryValue::Variable {
+                name: name.clone(),
+                space0: one_whitespace(),
+            },
         }
     }
 }
@@ -301,7 +322,11 @@ impl Lintable<CookieAttribute> for CookieAttribute {
         let space0 = empty_whitespace();
         let name = self.name.lint();
         let space1 = empty_whitespace();
-        CookieAttribute { space0, name, space1 }
+        CookieAttribute {
+            space0,
+            name,
+            space1,
+        }
     }
 }
 
@@ -319,8 +344,12 @@ impl Lintable<CookieAttributeName> for CookieAttributeName {
             CookieAttributeName::Domain(_) => CookieAttributeName::Domain("Domain".to_string()),
             CookieAttributeName::Path(_) => CookieAttributeName::Path("Path".to_string()),
             CookieAttributeName::Secure(_) => CookieAttributeName::Secure("Secure".to_string()),
-            CookieAttributeName::HttpOnly(_) => CookieAttributeName::HttpOnly("HttpOnly".to_string()),
-            CookieAttributeName::SameSite(_) => CookieAttributeName::SameSite("SameSite".to_string())
+            CookieAttributeName::HttpOnly(_) => {
+                CookieAttributeName::HttpOnly("HttpOnly".to_string())
+            }
+            CookieAttributeName::SameSite(_) => {
+                CookieAttributeName::SameSite("SameSite".to_string())
+            }
         }
     }
 }
@@ -334,7 +363,11 @@ impl Lintable<Predicate> for Predicate {
     fn lint(&self) -> Predicate {
         Predicate {
             not: self.clone().not,
-            space0: if self.not { one_whitespace() } else { empty_whitespace() },
+            space0: if self.not {
+                one_whitespace()
+            } else {
+                empty_whitespace()
+            },
             predicate_func: self.predicate_func.lint(),
         }
     }
@@ -363,25 +396,75 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
     #[allow(clippy::clone_on_copy)]
     fn lint(&self) -> PredicateFuncValue {
         match self {
-            PredicateFuncValue::EqualString { value, .. } => PredicateFuncValue::EqualString { space0: one_whitespace(), value: value.clone().lint() },
-            PredicateFuncValue::EqualInt { value, .. } => PredicateFuncValue::EqualInt { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::EqualBool { value, .. } => PredicateFuncValue::EqualBool { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::EqualNull { .. } => PredicateFuncValue::EqualNull { space0: one_whitespace() },
-            PredicateFuncValue::EqualFloat { value, .. } => PredicateFuncValue::EqualFloat { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::EqualExpression { value, .. } => PredicateFuncValue::EqualExpression { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::Contain { value, .. } => PredicateFuncValue::Contain { space0: one_whitespace(), value: value.clone().lint() },
+            PredicateFuncValue::EqualString { value, .. } => PredicateFuncValue::EqualString {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
+            PredicateFuncValue::EqualInt { value, .. } => PredicateFuncValue::EqualInt {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::EqualBool { value, .. } => PredicateFuncValue::EqualBool {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::EqualNull { .. } => PredicateFuncValue::EqualNull {
+                space0: one_whitespace(),
+            },
+            PredicateFuncValue::EqualFloat { value, .. } => PredicateFuncValue::EqualFloat {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::EqualExpression { value, .. } => {
+                PredicateFuncValue::EqualExpression {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::Contain { value, .. } => PredicateFuncValue::Contain {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
 
-            PredicateFuncValue::IncludeString { value, .. } => PredicateFuncValue::IncludeString { space0: one_whitespace(), value: value.clone().lint() },
-            PredicateFuncValue::IncludeInt { value, .. } => PredicateFuncValue::IncludeInt { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::IncludeFloat { value, .. } => PredicateFuncValue::IncludeFloat { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::IncludeBool { value, .. } => PredicateFuncValue::IncludeBool { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::IncludeNull {  .. } => PredicateFuncValue::IncludeNull { space0: one_whitespace() },
-            PredicateFuncValue::IncludeExpression { value, .. } => PredicateFuncValue::IncludeExpression { space0: one_whitespace(), value: value.clone() },
+            PredicateFuncValue::IncludeString { value, .. } => PredicateFuncValue::IncludeString {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
+            PredicateFuncValue::IncludeInt { value, .. } => PredicateFuncValue::IncludeInt {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::IncludeFloat { value, .. } => PredicateFuncValue::IncludeFloat {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::IncludeBool { value, .. } => PredicateFuncValue::IncludeBool {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::IncludeNull { .. } => PredicateFuncValue::IncludeNull {
+                space0: one_whitespace(),
+            },
+            PredicateFuncValue::IncludeExpression { value, .. } => {
+                PredicateFuncValue::IncludeExpression {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
 
-            PredicateFuncValue::Match { value, .. } => PredicateFuncValue::Match { space0: one_whitespace(), value: value.clone().lint() },
-            PredicateFuncValue::StartWith { value, .. } => PredicateFuncValue::StartWith { space0: one_whitespace(), value: value.clone().lint() },
-            PredicateFuncValue::CountEqual { value, .. } => PredicateFuncValue::CountEqual { space0: one_whitespace(), value: value.clone() },
-            PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {}
+            PredicateFuncValue::Match { value, .. } => PredicateFuncValue::Match {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
+            PredicateFuncValue::StartWith { value, .. } => PredicateFuncValue::StartWith {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
+            PredicateFuncValue::CountEqual { value, .. } => PredicateFuncValue::CountEqual {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {},
         }
     }
 }
@@ -450,9 +533,9 @@ impl Lintable<Bytes> for Bytes {
             Bytes::Xml { value } => Bytes::Xml {
                 value: value.clone(),
             },
-//            Bytes::MultilineString { value } => Bytes::MultilineString {
-//                value: value.clone(),
-//            },
+            //            Bytes::MultilineString { value } => Bytes::MultilineString {
+            //                value: value.clone(),
+            //            },
         }
     }
 }
@@ -469,7 +552,11 @@ impl Lintable<KeyValue> for KeyValue {
             space0: empty_whitespace(),
             key: self.clone().key,
             space1: empty_whitespace(),
-            space2: if self.value.clone().elements.is_empty() { empty_whitespace() } else { one_whitespace() },
+            space2: if self.value.clone().elements.is_empty() {
+                empty_whitespace()
+            } else {
+                one_whitespace()
+            },
             value: self.clone().value,
             line_terminator0: self.clone().line_terminator0,
         }
@@ -488,15 +575,15 @@ impl Lintable<MultipartParam> for MultipartParam {
             MultipartParam::FileParam(file_param) => MultipartParam::FileParam(file_param.lint()),
         }
     }
-//        let line_terminators = self.line_terminators.clone();
-//        let space0 = empty_whitespace();
-//        let key = self.key.clone();
-//        let space1 = empty_whitespace();
-//        let space2 =  self.space2.clone();
-//        let value = self.clone().value;
-//        let line_terminator0 = self.clone().line_terminator0;
-//        MultipartParam { line_terminators, space0, key,space1, space2, value, line_terminator0}
-//    }
+    //        let line_terminators = self.line_terminators.clone();
+    //        let space0 = empty_whitespace();
+    //        let key = self.key.clone();
+    //        let space1 = empty_whitespace();
+    //        let space2 =  self.space2.clone();
+    //        let value = self.clone().value;
+    //        let line_terminator0 = self.clone().line_terminator0;
+    //        MultipartParam { line_terminators, space0, key,space1, space2, value, line_terminator0}
+    //    }
 }
 
 impl Lintable<FileParam> for FileParam {
@@ -524,7 +611,6 @@ impl Lintable<FileParam> for FileParam {
         }
     }
 }
-
 
 fn empty_whitespace() -> Whitespace {
     Whitespace {
@@ -617,7 +703,6 @@ impl Lintable<Template> for Template {
         self.clone()
     }
 }
-
 
 #[cfg(test)]
 mod tests {

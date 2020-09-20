@@ -18,6 +18,6 @@
 pub mod color;
 pub mod error;
 pub mod html;
+pub mod logger;
 pub mod text;
 pub mod token;
-pub mod logger;

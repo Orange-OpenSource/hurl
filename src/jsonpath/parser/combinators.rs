@@ -15,16 +15,14 @@
  * limitations under the License.
  *
  */
-use super::{ParseFunc, ParseResult};
 use super::error::*;
 use super::reader::Reader;
+use super::{ParseFunc, ParseResult};
 
 pub fn optional<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, Option<T>> {
     let start = p.state.clone();
     match f(p) {
-        Ok(r) => {
-            Ok(Some(r))
-        }
+        Ok(r) => Ok(Some(r)),
         Err(e) => {
             if e.recoverable {
                 p.state = start;
@@ -41,33 +39,24 @@ pub fn optional<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, O
 pub fn recover<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, T> {
     //   let start = p.state.clone();
     match f(p) {
-        Ok(r) => {
-            Ok(r)
-        }
-        Err(e) => {
-            Err(Error {
-                pos: e.pos,
-                recoverable: true,
-                inner: e.inner,
-            })
-        }
+        Ok(r) => Ok(r),
+        Err(e) => Err(Error {
+            pos: e.pos,
+            recoverable: true,
+            inner: e.inner,
+        }),
     }
 }
-
 
 pub fn nonrecover<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, T> {
     //let start = p.state.clone();
     match f(p) {
-        Ok(r) => {
-            Ok(r)
-        }
-        Err(e) => {
-            Err(Error {
-                pos: e.pos,
-                recoverable: false,
-                inner: e.inner,
-            })
-        }
+        Ok(r) => Ok(r),
+        Err(e) => Err(Error {
+            pos: e.pos,
+            recoverable: false,
+            inner: e.inner,
+        }),
     }
 }
 
@@ -97,7 +86,6 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
         }
     }
 }
-
 
 pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Vec<T>> {
     let _initial_state = reader.state.clone();
@@ -144,17 +132,18 @@ pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, p: &mut Reader) -> ParseResult<'
                 f(p)
             } else {
                 match f(p) {
-                    Err(Error { recoverable: true, .. }) => {
+                    Err(Error {
+                        recoverable: true, ..
+                    }) => {
                         p.state = start;
                         choice(fs.clone().into_iter().skip(1).collect(), p)
                     }
-                    x => x
+                    x => x,
                 }
             }
         }
     }
 }
-
 
 pub fn peek<T>(f: ParseFunc<T>, p: Reader) -> ParseResult<T> {
     let start = p.state.clone();
@@ -174,4 +163,3 @@ pub fn peek<T>(f: ParseFunc<T>, p: Reader) -> ParseResult<T> {
         }
     }
 }
-

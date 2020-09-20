@@ -22,22 +22,26 @@ use crate::core::common::SourceInfo;
 use super::combinators::*;
 use super::error::*;
 use super::expr;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::{Reader, ReaderState};
+use super::ParseResult;
 
 pub type CharParser = fn(&mut Reader) -> ParseResult<(char, String)>;
-
 
 pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let start = reader.state.pos.clone();
 
     match reader.peek() {
-        Some(' ') | Some('\t') | Some('\n') | Some('#') | None => return Ok(Template {
-            quotes: false,
-            elements: vec![],
-            source_info: SourceInfo { start: start.clone(), end: start },
-        }),
+        Some(' ') | Some('\t') | Some('\n') | Some('#') | None => {
+            return Ok(Template {
+                quotes: false,
+                elements: vec![],
+                source_info: SourceInfo {
+                    start: start.clone(),
+                    end: start,
+                },
+            })
+        }
         _ => {}
     }
 
@@ -45,11 +49,14 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> 
     // TODO pas escape vector =>  expected fn pointer, found closure
     let mut elements = zero_or_more(
         |reader1| template_element(|reader2| any_char(vec!['#'], reader2), reader1),
-        reader)?;
+        reader,
+    )?;
 
     // check trailing space
     if let Some(TemplateElement::String { value, encoded }) = elements.last() {
-        let keep = encoded.trim_end_matches(|c: char| c == ' ' || c == '\t').len();
+        let keep = encoded
+            .trim_end_matches(|c: char| c == ' ' || c == '\t')
+            .len();
         let trailing_space = encoded.len() - keep;
         if trailing_space > 0 {
             let value = value.as_str()[..value.len() - trailing_space].to_string();
@@ -60,21 +67,25 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> 
             let cursor = reader.state.cursor - trailing_space;
             let line = reader.state.pos.line;
             let column = reader.state.pos.column - trailing_space;
-            reader.state = ReaderState { cursor, pos: Pos { line, column } };
+            reader.state = ReaderState {
+                cursor,
+                pos: Pos { line, column },
+            };
         }
     }
 
     Ok(Template {
         quotes,
         elements,
-        source_info: SourceInfo { start, end: reader.state.pos.clone() },
+        source_info: SourceInfo {
+            start,
+            end: reader.state.pos.clone(),
+        },
     })
 }
 
-
 pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedString> {
     let start = reader.state.pos.clone();
-
 
     let quotes = false;
     let mut value = "".to_string();
@@ -86,7 +97,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                 value.push(c);
                 encoded.push_str(reader.from(save.cursor).as_str())
             }
-            Err(e) =>
+            Err(e) => {
                 if e.recoverable {
                     reader.state = save.clone();
                     match reader.read() {
@@ -104,6 +115,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                 } else {
                     return Err(e);
                 }
+            }
         }
     }
 
@@ -112,13 +124,20 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
         return Err(Error {
             pos: start,
             recoverable: true,
-            inner: ParseError::Expecting { value: "key string".to_string() },
+            inner: ParseError::Expecting {
+                value: "key string".to_string(),
+            },
         });
     }
 
     let end = reader.state.pos.clone();
     let source_info = SourceInfo { start, end };
-    Ok(EncodedString { quotes, encoded, value, source_info })
+    Ok(EncodedString {
+        quotes,
+        encoded,
+        value,
+        source_info,
+    })
 }
 
 // todo should return an EncodedString
@@ -146,19 +165,23 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut elements = vec![];
     loop {
         match template_element_expression(reader) {
-            Err(e) => if e.recoverable {
-                match template_element_string(|reader1| any_char(vec!['"'], reader1), reader) {
-                    Err(e) => if e.recoverable {
-                        break;
-                    } else {
-                        return Err(e);
+            Err(e) => {
+                if e.recoverable {
+                    match template_element_string(|reader1| any_char(vec!['"'], reader1), reader) {
+                        Err(e) => {
+                            if e.recoverable {
+                                break;
+                            } else {
+                                return Err(e);
+                            }
+                        }
+                        Ok(element) => elements.push(element),
                     }
-                    Ok(element) => elements.push(element)
+                } else {
+                    return Err(e);
                 }
-            } else {
-                return Err(e);
-            },
-            Ok(element) => elements.push(element)
+            }
+            Ok(element) => elements.push(element),
         }
     }
 
@@ -171,16 +194,26 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     })
 }
 
-fn template_element(char_parser: CharParser, reader: &mut Reader) -> ParseResult<'static, TemplateElement> {
+fn template_element(
+    char_parser: CharParser,
+    reader: &mut Reader,
+) -> ParseResult<'static, TemplateElement> {
     match template_element_expression(reader) {
-        Err(e) => if e.recoverable {
-            template_element_string(char_parser, reader)
-        } else { Err(e) },
+        Err(e) => {
+            if e.recoverable {
+                template_element_string(char_parser, reader)
+            } else {
+                Err(e)
+            }
+        }
         r => r,
     }
 }
 
-fn template_element_string(char_parser: CharParser, reader: &mut Reader) -> ParseResult<'static, TemplateElement> {
+fn template_element_string(
+    char_parser: CharParser,
+    reader: &mut Reader,
+) -> ParseResult<'static, TemplateElement> {
     let start = reader.state.clone();
     let mut value = "".to_string();
     let mut encoded = "".to_string();
@@ -221,7 +254,9 @@ fn template_element_string(char_parser: CharParser, reader: &mut Reader) -> Pars
         Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::Expecting { value: "string".to_string() },
+            inner: ParseError::Expecting {
+                value: "string".to_string(),
+            },
         })
     } else {
         Ok(TemplateElement::String { value, encoded })
@@ -237,21 +272,27 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (cha
     let start = reader.state.clone();
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.from(start.cursor))),
-        Err(e) =>
+        Err(e) => {
             if e.recoverable {
                 reader.state = start.clone();
                 match reader.read() {
                     None => Err(Error {
                         pos: start.pos,
                         recoverable: true,
-                        inner: ParseError::Expecting { value: "char".to_string() },
+                        inner: ParseError::Expecting {
+                            value: "char".to_string(),
+                        },
                     }),
                     Some(c) => {
-                        if except.contains(&c) || vec!['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c) {
+                        if except.contains(&c)
+                            || vec!['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
+                        {
                             Err(Error {
                                 pos: start.pos,
                                 recoverable: true,
-                                inner: ParseError::Expecting { value: "char".to_string() },
+                                inner: ParseError::Expecting {
+                                    value: "char".to_string(),
+                                },
                             })
                         } else {
                             Ok((c, reader.from(start.cursor)))
@@ -261,6 +302,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (cha
             } else {
                 Err(e)
             }
+        }
     }
 }
 
@@ -290,11 +332,13 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
     literal("{", reader)?;
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
-        None => return Err(Error {
-            pos: reader.clone().state.pos,
-            recoverable: false,
-            inner: ParseError::Unicode {},
-        }),
+        None => {
+            return Err(Error {
+                pos: reader.clone().state.pos,
+                recoverable: false,
+                inner: ParseError::Unicode {},
+            })
+        }
         Some(c) => c,
     };
     literal("}", reader)?;
@@ -309,10 +353,9 @@ fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
     for d in digits.iter() {
         v += weight * d;
         weight *= 16;
-    };
+    }
     Ok(v)
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -321,60 +364,93 @@ mod tests {
     #[test]
     fn test_unquoted_template() {
         let mut reader = Reader::init("");
-        assert_eq!(unquoted_template(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![],
-            source_info: SourceInfo::init(1, 1, 1, 1),
-        });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![],
+                source_info: SourceInfo::init(1, 1, 1, 1),
+            }
+        );
         assert_eq!(reader.state.cursor, 0);
 
         let mut reader = Reader::init("a\\u{23}");
-        assert_eq!(unquoted_template(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![
-                TemplateElement::String { value: "a#".to_string(), encoded: "a\\u{23}".to_string() }
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 8),
-        });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "a#".to_string(),
+                    encoded: "a\\u{23}".to_string()
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 8),
+            }
+        );
         assert_eq!(reader.state.cursor, 7);
 
         let mut reader = Reader::init("hello\\u{20}{{name}}!");
-        assert_eq!(unquoted_template(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![
-                TemplateElement::String { value: "hello ".to_string(), encoded: "hello\\u{20}".to_string() },
-                TemplateElement::Expression(Expr {
-                    space0: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 14, 1, 14) },
-                    variable: Variable { name: "name".to_string(), source_info: SourceInfo::init(1, 14, 1, 18) },
-                    space1: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 18, 1, 18) },
-                }),
-                TemplateElement::String { value: "!".to_string(), encoded: "!".to_string() },
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 21),
-        });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![
+                    TemplateElement::String {
+                        value: "hello ".to_string(),
+                        encoded: "hello\\u{20}".to_string()
+                    },
+                    TemplateElement::Expression(Expr {
+                        space0: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::init(1, 14, 1, 14)
+                        },
+                        variable: Variable {
+                            name: "name".to_string(),
+                            source_info: SourceInfo::init(1, 14, 1, 18)
+                        },
+                        space1: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::init(1, 18, 1, 18)
+                        },
+                    }),
+                    TemplateElement::String {
+                        value: "!".to_string(),
+                        encoded: "!".to_string()
+                    },
+                ],
+                source_info: SourceInfo::init(1, 1, 1, 21),
+            }
+        );
         assert_eq!(reader.state.cursor, 20);
 
         let mut reader = Reader::init("hello\n");
-        assert_eq!(unquoted_template(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![
-                TemplateElement::String { value: "hello".to_string(), encoded: "hello".to_string() },
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 6),
-        });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "hello".to_string(),
+                    encoded: "hello".to_string()
+                },],
+                source_info: SourceInfo::init(1, 1, 1, 6),
+            }
+        );
         assert_eq!(reader.state.cursor, 5);
     }
 
     #[test]
     fn test_unquoted_template_trailing_space() {
         let mut reader = Reader::init("hello # comment");
-        assert_eq!(unquoted_template(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![
-                TemplateElement::String { value: "hello".to_string(), encoded: "hello".to_string() },
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 6),
-        });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "hello".to_string(),
+                    encoded: "hello".to_string()
+                },],
+                source_info: SourceInfo::init(1, 1, 1, 6),
+            }
+        );
         assert_eq!(reader.state.cursor, 5);
         assert_eq!(reader.state.pos, Pos { line: 1, column: 6 });
     }
@@ -382,12 +458,14 @@ mod tests {
     #[test]
     fn test_unquoted_template_empty() {
         let mut reader = Reader::init(" hi");
-        assert_eq!(unquoted_template(&mut reader).unwrap(),
-                   Template {
-                       quotes: false,
-                       elements: vec![],
-                       source_info: SourceInfo::init(1, 1, 1, 1),
-                   });
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![],
+                source_info: SourceInfo::init(1, 1, 1, 1),
+            }
+        );
 
         assert_eq!(reader.state.cursor, 0);
     }
@@ -395,21 +473,27 @@ mod tests {
     #[test]
     fn test_unquoted_key() {
         let mut reader = Reader::init("key");
-        assert_eq!(unquoted_string_key(&mut reader).unwrap(), EncodedString {
-            value: "key".to_string(),
-            encoded: "key".to_string(),
-            quotes: false,
-            source_info: SourceInfo::init(1, 1, 1, 4),
-        });
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "key".to_string(),
+                encoded: "key".to_string(),
+                quotes: false,
+                source_info: SourceInfo::init(1, 1, 1, 4),
+            }
+        );
         assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::init("key\\u{20}\\u{3a} :");
-        assert_eq!(unquoted_string_key(&mut reader).unwrap(), EncodedString {
-            value: "key :".to_string(),
-            encoded: "key\\u{20}\\u{3a}".to_string(),
-            quotes: false,
-            source_info: SourceInfo::init(1, 1, 1, 16),
-        });
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "key :".to_string(),
+                encoded: "key\\u{20}\\u{3a}".to_string(),
+                quotes: false,
+                source_info: SourceInfo::init(1, 1, 1, 16),
+            }
+        );
         assert_eq!(reader.state.cursor, 15);
     }
 
@@ -418,7 +502,12 @@ mod tests {
         let mut reader = Reader::init("");
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: "key string".to_string() });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "key string".to_string()
+            }
+        );
 
         let mut reader = Reader::init("\\l");
         let error = unquoted_string_key(&mut reader).err().unwrap();
@@ -429,31 +518,42 @@ mod tests {
     #[test]
     fn test_quoted_template() {
         let mut reader = Reader::init("\"\"");
-        assert_eq!(quoted_template(&mut reader).unwrap(), Template {
-            quotes: true,
-            elements: vec![],
-            source_info: SourceInfo::init(1, 1, 1, 3),
-        });
+        assert_eq!(
+            quoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: true,
+                elements: vec![],
+                source_info: SourceInfo::init(1, 1, 1, 3),
+            }
+        );
         assert_eq!(reader.state.cursor, 2);
 
         let mut reader = Reader::init("\"a#\"");
-        assert_eq!(quoted_template(&mut reader).unwrap(), Template {
-            quotes: true,
-            elements: vec![
-                TemplateElement::String { value: "a#".to_string(), encoded: "a#".to_string() }
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 5),
-        });
+        assert_eq!(
+            quoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: true,
+                elements: vec![TemplateElement::String {
+                    value: "a#".to_string(),
+                    encoded: "a#".to_string()
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 5),
+            }
+        );
         assert_eq!(reader.state.cursor, 4);
 
         let mut reader = Reader::init("\"{0}\"");
-        assert_eq!(quoted_template(&mut reader).unwrap(), Template {
-            quotes: true,
-            elements: vec![
-                TemplateElement::String { value: "{0}".to_string(), encoded: "{0}".to_string() }
-            ],
-            source_info: SourceInfo::init(1, 1, 1, 6),
-        });
+        assert_eq!(
+            quoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: true,
+                elements: vec![TemplateElement::String {
+                    value: "{0}".to_string(),
+                    encoded: "{0}".to_string()
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 6),
+            }
+        );
         assert_eq!(reader.state.cursor, 5);
     }
 
@@ -510,31 +610,53 @@ mod tests {
     #[test]
     fn test_template_element_expression() {
         let mut reader = Reader::init("{{name}}");
-        assert_eq!(template_element_expression(&mut reader).unwrap(),
-                   TemplateElement::Expression(Expr {
-                       space0: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 3, 1, 3) },
-                       variable: Variable { name: "name".to_string(), source_info: SourceInfo::init(1, 3, 1, 7) },
-                       space1: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 7, 1, 7) },
-                   })
+        assert_eq!(
+            template_element_expression(&mut reader).unwrap(),
+            TemplateElement::Expression(Expr {
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 3)
+                },
+                variable: Variable {
+                    name: "name".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 7)
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 7, 1, 7)
+                },
+            })
         );
     }
 
     #[test]
     fn test_any_char() {
         let mut reader = Reader::init("a");
-        assert_eq!(any_char(vec![], &mut reader).unwrap(), ('a', "a".to_string()));
+        assert_eq!(
+            any_char(vec![], &mut reader).unwrap(),
+            ('a', "a".to_string())
+        );
         assert_eq!(reader.state.cursor, 1);
 
         let mut reader = Reader::init(" ");
-        assert_eq!(any_char(vec![], &mut reader).unwrap(), (' ', " ".to_string()));
+        assert_eq!(
+            any_char(vec![], &mut reader).unwrap(),
+            (' ', " ".to_string())
+        );
         assert_eq!(reader.state.cursor, 1);
 
         let mut reader = Reader::init("\\t");
-        assert_eq!(any_char(vec![], &mut reader).unwrap(), ('\t', "\\t".to_string()));
+        assert_eq!(
+            any_char(vec![], &mut reader).unwrap(),
+            ('\t', "\\t".to_string())
+        );
         assert_eq!(reader.state.cursor, 2);
 
         let mut reader = Reader::init("#");
-        assert_eq!(any_char(vec![], &mut reader).unwrap(), ('#', "#".to_string()));
+        assert_eq!(
+            any_char(vec![], &mut reader).unwrap(),
+            ('#', "#".to_string())
+        );
         assert_eq!(reader.state.cursor, 1);
     }
 
@@ -569,7 +691,12 @@ mod tests {
         let mut reader = Reader::init("x");
         let error = escape_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: "\\".to_string() });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "\\".to_string()
+            }
+        );
         assert_eq!(error.recoverable, true);
         assert_eq!(reader.state.cursor, 0);
     }

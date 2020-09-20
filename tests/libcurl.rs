@@ -3,9 +3,7 @@ use std::io::prelude::*;
 
 use curl::easy::Easy;
 
-
 use hurl::http::*;
-
 
 use server::Server;
 
@@ -27,7 +25,6 @@ pub fn new_header(name: &str, value: &str) -> Header {
     }
 }
 
-
 #[test]
 fn get_easy() {
     let s = Server::new();
@@ -46,15 +43,16 @@ fn get_easy() {
     handle.url(&s.url("/hello")).unwrap();
     {
         let mut transfer = handle.transfer();
-        transfer.write_function(|new_data| {
-            data.extend_from_slice(new_data);
-            Ok(new_data.len())
-        }).unwrap();
+        transfer
+            .write_function(|new_data| {
+                data.extend_from_slice(new_data);
+                Ok(new_data.len())
+            })
+            .unwrap();
         transfer.perform().unwrap();
     }
     assert_eq!(data, b"Hello World!");
 }
-
 
 fn default_client() -> Client {
     let options = ClientOptions {
@@ -83,7 +81,6 @@ fn default_get_request(url: String) -> Request {
     }
 }
 
-
 // region basic
 
 #[test]
@@ -96,8 +93,14 @@ fn test_hello() {
     assert_eq!(response.body, b"Hello World!".to_vec());
 
     assert_eq!(response.headers.len(), 4);
-    assert!(response.headers.contains(&Header { name: "Content-Length".to_string(), value: "12".to_string() }));
-    assert!(response.headers.contains(&Header { name: "Content-Type".to_string(), value: "text/html; charset=utf-8".to_string() }));
+    assert!(response.headers.contains(&Header {
+        name: "Content-Length".to_string(),
+        value: "12".to_string()
+    }));
+    assert!(response.headers.contains(&Header {
+        name: "Content-Type".to_string(),
+        value: "text/html; charset=utf-8".to_string()
+    }));
     assert_eq!(response.get_header_values("Date".to_string()).len(), 1);
 }
 
@@ -131,9 +134,18 @@ fn test_patch() {
         method: Method::Patch,
         url: "http://localhost:8000/patch/file.txt".to_string(),
         headers: vec![
-            Header { name: "Host".to_string(), value: "www.example.com".to_string() },
-            Header { name: "Content-Type".to_string(), value: "application/example".to_string() },
-            Header { name: "If-Match".to_string(), value: "\"e0023aa4e\"".to_string() },
+            Header {
+                name: "Host".to_string(),
+                value: "www.example.com".to_string(),
+            },
+            Header {
+                name: "Content-Type".to_string(),
+                value: "application/example".to_string(),
+            },
+            Header {
+                name: "If-Match".to_string(),
+                value: "\"e0023aa4e\"".to_string(),
+            },
         ],
         querystring: vec![],
         form: vec![],
@@ -188,10 +200,22 @@ fn test_querystring_params() {
         url: "http://localhost:8000/querystring-params".to_string(),
         headers: vec![],
         querystring: vec![
-            Param { name: "param1".to_string(), value: "value1".to_string() },
-            Param { name: "param2".to_string(), value: "".to_string() },
-            Param { name: "param3".to_string(), value: "a=b".to_string() },
-            Param { name: "param4".to_string(), value: "1,2,3".to_string() }
+            Param {
+                name: "param1".to_string(),
+                value: "value1".to_string(),
+            },
+            Param {
+                name: "param2".to_string(),
+                value: "".to_string(),
+            },
+            Param {
+                name: "param3".to_string(),
+                value: "a=b".to_string(),
+            },
+            Param {
+                name: "param4".to_string(),
+                value: "1,2,3".to_string(),
+            },
         ],
         form: vec![],
         multipart: vec![],
@@ -217,10 +241,22 @@ fn test_form_params() {
         headers: vec![],
         querystring: vec![],
         form: vec![
-            Param { name: "param1".to_string(), value: "value1".to_string() },
-            Param { name: "param2".to_string(), value: "".to_string() },
-            Param { name: "param3".to_string(), value: "a=b".to_string() },
-            Param { name: "param4".to_string(), value: "a%3db".to_string() }
+            Param {
+                name: "param1".to_string(),
+                value: "value1".to_string(),
+            },
+            Param {
+                name: "param2".to_string(),
+                value: "".to_string(),
+            },
+            Param {
+                name: "param3".to_string(),
+                value: "a=b".to_string(),
+            },
+            Param {
+                name: "param4".to_string(),
+                value: "a%3db".to_string(),
+            },
         ],
         multipart: vec![],
         cookies: vec![],
@@ -230,7 +266,6 @@ fn test_form_params() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
-
 
     // make sure you can reuse client for other request
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -250,8 +285,13 @@ fn test_follow_location() {
     let mut client = default_client();
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 302);
-    assert_eq!(response.get_header_values("Location".to_string()).get(0).unwrap(),
-               "http://localhost:8000/redirected");
+    assert_eq!(
+        response
+            .get_header_values("Location".to_string())
+            .get(0)
+            .unwrap(),
+        "http://localhost:8000/redirected"
+    );
     assert_eq!(client.redirect_count, 0);
 
     let options = ClientOptions {
@@ -266,9 +306,14 @@ fn test_follow_location() {
     let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
-    assert_eq!(response.get_header_values("Content-Length".to_string()).get(0).unwrap(), "0");
+    assert_eq!(
+        response
+            .get_header_values("Content-Length".to_string())
+            .get(0)
+            .unwrap(),
+        "0"
+    );
     assert_eq!(client.redirect_count, 1);
-
 
     // make sure that the redirect count is reset to 0
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -277,7 +322,6 @@ fn test_follow_location() {
     assert_eq!(response.body, b"Hello World!".to_vec());
     assert_eq!(client.redirect_count, 0);
 }
-
 
 #[test]
 fn test_max_redirect() {
@@ -340,7 +384,6 @@ fn test_multipart_form_data() {
         cookies: vec![],
         body: vec![],
         content_type: Some("multipart/form-data".to_string()),
-
     };
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
@@ -396,7 +439,6 @@ fn test_error_fail_to_connect() {
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::FailToConnect);
 
-
     let options = ClientOptions {
         follow_location: false,
         max_redirect: None,
@@ -411,7 +453,6 @@ fn test_error_fail_to_connect() {
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::FailToConnect);
 }
-
 
 #[test]
 fn test_error_could_not_resolve_proxy_name() {
@@ -444,9 +485,10 @@ fn test_cookie() {
         querystring: vec![],
         form: vec![],
         multipart: vec![],
-        cookies: vec![
-            RequestCookie { name: "cookie1".to_string(), value: "valueA".to_string() }
-        ],
+        cookies: vec![RequestCookie {
+            name: "cookie1".to_string(),
+            value: "valueA".to_string(),
+        }],
         body: vec![],
         content_type: None,
     };
@@ -467,7 +509,6 @@ fn test_cookie() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 
-
     // For the time-being setting a cookie on a request
     // update the cookie store as well
     // The same cookie does not need to be set explicitly on further requests
@@ -480,34 +521,40 @@ fn test_cookie() {
 #[test]
 fn test_cookie_storage() {
     let mut client = default_client();
-    let request = default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA".to_string());
+    let request =
+        default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA".to_string());
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 
     let cookie_store = client.get_cookie_storage();
-    assert_eq!(cookie_store.get(0).unwrap().clone(), Cookie {
-        domain: "localhost".to_string(),
-        include_subdomain: "FALSE".to_string(),
-        path: "/".to_string(),
-        https: "FALSE".to_string(),
-        expires: "0".to_string(),
-        name: "cookie2".to_string(),
-        value: "valueA".to_string(),
-    });
+    assert_eq!(
+        cookie_store.get(0).unwrap().clone(),
+        Cookie {
+            domain: "localhost".to_string(),
+            include_subdomain: "FALSE".to_string(),
+            path: "/".to_string(),
+            https: "FALSE".to_string(),
+            expires: "0".to_string(),
+            name: "cookie2".to_string(),
+            value: "valueA".to_string(),
+        }
+    );
 
-    let request = default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string());
+    let request = default_get_request(
+        "http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string(),
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 }
 
-
 #[test]
 fn test_cookie_file() {
     let temp_file = "/tmp/cookies";
     let mut file = File::create(temp_file).expect("can not create temp file!");
-    file.write_all(b"localhost\tFALSE\t/\tFALSE\t0\tcookie2\tvalueA\n").unwrap();
+    file.write_all(b"localhost\tFALSE\t/\tFALSE\t0\tcookie2\tvalueA\n")
+        .unwrap();
 
     let options = ClientOptions {
         follow_location: false,
@@ -519,7 +566,9 @@ fn test_cookie_file() {
         insecure: false,
     };
     let mut client = Client::init(options);
-    let request = default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string());
+    let request = default_get_request(
+        "http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string(),
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -549,4 +598,3 @@ fn test_proxy() {
 }
 
 // endregion
-

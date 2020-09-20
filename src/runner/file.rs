@@ -22,13 +22,10 @@ use crate::core::ast::*;
 use crate::core::common::Value;
 use crate::http;
 
-
-use super::core::*;
 use super::super::format;
+use super::core::*;
 use super::entry;
 use crate::core::common::FormatError;
-
-
 
 /// Run a Hurl file with the hurl http client
 ///
@@ -112,8 +109,22 @@ pub fn run(
     };
 
     let start = Instant::now();
-    for (entry_index, entry) in hurl_file.entries.iter().take(n).cloned().enumerate().collect::<Vec<(usize, Entry)>>() {
-        let entry_result = entry::run(entry, http_client, entry_index, &mut variables, context_dir.clone(), &logger);
+    for (entry_index, entry) in hurl_file
+        .entries
+        .iter()
+        .take(n)
+        .cloned()
+        .enumerate()
+        .collect::<Vec<(usize, Entry)>>()
+    {
+        let entry_result = entry::run(
+            entry,
+            http_client,
+            entry_index,
+            &mut variables,
+            context_dir.clone(),
+            &logger,
+        );
         entries.push(entry_result.clone());
         for e in entry_result.errors.clone() {
             let error = format::error::Error {
@@ -133,7 +144,11 @@ pub fn run(
         }
     }
     let time_in_ms = start.elapsed().as_millis();
-    let success = entries.iter().flat_map(|e| e.errors.clone()).next().is_none();
+    let success = entries
+        .iter()
+        .flat_map(|e| e.errors.clone())
+        .next()
+        .is_none();
 
     let cookies = http_client.get_cookie_storage();
     HurlResult {
@@ -144,4 +159,3 @@ pub fn run(
         cookies,
     }
 }
-

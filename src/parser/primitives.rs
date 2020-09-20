@@ -20,21 +20,19 @@ use crate::core::common::SourceInfo;
 
 use super::combinators::*;
 use super::error::*;
-use super::ParseResult;
 use super::reader::Reader;
 use super::string::*;
 use super::template;
+use super::ParseResult;
 
 pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     let start = reader.state.clone();
     match reader.read() {
-        None => {
-            Err(Error {
-                pos: start.pos,
-                recoverable: true,
-                inner: ParseError::Space {},
-            })
-        }
+        None => Err(Error {
+            pos: start.pos,
+            recoverable: true,
+            inner: ParseError::Space {},
+        }),
         Some(c) => {
             if c == ' ' || c == '\t' {
                 Ok(Whitespace {
@@ -117,7 +115,9 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminat
                 return Err(Error {
                     pos: e.pos,
                     recoverable: false,
-                    inner: ParseError::Expecting { value: String::from("line_terminator") },
+                    inner: ParseError::Expecting {
+                        value: String::from("line_terminator"),
+                    },
                 });
             }
         }
@@ -167,7 +167,9 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::Expecting { value: s.to_string() },
+            inner: ParseError::Expecting {
+                value: s.to_string(),
+            },
         });
     }
     for c in s.chars() {
@@ -177,7 +179,9 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
                 return Err(Error {
                     pos: start.pos,
                     recoverable: false,
-                    inner: ParseError::Expecting { value: s.to_string() },
+                    inner: ParseError::Expecting {
+                        value: s.to_string(),
+                    },
                 });
             }
             Some(x) => {
@@ -185,7 +189,9 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
                     return Err(Error {
                         pos: start.pos,
                         recoverable: false,
-                        inner: ParseError::Expecting { value: s.to_string() },
+                        inner: ParseError::Expecting {
+                            value: s.to_string(),
+                        },
                     });
                 } else {
                     continue;
@@ -238,12 +244,13 @@ pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
             Err(_) => Err(Error {
                 pos: start.pos,
                 recoverable: false,
-                inner: ParseError::Expecting { value: String::from("newline") },
+                inner: ParseError::Expecting {
+                    value: String::from("newline"),
+                },
             }),
         },
     }
 }
-
 
 pub fn key_value(reader: &mut Reader) -> ParseResult<'static, KeyValue> {
     let line_terminators = optional_line_terminators(reader)?;
@@ -270,7 +277,8 @@ pub fn filename(reader: &mut Reader) -> ParseResult<'static, Filename> {
     // that you have to write with a relative name
     // default root_dir is the hurl directory
     let start = reader.state.clone();
-    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-');
+    let s = reader
+        .read_while(|c| c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-');
     if s.is_empty() {
         return Err(Error {
             pos: start.pos,
@@ -297,7 +305,6 @@ pub fn filename(reader: &mut Reader) -> ParseResult<'static, Filename> {
 
 pub fn null(reader: &mut Reader) -> ParseResult<'static, ()> {
     try_literal("null", reader)
-
 }
 
 pub fn boolean(reader: &mut Reader) -> ParseResult<'static, bool> {
@@ -309,13 +316,13 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<'static, bool> {
             Err(_) => Err(Error {
                 pos: start.pos,
                 recoverable: true,
-                inner: ParseError::Expecting { value: String::from("true|false") },
+                inner: ParseError::Expecting {
+                    value: String::from("true|false"),
+                },
             }),
         },
     }
 }
-
-
 
 pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
     let start = reader.state.clone();
@@ -324,7 +331,9 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
         return Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::Expecting { value: String::from("natural") },
+            inner: ParseError::Expecting {
+                value: String::from("natural"),
+            },
         });
     }
     let first_digit = reader.read().unwrap();
@@ -332,7 +341,9 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
         return Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::Expecting { value: String::from("natural") },
+            inner: ParseError::Expecting {
+                value: String::from("natural"),
+            },
         });
     }
 
@@ -344,7 +355,9 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
         return Err(Error {
             pos: save.pos,
             recoverable: false,
-            inner: ParseError::Expecting { value: String::from("natural") },
+            inner: ParseError::Expecting {
+                value: String::from("natural"),
+            },
         });
     }
     Ok(format!("{}{}", first_digit, s).parse().unwrap())
@@ -370,7 +383,9 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
         return Err(Error {
             pos: reader.clone().state.pos,
             recoverable: false,
-            inner: ParseError::Expecting { value: String::from("natural") },
+            inner: ParseError::Expecting {
+                value: String::from("natural"),
+            },
         });
     }
 
@@ -379,12 +394,18 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
         return Err(Error {
             pos: reader.clone().state.pos,
             recoverable: false,
-            inner: ParseError::Expecting { value: String::from("natural") },
+            inner: ParseError::Expecting {
+                value: String::from("natural"),
+            },
         });
     }
     let decimal = format!("{:0<18}", s).parse().unwrap();
     let decimal_digits = s.len();
-    Ok(Float { int, decimal, decimal_digits })
+    Ok(Float {
+        int,
+        decimal,
+        decimal_digits,
+    })
 }
 
 pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, Bytes> {
@@ -415,24 +436,24 @@ pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 pub fn raw_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut chars = vec![];
 
-
     let start = reader.state.pos.clone();
     while !reader.remaining().starts_with("```") && !reader.is_eof() {
         let pos = reader.state.pos.clone();
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
-    };
+    }
     let end = reader.state.pos.clone();
     literal("```", reader)?;
 
-
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo { start: start.clone(), end: end.clone() },
+        source_info: SourceInfo {
+            start: start.clone(),
+            end: end.clone(),
+        },
         chars,
     };
 
     let elements = template::templatize(encoded_string)?;
-
 
     Ok(Template {
         quotes: false,
@@ -448,7 +469,9 @@ pub fn eof(reader: &mut Reader) -> ParseResult<'static, ()> {
         Err(Error {
             pos: reader.state.clone().pos,
             recoverable: false,
-            inner: ParseError::Expecting { value: String::from("eof") },
+            inner: ParseError::Expecting {
+                value: String::from("eof"),
+            },
         })
     }
 }
@@ -478,24 +501,21 @@ pub fn hex_digit_value(c: char) -> Option<u32> {
 pub fn hex_digit(reader: &mut Reader) -> ParseResult<'static, u32> {
     let start = reader.clone().state;
     match reader.read() {
-        Some(c) => {
-            match hex_digit_value(c) {
-                Some(v) => Ok(v),
-                None => Err(Error {
-                    pos: start.pos,
-                    recoverable: true,
-                    inner: ParseError::HexDigit {},
-                })
-            }
-        }
+        Some(c) => match hex_digit_value(c) {
+            Some(v) => Ok(v),
+            None => Err(Error {
+                pos: start.pos,
+                recoverable: true,
+                inner: ParseError::HexDigit {},
+            }),
+        },
         None => Err(Error {
             pos: start.pos,
             recoverable: true,
             inner: ParseError::HexDigit {},
-        })
+        }),
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -613,19 +633,34 @@ mod tests {
         let mut reader = Reader::init("");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("hello") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("hello")
+            }
+        );
         assert_eq!(reader.state.cursor, 0);
 
         let mut reader = Reader::init("hi");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("hello") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("hello")
+            }
+        );
         assert_eq!(reader.state.cursor, 2);
 
         let mut reader = Reader::init("he");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("hello") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("hello")
+            }
+        );
         assert_eq!(reader.state.cursor, 2);
     }
 
@@ -640,7 +675,6 @@ mod tests {
             }
         );
     }
-
 
     #[test]
     fn test_key_value() {
@@ -715,20 +749,22 @@ mod tests {
     #[test]
     fn test_filename() {
         let mut reader = Reader::init("data/data.bin");
-        assert_eq!(filename(&mut reader).unwrap(),
-                   Filename {
-                       value: String::from("data/data.bin"),
-                       source_info: SourceInfo::init(1, 1, 1, 14),
-                   }
+        assert_eq!(
+            filename(&mut reader).unwrap(),
+            Filename {
+                value: String::from("data/data.bin"),
+                source_info: SourceInfo::init(1, 1, 1, 14),
+            }
         );
         assert_eq!(reader.state.cursor, 13);
 
         let mut reader = Reader::init("data.bin");
-        assert_eq!(filename(&mut reader).unwrap(),
-                   Filename {
-                       value: String::from("data.bin"),
-                       source_info: SourceInfo::init(1, 1, 1, 9),
-                   }
+        assert_eq!(
+            filename(&mut reader).unwrap(),
+            Filename {
+                value: String::from("data.bin"),
+                source_info: SourceInfo::init(1, 1, 1, 9),
+            }
         );
         assert_eq!(reader.state.cursor, 8);
     }
@@ -754,12 +790,22 @@ mod tests {
 
         let mut reader = Reader::init("xxx");
         let error = boolean(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("true|false") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("true|false")
+            }
+        );
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("trux");
         let error = boolean(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("true|false") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("true|false")
+            }
+        );
         assert_eq!(error.recoverable, true);
     }
 
@@ -783,19 +829,34 @@ mod tests {
         let mut reader = Reader::init("");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("01");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.recoverable, false);
 
         let mut reader = Reader::init("x");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.recoverable, true);
     }
 
@@ -813,38 +874,92 @@ mod tests {
         let mut reader = Reader::init("x");
         let error = integer(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.recoverable, true);
     }
 
     #[test]
     fn test_float() {
         let mut reader = Reader::init("1.0");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 1, decimal: 0, decimal_digits: 1 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 1,
+                decimal: 0,
+                decimal_digits: 1
+            }
+        );
         assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::init("-1.0");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: -1, decimal: 0, decimal_digits: 1 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: -1,
+                decimal: 0,
+                decimal_digits: 1
+            }
+        );
         assert_eq!(reader.state.cursor, 4);
 
         let mut reader = Reader::init("1.1");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 1, decimal: 100_000_000_000_000_000, decimal_digits: 1 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 1,
+                decimal: 100_000_000_000_000_000,
+                decimal_digits: 1
+            }
+        );
         assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::init("1.100");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 1, decimal: 100_000_000_000_000_000, decimal_digits: 3 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 1,
+                decimal: 100_000_000_000_000_000,
+                decimal_digits: 3
+            }
+        );
         assert_eq!(reader.state.cursor, 5);
 
         let mut reader = Reader::init("1.01");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 1, decimal: 10_000_000_000_000_000, decimal_digits: 2 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 1,
+                decimal: 10_000_000_000_000_000,
+                decimal_digits: 2
+            }
+        );
         assert_eq!(reader.state.cursor, 4);
 
         let mut reader = Reader::init("1.010");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 1, decimal: 10_000_000_000_000_000, decimal_digits: 3 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 1,
+                decimal: 10_000_000_000_000_000,
+                decimal_digits: 3
+            }
+        );
         assert_eq!(reader.state.cursor, 5);
 
         let mut reader = Reader::init("-0.333333333333333333");
-        assert_eq!(float(&mut reader).unwrap(), Float { int: 0, decimal: 333_333_333_333_333_333, decimal_digits: 18 });
+        assert_eq!(
+            float(&mut reader).unwrap(),
+            Float {
+                int: 0,
+                decimal: 333_333_333_333_333_333,
+                decimal_digits: 18
+            }
+        );
         assert_eq!(reader.state.cursor, 21);
     }
 
@@ -852,37 +967,67 @@ mod tests {
     fn test_float_error() {
         let mut reader = Reader::init("");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("-");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("1");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from(".") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from(".")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("1x");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from(".") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from(".")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("1.");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(error.recoverable, false);
 
         let mut reader = Reader::init("1.x");
         let error = float(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("natural") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("natural")
+            }
+        );
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(error.recoverable, false);
     }
@@ -890,108 +1035,117 @@ mod tests {
     #[test]
     fn test_raw_string_empty() {
         let mut reader = Reader::init("``````");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from(""),
-                source_info: SourceInfo::init(1, 4, 1, 4),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![],
-                source_info: SourceInfo::init(1, 4, 1, 4),
-            },
-        });
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 4, 1, 4),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![],
+                    source_info: SourceInfo::init(1, 4, 1, 4),
+                },
+            }
+        );
 
         let mut reader = Reader::init("```\n```");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from("\n"),
-                source_info: SourceInfo::init(1, 4, 2, 1),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![],
-                source_info: SourceInfo::init(2, 1, 2, 1),
-            },
-        });
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from("\n"),
+                    source_info: SourceInfo::init(1, 4, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![],
+                    source_info: SourceInfo::init(2, 1, 2, 1),
+                },
+            }
+        );
         let mut reader = Reader::init("```\r\n```");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from("\r\n"),
-                source_info: SourceInfo::init(1, 4, 2, 1),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![],
-                source_info: SourceInfo::init(2, 1, 2, 1),
-            },
-        });
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from("\r\n"),
+                    source_info: SourceInfo::init(1, 4, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![],
+                    source_info: SourceInfo::init(2, 1, 2, 1),
+                },
+            }
+        );
     }
 
     #[test]
     fn test_raw_string_hello() {
         let mut reader = Reader::init("```Hello World!```");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from(""),
-                source_info: SourceInfo::init(1, 4, 1, 4),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![
-                    TemplateElement::String {
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 4, 1, 4),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
                         value: "Hello World!".to_string(),
                         encoded: "Hello World!".to_string(),
-                    }
-                ],
-                source_info: SourceInfo::init(1, 4, 1, 16),
-            },
-        });
+                    }],
+                    source_info: SourceInfo::init(1, 4, 1, 16),
+                },
+            }
+        );
         let mut reader = Reader::init("```Hello\nWorld!\n```");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from(""),
-                source_info: SourceInfo::init(1, 4, 1, 4),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![
-                    TemplateElement::String {
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 4, 1, 4),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
                         value: "Hello\nWorld!\n".to_string(),
                         encoded: "Hello\nWorld!\n".to_string(),
-                    }
-                ],
-                source_info: SourceInfo::init(1, 4, 3, 1),
-            },
-        });
+                    }],
+                    source_info: SourceInfo::init(1, 4, 3, 1),
+                },
+            }
+        );
     }
-
 
     #[test]
     fn test_raw_string_csv() {
         let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
-        assert_eq!(raw_string(&mut reader).unwrap(), Bytes::RawString {
-            newline0: Whitespace {
-                value: String::from("\n"),
-                source_info: SourceInfo::init(1, 4, 2, 1),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![
-                    TemplateElement::String {
+        assert_eq!(
+            raw_string(&mut reader).unwrap(),
+            Bytes::RawString {
+                newline0: Whitespace {
+                    value: String::from("\n"),
+                    source_info: SourceInfo::init(1, 4, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
-                    }
-                ],
-                source_info: SourceInfo::init(2, 1, 5, 1),
-            },
-        });
+                    }],
+                    source_info: SourceInfo::init(2, 1, 5, 1),
+                },
+            }
+        );
     }
 
     #[test]
     fn test_raw_string_one_emptyline() {
-
-
         // one newline
         // the value takes the value of the newline??
         let mut reader = Reader::init("```\n\n```");
@@ -1004,12 +1158,10 @@ mod tests {
                 },
                 value: Template {
                     quotes: false,
-                    elements: vec![
-                        TemplateElement::String {
-                            value: "\n".to_string(),
-                            encoded: "\n".to_string(),
-                        }
-                    ],
+                    elements: vec![TemplateElement::String {
+                        value: "\n".to_string(),
+                        encoded: "\n".to_string(),
+                    }],
                     source_info: SourceInfo::init(2, 1, 3, 1),
                 },
             }
@@ -1026,12 +1178,10 @@ mod tests {
                 },
                 value: Template {
                     quotes: false,
-                    elements: vec![
-                        TemplateElement::String {
-                            value: "\r\n".to_string(),
-                            encoded: "\r\n".to_string(),
-                        }
-                    ],
+                    elements: vec![TemplateElement::String {
+                        value: "\r\n".to_string(),
+                        encoded: "\r\n".to_string(),
+                    }],
                     source_info: SourceInfo::init(2, 1, 3, 1),
                 },
             }
@@ -1043,44 +1193,59 @@ mod tests {
         let mut reader = Reader::init("xxx");
         let error = raw_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("```") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("```")
+            }
+        );
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("```\nxxx");
         let error = raw_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 2, column: 4 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("```") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("```")
+            }
+        );
         assert_eq!(error.recoverable, false);
 
         let mut reader = Reader::init("```xxx");
         let error = raw_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("```") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("```")
+            }
+        );
         assert_eq!(error.recoverable, false);
     }
 
     #[test]
     fn test_raw_string_value() {
         let mut reader = Reader::init("```");
-        assert_eq!(raw_string_value(&mut reader).unwrap(), Template {
-            quotes: false,
-            elements: vec![],
-            source_info: SourceInfo::init(1, 1, 1, 1),
-        });
+        assert_eq!(
+            raw_string_value(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![],
+                source_info: SourceInfo::init(1, 1, 1, 1),
+            }
+        );
         assert_eq!(reader.state.cursor, 3);
-
 
         let mut reader = Reader::init("hello```");
         assert_eq!(
             raw_string_value(&mut reader).unwrap(),
             Template {
                 quotes: false,
-                elements: vec![
-                    TemplateElement::String {
-                        value: "hello".to_string(),
-                        encoded: "hello".to_string(),
-                    }
-                ],
+                elements: vec![TemplateElement::String {
+                    value: "hello".to_string(),
+                    encoded: "hello".to_string(),
+                }],
                 source_info: SourceInfo::init(1, 1, 1, 6),
             }
         );

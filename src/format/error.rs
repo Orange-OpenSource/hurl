@@ -31,7 +31,6 @@ pub struct Error {
     pub color: bool,
 }
 
-
 impl Error {
     pub fn format(self) -> String {
         let mut s = "".to_string();
@@ -65,23 +64,27 @@ impl Error {
                     self.filename,
                     self.source_info.start.line,
                     self.source_info.start.column,
-                ).as_str(),
+                )
+                .as_str(),
             );
         }
-
 
         s.push_str(format!("{} |\n", " ".repeat(line_number_size)).as_str());
 
         let line = self.lines.get(self.source_info.start.line - 1).unwrap();
-        let line = str::replace(line, "\t", "    ");    // replace all your tabs with 4 characters
+        let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
         s.push_str(
             format!(
                 "{line_number:>width$} |{line}\n",
                 line_number = self.source_info.start.line,
                 width = line_number_size,
-                line = if line.is_empty() { line } else { format!(" {}", line) }
+                line = if line.is_empty() {
+                    line
+                } else {
+                    format!(" {}", line)
+                }
             )
-                .as_str(),
+            .as_str(),
         );
 
         // TODO: to clean/Refacto
@@ -99,7 +102,7 @@ impl Error {
                         " ".repeat(line_number_size).as_str(),
                         fixme = line,
                     )
-                        .as_str(),
+                    .as_str(),
                 );
             }
         } else {
@@ -108,7 +111,9 @@ impl Error {
 
             let mut tab_shift = 0;
             for (i, c) in line.chars().enumerate() {
-                if i >= self.source_info.start.column - 1 { break; };
+                if i >= self.source_info.start.column - 1 {
+                    break;
+                };
                 if c == '\t' {
                     tab_shift += 1;
                 }
@@ -121,17 +126,15 @@ impl Error {
                     "^".repeat(if width > 1 { width } else { 1 }),
                     fixme = self.fixme.as_str(),
                 )
-                    .as_str(),
+                .as_str(),
             );
         }
-
 
         s.push_str(format!("{} |\n", " ".repeat(line_number_size)).as_str());
 
         s
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -140,9 +143,7 @@ mod tests {
     #[test]
     fn test_basic() {
         let filename = String::from("integration/hurl_error_lint/spaces.hurl");
-        let lines = vec![
-            String::from("GET\thttp://localhost:8000/hello")
-        ];
+        let lines = vec![String::from("GET\thttp://localhost:8000/hello")];
         let error = Error {
             source_info: SourceInfo::init(1, 4, 1, 5),
             description: String::from("One space"),
@@ -152,23 +153,24 @@ mod tests {
             warning: true,
             color: false,
         };
-        assert_eq!(error.format(),
-                   String::from(r#"warning: One space
+        assert_eq!(
+            error.format(),
+            String::from(
+                r#"warning: One space
   --> integration/hurl_error_lint/spaces.hurl:1:4
    |
  1 | GET    http://localhost:8000/hello
    |    ^ Use only one space
    |
-"#)
+"#
+            )
         );
     }
 
     #[test]
     fn test_with_tabs() {
         let filename = String::from("integration/hurl_error_lint/spaces.hurl");
-        let lines = vec![
-            String::from("GET\thttp://localhost:8000/hello ")
-        ];
+        let lines = vec![String::from("GET\thttp://localhost:8000/hello ")];
         let error = Error {
             source_info: SourceInfo::init(1, 32, 1, 32),
             description: String::from("Unnecessary space"),
@@ -178,28 +180,28 @@ mod tests {
             warning: true,
             color: false,
         };
-        assert_eq!(error.format(),
-                   concat!(
-"warning: Unnecessary space\n",
-"  --> integration/hurl_error_lint/spaces.hurl:1:32\n",
-"   |\n",
-" 1 | GET    http://localhost:8000/hello \n",
-"   |                                   ^ Remove space\n",
-"   |\n")
+        assert_eq!(
+            error.format(),
+            concat!(
+                "warning: Unnecessary space\n",
+                "  --> integration/hurl_error_lint/spaces.hurl:1:32\n",
+                "   |\n",
+                " 1 | GET    http://localhost:8000/hello \n",
+                "   |                                   ^ Remove space\n",
+                "   |\n"
+            )
         );
     }
 
-
     #[test]
     fn test_end_of_file() {
-
         // todo: improve error location
 
         let filename = String::from("hurl_error_parser/json_unexpected_eof.hurl");
         let lines = vec![
             String::from("POST http://localhost:8000/data\n"),
             String::from("{ \"name\":\n"),
-            String::from("")
+            String::from(""),
         ];
         let error = Error {
             source_info: SourceInfo::init(3, 1, 3, 1),
@@ -210,14 +212,17 @@ mod tests {
             warning: true,
             color: false,
         };
-        assert_eq!(error.format(),
-                   String::from(r#"warning: Parsing json
+        assert_eq!(
+            error.format(),
+            String::from(
+                r#"warning: Parsing json
   --> hurl_error_parser/json_unexpected_eof.hurl:3:1
    |
  3 |
    | ^ json error
    |
-"#)
+"#
+            )
         );
     }
 
@@ -227,7 +232,7 @@ mod tests {
         let lines = vec![
             String::from("...\n"),
             String::from("[Asserts]\n"),
-            String::from("jsonpath \"$.message\" startsWith \"hello\"")
+            String::from("jsonpath \"$.message\" startsWith \"hello\""),
         ];
         let _error = Error {
             source_info: SourceInfo::init(3, 0, 3, 0),

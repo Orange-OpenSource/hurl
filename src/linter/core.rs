@@ -30,7 +30,6 @@ pub enum LinterError {
     OneSpace {},
 }
 
-
 impl FormatError for Error {
     fn source_info(&self) -> SourceInfo {
         self.clone().source_info

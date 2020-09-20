@@ -44,7 +44,6 @@ impl Reader {
         self.state.cursor == self.buffer.len()
     }
 
-
     pub fn read(&mut self) -> Option<char> {
         match self.buffer.get(self.state.cursor) {
             None => None,
@@ -65,7 +64,7 @@ impl Reader {
     pub fn peek(&mut self) -> Option<char> {
         match self.buffer.get(self.state.cursor) {
             None => None,
-            Some(c) => Some(*c)
+            Some(c) => Some(*c),
         }
     }
 
@@ -74,12 +73,13 @@ impl Reader {
         loop {
             match self.peek() {
                 None => return s,
-                Some(c) =>
+                Some(c) => {
                     if predicate(&c) {
                         s.push(self.read().unwrap())
                     } else {
                         return s;
                     }
+                }
             }
         }
     }
@@ -115,7 +115,6 @@ impl Reader {
 fn is_combining_character(c: char) -> bool {
     c > '\u{0300}' && c < '\u{036F}' // Combining Diacritical Marks (0300–036F)
 }
-
 
 #[cfg(test)]
 mod tests {

@@ -16,7 +16,6 @@
  *
  */
 
-
 ///
 /// This module defines a HTTP ResponseCookie,
 /// namely the cookie returned from the response Set-Cookie header
@@ -24,7 +23,6 @@
 /// They are exclusively used by the cookie query
 /// and not by the http client.
 ///
-
 
 ///
 /// Cookie return from HTTP Response
@@ -45,7 +43,6 @@ pub struct CookieAttribute {
 
 #[allow(dead_code)]
 impl ResponseCookie {
-
     ///
     /// parse value from Set-Cookie Header into a Cookie
     ///
@@ -158,9 +155,7 @@ impl ResponseCookie {
         }
         None
     }
-
 }
-
 
 impl CookieAttribute {
     fn parse(s: String) -> Option<CookieAttribute> {
@@ -176,7 +171,6 @@ impl CookieAttribute {
     }
 }
 
-
 #[cfg(test)]
 pub mod tests {
     use super::*;
@@ -185,24 +179,26 @@ pub mod tests {
     fn test_parse_cookie_attribute() {
         assert_eq!(
             CookieAttribute::parse("Expires=Wed, 21 Oct 2015 07:28:00 GMT".to_string()).unwrap(),
-            CookieAttribute { name: "Expires".to_string(), value: Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string()) }
+            CookieAttribute {
+                name: "Expires".to_string(),
+                value: Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string())
+            }
         );
 
         assert_eq!(
             CookieAttribute::parse("HttpOnly".to_string()).unwrap(),
-            CookieAttribute { name: "HttpOnly".to_string(), value:None }
+            CookieAttribute {
+                name: "HttpOnly".to_string(),
+                value: None
+            }
         );
 
-        assert_eq!(
-            CookieAttribute::parse("".to_string()),
-            None
-        );
+        assert_eq!(CookieAttribute::parse("".to_string()), None);
     }
-
 
     #[test]
     fn test_session_cookie() {
-        let cookie =  ResponseCookie {
+        let cookie = ResponseCookie {
             name: "sessionId".to_string(),
             value: "38afes7a8".to_string(),
             attributes: vec![],
@@ -222,21 +218,23 @@ pub mod tests {
 
     #[test]
     fn test_permanent_cookie() {
-        let cookie =  ResponseCookie {
+        let cookie = ResponseCookie {
             name: "id".to_string(),
             value: "a3fWa".to_string(),
-            attributes: vec![
-                CookieAttribute {
-                    name: "Expires".to_string(),
-                    value: Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string()),
-                }
-            ],
+            attributes: vec![CookieAttribute {
+                name: "Expires".to_string(),
+                value: Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string()),
+            }],
         };
         assert_eq!(
-            ResponseCookie::parse("id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT".to_string()).unwrap(),
+            ResponseCookie::parse("id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT".to_string())
+                .unwrap(),
             cookie
         );
-        assert_eq!(cookie.expires(), Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string()));
+        assert_eq!(
+            cookie.expires(),
+            Some("Wed, 21 Oct 2015 07:28:00 GMT".to_string())
+        );
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), None);
@@ -247,15 +245,13 @@ pub mod tests {
 
     #[test]
     fn test_permanent2_cookie() {
-        let cookie =  ResponseCookie {
+        let cookie = ResponseCookie {
             name: "id".to_string(),
             value: "a3fWa".to_string(),
-            attributes: vec![
-                CookieAttribute {
-                    name: "Max-Age".to_string(),
-                    value: Some("2592000".to_string()),
-                }
-            ],
+            attributes: vec![CookieAttribute {
+                name: "Max-Age".to_string(),
+                value: Some("2592000".to_string()),
+            }],
         };
         assert_eq!(
             ResponseCookie::parse("id=a3fWa; Max-Age=2592000".to_string()).unwrap(),
@@ -272,24 +268,38 @@ pub mod tests {
 
     #[test]
     fn test_lsid_cookie() {
-        let cookie =   ResponseCookie {
+        let cookie = ResponseCookie {
             name: "LSID".to_string(),
             value: "DQAAAK…Eaem_vYg".to_string(),
             attributes: vec![
-                CookieAttribute { name: "Path".to_string(), value: Some("/accounts".to_string()) },
-                CookieAttribute { name: "Expires".to_string(), value: Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()) },
-                CookieAttribute { name: "Secure".to_string(), value: None },
-                CookieAttribute { name: "HttpOnly".to_string(), value: None },
+                CookieAttribute {
+                    name: "Path".to_string(),
+                    value: Some("/accounts".to_string()),
+                },
+                CookieAttribute {
+                    name: "Expires".to_string(),
+                    value: Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()),
+                },
+                CookieAttribute {
+                    name: "Secure".to_string(),
+                    value: None,
+                },
+                CookieAttribute {
+                    name: "HttpOnly".to_string(),
+                    value: None,
+                },
             ],
         };
         assert_eq!(
             ResponseCookie::parse("LSID=DQAAAK…Eaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly".to_string()).unwrap(),
             cookie
         );
-        assert_eq!(cookie.expires(), Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()));
+        assert_eq!(
+            cookie.expires(),
+            Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string())
+        );
         assert_eq!(cookie.max_age(), None);
-        assert_eq!(cookie.domain(), None)
-        ;
+        assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), Some("/accounts".to_string()));
         assert_eq!(cookie.has_secure(), true);
         assert_eq!(cookie.has_httponly(), true);
@@ -298,21 +308,36 @@ pub mod tests {
 
     #[test]
     fn test_hsid_cookie() {
-        let cookie =   ResponseCookie {
+        let cookie = ResponseCookie {
             name: "HSID".to_string(),
             value: "AYQEVn…DKrdst".to_string(),
             attributes: vec![
-                CookieAttribute { name: "Domain".to_string(), value: Some(".foo.com".to_string()) },
-                CookieAttribute { name: "Path".to_string(), value: Some("/".to_string()) },
-                CookieAttribute { name: "Expires".to_string(), value: Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()) },
-                CookieAttribute { name: "HttpOnly".to_string(), value: None },
+                CookieAttribute {
+                    name: "Domain".to_string(),
+                    value: Some(".foo.com".to_string()),
+                },
+                CookieAttribute {
+                    name: "Path".to_string(),
+                    value: Some("/".to_string()),
+                },
+                CookieAttribute {
+                    name: "Expires".to_string(),
+                    value: Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()),
+                },
+                CookieAttribute {
+                    name: "HttpOnly".to_string(),
+                    value: None,
+                },
             ],
         };
         assert_eq!(
             ResponseCookie::parse("HSID=AYQEVn…DKrdst; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly".to_string()).unwrap(),
             cookie
         );
-        assert_eq!(cookie.expires(), Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()));
+        assert_eq!(
+            cookie.expires(),
+            Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string())
+        );
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), Some(".foo.com".to_string()));
         assert_eq!(cookie.path(), Some("/".to_string()));
@@ -320,7 +345,6 @@ pub mod tests {
         assert_eq!(cookie.has_httponly(), true);
         assert_eq!(cookie.samesite(), None);
     }
-
 
     #[test]
     fn test_trailing_semicolon() {
@@ -334,18 +358,14 @@ pub mod tests {
         );
     }
 
-
     #[test]
     fn test_invalid_cookie() {
-        assert_eq!(
-            ResponseCookie::parse("xx".to_string()),
-            None
-        );
+        assert_eq!(ResponseCookie::parse("xx".to_string()), None);
     }
 
     #[test]
     fn test_cookie_with_invalid_attributes() {
-        let cookie =  ResponseCookie {
+        let cookie = ResponseCookie {
             name: "id".to_string(),
             value: "a3fWa".to_string(),
             attributes: vec![
@@ -356,7 +376,7 @@ pub mod tests {
                 CookieAttribute {
                     name: "Max-Age".to_string(),
                     value: Some("".to_string()),
-                }
+                },
             ],
         };
         assert_eq!(
@@ -371,7 +391,4 @@ pub mod tests {
         assert_eq!(cookie.has_httponly(), false);
         assert_eq!(cookie.samesite(), None);
     }
-
-
 }
-

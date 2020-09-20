@@ -20,14 +20,17 @@ use crate::core::ast::*;
 use super::base64;
 use super::combinators::*;
 use super::json::parse as parse_json;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::Reader;
 use super::xml;
+use super::ParseResult;
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     //let start = p.state.clone();
-    choice(vec![raw_string, json_bytes, xml_bytes, base64_bytes, file_bytes], reader)
+    choice(
+        vec![raw_string, json_bytes, xml_bytes, base64_bytes, file_bytes],
+        reader,
+    )
 }
 
 fn xml_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
@@ -81,14 +84,13 @@ fn base64_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     })
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::core::common::{Pos, SourceInfo};
     use crate::core::json;
 
-    use super::*;
     use super::super::error::*;
+    use super::*;
 
     #[test]
     fn test_bytes_json() {
@@ -99,9 +101,21 @@ mod tests {
                 value: json::Value::List {
                     space0: "".to_string(),
                     elements: vec![
-                        json::ListElement { space0: "".to_string(), value: json::Value::Number("1".to_string()), space1: "".to_string() },
-                        json::ListElement { space0: "".to_string(), value: json::Value::Number("2".to_string()), space1: "".to_string() },
-                        json::ListElement { space0: "".to_string(), value: json::Value::Number("3".to_string()), space1: "".to_string() },
+                        json::ListElement {
+                            space0: "".to_string(),
+                            value: json::Value::Number("1".to_string()),
+                            space1: "".to_string()
+                        },
+                        json::ListElement {
+                            space0: "".to_string(),
+                            value: json::Value::Number("2".to_string()),
+                            space1: "".to_string()
+                        },
+                        json::ListElement {
+                            space0: "".to_string(),
+                            value: json::Value::Number("3".to_string()),
+                            space1: "".to_string()
+                        },
                     ],
                 }
             }
@@ -181,7 +195,12 @@ mod tests {
         let mut reader = Reader::init("{ x ");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
-        assert_eq!(error.inner, ParseError::Expecting { value: "\"".to_string() });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "\"".to_string()
+            }
+        );
     }
 
     #[test]
@@ -189,7 +208,12 @@ mod tests {
         let mut reader = Reader::init("```\nxxx ");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 2, column: 5 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("```") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("```")
+            }
+        );
     }
 
     #[test]
@@ -197,7 +221,12 @@ mod tests {
         let mut reader = Reader::init("");
         let error = bytes(&mut reader).err().unwrap();
         //println!("{:?}", error);
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("file") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("file")
+            }
+        );
         assert_eq!(error.recoverable, true);
     }
 
@@ -270,7 +299,12 @@ mod tests {
             }
         );
         assert_eq!(error.recoverable, false);
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from(";") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from(";")
+            }
+        );
     }
 
     #[test]
