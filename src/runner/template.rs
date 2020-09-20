@@ -41,17 +41,30 @@ impl Template {
 impl TemplateElement {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
         match self {
-            TemplateElement::String { value, .. } => { Ok(value) }
-            TemplateElement::Expression(Expr { variable: Variable { name, source_info }, .. }) => {
-                match variables.get(&name as &str) {
-                    Some(value) => if value.is_renderable() {
+            TemplateElement::String { value, .. } => Ok(value),
+            TemplateElement::Expression(Expr {
+                variable: Variable { name, source_info },
+                ..
+            }) => match variables.get(&name as &str) {
+                Some(value) => {
+                    if value.is_renderable() {
                         Ok(value.clone().to_string())
                     } else {
-                        Err(Error { source_info, inner: RunnerError::UnrenderableVariable { value: value.to_string() }, assert: false })
-                    },
-                    _ => Err(Error { source_info, inner: RunnerError::TemplateVariableNotDefined { name }, assert: false }),
+                        Err(Error {
+                            source_info,
+                            inner: RunnerError::UnrenderableVariable {
+                                value: value.to_string(),
+                            },
+                            assert: false,
+                        })
+                    }
                 }
-            }
+                _ => Err(Error {
+                    source_info,
+                    inner: RunnerError::TemplateVariableNotDefined { name },
+                    assert: false,
+                }),
+            },
         }
     }
 }
@@ -65,7 +78,6 @@ impl Value {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::core::common::SourceInfo;
@@ -75,32 +87,59 @@ mod tests {
     fn template_element_expression() -> TemplateElement {
         // {{name}}
         TemplateElement::Expression(Expr {
-            space0: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 3, 1, 3) },
-            variable: Variable { name: "name".to_string(), source_info: SourceInfo::init(1, 3, 1, 7) },
-            space1: Whitespace { value: "".to_string(), source_info: SourceInfo::init(1, 7, 1, 7) },
+            space0: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::init(1, 3, 1, 3),
+            },
+            variable: Variable {
+                name: "name".to_string(),
+                source_info: SourceInfo::init(1, 3, 1, 7),
+            },
+            space1: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::init(1, 7, 1, 7),
+            },
         })
     }
-
 
     #[test]
     fn test_template_element() {
         let variables = HashMap::new();
-        assert_eq!(TemplateElement::String { value: "World".to_string(), encoded: "World".to_string() }.eval(&variables).unwrap(),
-                   "World".to_string()
+        assert_eq!(
+            TemplateElement::String {
+                value: "World".to_string(),
+                encoded: "World".to_string()
+            }
+            .eval(&variables)
+            .unwrap(),
+            "World".to_string()
         );
 
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("World".to_string()));
-        assert_eq!(template_element_expression().eval(&variables).unwrap(), "World".to_string());
+        assert_eq!(
+            template_element_expression().eval(&variables).unwrap(),
+            "World".to_string()
+        );
     }
-
 
     #[test]
     fn test_template_element_error() {
         let mut variables = HashMap::new();
-        variables.insert("name".to_string(), Value::List(vec![Value::Integer(1), Value::Integer(2)]));
-        let error = template_element_expression().eval(&variables).err().unwrap();
+        variables.insert(
+            "name".to_string(),
+            Value::List(vec![Value::Integer(1), Value::Integer(2)]),
+        );
+        let error = template_element_expression()
+            .eval(&variables)
+            .err()
+            .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 3, 1, 7));
-        assert_eq!(error.inner, RunnerError::UnrenderableVariable { value: "[1,2]".to_string() });
+        assert_eq!(
+            error.inner,
+            RunnerError::UnrenderableVariable {
+                value: "[1,2]".to_string()
+            }
+        );
     }
 }

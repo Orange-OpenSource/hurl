@@ -21,14 +21,13 @@ use super::Error;
 pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, Error> {
     if n > 1 {
         Err(Error {
-            message: "Only save cookies for a unique session".to_string()
+            message: "Only save cookies for a unique session".to_string(),
         })
     } else {
         let path = std::path::Path::new(&filename);
         Ok(path.to_path_buf())
     }
 }
-
 
 pub fn output_color(color_present: bool, no_color_present: bool, stdout: bool) -> bool {
     if color_present {
@@ -40,9 +39,6 @@ pub fn output_color(color_present: bool, no_color_present: bool, stdout: bool) -
     }
 }
 
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -52,6 +48,4 @@ mod tests {
         assert_eq!(output_color(true, false, true), true);
         assert_eq!(output_color(false, false, true), true);
     }
-
-
 }

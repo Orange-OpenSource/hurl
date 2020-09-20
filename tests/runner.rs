@@ -18,14 +18,13 @@
 extern crate hurl;
 
 use hurl::core::ast;
+use hurl::core::ast::{EncodedString, Template, TemplateElement};
 use hurl::core::common::{Pos, SourceInfo};
-use hurl::runner;
 use hurl::format;
 use hurl::http;
-use std::collections::HashMap;
-use hurl::core::ast::{Template, TemplateElement, EncodedString};
+use hurl::runner;
 use hurl::runner::core::RunnerOptions;
-
+use std::collections::HashMap;
 
 // can be used for debugging
 #[test]
@@ -64,7 +63,7 @@ fn test_hurl_file() {
         filename: Some(filename.to_string()),
         lines: lines,
         verbose: false,
-        color: false
+        color: false,
     };
 
     let _hurl_log = runner::file::run(
@@ -74,11 +73,9 @@ fn test_hurl_file() {
         filename.to_string(),
         "current_dir".to_string(),
         options,
-        logger
+        logger,
     );
-//   assert_eq!(1,2)
-
-
+    //   assert_eq!(1,2)
 }
 
 #[cfg(test)]
@@ -104,9 +101,10 @@ fn hello_request() -> ast::Request {
         space1: whitespace.clone(),
         url: Template {
             quotes: false,
-            elements: vec![
-                TemplateElement::String { value: "http://localhost:8000/hello".to_string(), encoded: "http://localhost:8000/hello".to_string() }
-            ],
+            elements: vec![TemplateElement::String {
+                value: "http://localhost:8000/hello".to_string(),
+                encoded: "http://localhost:8000/hello".to_string(),
+            }],
             source_info: source_info.clone(),
         },
         line_terminator0: ast::LineTerminator {
@@ -114,28 +112,27 @@ fn hello_request() -> ast::Request {
             comment: None,
             newline: whitespace.clone(),
         },
-        headers: vec![
-            ast::KeyValue {
-                line_terminators: vec![],
-                space0: whitespace.clone(),
-                key: EncodedString {
-                    quotes: false,
-                    value: "User-Agent".to_string(),
-                    encoded: "User-Agent".to_string(),
-                    source_info: source_info.clone(),
-                },
-                space1: whitespace.clone(),
-                space2: whitespace.clone(),
-                value: Template {
-                    quotes: false,
-                    elements: vec![
-                        TemplateElement::String { value: "test".to_string(), encoded: "test".to_string() }
-                    ],
-                    source_info: source_info.clone(),
-                },
-                line_terminator0: line_terminator.clone(),
-            }
-        ],
+        headers: vec![ast::KeyValue {
+            line_terminators: vec![],
+            space0: whitespace.clone(),
+            key: EncodedString {
+                quotes: false,
+                value: "User-Agent".to_string(),
+                encoded: "User-Agent".to_string(),
+                source_info: source_info.clone(),
+            },
+            space1: whitespace.clone(),
+            space2: whitespace.clone(),
+            value: Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "test".to_string(),
+                    encoded: "test".to_string(),
+                }],
+                source_info: source_info.clone(),
+            },
+            line_terminator0: line_terminator.clone(),
+        }],
         sections: vec![],
         body: None,
         source_info: source_info.clone(),
@@ -191,9 +188,7 @@ fn test_hello() {
         }],
         line_terminators: vec![],
     };
-    let lines = vec![
-        String::from("line1")
-    ];
+    let lines = vec![String::from("line1")];
     let variables = HashMap::new();
     let options = RunnerOptions {
         fail_fast: true,
@@ -204,7 +199,7 @@ fn test_hello() {
         filename: None,
         lines,
         verbose: false,
-        color: false
+        color: false,
     };
     let _hurl_log = runner::file::run(
         hurl_file,
@@ -212,17 +207,17 @@ fn test_hello() {
         String::from("filename"),
         "current_dir".to_string(),
         options,
-        logger
+        logger,
     );
     //assert_eq!(hurl_log.entries.len(), 1);
     //assert_eq!(hurl_log.entries.get(0).unwrap().response.status, 200);
-//    assert!(hurl_log
-//        .entries
-//        .get(0)
-//        .unwrap()
-//        .asserts
-//        .get(0)
-//        .unwrap()
-//        .clone()
-//        .success());
+    //    assert!(hurl_log
+    //        .entries
+    //        .get(0)
+    //        .unwrap()
+    //        .asserts
+    //        .get(0)
+    //        .unwrap()
+    //        .clone()
+    //        .success());
 }

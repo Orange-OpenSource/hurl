@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use super::color::TerminalColor;
 use super::super::core::ast::*;
+use super::color::TerminalColor;
 use super::token::*;
 
 pub fn format(hurl_file: HurlFile, color: bool) -> String {

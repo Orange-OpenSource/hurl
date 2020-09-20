@@ -18,8 +18,8 @@
 extern crate clap;
 
 use std::fs;
-use std::io::{self, Read};
 use std::io::Write;
+use std::io::{self, Read};
 use std::path::Path;
 use std::process;
 

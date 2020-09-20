@@ -16,13 +16,11 @@
  *
  */
 
-
-use crate::http::*;
 use super::cookie::*;
 use super::core::*;
+use crate::http::*;
 
 type ParseError = String;
-
 
 pub fn parse_results(value: serde_json::Value) -> Result<Vec<HurlResult>, ParseError> {
     if let serde_json::Value::Array(values) = value {
@@ -36,7 +34,6 @@ pub fn parse_results(value: serde_json::Value) -> Result<Vec<HurlResult>, ParseE
         Err("expecting an array of session".to_string())
     }
 }
-
 
 fn parse_result(value: serde_json::Value) -> Result<HurlResult, ParseError> {
     if let serde_json::Value::Object(map) = value.clone() {
@@ -52,12 +49,10 @@ fn parse_result(value: serde_json::Value) -> Result<HurlResult, ParseError> {
             return Err("expecting an array of entries".to_string());
         };
         let time_in_ms = match value.get("time") {
-            Some(serde_json::Value::Number(n)) => {
-                match n.as_u64() {
-                    Some(x) => x as u128,
-                    None => return Err("expecting an integer for the time".to_string()),
-                }
-            }
+            Some(serde_json::Value::Number(n)) => match n.as_u64() {
+                Some(x) => x as u128,
+                None => return Err("expecting an integer for the time".to_string()),
+            },
             _ => return Err("expecting an integer for the time".to_string()),
         };
         let success = match value.get("success") {
@@ -65,7 +60,13 @@ fn parse_result(value: serde_json::Value) -> Result<HurlResult, ParseError> {
             _ => return Err("expecting a bool for the status".to_string()),
         };
         let cookies = vec![];
-        Ok(HurlResult { filename, entries, time_in_ms, success, cookies })
+        Ok(HurlResult {
+            filename,
+            entries,
+            time_in_ms,
+            success,
+            cookies,
+        })
     } else {
         Err("expecting an object for the result".to_string())
     }
@@ -95,7 +96,6 @@ fn parse_entry_result(value: serde_json::Value) -> Result<EntryResult, String> {
         time_in_ms: 0,
     })
 }
-
 
 pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
     if let serde_json::Value::Object(map) = value {
@@ -144,7 +144,6 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
             _ => vec![],
         };
 
-
         let cookies = match map.get("cookies") {
             Some(serde_json::Value::Array(values)) => {
                 let mut headers = vec![];
@@ -181,11 +180,13 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
 pub fn parse_response(value: serde_json::Value) -> Result<Response, ParseError> {
     if let serde_json::Value::Object(map) = value {
         let status = match map.get("status") {
-            Some(serde_json::Value::Number(x)) => if let Some(x) = x.as_u64() {
-                x as u32
-            } else {
-                return Err("expecting a integer for the status".to_string());
-            },
+            Some(serde_json::Value::Number(x)) => {
+                if let Some(x) = x.as_u64() {
+                    x as u32
+                } else {
+                    return Err("expecting a integer for the status".to_string());
+                }
+            }
             _ => return Err("expecting a number for the status".to_string()),
         };
 
@@ -228,10 +229,9 @@ fn parse_method(s: String) -> Result<Method, ParseError> {
         "OPTIONS" => Ok(Method::Options),
         "TRACE" => Ok(Method::Trace),
         "PATCH" => Ok(Method::Patch),
-        _ => Err(format!("Invalid method <{}>", s))
+        _ => Err(format!("Invalid method <{}>", s)),
     }
 }
-
 
 fn parse_header(value: serde_json::Value) -> Result<Header, ParseError> {
     if let serde_json::Value::Object(map) = value {
@@ -295,57 +295,80 @@ pub fn parse_response_cookie(value: serde_json::Value) -> Result<ResponseCookie,
 
         match map.get("expires") {
             None => {}
-            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute { name: "Expires".to_string(), value: Some(s.to_string()) }),
+            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute {
+                name: "Expires".to_string(),
+                value: Some(s.to_string()),
+            }),
             _ => return Err("expecting a string for the cookie expires".to_string()),
         };
         match map.get("max_age") {
             None => {}
-            Some(serde_json::Value::Number(n)) => attributes.push(CookieAttribute { name: "Max-Age".to_string(), value: Some(n.to_string()) }),
+            Some(serde_json::Value::Number(n)) => attributes.push(CookieAttribute {
+                name: "Max-Age".to_string(),
+                value: Some(n.to_string()),
+            }),
             _ => return Err("expecting an integer for the cookie max_age".to_string()),
         };
         match map.get("domain") {
             None => {}
-            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute { name: "Domain".to_string(), value: Some(s.to_string()) }),
+            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute {
+                name: "Domain".to_string(),
+                value: Some(s.to_string()),
+            }),
             _ => return Err("expecting a string for the cookie domain".to_string()),
         };
         match map.get("path") {
             None => {}
-            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute { name: "Path".to_string(), value: Some(s.to_string()) }),
+            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute {
+                name: "Path".to_string(),
+                value: Some(s.to_string()),
+            }),
             _ => return Err("expecting a string for the cookie path".to_string()),
         };
 
         match map.get("secure") {
             None => {}
-            Some(serde_json::Value::Bool(true)) => attributes.push(CookieAttribute { name: "Secure".to_string(), value: None }),
+            Some(serde_json::Value::Bool(true)) => attributes.push(CookieAttribute {
+                name: "Secure".to_string(),
+                value: None,
+            }),
             _ => return Err("expecting a true for the cookie secure flag".to_string()),
         };
         match map.get("http_only") {
             None => {}
-            Some(serde_json::Value::Bool(true)) => attributes.push(CookieAttribute { name: "HttpOnly".to_string(), value: None }),
+            Some(serde_json::Value::Bool(true)) => attributes.push(CookieAttribute {
+                name: "HttpOnly".to_string(),
+                value: None,
+            }),
             _ => return Err("expecting a true for the cookie http_only flag".to_string()),
         };
         match map.get("same_site") {
             None => {}
-            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute { name: "SameSite".to_string(), value: Some(s.to_string()) }),
+            Some(serde_json::Value::String(s)) => attributes.push(CookieAttribute {
+                name: "SameSite".to_string(),
+                value: Some(s.to_string()),
+            }),
             _ => return Err("expecting a string for the cookie same_site".to_string()),
         };
 
-        Ok(ResponseCookie { name, value, attributes })
+        Ok(ResponseCookie {
+            name,
+            value,
+            attributes,
+        })
     } else {
         Err("Expecting object for one cookie".to_string())
     }
 }
-
 
 fn parse_version(s: String) -> Result<Version, ParseError> {
     match s.as_str() {
         "HTTP/1.0" => Ok(Version::Http10),
         "HTTP/1.1" => Ok(Version::Http11),
         "HTTP/2" => Ok(Version::Http2),
-        _ => Err("Expecting version HTTP/1.0, HTTP/1.2 or HTTP/2".to_string())
+        _ => Err("Expecting version HTTP/1.0, HTTP/1.2 or HTTP/2".to_string()),
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -353,32 +376,42 @@ mod tests {
 
     #[test]
     fn test_parse_request() {
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "method": "GET",
     "url": "http://localhost:8000/hello",
     "headers": []
-}"#).unwrap();
+}"#,
+        )
+        .unwrap();
         assert_eq!(parse_request(v).unwrap(), hello_http_request());
 
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "method": "GET",
     "url": "http://localhost:8000/querystring-params?param1=value1&param2=a%20b",
     "headers": []
-}"#).unwrap();
-        assert_eq!(parse_request(v).unwrap(), Request {
-            method: Method::Get,
-            url: "http://localhost:8000/querystring-params?param1=value1&param2=a%20b".to_string(),
-            querystring: vec![],
-            headers: vec![],
-            cookies: vec![],
-            body: vec![],
-            form: vec![],
-            multipart: vec![],
-            content_type: None,
-        });
+}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            parse_request(v).unwrap(),
+            Request {
+                method: Method::Get,
+                url: "http://localhost:8000/querystring-params?param1=value1&param2=a%20b"
+                    .to_string(),
+                querystring: vec![],
+                headers: vec![],
+                cookies: vec![],
+                body: vec![],
+                form: vec![],
+                multipart: vec![],
+                content_type: None,
+            }
+        );
 
-
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "method": "GET",
     "url": "http://localhost/custom",
     "headers": [
@@ -389,13 +422,16 @@ mod tests {
        {"name": "theme", "value": "light"},
        {"name": "sessionToken", "value": "abc123"}
     ]
-}"#).unwrap();
+}"#,
+        )
+        .unwrap();
         assert_eq!(parse_request(v).unwrap(), custom_http_request());
     }
 
     #[test]
     fn test_parse_response() {
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "status": 200,
     "httpVersion": "HTTP/1.0",
     "headers": [
@@ -403,16 +439,27 @@ mod tests {
         {"name": "Content-Length", "value": "12" }
 
     ]
-}"#).unwrap();
-        assert_eq!(parse_response(v).unwrap(), Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![
-                Header { name: String::from("Content-Type"), value: String::from("text/html; charset=utf-8") },
-                Header { name: String::from("Content-Length"), value: String::from("12") },
-            ],
-            body: vec![],
-        });
+}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            parse_response(v).unwrap(),
+            Response {
+                version: Version::Http10,
+                status: 200,
+                headers: vec![
+                    Header {
+                        name: String::from("Content-Type"),
+                        value: String::from("text/html; charset=utf-8")
+                    },
+                    Header {
+                        name: String::from("Content-Length"),
+                        value: String::from("12")
+                    },
+                ],
+                body: vec![],
+            }
+        );
     }
 
     #[test]
@@ -425,30 +472,46 @@ mod tests {
 
     #[test]
     fn test_parse_header() {
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "name": "name1",
     "value": "value1"
-}"#).unwrap();
-        assert_eq!(parse_header(v).unwrap(), Header { name: "name1".to_string(), value: "value1".to_string() });
+}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            parse_header(v).unwrap(),
+            Header {
+                name: "name1".to_string(),
+                value: "value1".to_string()
+            }
+        );
     }
 
     #[test]
     fn test_parse_response_cookie() {
-        let v: serde_json::Value = serde_json::from_str(r#"{
+        let v: serde_json::Value = serde_json::from_str(
+            r#"{
     "name": "name1",
     "value": "value1"
-}"#).unwrap();
-        assert_eq!(parse_response_cookie(v).unwrap(),
-                   ResponseCookie {
-                       name: "name1".to_string(),
-                       value: "value1".to_string(),
-                       attributes: vec![],
-                   }
+}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            parse_response_cookie(v).unwrap(),
+            ResponseCookie {
+                name: "name1".to_string(),
+                value: "value1".to_string(),
+                attributes: vec![],
+            }
         );
     }
 
     #[test]
     fn test_parse_version() {
-        assert_eq!(parse_version("HTTP/1.0".to_string()).unwrap(), Version::Http10);
+        assert_eq!(
+            parse_version("HTTP/1.0".to_string()).unwrap(),
+            Version::Http10
+        );
     }
 }

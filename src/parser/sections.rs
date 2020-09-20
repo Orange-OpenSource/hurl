@@ -21,12 +21,12 @@ use crate::core::common::SourceInfo;
 
 use super::combinators::*;
 use super::error::*;
-use super::ParseResult;
 use super::predicate::predicate;
 use super::primitives::*;
 use super::query::{query, subquery};
 use super::reader::Reader;
 use super::string::*;
+use super::ParseResult;
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
     let sections = zero_or_more(|p1| section(p1), reader)?;
@@ -37,7 +37,7 @@ pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section
             "MultipartFormData",
             "Cookies",
         ]
-            .contains(&section.name())
+        .contains(&section.name())
         {
             return Err(Error {
                 pos: section.source_info.start,
@@ -118,9 +118,7 @@ fn section_value_form_params(reader: &mut Reader) -> ParseResult<'static, Sectio
     Ok(SectionValue::FormParams(items))
 }
 
-fn section_value_multipart_form_data(
-    reader: &mut Reader,
-) -> ParseResult<'static, SectionValue> {
+fn section_value_multipart_form_data(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
     let items = zero_or_more(|p1| multipart_param(p1), reader)?;
     Ok(SectionValue::MultipartFormData(items))
 }
@@ -167,8 +165,15 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
 ///
 fn cookie_value(reader: &mut Reader) -> ParseResult<'static, CookieValue> {
     //let start = reader.state.clone();
-    let value = reader.read_while(|c| c.is_ascii_alphanumeric()
-        || *c == '_' || *c == '-'  || *c == '/' || *c == '%' || *c == '[' || *c == ']');
+    let value = reader.read_while(|c| {
+        c.is_ascii_alphanumeric()
+            || *c == '_'
+            || *c == '-'
+            || *c == '/'
+            || *c == '%'
+            || *c == '['
+            || *c == ']'
+    });
     Ok(CookieValue { value })
 }
 
@@ -360,7 +365,6 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
     })
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -374,7 +378,8 @@ mod tests {
 
     #[test]
     fn test_asserts_section() {
-        let mut reader = Reader::init("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
+        let mut reader =
+            Reader::init("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
 
         assert_eq!(
             section(&mut reader).unwrap(),
@@ -465,7 +470,8 @@ mod tests {
 
     #[test]
     fn test_asserts_section_error() {
-        let mut reader = Reader::init("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
+        let mut reader =
+            Reader::init("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
         let error = section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -500,9 +506,14 @@ mod tests {
     fn test_cookie_error() {
         let mut reader = Reader::init("Foo: \"Bar\"");
         let error = cookie(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 6});
+        assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(error.recoverable, false);
-        assert_eq!(error.inner, ParseError::Expecting { value: "line_terminator".to_string()});
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "line_terminator".to_string()
+            }
+        );
     }
 
     #[test]
@@ -523,7 +534,6 @@ mod tests {
             }
         );
     }
-
 
     #[test]
     fn test_file_value() {

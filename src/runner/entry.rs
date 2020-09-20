@@ -18,17 +18,14 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-
 use crate::core::ast::*;
 use crate::core::common::SourceInfo;
 use crate::core::common::Value;
 use crate::http;
 
-
 use super::core::*;
 use super::core::{Error, RunnerError};
 use crate::format::logger::Logger;
-
 
 /// Run an entry with the hurl http client
 ///
@@ -48,12 +45,13 @@ use crate::format::logger::Logger;
 ////        all_proxy: None
 ////    });
 /// ```
-pub fn run(entry: Entry,
-           http_client: &mut http::Client,
-           entry_index: usize,
-           variables: &mut HashMap<String, Value>,
-           context_dir: String,
-           logger: &Logger,
+pub fn run(
+    entry: Entry,
+    http_client: &mut http::Client,
+    entry_index: usize,
+    variables: &mut HashMap<String, Value>,
+    context_dir: String,
+    logger: &Logger,
 ) -> EntryResult {
     let http_request = match entry.clone().request.eval(variables, context_dir.clone()) {
         Ok(r) => r,
@@ -70,7 +68,8 @@ pub fn run(entry: Entry,
         }
     };
 
-    logger.verbose("------------------------------------------------------------------------------");
+    logger
+        .verbose("------------------------------------------------------------------------------");
     logger.verbose(format!("executing entry {}", entry_index + 1).as_str());
 
     // Temporary - add cookie from request to the cookie store
@@ -110,18 +109,17 @@ pub fn run(entry: Entry,
                 response: None,
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![
-                    Error {
-                        source_info: SourceInfo {
-                            start: entry.clone().request.url.source_info.start,
-                            end: entry.clone().request.url.source_info.end,
-                        },
-                        inner: RunnerError::HttpConnection {
-                            message: "".to_string(),
-                            url: http_request.url,
-                        },
-                        assert: false,
-                    }],
+                errors: vec![Error {
+                    source_info: SourceInfo {
+                        start: entry.clone().request.url.source_info.start,
+                        end: entry.clone().request.url.source_info.end,
+                    },
+                    inner: RunnerError::HttpConnection {
+                        message: "".to_string(),
+                        url: http_request.url,
+                    },
+                    assert: false,
+                }],
                 time_in_ms: 0,
             };
         }
@@ -144,7 +142,7 @@ pub fn run(entry: Entry,
                     time_in_ms,
                 };
             }
-        }
+        },
     };
 
     // update variables now!
@@ -154,12 +152,20 @@ pub fn run(entry: Entry,
 
     let asserts = match entry.response {
         None => vec![],
-        Some(response) => response.eval_asserts(variables, http_response.clone(), context_dir)
+        Some(response) => response.eval_asserts(variables, http_response.clone(), context_dir),
     };
     let errors = asserts
         .iter()
         .filter_map(|assert| assert.clone().error())
-        .map(|Error { source_info, inner, .. }| Error { source_info, inner, assert: true })
+        .map(
+            |Error {
+                 source_info, inner, ..
+             }| Error {
+                source_info,
+                inner,
+                assert: true,
+            },
+        )
         .collect();
 
     if !captures.is_empty() {
@@ -180,7 +186,6 @@ pub fn run(entry: Entry,
         time_in_ms,
     }
 }
-
 
 pub fn log_request(logger: &Logger, request: &http::Request) {
     logger.verbose("Request");

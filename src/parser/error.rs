@@ -57,9 +57,7 @@ pub enum ParseError {
     EscapeChar,
 
     InvalidCookieAttribute,
-
 }
-
 
 impl FormatError for Error {
     fn source_info(&self) -> SourceInfo {
@@ -111,12 +109,17 @@ impl FormatError for Error {
             ParseError::PredicateValue { .. } => "invalid predicate value".to_string(),
             ParseError::RegexExpr { .. } => "Invalid Regex expression".to_string(),
             ParseError::DuplicateSection { .. } => "The section is already defined".to_string(),
-            ParseError::RequestSection { .. } => "This is not a valid section for a request".to_string(),
-            ParseError::ResponseSection { .. } => "This is not a valid section for a response".to_string(),
+            ParseError::RequestSection { .. } => {
+                "This is not a valid section for a request".to_string()
+            }
+            ParseError::ResponseSection { .. } => {
+                "This is not a valid section for a response".to_string()
+            }
             ParseError::EscapeChar { .. } => "The escaping sequence is not valid".to_string(),
-            ParseError::InvalidCookieAttribute { .. } => "The cookie attribute is not valid".to_string(),
+            ParseError::InvalidCookieAttribute { .. } => {
+                "The cookie attribute is not valid".to_string()
+            }
             _ => format!("{:?}", self),
         }
     }
 }
-

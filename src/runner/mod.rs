@@ -29,11 +29,12 @@ mod capture;
 mod cookie;
 pub mod core;
 mod entry;
+mod expr;
 pub mod file;
 mod http_response;
 mod json;
-pub mod log_serialize;
 pub mod log_deserialize;
+pub mod log_serialize;
 mod multipart;
 mod predicate;
 mod query;
@@ -41,6 +42,3 @@ pub mod request;
 mod response;
 mod template;
 mod xpath;
-mod expr;
-
-

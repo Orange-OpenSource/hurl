@@ -28,10 +28,9 @@ pub struct Head {
     pub stylesheet: Option<String>,
 }
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Body {
-    pub children: Vec<Element>
+    pub children: Vec<Element>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

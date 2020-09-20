@@ -41,7 +41,11 @@ pub fn format_standalone(hurl_file: HurlFile) -> String {
 }
 
 pub fn format(hurl_file: HurlFile, standalone: bool) -> String {
-    if standalone { format_standalone(hurl_file) } else { hurl_file.to_html() }
+    if standalone {
+        format_standalone(hurl_file)
+    } else {
+        hurl_file.to_html()
+    }
 }
 
 impl Htmlable for HurlFile {
@@ -399,7 +403,9 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::EqualString { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"number\">{}</span>", value.to_html()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_html()).as_str(),
+                );
             }
             PredicateFuncValue::EqualInt { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");
@@ -409,7 +415,9 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::EqualFloat { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"number\">{}</span>", value.to_string()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
             }
             PredicateFuncValue::EqualExpression { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");
@@ -419,17 +427,23 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::StartWith { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">startsWith</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"string\">{}</span>", value.to_html()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">{}</span>", value.to_html()).as_str(),
+                );
             }
             PredicateFuncValue::Contain { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">contains</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"string\">{}</span>", value.to_html()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">{}</span>", value.to_html()).as_str(),
+                );
             }
             PredicateFuncValue::IncludeString { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">includes</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"string\">{}</span>", value.to_html()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">{}</span>", value.to_html()).as_str(),
+                );
             }
             PredicateFuncValue::IncludeInt { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">includes</span>");
@@ -449,7 +463,9 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::IncludeFloat { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">includes</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"number\">{}</span>", value.to_string()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
             }
             PredicateFuncValue::IncludeExpression { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">includes</span>");
@@ -459,7 +475,9 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::Match { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">matches</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"string\">{}</span>", value.to_html()).as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">{}</span>", value.to_html()).as_str(),
+                );
             }
             PredicateFuncValue::EqualNull { space0 } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");

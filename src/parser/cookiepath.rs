@@ -2,10 +2,10 @@ use crate::core::ast::*;
 
 use super::combinators::*;
 use super::error::*;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::Reader;
 use super::string::*;
+use super::ParseResult;
 
 /*
 

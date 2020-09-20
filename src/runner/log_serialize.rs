@@ -16,19 +16,18 @@
  *
  */
 
-use serde::ser::{Serializer, SerializeStruct};
+use serde::ser::{SerializeStruct, Serializer};
 use serde::Serialize;
 
 use crate::http::*;
-
 
 use super::cookie::*;
 use super::core::*;
 
 impl Serialize for HurlResult {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
         state.serialize_field("filename", &self.clone().filename)?;
@@ -42,8 +41,8 @@ impl Serialize for HurlResult {
 
 impl Serialize for EntryResult {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("EntryResult", 3)?;
         if let Some(request) = &self.request {
@@ -61,11 +60,14 @@ impl Serialize for EntryResult {
 
 impl Serialize for AssertResult {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
-        if let AssertResult::Version {  actual, expected,.. } = self {
+        if let AssertResult::Version {
+            actual, expected, ..
+        } = self
+        {
             //state.serialize_field("source_info", source_info)?;
             state.serialize_field("actual", actual)?;
             state.serialize_field("expected", expected)?;
@@ -74,11 +76,10 @@ impl Serialize for AssertResult {
     }
 }
 
-
 impl Serialize for CaptureResult {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("CaptureResult", 3)?;
         state.serialize_field("name", self.name.as_str())?;
@@ -87,11 +88,10 @@ impl Serialize for CaptureResult {
     }
 }
 
-
 impl Serialize for Request {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         // 3 is the number of fields in the struct.
         let mut state = serializer.serialize_struct("??", 3)?;
@@ -110,11 +110,10 @@ impl Serialize for Request {
     }
 }
 
-
 impl Serialize for Response {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         // 3 is the number of fields in the struct.
         let mut state = serializer.serialize_struct("??", 3)?;
@@ -130,8 +129,8 @@ impl Serialize for Response {
 
 impl Serialize for Header {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
         state.serialize_field("name", &self.name)?;
@@ -142,8 +141,8 @@ impl Serialize for Header {
 
 impl Serialize for Param {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 3)?;
         state.serialize_field("name", &self.name)?;
@@ -154,8 +153,8 @@ impl Serialize for Param {
 
 impl Serialize for RequestCookie {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("??", 2)?;
         state.serialize_field("name", &self.name)?;
@@ -166,8 +165,8 @@ impl Serialize for RequestCookie {
 
 impl Serialize for Version {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         match self {
             Version::Http10 => serializer.serialize_str("HTTP/1.0"),
@@ -179,8 +178,8 @@ impl Serialize for Version {
 
 impl Serialize for ResponseCookie {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("ResponseCookie", 3)?;
         state.serialize_field("name", &self.clone().name)?;
@@ -210,11 +209,10 @@ impl Serialize for ResponseCookie {
     }
 }
 
-
 impl Serialize for Cookie {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut state = serializer.serialize_struct("Cookie", 3)?;
         state.serialize_field("domain", &self.clone().domain)?;

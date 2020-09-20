@@ -19,9 +19,9 @@ use crate::core::ast::*;
 use crate::core::common::SourceInfo;
 
 use super::error::*;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::Reader;
+use super::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, Expr> {
     // let start = p.state.clone();
@@ -42,7 +42,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, Expr> {
         space1,
     })
 }
-
 
 pub fn parse2(reader: &mut Reader) -> ParseResult<'static, Expr> {
     // let start = p.state.clone();
@@ -79,7 +78,6 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
     })
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::core::common::Pos;
@@ -113,7 +111,12 @@ mod tests {
         let mut reader = Reader::init("{{host>}}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("}}") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("}}")
+            }
+        );
         assert_eq!(error.recoverable, false);
     }
 
@@ -122,10 +125,14 @@ mod tests {
         let mut reader = Reader::init("{{host");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, ParseError::Expecting { value: String::from("}}") });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("}}")
+            }
+        );
         assert_eq!(error.recoverable, false);
     }
-
 
     #[test]
     fn test_variable() {

@@ -17,7 +17,6 @@
  */
 pub mod options;
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {
     pub message: String,

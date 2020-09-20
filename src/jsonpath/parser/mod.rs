@@ -19,10 +19,10 @@ use error::Error;
 use reader::Reader;
 
 pub mod combinators;
-pub mod parse;
 pub mod error;
-pub mod reader;
+pub mod parse;
 pub mod primitives;
+pub mod reader;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pos {

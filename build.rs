@@ -27,7 +27,6 @@ fn main() {
     if let Some(rev) = git_revision_hash() {
         println!("cargo:rustc-env=HURL_BUILD_GIT_HASH={}", rev);
     }
-
 }
 
 fn git_revision_hash() -> Option<String> {

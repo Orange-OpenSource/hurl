@@ -22,10 +22,10 @@ use super::bytes::*;
 use super::combinators::*;
 use super::error::*;
 use super::expr;
-use super::ParseResult;
 use super::primitives::*;
 use super::reader::Reader;
 use super::sections::*;
+use super::ParseResult;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
     let entries = zero_or_more(|p1| entry(p1), reader)?;
@@ -150,7 +150,6 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
 }
 
 fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
-
     // can not be json-encoded
     // can not be empty
     // but more restrictive: whitelist characters, not empty
@@ -198,7 +197,7 @@ fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
                         Some(c) => {
                             if c.is_alphanumeric()
                                 || vec![':', '/', '.', '-', '?', '=', '&', '_', '%', '*', ',']
-                                .contains(&c)
+                                    .contains(&c)
                             {
                                 buffer.push(c);
                             } else {
@@ -299,7 +298,6 @@ fn body(reader: &mut Reader) -> ParseResult<'static, Body> {
     })
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::core::common::Pos;
@@ -313,7 +311,6 @@ mod tests {
         let hurl_file = hurl_file(&mut reader).unwrap();
         assert_eq!(hurl_file.entries.len(), 1);
     }
-
 
     #[test]
     fn test_entry() {
@@ -612,7 +609,9 @@ mod tests {
             Template {
                 elements: vec![TemplateElement::String {
                     value: String::from("http://localhost:8000/cookies/set-session-cookie2-valueA"),
-                    encoded: String::from("http://localhost:8000/cookies/set-session-cookie2-valueA"),
+                    encoded: String::from(
+                        "http://localhost:8000/cookies/set-session-cookie2-valueA"
+                    ),
                 }],
                 quotes: false,
                 source_info: SourceInfo::init(1, 1, 1, 57),

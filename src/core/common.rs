@@ -17,8 +17,8 @@
  */
 use std::fmt;
 
-use serde::Serialize;
 use serde::ser::Serializer;
+use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum DeprecatedValue {
@@ -85,9 +85,12 @@ impl Value {
         }
     }
 
-
     pub fn from_f64(value: f64) -> Value {
-        let integer = if value < 0.0 { value.ceil() as i64 } else { value.floor() as i64 };
+        let integer = if value < 0.0 {
+            value.ceil() as i64
+        } else {
+            value.floor() as i64
+        };
         let decimal = (value.abs().fract() * 1_000_000_000_000_000_000.0).round() as u64;
         Value::Float(integer, decimal)
     }
@@ -103,20 +106,17 @@ impl Value {
         match value {
             serde_json::Value::Null => Value::Null,
             serde_json::Value::Bool(bool) => Value::Bool(*bool),
-            serde_json::Value::Number(n) =>
+            serde_json::Value::Number(n) => {
                 if n.is_f64() {
                     Value::from_f64(n.as_f64().unwrap())
                 } else {
                     Value::Integer(n.as_i64().unwrap())
                 }
-            ,
+            }
             serde_json::Value::String(s) => Value::String(s.to_string()),
-            serde_json::Value::Array(elements) =>
-                Value::List(elements
-                    .iter()
-                    .map(|e| Value::from_json(e))
-                    .collect())
-            ,
+            serde_json::Value::Array(elements) => {
+                Value::List(elements.iter().map(|e| Value::from_json(e)).collect())
+            }
             serde_json::Value::Object(map) => {
                 let mut elements = vec![];
                 for (key, value) in map {
@@ -128,7 +128,6 @@ impl Value {
         }
     }
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Pos {
@@ -168,11 +167,10 @@ pub trait FormatError {
     fn fixme(&self) -> String;
 }
 
-
 impl Serialize for Value {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         match self {
             Value::Bool(v) => serializer.serialize_bool(*v),
@@ -188,7 +186,7 @@ impl Serialize for Value {
                 let size = *size as i64;
                 serializer.collect_map(vec![
                     ("type", serde_json::Value::String("nodeset".to_string())),
-                    ("size", serde_json::Value::from(size))
+                    ("size", serde_json::Value::from(size)),
                 ])
             }
             Value::Bytes(v) => {
@@ -200,7 +198,6 @@ impl Serialize for Value {
     }
 }
 
-
 impl Value {
     pub fn to_json_value(&self) -> (String, serde_json::Value) {
         match self.clone() {
@@ -211,10 +208,7 @@ impl Value {
                 ("float".to_string(), serde_json::Value::from(value))
             }
             Value::String(v) => ("string".to_string(), serde_json::Value::String(v)),
-            Value::List(_) => (
-                "list".to_string(),
-                serde_json::Value::Array(vec![])
-            ),
+            Value::List(_) => ("list".to_string(), serde_json::Value::Array(vec![])),
             Value::Object(_) => todo!(),
             Value::Nodeset(_) => todo!(),
             Value::Bytes(_) => todo!(),
@@ -240,7 +234,6 @@ impl Value {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -249,17 +242,38 @@ mod tests {
     fn test_from_f64() {
         assert_eq!(Value::from_f64(1.0), Value::Float(1, 0));
         assert_eq!(Value::from_f64(-1.0), Value::Float(-1, 0));
-        assert_eq!(Value::from_f64(1.1), Value::Float(1, 100_000_000_000_000_096)); //TBC!!
-        assert_eq!(Value::from_f64(-1.1), Value::Float(-1, 100_000_000_000_000_096));
-        assert_eq!(Value::from_f64(1.5), Value::Float(1, 500_000_000_000_000_000));
+        assert_eq!(
+            Value::from_f64(1.1),
+            Value::Float(1, 100_000_000_000_000_096)
+        ); //TBC!!
+        assert_eq!(
+            Value::from_f64(-1.1),
+            Value::Float(-1, 100_000_000_000_000_096)
+        );
+        assert_eq!(
+            Value::from_f64(1.5),
+            Value::Float(1, 500_000_000_000_000_000)
+        );
     }
 
     #[test]
     fn test_from_json() {
-        assert_eq!(Value::from_json(&serde_json::Value::String("hello".to_string())), Value::String("hello".to_string()));
-        assert_eq!(Value::from_json(&serde_json::Value::Bool(true)), Value::Bool(true));
-        assert_eq!(Value::from_json(&serde_json::Value::from(1)), Value::Integer(1));
-        assert_eq!(Value::from_json(&serde_json::Value::from(1.5)), Value::Float(1, 500_000_000_000_000_000));
+        assert_eq!(
+            Value::from_json(&serde_json::Value::String("hello".to_string())),
+            Value::String("hello".to_string())
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::Bool(true)),
+            Value::Bool(true)
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::from(1)),
+            Value::Integer(1)
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::from(1.5)),
+            Value::Float(1, 500_000_000_000_000_000)
+        );
     }
 
     #[test]
@@ -271,17 +285,48 @@ mod tests {
     #[test]
     fn test_serialize() {
         assert_eq!(serde_json::to_string(&Value::Bool(true)).unwrap(), "true");
-        assert_eq!(serde_json::to_string(&Value::String("hello".to_string())).unwrap(), "\"hello\"");
+        assert_eq!(
+            serde_json::to_string(&Value::String("hello".to_string())).unwrap(),
+            "\"hello\""
+        );
         assert_eq!(serde_json::to_string(&Value::Integer(1)).unwrap(), "1");
-        assert_eq!(serde_json::to_string(&Value::Float(1, 500_000_000_000_000_000)).unwrap(), "1.5");
-        assert_eq!(serde_json::to_string(&Value::Float(1, 100_000_000_000_000_000)).unwrap(), "1.1");
-        assert_eq!(serde_json::to_string(&Value::Float(1, 100_000_000_000_000_096)).unwrap(), "1.1");
-        assert_eq!(serde_json::to_string(&Value::List(vec![Value::Integer(1), Value::Integer(2), Value::Integer(3)])).unwrap(), "[1,2,3]");
-        assert_eq!(serde_json::to_string(&Value::Object(vec![
-            ("name".to_string(), Value::String("Bob".to_string()))
-        ])).unwrap(), r#"{"name":"Bob"}"#);
-        assert_eq!(serde_json::to_string(&Value::Nodeset(4)).unwrap(), r#"{"type":"nodeset","size":4}"#);
-        assert_eq!(serde_json::to_string(&Value::Bytes(vec![65])).unwrap(), r#""QQ==""#);
+        assert_eq!(
+            serde_json::to_string(&Value::Float(1, 500_000_000_000_000_000)).unwrap(),
+            "1.5"
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::Float(1, 100_000_000_000_000_000)).unwrap(),
+            "1.1"
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::Float(1, 100_000_000_000_000_096)).unwrap(),
+            "1.1"
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::List(vec![
+                Value::Integer(1),
+                Value::Integer(2),
+                Value::Integer(3)
+            ]))
+            .unwrap(),
+            "[1,2,3]"
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::Object(vec![(
+                "name".to_string(),
+                Value::String("Bob".to_string())
+            )]))
+            .unwrap(),
+            r#"{"name":"Bob"}"#
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::Nodeset(4)).unwrap(),
+            r#"{"type":"nodeset","size":4}"#
+        );
+        assert_eq!(
+            serde_json::to_string(&Value::Bytes(vec![65])).unwrap(),
+            r#""QQ==""#
+        );
         assert_eq!(serde_json::to_string(&Value::Null {}).unwrap(), "null");
     }
 }

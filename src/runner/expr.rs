@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use crate::core::ast::Expr;
 use crate::core::common::Value;
 
-use super::core::{RunnerError, Error};
+use super::core::{Error, RunnerError};
 
 impl Expr {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<Value, Error> {
@@ -29,8 +29,10 @@ impl Expr {
         } else {
             Err(Error {
                 source_info: self.variable.source_info,
-                inner: RunnerError::TemplateVariableNotDefined { name: self.variable.name },
-                assert: false
+                inner: RunnerError::TemplateVariableNotDefined {
+                    name: self.variable.name,
+                },
+                assert: false,
             })
         }
     }

@@ -30,24 +30,21 @@ use crate::http;
 use super::core::Error;
 
 impl Request {
-    pub fn eval(self,
-                variables: &HashMap<String, Value>,
-                context_dir: String,
+    pub fn eval(
+        self,
+        variables: &HashMap<String, Value>,
+        context_dir: String,
     ) -> Result<http::Request, Error> {
         let method = self.method.clone().eval();
 
         let url = self.clone().url.eval(&variables)?;
-
 
         // headers
         let mut headers: Vec<http::Header> = vec![];
         for header in self.clone().headers {
             let name = header.key.value;
             let value = header.value.eval(variables)?;
-            headers.push(http::Header {
-                name,
-                value,
-            });
+            headers.push(http::Header { name, value });
         }
 
         let mut querystring: Vec<http::Param> = vec![];
@@ -63,12 +60,12 @@ impl Request {
             let value = param.value.eval(variables)?;
             form.push(http::Param { name, value });
         }
-//        if !self.clone().form_params().is_empty() {
-//            headers.push(http::core::Header {
-//                name: String::from("Content-Type"),
-//                value: String::from("application/x-www-form-urlencoded"),
-//            });
-//        }
+        //        if !self.clone().form_params().is_empty() {
+        //            headers.push(http::core::Header {
+        //                name: String::from("Content-Type"),
+        //                value: String::from("application/x-www-form-urlencoded"),
+        //            });
+        //        }
 
         let mut cookies = vec![];
         for cookie in self.clone().cookies() {
@@ -81,7 +78,7 @@ impl Request {
 
         let bytes = match self.clone().body {
             Some(body) => body.eval(variables, context_dir.clone())?,
-            None => vec![]
+            None => vec![],
         };
 
         let mut multipart = vec![];
@@ -94,23 +91,27 @@ impl Request {
             Some("application/x-www-form-urlencoded".to_string())
         } else if !multipart.is_empty() {
             Some("multipart/form-data".to_string())
-        } else if let Some(Body { value:Bytes::Json {..}, ..}) = self.body {
+        } else if let Some(Body {
+            value: Bytes::Json { .. },
+            ..
+        }) = self.body
+        {
             Some("application/json".to_string())
         } else {
             None
         };
 
         // add implicit content type
-//        if self.content_type().is_none() {
-//            if let Some(body) = self.body {
-//                if let Bytes::Json { .. } = body.value {
-//                    headers.push(http::core::Header {
-//                        name: String::from("Content-Type"),
-//                        value: String::from("application/json"),
-//                    });
-//                }
-//            }
-//        }
+        //        if self.content_type().is_none() {
+        //            if let Some(body) = self.body {
+        //                if let Bytes::Json { .. } = body.value {
+        //                    headers.push(http::core::Header {
+        //                        name: String::from("Content-Type"),
+        //                        value: String::from("application/json"),
+        //                    });
+        //                }
+        //            }
+        //        }
 
         Ok(http::Request {
             method,
@@ -121,7 +122,7 @@ impl Request {
             body: bytes,
             multipart,
             form,
-            content_type
+            content_type,
         })
     }
 
@@ -173,13 +174,12 @@ impl Method {
 //    }
 //}
 
-
 #[cfg(test)]
 mod tests {
     use crate::core::common::SourceInfo;
 
-    use super::*;
     use super::super::core::RunnerError;
+    use super::*;
 
     pub fn whitespace() -> Whitespace {
         Whitespace {
@@ -212,7 +212,7 @@ mod tests {
                     TemplateElement::String {
                         value: String::from("/hello"),
                         encoded: String::from("/hello"),
-                    }
+                    },
                 ],
                 quotes: false,
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -254,67 +254,59 @@ mod tests {
             method: Method::Get,
             space1: whitespace(),
             url: Template {
-                elements: vec![
-                    TemplateElement::String {
-                        value: String::from("http://localhost:8000/querystring-params"),
-                        encoded: String::from("http://localhost:8000/querystring-params"),
-                    }
-                ],
+                elements: vec![TemplateElement::String {
+                    value: String::from("http://localhost:8000/querystring-params"),
+                    encoded: String::from("http://localhost:8000/querystring-params"),
+                }],
                 quotes: false,
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
             line_terminator0: line_terminator.clone(),
             headers: vec![],
-            sections: vec![
-                Section {
-                    line_terminators: vec![],
-                    space0: whitespace(),
-                    line_terminator0: line_terminator,
-                    value: SectionValue::QueryParams(vec![
-                        simple_key_value(
-                            EncodedString {
-                                quotes: false,
-                                value: "param1".to_string(),
-                                encoded: "param1".to_string(),
-                                source_info: SourceInfo::init(0, 0, 0, 0),
-                            },
-                            Template {
-                                quotes: false,
-                                elements: vec![
-                                    TemplateElement::Expression(Expr {
-                                        space0: whitespace(),
-                                        variable: Variable {
-                                            name: String::from("param1"),
-                                            source_info: SourceInfo::init(1, 7, 1, 15),
-                                        },
-                                        space1: whitespace(),
-                                    })
-                                ],
-                                source_info: SourceInfo::init(0, 0, 0, 0),
-                            },
-                        ),
-                        simple_key_value(
-                            EncodedString {
-                                quotes: false,
-                                value: "param2".to_string(),
-                                encoded: "param2".to_string(),
-                                source_info: SourceInfo::init(0, 0, 0, 0),
-                            },
-                            Template {
-                                quotes: false,
-                                elements: vec![
-                                    TemplateElement::String {
-                                        value: "a b".to_string(),
-                                        encoded: "a b".to_string(),
-                                    }
-                                ],
-                                source_info: SourceInfo::init(0, 0, 0, 0),
-                            },
-                        )
-                    ]),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
-                },
-            ],
+            sections: vec![Section {
+                line_terminators: vec![],
+                space0: whitespace(),
+                line_terminator0: line_terminator,
+                value: SectionValue::QueryParams(vec![
+                    simple_key_value(
+                        EncodedString {
+                            quotes: false,
+                            value: "param1".to_string(),
+                            encoded: "param1".to_string(),
+                            source_info: SourceInfo::init(0, 0, 0, 0),
+                        },
+                        Template {
+                            quotes: false,
+                            elements: vec![TemplateElement::Expression(Expr {
+                                space0: whitespace(),
+                                variable: Variable {
+                                    name: String::from("param1"),
+                                    source_info: SourceInfo::init(1, 7, 1, 15),
+                                },
+                                space1: whitespace(),
+                            })],
+                            source_info: SourceInfo::init(0, 0, 0, 0),
+                        },
+                    ),
+                    simple_key_value(
+                        EncodedString {
+                            quotes: false,
+                            value: "param2".to_string(),
+                            encoded: "param2".to_string(),
+                            source_info: SourceInfo::init(0, 0, 0, 0),
+                        },
+                        Template {
+                            quotes: false,
+                            elements: vec![TemplateElement::String {
+                                value: "a b".to_string(),
+                                encoded: "a b".to_string(),
+                            }],
+                            source_info: SourceInfo::init(0, 0, 0, 0),
+                        },
+                    ),
+                ]),
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            }],
             body: None,
             source_info: SourceInfo::init(0, 0, 0, 0),
         }
@@ -323,24 +315,42 @@ mod tests {
     #[test]
     pub fn test_error_variable() {
         let variables = HashMap::new();
-        let error = hello_request().eval(&variables, "current_dir".to_string()).err().unwrap();
+        let error = hello_request()
+            .eval(&variables, "current_dir".to_string())
+            .err()
+            .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
-        assert_eq!(error.inner, RunnerError::TemplateVariableNotDefined { name: String::from("base_url") });
+        assert_eq!(
+            error.inner,
+            RunnerError::TemplateVariableNotDefined {
+                name: String::from("base_url")
+            }
+        );
     }
 
     #[test]
     pub fn test_hello_request() {
         let mut variables = HashMap::new();
-        variables.insert(String::from("base_url"), Value::String(String::from("http://localhost:8000")));
-        let http_request = hello_request().eval(&variables, "current_dir".to_string()).unwrap();
+        variables.insert(
+            String::from("base_url"),
+            Value::String(String::from("http://localhost:8000")),
+        );
+        let http_request = hello_request()
+            .eval(&variables, "current_dir".to_string())
+            .unwrap();
         assert_eq!(http_request, http::hello_http_request());
     }
 
     #[test]
     pub fn test_query_request() {
         let mut variables = HashMap::new();
-        variables.insert(String::from("param1"), Value::String(String::from("value1")));
-        let http_request = query_request().eval(&variables, "current_dir".to_string()).unwrap();
+        variables.insert(
+            String::from("param1"),
+            Value::String(String::from("value1")),
+        );
+        let http_request = query_request()
+            .eval(&variables, "current_dir".to_string())
+            .unwrap();
         assert_eq!(http_request, http::query_http_request());
     }
 }

@@ -35,7 +35,6 @@ Encoded
 YW55IGNhcm5hbCBwbGVhcw==		any carnal pleas   # [97, 110, 121, 32, 99, 97, 114, 110, 97, 108, 32, 112, 108, 101, 97, 115]
 */
 
-
 pub fn parse(reader: &mut Reader) -> Vec<u8> {
     let mut bytes = vec![];
     let mut buf = vec![]; // base64 text
@@ -46,31 +45,31 @@ pub fn parse(reader: &mut Reader) -> Vec<u8> {
         }
         let save = reader.state.clone();
         match reader.read() {
-            None => { break; }
+            None => {
+                break;
+            }
             Some(' ') | Some('\n') | Some('\t') => {}
-            Some(c) => {
-                match value(c) {
-                    None => {
-                        reader.state = save;
-                        break;
-                    }
-                    Some(v) => {
-                        buf.push(v);
-                        if buf.len() == 4 {
-                            let bs = decode_four_chars(
-                                *buf.get(0).unwrap(),
-                                *buf.get(1).unwrap(),
-                                *buf.get(2).unwrap(),
-                                *buf.get(3).unwrap(),
-                            );
-                            for b in bs {
-                                bytes.push(b);
-                            }
-                            buf = vec![];
+            Some(c) => match value(c) {
+                None => {
+                    reader.state = save;
+                    break;
+                }
+                Some(v) => {
+                    buf.push(v);
+                    if buf.len() == 4 {
+                        let bs = decode_four_chars(
+                            *buf.get(0).unwrap(),
+                            *buf.get(1).unwrap(),
+                            *buf.get(2).unwrap(),
+                            *buf.get(3).unwrap(),
+                        );
+                        for b in bs {
+                            bytes.push(b);
                         }
+                        buf = vec![];
                     }
                 }
-            }
+            },
         }
     }
     match buf.as_slice() {
@@ -80,7 +79,6 @@ pub fn parse(reader: &mut Reader) -> Vec<u8> {
     }
     bytes
 }
-
 
 fn value(c: char) -> Option<i32> {
     match c {
@@ -152,14 +150,15 @@ fn value(c: char) -> Option<i32> {
     }
 }
 
-
 fn padding(reader: &mut Reader) -> String {
     // consume padding can not fail
     let mut buf = String::from("");
     loop {
         let save = reader.state.clone();
         match reader.read() {
-            Some('=') => { buf.push('='); }
+            Some('=') => {
+                buf.push('=');
+            }
             _ => {
                 reader.state = save;
                 break;
@@ -168,7 +167,6 @@ fn padding(reader: &mut Reader) -> String {
     }
     buf
 }
-
 
 fn decode_two_chars(c1: i32, c2: i32) -> Vec<u8> {
     return vec![((c1 << 2 & 255) + (c2 >> 4)) as u8];
@@ -181,7 +179,6 @@ fn decode_three_chars(c1: i32, c2: i32, c3: i32) -> Vec<u8> {
     ];
 }
 
-
 fn decode_four_chars(c1: i32, c2: i32, c3: i32, c4: i32) -> Vec<u8> {
     return vec![
         ((c1 << 2 & 255) + (c2 >> 4)) as u8,
@@ -189,7 +186,6 @@ fn decode_four_chars(c1: i32, c2: i32, c3: i32, c4: i32) -> Vec<u8> {
         (((c3 << 6) & 255) + c4) as u8,
     ];
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -264,7 +260,6 @@ mod tests {
         assert_eq!(parse(&mut reader), vec![77, 97]);
         assert_eq!(reader.state.cursor, 5);
     }
-
 
     #[test]
     fn test_decode_two_chars() {

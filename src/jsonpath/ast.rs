@@ -19,10 +19,9 @@
 // https://goessner.net/articles/JsonPath/
 // https://jsonpath.com/
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Query {
-    pub selectors: Vec<Selector>
+    pub selectors: Vec<Selector>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -39,7 +38,6 @@ pub struct Predicate {
     pub func: PredicateFunc,
 }
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PredicateFunc {
     KeyExist {},
@@ -50,7 +48,6 @@ pub enum PredicateFunc {
     LessThan(Number),
     LessThanOrEqual(Number),
 }
-
 
 // Number
 // - without rounding

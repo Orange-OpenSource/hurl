@@ -17,7 +17,6 @@
  */
 extern crate libxml;
 
-
 use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs::File;
@@ -32,12 +31,11 @@ use crate::http;
 
 use super::core::{Error, RunnerError};
 
-
-
 impl MultipartParam {
-    pub fn eval(self,
-                variables: &HashMap<String, Value>,
-                context_dir: String,
+    pub fn eval(
+        self,
+        variables: &HashMap<String, Value>,
+        context_dir: String,
     ) -> Result<http::MultipartParam, Error> {
         match self {
             MultipartParam::Param(KeyValue { key, value, .. }) => {
@@ -62,7 +60,11 @@ impl FileParam {
         let absolute_filename = if path.is_absolute() {
             filename.value.clone()
         } else {
-            Path::new(context_dir.as_str()).join(filename.value.clone()).to_str().unwrap().to_string()
+            Path::new(context_dir.as_str())
+                .join(filename.value.clone())
+                .to_str()
+                .unwrap()
+                .to_string()
         };
 
         let data = match File::open(absolute_filename.clone()) {
@@ -70,24 +72,34 @@ impl FileParam {
                 let mut bytes = Vec::new();
                 match f.read_to_end(&mut bytes) {
                     Ok(_) => bytes,
-                    Err(_) => return Err(Error {
-                        source_info: filename.source_info,
-                        inner: RunnerError::FileReadAccess { value: absolute_filename },
-                        assert: false,
-                    })
+                    Err(_) => {
+                        return Err(Error {
+                            source_info: filename.source_info,
+                            inner: RunnerError::FileReadAccess {
+                                value: absolute_filename,
+                            },
+                            assert: false,
+                        })
+                    }
                 }
             }
-            Err(_) => return Err(Error {
-                source_info: filename.source_info,
-                inner: RunnerError::FileReadAccess { value: absolute_filename },
-                assert: false,
-            })
+            Err(_) => {
+                return Err(Error {
+                    source_info: filename.source_info,
+                    inner: RunnerError::FileReadAccess {
+                        value: absolute_filename,
+                    },
+                    assert: false,
+                })
+            }
         };
 
         if !Path::new(&absolute_filename).exists() {
             return Err(Error {
                 source_info: filename.source_info,
-                inner: RunnerError::FileReadAccess { value: filename.value.clone() },
+                inner: RunnerError::FileReadAccess {
+                    value: filename.value.clone(),
+                },
                 assert: false,
             });
         }
@@ -102,11 +114,13 @@ impl FileParam {
     }
 }
 
-
 impl FileValue {
     pub fn content_type(&self) -> String {
         match self.content_type.clone() {
-            None => match Path::new(self.filename.value.as_str()).extension().and_then(OsStr::to_str) {
+            None => match Path::new(self.filename.value.as_str())
+                .extension()
+                .and_then(OsStr::to_str)
+            {
                 Some("gif") => "image/gif".to_string(),
                 Some("jpg") => "image/jpeg".to_string(),
                 Some("jpeg") => "image/jpeg".to_string(),
@@ -118,12 +132,11 @@ impl FileValue {
                 Some("pdf") => "application/pdf".to_string(),
                 Some("xml") => "application/xml".to_string(),
                 _ => "application/octet-stream".to_string(),
-            }
-            Some(content_type) => content_type
+            },
+            Some(content_type) => content_type,
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -138,7 +151,6 @@ mod tests {
         }
     }
 
-
     #[test]
     pub fn test_eval_file_param() {
         let line_terminator = LineTerminator {
@@ -146,78 +158,101 @@ mod tests {
             comment: None,
             newline: whitespace(),
         };
-        assert_eq!(FileParam {
-            line_terminators: vec![],
-            space0: whitespace(),
-            key: EncodedString {
-                value: "upload1".to_string(),
-                encoded: "upload1".to_string(),
-                quotes: false,
-                source_info: SourceInfo::init(0, 0, 0, 0),
-            },
-            space1: whitespace(),
-            space2: whitespace(),
-            value: FileValue {
+        assert_eq!(
+            FileParam {
+                line_terminators: vec![],
                 space0: whitespace(),
-                filename: Filename { value: "hello.txt".to_string(), source_info: SourceInfo::init(0, 0, 0, 0) },
+                key: EncodedString {
+                    value: "upload1".to_string(),
+                    encoded: "upload1".to_string(),
+                    quotes: false,
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
                 space1: whitespace(),
                 space2: whitespace(),
-                content_type: None,
-            },
-            line_terminator0: line_terminator,
-        }.eval("integration/tests".to_string()).unwrap(),
-                   http::FileParam {
-                       name: "upload1".to_string(),
-                       filename: "hello.txt".to_string(),
-                       data: b"Hello World!".to_vec(),
-                       content_type: "text/plain".to_string(),
-                   });
+                value: FileValue {
+                    space0: whitespace(),
+                    filename: Filename {
+                        value: "hello.txt".to_string(),
+                        source_info: SourceInfo::init(0, 0, 0, 0)
+                    },
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: None,
+                },
+                line_terminator0: line_terminator,
+            }
+            .eval("integration/tests".to_string())
+            .unwrap(),
+            http::FileParam {
+                name: "upload1".to_string(),
+                filename: "hello.txt".to_string(),
+                data: b"Hello World!".to_vec(),
+                content_type: "text/plain".to_string(),
+            }
+        );
     }
 
     #[test]
     pub fn test_file_value_content_type() {
-        assert_eq!(FileValue {
-            space0: whitespace(),
-            filename: Filename {
-                value: "hello.txt".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
-            },
-            space1: whitespace(),
-            space2: whitespace(),
-            content_type: None,
-        }.content_type(), "text/plain".to_string());
+        assert_eq!(
+            FileValue {
+                space0: whitespace(),
+                filename: Filename {
+                    value: "hello.txt".to_string(),
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                space1: whitespace(),
+                space2: whitespace(),
+                content_type: None,
+            }
+            .content_type(),
+            "text/plain".to_string()
+        );
 
-        assert_eq!(FileValue {
-            space0: whitespace(),
-            filename: Filename {
-                value: "hello.html".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
-            },
-            space1: whitespace(),
-            space2: whitespace(),
-            content_type: None,
-        }.content_type(), "text/html".to_string());
+        assert_eq!(
+            FileValue {
+                space0: whitespace(),
+                filename: Filename {
+                    value: "hello.html".to_string(),
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                space1: whitespace(),
+                space2: whitespace(),
+                content_type: None,
+            }
+            .content_type(),
+            "text/html".to_string()
+        );
 
-        assert_eq!(FileValue {
-            space0: whitespace(),
-            filename: Filename {
-                value: "hello.txt".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
-            },
-            space1: whitespace(),
-            space2: whitespace(),
-            content_type: Some("text/html".to_string()),
-        }.content_type(), "text/html".to_string());
+        assert_eq!(
+            FileValue {
+                space0: whitespace(),
+                filename: Filename {
+                    value: "hello.txt".to_string(),
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                space1: whitespace(),
+                space2: whitespace(),
+                content_type: Some("text/html".to_string()),
+            }
+            .content_type(),
+            "text/html".to_string()
+        );
 
-        assert_eq!(FileValue {
-            space0: whitespace(),
-            filename: Filename {
-                value: "hello".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
-            },
-            space1: whitespace(),
-            space2: whitespace(),
-            content_type: None,
-        }.content_type(), "application/octet-stream".to_string());
+        assert_eq!(
+            FileValue {
+                space0: whitespace(),
+                filename: Filename {
+                    value: "hello".to_string(),
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                space1: whitespace(),
+                space2: whitespace(),
+                content_type: None,
+            }
+            .content_type(),
+            "application/octet-stream".to_string()
+        );
     }
 }

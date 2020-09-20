@@ -22,15 +22,13 @@ use crate::core::common::SourceInfo;
 
 use super::error;
 use super::expr;
-use super::ParseResult;
 use super::reader::*;
+use super::ParseResult;
 
 pub struct EncodedString {
     pub source_info: SourceInfo,
     pub chars: Vec<(char, String, Pos)>,
 }
-
-
 
 pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<TemplateElement>> {
     enum State {
@@ -60,10 +58,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
             State::FirstOpenBracket {} => {
                 if s.as_str() == "{" {
-                    elements.push(TemplateElement::String {
-                        value,
-                        encoded,
-                    });
+                    elements.push(TemplateElement::String { value, encoded });
                     value = "".to_string();
                     encoded = "".to_string();
                     state = State::Template {};
@@ -92,7 +87,10 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
             State::FirstCloseBracket {} => {
                 if s.as_str() == "}" {
                     let mut reader = Reader::init(encoded.as_str());
-                    reader.state = ReaderState { cursor: 0, pos: expression_start.unwrap().clone() };
+                    reader.state = ReaderState {
+                        cursor: 0,
+                        pos: expression_start.unwrap().clone(),
+                    };
                     let expression = expr::parse2(&mut reader)?;
                     elements.push(TemplateElement::Expression(expression));
                     value = "".to_string();
@@ -119,26 +117,23 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
             return Err(error::Error {
                 pos: encoded_string.source_info.end,
                 recoverable: false,
-                inner: error::ParseError::Expecting { value: "}}".to_string() },
+                inner: error::ParseError::Expecting {
+                    value: "}}".to_string(),
+                },
             });
         }
     }
 
-
     if !value.is_empty() {
-        elements.push(TemplateElement::String {
-            value,
-            encoded,
-        })
+        elements.push(TemplateElement::String { value, encoded })
     }
     Ok(elements)
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::core::ast::{Variable, Whitespace};
     use crate::core::ast::Expr;
+    use crate::core::ast::{Variable, Whitespace};
 
     use super::*;
 
@@ -158,42 +153,103 @@ mod tests {
                 ('i', "i".to_string(), Pos { line: 1, column: 2 }),
                 (' ', "\\u0020".to_string(), Pos { line: 1, column: 3 }),
                 ('{', "{".to_string(), Pos { line: 1, column: 9 }),
-                ('{', "{".to_string(), Pos { line: 1, column: 10 }),
-                ('n', "n".to_string(), Pos { line: 1, column: 11 }),
-                ('a', "a".to_string(), Pos { line: 1, column: 12 }),
-                ('m', "m".to_string(), Pos { line: 1, column: 13 }),
-                ('e', "e".to_string(), Pos { line: 1, column: 14 }),
-                ('}', "}".to_string(), Pos { line: 1, column: 15 }),
-                ('}', "}".to_string(), Pos { line: 1, column: 16 }),
-                ('!', "!".to_string(), Pos { line: 1, column: 17 }),
+                (
+                    '{',
+                    "{".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 10,
+                    },
+                ),
+                (
+                    'n',
+                    "n".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 11,
+                    },
+                ),
+                (
+                    'a',
+                    "a".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 12,
+                    },
+                ),
+                (
+                    'm',
+                    "m".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 13,
+                    },
+                ),
+                (
+                    'e',
+                    "e".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 14,
+                    },
+                ),
+                (
+                    '}',
+                    "}".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 15,
+                    },
+                ),
+                (
+                    '}',
+                    "}".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 16,
+                    },
+                ),
+                (
+                    '!',
+                    "!".to_string(),
+                    Pos {
+                        line: 1,
+                        column: 17,
+                    },
+                ),
             ],
         };
-        assert_eq!(templatize(encoded_string).unwrap(), vec![
-            TemplateElement::String {
-                value: "Hi ".to_string(),
-                encoded: "Hi\\u0020".to_string(),
-            },
-            TemplateElement::Expression(Expr {
-                space0: Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo::init(1, 11, 1, 11),
+        assert_eq!(
+            templatize(encoded_string).unwrap(),
+            vec![
+                TemplateElement::String {
+                    value: "Hi ".to_string(),
+                    encoded: "Hi\\u0020".to_string(),
                 },
-                variable: Variable { name: "name".to_string(), source_info: SourceInfo::init(1, 11, 1, 15) },
-                space1: Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo::init(1, 15, 1, 15),
+                TemplateElement::Expression(Expr {
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 11, 1, 11),
+                    },
+                    variable: Variable {
+                        name: "name".to_string(),
+                        source_info: SourceInfo::init(1, 11, 1, 15)
+                    },
+                    space1: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 15, 1, 15),
+                    },
+                }),
+                TemplateElement::String {
+                    value: "!".to_string(),
+                    encoded: "!".to_string(),
                 },
-            }),
-            TemplateElement::String {
-                value: "!".to_string(),
-                encoded: "!".to_string(),
-            },
-        ]);
+            ]
+        );
     }
 
     #[test]
     fn test_templatize_error() {
-
         // missing closing
         // {{x
         let encoded_string = EncodedString {
@@ -201,12 +257,17 @@ mod tests {
             chars: vec![
                 ('{', "{".to_string(), Pos { line: 1, column: 1 }),
                 ('{', "{".to_string(), Pos { line: 1, column: 2 }),
-                ('x', "x".to_string(), Pos { line: 1, column: 3 })
+                ('x', "x".to_string(), Pos { line: 1, column: 3 }),
             ],
         };
         let error = templatize(encoded_string).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
-        assert_eq!(error.inner, error::ParseError::Expecting { value: "}}".to_string() });
+        assert_eq!(
+            error.inner,
+            error::ParseError::Expecting {
+                value: "}}".to_string()
+            }
+        );
         assert_eq!(error.recoverable, false);
     }
 }

@@ -139,7 +139,7 @@ impl Method {
             Method::Connect => "CONNECT",
             Method::Options => "OPTIONS",
             Method::Trace => "TRACE",
-            Method::Patch => "PATCH"
+            Method::Patch => "PATCH",
         }
     }
 }
@@ -177,7 +177,6 @@ impl VersionValue {
 
 type Header = KeyValue;
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Body {
     pub line_terminators: Vec<LineTerminator>,
@@ -207,7 +206,7 @@ impl Section {
             SectionValue::FormParams(_) => "FormParams",
             SectionValue::Cookies(_) => "Cookies",
             SectionValue::Captures(_) => "Captures",
-            SectionValue::MultipartFormData(_) => "MultipartFormData"
+            SectionValue::MultipartFormData(_) => "MultipartFormData",
         }
     }
 }
@@ -274,7 +273,6 @@ pub struct FileValue {
     pub space2: Whitespace,
     pub content_type: Option<String>,
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Capture {
@@ -361,23 +359,20 @@ pub enum CookieAttributeName {
     SameSite(String),
 }
 
-
 impl CookieAttributeName {
     pub fn value(&self) -> String {
         match self {
-            CookieAttributeName::Value(value) |
-            CookieAttributeName::Expires(value) |
-            CookieAttributeName::MaxAge(value) |
-            CookieAttributeName::Domain(value) |
-            CookieAttributeName::Path(value) |
-            CookieAttributeName::Secure(value) |
-            CookieAttributeName::HttpOnly(value) |
-            CookieAttributeName::SameSite(value)
-            => value.to_string()
+            CookieAttributeName::Value(value)
+            | CookieAttributeName::Expires(value)
+            | CookieAttributeName::MaxAge(value)
+            | CookieAttributeName::Domain(value)
+            | CookieAttributeName::Path(value)
+            | CookieAttributeName::Secure(value)
+            | CookieAttributeName::HttpOnly(value)
+            | CookieAttributeName::SameSite(value) => value.to_string(),
         }
     }
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Subquery {
@@ -387,10 +382,7 @@ pub struct Subquery {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SubqueryValue {
-    Regex {
-        space0: Whitespace,
-        expr: Template,
-    },
+    Regex { space0: Whitespace, expr: Template },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -415,68 +407,22 @@ pub struct PredicateFunc {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum PredicateFuncValue {
-    EqualString {
-        space0: Whitespace,
-        value: Template,
-    },
-    EqualInt {
-        space0: Whitespace,
-        value: i64,
-    },
-    EqualFloat {
-        space0: Whitespace,
-        value: Float,
-    },
-    EqualBool {
-        space0: Whitespace,
-        value: bool,
-    },
-    EqualNull {
-        space0: Whitespace
-    },
-    EqualExpression {
-        space0: Whitespace,
-        value: Expr
-    },
-    CountEqual {
-        space0: Whitespace,
-        value: u64,
-    },
-    StartWith {
-        space0: Whitespace,
-        value: Template,
-    },
-    Contain {
-        space0: Whitespace,
-        value: Template,
-    },
-    IncludeString {
-        space0: Whitespace,
-        value: Template,
-    },
-    IncludeInt {
-        space0: Whitespace,
-        value: i64,
-    },
-    IncludeFloat {
-        space0: Whitespace,
-        value: Float,
-    },
-    IncludeBool {
-        space0: Whitespace,
-        value: bool,
-    },
-    IncludeNull {
-        space0: Whitespace,
-    },
-    IncludeExpression {
-        space0: Whitespace,
-        value: Expr,
-    },
-    Match {
-        space0: Whitespace,
-        value: Template,
-    },
+    EqualString { space0: Whitespace, value: Template },
+    EqualInt { space0: Whitespace, value: i64 },
+    EqualFloat { space0: Whitespace, value: Float },
+    EqualBool { space0: Whitespace, value: bool },
+    EqualNull { space0: Whitespace },
+    EqualExpression { space0: Whitespace, value: Expr },
+    CountEqual { space0: Whitespace, value: u64 },
+    StartWith { space0: Whitespace, value: Template },
+    Contain { space0: Whitespace, value: Template },
+    IncludeString { space0: Whitespace, value: Template },
+    IncludeInt { space0: Whitespace, value: i64 },
+    IncludeFloat { space0: Whitespace, value: Float },
+    IncludeBool { space0: Whitespace, value: bool },
+    IncludeNull { space0: Whitespace },
+    IncludeExpression { space0: Whitespace, value: Expr },
+    Match { space0: Whitespace, value: Template },
     Exist {},
 }
 
@@ -513,7 +459,6 @@ pub struct EncodedString {
     pub source_info: SourceInfo,
 }
 
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Whitespace {
     pub value: String,
@@ -544,16 +489,18 @@ pub struct Float {
     pub int: i64,
     pub decimal: u64,
     // use 18 digits
-    pub decimal_digits: usize,   // number of digits
+    pub decimal_digits: usize, // number of digits
 }
 
 impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let decimal_str: String = format!("{:018}", self.decimal).chars().take(self.decimal_digits).collect();
+        let decimal_str: String = format!("{:018}", self.decimal)
+            .chars()
+            .take(self.decimal_digits)
+            .collect();
         write!(f, "{}.{}", self.int, decimal_str)
     }
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LineTerminator {
@@ -613,9 +560,41 @@ mod tests {
 
     #[test]
     fn test_float() {
-        assert_eq!(Float { int: 1, decimal: 0, decimal_digits: 1 }.to_string(), "1.0");
-        assert_eq!(Float { int: 1, decimal: 10_000_000_000_000_000, decimal_digits: 2 }.to_string(), "1.01");
-        assert_eq!(Float { int: 1, decimal: 10_000_000_000_000_000, decimal_digits: 3 }.to_string(), "1.010");
-        assert_eq!(Float { int: -1, decimal: 333_333_333_333_333_333, decimal_digits: 3 }.to_string(), "-1.333");
+        assert_eq!(
+            Float {
+                int: 1,
+                decimal: 0,
+                decimal_digits: 1,
+            }
+            .to_string(),
+            "1.0"
+        );
+        assert_eq!(
+            Float {
+                int: 1,
+                decimal: 10_000_000_000_000_000,
+                decimal_digits: 2,
+            }
+            .to_string(),
+            "1.01"
+        );
+        assert_eq!(
+            Float {
+                int: 1,
+                decimal: 10_000_000_000_000_000,
+                decimal_digits: 3,
+            }
+            .to_string(),
+            "1.010"
+        );
+        assert_eq!(
+            Float {
+                int: -1,
+                decimal: 333_333_333_333_333_333,
+                decimal_digits: 3,
+            }
+            .to_string(),
+            "-1.333"
+        );
     }
 }
