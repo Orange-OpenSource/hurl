@@ -26,6 +26,7 @@ use crate::http;
 use super::core::*;
 use super::core::{Error, RunnerError};
 use crate::format::logger::Logger;
+use crate::http::HttpError;
 
 /// Run an entry with the hurl http client
 ///
@@ -103,7 +104,20 @@ pub fn run(
     let start = Instant::now();
     let http_response = match http_client.execute(&http_request, 0) {
         Ok(response) => response,
-        Err(_) => {
+        Err(http_error) => {
+            let runner_error = match http_error {
+                HttpError::CouldNotResolveProxyName => RunnerError::CouldNotResolveProxyName,
+                HttpError::CouldNotResolveHost => RunnerError::CouldNotResolveHost,
+                HttpError::FailToConnect => RunnerError::FailToConnect,
+                HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
+                HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
+                HttpError::SSLCertificate => RunnerError::SSLCertificate,
+                HttpError::InvalidUrl => RunnerError::InvalidURL(http_request.url.clone()),
+                HttpError::Other { description, .. } => RunnerError::HttpConnection {
+                    message: description,
+                    url: http_request.url.clone(),
+                },
+            };
             return EntryResult {
                 request: Some(http_request.clone()),
                 response: None,
@@ -114,10 +128,7 @@ pub fn run(
                         start: entry.clone().request.url.source_info.start,
                         end: entry.clone().request.url.source_info.end,
                     },
-                    inner: RunnerError::HttpConnection {
-                        message: "".to_string(),
-                        url: http_request.url,
-                    },
+                    inner: runner_error,
                     assert: false,
                 }],
                 time_in_ms: 0,

@@ -35,6 +35,8 @@ pub enum HttpError {
     TooManyRedirect,
     CouldNotParseResponse,
     SSLCertificate,
+    InvalidUrl,
+    Other { description: String, code: u32 },
 }
 
 #[derive(Debug)]
@@ -170,13 +172,17 @@ impl Client {
                 .unwrap();
 
             if let Err(e) = transfer.perform() {
-                match e.code() {
-                    5 => return Err(HttpError::CouldNotResolveProxyName),
-                    6 => return Err(HttpError::CouldNotResolveHost),
-                    7 => return Err(HttpError::FailToConnect),
-                    60 => return Err(HttpError::SSLCertificate),
-                    _ => panic!("{:#?}", e),
-                }
+                return match e.code() {
+                    3 => Err(HttpError::InvalidUrl),
+                    5 => Err(HttpError::CouldNotResolveProxyName),
+                    6 => Err(HttpError::CouldNotResolveHost),
+                    7 => Err(HttpError::FailToConnect),
+                    60 => Err(HttpError::SSLCertificate),
+                    _ => Err(HttpError::Other {
+                        code: e.code(),
+                        description: e.description().to_string(),
+                    }),
+                };
             }
         }
 
