@@ -34,6 +34,7 @@ pub enum DeprecatedValue {
 #[derive(Clone, Debug, PartialEq, Eq)]
 //#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Value {
+    Unit,
     Bool(bool),
     Integer(i64),
 
@@ -65,6 +66,7 @@ impl fmt::Display for Value {
             Value::Nodeset(x) => format!("Nodeset{:?}", x),
             Value::Bytes(x) => format!("Bytes({:x?})", x),
             Value::Null => "Null".to_string(),
+            Value::Unit => "Unit".to_string(),
         };
         write!(f, "{}", value)
     }
@@ -81,7 +83,8 @@ impl Value {
             Value::Object(_) => "object".to_string(),
             Value::Nodeset(_) => "nodeset".to_string(),
             Value::Bytes(_) => "bytes".to_string(),
-            Value::Null => "unit".to_string(),
+            Value::Null => "null".to_string(),
+            Value::Unit => "unit".to_string(),
         }
     }
 
@@ -194,6 +197,7 @@ impl Serialize for Value {
                 serializer.serialize_str(&encoded)
             }
             Value::Null => serializer.serialize_none(),
+            Value::Unit => todo!("how to serialize that in json?"),
         }
     }
 }
@@ -213,6 +217,7 @@ impl Value {
             Value::Nodeset(_) => todo!(),
             Value::Bytes(_) => todo!(),
             Value::Null => todo!(),
+            Value::Unit => todo!(),
         }
     }
 
@@ -230,6 +235,7 @@ impl Value {
             Value::Nodeset(_) => todo!(),
             Value::Bytes(_) => todo!(),
             Value::Null => todo!(),
+            Value::Unit => todo!(),
         }
     }
 }

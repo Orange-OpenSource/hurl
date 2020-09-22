@@ -126,6 +126,7 @@ impl Value {
             Value::Object(_) => "object".to_string(),
             Value::Bytes(values) => format!("byte array of size <{}>", values.len()),
             Value::Null => "null".to_string(),
+            Value::Unit => "unit".to_string(),
         }
     }
 }
@@ -396,7 +397,7 @@ impl PredicateFunc {
                             source_info: self.source_info.clone(),
                             inner: RunnerError::InvalidRegex(),
                             assert: false,
-                        })
+                        });
                     }
                 };
                 match value.clone() {
@@ -581,10 +582,7 @@ mod tests {
         );
         assert_eq!(error.source_info, SourceInfo::init(1, 0, 1, 0));
 
-        assert_eq!(
-            predicate.eval(&variables, Some(Value::Integer(1))).unwrap(),
-            ()
-        );
+        assert!(predicate.eval(&variables, Some(Value::Integer(1))).is_ok());
     }
 
     #[test]
@@ -609,6 +607,27 @@ mod tests {
         assert_eq!(assert_result.expected.as_str(), "int <10>");
     }
 
+    #[test]
+    fn test_predicate_type_mismatch_with_unit() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
+        let assert_result = PredicateFunc {
+            value: PredicateFuncValue::EqualInt {
+                space0: whitespace,
+                value: 10,
+            },
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        }
+        .eval(&variables, Some(Value::Unit))
+        .unwrap();
+        assert_eq!(assert_result.success, false);
+        assert_eq!(assert_result.type_mismatch, true);
+        assert_eq!(assert_result.actual.as_str(), "unit");
+        assert_eq!(assert_result.expected.as_str(), "int <10>");
+    }
     #[test]
     fn test_predicate_value_error() {
         let variables = HashMap::new();
@@ -665,6 +684,28 @@ mod tests {
             assert_result.expected.as_str(),
             "float <1.200000000000000000>"
         );
+    }
+
+    #[test]
+    fn test_predicate_exist() {
+        let variables = HashMap::new();
+        let predicate = PredicateFunc {
+            value: PredicateFuncValue::Exist {},
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
+
+        let assert_result = predicate
+            .clone()
+            .eval(&variables, Some(Value::Unit))
+            .unwrap();
+        assert_eq!(assert_result.success, true);
+        assert_eq!(assert_result.actual.as_str(), "unit");
+        assert_eq!(assert_result.expected.as_str(), "something");
+
+        let assert_result = predicate.eval(&variables, None).unwrap();
+        assert_eq!(assert_result.success, false);
+        assert_eq!(assert_result.actual.as_str(), "none");
+        assert_eq!(assert_result.expected.as_str(), "something");
     }
 
     #[test]
