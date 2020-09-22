@@ -64,8 +64,8 @@ cookie "LSID[Expires]" equals "Wed, 13 Jan 2021 22:23:01 GMT"
 cookie "LSID[Max-Age]" not exists
 cookie "LSID[Domain]" not exists
 cookie "LSID[Path]" equals "/accounts"
-cookie "LSID[Secure]" equals true
-cookie "LSID[HttpOnly]" equals true
+cookie "LSID[Secure]" exists
+cookie "LSID[HttpOnly]" exists
 cookie "LSID[SameSite]" not exists
 
 

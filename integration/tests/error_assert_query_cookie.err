@@ -1,0 +1,16 @@
+error: Assert Failure
+  --> tests/error_assert_query_cookie.hurl:4:0
+   |
+ 4 | cookie "cookie1[Secure]" equals false  # This is not valid, Secure attribute exists or not but does have a value
+   |   actual:   none
+   |   expected: bool <false>
+   |
+
+error: Assert Failure
+  --> tests/error_assert_query_cookie.hurl:6:0
+   |
+ 6 | cookie "cookie2[Secure]" equals true   # This is not valid, Secure attribute exists or not but does have a value
+   |   actual:   unit
+   |   expected: bool <true>
+   |
+

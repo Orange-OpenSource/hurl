@@ -232,14 +232,14 @@ impl CookieAttributeName {
             CookieAttributeName::Path(_) => cookie.path().map(Value::String),
             CookieAttributeName::Secure(_) => {
                 if cookie.has_secure() {
-                    Some(Value::Bool(true))
+                    Some(Value::Unit)
                 } else {
                     None
                 }
             }
             CookieAttributeName::HttpOnly(_) => {
                 if cookie.has_httponly() {
-                    Some(Value::Bool(true))
+                    Some(Value::Unit)
                 } else {
                     None
                 }
@@ -616,7 +616,7 @@ pub mod tests {
         };
         assert_eq!(
             query.eval(&variables, response.clone()).unwrap().unwrap(),
-            Value::Bool(true)
+            Value::Unit
         );
 
         // cookie "LSID[Domain]"
@@ -698,13 +698,13 @@ pub mod tests {
             CookieAttributeName::Secure("_".to_string())
                 .eval(cookie.clone())
                 .unwrap(),
-            Value::Bool(true)
+            Value::Unit
         );
         assert_eq!(
             CookieAttributeName::HttpOnly("_".to_string())
                 .eval(cookie.clone())
                 .unwrap(),
-            Value::Bool(true)
+            Value::Unit
         );
         assert_eq!(
             CookieAttributeName::SameSite("_".to_string()).eval(cookie),
