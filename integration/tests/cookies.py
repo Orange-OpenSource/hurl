@@ -21,17 +21,17 @@ def set_request_cookie2_valueb():
     return ''
 
 
-@app.route("/cookies/send-cookie2-value1")
-def send_cookie2_value1():
-    assert'cookie1' not in request.cookies
-    assert request.cookies['cookie2'] == 'value1'
-    return ''
-
-
-@app.route("/cookies/send-cookie2-value2")
-def send_cookie2_value2():
-    assert request.cookies['cookie2'] == 'value2'
-    return ''
+# @app.route("/cookies/send-cookie2-value1")
+# def send_cookie2_value1():
+#     assert'cookie1' not in request.cookies
+#     assert request.cookies['cookie2'] == 'value1'
+#     return ''
+#
+#
+# @app.route("/cookies/send-cookie2-value2")
+# def send_cookie2_value2():
+#     assert request.cookies['cookie2'] == 'value2'
+#     return ''
 
 
 @app.route("/cookies/delete-cookie2")
@@ -61,6 +61,11 @@ def assert_that_cookie2_is_valuea():
 @app.route("/cookies/assert-that-cookie2-is-valueB")
 def assert_that_cookie2_is_valueb():
     assert request.cookies['cookie2'] == 'valueB'
+    return ''
+
+@app.route("/cookies/assert-that-cookie2-is-valueA-and-valueB")
+def assert_that_cookie2_is_valuea_and_valueb():
+    assert request.headers['Cookie'] == 'cookie2=valueA; cookie2=ValueB'
     return ''
 
 @app.route("/cookies/set-session-cookie2-valueA-subdomain")

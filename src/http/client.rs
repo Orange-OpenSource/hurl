@@ -296,10 +296,10 @@ impl Client {
     ///
     /// set request cookies
     ///
-    fn set_cookies(&mut self, _cookies: &[RequestCookie]) {
-        //for cookie in cookies {
-        //self.handle.cookie(cookie.to_string().as_str()).unwrap();  // added in the store beforehand
-        //}
+    fn set_cookies(&mut self, cookies: &[RequestCookie]) {
+        for cookie in cookies {
+            self.handle.cookie(cookie.to_string().as_str()).unwrap();
+        }
     }
 
     ///
@@ -455,15 +455,24 @@ impl Client {
 
     ///
     /// Add cookie to Cookiejar
-    /// TODO check domain/path,...
+    ///
     pub fn add_cookie(&mut self, cookie: Cookie) {
         if self.verbose {
             eprintln!("* add to cookie store: {}", cookie);
-            //self.handle.cookie_list(format!("Set-Cookie: {}={}", cookie.name, cookie.value).as_str()).unwrap();
         }
         self.handle
             .cookie_list(cookie.to_string().as_str())
             .unwrap();
+    }
+
+    ///
+    /// Clear cookie storage
+    ///
+    pub fn clear_cookie_storage(&mut self) {
+        if self.verbose {
+            eprintln!("* clear cookie storage");
+        }
+        self.handle.cookie_list("ALL").unwrap();
     }
 }
 
