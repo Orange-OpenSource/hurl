@@ -133,6 +133,12 @@ Read cookies from file (using the Netscape cookie file format).
 Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
 
 
+.IP "--connect-timeout <seconds> "
+
+Maximum time in seconds that you allow hurl's connection to take.
+
+See also \fI-m, --max-time\fP option.
+
 
 .IP "-c, --cookie-jar <filename> "
 
@@ -201,6 +207,12 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 
 Follow redirect.  You can limit the amount of redirects to follow by using the \fI--max-redirs\fP option.
 
+
+.IP "-m, --max-time <seconds> "
+
+Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
+
+See also \fI--connect-timeout\fP option.
 
 
 .IP "--max-redirs <num> "

@@ -53,6 +53,8 @@ use crate::core::common::FormatError;
 ///        no_proxy: None,
 ///        verbose: false,
 ///        insecure: false,
+///        timeout: Default::default(),
+///        connect_timeout: Default::default()
 /// };
 /// let mut client = http::Client::init(options);
 ///

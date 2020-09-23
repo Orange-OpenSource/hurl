@@ -105,6 +105,7 @@ pub fn run(
                 HttpError::CouldNotResolveProxyName => RunnerError::CouldNotResolveProxyName,
                 HttpError::CouldNotResolveHost => RunnerError::CouldNotResolveHost,
                 HttpError::FailToConnect => RunnerError::FailToConnect,
+                HttpError::Timeout => RunnerError::Timeout,
                 HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
                 HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
                 HttpError::SSLCertificate => RunnerError::SSLCertificate,

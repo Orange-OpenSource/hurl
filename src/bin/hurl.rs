@@ -36,6 +36,7 @@ use hurl::parser;
 use hurl::runner;
 use hurl::runner::core::*;
 use hurl::runner::log_deserialize;
+use std::time::Duration;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CLIOptions {
@@ -50,6 +51,8 @@ pub struct CLIOptions {
     pub proxy: Option<String>,
     pub no_proxy: Option<String>,
     pub cookie_input_file: Option<String>,
+    pub timeout: Duration,
+    pub connect_timeout: Duration,
 }
 
 fn execute(
@@ -114,6 +117,9 @@ fn execute(
             let proxy = cli_options.proxy;
             let no_proxy = cli_options.no_proxy;
             let cookie_input_file = cli_options.cookie_input_file;
+
+            let timeout = cli_options.timeout;
+            let connect_timeout = cli_options.connect_timeout;
             let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
@@ -122,6 +128,8 @@ fn execute(
                 no_proxy,
                 verbose,
                 insecure,
+                timeout,
+                connect_timeout,
             };
             let mut client = http::Client::init(options);
 
@@ -299,6 +307,12 @@ fn app() -> clap::App<'static, 'static> {
                 .help("Colorize Output"),
         )
         .arg(
+            clap::Arg::with_name("connect_timeout")
+                .long("connect-timeout")
+                .value_name("SECONDS")
+                .help("Maximum time allowed for connection"),
+        )
+        .arg(
             clap::Arg::with_name("cookies_input_file")
                 .short("b")
                 .long("cookie")
@@ -356,6 +370,14 @@ fn app() -> clap::App<'static, 'static> {
                 .short("L")
                 .long("location")
                 .help("Follow redirects"),
+        )
+        .arg(
+            clap::Arg::with_name("max_time")
+                .long("max-time")
+                .short("m")
+                .value_name("NUM")
+                .allow_hyphen_values(true)
+                .help("Maximum time allowed for the transfer"),
         )
         .arg(
             clap::Arg::with_name("max_redirects")
@@ -447,7 +469,31 @@ fn parse_options(
             Err(_) => {
                 return Err(cli::Error {
                     message: "max_redirs option can not be parsed".to_string(),
-                })
+                });
+            }
+        },
+    };
+
+    let timeout = match matches.value_of("max_time") {
+        None => Duration::from_secs(0),
+        Some(s) => match s.parse::<u64>() {
+            Ok(n) => Duration::from_secs(n),
+            Err(_) => {
+                return Err(cli::Error {
+                    message: "max_time option can not be parsed".to_string(),
+                });
+            }
+        },
+    };
+
+    let connect_timeout = match matches.value_of("connect_timeout") {
+        None => Duration::from_secs(300),
+        Some(s) => match s.parse::<u64>() {
+            Ok(n) => Duration::from_secs(n),
+            Err(_) => {
+                return Err(cli::Error {
+                    message: "connect-timeout option can not be parsed".to_string(),
+                });
             }
         },
     };
@@ -464,6 +510,8 @@ fn parse_options(
         proxy,
         no_proxy,
         cookie_input_file,
+        timeout,
+        connect_timeout,
     })
 }
 

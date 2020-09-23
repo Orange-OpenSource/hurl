@@ -44,6 +44,8 @@ fn test_hurl_file() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
@@ -149,6 +151,8 @@ fn test_hello() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = http::Client::init(options);
     let source_info = SourceInfo {
