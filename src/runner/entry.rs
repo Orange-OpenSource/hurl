@@ -73,24 +73,20 @@ pub fn run(
         .verbose("------------------------------------------------------------------------------");
     logger.verbose(format!("executing entry {}", entry_index + 1).as_str());
 
-    // Temporary - add cookie from request to the cookie store
-    // should be set explicitly
-    // url should be valid at the point
-    // do not use cookie from request
-    use url::Url;
-    if let Ok(url) = Url::parse(http_request.url.as_str()) {
-        for c in http_request.cookies.clone() {
-            let cookie = http::Cookie {
-                domain: url.host_str().unwrap().to_string(),
-                include_subdomain: "FALSE".to_string(),
-                path: "/".to_string(),
-                https: "FALSE".to_string(),
-                expires: "0".to_string(),
-                name: c.name,
-                value: c.value,
-            };
+    //
+    // Experimental features
+    // with cookie storage
+    //
+    use std::str::FromStr;
+    if let Some(s) = entry.request.add_cookie_in_storage() {
+        if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(cookie);
+        } else {
+            logger.verbose(format!("cookie string can not be parsed: '{}'", s).as_str());
         }
+    }
+    if entry.request.clear_cookie_storage() {
+        http_client.clear_cookie_storage();
     }
 
     logger.verbose("");

@@ -17,6 +17,7 @@
  */
 
 use core::fmt;
+use std::str::FromStr;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Header {
@@ -57,6 +58,61 @@ impl fmt::Display for Cookie {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ParseCookieError {}
+
+impl FromStr for Cookie {
+    type Err = ParseCookieError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
+        let domain = if let Some(&v) = tokens.get(0) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let include_subdomain = if let Some(&v) = tokens.get(1) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let path = if let Some(&v) = tokens.get(2) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let https = if let Some(&v) = tokens.get(3) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let expires = if let Some(&v) = tokens.get(4) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let name = if let Some(&v) = tokens.get(5) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        let value = if let Some(&v) = tokens.get(6) {
+            v.to_string()
+        } else {
+            return Err(ParseCookieError {});
+        };
+        Ok(Cookie {
+            domain,
+            include_subdomain,
+            path,
+            https,
+            expires,
+            name,
+            value,
+        })
+    }
+}
+
 ///
 /// return a list of headers values for the given header name
 ///
@@ -71,4 +127,28 @@ pub fn get_header_values(headers: Vec<Header>, expected_name: String) -> Vec<Str
             }
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn parse_cookie_from_str() {
+        assert_eq!(
+            Cookie::from_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA")
+                .ok()
+                .unwrap(),
+            Cookie {
+                domain: "httpbin.org".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "0".to_string(),
+                name: "cookie1".to_string(),
+                value: "valueA".to_string()
+            }
+        );
+        assert_eq!(Cookie::from_str("xxx").err().unwrap(), ParseCookieError {});
+    }
 }

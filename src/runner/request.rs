@@ -134,6 +134,38 @@ impl Request {
         }
         None
     }
+
+    ///
+    /// experimental feature
+    /// @cookie_storage_add
+    ///
+    pub fn add_cookie_in_storage(&self) -> Option<String> {
+        for line_terminator in self.line_terminators.iter() {
+            if let Some(s) = line_terminator.comment.clone() {
+                if s.value.contains("@cookie_storage_set:") {
+                    let index = "#@cookie_storage_set:".to_string().len();
+                    let value = &s.value[index..s.value.len()].to_string().trim().to_string();
+                    return Some(value.to_string());
+                }
+            }
+        }
+        None
+    }
+
+    ///
+    /// experimental feature
+    /// @cookie_storage_clear
+    ///
+    pub fn clear_cookie_storage(&self) -> bool {
+        for line_terminator in self.line_terminators.iter() {
+            if let Some(s) = line_terminator.comment.clone() {
+                if s.value.contains("@cookie_storage_clear") {
+                    return true;
+                }
+            }
+        }
+        false
+    }
 }
 
 impl Method {
@@ -352,5 +384,87 @@ mod tests {
             .eval(&variables, "current_dir".to_string())
             .unwrap();
         assert_eq!(http_request, http::query_http_request());
+    }
+
+    #[test]
+    fn clear_cookie_store() {
+        assert_eq!(false, hello_request().clear_cookie_storage());
+
+        let line_terminator = LineTerminator {
+            space0: whitespace(),
+            comment: None,
+            newline: whitespace(),
+        };
+        assert_eq!(
+            true,
+            Request {
+                line_terminators: vec![LineTerminator {
+                    space0: whitespace(),
+                    comment: Some(Comment {
+                        value: "@cookie_storage_clear".to_string()
+                    }),
+                    newline: whitespace(),
+                }],
+                space0: whitespace(),
+                method: Method::Get,
+                space1: whitespace(),
+                url: Template {
+                    elements: vec![TemplateElement::String {
+                        value: String::from("http:///localhost"),
+                        encoded: String::from("http://localhost"),
+                    },],
+                    quotes: false,
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                line_terminator0: line_terminator,
+                headers: vec![],
+                sections: vec![],
+                body: None,
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            }
+            .clear_cookie_storage()
+        );
+    }
+
+    #[test]
+    fn add_cookie_in_storage() {
+        assert_eq!(None, hello_request().add_cookie_in_storage());
+
+        let line_terminator = LineTerminator {
+            space0: whitespace(),
+            comment: None,
+            newline: whitespace(),
+        };
+        assert_eq!(
+            Some("localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA".to_string()),
+            Request {
+                line_terminators: vec![LineTerminator {
+                    space0: whitespace(),
+                    comment: Some(Comment {
+                        value:
+                            "@cookie_storage_set: localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA"
+                                .to_string()
+                    }),
+                    newline: whitespace(),
+                }],
+                space0: whitespace(),
+                method: Method::Get,
+                space1: whitespace(),
+                url: Template {
+                    elements: vec![TemplateElement::String {
+                        value: String::from("http:///localhost"),
+                        encoded: String::from("http://localhost"),
+                    },],
+                    quotes: false,
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                line_terminator0: line_terminator,
+                headers: vec![],
+                sections: vec![],
+                body: None,
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            }
+            .add_cookie_in_storage()
+        );
     }
 }
