@@ -114,10 +114,18 @@ pub enum RunnerError {
         name: String,
     },
     InvalidURL(String),
+
     HttpConnection {
         url: String,
         message: String,
     },
+    CouldNotResolveProxyName,
+    CouldNotResolveHost,
+    FailToConnect,
+    TooManyRedirect,
+    CouldNotParseResponse,
+    SSLCertificate,
+
     FileReadAccess {
         value: String,
     },
@@ -181,6 +189,12 @@ impl FormatError for Error {
             RunnerError::TemplateVariableNotDefined { .. } => "Undefined Variable".to_string(),
             RunnerError::VariableNotDefined { .. } => "Undefined Variable".to_string(),
             RunnerError::HttpConnection { .. } => "Http Connection".to_string(),
+            RunnerError::CouldNotResolveProxyName => "Http Connection".to_string(),
+            RunnerError::CouldNotResolveHost => "Http Connection".to_string(),
+            RunnerError::FailToConnect => "Http Connection".to_string(),
+            RunnerError::TooManyRedirect => "Http Connection".to_string(),
+            RunnerError::CouldNotParseResponse => "Http Connection".to_string(),
+            RunnerError::SSLCertificate => "Http Connection".to_string(),
             RunnerError::PredicateValue { .. } => "Assert - Predicate Value Failed".to_string(),
             RunnerError::InvalidRegex {} => "Invalid regex".to_string(),
             RunnerError::FileReadAccess { .. } => "File ReadAccess".to_string(),
@@ -210,7 +224,15 @@ impl FormatError for Error {
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("You must set the variable {}", name)
             }
-            RunnerError::HttpConnection { url, .. } => format!("can not connect to {}", url),
+            RunnerError::HttpConnection { url, message } => {
+                format!("can not connect to {} ({})", url, message)
+            }
+            RunnerError::CouldNotResolveProxyName => "Could not resolve proxy name".to_string(),
+            RunnerError::CouldNotResolveHost => "Could not resolve host".to_string(),
+            RunnerError::FailToConnect => "Fail to connect".to_string(),
+            RunnerError::TooManyRedirect => "Too many redirect".to_string(),
+            RunnerError::CouldNotParseResponse => "Could not parse response".to_string(),
+            RunnerError::SSLCertificate => "SSl Certificate".to_string(),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {

@@ -2,6 +2,6 @@ error: Http Connection
   --> tests/error_http_connection.hurl:1:5
    |
  1 | GET http://unknown
-   |     ^^^^^^^^^^^^^^ can not connect to http://unknown/ ("http://unknown/: error trying to connect: failed to lookup address information: Name or service not known")
+   |     ^^^^^^^^^^^^^^ Could not resolve host
    |
 
