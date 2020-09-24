@@ -35,12 +35,6 @@ curl = "0.4.33"
 #[dev-dependencies]
 proptest = "0.9.4"
 
-[package.metadata.deb]
-assets = [
-  ["target/release/hurl", "usr/bin/", "755"],
-  ["target/release/hurlfmt", "usr/bin/", "755"],
-  ["target/man/hurl.1.gz", "usr/share/man/man1/hurl.1.gz", "644"],
-  ["target/man/hurlfmt.1.gz", "usr/share/man/man1/hurlfmt.1.gz", "644"]
-]
+
 
 
