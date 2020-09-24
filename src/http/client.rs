@@ -22,6 +22,7 @@ use std::str;
 use curl::easy;
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
+use std::time::Duration;
 
 use super::core::*;
 use super::request::*;
@@ -36,6 +37,7 @@ pub enum HttpError {
     CouldNotParseResponse,
     SSLCertificate,
     InvalidUrl,
+    Timeout,
     Other { description: String, code: u32 },
 }
 
@@ -61,6 +63,8 @@ pub struct ClientOptions {
     pub no_proxy: Option<String>,
     pub verbose: bool,
     pub insecure: bool,
+    pub timeout: Duration,
+    pub connect_timeout: Duration,
 }
 
 impl Client {
@@ -89,6 +93,9 @@ impl Client {
         h.verbose(options.verbose).unwrap();
         h.ssl_verify_host(options.insecure).unwrap();
         h.ssl_verify_peer(options.insecure).unwrap();
+
+        h.timeout(options.timeout).unwrap();
+        h.connect_timeout(options.connect_timeout).unwrap();
 
         Client {
             handle: Box::new(h),
@@ -177,6 +184,7 @@ impl Client {
                     5 => Err(HttpError::CouldNotResolveProxyName),
                     6 => Err(HttpError::CouldNotResolveHost),
                     7 => Err(HttpError::FailToConnect),
+                    28 => Err(HttpError::Timeout),
                     60 => Err(HttpError::SSLCertificate),
                     _ => Err(HttpError::Other {
                         code: e.code(),

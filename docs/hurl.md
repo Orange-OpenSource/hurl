@@ -130,6 +130,12 @@ Read cookies from file (using the Netscape cookie file format).
 Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
 
+### --connect-timeout <seconds> {#connect-timeout}
+
+Maximum time in seconds that you allow hurl's connection to take.
+
+See also [-m, --max-time](#max-time) option.
+
 
 ### -c, --cookie-jar <filename> {#cookie-jar}
 
@@ -198,6 +204,12 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 
 Follow redirect.  You can limit the amount of redirects to follow by using the [--max-redirs](#max-redirs) option.
 
+
+### -m, --max-time <seconds> {#ax-time}
+
+Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
+
+See also [--connect-timeout](#connect-timeout) option.
 
 
 ### --max-redirs <num> {#max-redirs}

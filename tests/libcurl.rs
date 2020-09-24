@@ -1,7 +1,7 @@
+use curl::easy::Easy;
 use std::fs::File;
 use std::io::prelude::*;
-
-use curl::easy::Easy;
+use std::time::Duration;
 
 use hurl::http::*;
 
@@ -63,6 +63,8 @@ fn default_client() -> Client {
         no_proxy: None,
         verbose: true,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Duration::from_secs(300),
     };
     Client::init(options)
 }
@@ -302,6 +304,8 @@ fn test_follow_location() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
@@ -333,6 +337,8 @@ fn test_max_redirect() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
@@ -447,6 +453,8 @@ fn test_error_fail_to_connect() {
         no_proxy: None,
         verbose: true,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -464,11 +472,53 @@ fn test_error_could_not_resolve_proxy_name() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::CouldNotResolveProxyName);
+}
+
+#[test]
+fn test_timeout() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
+        insecure: false,
+        timeout: Duration::from_millis(100),
+        connect_timeout: Default::default(),
+    };
+    let mut client = Client::init(options);
+    let request = default_get_request("http://localhost:8000/timeout".to_string());
+    let error = client.execute(&request, 0).err().unwrap();
+    assert_eq!(error, HttpError::Timeout);
+}
+
+//
+// TODO: find a way to test it locally
+// #[test]
+fn test_connect_timeout() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
+        insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Duration::from_secs(1),
+    };
+    let mut client = Client::init(options);
+    let request = default_get_request("http://example.com:81".to_string());
+    let error = client.execute(&request, 0).err().unwrap();
+    assert_eq!(error, HttpError::Timeout);
 }
 
 // endregion
@@ -564,6 +614,8 @@ fn test_cookie_file() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let request = default_get_request(
@@ -589,6 +641,8 @@ fn test_proxy() {
         no_proxy: None,
         verbose: false,
         insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
