@@ -18,12 +18,12 @@
 
 use std::collections::HashMap;
 
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 
-use super::super::core::ast::*;
 use super::core::*;
 use super::core::{Error, RunnerError};
+use super::value::Value;
 
 impl AssertResult {
     pub fn fail(self) -> bool {
@@ -149,7 +149,7 @@ impl Assert {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::core::common::SourceInfo;
+    use crate::ast::SourceInfo;
 
     use super::super::query;
     use super::*;

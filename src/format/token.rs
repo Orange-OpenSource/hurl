@@ -16,8 +16,7 @@
  *
  */
 
-use super::super::core::ast::*;
-use super::super::core::json;
+use crate::ast::*;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Token {
@@ -714,22 +713,22 @@ impl Tokenizable for Filename {
     }
 }
 
-impl Tokenizable for json::Value {
+impl Tokenizable for JsonValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         match self {
-            json::Value::String(s) => {
+            JsonValue::String(s) => {
                 //tokens.push(Token::CodeDelimiter("\"".to_string()));
                 tokens.append(&mut s.tokenize());
                 //tokens.push(Token::CodeDelimiter("\"".to_string()));
             }
-            json::Value::Number(value) => {
+            JsonValue::Number(value) => {
                 tokens.push(Token::Number(value.clone()));
             }
-            json::Value::Boolean(value) => {
+            JsonValue::Boolean(value) => {
                 tokens.push(Token::Number(value.to_string()));
             }
-            json::Value::List { space0, elements } => {
+            JsonValue::List { space0, elements } => {
                 tokens.push(Token::CodeDelimiter("[".to_string()));
                 tokens.push(Token::Whitespace(space0.clone()));
                 for (i, element) in elements.iter().enumerate() {
@@ -740,7 +739,7 @@ impl Tokenizable for json::Value {
                 }
                 tokens.push(Token::CodeDelimiter("]".to_string()));
             }
-            json::Value::Object { space0, elements } => {
+            JsonValue::Object { space0, elements } => {
                 tokens.push(Token::CodeDelimiter("{".to_string()));
                 tokens.push(Token::Whitespace(space0.clone()));
                 for (i, element) in elements.iter().enumerate() {
@@ -751,7 +750,7 @@ impl Tokenizable for json::Value {
                 }
                 tokens.push(Token::CodeDelimiter("}".to_string()));
             }
-            json::Value::Null {} => {
+            JsonValue::Null {} => {
                 tokens.push(Token::Keyword("null".to_string()));
             }
         }
@@ -759,7 +758,7 @@ impl Tokenizable for json::Value {
     }
 }
 
-impl Tokenizable for json::ListElement {
+impl Tokenizable for JsonListElement {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         tokens.push(Token::Whitespace(self.space0.clone()));
@@ -769,7 +768,7 @@ impl Tokenizable for json::ListElement {
     }
 }
 
-impl Tokenizable for json::ObjectElement {
+impl Tokenizable for JsonObjectElement {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         tokens.push(Token::Whitespace(self.space0.clone()));

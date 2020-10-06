@@ -23,10 +23,9 @@ use std::fs;
 use proptest::prelude::prop::test_runner::TestRunner;
 use proptest::prelude::*;
 
-use hurl::core::ast::{Expr, Template, TemplateElement, Variable, Whitespace};
-use hurl::core::common::SourceInfo;
-use hurl::core::json;
-use hurl::format::token::*;
+use hurl::ast::*;
+use hurl::format::{Token, Tokenizable};
+use hurl::parser::{parse_json, Reader};
 
 fn whitespace() -> BoxedStrategy<String> {
     prop_oneof![
@@ -39,37 +38,37 @@ fn whitespace() -> BoxedStrategy<String> {
 
 // region strategy scalar/leaves
 
-fn value_number() -> BoxedStrategy<json::Value> {
+fn value_number() -> BoxedStrategy<JsonValue> {
     prop_oneof![
-        Just(json::Value::Number("0".to_string())),
-        Just(json::Value::Number("1".to_string())),
-        Just(json::Value::Number("1.33".to_string())),
-        Just(json::Value::Number("-100".to_string()))
+        Just(JsonValue::Number("0".to_string())),
+        Just(JsonValue::Number("1".to_string())),
+        Just(JsonValue::Number("1.33".to_string())),
+        Just(JsonValue::Number("-100".to_string()))
     ]
     .boxed()
 }
 
-fn value_boolean() -> BoxedStrategy<json::Value> {
+fn value_boolean() -> BoxedStrategy<JsonValue> {
     prop_oneof![
-        Just(json::Value::Boolean(true)),
-        Just(json::Value::Boolean(false)),
+        Just(JsonValue::Boolean(true)),
+        Just(JsonValue::Boolean(false)),
     ]
     .boxed()
 }
 
-fn value_string() -> BoxedStrategy<json::Value> {
+fn value_string() -> BoxedStrategy<JsonValue> {
     let source_info = SourceInfo::init(0, 0, 0, 0);
     let variable = Variable {
         name: "name".to_string(),
         source_info: source_info.clone(),
     };
     prop_oneof![
-        Just(json::Value::String(Template {
+        Just(JsonValue::String(Template {
             elements: vec![],
             quotes: true,
             source_info: source_info.clone()
         })),
-        Just(json::Value::String(Template {
+        Just(JsonValue::String(Template {
             elements: vec![TemplateElement::String {
                 encoded: "Hello".to_string(),
                 value: "Hello".to_string(),
@@ -77,7 +76,7 @@ fn value_string() -> BoxedStrategy<json::Value> {
             quotes: true,
             source_info: source_info.clone()
         })),
-        Just(json::Value::String(Template {
+        Just(JsonValue::String(Template {
             elements: vec![
                 TemplateElement::String {
                     encoded: "Hello\\u0020 ".to_string(),
@@ -106,7 +105,7 @@ fn value_string() -> BoxedStrategy<json::Value> {
 
 // region strategy value
 
-fn value() -> BoxedStrategy<json::Value> {
+fn value() -> BoxedStrategy<JsonValue> {
     let leaf = prop_oneof![value_boolean(), value_string(), value_number(),];
     leaf.prop_recursive(
         8,   // 8 levels deep
@@ -115,14 +114,14 @@ fn value() -> BoxedStrategy<json::Value> {
         |value| {
             prop_oneof![
                 // Lists
-                (whitespace()).prop_map(|space0| json::Value::List {
+                (whitespace()).prop_map(|space0| JsonValue::List {
                     space0,
                     elements: vec![]
                 }),
                 (whitespace(), whitespace(), value.clone()).prop_map(|(space0, space1, value)| {
-                    json::Value::List {
+                    JsonValue::List {
                         space0,
-                        elements: vec![json::ListElement {
+                        elements: vec![JsonListElement {
                             space0: "".to_string(),
                             value,
                             space1,
@@ -138,15 +137,15 @@ fn value() -> BoxedStrategy<json::Value> {
                     value_number()
                 )
                     .prop_map(
-                        |(space00, space01, value0, space10, space11, value1)| json::Value::List {
+                        |(space00, space01, value0, space10, space11, value1)| JsonValue::List {
                             space0: space00,
                             elements: vec![
-                                json::ListElement {
+                                JsonListElement {
                                     space0: "".to_string(),
                                     value: value0,
                                     space1: space01
                                 },
-                                json::ListElement {
+                                JsonListElement {
                                     space0: space10,
                                     value: value1,
                                     space1: space11
@@ -163,15 +162,15 @@ fn value() -> BoxedStrategy<json::Value> {
                     value_boolean()
                 )
                     .prop_map(
-                        |(space00, space01, value0, space10, space11, value1)| json::Value::List {
+                        |(space00, space01, value0, space10, space11, value1)| JsonValue::List {
                             space0: space00,
                             elements: vec![
-                                json::ListElement {
+                                JsonListElement {
                                     space0: "".to_string(),
                                     value: value0,
                                     space1: space01
                                 },
-                                json::ListElement {
+                                JsonListElement {
                                     space0: space10,
                                     value: value1,
                                     space1: space11
@@ -188,15 +187,15 @@ fn value() -> BoxedStrategy<json::Value> {
                     value_string()
                 )
                     .prop_map(
-                        |(space00, space01, value0, space10, space11, value1)| json::Value::List {
+                        |(space00, space01, value0, space10, space11, value1)| JsonValue::List {
                             space0: space00,
                             elements: vec![
-                                json::ListElement {
+                                JsonListElement {
                                     space0: "".to_string(),
                                     value: value0,
                                     space1: space01
                                 },
-                                json::ListElement {
+                                JsonListElement {
                                     space0: space10,
                                     value: value1,
                                     space1: space11
@@ -205,7 +204,7 @@ fn value() -> BoxedStrategy<json::Value> {
                         }
                     ),
                 // Object
-                (whitespace()).prop_map(|space0| json::Value::Object {
+                (whitespace()).prop_map(|space0| JsonValue::Object {
                     space0,
                     elements: vec![]
                 }),
@@ -217,9 +216,9 @@ fn value() -> BoxedStrategy<json::Value> {
                     whitespace()
                 )
                     .prop_map(|(space0, space1, space2, value, space3)| {
-                        json::Value::Object {
+                        JsonValue::Object {
                             space0,
-                            elements: vec![json::ObjectElement {
+                            elements: vec![JsonObjectElement {
                                 space0: "".to_string(),
                                 name: "key1".to_string(),
                                 space1,
@@ -253,7 +252,7 @@ fn format_token(token: Token) -> String {
     }
 }
 
-fn format_value(value: json::Value) -> String {
+fn format_value(value: JsonValue) -> String {
     let tokens = value.tokenize();
     //eprintln!("{:?}", tokens);
     tokens
@@ -272,8 +271,8 @@ fn test_echo() {
             //eprintln!("value={:#?}", value);
             let s = format_value(value);
             eprintln!("s={}", s);
-            let mut reader = hurl::parser::reader::Reader::init(s.as_str());
-            let parsed_value = hurl::parser::json::parse(&mut reader).unwrap();
+            let mut reader = Reader::init(s.as_str());
+            let parsed_value = parse_json(&mut reader).unwrap();
             assert_eq!(format_value(parsed_value), s);
 
             Ok(())
@@ -290,8 +289,8 @@ fn test_parse_files() {
         let path = p.unwrap().path();
         println!("parsing json file {}", path.display());
         let s = fs::read_to_string(path).expect("Something went wrong reading the file");
-        let mut reader = hurl::parser::reader::Reader::init(s.as_str());
-        let parsed_value = hurl::parser::json::parse(&mut reader).unwrap();
+        let mut reader = Reader::init(s.as_str());
+        let parsed_value = parse_json(&mut reader).unwrap();
 
         assert_eq!(format_value(parsed_value), s);
     }

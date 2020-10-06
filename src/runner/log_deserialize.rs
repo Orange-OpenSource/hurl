@@ -16,9 +16,10 @@
  *
  */
 
+use crate::http::*;
+
 use super::cookie::*;
 use super::core::*;
-use crate::http::*;
 
 type ParseError = String;
 
@@ -281,6 +282,7 @@ pub fn parse_request_cookie(value: serde_json::Value) -> Result<RequestCookie, P
     }
 }
 
+#[allow(dead_code)]
 pub fn parse_response_cookie(value: serde_json::Value) -> Result<ResponseCookie, ParseError> {
     if let serde_json::Value::Object(map) = value {
         let name = match map.get("name") {
@@ -373,6 +375,7 @@ fn parse_version(s: String) -> Result<Version, ParseError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::runner::value::Value;
 
     #[test]
     fn test_parse_request() {
@@ -512,6 +515,26 @@ mod tests {
         assert_eq!(
             parse_version("HTTP/1.0".to_string()).unwrap(),
             Version::Http10
+        );
+    }
+
+    #[test]
+    fn test_parse_value() {
+        assert_eq!(
+            Value::from_json(&serde_json::Value::String("hello".to_string())),
+            Value::String("hello".to_string())
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::Bool(true)),
+            Value::Bool(true)
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::from(1)),
+            Value::Integer(1)
+        );
+        assert_eq!(
+            Value::from_json(&serde_json::Value::from(1.5)),
+            Value::Float(1, 500_000_000_000_000_000)
         );
     }
 }

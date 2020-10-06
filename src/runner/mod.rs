@@ -23,22 +23,27 @@
 //!
 //!
 
+pub use self::core::{Error, HurlResult, RunnerError, RunnerOptions};
+pub use self::hurl_file::run as run_hurl_file;
+pub use self::log_deserialize::parse_results as deserialize_results;
+
 mod assert;
 mod body;
 mod capture;
 mod cookie;
-pub mod core;
+mod core;
 mod entry;
 mod expr;
-pub mod file;
 mod http_response;
+mod hurl_file;
 mod json;
-pub mod log_deserialize;
-pub mod log_serialize;
+mod log_deserialize;
+mod log_serialize;
 mod multipart;
 mod predicate;
 mod query;
-pub mod request;
+mod request;
 mod response;
 mod template;
+mod value;
 mod xpath;

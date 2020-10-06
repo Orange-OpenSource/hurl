@@ -17,14 +17,11 @@
  */
 use std::collections::HashMap;
 
-use crate::core::common::Value;
-use crate::core::common::{Pos, SourceInfo};
+use crate::ast::*;
 use crate::http;
-use crate::runner::core::RunnerError;
 
-use super::super::core::ast::*;
-use super::core::Error;
 use super::core::*;
+use super::value::Value;
 
 impl Response {
     pub fn eval_asserts(

@@ -17,10 +17,10 @@
  */
 use std::collections::HashMap;
 
-use crate::core::ast::Expr;
-use crate::core::common::Value;
+use crate::ast::Expr;
 
 use super::core::{Error, RunnerError};
+use super::value::Value;
 
 impl Expr {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<Value, Error> {

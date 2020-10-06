@@ -15,7 +15,14 @@
  * limitations under the License.
  *
  */
-use super::ast::Template;
+use super::core::Template;
+
+///
+/// This the AST for the JSON used within hurl
+///
+/// It is a superset of the standard json spec.
+/// Strings have been replaced by hurl template.
+///
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Value {
@@ -65,11 +72,11 @@ pub struct ObjectElement {
 
 #[cfg(test)]
 pub mod tests {
-    use super::super::ast::{Expr, TemplateElement, Variable, Whitespace};
-    use super::super::common::SourceInfo;
+    use super::super::core::SourceInfo;
+    use super::super::core::{Expr, TemplateElement, Variable, Whitespace};
     use super::*;
 
-    pub fn person_value() -> Value {
+    pub fn json_person_value() -> Value {
         Value::Object {
             space0: "\n    ".to_string(),
             elements: vec![ObjectElement {
@@ -90,7 +97,7 @@ pub mod tests {
         }
     }
 
-    pub fn hello_world_value() -> Value {
+    pub fn json_hello_world_value() -> Value {
         // "hello\u0020{{name}}!"
         Value::String(Template {
             quotes: true,

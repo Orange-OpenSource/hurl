@@ -18,15 +18,13 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-use crate::core::ast::*;
-use crate::core::common::SourceInfo;
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
+use crate::http::HttpError;
 
 use super::core::*;
 use super::core::{Error, RunnerError};
-use crate::format::logger::Logger;
-use crate::http::HttpError;
+use super::value::Value;
 
 /// Run an entry with the hurl http client
 ///
@@ -52,7 +50,8 @@ pub fn run(
     entry_index: usize,
     variables: &mut HashMap<String, Value>,
     context_dir: String,
-    logger: &Logger,
+    log_verbose: &impl Fn(&str),
+    log_error_message: &impl Fn(bool, &str),
 ) -> EntryResult {
     let http_request = match entry.clone().request.eval(variables, context_dir.clone()) {
         Ok(r) => r,
@@ -63,15 +62,13 @@ pub fn run(
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![error],
-
                 time_in_ms: 0,
             };
         }
     };
 
-    logger
-        .verbose("------------------------------------------------------------------------------");
-    logger.verbose(format!("executing entry {}", entry_index + 1).as_str());
+    log_verbose("------------------------------------------------------------------------------");
+    log_verbose(format!("executing entry {}", entry_index + 1).as_str());
 
     //
     // Experimental features
@@ -82,20 +79,23 @@ pub fn run(
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(cookie);
         } else {
-            logger.verbose(format!("cookie string can not be parsed: '{}'", s).as_str());
+            log_error_message(
+                true,
+                format!("cookie string can not be parsed: '{}'", s).as_str(),
+            );
         }
     }
     if entry.request.clear_cookie_storage() {
         http_client.clear_cookie_storage();
     }
 
-    logger.verbose("");
-    logger.verbose("Cookie store:");
+    log_verbose("");
+    log_verbose("Cookie store:");
     for cookie in http_client.get_cookie_storage() {
-        logger.verbose(cookie.to_string().as_str());
+        log_verbose(cookie.to_string().as_str());
     }
-    logger.verbose("");
-    log_request(logger, &http_request);
+    log_verbose("");
+    log_request(log_verbose, &http_request);
 
     let start = Instant::now();
     let http_response = match http_client.execute(&http_request, 0) {
@@ -134,7 +134,7 @@ pub fn run(
     };
 
     let time_in_ms = start.elapsed().as_millis();
-    logger.verbose(format!("Response Time: {}ms", time_in_ms).as_str());
+    log_verbose(format!("Response Time: {}ms", time_in_ms).as_str());
 
     let captures = match entry.response.clone() {
         None => vec![],
@@ -177,13 +177,13 @@ pub fn run(
         .collect();
 
     if !captures.is_empty() {
-        logger.verbose("Captures");
+        log_verbose("Captures");
         for capture in captures.clone() {
-            logger.verbose(format!("{}: {}", capture.name, capture.value).as_str());
+            log_verbose(format!("{}: {}", capture.name, capture.value).as_str());
         }
     }
 
-    logger.verbose("");
+    log_verbose("");
 
     EntryResult {
         request: Some(http_request),
@@ -195,39 +195,39 @@ pub fn run(
     }
 }
 
-pub fn log_request(logger: &Logger, request: &http::Request) {
-    logger.verbose("Request");
-    logger.verbose(format!("{} {}", request.method, request.url).as_str());
+pub fn log_request(log_verbose: impl Fn(&str), request: &http::Request) {
+    log_verbose("Request");
+    log_verbose(format!("{} {}", request.method, request.url).as_str());
     for header in request.headers.clone() {
-        logger.verbose(header.to_string().as_str());
+        log_verbose(header.to_string().as_str());
     }
     if !request.querystring.is_empty() {
-        logger.verbose("[QueryStringParams]");
+        log_verbose("[QueryStringParams]");
         for param in request.querystring.clone() {
-            logger.verbose(param.to_string().as_str());
+            log_verbose(param.to_string().as_str());
         }
     }
     if !request.form.is_empty() {
-        logger.verbose("[FormParams]");
+        log_verbose("[FormParams]");
         for param in request.form.clone() {
-            logger.verbose(param.to_string().as_str());
+            log_verbose(param.to_string().as_str());
         }
     }
     if !request.multipart.is_empty() {
-        logger.verbose("[MultipartFormData]");
+        log_verbose("[MultipartFormData]");
         for param in request.multipart.clone() {
-            logger.verbose(param.to_string().as_str());
+            log_verbose(param.to_string().as_str());
         }
     }
     if !request.cookies.is_empty() {
-        logger.verbose("[Cookies]");
+        log_verbose("[Cookies]");
         for cookie in request.cookies.clone() {
-            logger.verbose(cookie.to_string().as_str());
+            log_verbose(cookie.to_string().as_str());
         }
     }
     if let Some(s) = request.content_type.clone() {
-        logger.verbose("");
-        logger.verbose(format!("implicit content-type={}", s).as_str());
+        log_verbose("");
+        log_verbose(format!("implicit content-type={}", s).as_str());
     }
-    logger.verbose("");
+    log_verbose("");
 }

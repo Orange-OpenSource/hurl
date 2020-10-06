@@ -15,5 +15,8 @@
  * limitations under the License.
  *
  */
-pub mod ast;
-pub mod render;
+
+pub use self::ast::{Attribute, Body, Element, Head, Html};
+
+mod ast;
+mod render;

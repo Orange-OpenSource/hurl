@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
+
 // unique entry point to libxml
 extern crate libxml;
 
 use std::ffi::CStr;
 
-use super::super::core::common::Value;
+use super::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum XpathError {

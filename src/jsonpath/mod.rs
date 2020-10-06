@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  */
-pub mod ast;
-pub mod eval;
-pub mod parser;
+
+pub use self::parser::parse;
+
+mod ast;
+mod eval;
+mod parser;

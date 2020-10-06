@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-use super::super::core::ast::*;
+use crate::ast::*;
+
 use super::color::TerminalColor;
 use super::token::*;
 

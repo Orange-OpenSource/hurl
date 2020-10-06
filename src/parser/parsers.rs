@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
-use crate::core::common::SourceInfo;
+use crate::ast::*;
 
 use super::bytes::*;
 use super::combinators::*;
@@ -300,9 +299,6 @@ fn body(reader: &mut Reader) -> ParseResult<'static, Body> {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::Pos;
-    use crate::core::json;
-
     use super::*;
 
     #[test]
@@ -499,22 +495,22 @@ mod tests {
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json {
-                value: json::Value::List {
+                value: JsonValue::List {
                     space0: "".to_string(),
                     elements: vec![
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("1".to_string()),
+                            value: JsonValue::Number("1".to_string()),
                             space1: "".to_string(),
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("2".to_string()),
+                            value: JsonValue::Number("2".to_string()),
                             space1: "".to_string(),
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("3".to_string()),
+                            value: JsonValue::Number("3".to_string()),
                             space1: "".to_string(),
                         },
                     ],
@@ -528,7 +524,7 @@ mod tests {
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json {
-                value: json::Value::String(Template {
+                value: JsonValue::String(Template {
                     quotes: true,
                     elements: vec![TemplateElement::String {
                         value: "Hello".to_string(),
@@ -545,7 +541,7 @@ mod tests {
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json {
-                value: json::Value::Number("100".to_string())
+                value: JsonValue::Number("100".to_string())
             }
         );
     }
@@ -737,22 +733,22 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json {
-                value: json::Value::List {
+                value: JsonValue::List {
                     space0: "".to_string(),
                     elements: vec![
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("1".to_string()),
+                            value: JsonValue::Number("1".to_string()),
                             space1: "".to_string(),
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("2".to_string()),
+                            value: JsonValue::Number("2".to_string()),
                             space1: "".to_string(),
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("3".to_string()),
+                            value: JsonValue::Number("3".to_string()),
                             space1: "".to_string(),
                         },
                     ],
@@ -767,7 +763,7 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json {
-                value: json::Value::Object {
+                value: JsonValue::Object {
                     space0: "".to_string(),
                     elements: vec![],
                 }
@@ -781,7 +777,7 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json {
-                value: json::Value::Object {
+                value: JsonValue::Object {
                     space0: "".to_string(),
                     elements: vec![],
                 }

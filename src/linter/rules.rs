@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
-use crate::core::common::SourceInfo;
+use crate::ast::*;
 
 use super::core::{Error, Lintable, LinterError};
 

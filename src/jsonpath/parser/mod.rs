@@ -15,14 +15,9 @@
  * limitations under the License.
  *
  */
+
 use error::Error;
 use reader::Reader;
-
-pub mod combinators;
-pub mod error;
-pub mod parse;
-pub mod primitives;
-pub mod reader;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pos {
@@ -32,3 +27,11 @@ pub struct Pos {
 
 pub type ParseResult<'a, T> = std::result::Result<T, Error>;
 pub type ParseFunc<'a, T> = fn(&mut Reader) -> ParseResult<'a, T>;
+
+pub use self::parse::parse;
+
+mod combinators;
+mod error;
+mod parse;
+mod primitives;
+mod reader;

@@ -15,41 +15,14 @@
  * limitations under the License.
  *
  */
+use regex::Regex;
 use std::collections::HashMap;
 
-use regex::Regex;
+use crate::ast::*;
 
-use crate::core::common::Value;
-use crate::core::common::{Pos, SourceInfo};
-
-use super::super::core::ast::*;
 use super::core::*;
 use super::core::{Error, RunnerError};
-
-// equals 10         function  return ()
-// not equals 10
-// countEquals 3               return () => ok        PredicateExpectedError
-// not countEquals                           nok
-
-// PredicateValue   => Recoverable with a not
-// PredicateType
-
-// xpath boolean(//user) equals 10
-//                       ^^^^^^^^^^   Type does not matched with value return by query (generic message for the time-being
-// xpath boolean(//user) not equals 10
-//                       ^^^^^^^^^^^^^   Type does not matched with value return by query
-// xpath cont(//user)  equals 10
-//                     ^^^^^^^^^^^^^   actual value is 9
-// xpath cont(//user)  greaterThan 10
-//                     ^^^^^^^^^^^^^^   actual value is 9
-
-// Predicate
-// 2 evals
-
-// 1) eval template
-// 2) eval predicate
-
-// equals template  becomes and equals string
+use super::value::Value;
 
 impl Predicate {
     pub fn eval(self, variables: &HashMap<String, Value>, value: Option<Value>) -> PredicateResult {

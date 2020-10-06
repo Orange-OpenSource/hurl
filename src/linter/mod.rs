@@ -15,5 +15,8 @@
  * limitations under the License.
  *
  */
-pub mod core;
-pub mod rules;
+
+pub use self::core::{Error, Lintable, LinterError};
+
+mod core;
+mod rules;

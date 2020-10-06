@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::common::Pos;
+use crate::ast::Pos;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {

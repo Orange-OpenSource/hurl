@@ -25,10 +25,9 @@ use std::process;
 
 use atty::Stream;
 
-use hurl::core::common::FormatError;
-use hurl::format::html;
-use hurl::format::text;
-use hurl::linter::core::Lintable;
+use hurl::cli;
+use hurl::format;
+use hurl::linter::Lintable;
 use hurl::parser;
 
 fn main() {
@@ -123,6 +122,8 @@ fn main() {
         atty::is(Stream::Stdout)
     };
 
+    let log_error_message = cli::make_logger_error_message(output_color);
+
     let filename = match matches.value_of("INPUT") {
         None => "-",
         Some("-") => "-",
@@ -140,7 +141,7 @@ fn main() {
     };
 
     if matches.is_present("in_place") && filename == "-" {
-        eprintln!("You can not use inplace with standard input stream!");
+        log_error_message(false, "You can not use inplace with standard input stream!");
         std::process::exit(1);
     };
 
@@ -159,43 +160,31 @@ fn main() {
         .split(&contents)
         .collect();
 
-    let lines = lines.iter().map(|s| (*s).to_string()).collect();
+    let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
+    let optional_filename = if filename == "" {
+        None
+    } else {
+        Some(filename.to_string())
+    };
+    let log_parser_error =
+        cli::make_logger_parser_error(lines.clone(), output_color, optional_filename.clone());
+    let log_linter_error = cli::make_logger_linter_error(lines, output_color, optional_filename);
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
-            //eprintln!("Error {:?}", e);
-
-            let error = hurl::format::error::Error {
-                source_info: e.source_info(),
-                description: e.description(),
-                fixme: e.fixme(),
-                lines,
-                filename: filename.to_string(),
-                warning: true,
-                color: output_color,
-            };
-            eprintln!("{}", error.format());
+            log_parser_error(&e, false);
             process::exit(2);
         }
         Ok(hurl_file) => {
             if matches.is_present("check") {
                 for e in hurl_file.errors() {
-                    let error = hurl::format::error::Error {
-                        source_info: e.source_info(),
-                        description: e.description(),
-                        fixme: e.fixme(),
-                        lines: lines.clone(),
-                        filename: filename.to_string(),
-                        warning: true,
-                        color: output_color,
-                    };
-                    eprintln!("{}", error.format());
+                    log_linter_error(&e, true);
                 }
                 std::process::exit(1);
             } else if matches.is_present("ast_output") {
                 eprintln!("{:#?}", hurl_file);
             } else if matches.is_present("html_output") {
                 let standalone = matches.is_present("standalone");
-                println!("{}", html::format(hurl_file, standalone));
+                println!("{}", format::format_html(hurl_file, standalone));
             } else {
                 let hurl_file = if matches.is_present("no_format") {
                     hurl_file
@@ -205,13 +194,13 @@ fn main() {
                 if matches.is_present("in_place") {
                     match fs::File::create(filename) {
                         Ok(mut f) => {
-                            let s = text::format(hurl_file, false);
+                            let s = format::format_text(hurl_file, false);
                             f.write_all(s.as_bytes()).unwrap();
                         }
                         Err(_) => eprintln!("Error opening file {} in write mode", filename),
                     };
                 } else {
-                    print!("{}", text::format(hurl_file, output_color));
+                    print!("{}", format::format_text(hurl_file, output_color));
                 };
             }
         }

@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
+use super::json;
 use core::fmt;
 
-use super::common::SourceInfo;
-use super::json;
+///
+/// Hurl AST
+///
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlFile {
@@ -483,7 +485,7 @@ pub struct Number {
 
 // TBC: Issue with equality for f64
 // represent your float only with integers
-// must be easily compared to the core float value
+// must be easily compared to the ast float value
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Float {
     pub int: i64,
@@ -532,6 +534,38 @@ pub enum Bytes {
         filename: Filename,
         space1: Whitespace,
     },
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Pos {
+    pub line: usize,
+    pub column: usize,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SourceInfo {
+    pub start: Pos,
+    pub end: Pos,
+}
+
+impl SourceInfo {
+    pub fn init(
+        start_line: usize,
+        start_col: usize,
+        end_line: usize,
+        end_column: usize,
+    ) -> SourceInfo {
+        SourceInfo {
+            start: Pos {
+                line: start_line,
+                column: start_col,
+            },
+            end: Pos {
+                line: end_line,
+                column: end_column,
+            },
+        }
+    }
 }
 
 //

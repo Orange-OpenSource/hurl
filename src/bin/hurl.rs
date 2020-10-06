@@ -28,14 +28,11 @@ use chrono::{DateTime, Local};
 use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
-use hurl::core::common::FormatError;
-use hurl::format;
 use hurl::html;
 use hurl::http;
 use hurl::parser;
 use hurl::runner;
-use hurl::runner::core::*;
-use hurl::runner::log_deserialize;
+use hurl::runner::{HurlResult, RunnerOptions};
 use std::time::Duration;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -61,43 +58,49 @@ fn execute(
     current_dir: &Path,
     file_root: Option<String>,
     cli_options: CLIOptions,
-    logger: format::logger::Logger,
+    log_verbose: &impl Fn(&str),
+    log_error_message: &impl Fn(bool, &str),
 ) -> HurlResult {
+    let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+        .unwrap()
+        .split(&contents)
+        .map(|l| l.to_string())
+        .collect();
+    let optional_filename = if filename == "" {
+        None
+    } else {
+        Some(filename.to_string())
+    };
+    let log_parser_error =
+        cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
+    let log_runner_error =
+        cli::make_logger_runner_error(lines, cli_options.color, optional_filename);
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
-            let error = hurl::format::error::Error {
-                source_info: e.source_info(),
-                description: e.description(),
-                fixme: e.fixme(),
-                lines: vec![],
-                filename: "".to_string(),
-                warning: false,
-                color: logger.color,
-            };
-            logger.error(&error);
+            log_parser_error(&e, false);
             std::process::exit(2);
         }
         Ok(hurl_file) => {
-            logger.verbose(format!("fail fast: {}", cli_options.fail_fast).as_str());
-            logger.verbose(format!("insecure: {}", cli_options.insecure).as_str());
-            logger.verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
+            log_verbose(format!("fail fast: {}", cli_options.fail_fast).as_str());
+            log_verbose(format!("insecure: {}", cli_options.insecure).as_str());
+            log_verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
             if let Some(n) = cli_options.max_redirect {
-                logger.verbose(format!("max redirect: {}", n).as_str());
+                log_verbose(format!("max redirect: {}", n).as_str());
             }
             if let Some(proxy) = cli_options.proxy.clone() {
-                logger.verbose(format!("proxy: {}", proxy).as_str());
+                log_verbose(format!("proxy: {}", proxy).as_str());
             }
 
             if !cli_options.variables.is_empty() {
-                logger.verbose("variables:");
+                log_verbose("variables:");
                 for (name, value) in cli_options.variables.clone() {
-                    logger.verbose(format!("    {}={}", name, value).as_str());
+                    log_verbose(format!("    {}={}", name, value).as_str());
                 }
             }
 
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
-                    logger.verbose(
+                    log_verbose(
                         format!(
                             "executing {}/{} entries",
                             to_entry.to_string(),
@@ -106,7 +109,7 @@ fn execute(
                         .as_str(),
                     );
                 } else {
-                    logger.verbose("executing all entries");
+                    log_verbose("executing all entries");
                 }
             }
 
@@ -145,19 +148,20 @@ fn execute(
                 }
                 Some(filename) => filename,
             };
-
             let options = RunnerOptions {
                 fail_fast: cli_options.fail_fast,
                 variables: cli_options.variables,
                 to_entry: cli_options.to_entry,
+                context_dir,
             };
-            runner::file::run(
+            runner::run_hurl_file(
                 hurl_file,
                 &mut client,
                 filename.to_string(),
-                context_dir,
                 options,
-                logger,
+                &log_verbose,
+                &log_error_message,
+                &log_runner_error,
             )
         }
     }
@@ -173,63 +177,57 @@ fn output_color(matches: ArgMatches) -> bool {
     }
 }
 
-fn to_entry(matches: ArgMatches, logger: format::logger::Logger) -> Option<usize> {
+fn to_entry(matches: ArgMatches) -> Result<Option<usize>, cli::CLIError> {
     match matches.value_of("to_entry") {
         Some(value) => match value.parse() {
-            Ok(v) => Some(v),
-            Err(_) => {
-                logger.error_message(
-                    "Invalid value for option --to-entry - must be a positive integer!".to_string(),
-                );
-                std::process::exit(1);
-            }
+            Ok(v) => Ok(Some(v)),
+            Err(_) => Err(cli::CLIError {
+                message: "Invalid value for option --to-entry - must be a positive integer!"
+                    .to_string(),
+            }),
         },
-        None => None,
+        None => Ok(None),
     }
 }
 
 fn json_file(
     matches: ArgMatches,
-    logger: format::logger::Logger,
-) -> (Vec<HurlResult>, Option<std::path::PathBuf>) {
+    log_verbose: impl Fn(&str),
+) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), cli::CLIError> {
     if let Some(filename) = matches.value_of("json") {
         let path = Path::new(filename);
 
         let results = if matches.is_present("append") && std::path::Path::new(&path).exists() {
-            logger.verbose(format!("Appending session to {}", path.display()).as_str());
+            log_verbose(format!("Appending session to {}", path.display()).as_str());
 
             let data = fs::read_to_string(path).unwrap();
             let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
-                Ok(v) => v,
+                Ok(val) => val,
                 Err(_) => {
-                    logger.error_message(format!(
-                        "The file {} is not a valid json file",
-                        path.display()
-                    ));
-                    std::process::exit(127);
+                    return Err(cli::CLIError {
+                        message: format!("The file {} is not a valid json file", path.display()),
+                    });
                 }
             };
-            match log_deserialize::parse_results(v) {
+            match runner::deserialize_results(v) {
                 Err(msg) => {
-                    logger
-                        .error_message(format!("Existing Hurl json can not be parsed! -  {}", msg));
-                    std::process::exit(127);
+                    return Err(cli::CLIError {
+                        message: format!("Existing Hurl json can not be parsed! -  {}", msg),
+                    });
                 }
                 Ok(results) => results,
             }
         } else {
-            if matches.is_present("verbose") {
-                logger.error_message(format!("* Writing session to {}", path.display()));
-            }
+            log_verbose(format!("* Writing session to {}", path.display()).as_str());
             vec![]
         };
-        (results, Some(path.to_path_buf()))
+        Ok((results, Some(path.to_path_buf())))
     } else {
-        (vec![], None)
+        Ok((vec![], None))
     }
 }
 
-fn html_report(matches: ArgMatches, logger: format::logger::Logger) -> Option<std::path::PathBuf> {
+fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, cli::CLIError> {
     if let Some(dir) = matches.value_of("html_report") {
         let path = Path::new(dir);
         if std::path::Path::new(&path).exists() {
@@ -238,48 +236,51 @@ fn html_report(matches: ArgMatches, logger: format::logger::Logger) -> Option<st
                 .map(|mut i| i.next().is_none())
                 .unwrap_or(false)
             {
-                logger.error_message(format!(
-                    "Html dir {} already exists and is not empty",
-                    path.display()
-                ));
-                std::process::exit(127)
+                return Err(cli::CLIError {
+                    message: format!(
+                        "Html dir {} already exists and is not empty",
+                        path.display()
+                    ),
+                });
             }
-            Some(path.to_path_buf())
+            Ok(Some(path.to_path_buf()))
         } else {
             match std::fs::create_dir(path) {
-                Err(_) => {
-                    logger.error_message(format!("Html dir {} can not be created", path.display()));
-                    std::process::exit(127)
-                }
-                Ok(_) => Some(path.to_path_buf()),
+                Err(_) => Err(cli::CLIError {
+                    message: format!("Html dir {} can not be created", path.display()),
+                }),
+                Ok(_) => Ok(Some(path.to_path_buf())),
             }
         }
     } else {
-        None
+        Ok(None)
     }
 }
 
-fn variables(matches: ArgMatches, logger: format::logger::Logger) -> HashMap<String, String> {
+fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, cli::CLIError> {
     let mut variables = HashMap::new();
     if matches.is_present("variable") {
         let input: Vec<_> = matches.values_of("variable").unwrap().collect();
         for s in input {
             match s.find('=') {
                 None => {
-                    logger.error_message(format!("Missing variable value for {}!", s));
-                    std::process::exit(1);
+                    return Err(cli::CLIError {
+                        message: format!("Missing variable value for {}!", s),
+                    });
                 }
                 Some(index) => {
                     let (name, value) = s.split_at(index);
                     if variables.contains_key(name) {
-                        std::process::exit(1);
+                        return Err(cli::CLIError {
+                            message: format!("Variable {} defined twice!", name),
+                        });
                     }
                     variables.insert(name.to_string(), value[1..].to_string());
                 }
             };
         }
     }
-    variables
+    Ok(variables)
 }
 
 fn app() -> clap::App<'static, 'static> {
@@ -437,25 +438,25 @@ fn app() -> clap::App<'static, 'static> {
         )
 }
 
-pub fn unwrap_or_exit<T>(result: Result<T, cli::Error>, logger: format::logger::Logger) -> T {
+pub fn unwrap_or_exit<T>(
+    log_error_message: &impl Fn(bool, &str),
+    result: Result<T, cli::CLIError>,
+) -> T {
     match result {
         Ok(v) => v,
         Err(e) => {
-            logger.error_message(e.message);
+            log_error_message(false, e.message.as_str());
             std::process::exit(127);
         }
     }
 }
 
-fn parse_options(
-    matches: ArgMatches,
-    logger: format::logger::Logger,
-) -> Result<CLIOptions, cli::Error> {
+fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
     let verbose = matches.is_present("verbose");
     let color = output_color(matches.clone());
     let fail_fast = !matches.is_present("fail_at_end");
-    let variables = variables(matches.clone(), logger.clone());
-    let to_entry = to_entry(matches.clone(), logger);
+    let variables = variables(matches.clone())?;
+    let to_entry = to_entry(matches.clone())?;
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
     let insecure = matches.is_present("insecure");
@@ -467,7 +468,7 @@ fn parse_options(
         Some(s) => match s.parse::<usize>() {
             Ok(x) => Some(x),
             Err(_) => {
-                return Err(cli::Error {
+                return Err(cli::CLIError {
                     message: "max_redirs option can not be parsed".to_string(),
                 });
             }
@@ -479,7 +480,7 @@ fn parse_options(
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(cli::Error {
+                return Err(cli::CLIError {
                     message: "max_time option can not be parsed".to_string(),
                 });
             }
@@ -491,7 +492,7 @@ fn parse_options(
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(cli::Error {
+                return Err(cli::CLIError {
                     message: "connect-timeout option can not be parsed".to_string(),
                 });
             }
@@ -515,7 +516,7 @@ fn parse_options(
     })
 }
 
-fn main() -> Result<(), cli::Error> {
+fn main() {
     let app = app();
     let matches = app.clone().get_matches();
 
@@ -540,31 +541,25 @@ fn main() -> Result<(), cli::Error> {
         Some(value) => Some(value.to_string()),
         _ => None,
     };
+    let verbose = matches.is_present("verbose");
+    let log_verbose = cli::make_logger_verbose(verbose);
+    let color = output_color(matches.clone());
+    let log_error_message = cli::make_logger_error_message(color);
+    let cli_options = unwrap_or_exit(&log_error_message, parse_options(matches.clone()));
 
-    let logger = format::logger::Logger {
-        filename: None,
-        lines: vec![],
-        verbose: matches.is_present("verbose"),
-        color: output_color(matches.clone()),
-    };
-
-    let (mut hurl_results, json_file) = json_file(matches.clone(), logger.clone());
-    let html_report = html_report(matches.clone(), logger.clone());
+    let (mut hurl_results, json_file) =
+        unwrap_or_exit(&log_error_message, json_file(matches.clone(), &log_verbose));
+    let html_report = unwrap_or_exit(&log_error_message, html_report(matches.clone()));
     let cookies_output_file = match matches.value_of("cookies_output_file") {
         None => None,
         Some(filename) => {
             let filename = unwrap_or_exit(
-                cli::options::cookies_output_file(filename.to_string(), filenames.len()),
-                logger.clone(),
+                &log_error_message,
+                cli::cookies_output_file(filename.to_string(), filenames.len()),
             );
             Some(filename)
         }
     };
-
-    let cli_options = unwrap_or_exit(
-        parse_options(matches.clone(), logger.clone()),
-        logger.clone(),
-    );
 
     for filename in filenames {
         let contents = if filename == "-" {
@@ -575,30 +570,22 @@ fn main() -> Result<(), cli::Error> {
             contents
         } else {
             if !Path::new(filename).exists() {
-                logger.error_message(format!("Input file {} does not exit!", filename));
+                log_error_message(
+                    false,
+                    format!("Input file {} does not exit!", filename).as_str(),
+                );
                 std::process::exit(1);
             }
             fs::read_to_string(filename).expect("Something went wrong reading the file")
         };
-        let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(&contents)
-            .map(|l| l.to_string())
-            .collect();
-        let logger = format::logger::Logger {
-            filename: Some(filename.to_string()),
-            lines: lines.clone(),
-            verbose: cli_options.verbose,
-            color: cli_options.color,
-        };
-
         let hurl_result = execute(
             filename,
             contents,
             current_dir,
             file_root.clone(),
             cli_options.clone(),
-            logger.clone(),
+            &log_verbose,
+            &log_error_message,
         );
 
         if hurl_result.errors().is_empty() {
@@ -607,7 +594,7 @@ fn main() -> Result<(), cli::Error> {
             if let Some(entry_result) = hurl_result.entries.last() {
                 if let Some(response) = entry_result.response.clone() {
                     if matches.is_present("include") {
-                        logger.info(
+                        cli::log_info(
                             format!(
                                 "HTTP/{} {}",
                                 response.version.to_string(),
@@ -616,24 +603,28 @@ fn main() -> Result<(), cli::Error> {
                             .as_str(),
                         );
                         for header in response.headers.clone() {
-                            logger.info(format!("{}: {}", header.name, header.value).as_str());
+                            cli::log_info(format!("{}: {}", header.name, header.value).as_str());
                         }
-                        logger.info("");
+                        cli::log_info("");
                     }
 
-                    write_output(response.body, matches.value_of("output"), logger.clone());
+                    unwrap_or_exit(
+                        &log_error_message,
+                        write_output(response.body, matches.value_of("output")),
+                    );
                 } else {
-                    logger.warning_message("no response has been received".to_string());
+                    cli::log_info("no response has been received");
                 }
             } else {
-                logger.warning_message(format!(
-                    "warning: no entry have been executed {}",
-                    if filename == "-" {
-                        "".to_string()
-                    } else {
-                        format!("for file {}", filename)
-                    }
-                ));
+                let source = if filename == "-" {
+                    "".to_string()
+                } else {
+                    format!("for file {}", filename).to_string()
+                };
+                log_error_message(
+                    true,
+                    format!("no entry have been executed {}", source).as_str(),
+                );
             };
         }
 
@@ -643,34 +634,38 @@ fn main() -> Result<(), cli::Error> {
     if let Some(file_path) = json_file {
         let mut file = match std::fs::File::create(&file_path) {
             Err(why) => {
-                logger.error_message(format!(
-                    "Issue writing to {}: {:?}",
-                    file_path.display(),
-                    why
-                ));
+                log_error_message(
+                    false,
+                    format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
+                );
                 std::process::exit(127)
             }
             Ok(file) => file,
         };
         let serialized = serde_json::to_string_pretty(&hurl_results).unwrap();
         if let Err(why) = file.write_all(serialized.as_bytes()) {
-            logger.error_message(format!(
-                "Issue writing to {}: {:?}",
-                file_path.display(),
-                why
-            ));
+            log_error_message(
+                false,
+                format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
+            );
             std::process::exit(127)
         }
     }
 
     if let Some(dir_path) = html_report {
-        logger.verbose(format!("Writing html report to {}", dir_path.display()).as_str());
-        write_html_report(dir_path, hurl_results.clone(), logger.clone());
+        log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
+        unwrap_or_exit(
+            &log_error_message,
+            write_html_report(dir_path, hurl_results.clone()),
+        );
     }
 
     if let Some(file_path) = cookies_output_file {
-        logger.verbose(format!("Writing cookies to {}", file_path.display()).as_str());
-        write_cookies_file(file_path, hurl_results.clone(), logger);
+        log_verbose(format!("Writing cookies to {}", file_path.display()).as_str());
+        unwrap_or_exit(
+            &log_error_message,
+            write_cookies_file(file_path, hurl_results.clone()),
+        );
     }
 
     std::process::exit(exit_code(hurl_results));
@@ -680,7 +675,7 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for hurl_result in hurl_results.clone() {
-        let runner_errors: Vec<runner::core::Error> = hurl_result
+        let runner_errors: Vec<runner::Error> = hurl_result
             .clone()
             .errors()
             .iter()
@@ -704,7 +699,7 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     }
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<&str>, logger: format::logger::Logger) {
+fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), cli::CLIError> {
     match filename {
         None => {
             let stdout = io::stdout();
@@ -713,18 +708,21 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>, logger: format::logger::
             handle
                 .write_all(bytes.as_slice())
                 .expect("writing bytes to console");
+            Ok(())
         }
         Some(filename) => {
             let path = Path::new(filename);
             let mut file = match std::fs::File::create(&path) {
                 Err(why) => {
-                    logger.error_message(format!("Issue writing to {}: {:?}", path.display(), why));
-                    std::process::exit(127)
+                    return Err(cli::CLIError {
+                        message: format!("Issue writing to {}: {:?}", path.display(), why),
+                    });
                 }
                 Ok(file) => file,
             };
             file.write_all(bytes.as_slice())
                 .expect("writing bytes to file");
+            Ok(())
         }
     }
 }
@@ -732,16 +730,12 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>, logger: format::logger::
 fn write_cookies_file(
     file_path: PathBuf,
     hurl_results: Vec<HurlResult>,
-    logger: format::logger::Logger,
-) {
+) -> Result<(), cli::CLIError> {
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!(
-                "Issue writing to {}: {:?}",
-                file_path.display(),
-                why
-            ));
-            std::process::exit(127)
+            return Err(cli::CLIError {
+                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            });
         }
         Ok(file) => file,
     };
@@ -752,8 +746,9 @@ fn write_cookies_file(
     .to_string();
     match hurl_results.first() {
         None => {
-            logger.error_message("Issue fetching results".to_string());
-            std::process::exit(127)
+            return Err(cli::CLIError {
+                message: "Issue fetching results".to_string(),
+            });
         }
         Some(result) => {
             for cookie in result.cookies.clone() {
@@ -764,20 +759,17 @@ fn write_cookies_file(
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        logger.error_message(format!(
-            "Issue writing to {}: {:?}",
-            file_path.display(),
-            why
-        ));
-        std::process::exit(127)
+        return Err(cli::CLIError {
+            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+        });
     }
+    Ok(())
 }
 
 fn write_html_report(
     dir_path: PathBuf,
     hurl_results: Vec<HurlResult>,
-    logger: format::logger::Logger,
-) {
+) -> Result<(), cli::CLIError> {
     //let now: DateTime<Utc> = Utc::now();
     let now: DateTime<Local> = Local::now();
     let html = create_html_index(now.to_rfc2822(), hurl_results);
@@ -786,65 +778,54 @@ fn write_html_report(
     let file_path = dir_path.join("index.html");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!(
-                "Issue writing to {}: {:?}",
-                file_path.display(),
-                why
-            ));
-            std::process::exit(127)
+            return Err(cli::CLIError {
+                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(s.as_bytes()) {
-        logger.error_message(format!(
-            "Issue writing to {}: {:?}",
-            file_path.display(),
-            why
-        ));
-        std::process::exit(127)
+        return Err(cli::CLIError {
+            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+        });
     }
 
     let file_path = dir_path.join("report.css");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            logger.error_message(format!(
-                "Issue writing to {}: {:?}",
-                file_path.display(),
-                why
-            ));
-            std::process::exit(127)
+            return Err(cli::CLIError {
+                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(include_bytes!("report.css")) {
-        logger.error_message(format!(
-            "Issue writing to {}: {:?}",
-            file_path.display(),
-            why
-        ));
-        std::process::exit(127)
+        return Err(cli::CLIError {
+            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+        });
     }
+    Ok(())
 }
 
-fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::ast::Html {
-    let head = html::ast::Head {
+fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
+    let head = html::Head {
         title: "Hurl Report".to_string(),
         stylesheet: Some("report.css".to_string()),
     };
 
-    let body = html::ast::Body {
+    let body = html::Body {
         children: vec![
-            html::ast::Element::NodeElement {
+            html::Element::NodeElement {
                 name: "h2".to_string(),
                 attributes: vec![],
-                children: vec![html::ast::Element::TextElement("Hurl Report".to_string())],
+                children: vec![html::Element::TextElement("Hurl Report".to_string())],
             },
-            html::ast::Element::NodeElement {
+            html::Element::NodeElement {
                 name: "div".to_string(),
-                attributes: vec![html::ast::Attribute::Class("date".to_string())],
-                children: vec![html::ast::Element::TextElement(now)],
+                attributes: vec![html::Attribute::Class("date".to_string())],
+                children: vec![html::Element::TextElement(now)],
             },
-            html::ast::Element::NodeElement {
+            html::Element::NodeElement {
                 name: "table".to_string(),
                 attributes: vec![],
                 children: vec![
@@ -854,64 +835,64 @@ fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::ast::H
             },
         ],
     };
-    html::ast::Html { head, body }
+    html::Html { head, body }
 }
 
-fn create_html_table_header() -> html::ast::Element {
-    html::ast::Element::NodeElement {
+fn create_html_table_header() -> html::Element {
+    html::Element::NodeElement {
         name: "thead".to_string(),
         attributes: vec![],
-        children: vec![html::ast::Element::NodeElement {
+        children: vec![html::Element::NodeElement {
             name: "tr".to_string(),
             attributes: vec![],
             children: vec![
-                html::ast::Element::NodeElement {
+                html::Element::NodeElement {
                     name: "td".to_string(),
                     attributes: vec![],
-                    children: vec![html::ast::Element::TextElement("filename".to_string())],
+                    children: vec![html::Element::TextElement("filename".to_string())],
                 },
-                html::ast::Element::NodeElement {
+                html::Element::NodeElement {
                     name: "td".to_string(),
                     attributes: vec![],
-                    children: vec![html::ast::Element::TextElement("duration".to_string())],
+                    children: vec![html::Element::TextElement("duration".to_string())],
                 },
             ],
         }],
     }
 }
 
-fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::ast::Element {
+fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::Element {
     let children = hurl_results
         .iter()
         .map(|result| create_html_result(result.clone()))
         .collect();
 
-    html::ast::Element::NodeElement {
+    html::Element::NodeElement {
         name: "tbody".to_string(),
         attributes: vec![],
         children,
     }
 }
 
-fn create_html_result(result: HurlResult) -> html::ast::Element {
+fn create_html_result(result: HurlResult) -> html::Element {
     let status = if result.success {
         "success".to_string()
     } else {
         "failure".to_string()
     };
-    html::ast::Element::NodeElement {
+    html::Element::NodeElement {
         name: "tr".to_string(),
         attributes: vec![],
         children: vec![
-            html::ast::Element::NodeElement {
+            html::Element::NodeElement {
                 name: "td".to_string(),
-                attributes: vec![html::ast::Attribute::Class(status)],
-                children: vec![html::ast::Element::TextElement(result.filename.clone())],
+                attributes: vec![html::Attribute::Class(status)],
+                children: vec![html::Element::TextElement(result.filename.clone())],
             },
-            html::ast::Element::NodeElement {
+            html::Element::NodeElement {
                 name: "td".to_string(),
                 attributes: vec![],
-                children: vec![html::ast::Element::TextElement(format!(
+                children: vec![html::Element::TextElement(format!(
                     "{}s",
                     result.time_in_ms as f64 / 1000.0
                 ))],

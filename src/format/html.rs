@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use super::super::core::ast::*;
+use crate::ast::*;
 
 pub trait Htmlable {
     fn to_html(&self) -> String;

@@ -23,11 +23,11 @@ use std::collections::HashMap;
 #[allow(unused)]
 use std::io::prelude::*;
 
-use crate::core::ast::*;
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 
 use super::core::Error;
+use super::value::Value;
 
 impl Request {
     pub fn eval(
@@ -61,7 +61,7 @@ impl Request {
             form.push(http::Param { name, value });
         }
         //        if !self.clone().form_params().is_empty() {
-        //            headers.push(http::core::Header {
+        //            headers.push(http::ast::Header {
         //                name: String::from("Content-Type"),
         //                value: String::from("application/x-www-form-urlencoded"),
         //            });
@@ -105,7 +105,7 @@ impl Request {
         //        if self.content_type().is_none() {
         //            if let Some(body) = self.body {
         //                if let Bytes::Json { .. } = body.value {
-        //                    headers.push(http::core::Header {
+        //                    headers.push(http::ast::Header {
         //                        name: String::from("Content-Type"),
         //                        value: String::from("application/json"),
         //                    });
@@ -208,7 +208,7 @@ impl Method {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::SourceInfo;
+    use crate::ast::SourceInfo;
 
     use super::super::core::RunnerError;
     use super::*;

@@ -16,10 +16,12 @@
  *
  */
 
+use encoding::{DecoderTrap, EncodingRef};
+
+use crate::http::Response;
+
 use super::cookie::ResponseCookie;
 use super::core::RunnerError;
-use crate::http::Response;
-use encoding::{DecoderTrap, EncodingRef};
 
 impl Response {
     pub fn cookies(&self) -> Vec<ResponseCookie> {

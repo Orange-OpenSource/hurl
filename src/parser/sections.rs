@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
-use crate::core::common::Pos;
-use crate::core::common::SourceInfo;
+use crate::ast::*;
 
 use super::combinators::*;
 use super::error::*;
@@ -368,7 +366,7 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::common::Pos;
+    use crate::ast::Pos;
 
     #[test]
     fn test_section_name() {

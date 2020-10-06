@@ -18,14 +18,12 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-use crate::core::ast::*;
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 
-use super::super::format;
 use super::core::*;
 use super::entry;
-use crate::core::common::FormatError;
+use super::value::Value;
 
 /// Run a Hurl file with the hurl http client
 ///
@@ -33,8 +31,8 @@ use crate::core::common::FormatError;
 ///
 /// ```
 /// use hurl::http;
+/// use hurl::parser;
 /// use hurl::runner;
-/// use hurl::format;
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl".to_string();
@@ -42,7 +40,15 @@ use crate::core::common::FormatError;
 /// GET http://localhost:8000/hello
 /// HTTP/1.0 200
 /// "#;
-/// let hurl_file = hurl::parser::parse_hurl_file(s).unwrap();
+/// let hurl_file = parser::parse_hurl_file(s).unwrap();
+///
+/// // create loggers (function pointer or closure)
+/// fn log_verbose(message: &str) { eprintln!("* {}", message); }
+/// fn log_error_message(_warning:bool, message: &str) { eprintln!("{}", message); }
+/// fn log_error(error: &runner::Error, _warning: bool) { eprintln!("* {:#?}", error); }
+/// let log_verbose: fn(&str) = log_verbose;
+/// let log_error_message: fn(bool, &str) = log_error_message;
+/// let log_error: fn(&runner::Error, bool) = log_error;
 ///
 /// // Create an http client
 /// let options = http::ClientOptions {
@@ -60,42 +66,35 @@ use crate::core::common::FormatError;
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
-/// let options = runner::core::RunnerOptions {
+/// let options = runner::RunnerOptions {
 ///        fail_fast: false,
 ///        variables,
 ///        to_entry: None,
+///        context_dir: "current_dir".to_string(),
 ///  };
 ///
-/// // create a logger
-/// // It needs the text input as lines for reporting errors
-/// let lines = regex::Regex::new(r"\n|\r\n").unwrap().split(&s).map(|l| l.to_string()).collect();
-/// let logger = format::logger::Logger {
-///        filename: Some(filename.clone()),
-///        lines,
-///        verbose: false,
-///        color: false
-///    };
-///
 /// // Run the hurl file
-/// let context_dir = "current_dir".to_string();
-/// let hurl_results = runner::file::run(
+/// let hurl_results = runner::run_hurl_file(
 ///     hurl_file,
 ///     &mut client,
 ///     filename,
-///     context_dir,
 ///     options,
-///     logger
+///     &log_verbose,
+///     &log_error_message,
+///     &log_error,
 /// );
 /// assert!(hurl_results.success);
 ///
 /// ```
+///
 pub fn run(
     hurl_file: HurlFile,
     http_client: &mut http::Client,
     filename: String,
-    context_dir: String,
     options: RunnerOptions,
-    logger: format::logger::Logger,
+    log_verbose: &impl Fn(&str),
+    log_error_message: &impl Fn(bool, &str),
+    log_error: &impl Fn(&Error, bool),
 ) -> HurlResult {
     let mut entries = vec![];
     let mut variables = HashMap::default();
@@ -124,23 +123,14 @@ pub fn run(
             http_client,
             entry_index,
             &mut variables,
-            context_dir.clone(),
-            &logger,
+            options.context_dir.clone(),
+            &log_verbose,
+            &log_error_message,
         );
         entries.push(entry_result.clone());
         for e in entry_result.errors.clone() {
-            let error = format::error::Error {
-                source_info: e.clone().source_info,
-                description: e.clone().description(),
-                fixme: e.fixme(),
-                lines: vec![],
-                filename: "".to_string(),
-                warning: false,
-                color: false,
-            };
-            logger.clone().error(&error);
+            log_error(&e, false);
         }
-
         if options.fail_fast && !entry_result.errors.is_empty() {
             break;
         }
