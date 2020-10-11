@@ -71,10 +71,7 @@ impl TemplateElement {
 
 impl Value {
     pub fn is_renderable(&self) -> bool {
-        match self {
-            Value::Integer(_) | Value::Bool(_) | Value::Float(_, _) | Value::String(_) => true,
-            _ => false,
-        }
+        matches!(self, Value::Integer(_) | Value::Bool(_) | Value::Float(_, _) | Value::String(_))
     }
 }
 

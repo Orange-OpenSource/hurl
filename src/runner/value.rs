@@ -89,10 +89,7 @@ impl Value {
     }
 
     pub fn is_scalar(&self) -> bool {
-        match self {
-            Value::Nodeset(_) | Value::List(_) => false,
-            _ => true,
-        }
+        !matches!(self, Value::Nodeset(_) | Value::List(_))
     }
 }
 
