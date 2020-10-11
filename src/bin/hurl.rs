@@ -50,6 +50,7 @@ pub struct CLIOptions {
     pub cookie_input_file: Option<String>,
     pub timeout: Duration,
     pub connect_timeout: Duration,
+    pub compressed: bool,
 }
 
 fn execute(
@@ -123,6 +124,7 @@ fn execute(
 
             let timeout = cli_options.timeout;
             let connect_timeout = cli_options.connect_timeout;
+            let compressed = cli_options.compressed;
             let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
@@ -133,6 +135,7 @@ fn execute(
                 insecure,
                 timeout,
                 connect_timeout,
+                compressed,
             };
             let mut client = http::Client::init(options);
 
@@ -306,6 +309,11 @@ fn app() -> clap::App<'static, 'static> {
                 .long("color")
                 .conflicts_with("no-color")
                 .help("Colorize Output"),
+        )
+        .arg(
+            clap::Arg::with_name("compressed")
+                .long("compressed")
+                .help("Request compressed response (using deflate or gzip)"),
         )
         .arg(
             clap::Arg::with_name("connect_timeout")
@@ -498,6 +506,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
             }
         },
     };
+    let compressed = matches.is_present("compressed");
 
     Ok(CLIOptions {
         verbose,
@@ -513,6 +522,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         cookie_input_file,
         timeout,
         connect_timeout,
+        compressed,
     })
 }
 
