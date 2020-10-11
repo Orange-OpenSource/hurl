@@ -112,11 +112,7 @@ impl PredicateFunc {
     ) -> Result<AssertResult, Error> {
         match optional_value {
             None => {
-                let type_mismatch = if let PredicateFuncValue::Exist {} = self.value {
-                    false
-                } else {
-                    true
-                };
+                let type_mismatch = !matches!(self.value, PredicateFuncValue::Exist {});
                 Ok(AssertResult {
                     success: false,
                     actual: "none".to_string(),

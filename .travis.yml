@@ -1,7 +1,7 @@
 language: rust
 sudo: true
 rust:
-    - 1.46.0
+    - 1.47.0
 
 jobs:
   include:
