@@ -15,8 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
-use crate::core::common::SourceInfo;
+use crate::ast::*;
 
 use super::error::*;
 use super::primitives::*;
@@ -80,7 +79,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::Pos;
+    use crate::ast::Pos;
 
     use super::*;
 

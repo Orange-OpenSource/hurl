@@ -25,7 +25,7 @@ use serde_json::json;
 use hurl::jsonpath;
 
 fn test_ok(s: &str, value: serde_json::Value) -> Vec<serde_json::Value> {
-    return match jsonpath::parser::parse::parse(s) {
+    return match jsonpath::parse(s) {
         Ok(expr) => expr.eval(value),
         Err(e) => panic!("{:?}", e),
     };

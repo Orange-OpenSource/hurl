@@ -17,10 +17,10 @@
  */
 use std::collections::HashMap;
 
-use crate::core::ast::*;
-use crate::core::common::Value;
+use crate::ast::*;
 
 use super::core::{Error, RunnerError};
+use super::value::Value;
 
 impl Template {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
@@ -80,7 +80,7 @@ impl Value {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::SourceInfo;
+    use crate::ast::SourceInfo;
 
     use super::*;
 

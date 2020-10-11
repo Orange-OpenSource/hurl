@@ -16,9 +16,7 @@
  *
  */
 
-use crate::core::ast::TemplateElement;
-use crate::core::common::Pos;
-use crate::core::common::SourceInfo;
+use crate::ast::{Pos, SourceInfo, TemplateElement};
 
 use super::error;
 use super::expr;
@@ -132,8 +130,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
 #[cfg(test)]
 mod tests {
-    use crate::core::ast::Expr;
-    use crate::core::ast::{Variable, Whitespace};
+    use crate::ast::{Expr, Variable, Whitespace};
 
     use super::*;
 

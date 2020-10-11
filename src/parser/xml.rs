@@ -17,7 +17,7 @@
  */
 use sxd_document::parser;
 
-use crate::core::common::Pos;
+use crate::ast::Pos;
 
 use super::error::*;
 use super::reader::Reader;

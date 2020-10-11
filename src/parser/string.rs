@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
-use crate::core::common::Pos;
-use crate::core::common::SourceInfo;
+use crate::ast::*;
 
 use super::combinators::*;
 use super::error::*;

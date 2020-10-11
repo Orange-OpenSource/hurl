@@ -21,10 +21,10 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-use crate::core::common::Value;
+use crate::ast::*;
 
-use super::super::core::ast::*;
 use super::core::{Error, RunnerError};
+use super::value::Value;
 
 impl Body {
     pub fn eval(
@@ -87,7 +87,7 @@ impl Bytes {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::SourceInfo;
+    use crate::ast::SourceInfo;
 
     use super::*;
 

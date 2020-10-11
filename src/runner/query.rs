@@ -16,17 +16,16 @@
  *
  */
 
+use regex::Regex;
 use std::collections::HashMap;
 
-use regex::Regex;
-
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 use crate::jsonpath;
 
-use super::super::core::ast::*;
 use super::cookie;
 use super::core::{Error, RunnerError};
+use super::value::Value;
 use super::xpath;
 
 pub type QueryResult = Result<Option<Value>, Error>;
@@ -142,7 +141,7 @@ impl Query {
                 //                    }
                 //                };
                 // Using your own json implem
-                let query = match jsonpath::parser::parse::parse(value.as_str()) {
+                let query = match jsonpath::parse(value.as_str()) {
                     Ok(q) => q,
                     Err(_) => {
                         return Err(Error {
@@ -249,10 +248,38 @@ impl CookieAttributeName {
     }
 }
 
+impl Value {
+    pub fn from_json(value: &serde_json::Value) -> Value {
+        match value {
+            serde_json::Value::Null => Value::Null,
+            serde_json::Value::Bool(bool) => Value::Bool(*bool),
+            serde_json::Value::Number(n) => {
+                if n.is_f64() {
+                    Value::from_f64(n.as_f64().unwrap())
+                } else {
+                    Value::Integer(n.as_i64().unwrap())
+                }
+            }
+            serde_json::Value::String(s) => Value::String(s.to_string()),
+            serde_json::Value::Array(elements) => {
+                Value::List(elements.iter().map(|e| Value::from_json(e)).collect())
+            }
+            serde_json::Value::Object(map) => {
+                let mut elements = vec![];
+                for (key, value) in map {
+                    elements.push((key.to_string(), Value::from_json(value)));
+                    //
+                }
+                Value::Object(elements)
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::core::common::{Pos, SourceInfo};
+    use crate::ast::{Pos, SourceInfo};
 
     pub fn xpath_invalid_query() -> Query {
         // xpath ???

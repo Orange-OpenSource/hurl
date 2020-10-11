@@ -23,6 +23,7 @@ use crate::http::*;
 
 use super::cookie::*;
 use super::core::*;
+use super::value::Value;
 
 impl Serialize for HurlResult {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -223,5 +224,37 @@ impl Serialize for Cookie {
         state.serialize_field("name", &self.clone().name)?;
         state.serialize_field("value", &self.clone().value)?;
         state.end()
+    }
+}
+
+impl Serialize for Value {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Value::Bool(v) => serializer.serialize_bool(*v),
+            Value::Integer(v) => serializer.serialize_i64(*v),
+            Value::Float(i, d) => {
+                let value = *i as f64 + (*d as f64) / 1_000_000_000_000_000_000.0;
+                serializer.serialize_f64(value)
+            }
+            Value::String(s) => serializer.serialize_str(s),
+            Value::List(values) => serializer.collect_seq(values),
+            Value::Object(values) => serializer.collect_map(values.iter().map(|(k, v)| (k, v))),
+            Value::Nodeset(size) => {
+                let size = *size as i64;
+                serializer.collect_map(vec![
+                    ("type", serde_json::Value::String("nodeset".to_string())),
+                    ("size", serde_json::Value::from(size)),
+                ])
+            }
+            Value::Bytes(v) => {
+                let encoded = base64::encode(v);
+                serializer.serialize_str(&encoded)
+            }
+            Value::Null => serializer.serialize_none(),
+            Value::Unit => todo!("how to serialize that in json?"),
+        }
     }
 }

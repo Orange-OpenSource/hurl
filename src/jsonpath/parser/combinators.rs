@@ -19,47 +19,6 @@ use super::error::*;
 use super::reader::Reader;
 use super::{ParseFunc, ParseResult};
 
-pub fn optional<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, Option<T>> {
-    let start = p.state.clone();
-    match f(p) {
-        Ok(r) => Ok(Some(r)),
-        Err(e) => {
-            if e.recoverable {
-                p.state = start;
-                Ok(None)
-            } else {
-                Err(e)
-            }
-        }
-    }
-}
-
-// make an error recoverable
-// but does not reset cursor
-pub fn recover<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, T> {
-    //   let start = p.state.clone();
-    match f(p) {
-        Ok(r) => Ok(r),
-        Err(e) => Err(Error {
-            pos: e.pos,
-            recoverable: true,
-            inner: e.inner,
-        }),
-    }
-}
-
-pub fn nonrecover<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, T> {
-    //let start = p.state.clone();
-    match f(p) {
-        Ok(r) => Ok(r),
-        Err(e) => Err(Error {
-            pos: e.pos,
-            recoverable: false,
-            inner: e.inner,
-        }),
-    }
-}
-
 pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, Vec<T>> {
     let _start = p.state.clone();
 
@@ -87,40 +46,6 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
     }
 }
 
-pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Vec<T>> {
-    let _initial_state = reader.state.clone();
-    match f(reader) {
-        Ok(r) => {
-            let mut v = vec![r];
-            loop {
-                let initial_state = reader.state.clone();
-                match f(reader) {
-                    Ok(r) => {
-                        v.push(r);
-                    }
-                    Err(e) => {
-                        if e.recoverable {
-                            reader.state.pos = initial_state.pos;
-                            reader.state.cursor = initial_state.cursor;
-                            return Ok(v);
-                        } else {
-                            return Err(e);
-                        };
-                    }
-                }
-            }
-        }
-        Err(Error { pos, inner, .. }) => {
-            // if zero occurence => should fail?
-            Err(Error {
-                pos,
-                recoverable: false,
-                inner,
-            })
-        }
-    }
-}
-
 // return the last error when no default error is specified
 // tipically this should be recoverable
 pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, p: &mut Reader) -> ParseResult<'a, T> {
@@ -141,25 +66,6 @@ pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, p: &mut Reader) -> ParseResult<'
                     x => x,
                 }
             }
-        }
-    }
-}
-
-pub fn peek<T>(f: ParseFunc<T>, p: Reader) -> ParseResult<T> {
-    let start = p.state.clone();
-    let mut p = p;
-    match f(&mut p) {
-        Ok(r) => {
-            p.state = start;
-            Ok(r)
-        }
-        Err(e) => {
-            p.state = start;
-            Err(Error {
-                pos: e.pos,
-                recoverable: false,
-                inner: e.inner,
-            })
         }
     }
 }

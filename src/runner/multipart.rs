@@ -25,11 +25,11 @@ use std::io::prelude::*;
 use std::io::Read;
 use std::path::Path;
 
-use crate::core::ast::*;
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 
 use super::core::{Error, RunnerError};
+use super::value::Value;
 
 impl MultipartParam {
     pub fn eval(
@@ -140,7 +140,7 @@ impl FileValue {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::SourceInfo;
+    use crate::ast::SourceInfo;
 
     use super::*;
 

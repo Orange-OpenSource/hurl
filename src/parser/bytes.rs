@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::*;
+use crate::ast::*;
 
 use super::base64;
 use super::combinators::*;
@@ -86,8 +86,6 @@ fn base64_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::common::{Pos, SourceInfo};
-    use crate::core::json;
 
     use super::super::error::*;
     use super::*;
@@ -98,22 +96,22 @@ mod tests {
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json {
-                value: json::Value::List {
+                value: JsonValue::List {
                     space0: "".to_string(),
                     elements: vec![
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("1".to_string()),
+                            value: JsonValue::Number("1".to_string()),
                             space1: "".to_string()
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("2".to_string()),
+                            value: JsonValue::Number("2".to_string()),
                             space1: "".to_string()
                         },
-                        json::ListElement {
+                        JsonListElement {
                             space0: "".to_string(),
-                            value: json::Value::Number("3".to_string()),
+                            value: JsonValue::Number("3".to_string()),
                             space1: "".to_string()
                         },
                     ],
@@ -126,7 +124,7 @@ mod tests {
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json {
-                value: json::Value::Object {
+                value: JsonValue::Object {
                     space0: " ".to_string(),
                     elements: vec![],
                 }
@@ -138,7 +136,7 @@ mod tests {
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json {
-                value: json::Value::Boolean(true)
+                value: JsonValue::Boolean(true)
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -147,7 +145,7 @@ mod tests {
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json {
-                value: json::Value::String(Template {
+                value: JsonValue::String(Template {
                     quotes: true,
                     elements: vec![],
                     source_info: SourceInfo::init(1, 2, 1, 2),
@@ -236,7 +234,7 @@ mod tests {
         assert_eq!(
             json_bytes(&mut reader).unwrap(),
             Bytes::Json {
-                value: json::Value::Number("100".to_string())
+                value: JsonValue::Number("100".to_string())
             }
         );
     }

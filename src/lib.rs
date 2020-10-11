@@ -20,8 +20,8 @@
 #[macro_use]
 extern crate float_cmp;
 
+pub mod ast;
 pub mod cli;
-pub mod core;
 pub mod format;
 pub mod html;
 pub mod http;

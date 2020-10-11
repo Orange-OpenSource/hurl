@@ -17,22 +17,22 @@
  */
 use std::collections::HashMap;
 
-use crate::core::common::Value;
-use crate::core::json;
+use crate::ast::{JsonListElement, JsonObjectElement, JsonValue};
 
 use super::core::Error;
+use super::value::Value;
 
-impl json::Value {
+impl JsonValue {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
         match self {
-            json::Value::Null {} => Ok("null".to_string()),
-            json::Value::Number(s) => Ok(s),
-            json::Value::String(template) => {
+            JsonValue::Null {} => Ok("null".to_string()),
+            JsonValue::Number(s) => Ok(s),
+            JsonValue::String(template) => {
                 let s = template.eval(variables)?;
                 Ok(format!("\"{}\"", s))
             }
-            json::Value::Boolean(v) => Ok(v.to_string()),
-            json::Value::List { space0, elements } => {
+            JsonValue::Boolean(v) => Ok(v.to_string()),
+            JsonValue::List { space0, elements } => {
                 let mut elems_string = vec![];
                 for element in elements {
                     let s = element.eval(variables)?;
@@ -40,7 +40,7 @@ impl json::Value {
                 }
                 Ok(format!("[{}{}]", space0, elems_string.join(",")))
             }
-            json::Value::Object { space0, elements } => {
+            JsonValue::Object { space0, elements } => {
                 let mut elems_string = vec![];
                 for element in elements {
                     let s = element.eval(variables)?;
@@ -52,14 +52,14 @@ impl json::Value {
     }
 }
 
-impl json::ListElement {
+impl JsonListElement {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
         let s = self.value.eval(variables)?;
         Ok(format!("{}{}{}", self.space0, s, self.space1))
     }
 }
 
-impl json::ObjectElement {
+impl JsonObjectElement {
     pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
         let value = self.value.eval(variables)?;
         Ok(format!(
@@ -71,32 +71,30 @@ impl json::ObjectElement {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::ast::{Template, TemplateElement};
-    use crate::core::common::SourceInfo;
-
     use super::super::core::RunnerError;
     use super::*;
+    use crate::ast::*;
 
     #[test]
     fn test_scalar_value() {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
-            json::Value::Null {}.eval(&variables).unwrap(),
+            JsonValue::Null {}.eval(&variables).unwrap(),
             "null".to_string()
         );
         assert_eq!(
-            json::Value::Number("3.14".to_string())
+            JsonValue::Number("3.14".to_string())
                 .eval(&variables)
                 .unwrap(),
             "3.14".to_string()
         );
         assert_eq!(
-            json::Value::Boolean(false).eval(&variables).unwrap(),
+            JsonValue::Boolean(false).eval(&variables).unwrap(),
             "false".to_string()
         );
         assert_eq!(
-            json::tests::hello_world_value().eval(&variables).unwrap(),
+            json_hello_world_value().eval(&variables).unwrap(),
             "\"Hello Bob!\"".to_string()
         );
     }
@@ -104,10 +102,7 @@ mod tests {
     #[test]
     fn test_error() {
         let variables = HashMap::new();
-        let error = json::tests::hello_world_value()
-            .eval(&variables)
-            .err()
-            .unwrap();
+        let error = json_hello_world_value().eval(&variables).err().unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 15, 1, 19));
         assert_eq!(
             error.inner,
@@ -122,7 +117,7 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
-            json::Value::List {
+            JsonValue::List {
                 space0: "".to_string(),
                 elements: vec![],
             }
@@ -132,22 +127,22 @@ mod tests {
         );
 
         assert_eq!(
-            json::Value::List {
+            JsonValue::List {
                 space0: "".to_string(),
                 elements: vec![
-                    json::ListElement {
+                    JsonListElement {
                         space0: "".to_string(),
-                        value: json::Value::Number("1".to_string()),
+                        value: JsonValue::Number("1".to_string()),
                         space1: "".to_string()
                     },
-                    json::ListElement {
+                    JsonListElement {
                         space0: " ".to_string(),
-                        value: json::Value::Number("-2".to_string()),
+                        value: JsonValue::Number("-2".to_string()),
                         space1: "".to_string()
                     },
-                    json::ListElement {
+                    JsonListElement {
                         space0: " ".to_string(),
-                        value: json::Value::Number("3.0".to_string()),
+                        value: JsonValue::Number("3.0".to_string()),
                         space1: "".to_string()
                     },
                 ],
@@ -166,17 +161,17 @@ mod tests {
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
         assert_eq!(
-            json::Value::List {
+            JsonValue::List {
                 space0: "".to_string(),
                 elements: vec![
-                    json::ListElement {
+                    JsonListElement {
                         space0: "".to_string(),
-                        value: json::Value::String(template),
+                        value: JsonValue::String(template),
                         space1: "".to_string()
                     },
-                    json::ListElement {
+                    JsonListElement {
                         space0: " ".to_string(),
-                        value: json::tests::hello_world_value(),
+                        value: json_hello_world_value(),
                         space1: "".to_string()
                     },
                 ],
@@ -191,7 +186,7 @@ mod tests {
     fn test_object_value() {
         let variables = HashMap::new();
         assert_eq!(
-            json::Value::Object {
+            JsonValue::Object {
                 space0: "".to_string(),
                 elements: vec![]
             }
@@ -200,7 +195,7 @@ mod tests {
             "{}".to_string()
         );
         assert_eq!(
-            json::tests::person_value().eval(&variables).unwrap(),
+            json_person_value().eval(&variables).unwrap(),
             r#"{
     "firstName": "John"
 }"#

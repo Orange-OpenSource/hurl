@@ -15,25 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::core::ast::HurlFile;
-use error::Error;
-
-mod base64;
-mod bytes;
-mod combinators;
-mod cookiepath;
-pub mod error;
-mod expr;
-pub mod json;
-mod parsers;
-mod predicate;
-mod primitives;
-mod query;
-pub mod reader;
-mod sections;
-mod string;
-mod template;
-mod xml;
+use crate::ast::HurlFile;
 
 pub type ParseResult<'a, T> = std::result::Result<T, Error>;
 pub type ParseFunc<'a, T> = fn(&mut reader::Reader) -> ParseResult<'a, T>;
@@ -42,3 +24,25 @@ pub fn parse_hurl_file(s: &str) -> ParseResult<'static, HurlFile> {
     let mut reader = reader::Reader::init(s);
     parsers::hurl_file(&mut reader)
 }
+
+pub use self::error::{Error, ParseError};
+pub use self::json::parse as parse_json;
+pub use self::reader::Reader;
+pub use self::template::templatize;
+
+mod base64;
+mod bytes;
+mod combinators;
+mod cookiepath;
+mod error;
+mod expr;
+mod json;
+mod parsers;
+mod predicate;
+mod primitives;
+mod query;
+mod reader;
+mod sections;
+mod string;
+mod template;
+mod xml;

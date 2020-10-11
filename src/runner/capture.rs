@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
+use regex::Regex;
 use std::collections::HashMap;
 
-use regex::Regex;
-
-use crate::core::common::Value;
+use crate::ast::*;
 use crate::http;
 
-use super::super::core::ast::*;
 use super::core::RunnerError;
 use super::core::{CaptureResult, Error};
+use super::value::Value;
 
 impl Capture {
     pub fn eval(
@@ -101,7 +100,7 @@ impl Subquery {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::core::common::{Pos, SourceInfo};
+    use crate::ast::{Pos, SourceInfo};
 
     use super::*;
 
