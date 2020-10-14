@@ -53,7 +53,6 @@ fn test_hurl_file() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
-        compressed: false,
     };
     let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
@@ -160,7 +159,6 @@ fn test_hello() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
-        compressed: false,
     };
     let mut client = http::Client::init(options);
     let source_info = SourceInfo {

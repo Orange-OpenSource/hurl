@@ -27,7 +27,9 @@ use atty::Stream;
 use chrono::{DateTime, Local};
 use clap::{AppSettings, ArgMatches};
 
+use hurl::ast::{Pos, SourceInfo};
 use hurl::cli;
+use hurl::cli::Error;
 use hurl::html;
 use hurl::http;
 use hurl::parser;
@@ -124,7 +126,6 @@ fn execute(
 
             let timeout = cli_options.timeout;
             let connect_timeout = cli_options.connect_timeout;
-            let compressed = cli_options.compressed;
             let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
@@ -135,7 +136,6 @@ fn execute(
                 insecure,
                 timeout,
                 connect_timeout,
-                compressed,
             };
             let mut client = http::Client::init(options);
 
@@ -588,6 +588,7 @@ fn main() {
             }
             fs::read_to_string(filename).expect("Something went wrong reading the file")
         };
+
         let hurl_result = execute(
             filename,
             contents,
@@ -617,10 +618,32 @@ fn main() {
                         }
                         cli::log_info("");
                     }
-
+                    let body = if cli_options.compressed {
+                        match response.uncompress_body() {
+                            Ok(bytes) => bytes,
+                            Err(e) => {
+                                log_error_message(
+                                    false,
+                                    runner::Error {
+                                        source_info: SourceInfo {
+                                            start: Pos { line: 0, column: 0 },
+                                            end: Pos { line: 0, column: 0 },
+                                        },
+                                        inner: e,
+                                        assert: false,
+                                    }
+                                    .fixme()
+                                    .as_str(),
+                                );
+                                std::process::exit(3);
+                            }
+                        }
+                    } else {
+                        response.body
+                    };
                     unwrap_or_exit(
                         &log_error_message,
-                        write_output(response.body, matches.value_of("output")),
+                        write_output(body, matches.value_of("output")),
                     );
                 } else {
                     cli::log_info("no response has been received");

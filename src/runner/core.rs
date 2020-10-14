@@ -130,6 +130,9 @@ pub enum RunnerError {
     CouldNotParseResponse,
     SSLCertificate,
 
+    UnsupportedContentEncoding(String),
+    CouldNotUncompressResponse(String),
+
     FileReadAccess {
         value: String,
     },

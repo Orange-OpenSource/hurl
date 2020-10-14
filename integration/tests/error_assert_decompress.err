@@ -1,0 +1,7 @@
+error: Decompression Error
+  --> tests/error_assert_decompress.hurl:1:1
+   |
+ 1 | GET http://localhost:8000/error-assert-decompress
+   | ^ Could not uncompress response with gzip
+   |
+

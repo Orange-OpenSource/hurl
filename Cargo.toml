@@ -31,6 +31,9 @@ float-cmp = "0.6.0"
 encoding = "0.2"
 chrono = "0.4.11"
 curl = "0.4.33"
+brotli="3.3.0"
+libflate = "1.0.2"
+
 
 #[dev-dependencies]
 proptest = "0.9.4"
