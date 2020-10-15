@@ -65,7 +65,6 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub timeout: Duration,
     pub connect_timeout: Duration,
-    pub compressed: bool,
 }
 
 impl Client {
@@ -98,9 +97,6 @@ impl Client {
         h.timeout(options.timeout).unwrap();
         h.connect_timeout(options.connect_timeout).unwrap();
 
-        if options.compressed {
-            h.accept_encoding("br, gzip, deflate").unwrap();
-        }
         Client {
             handle: Box::new(h),
             follow_location: options.follow_location,

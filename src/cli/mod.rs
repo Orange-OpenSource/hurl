@@ -16,6 +16,7 @@
  *
  */
 
+pub use self::error::Error;
 pub use self::logger::{
     log_info, make_logger_error_message, make_logger_linter_error, make_logger_parser_error,
     make_logger_runner_error, make_logger_verbose,

@@ -55,7 +55,8 @@ impl Response {
     ///
     pub fn text(&self) -> Result<String, RunnerError> {
         let encoding = self.encoding()?;
-        match encoding.decode(&self.body, DecoderTrap::Strict) {
+        let body = &self.uncompress_body()?;
+        match encoding.decode(body, DecoderTrap::Strict) {
             Ok(s) => Ok(s),
             Err(_) => Err(RunnerError::InvalidDecoding {
                 charset: encoding.name().to_string(),

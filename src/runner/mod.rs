@@ -30,6 +30,7 @@ pub use self::log_deserialize::parse_results as deserialize_results;
 mod assert;
 mod body;
 mod capture;
+mod content_decoding;
 mod cookie;
 mod core;
 mod entry;

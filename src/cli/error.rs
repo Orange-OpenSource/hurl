@@ -124,6 +124,8 @@ impl Error for runner::Error {
             RunnerError::AssertFailure { .. } => "Assert Failure".to_string(),
             RunnerError::UnrenderableVariable { .. } => "Unrenderable Variable".to_string(),
             RunnerError::NoQueryResult { .. } => "No query result".to_string(),
+            RunnerError::UnsupportedContentEncoding(..) => "Decompression Error".to_string(),
+            RunnerError::CouldNotUncompressResponse(..) => "Decompression Error".to_string(),
         }
     }
 
@@ -196,6 +198,12 @@ impl Error for runner::Error {
                 format!("value {} can not be rendered", value)
             }
             RunnerError::NoQueryResult { .. } => "The query didn't return any result".to_string(),
+            RunnerError::UnsupportedContentEncoding(algorithm) => {
+                format!("Compression {} is not supported", algorithm)
+            }
+            RunnerError::CouldNotUncompressResponse(algorithm) => {
+                format!("Could not uncompress response with {}", algorithm)
+            }
         }
     }
 }
