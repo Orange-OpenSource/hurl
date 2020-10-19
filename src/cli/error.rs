@@ -189,8 +189,18 @@ impl Error for runner::Error {
                 format!("The charset '{}' is not valid", charset)
             }
             RunnerError::AssertFailure {
-                actual, expected, ..
-            } => format!("actual:   {}\nexpected: {}", actual, expected),
+                actual,
+                expected,
+                type_mismatch,
+                ..
+            } => {
+                let additional = if *type_mismatch {
+                    "\n>>> types between actual and expected are not consistent"
+                } else {
+                    ""
+                };
+                format!("actual:   {}\nexpected: {}{}", actual, expected, additional)
+            }
             RunnerError::VariableNotDefined { name } => {
                 format!("You must set the variable {}", name)
             }

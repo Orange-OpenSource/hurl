@@ -2,7 +2,8 @@ GET http://localhost:8000/assert-json
 HTTP/1.0 200
 [Asserts]
 jsonpath "$.success" equals false
-jsonpath "$.success" equals false
+jsonpath "$.success" not equals null
+jsonpath "$.success" exists
 jsonpath "$.errors" countEquals 2
 jsonpath "$.warnings" countEquals 0
 jsonpath "$.toto" not exists

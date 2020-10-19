@@ -22,3 +22,12 @@ error: Assert Failure
    |   expected: includes int <100>
    |
 
+error: Assert Failure
+  --> tests/error_assert_value_error.hurl:7:0
+   |
+ 7 | jsonpath "$.values" not contains "Hello"
+   |   actual:   [int <1>, int <2>, int <3>]
+   |   expected: not contains string <Hello>
+   |   >>> types between actual and expected are not consistent
+   |
+
