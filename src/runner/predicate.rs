@@ -38,11 +38,13 @@ impl Predicate {
             },
         };
         if assert_result.type_mismatch {
+            let not = if self.not { "not " } else { "" };
+            let expected = format!("{}{}", not, assert_result.expected);
             Err(Error {
                 source_info,
                 inner: RunnerError::AssertFailure {
                     actual: assert_result.actual,
-                    expected: assert_result.expected,
+                    expected,
                     type_mismatch: true,
                 },
                 assert: true,
@@ -112,12 +114,12 @@ impl PredicateFunc {
     ) -> Result<AssertResult, Error> {
         match optional_value {
             None => {
-                let type_mismatch = !matches!(self.value, PredicateFuncValue::Exist {});
+                //let type_mismatch = !matches!(self.value, PredicateFuncValue::Exist {});
                 Ok(AssertResult {
                     success: false,
                     actual: "none".to_string(),
                     expected: self.expected(variables)?,
-                    type_mismatch,
+                    type_mismatch: false,
                 })
             }
             Some(value) => self.eval_something(variables, value),
@@ -454,11 +456,17 @@ fn assert_values_equal(actual: Value, expected: Value) -> Result<AssertResult, E
             expected: expected.display(),
             type_mismatch: false,
         }),
-        _ => Ok(AssertResult {
+        (Value::Unit, _) => Ok(AssertResult {
             success: false,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: true,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
         }),
     }
 }
@@ -495,6 +503,13 @@ fn assert_include(value: Value, element: Value) -> Result<AssertResult, Error> {
 mod tests {
     use super::*;
 
+    fn whitespace() -> Whitespace {
+        Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        }
+    }
+
     #[test]
     fn test_invalid_xpath() {}
 
@@ -502,7 +517,7 @@ mod tests {
     fn test_predicate() {
         // not equals 10 with value 1     OK
         // not equals 10 with value 10    ValueError
-        // not equals 10 with value true  TypeError
+        // not equals 10 with value true  => this is now valid
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -521,20 +536,10 @@ mod tests {
             },
         };
 
-        let error = predicate
+        assert!(predicate
             .clone()
             .eval(&variables, Some(Value::Bool(true)))
-            .err()
-            .unwrap();
-        assert_eq!(
-            error.inner,
-            RunnerError::AssertFailure {
-                actual: "bool <true>".to_string(),
-                expected: "int <10>".to_string(),
-                type_mismatch: true,
-            }
-        );
-        assert_eq!(error.source_info, SourceInfo::init(1, 0, 1, 0));
+            .is_ok());
 
         let error = predicate
             .clone()
@@ -571,7 +576,7 @@ mod tests {
         .eval(&variables, Some(Value::Bool(true)))
         .unwrap();
         assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, true);
+        assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "bool <true>");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
     }
@@ -597,6 +602,7 @@ mod tests {
         assert_eq!(assert_result.actual.as_str(), "unit");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
     }
+
     #[test]
     fn test_predicate_value_error() {
         let variables = HashMap::new();
@@ -907,5 +913,95 @@ mod tests {
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "nodeset of size <1>");
         assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+    }
+
+    #[test]
+    fn test_predicate_not_with_different_types() {
+        // equals predicate does not generate a type error with an integer value
+        let predicate = Predicate {
+            not: true,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                source_info: SourceInfo::init(0, 0, 0, 0),
+                value: PredicateFuncValue::EqualNull {
+                    space0: whitespace(),
+                },
+            },
+        };
+
+        let variables = HashMap::new();
+        assert!(predicate.eval(&variables, Some(Value::Integer(1))).is_ok());
+        //assert!(predicate.eval(&variables, None).is_ok());
+
+        // startswith predicate generates a type error with an integer value
+        let predicate = Predicate {
+            not: true,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                source_info: SourceInfo::init(0, 0, 0, 0),
+                value: PredicateFuncValue::StartWith {
+                    space0: whitespace(),
+                    value: Template {
+                        quotes: false,
+                        elements: vec![TemplateElement::String {
+                            value: "toto".to_string(),
+                            encoded: "toto".to_string(),
+                        }],
+                        source_info: SourceInfo::init(0, 0, 0, 0),
+                    },
+                },
+            },
+        };
+        let error = predicate
+            .eval(&variables, Some(Value::Integer(1)))
+            .err()
+            .unwrap();
+        assert_eq!(
+            error.inner,
+            RunnerError::AssertFailure {
+                actual: "int <1>".to_string(),
+                expected: "not starts with string <toto>".to_string(),
+                type_mismatch: true
+            }
+        );
+    }
+
+    #[test]
+    fn test_no_type_mismatch_with_none_value() {
+        let predicate = Predicate {
+            not: false,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                source_info: SourceInfo::init(0, 0, 0, 0),
+                value: PredicateFuncValue::EqualNull {
+                    space0: whitespace(),
+                },
+            },
+        };
+
+        let variables = HashMap::new();
+        let error = predicate.eval(&variables, None).err().unwrap();
+        assert_eq!(
+            error.inner,
+            RunnerError::AssertFailure {
+                actual: "none".to_string(),
+                expected: "null".to_string(),
+                type_mismatch: false
+            }
+        );
+
+        let predicate = Predicate {
+            not: true,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                source_info: SourceInfo::init(0, 0, 0, 0),
+                value: PredicateFuncValue::EqualNull {
+                    space0: whitespace(),
+                },
+            },
+        };
+
+        let variables = HashMap::new();
+        assert!(predicate.eval(&variables, None).is_ok());
     }
 }

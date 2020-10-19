@@ -68,6 +68,7 @@ error: Assert Failure
 13 | jsonpath "$.message" countEquals 1
    |   actual:   string <0>
    |   expected: count equals to <1>
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert Failure
