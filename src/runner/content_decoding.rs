@@ -34,31 +34,49 @@ pub enum Encoding {
     Identity,
 }
 
+impl Encoding {
+    pub fn parse(s: &str) -> Result<Encoding, RunnerError> {
+        match s {
+            "br" => Ok(Encoding::Brotli),
+            "gzip" => Ok(Encoding::Gzip),
+            "deflate" => Ok(Encoding::Deflate),
+            "identity" => Ok(Encoding::Identity),
+            v => Err(RunnerError::UnsupportedContentEncoding(v.to_string())),
+        }
+    }
+
+    pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, RunnerError> {
+        match self {
+            Encoding::Identity => Ok(data.to_vec()),
+            Encoding::Gzip => uncompress_gzip(&data[..]),
+            Encoding::Deflate => uncompress_zlib(&data[..]),
+            Encoding::Brotli => uncompress_brotli(&data[..]),
+        }
+    }
+}
+
 impl http::Response {
-    fn content_encoding(&self) -> Result<Option<Encoding>, RunnerError> {
+    fn content_encoding(&self) -> Result<Vec<Encoding>, RunnerError> {
         for header in self.headers.clone() {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
-                return match header.value.as_str() {
-                    "br" => Ok(Some(Encoding::Brotli)),
-                    "gzip" => Ok(Some(Encoding::Gzip)),
-                    "deflate" => Ok(Some(Encoding::Deflate)),
-                    "identity" => Ok(Some(Encoding::Identity)),
-                    v => Err(RunnerError::UnsupportedContentEncoding(v.to_string())),
-                };
+                let mut encodings = vec![];
+                for value in header.value.as_str().split(',') {
+                    let encoding = Encoding::parse(value.trim())?;
+                    encodings.push(encoding);
+                }
+                return Ok(encodings);
             }
         }
-        Ok(None)
+        Ok(vec![])
     }
 
     pub fn uncompress_body(&self) -> Result<Vec<u8>, RunnerError> {
-        let encoding = self.content_encoding()?;
-        match encoding {
-            Some(Encoding::Identity) => Ok(self.body.clone()),
-            Some(Encoding::Gzip) => uncompress_gzip(&self.body[..]),
-            Some(Encoding::Deflate) => uncompress_zlib(&self.body[..]),
-            Some(Encoding::Brotli) => uncompress_brotli(&self.body[..]),
-            None => Ok(self.body.clone()),
+        let encodings = self.content_encoding()?;
+        let mut data = self.body.clone();
+        for encoding in encodings {
+            data = encoding.decode(&data)?
         }
+        Ok(data)
     }
 }
 
@@ -105,6 +123,15 @@ pub mod tests {
     use super::*;
 
     #[test]
+    fn test_parse_encoding() {
+        assert_eq!(Encoding::parse("br").unwrap(), Encoding::Brotli);
+        assert_eq!(
+            Encoding::parse("xx").err().unwrap(),
+            RunnerError::UnsupportedContentEncoding("xx".to_string())
+        );
+    }
+
+    #[test]
     fn test_content_encoding() {
         let response = http::Response {
             version: http::Version::Http10,
@@ -112,7 +139,7 @@ pub mod tests {
             headers: vec![],
             body: vec![],
         };
-        assert_eq!(response.content_encoding().unwrap(), None);
+        assert_eq!(response.content_encoding().unwrap(), vec![]);
 
         let response = http::Response {
             version: http::Version::Http10,
@@ -137,9 +164,23 @@ pub mod tests {
             }],
             body: vec![],
         };
+        assert_eq!(response.content_encoding().unwrap(), vec![Encoding::Brotli]);
+    }
+
+    #[test]
+    fn test_multiple_content_encoding() {
+        let response = http::Response {
+            version: http::Version::Http10,
+            status: 200,
+            headers: vec![http::Header {
+                name: "Content-Encoding".to_string(),
+                value: "br, identity".to_string(),
+            }],
+            body: vec![],
+        };
         assert_eq!(
-            response.content_encoding().unwrap().unwrap(),
-            Encoding::Brotli
+            response.content_encoding().unwrap(),
+            vec![Encoding::Brotli, Encoding::Identity]
         );
     }
 
@@ -151,6 +192,20 @@ pub mod tests {
             headers: vec![http::Header {
                 name: "Content-Encoding".to_string(),
                 value: "br".to_string(),
+            }],
+            body: vec![
+                0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
+                0x64, 0x21,
+            ],
+        };
+        assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
+
+        let response = http::Response {
+            version: http::Version::Http10,
+            status: 200,
+            headers: vec![http::Header {
+                name: "Content-Encoding".to_string(),
+                value: "br, identity".to_string(),
             }],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,

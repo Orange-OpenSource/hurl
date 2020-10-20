@@ -115,8 +115,8 @@ impl Response {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
-                                start: Pos { line: 1, column: 1 },
-                                end: Pos { line: 1, column: 1 },
+                                start: body.space0.source_info.end.clone(),
+                                end: body.space0.source_info.end.clone(),
                             },
                             inner: e,
                             assert: true,
@@ -134,8 +134,8 @@ impl Response {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
-                                start: Pos { line: 1, column: 1 },
-                                end: Pos { line: 1, column: 1 },
+                                start: body.space0.source_info.end.clone(),
+                                end: body.space0.source_info.end.clone(),
                             },
                             inner: e,
                             assert: true,
@@ -156,8 +156,8 @@ impl Response {
                         Ok(s) => Ok(Value::String(s)),
                         Err(e) => Err(Error {
                             source_info: SourceInfo {
-                                start: Pos { line: 1, column: 1 },
-                                end: Pos { line: 1, column: 1 },
+                                start: body.space0.source_info.end.clone(),
+                                end: body.space0.source_info.end.clone(),
                             },
                             inner: e,
                             assert: true,

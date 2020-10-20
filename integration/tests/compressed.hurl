@@ -25,3 +25,10 @@ Content-Length: 17
 Content-Encoding: br
 Content-Type: text/html; charset=utf-8
 ```Hello World!```
+
+GET http://localhost:8000/compressed/brotli_identity
+HTTP/1.0 200
+Content-Length: 17
+Content-Encoding: br, identity
+Content-Type: text/html; charset=utf-8
+```Hello World!```

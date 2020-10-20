@@ -30,7 +30,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -113,7 +113,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -201,7 +201,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -257,7 +257,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -304,7 +304,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -358,7 +358,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -378,7 +378,7 @@
       }
     ],
     "success": true,
-    "time": 20,
+    "time": 22,
     "cookies": []
   },
   {
@@ -412,7 +412,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -464,7 +464,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -518,7 +518,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -569,7 +569,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -633,7 +633,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -656,7 +656,7 @@
           {},
           {}
         ],
-        "time": 6
+        "time": 5
       },
       {
         "request": {
@@ -695,7 +695,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -737,7 +737,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -848,7 +848,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -897,7 +897,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -947,7 +947,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -985,7 +985,7 @@
             },
             {
               "name": "Content-Length",
-              "value": "16"
+              "value": "17"
             },
             {
               "name": "Content-Encoding",
@@ -997,7 +997,57 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "time": 1
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/compressed/brotli_identity",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "17"
+            },
+            {
+              "name": "Content-Encoding",
+              "value": "br, identity"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -1017,7 +1067,7 @@
       }
     ],
     "success": true,
-    "time": 11,
+    "time": 14,
     "cookies": []
   },
   {
@@ -1056,7 +1106,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -1098,7 +1148,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:27 GMT"
             }
           ]
         },
@@ -1150,7 +1200,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1193,7 +1243,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1240,7 +1290,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1270,7 +1320,7 @@
             {
               "name": "cookie2",
               "value": "",
-              "expires": "Mon, 19-Oct-2020 12:29:28 GMT",
+              "expires": "Tue, 20-Oct-2020 11:51:28 GMT",
               "max_age": 0,
               "path": "/"
             }
@@ -1282,7 +1332,7 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Mon, 19-Oct-2020 12:29:28 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Tue, 20-Oct-2020 11:51:28 GMT; Max-Age=0; Path=/"
             },
             {
               "name": "Content-Length",
@@ -1294,7 +1344,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1338,7 +1388,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1418,7 +1468,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1455,7 +1505,7 @@
         "include_subdomain": "FALSE",
         "path": "/",
         "https": "FALSE",
-        "expires": "1603110568",
+        "expires": "1603194688",
         "name": "cookie2",
         "value": ""
       },
@@ -1501,7 +1551,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1543,7 +1593,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1593,7 +1643,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1650,7 +1700,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1664,7 +1714,7 @@
           {},
           {}
         ],
-        "time": 5
+        "time": 6
       },
       {
         "request": {
@@ -1694,7 +1744,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1712,7 +1762,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 8,
     "cookies": []
   },
   {
@@ -1746,7 +1796,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1759,7 +1809,62 @@
           {},
           {}
         ],
-        "time": 6
+        "time": 5
+      }
+    ],
+    "success": false,
+    "time": 6,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_content_encoding.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error/content-encoding",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Encoding",
+              "value": "unknown"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "5"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [
+          {
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ],
+        "time": 5
       }
     ],
     "success": false,
@@ -1801,7 +1906,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1818,7 +1923,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -1852,7 +1957,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1903,7 +2008,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1954,7 +2059,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -1971,7 +2076,7 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2005,7 +2110,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2021,7 +2126,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2055,7 +2160,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2072,7 +2177,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 7,
     "cookies": []
   },
   {
@@ -2106,7 +2211,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2177,7 +2282,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2195,7 +2300,7 @@
           {},
           {}
         ],
-        "time": 5
+        "time": 6
       }
     ],
     "success": false,
@@ -2252,7 +2357,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2303,7 +2408,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:28 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2354,7 +2459,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2366,11 +2471,11 @@
           },
           {}
         ],
-        "time": 10
+        "time": 5
       }
     ],
     "success": false,
-    "time": 10,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2404,7 +2509,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2421,7 +2526,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2455,7 +2560,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2475,7 +2580,7 @@
       }
     ],
     "success": false,
-    "time": 10,
+    "time": 9,
     "cookies": []
   },
   {
@@ -2509,7 +2614,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2542,7 +2647,7 @@
       }
     ],
     "success": false,
-    "time": 9,
+    "time": 8,
     "cookies": []
   },
   {
@@ -2576,7 +2681,7 @@
       }
     ],
     "success": false,
-    "time": 60,
+    "time": 28,
     "cookies": []
   },
   {
@@ -2610,7 +2715,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2682,7 +2787,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2750,7 +2855,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2800,7 +2905,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2827,7 +2932,7 @@
       }
     ],
     "success": false,
-    "time": 17,
+    "time": 18,
     "cookies": []
   },
   {
@@ -2861,7 +2966,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2912,7 +3017,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -2925,11 +3030,11 @@
           {},
           {}
         ],
-        "time": 5
+        "time": 6
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2963,7 +3068,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -3027,7 +3132,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:29 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:28 GMT"
             }
           ]
         },
@@ -3091,7 +3196,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3139,7 +3244,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3208,7 +3313,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3255,7 +3360,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3305,7 +3410,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3356,7 +3461,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3407,7 +3512,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3470,7 +3575,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3482,7 +3587,7 @@
           },
           {}
         ],
-        "time": 1
+        "time": 2
       },
       {
         "request": {
@@ -3517,7 +3622,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3563,7 +3668,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3614,7 +3719,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3657,7 +3762,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3708,7 +3813,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3874,7 +3979,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3892,7 +3997,7 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -3926,7 +4031,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -3976,7 +4081,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4026,7 +4131,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4068,7 +4173,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4110,7 +4215,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4152,7 +4257,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4194,7 +4299,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4236,7 +4341,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4278,7 +4383,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4325,7 +4430,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4335,7 +4440,7 @@
       }
     ],
     "success": true,
-    "time": 18,
+    "time": 17,
     "cookies": []
   },
   {
@@ -4369,7 +4474,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4411,7 +4516,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4458,7 +4563,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4508,7 +4613,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4550,7 +4655,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4600,7 +4705,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4646,7 +4751,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4698,7 +4803,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4765,7 +4870,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4807,7 +4912,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4862,7 +4967,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4909,7 +5014,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -4963,7 +5068,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -5006,7 +5111,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
@@ -5056,7 +5161,7 @@
             },
             {
               "name": "Date",
-              "value": "Mon, 19 Oct 2020 12:29:31 GMT"
+              "value": "Tue, 20 Oct 2020 11:51:30 GMT"
             }
           ]
         },
