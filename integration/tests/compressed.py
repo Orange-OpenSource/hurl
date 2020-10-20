@@ -24,10 +24,21 @@ def compressed_zlib():
 def compressed_brotli():
     result = BytesIO()
 
-    result.write(b'\x21\x2c\x00\x04\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21')
+    result.write(b'\x21\x2c\x00\x04\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x03')
     data = result.getvalue()
     resp = make_response(data)
     resp.headers['Content-Encoding'] = 'br'
+    return resp
+
+
+@app.route("/compressed/brotli_identity")
+def compressed_brotli_identity():
+    result = BytesIO()
+
+    result.write(b'\x21\x2c\x00\x04\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x03')
+    data = result.getvalue()
+    resp = make_response(data)
+    resp.headers['Content-Encoding'] = 'br, identity'
     return resp
 
 @app.route("/compressed/none")
