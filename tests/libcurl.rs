@@ -427,6 +427,29 @@ fn test_post_bytes() {
 
 // endregion
 
+#[test]
+fn test_expect() {
+    let mut client = default_client();
+    let request = Request {
+        method: Method::Post,
+        url: "http://localhost:8000/expect".to_string(),
+        headers: vec![Header {
+            name: "Expect".to_string(),
+            value: "100-continue".to_string(),
+        }],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: b"data".to_vec(),
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+    assert_eq!(response.version, Version::Http10);
+    assert!(response.body.is_empty());
+}
+
 // region error
 
 #[test]

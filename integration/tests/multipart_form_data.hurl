@@ -6,7 +6,7 @@ upload1: file,hello.txt;
 upload2: file,hello.html;
 upload3: file,hello.txt; text/html
 
-HTTP/* 200
+HTTP/1.0 200
 
 
 

@@ -6,6 +6,7 @@ from flask import request
 def multipart_form_data():
 
     assert request.form['key1'] == 'value1'
+    assert 'Expect' not in request.headers
 
     upload1 = request.files['upload1']
     assert upload1.filename == 'hello.txt'

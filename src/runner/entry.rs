@@ -110,6 +110,10 @@ pub fn run(
                 HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
                 HttpError::SSLCertificate => RunnerError::SSLCertificate,
                 HttpError::InvalidUrl => RunnerError::InvalidURL(http_request.url.clone()),
+                HttpError::StatuslineIsMissing => RunnerError::HttpConnection {
+                    message: "status line is missing".to_string(),
+                    url: http_request.url.clone(),
+                },
                 HttpError::Other { description, .. } => RunnerError::HttpConnection {
                     message: description,
                     url: http_request.url.clone(),

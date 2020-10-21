@@ -25,7 +25,7 @@ jsonpath "$.nullable" equals null
 }
 
 GET http://localhost:8000/assert-json/index
-HTTP/* 200
+HTTP/1.0 200
 [Captures]
 index: body
 
