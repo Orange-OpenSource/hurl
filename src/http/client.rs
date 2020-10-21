@@ -53,6 +53,7 @@ pub struct Client {
     pub redirect_count: usize,
     pub max_redirect: Option<usize>,
     pub verbose: bool,
+    pub authorization: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -66,6 +67,7 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub timeout: Duration,
     pub connect_timeout: Duration,
+    pub user: Option<String>,
 }
 
 impl Client {
@@ -98,12 +100,14 @@ impl Client {
         h.timeout(options.timeout).unwrap();
         h.connect_timeout(options.connect_timeout).unwrap();
 
+        let authorization = options.user.map(|user| base64::encode(user.as_bytes()));
         Client {
             handle: Box::new(h),
             follow_location: options.follow_location,
             max_redirect: options.max_redirect,
             redirect_count: 0,
             verbose: options.verbose,
+            authorization,
         }
     }
 
@@ -301,13 +305,16 @@ impl Client {
             list.append("Expect:").unwrap(); // remove header Expect
         }
 
-        //        if request.form.is_empty() && request.multipart.is_empty() && request.body.is_empty() {
-        //            list.append("Content-Length:").unwrap();
-        //        }
-
         if get_header_values(request.headers.clone(), "User-Agent".to_string()).is_empty() {
             list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str())
                 .unwrap();
+        }
+
+        if let Some(authorization) = self.authorization.clone() {
+            if get_header_values(request.headers.clone(), "Authorization".to_string()).is_empty() {
+                list.append(format!("Authorization: Basic {}", authorization).as_str())
+                    .unwrap();
+            }
         }
 
         self.handle.http_headers(list).unwrap();
