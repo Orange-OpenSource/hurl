@@ -53,6 +53,7 @@ pub struct CLIOptions {
     pub timeout: Duration,
     pub connect_timeout: Duration,
     pub compressed: bool,
+    pub user: Option<String>,
 }
 
 fn execute(
@@ -126,6 +127,7 @@ fn execute(
 
             let timeout = cli_options.timeout;
             let connect_timeout = cli_options.connect_timeout;
+            let user = cli_options.user;
             let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
@@ -136,6 +138,7 @@ fn execute(
                 insecure,
                 timeout,
                 connect_timeout,
+                user,
             };
             let mut client = http::Client::init(options);
 
@@ -430,6 +433,14 @@ fn app() -> clap::App<'static, 'static> {
                 .takes_value(true),
         )
         .arg(
+            clap::Arg::with_name("user")
+                .short("u")
+                .long("user")
+                .value_name("user:password")
+                .help("Add basic Authentication header to each request.")
+                .takes_value(true),
+        )
+        .arg(
             clap::Arg::with_name("variable")
                 .long("variable")
                 .value_name("NAME=VALUE")
@@ -507,6 +518,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         },
     };
     let compressed = matches.is_present("compressed");
+    let user = matches.value_of("user").map(|x| x.to_string());
 
     Ok(CLIOptions {
         verbose,
@@ -523,6 +535,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         timeout,
         connect_timeout,
         compressed,
+        user,
     })
 }
 

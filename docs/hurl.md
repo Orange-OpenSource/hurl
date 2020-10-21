@@ -253,6 +253,9 @@ Write output to <file> instead of stdout.
 
 Use the specified proxy.
 
+### -u, --user <user:password> {#user}
+
+Add basic Authentication header to each request.
 
 
 ### --variable <name=value> {#variable}

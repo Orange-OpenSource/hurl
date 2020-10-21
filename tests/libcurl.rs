@@ -65,6 +65,7 @@ fn default_client() -> Client {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
+        user: None,
     };
     Client::init(options)
 }
@@ -306,6 +307,7 @@ fn test_follow_location() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
@@ -339,6 +341,7 @@ fn test_max_redirect() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
@@ -450,6 +453,38 @@ fn test_expect() {
     assert!(response.body.is_empty());
 }
 
+#[test]
+fn test_basic_authentication() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: true,
+        insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Duration::from_secs(300),
+        user: Some("bob:secret".to_string()),
+    };
+    let mut client = Client::init(options);
+    let request = Request {
+        method: Method::Get,
+        url: "http://localhost:8000/basic-authentication".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: vec![],
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.body, b"You are authenticated".to_vec());
+}
+
 // region error
 
 #[test]
@@ -478,6 +513,7 @@ fn test_error_fail_to_connect() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -497,6 +533,7 @@ fn test_error_could_not_resolve_proxy_name() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -516,6 +553,7 @@ fn test_timeout() {
         insecure: false,
         timeout: Duration::from_millis(100),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/timeout".to_string());
@@ -537,6 +575,7 @@ fn test_connect_timeout() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(1),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://example.com:81".to_string());
@@ -639,6 +678,7 @@ fn test_cookie_file() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request(
@@ -666,6 +706,7 @@ fn test_proxy() {
         insecure: false,
         timeout: Default::default(),
         connect_timeout: Default::default(),
+        user: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
