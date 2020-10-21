@@ -38,6 +38,7 @@ pub enum HttpError {
     SSLCertificate,
     InvalidUrl,
     Timeout,
+    StatuslineIsMissing,
     Other { description: String, code: u32 },
 }
 
@@ -152,7 +153,8 @@ impl Client {
             })
             .unwrap();
 
-        let mut lines = vec![];
+        let mut status_lines = vec![];
+        let mut headers = vec![];
         let mut body = Vec::<u8>::new();
         {
             let mut transfer = self.handle.transfer();
@@ -165,7 +167,11 @@ impl Client {
             transfer
                 .header_function(|h| {
                     if let Some(s) = decode_header(h) {
-                        lines.push(s)
+                        if s.starts_with("HTTP/") {
+                            status_lines.push(s);
+                        } else {
+                            headers.push(s)
+                        }
                     }
                     true
                 })
@@ -195,9 +201,11 @@ impl Client {
         }
 
         let status = self.handle.response_code().unwrap();
-        let first_line = lines.remove(0); // remove the status line
-        let version = self.parse_response_version(first_line)?;
-        let headers = self.parse_response_headers(&mut lines);
+        let version = match status_lines.last() {
+            None => return Err(HttpError::StatuslineIsMissing {}),
+            Some(status_line) => self.parse_response_version(status_line.clone())?,
+        };
+        let headers = self.parse_response_headers(&headers);
 
         if let Some(url) = self.get_follow_location(headers.clone()) {
             let request = Request {
@@ -287,6 +295,10 @@ impl Client {
             } else {
                 list.append("Content-Type:").unwrap(); // remove header Content-Type
             }
+        }
+
+        if get_header_values(request.headers.clone(), "Expect".to_string()).is_empty() {
+            list.append("Expect:").unwrap(); // remove header Expect
         }
 
         //        if request.form.is_empty() && request.multipart.is_empty() && request.body.is_empty() {
@@ -391,9 +403,8 @@ impl Client {
     ///
     /// parse headers from libcurl responses
     ///
-    fn parse_response_headers(&mut self, lines: &mut Vec<String>) -> Vec<Header> {
+    fn parse_response_headers(&mut self, lines: &[String]) -> Vec<Header> {
         let mut headers: Vec<Header> = vec![];
-        lines.pop(); // remove the blank line between headers and body
         for line in lines {
             if let Some(header) = Header::parse(line.to_string()) {
                 headers.push(header);
