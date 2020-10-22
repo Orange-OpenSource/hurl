@@ -9,6 +9,11 @@ HTTP/1.0 200
 GET http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session
 HTTP/1.0 200
 
+GET http://localhost:8000/cookies/set-multiple-request-cookies
+[Cookies]
+user1: Bob
+user2: Bill
+HTTP/1.0 200
 
 
 # Session Cookie
@@ -54,3 +59,5 @@ cookie "LSID[Path]" equals "/accounts"
 cookie "LSID[Secure]" exists
 cookie "LSID[HttpOnly]" exists
 cookie "LSID[SameSite]" not exists
+
+
