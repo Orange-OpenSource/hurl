@@ -7,6 +7,12 @@ def set_request_cookie1_value1():
     assert request.cookies['cookie1'] == 'valueA'
     return ''
 
+@app.route("/cookies/set-multiple-request-cookies")
+def set_multiple_request_cookies():
+    assert request.cookies['user1'] == 'Bob'
+    assert request.cookies['user2'] == 'Bill'
+    return ''
+
 
 @app.route("/cookies/set-session-cookie2-valueA")
 def set_session_cookie2_valuea():

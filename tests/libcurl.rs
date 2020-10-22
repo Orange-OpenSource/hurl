@@ -620,14 +620,34 @@ fn test_cookie() {
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
+}
 
-    // For the time-being setting a cookie on a request
-    // update the cookie store as well
-    // The same cookie does not need to be set explicitly on further requests
-    // let request = default_get_request("http://localhost:8000/cookies/set-request-cookie1-valueA".to_string());
-    // let response = client.execute(&request, 0).unwrap();
-    // assert_eq!(response.status, 200);
-    // assert!(response.body.is_empty());
+#[test]
+fn test_multiple_request_cookies() {
+    let mut client = default_client();
+    let request = Request {
+        method: Method::Get,
+        url: "http://localhost:8000/cookies/set-multiple-request-cookies".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![
+            RequestCookie {
+                name: "user1".to_string(),
+                value: "Bob".to_string(),
+            },
+            RequestCookie {
+                name: "user2".to_string(),
+                value: "Bill".to_string(),
+            },
+        ],
+        body: vec![],
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+    assert!(response.body.is_empty());
 }
 
 #[test]

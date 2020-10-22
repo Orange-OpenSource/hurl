@@ -324,9 +324,12 @@ impl Client {
     /// set request cookies
     ///
     fn set_cookies(&mut self, cookies: &[RequestCookie]) {
-        for cookie in cookies {
-            self.handle.cookie(cookie.to_string().as_str()).unwrap();
-        }
+        let s = cookies
+            .iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>()
+            .join("; ");
+        self.handle.cookie(s.as_str()).unwrap();
     }
 
     ///
