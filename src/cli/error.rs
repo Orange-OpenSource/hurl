@@ -144,7 +144,7 @@ impl Error for runner::Error {
             RunnerError::Timeout => "Timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "Too many redirect".to_string(),
             RunnerError::CouldNotParseResponse => "Could not parse response".to_string(),
-            RunnerError::SSLCertificate => "SSl Certificate".to_string(),
+            RunnerError::SSLCertificate => "SSL certificate problem".to_string(),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {

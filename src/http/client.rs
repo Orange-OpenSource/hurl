@@ -94,8 +94,8 @@ impl Client {
             h.noproxy(s.as_str()).unwrap();
         }
         h.verbose(options.verbose).unwrap();
-        h.ssl_verify_host(options.insecure).unwrap();
-        h.ssl_verify_peer(options.insecure).unwrap();
+        h.ssl_verify_host(!options.insecure).unwrap();
+        h.ssl_verify_peer(!options.insecure).unwrap();
 
         h.timeout(options.timeout).unwrap();
         h.connect_timeout(options.connect_timeout).unwrap();
