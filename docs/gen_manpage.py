@@ -8,16 +8,31 @@ def header(version):
 
 
 def version():
-    s = open('../Cargo.toml', 'r').read()
-    p = re.compile('version(.*)"')
-    p = re.compile('(.*)', re.MULTILINE)
-    m = p.match(s)
-    return '0.99'
+    p = re.compile('version = "(.*)"')
+    for line in open('../Cargo.toml', 'r').readlines():
+        m = p.match(line)
+        if m:
+            return m.group(1)
+    return None
 
 
 def process_code_block(s):
-    p = re.compile("```(.*?)```" , re.DOTALL )
-    return p.sub('\\\\f[C]\\1\\\\f[R]', s)
+    output = ''
+    indent = False
+    for line in s.split('\n'):
+        if indent and line.startswith('```'):
+            indent = False
+        elif not indent and line.startswith('```'):
+            indent = True
+        else:
+            if line != '':
+                if indent:
+                    output += '    '
+                output += line
+            output += '\n'
+
+    return output
+    #p.sub('\\\\f[C]\\1\\\\f[R]', s)
 
 
 def convert_md(s):
@@ -49,7 +64,8 @@ def main():
     print(header(version()))
 
     s = ''.join([convert_md(line) for line in data])
-    #s = process_code_block(s)
+
+    s = process_code_block(s)
     print(s)
 
 

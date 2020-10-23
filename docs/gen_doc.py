@@ -3,6 +3,7 @@ import sys
 import re
 
 
+
 def header():
    return '''---
 layout: doc
@@ -10,6 +11,24 @@ title: Man Page
 ---
 # {{ page.title }}
 '''
+
+
+def process_code_block(s):
+    output = ''
+    in_code = False
+    for line in s.split('\n'):
+        if not in_code and line.startswith('```'):
+            output += '{% raw %}\n'
+            output += line + '\n'
+            in_code = True
+        elif in_code and line.startswith('```'):
+            output += line + '\n'
+            output += '{% endraw %}\n'
+            in_code = False
+        else:
+            output += line + '\n'
+
+    return output
 
 
 def escape(s):
@@ -36,6 +55,7 @@ def main():
     s = ''.join(lines)
     s = escape(s)
     s = add_anchor_for_h2(s)
+    s = process_code_block(s)
     print(header() + s)
 
 
