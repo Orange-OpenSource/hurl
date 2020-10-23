@@ -368,7 +368,7 @@ fn app() -> clap::App<'static, 'static> {
             clap::Arg::with_name("insecure")
                 .short("k")
                 .long("insecure")
-                .help("Allow insecure SSl connections"),
+                .help("Allow insecure SSL connections"),
         )
         .arg(
             clap::Arg::with_name("json")
