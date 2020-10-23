@@ -329,7 +329,9 @@ impl Client {
             .map(|c| c.to_string())
             .collect::<Vec<String>>()
             .join("; ");
-        self.handle.cookie(s.as_str()).unwrap();
+        if !s.is_empty() {
+            self.handle.cookie(s.as_str()).unwrap();
+        }
     }
 
     ///

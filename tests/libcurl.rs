@@ -605,21 +605,23 @@ fn test_cookie() {
         content_type: None,
     };
 
-    // set cookie from the request cookie (temporary)
-    let request_cookie = request.cookies.get(0).unwrap();
-    let cookie = Cookie {
-        domain: "localhost".to_string(),
-        include_subdomain: "FALSE".to_string(),
-        path: "/".to_string(),
-        https: "FALSE".to_string(),
-        expires: "0".to_string(),
-        name: request_cookie.name.clone(),
-        value: request_cookie.value.clone(),
-    };
-    client.add_cookie(cookie);
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
+
+    let request = Request {
+        method: Method::Get,
+        url: "http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: vec![],
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
 }
 
 #[test]
