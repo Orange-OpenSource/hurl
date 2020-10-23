@@ -5,12 +5,14 @@ from tests import app
 @app.route("/cookies/set-request-cookie1-valueA")
 def set_request_cookie1_value1():
     assert request.cookies['cookie1'] == 'valueA'
+    assert request.headers['Cookie'] == 'cookie1=valueA'
     return ''
 
 @app.route("/cookies/set-multiple-request-cookies")
 def set_multiple_request_cookies():
     assert request.cookies['user1'] == 'Bob'
     assert request.cookies['user2'] == 'Bill'
+    assert request.headers['Cookie'] == 'user1=Bob; user2=Bill'
     return ''
 
 
@@ -50,6 +52,7 @@ def delete_cookie2():
 @app.route("/cookies/assert-that-cookie1-is-not-in-session")
 def assert_that_cookie1_is_not_in_session():
     assert'cookie1' not in request.cookies
+    assert 'Cookie' not in request.headers
     return ''
 
 
