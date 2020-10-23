@@ -30,20 +30,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:55 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -113,62 +106,18 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:55 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
     "time": 6,
-    "cookies": [
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "FALSE",
-        "expires": "0",
-        "name": "cookie1",
-        "value": "value1"
-      },
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "FALSE",
-        "expires": "0",
-        "name": "cookie2",
-        "value": "value2"
-      },
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "FALSE",
-        "expires": "0",
-        "name": "cookie3",
-        "value": "value3"
-      }
-    ]
+    "cookies": []
   },
   {
     "filename": "tests/assert_json.hurl",
@@ -201,33 +150,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -257,24 +186,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "index",
-            "value": "1"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -304,23 +222,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -358,27 +266,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 21,
+    "time": 20,
     "cookies": []
   },
   {
@@ -412,25 +310,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 8,
+    "time": 9,
     "cookies": []
   },
   {
@@ -464,23 +354,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -501,7 +381,7 @@
         },
         "response": {
           "httpVersion": "HTTP/1.0",
-          "status": 500,
+          "status": 200,
           "cookies": [],
           "headers": [
             {
@@ -509,12 +389,8 @@
               "value": "text/html; charset=utf-8"
             },
             {
-              "name": "X-XSS-Protection",
-              "value": "0"
-            },
-            {
-              "name": "Connection",
-              "value": "close"
+              "name": "Content-Length",
+              "value": "21"
             },
             {
               "name": "Server",
@@ -522,24 +398,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 11
+        "asserts": [],
+        "time": 0
       }
     ],
-    "success": false,
-    "time": 13,
+    "success": true,
+    "time": 6,
     "cookies": []
   },
   {
@@ -573,24 +442,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -624,25 +486,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "content_type",
-            "value": "text/html; charset=utf-8"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 6
+        "captures": [],
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -688,30 +538,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "param1",
-            "value": "value1"
-          },
-          {
-            "name": "param2",
-            "value": "Bob"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -750,19 +583,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -792,80 +619,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "an_object",
-            "value": {
-              "id": "123"
-            }
-          },
-          {
-            "name": "a_list",
-            "value": [
-              1,
-              2,
-              3
-            ]
-          },
-          {
-            "name": "a_null",
-            "value": null
-          },
-          {
-            "name": "an_integer",
-            "value": 1
-          },
-          {
-            "name": "a_float",
-            "value": 1.1
-          },
-          {
-            "name": "a_bool",
-            "value": true
-          },
-          {
-            "name": "a_string",
-            "value": "hello"
-          },
-          {
-            "name": "all",
-            "value": {
-              "a_bool": true,
-              "a_float": 1.1,
-              "a_list": [
-                1,
-                2,
-                3
-              ],
-              "a_null": null,
-              "a_string": "hello",
-              "an_integer": 1,
-              "an_object": {
-                "id": "123"
-              }
-            }
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "captures": [],
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -903,22 +663,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -952,23 +703,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1002,23 +743,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1052,23 +783,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1102,23 +823,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -1161,19 +872,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1203,19 +908,58 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/cookies/set-multiple-request-cookies",
+          "queryString": [],
+          "headers": [],
+          "cookies": [
+            {
+              "name": "user1",
+              "value": "Bob"
+            },
+            {
+              "name": "user2",
+              "value": "Bill"
+            }
+          ],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1255,20 +999,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1298,19 +1035,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1345,19 +1076,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1375,7 +1100,7 @@
             {
               "name": "cookie2",
               "value": "",
-              "expires": "Wed, 21-Oct-2020 11:08:01 GMT",
+              "expires": "Fri, 23-Oct-2020 13:38:56 GMT",
               "max_age": 0,
               "path": "/"
             }
@@ -1387,7 +1112,7 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Wed, 21-Oct-2020 11:08:01 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Fri, 23-Oct-2020 13:38:56 GMT; Max-Age=0; Path=/"
             },
             {
               "name": "Content-Length",
@@ -1399,21 +1124,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1443,19 +1160,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1523,57 +1234,18 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
     "time": 20,
-    "cookies": [
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "FALSE",
-        "expires": "1603278481",
-        "name": "cookie2",
-        "value": ""
-      },
-      {
-        "domain": "#HttpOnly_localhost",
-        "include_subdomain": "FALSE",
-        "path": "/accounts",
-        "https": "TRUE",
-        "expires": "1610576581",
-        "name": "LSID",
-        "value": "DQAAAKEaem_vYg"
-      }
-    ]
+    "cookies": []
   },
   {
     "filename": "tests/cookie_storage.hurl",
@@ -1606,19 +1278,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1648,19 +1314,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -1698,19 +1358,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -1755,21 +1409,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -1799,25 +1445,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 8,
+    "time": 7,
     "cookies": []
   },
   {
@@ -1851,20 +1489,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -1906,20 +1537,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -1961,20 +1585,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2012,20 +1629,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2063,20 +1673,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2114,20 +1717,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2165,19 +1761,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "2"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2215,24 +1805,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 7,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2266,20 +1849,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2337,49 +1913,18 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 10,
-    "cookies": [
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "FALSE",
-        "expires": "0",
-        "name": "cookie1",
-        "value": "value1"
-      },
-      {
-        "domain": "localhost",
-        "include_subdomain": "FALSE",
-        "path": "/",
-        "https": "TRUE",
-        "expires": "0",
-        "name": "cookie2",
-        "value": "value2"
-      }
-    ]
+    "time": 9,
+    "cookies": []
   },
   {
     "filename": "tests/error_assert_query_invalid_regex.hurl",
@@ -2412,20 +1957,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2463,20 +2001,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2514,19 +2045,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2564,20 +2089,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2615,27 +2133,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 10,
+    "time": 9,
     "cookies": []
   },
   {
@@ -2669,36 +2177,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "status",
-            "value": 200
-          },
-          {
-            "name": "length",
-            "value": "0"
-          },
-          {
-            "name": "type",
-            "value": "text/html; charset=utf-8"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "captures": [],
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2770,24 +2255,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2842,20 +2320,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -2873,60 +2344,6 @@
     ],
     "success": false,
     "time": 0,
-    "cookies": []
-  },
-  {
-    "filename": "tests/error_output_decompress.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/error-output-decompress",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Encoding",
-              "value": "gzip"
-            },
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "5"
-            },
-            {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
-              "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
-            }
-          ]
-        },
-        "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
-      }
-    ],
-    "success": true,
-    "time": 5,
     "cookies": []
   },
   {
@@ -2960,34 +2377,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 17,
+    "time": 16,
     "cookies": []
   },
   {
@@ -3021,24 +2421,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -3072,20 +2465,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -3123,20 +2509,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": false,
@@ -3187,28 +2566,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:01 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "list",
-            "value": [
-              1,
-              2,
-              3
-            ]
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "captures": [],
@@ -3232,36 +2596,13 @@
           "cookies": [],
           "body": ""
         },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
-            },
-            {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
-              "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
-            }
-          ]
-        },
         "captures": [],
         "asserts": [],
-        "time": 2007
+        "time": 0
       }
     ],
-    "success": true,
-    "time": 2007,
+    "success": false,
+    "time": 1000,
     "cookies": []
   },
   {
@@ -3279,7 +2620,7 @@
             }
           ],
           "cookies": [],
-          "body": "ZGF0YQ=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3300,19 +2641,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -3333,7 +2668,7 @@
         },
         "response": {
           "httpVersion": "HTTP/1.0",
-          "status": 302,
+          "status": 200,
           "cookies": [],
           "headers": [
             {
@@ -3342,11 +2677,7 @@
             },
             {
               "name": "Content-Length",
-              "value": "287"
-            },
-            {
-              "name": "Location",
-              "value": "http://localhost:8000/following-redirect"
+              "value": "18"
             },
             {
               "name": "Server",
@@ -3354,24 +2685,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
-    "success": false,
-    "time": 6,
+    "success": true,
+    "time": 8,
     "cookies": []
   },
   {
@@ -3423,19 +2747,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3449,7 +2767,7 @@
             }
           ],
           "cookies": [],
-          "body": "cGFyYW0xPXZhbHVlMSZwYXJhbTI9JnBhcmFtMz1hJTNkYiZwYXJhbTQ9YSUyNTNkYg=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3470,23 +2788,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 8,
+    "time": 7,
     "cookies": []
   },
   {
@@ -3520,19 +2832,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3571,19 +2877,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3622,19 +2922,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3685,19 +2979,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3732,19 +3020,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3778,24 +3060,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 14,
+    "time": 13,
     "cookies": []
   },
   {
@@ -3829,20 +3104,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -3872,20 +3140,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -3923,19 +3184,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:03 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -3959,7 +3214,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "eyAidXNlciI6ICJib2IiIH0="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3985,14 +3240,8 @@
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4027,14 +3276,8 @@
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4089,21 +3332,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4120,7 +3355,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "SGVsbG8gV29ybGQh"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4141,19 +3376,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4170,7 +3399,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "SGVsbG8gV29ybGQh"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4191,19 +3420,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4220,7 +3443,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4241,19 +3464,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4262,7 +3479,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "WzEsMiwzXQ=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4283,19 +3500,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4304,7 +3515,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "IkhlbGxvIg=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4325,19 +3536,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4346,7 +3551,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "MTAw"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4367,19 +3572,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4388,7 +3587,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "ewogICAgIm5hdHVyYWwiOiAxMDAsCiAgICAibmVnYXRpdmUiOiAtMSwKICAgICJmbG9hdCI6ICIzLjMzMzMzMzMzMzMzMzMzMyIsCiAgICAiZXhwb25lbnQiOiAxMDBlMTAwCn0="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4409,19 +3608,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4430,7 +3623,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "dHJ1ZQ=="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4451,19 +3644,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4493,24 +3680,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "name",
-            "value": "Bob"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4519,7 +3695,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "ewogICAgIm5hbWUiOiAiQm9iIiwKICAgICJwYXNzd29yZCI6ICJzZWNyZXQiCn0="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4540,13 +3716,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
         "asserts": [],
-        "time": 1
+        "time": 0
       }
     ],
     "success": true,
@@ -4563,7 +3739,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4584,19 +3760,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 6
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4626,24 +3796,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
-        "captures": [
-          {
-            "name": "bob_age",
-            "value": "10"
-          }
-        ],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "captures": [],
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4652,7 +3811,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "bmFtZSxhZ2UKYm9iLDEwCmJpbGwsMjIK"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4673,19 +3832,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4702,7 +3855,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxkcmluaz5jYWbDqTwvZHJpbms+"
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4723,19 +3876,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4744,7 +3891,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
-          "body": "PGRyaW5rPmNhZsOpPC9kcmluaz4="
+          "body": ""
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4765,19 +3912,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4815,23 +3956,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -4861,25 +3992,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {},
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 10,
     "cookies": []
   },
   {
@@ -4913,19 +4036,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -4980,19 +4097,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -5022,19 +4133,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -5077,19 +4182,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -5124,23 +4223,17 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
-    "time": 11,
+    "time": 10,
     "cookies": []
   },
   {
@@ -5178,20 +4271,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {},
-          {}
-        ],
-        "time": 5
+        "asserts": [],
+        "time": 0
       },
       {
         "request": {
@@ -5221,19 +4307,13 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
         "captures": [],
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "time": 1
+        "asserts": [],
+        "time": 0
       }
     ],
     "success": true,
@@ -5271,7 +4351,7 @@
             },
             {
               "name": "Date",
-              "value": "Wed, 21 Oct 2020 11:08:04 GMT"
+              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
             }
           ]
         },
