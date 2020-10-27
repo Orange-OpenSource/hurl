@@ -66,6 +66,7 @@ fn default_client() -> Client {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
         user: None,
+        accept_encoding: None,
     };
     Client::init(options)
 }
@@ -98,11 +99,11 @@ fn test_hello() {
     assert_eq!(response.headers.len(), 4);
     assert!(response.headers.contains(&Header {
         name: "Content-Length".to_string(),
-        value: "12".to_string()
+        value: "12".to_string(),
     }));
     assert!(response.headers.contains(&Header {
         name: "Content-Type".to_string(),
-        value: "text/html; charset=utf-8".to_string()
+        value: "text/html; charset=utf-8".to_string(),
     }));
     assert_eq!(response.get_header_values("Date".to_string()).len(), 1);
 }
@@ -308,6 +309,7 @@ fn test_follow_location() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
@@ -342,6 +344,7 @@ fn test_max_redirect() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
@@ -466,6 +469,7 @@ fn test_basic_authentication() {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
         user: Some("bob:secret".to_string()),
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = Request {
@@ -514,6 +518,7 @@ fn test_error_fail_to_connect() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -534,6 +539,7 @@ fn test_error_could_not_resolve_proxy_name() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -554,11 +560,47 @@ fn test_timeout() {
         timeout: Duration::from_millis(100),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/timeout".to_string());
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::Timeout);
+}
+
+#[test]
+fn test_accept_encoding() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: true,
+        insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Duration::from_secs(300),
+        user: None,
+        accept_encoding: Some("gzip".to_string()),
+    };
+    let mut client = Client::init(options);
+    let request = Request {
+        method: Method::Get,
+        url: "http://localhost:8000/compressed/gzip".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: vec![],
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+    assert!(response.headers.contains(&Header {
+        name: "Content-Length".to_string(),
+        value: "32".to_string(),
+    }));
 }
 
 //
@@ -576,13 +618,13 @@ fn test_connect_timeout() {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(1),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://example.com:81".to_string());
     let error = client.execute(&request, 0).err().unwrap();
     assert_eq!(error, HttpError::Timeout);
 }
-
 // endregion
 
 // region cookie
@@ -701,6 +743,7 @@ fn test_cookie_file() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request(
@@ -729,6 +772,7 @@ fn test_proxy() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
+        accept_encoding: None,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());

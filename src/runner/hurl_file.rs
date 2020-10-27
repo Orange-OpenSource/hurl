@@ -62,6 +62,7 @@ use super::value::Value;
 ///        timeout: Default::default(),
 ///        connect_timeout: Default::default(),
 ///        user: None,
+///        accept_encoding: None
 /// };
 /// let mut client = http::Client::init(options);
 ///
