@@ -54,6 +54,7 @@ pub struct Client {
     pub max_redirect: Option<usize>,
     pub verbose: bool,
     pub authorization: Option<String>,
+    pub accept_encoding: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -68,6 +69,7 @@ pub struct ClientOptions {
     pub timeout: Duration,
     pub connect_timeout: Duration,
     pub user: Option<String>,
+    pub accept_encoding: Option<String>,
 }
 
 impl Client {
@@ -101,6 +103,7 @@ impl Client {
         h.connect_timeout(options.connect_timeout).unwrap();
 
         let authorization = options.user.map(|user| base64::encode(user.as_bytes()));
+        let accept_encoding = options.accept_encoding;
         Client {
             handle: Box::new(h),
             follow_location: options.follow_location,
@@ -108,6 +111,7 @@ impl Client {
             redirect_count: 0,
             verbose: options.verbose,
             authorization,
+            accept_encoding,
         }
     }
 
@@ -313,6 +317,13 @@ impl Client {
         if let Some(authorization) = self.authorization.clone() {
             if get_header_values(request.headers.clone(), "Authorization".to_string()).is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
+                    .unwrap();
+            }
+        }
+        if let Some(accept_encoding) = self.accept_encoding.clone() {
+            if get_header_values(request.headers.clone(), "Accept-Encoding".to_string()).is_empty()
+            {
+                list.append(format!("Accept-Encoding: {}", accept_encoding).as_str())
                     .unwrap();
             }
         }
