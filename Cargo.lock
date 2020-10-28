@@ -349,7 +349,7 @@ dependencies = [
 
 [[package]]
 name = "hurl"
-version = "0.99.13"
+version = "0.99.14"
 dependencies = [
  "atty",
  "base64",
