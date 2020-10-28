@@ -21,7 +21,7 @@ jobs:
       dist: bionic
       before_script:
          - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
-         - sudo apt install libcurl4-openssl-dev
+         - sudo apt install -y libcurl4-openssl-dev
       script:
          - ci/man.sh
          - ci/release.sh
@@ -38,6 +38,7 @@ jobs:
     - stage: "Release"
       os: osx
       before_script:
+         - brew install jq
          - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
       script:
          - ci/man.sh
