@@ -137,7 +137,7 @@ Read cookies from file (using the Netscape cookie file format).
 Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
 
-### --compressed
+### --compressed {#compressed}
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
 
