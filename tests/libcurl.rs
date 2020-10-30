@@ -760,12 +760,12 @@ fn test_cookie_file() {
 
 #[test]
 fn test_proxy() {
-    // mitmproxy listening on port 8080
+    // mitmproxy listening on port 8888
     let options = ClientOptions {
         follow_location: false,
         max_redirect: None,
         cookie_input_file: None,
-        proxy: Some("localhost:8080".to_string()),
+        proxy: Some("localhost:8888".to_string()),
         no_proxy: None,
         verbose: false,
         insecure: false,
@@ -775,10 +775,9 @@ fn test_proxy() {
         accept_encoding: None,
     };
     let mut client = Client::init(options);
-    let request = default_get_request("http://localhost:8000/hello".to_string());
+    let request = default_get_request("http://localhost:8000/proxy".to_string());
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
-    assert_eq!(response.body, b"Hello World!".to_vec());
 }
 
 // endregion

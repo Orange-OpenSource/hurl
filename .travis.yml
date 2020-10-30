@@ -9,10 +9,10 @@ jobs:
       os: linux
       dist: bionic
       before_script:
-        - ci/setup.sh
+        - ci/setup.sh || travis_terminate 1
       script:
         - ci/check.sh
-        - ./build.sh
+        - ./build.sh || travis_terminate 1
         - export PATH="$PWD/target/debug:$PATH"
         - integration/integration.sh
 
