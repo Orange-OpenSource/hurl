@@ -557,9 +557,10 @@ fn main() {
 
     if filenames.is_empty() && atty::is(Stream::Stdin) {
         if app.clone().print_help().is_err() {
-            std::process::exit(1);
-        } else {
+            panic!("panic during printing help");
         }
+        println!();
+        std::process::exit(1);
     } else if filenames.is_empty() {
         filenames.push("-");
     }
