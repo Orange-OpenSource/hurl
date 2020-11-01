@@ -24,62 +24,60 @@ use std::path::Path;
 use crate::ast::*;
 
 use super::core::{Error, RunnerError};
+use super::json::eval_json_value;
+use super::template::eval_template;
 use super::value::Value;
 
-impl Body {
-    pub fn eval(
-        self,
-        variables: &HashMap<String, Value>,
-        context_dir: String,
-    ) -> Result<Vec<u8>, Error> {
-        self.value.eval(variables, context_dir)
-    }
+pub fn eval_body(
+    body: Body,
+    variables: &HashMap<String, Value>,
+    context_dir: String,
+) -> Result<Vec<u8>, Error> {
+    eval_bytes(body.value, variables, context_dir)
 }
 
-impl Bytes {
-    pub fn eval(
-        self,
-        variables: &HashMap<String, Value>,
-        context_dir: String,
-    ) -> Result<Vec<u8>, Error> {
-        match self {
-            Bytes::RawString { value, .. } => {
-                let value = value.eval(variables)?;
-                Ok(value.into_bytes())
-            }
-            Bytes::Base64 { value, .. } => Ok(value),
-            Bytes::Xml { value, .. } => Ok(value.into_bytes()),
-            Bytes::Json { value, .. } => {
-                let value = value.eval(variables)?;
-                Ok(value.into_bytes())
-            }
-            Bytes::File { filename, .. } => {
-                let path = Path::new(filename.value.as_str());
-                let absolute_filename = if path.is_absolute() {
-                    filename.clone().value
-                } else {
-                    Path::new(context_dir.as_str())
-                        .join(filename.value)
-                        .to_str()
-                        .unwrap()
-                        .to_string()
-                };
-                match File::open(absolute_filename.clone()) {
-                    Ok(f) => {
-                        let mut bytes = vec![];
-                        for byte in f.bytes() {
-                            bytes.push(byte.unwrap());
-                        }
-                        Ok(bytes)
+pub fn eval_bytes(
+    bytes: Bytes,
+    variables: &HashMap<String, Value>,
+    context_dir: String,
+) -> Result<Vec<u8>, Error> {
+    match bytes {
+        Bytes::RawString { value, .. } => {
+            let value = eval_template(value, variables)?;
+            Ok(value.into_bytes())
+        }
+        Bytes::Base64 { value, .. } => Ok(value),
+        Bytes::Xml { value, .. } => Ok(value.into_bytes()),
+        Bytes::Json { value, .. } => {
+            let value = eval_json_value(value, variables)?;
+            Ok(value.into_bytes())
+        }
+        Bytes::File { filename, .. } => {
+            let path = Path::new(filename.value.as_str());
+            let absolute_filename = if path.is_absolute() {
+                filename.clone().value
+            } else {
+                Path::new(context_dir.as_str())
+                    .join(filename.value)
+                    .to_str()
+                    .unwrap()
+                    .to_string()
+            };
+            match File::open(absolute_filename.clone()) {
+                Ok(f) => {
+                    let mut bytes = vec![];
+                    for byte in f.bytes() {
+                        bytes.push(byte.unwrap());
                     }
-                    Err(_) => Err(Error {
-                        source_info: filename.source_info,
-                        inner: RunnerError::FileReadAccess {
-                            value: absolute_filename,
-                        },
-                        assert: false,
-                    }),
+                    Ok(bytes)
                 }
+                Err(_) => Err(Error {
+                    source_info: filename.source_info,
+                    inner: RunnerError::FileReadAccess {
+                        value: absolute_filename,
+                    },
+                    assert: false,
+                }),
             }
         }
     }
@@ -127,7 +125,7 @@ mod tests {
 
         let variables = HashMap::new();
         assert_eq!(
-            bytes.eval(&variables, "current_dir".to_string()).unwrap(),
+            eval_bytes(bytes, &variables, "current_dir".to_string()).unwrap(),
             b"Hello World!"
         );
     }
@@ -151,8 +149,7 @@ mod tests {
 
         let variables = HashMap::new();
 
-        let error = bytes
-            .eval(&variables, "current_dir".to_string())
+        let error = eval_bytes(bytes, &variables, "current_dir".to_string())
             .err()
             .unwrap();
         assert_eq!(

@@ -23,76 +23,74 @@ use crate::http;
 
 use super::core::RunnerError;
 use super::core::{CaptureResult, Error};
+use super::query::eval_query;
+use super::template::eval_template;
 use super::value::Value;
 
-impl Capture {
-    pub fn eval(
-        self,
-        variables: &HashMap<String, Value>,
-        http_response: http::Response,
-    ) -> Result<CaptureResult, Error> {
-        let name = self.name.value;
-        let value = self.query.clone().eval(variables, http_response)?;
-        let value = match value {
-            None => {
-                return Err(Error {
-                    source_info: self.query.source_info,
-                    inner: RunnerError::NoQueryResult {},
-                    assert: false,
-                })
-            }
-            Some(value) => match self.subquery {
-                None => value,
-                Some(subquery) => {
-                    let value = subquery.clone().eval(variables, value)?;
-                    match value {
-                        None => {
-                            return Err(Error {
-                                source_info: subquery.source_info,
-                                inner: RunnerError::NoQueryResult {},
-                                assert: false,
-                            })
-                        }
-                        Some(value) => value,
+pub fn eval_capture(
+    capture: Capture,
+    variables: &HashMap<String, Value>,
+    http_response: http::Response,
+) -> Result<CaptureResult, Error> {
+    let name = capture.name.value;
+    let value = eval_query(capture.query.clone(), variables, http_response)?;
+    let value = match value {
+        None => {
+            return Err(Error {
+                source_info: capture.query.source_info,
+                inner: RunnerError::NoQueryResult {},
+                assert: false,
+            });
+        }
+        Some(value) => match capture.subquery {
+            None => value,
+            Some(subquery) => {
+                let value = eval_subquery(subquery.clone(), variables, value)?;
+                match value {
+                    None => {
+                        return Err(Error {
+                            source_info: subquery.source_info,
+                            inner: RunnerError::NoQueryResult {},
+                            assert: false,
+                        });
                     }
+                    Some(value) => value,
                 }
-            },
-        };
-        Ok(CaptureResult { name, value })
-    }
+            }
+        },
+    };
+    Ok(CaptureResult { name, value })
 }
 
-impl Subquery {
-    pub fn eval(
-        self,
-        variables: &HashMap<String, Value>,
-        value: Value,
-    ) -> Result<Option<Value>, Error> {
-        match self.value {
-            SubqueryValue::Regex { expr, .. } => {
-                let source_info = expr.source_info.clone();
-                let expr = expr.eval(variables)?;
-                match value {
-                    Value::String(s) => match Regex::new(expr.as_str()) {
-                        Ok(re) => match re.captures(s.as_str()) {
-                            Some(captures) => match captures.get(1) {
-                                Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                                None => Ok(None),
-                            },
+fn eval_subquery(
+    subquery: Subquery,
+    variables: &HashMap<String, Value>,
+    value: Value,
+) -> Result<Option<Value>, Error> {
+    match subquery.value {
+        SubqueryValue::Regex { expr, .. } => {
+            let source_info = expr.source_info.clone();
+            let expr = eval_template(expr, variables)?;
+            match value {
+                Value::String(s) => match Regex::new(expr.as_str()) {
+                    Ok(re) => match re.captures(s.as_str()) {
+                        Some(captures) => match captures.get(1) {
+                            Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
                             None => Ok(None),
                         },
-                        Err(_) => Err(Error {
-                            source_info,
-                            inner: RunnerError::InvalidRegex(),
-                            assert: false,
-                        }),
+                        None => Ok(None),
                     },
-                    _ => Err(Error {
-                        source_info: self.source_info,
-                        inner: RunnerError::SubqueryInvalidInput,
+                    Err(_) => Err(Error {
+                        source_info,
+                        inner: RunnerError::InvalidRegex(),
                         assert: false,
                     }),
-                }
+                },
+                _ => Err(Error {
+                    source_info: subquery.source_info,
+                    inner: RunnerError::SubqueryInvalidInput,
+                    assert: false,
+                }),
             }
         }
     }
@@ -195,8 +193,7 @@ pub mod tests {
             },
         };
 
-        let error = capture
-            .eval(&variables, http::xml_three_users_http_response())
+        let error = eval_capture(capture, &variables, http::xml_three_users_http_response())
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
@@ -251,9 +248,12 @@ pub mod tests {
     fn test_capture() {
         let variables = HashMap::new();
         assert_eq!(
-            user_count_capture()
-                .eval(&variables, http::xml_three_users_http_response())
-                .unwrap(),
+            eval_capture(
+                user_count_capture(),
+                &variables,
+                http::xml_three_users_http_response(),
+            )
+            .unwrap(),
             CaptureResult {
                 name: "UserCount".to_string(),
                 value: Value::from_f64(3.0),
@@ -261,9 +261,7 @@ pub mod tests {
         );
 
         assert_eq!(
-            duration_capture()
-                .eval(&variables, http::json_http_response())
-                .unwrap(),
+            eval_capture(duration_capture(), &variables, http::json_http_response()).unwrap(),
             CaptureResult {
                 name: "duration".to_string(),
                 value: Value::from_f64(1.5),
@@ -294,14 +292,18 @@ pub mod tests {
             },
         };
         assert_eq!(
-            subquery
-                .clone()
-                .eval(&variables, Value::String("Hello Bob!".to_string()))
-                .unwrap()
-                .unwrap(),
+            eval_subquery(
+                subquery.clone(),
+                &variables,
+                Value::String("Hello Bob!".to_string())
+            )
+            .unwrap()
+            .unwrap(),
             Value::String("Bob".to_string())
         );
-        let error = subquery.eval(&variables, Value::Bool(true)).err().unwrap();
+        let error = eval_subquery(subquery, &variables, Value::Bool(true))
+            .err()
+            .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
         assert_eq!(error.inner, RunnerError::SubqueryInvalidInput);
     }
@@ -327,10 +329,13 @@ pub mod tests {
                 },
             },
         };
-        let error = subquery
-            .eval(&variables, Value::String("Hello Bob!".to_string()))
-            .err()
-            .unwrap();
+        let error = eval_subquery(
+            subquery,
+            &variables,
+            Value::String("Hello Bob!".to_string()),
+        )
+        .err()
+        .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 20));
         assert_eq!(error.inner, RunnerError::InvalidRegex {});
     }

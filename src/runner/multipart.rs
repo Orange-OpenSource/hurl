@@ -29,6 +29,7 @@ use crate::ast::*;
 use crate::http;
 
 use super::core::{Error, RunnerError};
+use super::template::eval_template;
 use super::value::Value;
 
 impl MultipartParam {
@@ -40,7 +41,7 @@ impl MultipartParam {
         match self {
             MultipartParam::Param(KeyValue { key, value, .. }) => {
                 let name = key.value;
-                let value = value.eval(variables)?;
+                let value = eval_template(value, variables)?;
                 Ok(http::MultipartParam::Param(http::Param { name, value }))
             }
             MultipartParam::FileParam(param) => {
