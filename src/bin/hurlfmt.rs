@@ -132,8 +132,9 @@ fn main() {
 
     if filename == "-" && atty::is(Stream::Stdin) {
         if app.clone().print_help().is_err() {
-            panic!("error during print_help")
+            panic!("panic during printing help");
         }
+        println!();
         std::process::exit(1);
     } else if filename != "-" && !Path::new(filename).exists() {
         eprintln!("Input file {} does not exit!", filename);
