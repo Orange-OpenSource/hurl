@@ -24,7 +24,10 @@ use crate::http::HttpError;
 
 use super::core::*;
 use super::core::{Error, RunnerError};
+use super::request::eval_request;
+use super::response::{eval_asserts, eval_captures};
 use super::value::Value;
+use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
 
 /// Run an entry with the hurl http client
 ///
@@ -53,7 +56,7 @@ pub fn run(
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
 ) -> EntryResult {
-    let http_request = match entry.clone().request.eval(variables, context_dir.clone()) {
+    let http_request = match eval_request(entry.request.clone(), variables, context_dir.clone()) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
@@ -75,7 +78,7 @@ pub fn run(
     // with cookie storage
     //
     use std::str::FromStr;
-    if let Some(s) = entry.request.add_cookie_in_storage() {
+    if let Some(s) = cookie_storage_set(entry.request.clone()) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(cookie);
         } else {
@@ -85,7 +88,7 @@ pub fn run(
             );
         }
     }
-    if entry.request.clear_cookie_storage() {
+    if cookie_storage_clear(entry.request.clone()) {
         http_client.clear_cookie_storage();
     }
 
@@ -142,7 +145,7 @@ pub fn run(
 
     let captures = match entry.response.clone() {
         None => vec![],
-        Some(response) => match response.eval_captures(http_response.clone(), variables) {
+        Some(response) => match eval_captures(response, http_response.clone(), variables) {
             Ok(captures) => captures,
             Err(e) => {
                 return EntryResult {
@@ -164,7 +167,7 @@ pub fn run(
 
     let asserts = match entry.response {
         None => vec![],
-        Some(response) => response.eval_asserts(variables, http_response.clone(), context_dir),
+        Some(response) => eval_asserts(response, variables, http_response.clone(), context_dir),
     };
     let errors = asserts
         .iter()

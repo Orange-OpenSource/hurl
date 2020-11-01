@@ -89,7 +89,7 @@ impl Lintable<Request> for Request {
             Some(body) => Some(body.lint()),
         };
         let mut sections: Vec<Section> = self.sections.iter().map(|e| e.lint()).collect();
-        sections.sort_by_key(|k| k.value.clone().index());
+        sections.sort_by_key(|k| section_value_index(k.value.clone()));
 
         let source_info = SourceInfo::init(0, 0, 0, 0);
         Request {
@@ -128,7 +128,7 @@ impl Lintable<Response> for Response {
         let line_terminator0 = self.clone().line_terminator0;
         let headers = self.headers.iter().map(|e| e.lint()).collect();
         let mut sections: Vec<Section> = self.sections.iter().map(|e| e.lint()).collect();
-        sections.sort_by_key(|k| k.value.clone().index());
+        sections.sort_by_key(|k| section_value_index(k.value.clone()));
 
         let b = self.body.clone();
         Response {
@@ -194,16 +194,14 @@ impl Lintable<SectionValue> for SectionValue {
     }
 }
 
-impl SectionValue {
-    fn index(self) -> u32 {
-        match self {
-            SectionValue::QueryParams(_) => 0,
-            SectionValue::FormParams(_) => 1,
-            SectionValue::MultipartFormData(_) => 2,
-            SectionValue::Cookies(_) => 3,
-            SectionValue::Captures(_) => 0,
-            SectionValue::Asserts(_) => 1,
-        }
+fn section_value_index(section_value: SectionValue) -> u32 {
+    match section_value {
+        SectionValue::QueryParams(_) => 0,
+        SectionValue::FormParams(_) => 1,
+        SectionValue::MultipartFormData(_) => 2,
+        SectionValue::Cookies(_) => 3,
+        SectionValue::Captures(_) => 0,
+        SectionValue::Asserts(_) => 1,
     }
 }
 

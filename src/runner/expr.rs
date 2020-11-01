@@ -22,18 +22,16 @@ use crate::ast::Expr;
 use super::core::{Error, RunnerError};
 use super::value::Value;
 
-impl Expr {
-    pub fn eval(self, variables: &HashMap<String, Value>) -> Result<Value, Error> {
-        if let Some(value) = variables.get(self.variable.name.as_str()) {
-            Ok(value.clone())
-        } else {
-            Err(Error {
-                source_info: self.variable.source_info,
-                inner: RunnerError::TemplateVariableNotDefined {
-                    name: self.variable.name,
-                },
-                assert: false,
-            })
-        }
+pub fn eval_expr(expr: Expr, variables: &HashMap<String, Value>) -> Result<Value, Error> {
+    if let Some(value) = variables.get(expr.variable.name.as_str()) {
+        Ok(value.clone())
+    } else {
+        Err(Error {
+            source_info: expr.variable.source_info,
+            inner: RunnerError::TemplateVariableNotDefined {
+                name: expr.variable.name,
+            },
+            assert: false,
+        })
     }
 }

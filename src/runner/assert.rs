@@ -23,6 +23,8 @@ use crate::http;
 
 use super::core::*;
 use super::core::{Error, RunnerError};
+use super::predicate::eval_predicate;
+use super::query::eval_query;
 use super::value::Value;
 
 impl AssertResult {
@@ -126,24 +128,22 @@ impl AssertResult {
     }
 }
 
-impl Assert {
-    pub fn eval(
-        self,
-        http_response: http::Response,
-        variables: &HashMap<String, Value>,
-    ) -> AssertResult {
-        let actual = self.query.eval(variables, http_response);
-        let source_info = self.predicate.clone().predicate_func.source_info;
-        let predicate_result = match actual.clone() {
-            Err(_) => None,
-            Ok(actual) => Some(self.predicate.eval(variables, actual)),
-        };
+pub fn eval_assert(
+    assert: Assert,
+    variables: &HashMap<String, Value>,
+    http_response: http::Response,
+) -> AssertResult {
+    let actual = eval_query(assert.query.clone(), variables, http_response);
+    let source_info = assert.predicate.clone().predicate_func.source_info;
+    let predicate_result = match actual.clone() {
+        Err(_) => None,
+        Ok(actual) => Some(eval_predicate(assert.predicate, variables, actual)),
+    };
 
-        AssertResult::Explicit {
-            actual,
-            source_info,
-            predicate_result,
-        }
+    AssertResult::Explicit {
+        actual,
+        source_info,
+        predicate_result,
     }
 }
 
@@ -192,7 +192,11 @@ pub mod tests {
     fn test_eval() {
         let variables = HashMap::new();
         assert_eq!(
-            assert_count_user().eval(http::xml_three_users_http_response(), &variables),
+            eval_assert(
+                assert_count_user(),
+                &variables,
+                http::xml_three_users_http_response()
+            ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Nodeset(3))),
                 source_info: SourceInfo::init(1, 14, 1, 27),

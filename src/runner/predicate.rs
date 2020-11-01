@@ -15,63 +15,68 @@
  * limitations under the License.
  *
  */
-use regex::Regex;
 use std::collections::HashMap;
+
+use regex::Regex;
 
 use crate::ast::*;
 
 use super::core::*;
 use super::core::{Error, RunnerError};
+use super::expr::eval_expr;
+use super::template::eval_template;
 use super::value::Value;
 
-impl Predicate {
-    pub fn eval(self, variables: &HashMap<String, Value>, value: Option<Value>) -> PredicateResult {
-        let assert_result = self.predicate_func.clone().eval(variables, value)?;
-        let source_info = SourceInfo {
-            start: Pos {
-                line: self.space0.source_info.start.line,
-                column: 0,
+pub fn eval_predicate(
+    predicate: Predicate,
+    variables: &HashMap<String, Value>,
+    value: Option<Value>,
+) -> PredicateResult {
+    let assert_result = eval_predicate_func(predicate.predicate_func.clone(), variables, value)?;
+    let source_info = SourceInfo {
+        start: Pos {
+            line: predicate.space0.source_info.start.line,
+            column: 0,
+        },
+        end: Pos {
+            line: predicate.space0.source_info.start.line,
+            column: 0,
+        },
+    };
+    if assert_result.type_mismatch {
+        let not = if predicate.not { "not " } else { "" };
+        let expected = format!("{}{}", not, assert_result.expected);
+        Err(Error {
+            source_info,
+            inner: RunnerError::AssertFailure {
+                actual: assert_result.actual,
+                expected,
+                type_mismatch: true,
             },
-            end: Pos {
-                line: self.space0.source_info.start.line,
-                column: 0,
+            assert: true,
+        })
+    } else if predicate.not && assert_result.success {
+        Err(Error {
+            source_info,
+            inner: RunnerError::AssertFailure {
+                actual: assert_result.actual,
+                expected: format!("not {}", assert_result.expected),
+                type_mismatch: false,
             },
-        };
-        if assert_result.type_mismatch {
-            let not = if self.not { "not " } else { "" };
-            let expected = format!("{}{}", not, assert_result.expected);
-            Err(Error {
-                source_info,
-                inner: RunnerError::AssertFailure {
-                    actual: assert_result.actual,
-                    expected,
-                    type_mismatch: true,
-                },
-                assert: true,
-            })
-        } else if self.not && assert_result.success {
-            Err(Error {
-                source_info,
-                inner: RunnerError::AssertFailure {
-                    actual: assert_result.actual,
-                    expected: format!("not {}", assert_result.expected),
-                    type_mismatch: false,
-                },
-                assert: true,
-            })
-        } else if !self.not && !assert_result.success {
-            Err(Error {
-                source_info,
-                inner: RunnerError::AssertFailure {
-                    actual: assert_result.actual,
-                    expected: assert_result.expected,
-                    type_mismatch: false,
-                },
-                assert: true,
-            })
-        } else {
-            Ok(())
-        }
+            assert: true,
+        })
+    } else if !predicate.not && !assert_result.success {
+        Err(Error {
+            source_info,
+            inner: RunnerError::AssertFailure {
+                actual: assert_result.actual,
+                expected: assert_result.expected,
+                type_mismatch: false,
+            },
+            assert: true,
+        })
+    } else {
+        Ok(())
     }
 }
 
@@ -106,303 +111,304 @@ impl Value {
     }
 }
 
-impl PredicateFunc {
-    fn eval(
-        self,
-        variables: &HashMap<String, Value>,
-        optional_value: Option<Value>,
-    ) -> Result<AssertResult, Error> {
-        match optional_value {
-            None => {
-                //let type_mismatch = !matches!(self.value, PredicateFuncValue::Exist {});
-                Ok(AssertResult {
-                    success: false,
-                    actual: "none".to_string(),
-                    expected: self.expected(variables)?,
+fn eval_predicate_func(
+    predicate_func: PredicateFunc,
+    variables: &HashMap<String, Value>,
+    optional_value: Option<Value>,
+) -> Result<AssertResult, Error> {
+    match optional_value {
+        None => {
+            //let type_mismatch = !matches!(self.value, PredicateFuncValue::Exist {});
+            Ok(AssertResult {
+                success: false,
+                actual: "none".to_string(),
+                expected: expected(predicate_func, variables)?,
+                type_mismatch: false,
+            })
+        }
+        Some(value) => eval_something(predicate_func, variables, value),
+    }
+}
+
+fn expected(
+    predicate_func: PredicateFunc,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    match predicate_func.value {
+        PredicateFuncValue::EqualInt {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("int <{}>", expected))
+        }
+        PredicateFuncValue::EqualFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
+        } => Ok(format!("float <{}.{}>", expected_int, expected_dec)),
+        PredicateFuncValue::EqualNull { .. } => Ok("null".to_string()),
+        PredicateFuncValue::EqualBool {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("bool <{}>", expected))
+        }
+        PredicateFuncValue::EqualString {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(format!("string <{}>", expected))
+        }
+        PredicateFuncValue::EqualExpression {
+            value: expected, ..
+        } => {
+            let expected = eval_expr(expected, variables)?;
+            todo!(">> {:?}", expected)
+        }
+        PredicateFuncValue::CountEqual {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("count equals to <{}>", expected))
+        }
+        PredicateFuncValue::StartWith {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(format!("starts with string <{}>", expected))
+        }
+        PredicateFuncValue::Contain {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(format!("contains string <{}>", expected))
+        }
+        PredicateFuncValue::IncludeString {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(format!("includes string <{}>", expected))
+        }
+        PredicateFuncValue::IncludeInt {
+            value: expected, ..
+        } => Ok(format!("includes int <{}>", expected)),
+        PredicateFuncValue::IncludeFloat {
+            value: expected, ..
+        } => Ok(format!("includes float <{}>", expected)),
+        PredicateFuncValue::IncludeNull { .. } => Ok("includes null".to_string()),
+        PredicateFuncValue::IncludeBool {
+            value: expected, ..
+        } => Ok(format!("includes bool <{}>", expected)),
+        PredicateFuncValue::IncludeExpression {
+            value: _expected, ..
+        } => todo!(),
+        PredicateFuncValue::Match {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(format!("matches regex <{}>", expected))
+        }
+        PredicateFuncValue::Exist {} => Ok("something".to_string()),
+    }
+}
+
+fn eval_something(
+    predicate_func: PredicateFunc,
+    variables: &HashMap<String, Value>,
+    value: Value,
+) -> Result<AssertResult, Error> {
+    match predicate_func.value {
+        // equals int
+        PredicateFuncValue::EqualInt {
+            value: expected, ..
+        } => assert_values_equal(value, Value::Integer(expected)),
+
+        // equals null
+        PredicateFuncValue::EqualNull { .. } => assert_values_equal(value, Value::Null),
+
+        // equals bool
+        PredicateFuncValue::EqualBool {
+            value: expected, ..
+        } => assert_values_equal(value, Value::Bool(expected)),
+
+        // equals float
+        PredicateFuncValue::EqualFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_values_equal(value, Value::Float(int, decimal)),
+
+        // equals string
+        PredicateFuncValue::EqualString {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            assert_values_equal(value, Value::String(expected))
+        }
+
+        // equals expression
+        PredicateFuncValue::EqualExpression {
+            value: expected, ..
+        } => {
+            let expected = eval_expr(expected, variables)?;
+            assert_values_equal(value, expected)
+        }
+
+        // countEquals
+        PredicateFuncValue::CountEqual {
+            value: expected_value,
+            ..
+        } => {
+            let actual = value.clone().display();
+            let expected = format!("count equals to <{}>", expected_value);
+            match value {
+                Value::List(values) => Ok(AssertResult {
+                    success: values.len() as u64 == expected_value,
+                    actual,
+                    expected,
                     type_mismatch: false,
-                })
-            }
-            Some(value) => self.eval_something(variables, value),
-        }
-    }
-
-    fn expected(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
-        match self.value {
-            PredicateFuncValue::EqualInt {
-                value: expected, ..
-            } => {
-                let expected = expected.to_string();
-                Ok(format!("int <{}>", expected))
-            }
-            PredicateFuncValue::EqualFloat {
-                value:
-                    Float {
-                        int: expected_int,
-                        decimal: expected_dec,
-                        ..
-                    },
-                ..
-            } => Ok(format!("float <{}.{}>", expected_int, expected_dec)),
-            PredicateFuncValue::EqualNull { .. } => Ok("null".to_string()),
-            PredicateFuncValue::EqualBool {
-                value: expected, ..
-            } => {
-                let expected = expected.to_string();
-                Ok(format!("bool <{}>", expected))
-            }
-            PredicateFuncValue::EqualString {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                Ok(format!("string <{}>", expected))
-            }
-            PredicateFuncValue::EqualExpression {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                todo!(">> {:?}", expected)
-            }
-            PredicateFuncValue::CountEqual {
-                value: expected, ..
-            } => {
-                let expected = expected.to_string();
-                Ok(format!("count equals to <{}>", expected))
-            }
-            PredicateFuncValue::StartWith {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                Ok(format!("starts with string <{}>", expected))
-            }
-            PredicateFuncValue::Contain {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                Ok(format!("contains string <{}>", expected))
-            }
-            PredicateFuncValue::IncludeString {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                Ok(format!("includes string <{}>", expected))
-            }
-            PredicateFuncValue::IncludeInt {
-                value: expected, ..
-            } => Ok(format!("includes int <{}>", expected)),
-            PredicateFuncValue::IncludeFloat {
-                value: expected, ..
-            } => Ok(format!("includes float <{}>", expected)),
-            PredicateFuncValue::IncludeNull { .. } => Ok("includes null".to_string()),
-            PredicateFuncValue::IncludeBool {
-                value: expected, ..
-            } => Ok(format!("includes bool <{}>", expected)),
-            PredicateFuncValue::IncludeExpression {
-                value: _expected, ..
-            } => todo!(),
-            PredicateFuncValue::Match {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                Ok(format!("matches regex <{}>", expected))
-            }
-            PredicateFuncValue::Exist {} => Ok("something".to_string()),
-        }
-    }
-
-    fn eval_something(
-        self,
-        variables: &HashMap<String, Value>,
-        value: Value,
-    ) -> Result<AssertResult, Error> {
-        match self.value {
-            // equals int
-            PredicateFuncValue::EqualInt {
-                value: expected, ..
-            } => assert_values_equal(value, Value::Integer(expected)),
-
-            // equals null
-            PredicateFuncValue::EqualNull { .. } => assert_values_equal(value, Value::Null),
-
-            // equals bool
-            PredicateFuncValue::EqualBool {
-                value: expected, ..
-            } => assert_values_equal(value, Value::Bool(expected)),
-
-            // equals float
-            PredicateFuncValue::EqualFloat {
-                value: Float { int, decimal, .. },
-                ..
-            } => assert_values_equal(value, Value::Float(int, decimal)),
-
-            // equals string
-            PredicateFuncValue::EqualString {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                assert_values_equal(value, Value::String(expected))
-            }
-
-            // equals expression
-            PredicateFuncValue::EqualExpression {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                assert_values_equal(value, expected)
-            }
-
-            // countEquals
-            PredicateFuncValue::CountEqual {
-                value: expected_value,
-                ..
-            } => {
-                let actual = value.clone().display();
-                let expected = format!("count equals to <{}>", expected_value);
-                match value {
-                    Value::List(values) => Ok(AssertResult {
-                        success: values.len() as u64 == expected_value,
-                        actual,
-                        expected,
-                        type_mismatch: false,
-                    }),
-                    Value::Nodeset(n) => Ok(AssertResult {
-                        success: n as u64 == expected_value,
-                        actual,
-                        expected,
-                        type_mismatch: false,
-                    }),
-                    _ => Ok(AssertResult {
-                        success: false,
-                        actual,
-                        expected,
-                        type_mismatch: true,
-                    }),
-                }
-            }
-
-            // starts with string
-            PredicateFuncValue::StartWith {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                match value.clone() {
-                    Value::String(actual) => Ok(AssertResult {
-                        success: actual.as_str().starts_with(expected.as_str()),
-                        actual: value.display(),
-                        expected: format!("starts with string <{}>", expected),
-                        type_mismatch: false,
-                    }),
-                    _ => Ok(AssertResult {
-                        success: false,
-                        actual: value.display(),
-                        expected: format!("starts with string <{}>", expected),
-                        type_mismatch: true,
-                    }),
-                }
-            }
-
-            // contains
-            PredicateFuncValue::Contain {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                match value.clone() {
-                    Value::String(actual) => Ok(AssertResult {
-                        success: actual.as_str().contains(expected.as_str()),
-                        actual: value.display(),
-                        expected: format!("contains string <{}>", expected),
-                        type_mismatch: false,
-                    }),
-                    _ => Ok(AssertResult {
-                        success: false,
-                        actual: value.display(),
-                        expected: format!("contains string <{}>", expected),
-                        type_mismatch: true,
-                    }),
-                }
-            }
-
-            // includes String
-            PredicateFuncValue::IncludeString {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                assert_include(value, Value::String(expected))
-            }
-
-            // includes int
-            PredicateFuncValue::IncludeInt {
-                value: expected, ..
-            } => assert_include(value, Value::Integer(expected)),
-
-            // includes float
-            PredicateFuncValue::IncludeFloat {
-                value: Float { int, decimal, .. },
-                ..
-            } => assert_include(value, Value::Float(int, decimal)),
-
-            // includes bool
-            PredicateFuncValue::IncludeBool {
-                value: expected, ..
-            } => assert_include(value, Value::Bool(expected)),
-
-            // includes null
-            PredicateFuncValue::IncludeNull { .. } => assert_include(value, Value::Null),
-
-            // includes expression
-            PredicateFuncValue::IncludeExpression {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                assert_include(value, expected)
-            }
-
-            // match string
-            PredicateFuncValue::Match {
-                value: expected, ..
-            } => {
-                let expected = expected.eval(variables)?;
-                let regex = match Regex::new(expected.as_str()) {
-                    Ok(re) => re,
-                    Err(_) => {
-                        return Err(Error {
-                            source_info: self.source_info.clone(),
-                            inner: RunnerError::InvalidRegex(),
-                            assert: false,
-                        });
-                    }
-                };
-                match value.clone() {
-                    Value::String(actual) => Ok(AssertResult {
-                        success: regex.is_match(actual.as_str()),
-                        actual: value.display(),
-                        expected: format!("matches regex <{}>", expected),
-                        type_mismatch: false,
-                    }),
-                    _ => Ok(AssertResult {
-                        success: false,
-                        actual: value.display(),
-                        expected: format!("matches regex <{}>", expected),
-                        type_mismatch: true,
-                    }),
-                }
-            }
-
-            // exists
-            PredicateFuncValue::Exist {} => match value {
-                Value::Nodeset(0) => Ok(AssertResult {
-                    success: false,
-                    actual: value.display(),
-                    expected: "something".to_string(),
+                }),
+                Value::Nodeset(n) => Ok(AssertResult {
+                    success: n as u64 == expected_value,
+                    actual,
+                    expected,
                     type_mismatch: false,
                 }),
                 _ => Ok(AssertResult {
-                    success: true,
+                    success: false,
+                    actual,
+                    expected,
+                    type_mismatch: true,
+                }),
+            }
+        }
+
+        // starts with string
+        PredicateFuncValue::StartWith {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            match value.clone() {
+                Value::String(actual) => Ok(AssertResult {
+                    success: actual.as_str().starts_with(expected.as_str()),
                     actual: value.display(),
-                    expected: "something".to_string(),
+                    expected: format!("starts with string <{}>", expected),
                     type_mismatch: false,
                 }),
-            },
+                _ => Ok(AssertResult {
+                    success: false,
+                    actual: value.display(),
+                    expected: format!("starts with string <{}>", expected),
+                    type_mismatch: true,
+                }),
+            }
         }
+
+        // contains
+        PredicateFuncValue::Contain {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            match value.clone() {
+                Value::String(actual) => Ok(AssertResult {
+                    success: actual.as_str().contains(expected.as_str()),
+                    actual: value.display(),
+                    expected: format!("contains string <{}>", expected),
+                    type_mismatch: false,
+                }),
+                _ => Ok(AssertResult {
+                    success: false,
+                    actual: value.display(),
+                    expected: format!("contains string <{}>", expected),
+                    type_mismatch: true,
+                }),
+            }
+        }
+
+        // includes String
+        PredicateFuncValue::IncludeString {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            assert_include(value, Value::String(expected))
+        }
+
+        // includes int
+        PredicateFuncValue::IncludeInt {
+            value: expected, ..
+        } => assert_include(value, Value::Integer(expected)),
+
+        // includes float
+        PredicateFuncValue::IncludeFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_include(value, Value::Float(int, decimal)),
+
+        // includes bool
+        PredicateFuncValue::IncludeBool {
+            value: expected, ..
+        } => assert_include(value, Value::Bool(expected)),
+
+        // includes null
+        PredicateFuncValue::IncludeNull { .. } => assert_include(value, Value::Null),
+
+        // includes expression
+        PredicateFuncValue::IncludeExpression {
+            value: expected, ..
+        } => {
+            let expected = eval_expr(expected, variables)?;
+            assert_include(value, expected)
+        }
+
+        // match string
+        PredicateFuncValue::Match {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            let regex = match Regex::new(expected.as_str()) {
+                Ok(re) => re,
+                Err(_) => {
+                    return Err(Error {
+                        source_info: predicate_func.source_info.clone(),
+                        inner: RunnerError::InvalidRegex(),
+                        assert: false,
+                    });
+                }
+            };
+            match value.clone() {
+                Value::String(actual) => Ok(AssertResult {
+                    success: regex.is_match(actual.as_str()),
+                    actual: value.display(),
+                    expected: format!("matches regex <{}>", expected),
+                    type_mismatch: false,
+                }),
+                _ => Ok(AssertResult {
+                    success: false,
+                    actual: value.display(),
+                    expected: format!("matches regex <{}>", expected),
+                    type_mismatch: true,
+                }),
+            }
+        }
+
+        // exists
+        PredicateFuncValue::Exist {} => match value {
+            Value::Nodeset(0) => Ok(AssertResult {
+                success: false,
+                actual: value.display(),
+                expected: "something".to_string(),
+                type_mismatch: false,
+            }),
+            _ => Ok(AssertResult {
+                success: true,
+                actual: value.display(),
+                expected: "something".to_string(),
+                type_mismatch: false,
+            }),
+        },
     }
 }
 
@@ -536,14 +542,9 @@ mod tests {
             },
         };
 
-        assert!(predicate
-            .clone()
-            .eval(&variables, Some(Value::Bool(true)))
-            .is_ok());
+        assert!(eval_predicate(predicate.clone(), &variables, Some(Value::Bool(true))).is_ok());
 
-        let error = predicate
-            .clone()
-            .eval(&variables, Some(Value::Integer(10)))
+        let error = eval_predicate(predicate.clone(), &variables, Some(Value::Integer(10)))
             .err()
             .unwrap();
         assert_eq!(
@@ -556,7 +557,7 @@ mod tests {
         );
         assert_eq!(error.source_info, SourceInfo::init(1, 0, 1, 0));
 
-        assert!(predicate.eval(&variables, Some(Value::Integer(1))).is_ok());
+        assert!(eval_predicate(predicate, &variables, Some(Value::Integer(1))).is_ok());
     }
 
     #[test]
@@ -566,14 +567,17 @@ mod tests {
             value: String::from(" "),
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualInt {
-                space0: whitespace,
-                value: 10,
+        let assert_result = eval_predicate_func(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualInt {
+                    space0: whitespace,
+                    value: 10,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval(&variables, Some(Value::Bool(true)))
+            &variables,
+            Some(Value::Bool(true)),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
@@ -588,14 +592,17 @@ mod tests {
             value: String::from(" "),
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualInt {
-                space0: whitespace,
-                value: 10,
+        let assert_result = eval_predicate_func(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualInt {
+                    space0: whitespace,
+                    value: 10,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval(&variables, Some(Value::Unit))
+            &variables,
+            Some(Value::Unit),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, true);
@@ -611,46 +618,55 @@ mod tests {
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualInt {
-                space0: whitespace.clone(),
-                value: 10,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualInt {
+                    space0: whitespace.clone(),
+                    value: 10,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Integer(1))
+            &variables,
+            Value::Integer(1),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualBool {
-                space0: whitespace.clone(),
-                value: true,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualBool {
+                    space0: whitespace.clone(),
+                    value: true,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Bool(false))
+            &variables,
+            Value::Bool(false),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
         assert_eq!(assert_result.expected.as_str(), "bool <true>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualFloat {
-                space0: whitespace,
-                value: Float {
-                    int: 1,
-                    decimal: 200_000_000_000_000_000,
-                    decimal_digits: 0,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualFloat {
+                    space0: whitespace,
+                    value: Float {
+                        int: 1,
+                        decimal: 200_000_000_000_000_000,
+                        decimal_digits: 0,
+                    },
                 },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Float(1, 1))
+            &variables,
+            Value::Float(1, 1),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
@@ -664,20 +680,18 @@ mod tests {
     #[test]
     fn test_predicate_exist() {
         let variables = HashMap::new();
-        let predicate = PredicateFunc {
+        let predicate_func = PredicateFunc {
             value: PredicateFuncValue::Exist {},
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
 
-        let assert_result = predicate
-            .clone()
-            .eval(&variables, Some(Value::Unit))
-            .unwrap();
+        let assert_result =
+            eval_predicate_func(predicate_func.clone(), &variables, Some(Value::Unit)).unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.actual.as_str(), "unit");
         assert_eq!(assert_result.expected.as_str(), "something");
 
-        let assert_result = predicate.eval(&variables, None).unwrap();
+        let assert_result = eval_predicate_func(predicate_func, &variables, None).unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.actual.as_str(), "none");
         assert_eq!(assert_result.expected.as_str(), "something");
@@ -690,46 +704,55 @@ mod tests {
             value: String::from(" "),
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualInt {
-                space0: whitespace.clone(),
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualInt {
+                    space0: whitespace.clone(),
+                    value: 1,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Integer(1))
+            &variables,
+            Value::Integer(1),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualBool {
-                space0: whitespace.clone(),
-                value: false,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualBool {
+                    space0: whitespace.clone(),
+                    value: false,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Bool(false))
+            &variables,
+            Value::Bool(false),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
         assert_eq!(assert_result.expected.as_str(), "bool <false>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualFloat {
-                space0: whitespace.clone(),
-                value: Float {
-                    int: 1,
-                    decimal: 1,
-                    decimal_digits: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualFloat {
+                    space0: whitespace.clone(),
+                    value: Float {
+                        int: 1,
+                        decimal: 1,
+                        decimal_digits: 1,
+                    },
                 },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Float(1, 1))
+            &variables,
+            Value::Float(1, 1),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
@@ -737,14 +760,17 @@ mod tests {
         assert_eq!(assert_result.expected.as_str(), "float <1.1>");
 
         // a float can be equals to an int (but the reverse)
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualInt {
-                space0: whitespace,
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualInt {
+                    space0: whitespace,
+                    value: 1,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Float(1, 0))
+            &variables,
+            Value::Float(1, 0),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
@@ -779,14 +805,14 @@ mod tests {
             source_info: SourceInfo::init(1, 1, 1, 1),
         };
 
-        let error = PredicateFunc {
-            value: PredicateFuncValue::EqualString {
-                space0: whitespace.clone(),
-                value: template.clone(),
+        let error = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualString {
+                    space0: whitespace.clone(),
+                    value: template.clone(),
+                },
+                source_info: SourceInfo::init(1, 1, 1, 21),
             },
-            source_info: SourceInfo::init(1, 1, 1, 21),
-        }
-        .eval_something(
             &variables,
             Value::String(String::from("http://localhost:8000")),
         )
@@ -804,14 +830,14 @@ mod tests {
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::EqualString {
-                space0: whitespace,
-                value: template,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::EqualString {
+                    space0: whitespace,
+                    value: template,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(
             &variables,
             Value::String(String::from("http://localhost:8000")),
         )
@@ -836,42 +862,51 @@ mod tests {
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::CountEqual {
-                space0: whitespace.clone(),
-                value: 10,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::CountEqual {
+                    space0: whitespace.clone(),
+                    value: 10,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Bool(true))
+            &variables,
+            Value::Bool(true),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, true);
         assert_eq!(assert_result.actual.as_str(), "bool <true>");
         assert_eq!(assert_result.expected.as_str(), "count equals to <10>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::CountEqual {
-                space0: whitespace.clone(),
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::CountEqual {
+                    space0: whitespace.clone(),
+                    value: 1,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::List(vec![]))
+            &variables,
+            Value::List(vec![]),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "[]");
         assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
 
-        let assert_result = PredicateFunc {
-            source_info: SourceInfo::init(0, 0, 0, 0),
-            value: PredicateFuncValue::CountEqual {
-                space0: whitespace,
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                source_info: SourceInfo::init(0, 0, 0, 0),
+                value: PredicateFuncValue::CountEqual {
+                    space0: whitespace,
+                    value: 1,
+                },
             },
-        }
-        .eval_something(&variables, Value::Nodeset(3))
+            &variables,
+            Value::Nodeset(3),
+        )
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
@@ -886,28 +921,34 @@ mod tests {
             value: String::from(" "),
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::CountEqual {
-                space0: whitespace.clone(),
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::CountEqual {
+                    space0: whitespace.clone(),
+                    value: 1,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::List(vec![Value::Integer(1)]))
+            &variables,
+            Value::List(vec![Value::Integer(1)]),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "[int <1>]");
         assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
 
-        let assert_result = PredicateFunc {
-            value: PredicateFuncValue::CountEqual {
-                space0: whitespace,
-                value: 1,
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::CountEqual {
+                    space0: whitespace,
+                    value: 1,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        }
-        .eval_something(&variables, Value::Nodeset(1))
+            &variables,
+            Value::Nodeset(1),
+        )
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
@@ -930,7 +971,7 @@ mod tests {
         };
 
         let variables = HashMap::new();
-        assert!(predicate.eval(&variables, Some(Value::Integer(1))).is_ok());
+        assert!(eval_predicate(predicate, &variables, Some(Value::Integer(1))).is_ok());
         //assert!(predicate.eval(&variables, None).is_ok());
 
         // startswith predicate generates a type error with an integer value
@@ -952,8 +993,7 @@ mod tests {
                 },
             },
         };
-        let error = predicate
-            .eval(&variables, Some(Value::Integer(1)))
+        let error = eval_predicate(predicate, &variables, Some(Value::Integer(1)))
             .err()
             .unwrap();
         assert_eq!(
@@ -961,7 +1001,7 @@ mod tests {
             RunnerError::AssertFailure {
                 actual: "int <1>".to_string(),
                 expected: "not starts with string <toto>".to_string(),
-                type_mismatch: true
+                type_mismatch: true,
             }
         );
     }
@@ -980,13 +1020,13 @@ mod tests {
         };
 
         let variables = HashMap::new();
-        let error = predicate.eval(&variables, None).err().unwrap();
+        let error = eval_predicate(predicate, &variables, None).err().unwrap();
         assert_eq!(
             error.inner,
             RunnerError::AssertFailure {
                 actual: "none".to_string(),
                 expected: "null".to_string(),
-                type_mismatch: false
+                type_mismatch: false,
             }
         );
 
@@ -1002,6 +1042,6 @@ mod tests {
         };
 
         let variables = HashMap::new();
-        assert!(predicate.eval(&variables, None).is_ok());
+        assert!(eval_predicate(predicate, &variables, None).is_ok());
     }
 }

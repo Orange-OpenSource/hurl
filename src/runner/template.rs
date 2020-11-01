@@ -22,50 +22,52 @@ use crate::ast::*;
 use super::core::{Error, RunnerError};
 use super::value::Value;
 
-impl Template {
-    pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
-        let Template { elements, .. } = self;
-        {
-            let mut value = String::from("");
-            for elem in elements {
-                match elem.eval(variables) {
-                    Ok(v) => value.push_str(v.as_str()),
-                    Err(e) => return Err(e),
-                }
+pub fn eval_template(
+    template: Template,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    let Template { elements, .. } = template;
+    {
+        let mut value = String::from("");
+        for elem in elements {
+            match eval_template_element(elem, variables) {
+                Ok(v) => value.push_str(v.as_str()),
+                Err(e) => return Err(e),
             }
-            Ok(value)
         }
+        Ok(value)
     }
 }
 
-impl TemplateElement {
-    pub fn eval(self, variables: &HashMap<String, Value>) -> Result<String, Error> {
-        match self {
-            TemplateElement::String { value, .. } => Ok(value),
-            TemplateElement::Expression(Expr {
-                variable: Variable { name, source_info },
-                ..
-            }) => match variables.get(&name as &str) {
-                Some(value) => {
-                    if value.is_renderable() {
-                        Ok(value.clone().to_string())
-                    } else {
-                        Err(Error {
-                            source_info,
-                            inner: RunnerError::UnrenderableVariable {
-                                value: value.to_string(),
-                            },
-                            assert: false,
-                        })
-                    }
+fn eval_template_element(
+    template_element: TemplateElement,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    match template_element {
+        TemplateElement::String { value, .. } => Ok(value),
+        TemplateElement::Expression(Expr {
+            variable: Variable { name, source_info },
+            ..
+        }) => match variables.get(&name as &str) {
+            Some(value) => {
+                if value.is_renderable() {
+                    Ok(value.clone().to_string())
+                } else {
+                    Err(Error {
+                        source_info,
+                        inner: RunnerError::UnrenderableVariable {
+                            value: value.to_string(),
+                        },
+                        assert: false,
+                    })
                 }
-                _ => Err(Error {
-                    source_info,
-                    inner: RunnerError::TemplateVariableNotDefined { name },
-                    assert: false,
-                }),
-            },
-        }
+            }
+            _ => Err(Error {
+                source_info,
+                inner: RunnerError::TemplateVariableNotDefined { name },
+                assert: false,
+            }),
+        },
     }
 }
 
@@ -103,11 +105,13 @@ mod tests {
     fn test_template_element() {
         let variables = HashMap::new();
         assert_eq!(
-            TemplateElement::String {
-                value: "World".to_string(),
-                encoded: "World".to_string()
-            }
-            .eval(&variables)
+            eval_template_element(
+                TemplateElement::String {
+                    value: "World".to_string(),
+                    encoded: "World".to_string(),
+                },
+                &variables
+            )
             .unwrap(),
             "World".to_string()
         );
@@ -115,7 +119,7 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("World".to_string()));
         assert_eq!(
-            template_element_expression().eval(&variables).unwrap(),
+            eval_template_element(template_element_expression(), &variables).unwrap(),
             "World".to_string()
         );
     }
@@ -127,8 +131,7 @@ mod tests {
             "name".to_string(),
             Value::List(vec![Value::Integer(1), Value::Integer(2)]),
         );
-        let error = template_element_expression()
-            .eval(&variables)
+        let error = eval_template_element(template_element_expression(), &variables)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 3, 1, 7));
