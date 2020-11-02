@@ -19,4 +19,5 @@
 pub use self::core::{Error, Lintable, LinterError};
 
 mod core;
+mod error;
 mod rules;

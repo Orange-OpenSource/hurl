@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+
+#[allow(unused)]
 pub enum TerminalColor {
     Black,
     Red,

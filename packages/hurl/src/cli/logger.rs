@@ -16,9 +16,11 @@
  *
  */
 
-use super::error::Error;
-use crate::format::TerminalColor;
 use crate::runner;
+
+use super::color::TerminalColor;
+
+use hurl_core::error::Error;
 use hurl_core::parser;
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {

@@ -29,12 +29,12 @@ use chrono::{DateTime, Local};
 use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
-use hurl::cli::Error;
 use hurl::html;
 use hurl::http;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions};
 use hurl_core::ast::{Pos, SourceInfo};
+use hurl_core::error::Error;
 use hurl_core::parser;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -56,6 +56,10 @@ pub struct CLIOptions {
     pub user: Option<String>,
 }
 
+pub struct CLIError {
+    pub message: String,
+}
+
 fn execute(
     filename: &str,
     contents: String,
@@ -75,10 +79,12 @@ fn execute(
     } else {
         Some(filename.to_string())
     };
+
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
     let log_runner_error =
         cli::make_logger_runner_error(lines, cli_options.color, optional_filename);
+
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
             log_parser_error(&e, false);
@@ -89,7 +95,7 @@ fn execute(
             log_verbose(format!("insecure: {}", cli_options.insecure).as_str());
             log_verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
             if let Some(n) = cli_options.max_redirect {
-                log_verbose(format!("max redirect: {}", n).as_str());
+                log_verbose(format!("max redirect: {}", n.to_string()).as_str());
             }
             if let Some(proxy) = cli_options.proxy.clone() {
                 log_verbose(format!("proxy: {}", proxy).as_str());
@@ -108,7 +114,7 @@ fn execute(
                         format!(
                             "executing {}/{} entries",
                             to_entry.to_string(),
-                            hurl_file.entries.len()
+                            hurl_file.entries.len().to_string()
                         )
                         .as_str(),
                     );
@@ -190,11 +196,11 @@ fn output_color(matches: ArgMatches) -> bool {
     }
 }
 
-fn to_entry(matches: ArgMatches) -> Result<Option<usize>, cli::CLIError> {
+fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CLIError> {
     match matches.value_of("to_entry") {
         Some(value) => match value.parse() {
             Ok(v) => Ok(Some(v)),
-            Err(_) => Err(cli::CLIError {
+            Err(_) => Err(CLIError {
                 message: "Invalid value for option --to-entry - must be a positive integer!"
                     .to_string(),
             }),
@@ -206,7 +212,7 @@ fn to_entry(matches: ArgMatches) -> Result<Option<usize>, cli::CLIError> {
 fn json_file(
     matches: ArgMatches,
     log_verbose: impl Fn(&str),
-) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), cli::CLIError> {
+) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), CLIError> {
     if let Some(filename) = matches.value_of("json") {
         let path = Path::new(filename);
 
@@ -217,14 +223,14 @@ fn json_file(
             let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
                 Ok(val) => val,
                 Err(_) => {
-                    return Err(cli::CLIError {
+                    return Err(CLIError {
                         message: format!("The file {} is not a valid json file", path.display()),
                     });
                 }
             };
             match runner::deserialize_results(v) {
                 Err(msg) => {
-                    return Err(cli::CLIError {
+                    return Err(CLIError {
                         message: format!("Existing Hurl json can not be parsed! -  {}", msg),
                     });
                 }
@@ -240,7 +246,7 @@ fn json_file(
     }
 }
 
-fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, cli::CLIError> {
+fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIError> {
     if let Some(dir) = matches.value_of("html_report") {
         let path = Path::new(dir);
         if std::path::Path::new(&path).exists() {
@@ -249,7 +255,7 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, cli::C
                 .map(|mut i| i.next().is_none())
                 .unwrap_or(false)
             {
-                return Err(cli::CLIError {
+                return Err(CLIError {
                     message: format!(
                         "Html dir {} already exists and is not empty",
                         path.display()
@@ -259,7 +265,7 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, cli::C
             Ok(Some(path.to_path_buf()))
         } else {
             match std::fs::create_dir(path) {
-                Err(_) => Err(cli::CLIError {
+                Err(_) => Err(CLIError {
                     message: format!("Html dir {} can not be created", path.display()),
                 }),
                 Ok(_) => Ok(Some(path.to_path_buf())),
@@ -270,21 +276,21 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, cli::C
     }
 }
 
-fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, cli::CLIError> {
+fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, CLIError> {
     let mut variables = HashMap::new();
     if matches.is_present("variable") {
         let input: Vec<_> = matches.values_of("variable").unwrap().collect();
         for s in input {
             match s.find('=') {
                 None => {
-                    return Err(cli::CLIError {
+                    return Err(CLIError {
                         message: format!("Missing variable value for {}!", s),
                     });
                 }
                 Some(index) => {
                     let (name, value) = s.split_at(index);
                     if variables.contains_key(name) {
-                        return Err(cli::CLIError {
+                        return Err(CLIError {
                             message: format!("Variable {} defined twice!", name),
                         });
                     }
@@ -466,7 +472,7 @@ fn app() -> clap::App<'static, 'static> {
 
 pub fn unwrap_or_exit<T>(
     log_error_message: &impl Fn(bool, &str),
-    result: Result<T, cli::CLIError>,
+    result: Result<T, CLIError>,
 ) -> T {
     match result {
         Ok(v) => v,
@@ -477,7 +483,7 @@ pub fn unwrap_or_exit<T>(
     }
 }
 
-fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
+fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
     let verbose = matches.is_present("verbose");
     let color = output_color(matches.clone());
     let fail_fast = !matches.is_present("fail_at_end");
@@ -494,7 +500,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         Some(s) => match s.parse::<usize>() {
             Ok(x) => Some(x),
             Err(_) => {
-                return Err(cli::CLIError {
+                return Err(CLIError {
                     message: "max_redirs option can not be parsed".to_string(),
                 });
             }
@@ -506,7 +512,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(cli::CLIError {
+                return Err(CLIError {
                     message: "max_time option can not be parsed".to_string(),
                 });
             }
@@ -518,7 +524,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, cli::CLIError> {
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(cli::CLIError {
+                return Err(CLIError {
                     message: "connect-timeout option can not be parsed".to_string(),
                 });
             }
@@ -586,7 +592,7 @@ fn main() {
         Some(filename) => {
             let filename = unwrap_or_exit(
                 &log_error_message,
-                cli::cookies_output_file(filename.to_string(), filenames.len()),
+                cookies_output_file(filename.to_string(), filenames.len()),
             );
             Some(filename)
         }
@@ -753,7 +759,7 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     }
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), cli::CLIError> {
+fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CLIError> {
     match filename {
         None => {
             let stdout = io::stdout();
@@ -768,7 +774,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), cli::CLIEr
             let path = Path::new(filename);
             let mut file = match std::fs::File::create(&path) {
                 Err(why) => {
-                    return Err(cli::CLIError {
+                    return Err(CLIError {
                         message: format!("Issue writing to {}: {:?}", path.display(), why),
                     });
                 }
@@ -781,13 +787,21 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), cli::CLIEr
     }
 }
 
-fn write_cookies_file(
-    file_path: PathBuf,
-    hurl_results: Vec<HurlResult>,
-) -> Result<(), cli::CLIError> {
+pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CLIError> {
+    if n > 1 {
+        Err(CLIError {
+            message: "Only save cookies for a unique session".to_string(),
+        })
+    } else {
+        let path = std::path::Path::new(&filename);
+        Ok(path.to_path_buf())
+    }
+}
+
+fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CLIError> {
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(cli::CLIError {
+            return Err(CLIError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
@@ -800,7 +814,7 @@ fn write_cookies_file(
     .to_string();
     match hurl_results.first() {
         None => {
-            return Err(cli::CLIError {
+            return Err(CLIError {
                 message: "Issue fetching results".to_string(),
             });
         }
@@ -813,17 +827,14 @@ fn write_cookies_file(
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(cli::CLIError {
+        return Err(CLIError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
     Ok(())
 }
 
-fn write_html_report(
-    dir_path: PathBuf,
-    hurl_results: Vec<HurlResult>,
-) -> Result<(), cli::CLIError> {
+fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CLIError> {
     //let now: DateTime<Utc> = Utc::now();
     let now: DateTime<Local> = Local::now();
     let html = create_html_index(now.to_rfc2822(), hurl_results);
@@ -832,14 +843,14 @@ fn write_html_report(
     let file_path = dir_path.join("index.html");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(cli::CLIError {
+            return Err(CLIError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(cli::CLIError {
+        return Err(CLIError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
@@ -847,14 +858,14 @@ fn write_html_report(
     let file_path = dir_path.join("report.css");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(cli::CLIError {
+            return Err(CLIError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(include_bytes!("report.css")) {
-        return Err(cli::CLIError {
+        return Err(CLIError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }

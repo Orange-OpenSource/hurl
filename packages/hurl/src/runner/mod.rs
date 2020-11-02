@@ -34,6 +34,7 @@ mod content_decoding;
 mod cookie;
 mod core;
 mod entry;
+mod error;
 mod expr;
 mod http_response;
 mod hurl_file;

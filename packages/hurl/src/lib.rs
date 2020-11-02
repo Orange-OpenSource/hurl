@@ -21,7 +21,6 @@
 extern crate float_cmp;
 
 pub mod cli;
-pub mod format;
 pub mod html;
 pub mod http;
 pub mod jsonpath;

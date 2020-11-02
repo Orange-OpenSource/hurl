@@ -16,14 +16,12 @@
  *
  */
 
-pub use self::error::Error;
 pub use self::logger::{
     log_info, make_logger_error_message, make_logger_linter_error, make_logger_parser_error,
     make_logger_verbose,
 };
-pub use self::options::cookies_output_file;
-pub use self::options::CLIError;
 
-mod error;
+pub use self::color::TerminalColor;
+
+mod color;
 mod logger;
-mod options;

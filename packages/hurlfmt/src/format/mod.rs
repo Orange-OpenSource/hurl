@@ -16,12 +16,10 @@
  *
  */
 
-pub use self::color::TerminalColor;
 pub use self::html::format as format_html;
 pub use self::text::format as format_text;
 pub use self::token::{Token, Tokenizable};
 
-mod color;
 mod html;
 mod text;
 mod token;

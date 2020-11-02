@@ -20,4 +20,5 @@
 extern crate float_cmp;
 
 pub mod ast;
+pub mod error;
 pub mod parser;

@@ -17,8 +17,8 @@
  */
 use hurl_core::ast::*;
 
-use super::color::TerminalColor;
 use super::token::*;
+use crate::cli::TerminalColor;
 
 pub fn format(hurl_file: HurlFile, color: bool) -> String {
     let mut buffer = String::from("");

@@ -30,6 +30,10 @@ use hurlfmt::cli;
 use hurlfmt::format;
 use hurlfmt::linter::Lintable;
 
+pub struct CLIError {
+    pub message: String,
+}
+
 fn main() {
     //    // Do we have a git hash?
     //    // (Yes, if ripgrep was built on a machine with `git` installed.)
