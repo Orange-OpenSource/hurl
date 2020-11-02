@@ -359,6 +359,60 @@ dependencies = [
  "curl",
  "encoding",
  "float-cmp",
+ "hurl_core",
+ "libflate",
+ "libxml",
+ "proptest",
+ "regex",
+ "roxmltree",
+ "serde",
+ "serde-xml-rs",
+ "serde_json",
+ "structopt",
+ "sxd-document",
+ "url",
+ "xmlparser",
+]
+
+[[package]]
+name = "hurl_core"
+version = "0.99.14"
+dependencies = [
+ "atty",
+ "base64",
+ "brotli",
+ "chrono",
+ "clap",
+ "curl",
+ "encoding",
+ "float-cmp",
+ "libflate",
+ "libxml",
+ "proptest",
+ "regex",
+ "roxmltree",
+ "serde",
+ "serde-xml-rs",
+ "serde_json",
+ "structopt",
+ "sxd-document",
+ "url",
+ "xmlparser",
+]
+
+[[package]]
+name = "hurlfmt"
+version = "0.99.14"
+dependencies = [
+ "atty",
+ "base64",
+ "brotli",
+ "chrono",
+ "clap",
+ "curl",
+ "encoding",
+ "float-cmp",
+ "hurl_core",
  "libflate",
  "libxml",
  "proptest",
