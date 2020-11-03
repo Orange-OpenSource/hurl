@@ -264,23 +264,25 @@ fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
 }
 
 fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
-    let start = reader.state.clone();
-    match natural(reader) {
-        Ok(value) => Ok(Status {
-            value,
-            source_info: SourceInfo::init(
-                start.pos.line,
-                start.pos.column,
-                reader.state.pos.line,
-                reader.state.pos.column,
-            ),
-        }),
-        Err(_) => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Status {},
-        }),
-    }
+    let start = reader.state.pos.clone();
+    let value = match try_literal("*", reader) {
+        Ok(_) => StatusValue::Any,
+        Err(_) => match natural(reader) {
+            Ok(value) => StatusValue::Specific(value),
+            Err(_) => {
+                return Err(Error {
+                    pos: start.clone(),
+                    recoverable: false,
+                    inner: ParseError::Status {},
+                })
+            }
+        },
+    };
+    let end = reader.state.pos.clone();
+    Ok(Status {
+        value,
+        source_info: SourceInfo { start, end },
+    })
 }
 
 fn body(reader: &mut Reader) -> ParseResult<'static, Body> {
@@ -351,7 +353,7 @@ mod tests {
         let mut reader = Reader::init("GET http://google.fr\nHTTP/1.1 200");
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::Get);
-        assert_eq!(e.response.unwrap().status.value, 200);
+        assert_eq!(e.response.unwrap().status.value, StatusValue::Specific(200));
     }
 
     #[test]
@@ -560,7 +562,7 @@ mod tests {
         let r = response(&mut reader).unwrap();
 
         assert_eq!(r.version.value, VersionValue::Version11);
-        assert_eq!(r.status.value, 200);
+        assert_eq!(r.status.value, StatusValue::Specific(200));
     }
 
     #[test]
@@ -715,9 +717,13 @@ mod tests {
 
     #[test]
     fn test_status() {
+        let mut reader = Reader::init("*");
+        let s = status(&mut reader).unwrap();
+        assert_eq!(s.value, StatusValue::Any);
+
         let mut reader = Reader::init("200");
         let s = status(&mut reader).unwrap();
-        assert_eq!(s.value, 200);
+        assert_eq!(s.value, StatusValue::Specific(200));
 
         let mut reader = Reader::init("xxx");
         let result = status(&mut reader);

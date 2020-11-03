@@ -147,12 +147,6 @@ impl Method {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Status {
-    pub value: u64,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Version {
     pub value: VersionValue,
     pub source_info: SourceInfo,
@@ -173,6 +167,27 @@ impl VersionValue {
             VersionValue::Version11 => "1.1",
             VersionValue::Version2 => "2",
             VersionValue::VersionAny => "*",
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Status {
+    pub value: StatusValue,
+    pub source_info: SourceInfo,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum StatusValue {
+    Any,
+    Specific(u64),
+}
+
+impl fmt::Display for StatusValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            StatusValue::Any => write!(f, "*"),
+            StatusValue::Specific(v) => write!(f, "{}", v.to_string()),
         }
     }
 }
