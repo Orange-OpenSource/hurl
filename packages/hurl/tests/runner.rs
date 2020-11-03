@@ -186,7 +186,7 @@ fn test_hello() {
                 },
                 space0: whitespace.clone(),
                 status: Status {
-                    value: 200,
+                    value: StatusValue::Specific(200),
                     source_info: source_info.clone(),
                 },
                 space1: whitespace.clone(),

@@ -44,11 +44,13 @@ pub fn eval_asserts(
     });
 
     let status = response.clone().status;
-    asserts.push(AssertResult::Status {
-        actual: u64::from(http_response.status),
-        expected: status.value as u64,
-        source_info: status.source_info,
-    });
+    if let StatusValue::Specific(v) = status.value {
+        asserts.push(AssertResult::Status {
+            actual: http_response.status as u64,
+            expected: v as u64,
+            source_info: status.source_info,
+        });
+    }
 
     for header in response.clone().headers {
         match eval_template(header.value.clone(), variables) {
@@ -247,7 +249,7 @@ mod tests {
             },
             space0: whitespace.clone(),
             status: Status {
-                value: 200,
+                value: StatusValue::Specific(200),
                 source_info: SourceInfo::init(2, 10, 2, 13),
             },
             space1: whitespace.clone(),

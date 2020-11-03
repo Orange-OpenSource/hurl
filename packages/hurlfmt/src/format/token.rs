@@ -124,7 +124,7 @@ impl Tokenizable for Response {
         add_tokens(&mut tokens, self.space0.tokenize());
         add_tokens(&mut tokens, self.version.tokenize());
         add_tokens(&mut tokens, self.space1.tokenize());
-        tokens.push(Token::Status(self.status.value.to_string()));
+        add_tokens(&mut tokens, self.status.tokenize());
         add_tokens(&mut tokens, self.line_terminator0.tokenize());
         add_tokens(
             &mut tokens,
@@ -136,6 +136,17 @@ impl Tokenizable for Response {
         );
         if let Some(body) = self.clone().body {
             add_tokens(&mut tokens, body.tokenize())
+        }
+        tokens
+    }
+}
+
+impl Tokenizable for Status {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        match self.value.clone() {
+            StatusValue::Any => tokens.push(Token::Status("*".to_string())),
+            StatusValue::Specific(v) => tokens.push(Token::Status(v.to_string())),
         }
         tokens
     }
