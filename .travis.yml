@@ -20,7 +20,7 @@ jobs:
       os: linux
       dist: bionic
       before_script:
-         - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
+         - export VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"')
          - sudo apt install -y libcurl4-openssl-dev
       script:
          - ci/man.sh
@@ -39,7 +39,7 @@ jobs:
       os: osx
       before_script:
          - brew install jq
-         - export VERSION=$(grep '^version' Cargo.toml | cut -f2 -d'"')
+         - export VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"')
       script:
          - ci/man.sh
          - ci/release.sh

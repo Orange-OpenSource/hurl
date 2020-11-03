@@ -1,0 +1,23 @@
+[package]
+name = "hurlfmt"
+version = "0.99.14"
+authors = ["Fabrice Reix <fabrice.reix@orange.com>"]
+edition = "2018"
+
+[features]
+# Treat warnings as a build error.
+strict = []
+
+[dependencies]
+atty = "0.2.13"
+clap = "2.33.0"
+regex = "1.1.0"
+
+[dependencies.hurl_core]
+path = "../hurl_core"
+
+[dev-dependencies]
+proptest = "0.9.4"
+
+
+

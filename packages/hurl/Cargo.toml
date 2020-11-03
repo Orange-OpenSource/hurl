@@ -1,0 +1,36 @@
+[package]
+name = "hurl"
+version = "0.99.14"
+authors = ["Fabrice Reix <fabrice.reix@orange.com>"]
+edition = "2018"
+
+[lib]
+name = "hurl"
+
+[features]
+# Treat warnings as a build error.
+strict = []
+
+[dependencies]
+atty = "0.2.13"
+base64 = "0.11.0"
+brotli="3.3.0"
+chrono = "0.4.11"
+clap = "2.33.0"
+curl = "0.4.33"
+encoding = "0.2"
+float-cmp = "0.6.0"
+libflate = "1.0.2"
+libxml = "0.2.12"
+regex = "1.1.0"
+serde = "1.0.104"
+serde_json = "1.0.40"
+url = "2.1.0"
+
+[dependencies.hurl_core]
+path = "../hurl_core"
+
+
+
+
+
