@@ -101,6 +101,7 @@ impl Serialize for Request {
         state.serialize_field("queryString", &self.clone().querystring)?;
         state.serialize_field("headers", &self.clone().headers)?;
         state.serialize_field("cookies", &self.clone().cookies)?;
+        state.serialize_field("multipartFormData", &self.clone().multipart)?;
 
         if !self.clone().form.is_empty() {
             state.serialize_field("form", &self.clone().form)?;
@@ -223,6 +224,34 @@ impl Serialize for Cookie {
         state.serialize_field("expires", &self.clone().expires)?;
         state.serialize_field("name", &self.clone().name)?;
         state.serialize_field("value", &self.clone().value)?;
+        state.end()
+    }
+}
+
+impl Serialize for MultipartParam {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match &self.clone() {
+            MultipartParam::Param(param) => param.serialize(serializer),
+            MultipartParam::FileParam(file_param) => file_param.serialize(serializer),
+        }
+    }
+}
+
+impl Serialize for FileParam {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("FileParam", 4)?;
+        state.serialize_field("name", &self.clone().name)?;
+        if let Ok(s) = std::str::from_utf8(&self.clone().data) {
+            state.serialize_field("value", s)?;
+        }
+        state.serialize_field("fileName", &self.clone().filename)?;
+        state.serialize_field("contentType", &self.clone().content_type)?;
         state.end()
     }
 }
