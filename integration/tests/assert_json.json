@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/assert-json"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/assert-json/index"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/assert-json"},"response":{"version":"HTTP/1.0","status":200}}]}

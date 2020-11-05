@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/redirect"},"response":{"version":"HTTP/1.0","status":302,"headers":[{"name":"Location","value":"http://localhost:8000/redirected"}]}},{"request":{"method":"GET","url":"http://localhost:8000/redirected"},"response":{"version":"HTTP/1.0","status":200}}]}

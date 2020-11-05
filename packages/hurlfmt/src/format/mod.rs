@@ -17,9 +17,12 @@
  */
 
 pub use self::html::format as format_html;
+pub use self::json::format as format_json;
 pub use self::text::format as format_text;
 pub use self::token::{Token, Tokenizable};
 
 mod html;
+mod json;
+mod serialize_json;
 mod text;
 mod token;
