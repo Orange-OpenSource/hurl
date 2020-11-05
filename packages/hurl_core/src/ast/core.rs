@@ -16,12 +16,10 @@
  *
  */
 use super::json;
-use core::fmt;
 
 ///
 /// Hurl AST
 ///
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlFile {
     pub entries: Vec<Entry>,
@@ -130,22 +128,6 @@ pub enum Method {
     Patch,
 }
 
-impl Method {
-    pub fn as_str<'a>(&self) -> &'a str {
-        match self {
-            Method::Get => "GET",
-            Method::Head => "HEAD",
-            Method::Post => "POST",
-            Method::Put => "PUT",
-            Method::Delete => "DELETE",
-            Method::Connect => "CONNECT",
-            Method::Options => "OPTIONS",
-            Method::Trace => "TRACE",
-            Method::Patch => "PATCH",
-        }
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Version {
     pub value: VersionValue,
@@ -183,16 +165,7 @@ pub enum StatusValue {
     Specific(u64),
 }
 
-impl fmt::Display for StatusValue {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            StatusValue::Any => write!(f, "*"),
-            StatusValue::Specific(v) => write!(f, "{}", v.to_string()),
-        }
-    }
-}
-
-type Header = KeyValue;
+pub type Header = KeyValue;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Body {
@@ -509,16 +482,6 @@ pub struct Float {
     pub decimal_digits: usize, // number of digits
 }
 
-impl fmt::Display for Float {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let decimal_str: String = format!("{:018}", self.decimal)
-            .chars()
-            .take(self.decimal_digits)
-            .collect();
-        write!(f, "{}.{}", self.int, decimal_str)
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LineTerminator {
     pub space0: Whitespace,
@@ -583,13 +546,6 @@ impl SourceInfo {
     }
 }
 
-//
-// template
-//
-// might include expression
-// which can only simple ASCII (even in json value)
-// optional delimiter/encoding
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Expr {
     pub space0: Whitespace,
@@ -601,49 +557,4 @@ pub struct Expr {
 pub struct Variable {
     pub name: String,
     pub source_info: SourceInfo,
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_float() {
-        assert_eq!(
-            Float {
-                int: 1,
-                decimal: 0,
-                decimal_digits: 1,
-            }
-            .to_string(),
-            "1.0"
-        );
-        assert_eq!(
-            Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 2,
-            }
-            .to_string(),
-            "1.01"
-        );
-        assert_eq!(
-            Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 3,
-            }
-            .to_string(),
-            "1.010"
-        );
-        assert_eq!(
-            Float {
-                int: -1,
-                decimal: 333_333_333_333_333_333,
-                decimal_digits: 3,
-            }
-            .to_string(),
-            "-1.333"
-        );
-    }
 }

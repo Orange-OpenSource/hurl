@@ -92,7 +92,7 @@ impl Tokenizable for Request {
                 .collect(),
         );
         add_tokens(&mut tokens, self.space0.tokenize());
-        tokens.push(Token::Method(self.method.as_str().to_string()));
+        tokens.push(Token::Method(self.method.to_string()));
         add_tokens(&mut tokens, self.space1.tokenize());
         add_tokens(&mut tokens, self.url.tokenize());
         add_tokens(&mut tokens, self.line_terminator0.tokenize());

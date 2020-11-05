@@ -120,7 +120,7 @@ impl Htmlable for Response {
 
 impl Htmlable for Method {
     fn to_html(&self) -> String {
-        return format!("<span class=\"method\">{}</span>", self.as_str());
+        return format!("<span class=\"method\">{}</span>", self.to_string());
     }
 }
 
