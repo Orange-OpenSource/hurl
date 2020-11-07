@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/predicates-string"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/predicates-string-empty"},"response":{"version":"HTTP/1.0","status":200}}]}

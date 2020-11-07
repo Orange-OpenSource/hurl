@@ -4,6 +4,8 @@ cd "$(dirname "$0")"
 
 # Static Analysis
 ./hurl_echo tests/*.hurl tests_error_lint/*.hurl
+./export_json.sh tests/*.hurl
+
 ./lint.sh tests_error_lint/*.hurl
 ./generate_html
 

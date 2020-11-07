@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/post-multilines"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/get-bob-age"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"POST","url":"http://localhost:8000/post-multilines"},"response":{"version":"HTTP/1.0","status":200}}]}

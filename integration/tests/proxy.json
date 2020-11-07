@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/proxy"},"response":{"version":"HTTP/1.0","status":200,"headers":[{"name":"From-Proxy","value":"Hello"}]}}]}

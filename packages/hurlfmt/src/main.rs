@@ -73,7 +73,15 @@ fn main() {
             clap::Arg::with_name("html_output")
                 .long("html")
                 .conflicts_with("ast_output")
+                .conflicts_with("json_output")
                 .help("Output Html"),
+        )
+        .arg(
+            clap::Arg::with_name("json_output")
+                .long("json")
+                .conflicts_with("ast_output")
+                .conflicts_with("html_output")
+                .help("Output Json"),
         )
         .arg(
             clap::Arg::with_name("standalone")
@@ -91,6 +99,7 @@ fn main() {
             clap::Arg::with_name("ast_output")
                 .long("ast")
                 .conflicts_with("html_output")
+                .conflicts_with("json_output")
                 .help("Output AST"),
         )
         .arg(
@@ -187,6 +196,8 @@ fn main() {
                 std::process::exit(1);
             } else if matches.is_present("ast_output") {
                 eprintln!("{:#?}", hurl_file);
+            } else if matches.is_present("json_output") {
+                println!("{}", format::format_json(hurl_file));
             } else if matches.is_present("html_output") {
                 let standalone = matches.is_present("standalone");
                 println!("{}", format::format_html(hurl_file, standalone));

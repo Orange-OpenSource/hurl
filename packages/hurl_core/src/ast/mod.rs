@@ -22,4 +22,5 @@ pub use self::json::ObjectElement as JsonObjectElement;
 pub use self::json::Value as JsonValue;
 
 mod core;
+mod display;
 mod json;

@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/assert-header"},"response":{"version":"HTTP/1.0","status":200,"headers":[{"name":"Content-Type","value":"text/html; charset=utf-8"},{"name":"Set-Cookie","value":"cookie1=value1; Path=/"},{"name":"Set-Cookie","value":"cookie2=value2; Path=/"}]}}]}
