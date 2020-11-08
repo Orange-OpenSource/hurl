@@ -631,19 +631,19 @@ fn main() {
             // last entry + response + body
             if let Some(entry_result) = hurl_result.entries.last() {
                 if let Some(response) = entry_result.response.clone() {
+                    let mut output = vec![];
                     if matches.is_present("include") {
-                        cli::log_info(
-                            format!(
-                                "HTTP/{} {}",
-                                response.version.to_string(),
-                                response.status.to_string()
-                            )
-                            .as_str(),
+                        let status_line = format!(
+                            "HTTP/{} {}\n",
+                            response.version.to_string(),
+                            response.status.to_string()
                         );
+                        output.append(&mut status_line.into_bytes());
                         for header in response.headers.clone() {
-                            cli::log_info(format!("{}: {}", header.name, header.value).as_str());
+                            let header_line = format!("{}: {}\n", header.name, header.value);
+                            output.append(&mut header_line.into_bytes());
                         }
-                        cli::log_info("");
+                        output.append(&mut "\n".to_string().into_bytes());
                     }
                     let body = if cli_options.compressed {
                         match response.uncompress_body() {
@@ -668,9 +668,10 @@ fn main() {
                     } else {
                         response.body
                     };
+                    output.append(&mut body.clone());
                     unwrap_or_exit(
                         &log_error_message,
-                        write_output(body, matches.value_of("output")),
+                        write_output(output, matches.value_of("output")),
                     );
                 } else {
                     cli::log_info("no response has been received");
