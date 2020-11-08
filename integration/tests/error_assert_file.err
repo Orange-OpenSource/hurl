@@ -1,7 +1,7 @@
 error: Assert Body Value
   --> tests/error_assert_file.hurl:8:1
    |
- 8 | file,hello.txt;
+ 8 | file,data.txt;
    | ^ actual value is <Bytes([48, 65, 6c, 6c, 6f])>
    |
 
