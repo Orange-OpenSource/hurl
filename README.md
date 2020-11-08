@@ -2,6 +2,7 @@
 
 <br/>
 
+[![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![deploy status](https://travis-ci.org/Orange-OpenSource/hurl.svg?branch=master)](https://travis-ci.org/Orange-OpenSource/hurl/)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
