@@ -1,1 +1,0 @@
-hurl tests/output.hurl

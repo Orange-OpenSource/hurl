@@ -9,6 +9,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -30,7 +31,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:55 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -40,7 +41,7 @@
       }
     ],
     "success": true,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -53,6 +54,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -106,7 +108,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:55 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -116,7 +118,7 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 7,
     "cookies": []
   },
   {
@@ -129,6 +131,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -150,7 +153,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -165,6 +168,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -186,7 +190,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -201,6 +205,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -222,7 +227,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -232,7 +237,7 @@
       }
     ],
     "success": true,
-    "time": 12,
+    "time": 13,
     "cookies": []
   },
   {
@@ -245,6 +250,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -266,7 +272,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -289,6 +295,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -310,7 +317,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -324,6 +331,88 @@
     "cookies": []
   },
   {
+    "filename": "tests/assert_status_code.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-status-code",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 201,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-status-code",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 201,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": true,
+    "time": 8,
+    "cookies": []
+  },
+  {
     "filename": "tests/assert_xpath.hurl",
     "entries": [
       {
@@ -333,6 +422,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -354,7 +444,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -377,6 +467,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -398,7 +489,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -421,6 +512,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -442,7 +534,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -465,6 +557,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -486,7 +579,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -509,6 +602,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -538,7 +632,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -562,6 +656,7 @@
           ],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -583,7 +678,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -598,6 +693,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -619,7 +715,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -642,6 +738,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -663,7 +760,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -678,6 +775,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -703,7 +801,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -718,6 +816,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -743,7 +842,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -758,6 +857,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -783,7 +883,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -798,6 +898,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -823,7 +924,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -851,6 +952,7 @@
               "value": "valueA"
             }
           ],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -872,7 +974,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -887,6 +989,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -908,7 +1011,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -932,6 +1035,7 @@
               "value": "Bill"
             }
           ],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -953,7 +1057,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -968,6 +1072,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -999,7 +1104,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1014,6 +1119,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1035,7 +1141,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1055,6 +1161,7 @@
               "value": "ValueB"
             }
           ],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1076,7 +1183,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1091,6 +1198,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1100,7 +1208,7 @@
             {
               "name": "cookie2",
               "value": "",
-              "expires": "Fri, 23-Oct-2020 13:38:56 GMT",
+              "expires": "Mon, 09-Nov-2020 08:04:01 GMT",
               "max_age": 0,
               "path": "/"
             }
@@ -1112,7 +1220,7 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Fri, 23-Oct-2020 13:38:56 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Mon, 09-Nov-2020 08:04:01 GMT; Max-Age=0; Path=/"
             },
             {
               "name": "Content-Length",
@@ -1124,7 +1232,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1139,6 +1247,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1160,7 +1269,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1175,6 +1284,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1234,7 +1344,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1244,7 +1354,7 @@
       }
     ],
     "success": true,
-    "time": 20,
+    "time": 21,
     "cookies": []
   },
   {
@@ -1257,6 +1367,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1278,7 +1389,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1293,6 +1404,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1314,7 +1426,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1337,6 +1449,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1358,7 +1471,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1388,6 +1501,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1409,7 +1523,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1424,6 +1538,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1445,7 +1560,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1468,6 +1583,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1489,7 +1605,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1512,6 +1628,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1537,7 +1654,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1560,6 +1677,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1585,7 +1703,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1608,6 +1726,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1629,7 +1748,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1652,6 +1771,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1673,7 +1793,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1696,6 +1816,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1717,7 +1838,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:01 GMT"
             }
           ]
         },
@@ -1740,6 +1861,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1761,7 +1883,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -1784,6 +1906,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1805,7 +1928,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -1828,6 +1951,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1849,7 +1973,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -1872,6 +1996,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1913,7 +2038,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -1936,6 +2061,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -1957,7 +2083,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -1980,6 +2106,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2001,7 +2128,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2024,6 +2151,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2045,7 +2173,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:56 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2068,6 +2196,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2089,7 +2218,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2112,6 +2241,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2133,7 +2263,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2156,6 +2286,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2177,7 +2308,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2213,6 +2344,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "captures": [],
@@ -2221,7 +2353,7 @@
       }
     ],
     "success": false,
-    "time": 28,
+    "time": 12,
     "cookies": []
   },
   {
@@ -2234,6 +2366,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2255,7 +2388,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2265,7 +2398,7 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2278,6 +2411,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "captures": [],
@@ -2299,6 +2433,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2320,7 +2455,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2356,6 +2491,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2377,7 +2513,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2400,6 +2536,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2421,7 +2558,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2444,6 +2581,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2465,7 +2603,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2488,6 +2626,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2509,7 +2648,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2545,6 +2684,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2566,7 +2706,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:57 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:02 GMT"
             }
           ]
         },
@@ -2594,6 +2734,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "captures": [],
@@ -2602,7 +2743,7 @@
       }
     ],
     "success": false,
-    "time": 1000,
+    "time": 1001,
     "cookies": []
   },
   {
@@ -2620,6 +2761,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2641,7 +2783,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2664,6 +2806,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2685,7 +2828,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2708,6 +2851,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "form": [
             {
               "name": "param1",
@@ -2747,7 +2891,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2767,6 +2911,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2788,7 +2933,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2798,7 +2943,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 8,
     "cookies": []
   },
   {
@@ -2811,6 +2956,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2832,7 +2978,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2856,6 +3002,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2877,7 +3024,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2901,6 +3048,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2922,7 +3070,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2958,6 +3106,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -2979,7 +3128,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -2999,6 +3148,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3020,7 +3170,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3035,6 +3185,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3060,7 +3211,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3070,7 +3221,7 @@
       }
     ],
     "success": true,
-    "time": 13,
+    "time": 14,
     "cookies": []
   },
   {
@@ -3083,6 +3234,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3104,7 +3256,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3119,6 +3271,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3140,7 +3293,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:58 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3163,6 +3316,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3184,7 +3338,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3214,6 +3368,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3250,6 +3405,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3307,6 +3463,7 @@
             }
           ],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3332,7 +3489,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3355,6 +3512,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3376,7 +3534,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3399,6 +3557,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3420,7 +3579,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3443,6 +3602,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3464,7 +3624,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3479,6 +3639,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3500,7 +3661,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3515,6 +3676,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3536,7 +3698,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3551,6 +3713,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3572,7 +3735,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3587,6 +3750,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3608,7 +3772,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3623,6 +3787,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3644,7 +3809,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3659,6 +3824,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3680,7 +3846,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3695,6 +3861,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3716,7 +3883,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3739,6 +3906,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3760,7 +3928,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3775,6 +3943,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3796,7 +3965,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3811,6 +3980,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3832,7 +4002,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3855,6 +4025,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3876,7 +4047,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3891,6 +4062,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3912,7 +4084,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3935,6 +4107,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3956,7 +4129,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -3971,6 +4144,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -3992,7 +4166,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -4002,7 +4176,56 @@
       }
     ],
     "success": true,
-    "time": 10,
+    "time": 8,
+    "cookies": []
+  },
+  {
+    "filename": "tests/proxy.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/proxy",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Werkzeug/0.16.1 Python/3.5.3"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
+            },
+            {
+              "name": "From-Proxy",
+              "value": "Hello"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": true,
+    "time": 14,
     "cookies": []
   },
   {
@@ -4015,6 +4238,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4036,7 +4260,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:04 GMT"
             }
           ]
         },
@@ -4076,6 +4300,7 @@
           ],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4097,7 +4322,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4112,6 +4337,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4133,7 +4359,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4161,6 +4387,7 @@
           ],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4182,7 +4409,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4202,6 +4429,7 @@
           ],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4223,7 +4451,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4233,7 +4461,7 @@
       }
     ],
     "success": true,
-    "time": 10,
+    "time": 11,
     "cookies": []
   },
   {
@@ -4246,6 +4474,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4271,7 +4500,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4286,6 +4515,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4307,7 +4537,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },
@@ -4330,6 +4560,7 @@
           "queryString": [],
           "headers": [],
           "cookies": [],
+          "multipartFormData": [],
           "body": ""
         },
         "response": {
@@ -4351,7 +4582,7 @@
             },
             {
               "name": "Date",
-              "value": "Fri, 23 Oct 2020 13:38:59 GMT"
+              "value": "Mon, 09 Nov 2020 08:04:05 GMT"
             }
           ]
         },

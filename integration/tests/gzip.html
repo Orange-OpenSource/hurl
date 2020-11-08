@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+
+dy {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    display: block;
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.version {
+    color: black;
+}
+
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+
+.comment {
+    color: dimgray;
+}
+
+</style></head><body>
+<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="string">http://localhost:8000/gzip</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div></div>
+</body></html>
