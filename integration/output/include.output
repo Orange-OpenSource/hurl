@@ -1,7 +1,0 @@
-HTTP/1.0 200
-date: DATE2
-content-type: text/html; charset=utf-8
-content-length: 19
-server: Werkzeug/0.16.1 Python/3.5.3
-
-Response endpoint2

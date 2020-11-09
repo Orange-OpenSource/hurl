@@ -16,3 +16,8 @@ for python_file in glob.glob(current_dir + '/*.py'):
     except ImportError as err:
         print('Error:', err)
 
+
+@app.after_request
+def remove_header(response):
+    response.headers['Server'] = 'Flask Server'
+    return response

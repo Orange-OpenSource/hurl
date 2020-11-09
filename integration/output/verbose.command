@@ -1,1 +1,0 @@
-hurl --verbose tests/output.hurl

@@ -333,19 +333,19 @@ fn test_multipart_form_data() {
             }),
             MultipartParam::FileParam(FileParam {
                 name: "upload1".to_string(),
-                filename: "hello.txt".to_string(),
+                filename: "data.txt".to_string(),
                 data: b"Hello World!".to_vec(),
                 content_type: "text/plain".to_string(),
             }),
             MultipartParam::FileParam(FileParam {
                 name: "upload2".to_string(),
-                filename: "hello.html".to_string(),
+                filename: "data.html".to_string(),
                 data: b"Hello <b>World</b>!".to_vec(),
                 content_type: "text/html".to_string(),
             }),
             MultipartParam::FileParam(FileParam {
                 name: "upload3".to_string(),
-                filename: "hello.txt".to_string(),
+                filename: "data.txt".to_string(),
                 data: b"Hello World!".to_vec(),
                 content_type: "text/html".to_string(),
             }),

@@ -1,0 +1,51 @@
+#!/bin/bash
+# Lint hurl file
+#
+set -u
+
+EXITCODE_EXPECTED=1
+
+for hurl_file in "$@"; do
+    set +e
+    cmd="hurlfmt --check $hurl_file"
+    echo "$cmd"
+    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
+
+    EXITCODE_ACTUAL=$?
+    set -eo pipefail
+    if [ "$EXITCODE_ACTUAL" != "$EXITCODE_EXPECTED" ]; then
+        echo "ERROR Exit Code"
+        echo "  Expected: $EXITCODE_EXPECTED"
+        echo "  Actual: $EXITCODE_ACTUAL"
+        exit 1
+    fi
+
+    STDERR_ACTUAL=$(cat /tmp/test.stderr)
+    STDERR_EXPECTED=$(cat "${hurl_file%%.*}.err")
+    diff "${hurl_file%%.*}.err" /tmp/test.stderr
+    if [ "$STDERR_ACTUAL" != "$STDERR_EXPECTED" ]; then
+        echo "ERROR stderr"
+        echo "  expected:"
+        echo "$STDERR_EXPECTED" |  perl -pe 'chomp;s/.*/    $_\n/'
+        echo "  actual:"
+        echo "$STDERR_ACTUAL"  |  perl -pe 'chomp;s/.*/    $_\n/'
+        exit 1
+    fi
+
+    cmd="hurlfmt $hurl_file"
+    echo "$cmd"
+    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
+    LINT_ACTUAL=$(cat /tmp/test.stdout)
+    LINT_EXPECTED=$(cat "${hurl_file%%.*}.hurl.lint")
+    if [ "$LINT_ACTUAL" != "$LINT_EXPECTED" ]; then
+        echo "ERROR linting"
+        echo "  expected:"
+        echo "$LINT_EXPECTED" |  perl -pe 'chomp;s/.*/    $_\n/'
+        echo "  actual:"
+        echo "$LINT_ACTUAL"  |  perl -pe 'chomp;s/.*/    $_\n/'
+        exit 1
+    fi
+
+done
+
+
