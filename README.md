@@ -3,7 +3,6 @@
 <br/>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
-[![deploy status](https://travis-ci.org/Orange-OpenSource/hurl.svg?branch=master)](https://travis-ci.org/Orange-OpenSource/hurl/)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
 
@@ -11,7 +10,7 @@
 
 Hurl is a command line tool that performs HTTP requests defined in a simple plain text format.
 
-It can perform requests, capture values and evaluate queries on headers and body response. 
+It can perform requests, capture values and evaluate queries on headers and body response.
 Hurl is very versatile: it can be used for both fetching data and testing HTTP sessions.
 
 ```hurl
@@ -195,9 +194,9 @@ file,data.json;
 ### Templating a JSON/XML Body
 
 Using templates with [JSON body](https://hurl.dev/docs/request.html#json-body) or [XML body](https://hurl.dev/docs/request.html#xml-body)
- is not currently supported in Hurl. Besides, you can use templates in [raw string body](https://hurl.dev/docs/request.html#raw-string-body) 
+ is not currently supported in Hurl. Besides, you can use templates in [raw string body](https://hurl.dev/docs/request.html#raw-string-body)
  with variables to send a JSON or XML body:
- 
+
 ~~~hurl
 PUT https://api.example.net/hits
 Content-Type: application/json
@@ -262,7 +261,7 @@ Content-Type: text/html; charset=UTF-8
 xpath "string(/html/head/title)" contains "Example" # Check title
 xpath "count(//p)" equals 2                         # Check the number of p
 xpath "//p" countEquals 2                           # Similar assert for p
-xpath "boolean(count(//h2))" equals false           # Check there is no h2  
+xpath "boolean(count(//h2))" equals false           # Check there is no h2
 xpath "//h2" not exists                             # Similar assert for h2
 ```
 
