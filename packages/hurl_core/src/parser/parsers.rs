@@ -195,7 +195,7 @@ fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
                         None => break,
                         Some(c) => {
                             if c.is_alphanumeric()
-                                || vec![':', '/', '.', '-', '?', '=', '&', '_', '%', '*', ',']
+                                || vec![':', '/', '.', '-', '?', '=', '&', '_', '%', '*', ',', '@']
                                     .contains(&c)
                             {
                                 buffer.push(c);
