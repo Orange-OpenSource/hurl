@@ -3,9 +3,7 @@
 # Each hurl file will be run successively, result is appended to the same json file
 set +e
 rm -rf report/*
-mkdir -p report/html
 find tests -name "*.hurl" | sort | while read -r hurl_file; do
-    rm -f report/html/*   # TODO to be removed
     options=("--append" "--json report/tests.json" "--html report/html" "--output /dev/null")
     if test -f "${hurl_file%.*}.options"; then
         options+=("$(cat "${hurl_file%.*}.options")")

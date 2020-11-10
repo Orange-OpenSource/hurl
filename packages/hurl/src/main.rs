@@ -250,18 +250,6 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIErr
     if let Some(dir) = matches.value_of("html_report") {
         let path = Path::new(dir);
         if std::path::Path::new(&path).exists() {
-            if !path
-                .read_dir()
-                .map(|mut i| i.next().is_none())
-                .unwrap_or(false)
-            {
-                return Err(CLIError {
-                    message: format!(
-                        "Html dir {} already exists and is not empty",
-                        path.display()
-                    ),
-                });
-            }
             Ok(Some(path.to_path_buf()))
         } else {
             match std::fs::create_dir(path) {
