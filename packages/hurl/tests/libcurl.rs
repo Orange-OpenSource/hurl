@@ -444,6 +444,23 @@ fn test_basic_authentication() {
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);
     assert_eq!(response.body, b"You are authenticated".to_vec());
+
+    let mut client = default_client();
+    let request = Request {
+        method: Method::Get,
+        url: "http://bob:secret@localhost:8000/basic-authentication".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: vec![],
+        content_type: None,
+    };
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.body, b"You are authenticated".to_vec());
 }
 
 // region error
