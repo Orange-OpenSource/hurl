@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-invalid-predicate-type"},"response":{"version":"HTTP/1.0","status":200}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-invalid-predicate-type"},"response":{"version":"HTTP/1.0","status":200,"asserts":[{"query":{"type":"header","name":"content-type"},"predicate":{"type":"equal","value":1}}]}}]}

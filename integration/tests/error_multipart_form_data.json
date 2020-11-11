@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/unused"}}]}
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/unused","multipart_form_data":[{"name":"key1","value":"value1"},{"name":"upload1","filename":"unknown"}]}}]}

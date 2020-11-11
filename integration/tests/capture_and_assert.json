@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/capture-and-assert"},"response":{"version":"HTTP/1.0","status":200}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/capture-and-assert"},"response":{"version":"HTTP/1.0","status":200,"captures":[{"name":"content_type","query":{"type":"header","name":"content-type"}}],"asserts":[{"query":{"type":"header","name":"content-type"},"predicate":{"type":"equal","value":"{{content_type}}"}}]}}]}
