@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/output/endpoint1"},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/output/endpoint2"},"response":{"version":"HTTP/1.0","status":200}}]}
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/output/endpoint1","body":{"type":"json","value":{"user":"bob"}}},"response":{"version":"HTTP/1.0","status":200}},{"request":{"method":"GET","url":"http://localhost:8000/output/endpoint2"},"response":{"version":"HTTP/1.0","status":200}}]}

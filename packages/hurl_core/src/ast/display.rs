@@ -104,6 +104,33 @@ impl fmt::Display for Expr {
     }
 }
 
+impl fmt::Display for CookiePath {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = self.name.to_string();
+        if let Some(attribute) = self.attribute.clone() {
+            let s = format!("[{}]", attribute.to_string());
+            buf.push_str(s.as_str());
+        }
+        write!(f, "{}", buf)
+    }
+}
+
+impl fmt::Display for CookieAttribute {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self.name {
+            CookieAttributeName::MaxAge(_) => "Max-Age",
+            CookieAttributeName::Value(_) => "Value",
+            CookieAttributeName::Expires(_) => "Expire",
+            CookieAttributeName::Domain(_) => "Domain",
+            CookieAttributeName::Path(_) => "Path",
+            CookieAttributeName::Secure(_) => "Secure",
+            CookieAttributeName::HttpOnly(_) => "HttpOnly",
+            CookieAttributeName::SameSite(_) => "SameSite",
+        };
+        write!(f, "{}", s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -187,5 +214,28 @@ mod tests {
     #[test]
     fn test_template() {
         assert_eq!(hello_template().to_string(), "Hello {{name}}!");
+    }
+
+    #[test]
+    fn test_cookie_path() {
+        assert_eq!(
+            CookiePath {
+                name: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "LSID".to_string(),
+                        encoded: "unused".to_string()
+                    }],
+                    source_info: SourceInfo::init(0, 0, 0, 0)
+                },
+                attribute: Some(CookieAttribute {
+                    space0: whitespace(),
+                    name: CookieAttributeName::MaxAge("Max-Age".to_string()),
+                    space1: whitespace()
+                })
+            }
+            .to_string(),
+            "LSID[Max-Age]".to_string()
+        );
     }
 }
