@@ -337,7 +337,7 @@ impl Lintable<CookieAttributeName> for CookieAttributeName {
         match self {
             CookieAttributeName::Value(_) => CookieAttributeName::Value("Value".to_string()),
             CookieAttributeName::Expires(_) => CookieAttributeName::Expires("Expires".to_string()),
-            CookieAttributeName::MaxAge(_) => CookieAttributeName::MaxAge("MaxAge".to_string()),
+            CookieAttributeName::MaxAge(_) => CookieAttributeName::MaxAge("Max-Age".to_string()),
             CookieAttributeName::Domain(_) => CookieAttributeName::Domain("Domain".to_string()),
             CookieAttributeName::Path(_) => CookieAttributeName::Path("Path".to_string()),
             CookieAttributeName::Secure(_) => CookieAttributeName::Secure("Secure".to_string()),
