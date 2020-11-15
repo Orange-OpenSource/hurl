@@ -3,9 +3,9 @@ set -eo pipefail
 
 for hurl_file in "$@"; do
     html_file="${hurl_file%.*}".html
-    cmd="hurlfmt --html $hurl_file"
+    cmd="hurlfmt --output html $hurl_file"
     echo "$cmd"
-    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
+    $cmd >/tmp/test.stdout
 
     expected=$(cat "$html_file")
     actual=$(cat /tmp/test.stdout)

@@ -4,10 +4,10 @@ set -u
 set -eo pipefail
 for hurl_file in "$@"; do
     json_file="${hurl_file%.*}.json"
-    cmd="hurlfmt --json $hurl_file"
+    cmd="hurlfmt --output json $hurl_file"
     echo "$cmd"
 
-    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
+    $cmd >/tmp/test.stdout
     expected=$(cat "$json_file")
     actual=$(cat /tmp/test.stdout)
     if [ "$actual" != "$expected" ]; then
