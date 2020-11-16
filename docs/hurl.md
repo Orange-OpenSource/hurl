@@ -130,7 +130,7 @@ Colorize Output
 
 
 
-### -b, --cookie <filename> {#cookie}
+### -b, --cookie <file> {#cookie}
 
 Read cookies from file (using the Netscape cookie file format).
 
@@ -149,7 +149,7 @@ Maximum time in seconds that you allow Hurl's connection to take.
 See also [-m, --max-time](#max-time) option.
 
 
-### -c, --cookie-jar <filename> {#cookie-jar}
+### -c, --cookie-jar <file> {#cookie-jar}
 
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
@@ -163,9 +163,9 @@ Combined with [-b, --cookie](#cookie),you can simulate a cookie storage between 
 Continue executing requests to the end of the Hurl file even when an assert error occurs.
 By default, Hurl exits after an assert error in the HTTP response.
 
-Note that this option does not affect the behavior with mutiple input Hurl files.
+Note that this option does not affect the behavior with multiple input Hurl files.
 
-All the input files are executed independently. The result of one file does not affect the excecution of the other Hurl files.
+All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
 
 ### --file-root <dir> {#file-root}
@@ -192,7 +192,7 @@ If you want to combine results from different Hurl executions in a unique html r
 
 ### -i, --include {#include}
 
-Include the HTTP headers in the output.
+Include the HTTP headers in the output (last entry).
 
 
 
