@@ -1,5 +1,4 @@
-
-dy {
+body {
     counter-reset: line;
     font-family: monospace;
 }
@@ -25,10 +24,16 @@ span.line:before {
     color: black;
 }
 
+.url {
+    color: darkblue;
+}
+
 .version {
     color: black;
 }
-
+.status {
+    color: blue;
+}
 .section-header {
     color: darkmagenta;
 }
@@ -48,4 +53,3 @@ span.line:before {
 .comment {
     color: dimgray;
 }
-

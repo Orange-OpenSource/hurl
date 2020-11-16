@@ -28,7 +28,7 @@ pub fn format(hurl_file: HurlFile, color: bool) -> String {
     buffer
 }
 
-fn format_token(token: Token, color: bool) -> String {
+pub fn format_token(token: Token, color: bool) -> String {
     match token {
         Token::Whitespace(value) => value,
         Token::Method(value) => {
