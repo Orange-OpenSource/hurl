@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 import sys
 import re
+from datetime import date
 
 
-def header(version):
-    return '.TH hurl 1 "DATE" "hurl %s" " Hurl Manual"' % (version)
+def header(version, date):
+    return '.TH hurl 1 "%s" "hurl %s" " Hurl Manual"' % (date.strftime("%d %b %Y"), version)
 
 
 def version():
     p = re.compile('version = "(.*)"')
-    for line in open('Cargo.toml', 'r').readlines():
+    for line in open('packages/hurl/Cargo.toml', 'r').readlines():
         m = p.match(line)
         if m:
             return m.group(1)
@@ -61,7 +62,7 @@ def convert_md(s):
 def main():
     input_file = sys.argv[1]
     data = open(input_file).readlines()
-    print(header(version()))
+    print(header(version(), date.today()))
 
     s = ''.join([convert_md(line) for line in data])
 
