@@ -9,7 +9,7 @@ def header(version):
 
 def version():
     p = re.compile('version = "(.*)"')
-    for line in open('../Cargo.toml', 'r').readlines():
+    for line in open('Cargo.toml', 'r').readlines():
         m = p.match(line)
         if m:
             return m.group(1)
