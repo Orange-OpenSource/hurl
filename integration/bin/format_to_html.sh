@@ -3,7 +3,7 @@ set -eo pipefail
 
 for hurl_file in "$@"; do
     html_file="${hurl_file%.*}".html
-    cmd="hurlfmt --output html $hurl_file"
+    cmd="hurlfmt --format html $hurl_file"
     echo "$cmd"
     $cmd >/tmp/test.stdout
 
