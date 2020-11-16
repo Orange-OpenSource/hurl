@@ -4,7 +4,7 @@ set -u
 set -eo pipefail
 for hurl_file in "$@"; do
     json_file="${hurl_file%.*}.json"
-    cmd="hurlfmt --output json $hurl_file"
+    cmd="hurlfmt --format json $hurl_file"
     echo "$cmd"
 
     $cmd >/tmp/test.stdout

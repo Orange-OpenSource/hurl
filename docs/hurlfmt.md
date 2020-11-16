@@ -69,6 +69,11 @@ Colorize Output.
 This can not be used [--in-place](#inplace).
 
 
+### --format {#output}
+
+Specify output format: text (default), json or html.
+
+
 ### -h, --help {#help}
 
 Usage help.
@@ -93,9 +98,9 @@ Do not format output.
 By default text output is automatically formatted.
 
 
-### --output {#output}
+### -o, --output <file> {#output}
 
-Specify output format: text (default), json or html.
+Write output to <file> instead of stdout.
 
 
 ### --standalone {#standalone}

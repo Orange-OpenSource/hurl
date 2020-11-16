@@ -44,6 +44,7 @@ fn main() {
         .arg(
             clap::Arg::with_name("check")
                 .long("check")
+                .conflicts_with("format")
                 .conflicts_with("output")
                 .help("Run in 'check' mode"),
         )
@@ -55,47 +56,54 @@ fn main() {
                 .help("Colorize Output"),
         )
         .arg(
+            clap::Arg::with_name("format")
+                .long("format")
+                .conflicts_with("check")
+                .value_name("FORMAT")
+                .help("Specify output format: text (default), json or html"),
+        )
+        .arg(
             clap::Arg::with_name("in_place")
                 .long("in-place")
                 .conflicts_with("output")
+                .conflicts_with("color")
                 .help("Modify file in place"),
         )
         .arg(
             clap::Arg::with_name("no_color")
                 .long("no-color")
                 .conflicts_with("color")
-                .help("Do not colorize Output"),
+                .help("Do not colorize output"),
         )
         .arg(
             clap::Arg::with_name("no_format")
                 .long("no-format")
-                .help("Do not format Output"),
+                .help("Do not format output"),
         )
         .arg(
             clap::Arg::with_name("output")
+                .short("o")
                 .long("output")
-                .conflicts_with("check")
-                .value_name("FORMAT")
-                .help("Output to a specified format: text (default), json or html"),
+                .value_name("FILE")
+                .help("Write to FILE instead of stdout"),
         )
         .arg(
             clap::Arg::with_name("standalone")
                 .long("standalone")
-                .conflicts_with("ast_output")
                 .help("Standalone Html"),
         );
 
     let matches = app.clone().get_matches();
 
     // Additional checks
-    if matches.is_present("standalone") && matches.value_of("output") != Some("html") {
+    if matches.is_present("standalone") && matches.value_of("format") != Some("html") {
         eprintln!("use --standalone option only with html output");
         std::process::exit(1);
     }
 
     let output_color = if matches.is_present("color") {
         true
-    } else if matches.is_present("no_color") {
+    } else if matches.is_present("no_color") || matches.is_present("in_place") {
         false
     } else {
         atty::is(Stream::Stdout)
@@ -120,10 +128,19 @@ fn main() {
         std::process::exit(1);
     };
 
-    if matches.is_present("in_place") && filename == "-" {
-        log_error_message(false, "You can not use inplace with standard input stream!");
-        std::process::exit(1);
-    };
+    if matches.is_present("in_place") {
+        if filename == "-" {
+            log_error_message(
+                true,
+                "You can not use --in-place with standard input stream!",
+            );
+            std::process::exit(1);
+        };
+        if matches.value_of("format").unwrap_or("text") != "text" {
+            log_error_message(true, "You can use --in-place only text format!");
+            std::process::exit(1);
+        };
+    }
 
     let contents = if filename == "-" {
         let mut contents = String::new();
@@ -146,6 +163,13 @@ fn main() {
     } else {
         Some(filename.to_string())
     };
+
+    let output_file = if matches.is_present("in_place") {
+        Some(filename)
+    } else {
+        matches.value_of("output")
+    };
+
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), output_color, optional_filename.clone());
     let log_linter_error = cli::make_logger_linter_error(lines, output_color, optional_filename);
@@ -161,39 +185,53 @@ fn main() {
                 }
                 std::process::exit(1);
             } else {
-                match matches.value_of("output").unwrap_or("text") {
+                let output = match matches.value_of("format").unwrap_or("text") {
                     "text" => {
                         let hurl_file = if matches.is_present("no_format") {
                             hurl_file
                         } else {
                             hurl_file.lint()
                         };
-                        if matches.is_present("in_place") {
-                            match fs::File::create(filename) {
-                                Ok(mut f) => {
-                                    let s = format::format_text(hurl_file, false);
-                                    f.write_all(s.as_bytes()).unwrap();
-                                }
-                                Err(_) => {
-                                    eprintln!("Error opening file {} in write mode", filename)
-                                }
-                            };
-                        } else {
-                            print!("{}", format::format_text(hurl_file, output_color));
-                        }
+                        format::format_text(hurl_file, output_color)
                     }
-                    "json" => println!("{}", format::format_json(hurl_file)),
+                    "json" => format::format_json(hurl_file),
                     "html" => {
                         let standalone = matches.is_present("standalone");
-                        println!("{}", format::format_html(hurl_file, standalone));
+                        format::format_html(hurl_file, standalone)
                     }
-                    "ast" => println!("{:#?}", hurl_file),
+                    "ast" => format!("{:#?}", hurl_file),
                     _ => {
                         eprintln!("Invalid output option - expecting text, html or json");
                         std::process::exit(1);
                     }
-                }
+                };
+                write_output(output.into_bytes(), output_file);
             }
+        }
+    }
+}
+
+fn write_output(bytes: Vec<u8>, filename: Option<&str>) {
+    match filename {
+        None => {
+            let stdout = io::stdout();
+            let mut handle = stdout.lock();
+
+            handle
+                .write_all(bytes.as_slice())
+                .expect("writing bytes to console");
+        }
+        Some(filename) => {
+            let path = Path::new(filename);
+            let mut file = match std::fs::File::create(&path) {
+                Err(why) => {
+                    eprintln!("Issue writing to {}: {:?}", path.display(), why);
+                    std::process::exit(1);
+                }
+                Ok(file) => file,
+            };
+            file.write_all(bytes.as_slice())
+                .expect("writing bytes to file");
         }
     }
 }
