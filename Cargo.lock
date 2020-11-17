@@ -317,7 +317,7 @@ dependencies = [
 
 [[package]]
 name = "hurl"
-version = "0.99.14"
+version = "1.0.0"
 dependencies = [
  "atty",
  "base64",
@@ -338,7 +338,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "0.99.14"
+version = "1.0.0"
 dependencies = [
  "float-cmp",
  "sxd-document",
@@ -346,7 +346,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "0.99.14"
+version = "1.0.0"
 dependencies = [
  "atty",
  "clap",
