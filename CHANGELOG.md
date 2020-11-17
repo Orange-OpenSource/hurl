@@ -3,22 +3,23 @@
 
 Changes:
 
-* Update hurlfmt usage [81](https://github.com/Orange-OpenSource/hurl/issues/81)
+* Update hurlfmt usage [#81](https://github.com/Orange-OpenSource/hurl/issues/81)
 
-* Migrate fully to Github Actions [69](https://github.com/Orange-OpenSource/hurl/issues/69)
+* Migrate fully to Github Actions [#69](https://github.com/Orange-OpenSource/hurl/issues/69)
 
-* Add Hurl File JSON export  [65](https://github.com/Orange-OpenSource/hurl/issues/65)
+* Add Hurl File JSON export  [#65](https://github.com/Orange-OpenSource/hurl/issues/65)
 
-* Support wildcard value in implicit status code reponse [55](https://github.com/Orange-OpenSource/hurl/issues/55)
+* Support wildcard value in implicit status code reponse [#55](https://github.com/Orange-OpenSource/hurl/issues/55)
 
 
 Bugs Fixes:
 
-* Can not parse user in url (Basic Authentication) [73](https://github.com/Orange-OpenSource/hurl/issues/73)
+* Can not parse user in url (Basic Authentication) [#73](https://github.com/Orange-OpenSource/hurl/issues/73)
 
-* MultipartFormData is not present in json export [63](https://github.com/Orange-OpenSource/hurl/issues/63)
+* MultipartFormData is not present in json export [#63](https://github.com/Orange-OpenSource/hurl/issues/63)
 
-* Hurl usage doesn't end with newline  [60](https://github.com/Orange-OpenSource/hurl/issues/60)
+* Hurl usage doesn't end with newline  [#60](https://github.com/Orange-OpenSource/hurl/issues/60)
+
 
 
 
