@@ -2,7 +2,7 @@
 set -e
 
 #cargo build --features "strict"
-cargo --version
+ci/check_version.sh
 
 cargo build
 cargo test
