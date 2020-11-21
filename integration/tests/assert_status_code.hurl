@@ -9,3 +9,9 @@ HTTP/* *
 status not equals 200
 
 
+# simply check that the status code is OK
+GET http://localhost:8000/assert-status-code
+HTTP/* *
+[Asserts]
+status greaterThanOrEquals 200
+status lessThan 300

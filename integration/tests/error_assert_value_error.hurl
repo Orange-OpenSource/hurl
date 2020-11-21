@@ -5,3 +5,4 @@ header "content-type" equals "XXX"
 jsonpath "$.id" equals "000001"
 jsonpath "$.values" includes 100
 jsonpath "$.values" not contains "Hello"
+jsonpath "$.count" greaterThan 5
