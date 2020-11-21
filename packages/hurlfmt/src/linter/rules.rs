@@ -418,6 +418,52 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
                     value: value.clone(),
                 }
             }
+            PredicateFuncValue::GreaterThanInt { value, .. } => {
+                PredicateFuncValue::GreaterThanInt {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::GreaterThanFloat { value, .. } => {
+                PredicateFuncValue::GreaterThanFloat {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::GreaterThanOrEqualInt { value, .. } => {
+                PredicateFuncValue::GreaterThanOrEqualInt {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::GreaterThanOrEqualFloat { value, .. } => {
+                PredicateFuncValue::GreaterThanOrEqualFloat {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::LessThanInt { value, .. } => PredicateFuncValue::GreaterThanInt {
+                space0: one_whitespace(),
+                value: value.clone(),
+            },
+            PredicateFuncValue::LessThanFloat { value, .. } => {
+                PredicateFuncValue::GreaterThanFloat {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::LessThanOrEqualInt { value, .. } => {
+                PredicateFuncValue::GreaterThanOrEqualInt {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
+            PredicateFuncValue::LessThanOrEqualFloat { value, .. } => {
+                PredicateFuncValue::GreaterThanOrEqualFloat {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                }
+            }
             PredicateFuncValue::Contain { value, .. } => PredicateFuncValue::Contain {
                 space0: one_whitespace(),
                 value: value.clone().lint(),

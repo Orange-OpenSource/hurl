@@ -561,6 +561,46 @@ impl Tokenizable for PredicateFuncValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
+            PredicateFuncValue::GreaterThanInt { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("greaterThan")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::GreaterThanFloat { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("greaterThan")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::GreaterThanOrEqualInt { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("greaterThanOrEquals")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::GreaterThanOrEqualFloat { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("greaterThanOrEquals")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::LessThanInt { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("lessThan")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::LessThanFloat { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("lessThan")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::LessThanOrEqualInt { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("lessThanOrEquals")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::LessThanOrEqualFloat { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("lessThanOrEquals")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
             PredicateFuncValue::CountEqual { space0, value } => {
                 tokens.push(Token::PredicateType(String::from("countEquals")));
                 add_tokens(&mut tokens, space0.tokenize());

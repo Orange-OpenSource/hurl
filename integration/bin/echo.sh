@@ -7,7 +7,7 @@ set -eo pipefail
 for hurl_file in "$@"; do
     cmd="hurlfmt --no-format $hurl_file"
     echo "$cmd"
-    $cmd 2>/tmp/test.stderr >/tmp/test.stdout
+    $cmd >/tmp/test.stdout
 
     expected=$(cat "$hurl_file")
     actual=$(cat "/tmp/test.stdout")
