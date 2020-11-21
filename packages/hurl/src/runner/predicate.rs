@@ -80,6 +80,7 @@ pub fn eval_predicate(
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
 struct AssertResult {
     pub success: bool,
     pub type_mismatch: bool,
@@ -169,6 +170,77 @@ fn expected(
             let expected = eval_expr(expected, variables)?;
             todo!(">> {:?}", expected)
         }
+
+        PredicateFuncValue::GreaterThanInt {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("greater than <{}>", expected))
+        }
+        PredicateFuncValue::GreaterThanFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
+        } => Ok(format!("greater than <{}.{}>", expected_int, expected_dec)),
+
+        PredicateFuncValue::GreaterThanOrEqualInt {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("greater than or equals to <{}>", expected))
+        }
+        PredicateFuncValue::GreaterThanOrEqualFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
+        } => Ok(format!(
+            "greater than or equals to <{}.{}>",
+            expected_int, expected_dec
+        )),
+
+        PredicateFuncValue::LessThanInt {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("less than <{}>", expected))
+        }
+        PredicateFuncValue::LessThanFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
+        } => Ok(format!("less than <{}.{}>", expected_int, expected_dec)),
+
+        PredicateFuncValue::LessThanOrEqualInt {
+            value: expected, ..
+        } => {
+            let expected = expected.to_string();
+            Ok(format!("less than or equals to <{}>", expected))
+        }
+        PredicateFuncValue::LessThanOrEqualFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
+        } => Ok(format!(
+            "less than or equals to <{}.{}>",
+            expected_int, expected_dec
+        )),
+
         PredicateFuncValue::CountEqual {
             value: expected, ..
         } => {
@@ -256,6 +328,38 @@ fn eval_something(
             let expected = eval_expr(expected, variables)?;
             assert_values_equal(value, expected)
         }
+
+        PredicateFuncValue::GreaterThanInt {
+            value: expected, ..
+        } => assert_values_greater(value, Value::Integer(expected)),
+        PredicateFuncValue::GreaterThanFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_values_greater(value, Value::Float(int, decimal)),
+
+        PredicateFuncValue::GreaterThanOrEqualInt {
+            value: expected, ..
+        } => assert_values_greater_or_equal(value, Value::Integer(expected)),
+        PredicateFuncValue::GreaterThanOrEqualFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_values_greater_or_equal(value, Value::Float(int, decimal)),
+
+        PredicateFuncValue::LessThanInt {
+            value: expected, ..
+        } => assert_values_less(value, Value::Integer(expected)),
+        PredicateFuncValue::LessThanFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_values_less(value, Value::Float(int, decimal)),
+
+        PredicateFuncValue::LessThanOrEqualInt {
+            value: expected, ..
+        } => assert_values_less_or_equal(value, Value::Integer(expected)),
+        PredicateFuncValue::LessThanOrEqualFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => assert_values_less_or_equal(value, Value::Float(int, decimal)),
 
         // countEquals
         PredicateFuncValue::CountEqual {
@@ -477,6 +581,127 @@ fn assert_values_equal(actual: Value, expected: Value) -> Result<AssertResult, E
     }
 }
 
+fn assert_values_greater(actual: Value, expected: Value) -> Result<AssertResult, Error> {
+    match compare_numbers(actual.clone(), expected.clone()) {
+        Some(1) => Ok(AssertResult {
+            success: true,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        Some(0) | Some(-1) => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+fn assert_values_greater_or_equal(actual: Value, expected: Value) -> Result<AssertResult, Error> {
+    match compare_numbers(actual.clone(), expected.clone()) {
+        Some(1) | Some(0) => Ok(AssertResult {
+            success: true,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        Some(-1) => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+fn assert_values_less(actual: Value, expected: Value) -> Result<AssertResult, Error> {
+    match compare_numbers(actual.clone(), expected.clone()) {
+        Some(-1) => Ok(AssertResult {
+            success: true,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        Some(0) | Some(1) => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+fn assert_values_less_or_equal(actual: Value, expected: Value) -> Result<AssertResult, Error> {
+    match compare_numbers(actual.clone(), expected.clone()) {
+        Some(-1) | Some(0) => Ok(AssertResult {
+            success: true,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        Some(1) => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
+        _ => Ok(AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: true,
+        }),
+    }
+}
+
+// return -1, 0 or 1
+// none if one of the value is not a number
+// attention: actual and expected are not symetrical
+// you can expect an Integer with actual float, but not the reverse
+fn compare_numbers(actual: Value, expected: Value) -> Option<i32> {
+    match (actual, expected) {
+        (Value::Integer(value1), Value::Integer(value2)) => {
+            Some(compare_float((value1, 0), (value2, 0)))
+        }
+        (Value::Float(i1, d1), Value::Float(i2, d2)) => Some(compare_float((i1, d1), (i2, d2))),
+        (Value::Float(i1, d1), Value::Integer(i2)) => Some(compare_float((i1, d1), (i2, 0))),
+        _ => None,
+    }
+}
+
+fn compare_float((i1, d1): (i64, u64), (i2, d2): (i64, u64)) -> i32 {
+    if i1 > i2 {
+        1
+    } else if i1 < i2 {
+        -1
+    } else if (i1 > 0 && d1 > d2) || (i1 < 0 && d1 < d2) {
+        1
+    } else if (i1 > 0 && d1 < d2) || (i1 < 0 && d1 > d2) {
+        -1
+    } else {
+        0
+    }
+}
+
 fn assert_include(value: Value, element: Value) -> Result<AssertResult, Error> {
     let expected = format!("includes {}", element.clone().display());
     match value.clone() {
@@ -507,6 +732,7 @@ fn assert_include(value: Value, element: Value) -> Result<AssertResult, Error> {
 
 #[cfg(test)]
 mod tests {
+    use super::AssertResult;
     use super::*;
 
     fn whitespace() -> Whitespace {
@@ -851,6 +1077,123 @@ mod tests {
         assert_eq!(
             assert_result.expected.as_str(),
             "string <http://localhost:8000>"
+        );
+    }
+
+    #[test]
+    fn test_compare_float() {
+        assert_eq!(compare_float((2, 3), (1, 2)), 1);
+        assert_eq!(compare_float((2, 3), (2, 2)), 1);
+        assert_eq!(compare_float((2, 3), (-4, 2)), 1);
+        assert_eq!(compare_float((2, 3), (2, 3)), 0);
+        assert_eq!(compare_float((2, 3), (3, 2)), -1);
+        assert_eq!(compare_float((2, 3), (2, 4)), -1);
+    }
+
+    #[test]
+    fn test_compare_numbers() {
+        // 2 integers
+        assert_eq!(
+            compare_numbers(Value::Integer(2), Value::Integer(1)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Integer(1), Value::Integer(1)).unwrap(),
+            0
+        );
+        assert_eq!(
+            compare_numbers(Value::Integer(1), Value::Integer(2)).unwrap(),
+            -1
+        );
+        assert_eq!(
+            compare_numbers(Value::Integer(-1), Value::Integer(-2)).unwrap(),
+            1
+        );
+
+        // 2 floats
+        assert_eq!(
+            compare_numbers(Value::Float(2, 3), Value::Float(1, 2)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(2, 3), Value::Float(2, 2)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(1, 2), Value::Float(1, 5)).unwrap(),
+            -1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(-2, 1), Value::Float(-3, 1)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(1, 1), Value::Float(-2, 1)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(1, 1), Value::Float(1, 1)).unwrap(),
+            0
+        );
+
+        // 1 float and 1 integer
+        assert_eq!(
+            compare_numbers(Value::Float(2, 3), Value::Integer(2)).unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(2, 3), Value::Integer(3)).unwrap(),
+            -1
+        );
+        assert_eq!(
+            compare_numbers(Value::Float(2, 0), Value::Integer(2)).unwrap(),
+            0
+        );
+
+        // 1 integer and 1 float
+        assert!(compare_numbers(Value::Integer(2), Value::Float(2, 0)).is_none());
+
+        // with a non number
+        assert!(compare_numbers(Value::Integer(-1), Value::String("hello".to_string())).is_none());
+    }
+
+    #[test]
+    fn test_assert_value_greater() {
+        assert_eq!(
+            assert_values_greater(Value::Integer(2), Value::Integer(1)).unwrap(),
+            AssertResult {
+                success: true,
+                type_mismatch: false,
+                actual: "int <2>".to_string(),
+                expected: "int <1>".to_string()
+            }
+        );
+        assert_eq!(
+            assert_values_greater(Value::Integer(1), Value::Integer(1)).unwrap(),
+            AssertResult {
+                success: false,
+                type_mismatch: false,
+                actual: "int <1>".to_string(),
+                expected: "int <1>".to_string()
+            }
+        );
+        assert_eq!(
+            assert_values_greater(Value::Float(1, 1), Value::Integer(1)).unwrap(),
+            AssertResult {
+                success: true,
+                type_mismatch: false,
+                actual: "float <1.1>".to_string(),
+                expected: "int <1>".to_string()
+            }
+        );
+        assert_eq!(
+            assert_values_greater(Value::Float(1, 1), Value::Integer(2)).unwrap(),
+            AssertResult {
+                success: false,
+                type_mismatch: false,
+                actual: "float <1.1>".to_string(),
+                expected: "int <2>".to_string()
+            }
         );
     }
 

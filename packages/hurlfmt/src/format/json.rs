@@ -342,6 +342,59 @@ impl ToJson for Predicate {
                 attributes.push(("type".to_string(), JValue::String("equal".to_string())));
                 attributes.push(("value".to_string(), JValue::String(value.to_string())));
             }
+            PredicateFuncValue::GreaterThanInt { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("greater-than".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::GreaterThanFloat { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("greater-than".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::GreaterThanOrEqualInt { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("greater-than-or-equal".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::GreaterThanOrEqualFloat { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("greater-than-or-equal".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::LessThanInt { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("greater-than".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::LessThanFloat { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("less-than".to_string())));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::LessThanOrEqualInt { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("less-than-or-equal".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::LessThanOrEqualFloat { value, .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("less-than-or-equal".to_string()),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
             PredicateFuncValue::CountEqual { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
                 attributes.push(("value".to_string(), JValue::Number(value.to_string())));

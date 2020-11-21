@@ -63,6 +63,10 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
     match choice(
         vec![
             equal_predicate,
+            greater_or_equal_predicate,
+            greater_predicate,
+            less_or_equal_predicate,
+            less_predicate,
             count_equal_predicate,
             start_with_predicate,
             contain_predicate,
@@ -100,6 +104,114 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
         Ok(PredicateValue::Template { value }) => {
             Ok(PredicateFuncValue::EqualString { space0, value })
         }
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
+    }
+}
+
+fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("greaterThan", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+
+    match predicate_value(reader) {
+        Ok(PredicateValue::Int { value }) => {
+            Ok(PredicateFuncValue::GreaterThanInt { space0, value })
+        }
+        Ok(PredicateValue::Float { value }) => {
+            Ok(PredicateFuncValue::GreaterThanFloat { space0, value })
+        }
+        Ok(_) => Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::PredicateValue {},
+        }),
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
+    }
+}
+fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("greaterThanOrEquals", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+
+    match predicate_value(reader) {
+        Ok(PredicateValue::Int { value }) => {
+            Ok(PredicateFuncValue::GreaterThanOrEqualInt { space0, value })
+        }
+        Ok(PredicateValue::Float { value }) => {
+            Ok(PredicateFuncValue::GreaterThanOrEqualFloat { space0, value })
+        }
+        Ok(_) => Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::PredicateValue {},
+        }),
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
+    }
+}
+
+fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("lessThan", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+
+    match predicate_value(reader) {
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::LessThanInt { space0, value }),
+        Ok(PredicateValue::Float { value }) => {
+            Ok(PredicateFuncValue::LessThanFloat { space0, value })
+        }
+        Ok(_) => Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::PredicateValue {},
+        }),
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
+    }
+}
+fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("lessThanOrEquals", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+
+    match predicate_value(reader) {
+        Ok(PredicateValue::Int { value }) => {
+            Ok(PredicateFuncValue::LessThanOrEqualInt { space0, value })
+        }
+        Ok(PredicateValue::Float { value }) => {
+            Ok(PredicateFuncValue::LessThanOrEqualFloat { space0, value })
+        }
+        Ok(_) => Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::PredicateValue {},
+        }),
         Err(e) => match e.inner {
             ParseError::EscapeChar {} => Err(e),
             _ => Err(Error {

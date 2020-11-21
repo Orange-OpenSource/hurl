@@ -460,6 +460,62 @@ impl Htmlable for PredicateFuncValue {
                     format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
                 );
             }
+            PredicateFuncValue::GreaterThanInt { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">greater-than</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::GreaterThanFloat { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">greater-than</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::GreaterThanOrEqualInt { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">greater-than-or-equal</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::GreaterThanOrEqualFloat { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">greater-than-or-equal</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::LessThanInt { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">less-than</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::LessThanFloat { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">less-than</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::LessThanOrEqualInt { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">less-than-or-equal</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::LessThanOrEqualFloat { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">less-than-or-equal</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
             PredicateFuncValue::EqualExpression { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">equals</span>");
                 buffer.push_str(space0.to_html().as_str());
