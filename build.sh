@@ -2,6 +2,8 @@
 set -e
 
 #cargo build --features "strict"
+cargo --version
+
 cargo build
 cargo test
 cargo doc --document-private-items
