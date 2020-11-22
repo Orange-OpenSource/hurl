@@ -121,6 +121,7 @@ pub mod tests {
             status: 200,
             headers: vec![],
             body: b"Hello World!".to_vec(),
+            duration: Default::default(),
         }
     }
 
@@ -133,6 +134,7 @@ pub mod tests {
                 value: "text/plain; charset=utf-8".to_string(),
             }],
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
+            duration: Default::default(),
         }
     }
 
@@ -145,6 +147,7 @@ pub mod tests {
                 value: "text/plain; charset=ISO-8859-1".to_string(),
             }],
             body: vec![0x63, 0x61, 0x66, 0xe9],
+            duration: Default::default(),
         }
     }
 
@@ -192,6 +195,7 @@ pub mod tests {
                     value: "test/plain; charset=xxx".to_string()
                 }],
                 body: b"Hello World!".to_vec(),
+                duration: Default::default()
             }
             .encoding()
             .err()
@@ -210,6 +214,7 @@ pub mod tests {
                 status: 200,
                 headers: vec![],
                 body: vec![0x63, 0x61, 0x66, 0xe9],
+                duration: Default::default()
             }
             .text()
             .err()
@@ -228,6 +233,7 @@ pub mod tests {
                     value: "text/plain; charset=ISO-8859-1".to_string()
                 }],
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
+                duration: Default::default()
             }
             .text()
             .unwrap(),

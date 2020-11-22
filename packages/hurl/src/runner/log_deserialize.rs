@@ -20,6 +20,7 @@ use crate::http::*;
 
 use super::cookie::*;
 use super::core::*;
+use std::time::Duration;
 
 type ParseError = String;
 
@@ -208,11 +209,15 @@ pub fn parse_response(value: serde_json::Value) -> Result<Response, ParseError> 
             _ => vec![],
         };
 
+        // TODO: Check if you need it
+        let duration = Duration::new(0, 0);
+
         Ok(Response {
             version,
             status,
             headers,
             body: vec![],
+            duration,
         })
     } else {
         Err("expecting an object for the response".to_string())
@@ -461,6 +466,7 @@ mod tests {
                     },
                 ],
                 body: vec![],
+                duration: Default::default()
             }
         );
     }
