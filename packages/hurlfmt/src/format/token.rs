@@ -467,6 +467,7 @@ impl Tokenizable for Query {
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, name.tokenize());
             }
+            QueryValue::Duration {} => tokens.push(Token::QueryType(String::from("duration"))),
         }
         tokens
     }

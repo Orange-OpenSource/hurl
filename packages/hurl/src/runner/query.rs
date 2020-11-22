@@ -200,6 +200,9 @@ pub fn eval_query(
                 Ok(None)
             }
         }
+        QueryValue::Duration {} => Ok(Some(Value::Integer(
+            http_response.duration.as_millis() as i64
+        ))),
     }
 }
 

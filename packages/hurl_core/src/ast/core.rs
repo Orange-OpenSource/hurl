@@ -322,6 +322,7 @@ pub enum QueryValue {
         space0: Whitespace,
         name: Template,
     },
+    Duration {},
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
