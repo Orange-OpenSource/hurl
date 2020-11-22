@@ -27,11 +27,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -41,7 +41,7 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -99,16 +99,16 @@
               "value": "cookie3=value3; Path=/"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -118,7 +118,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 6,
     "cookies": []
   },
   {
@@ -149,11 +149,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -186,11 +186,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -223,11 +223,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -268,11 +268,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -313,11 +313,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -327,7 +327,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 8,
     "cookies": []
   },
   {
@@ -358,11 +358,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -395,11 +395,48 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-status-code",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 201,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -409,7 +446,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 8,
     "cookies": []
   },
   {
@@ -440,11 +477,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -485,11 +522,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -499,7 +536,7 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -530,11 +567,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -575,11 +612,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -623,16 +660,16 @@
               "value": "Hello Bob!"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -674,11 +711,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -711,11 +748,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -756,11 +793,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -797,11 +834,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -838,11 +875,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -879,11 +916,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -920,11 +957,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:36 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -934,7 +971,7 @@
       }
     ],
     "success": true,
-    "time": 15,
+    "time": 14,
     "cookies": []
   },
   {
@@ -970,11 +1007,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1007,11 +1044,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1053,11 +1090,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1095,16 +1132,16 @@
               "value": "cookie2=valueA; Path=/"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1137,11 +1174,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1179,11 +1216,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1208,7 +1245,7 @@
             {
               "name": "cookie2",
               "value": "",
-              "expires": "Mon, 09-Nov-2020 19:13:37 GMT",
+              "expires": "Sun, 22-Nov-2020 07:54:28 GMT",
               "max_age": 0,
               "path": "/"
             }
@@ -1220,19 +1257,19 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Mon, 09-Nov-2020 19:13:37 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Sun, 22-Nov-2020 07:54:28 GMT; Max-Age=0; Path=/"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
             },
             {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1265,11 +1302,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1335,16 +1372,16 @@
               "value": "SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1385,11 +1422,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1422,11 +1459,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1467,11 +1504,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:28 GMT"
             }
           ]
         },
@@ -1519,11 +1556,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1556,11 +1593,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1601,11 +1638,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1650,11 +1687,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1699,11 +1736,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1744,11 +1781,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1758,7 +1795,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -1789,11 +1826,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1803,7 +1840,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -1834,11 +1871,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1879,11 +1916,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1924,11 +1961,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -1969,11 +2006,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2029,16 +2066,16 @@
               "value": "cookie2=value2; Secure; Path=/"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2048,7 +2085,7 @@
       }
     ],
     "success": false,
-    "time": 9,
+    "time": 8,
     "cookies": []
   },
   {
@@ -2079,11 +2116,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2124,11 +2161,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2169,11 +2206,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2214,11 +2251,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2228,7 +2265,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2255,15 +2292,15 @@
             },
             {
               "name": "Content-Length",
-              "value": "20"
+              "value": "32"
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2273,7 +2310,7 @@
       }
     ],
     "success": false,
-    "time": 9,
+    "time": 10,
     "cookies": []
   },
   {
@@ -2304,11 +2341,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2353,7 +2390,7 @@
       }
     ],
     "success": false,
-    "time": 28,
+    "time": 12,
     "cookies": []
   },
   {
@@ -2384,11 +2421,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:37 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2398,7 +2435,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -2451,11 +2488,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:29 GMT"
             }
           ]
         },
@@ -2466,6 +2503,28 @@
     ],
     "success": false,
     "time": 6,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_max_redirect.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/redirect/7",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 13,
     "cookies": []
   },
   {
@@ -2509,11 +2568,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:30 GMT"
             }
           ]
         },
@@ -2554,11 +2613,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:30 GMT"
             }
           ]
         },
@@ -2599,11 +2658,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:30 GMT"
             }
           ]
         },
@@ -2644,11 +2703,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:30 GMT"
             }
           ]
         },
@@ -2702,11 +2761,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:38 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:30 GMT"
             }
           ]
         },
@@ -2779,11 +2838,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -2824,11 +2883,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -2838,7 +2897,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 8,
     "cookies": []
   },
   {
@@ -2887,11 +2946,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -2929,11 +2988,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -2974,11 +3033,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3020,11 +3079,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3066,11 +3125,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3124,11 +3183,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3166,11 +3225,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3202,16 +3261,16 @@
               "value": "cafe"
             },
             {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
               "name": "Content-Length",
               "value": "0"
             },
             {
-              "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
-            },
-            {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3252,11 +3311,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3289,11 +3348,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:39 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:31 GMT"
             }
           ]
         },
@@ -3325,10 +3384,6 @@
           "cookies": [],
           "headers": [
             {
-              "name": "Server",
-              "value": "SERVER"
-            },
-            {
               "name": "Date",
               "value": "DATE"
             },
@@ -3339,6 +3394,10 @@
             {
               "name": "Content-Length",
               "value": "5"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
             }
           ]
         },
@@ -3379,11 +3438,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:42 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:34 GMT"
             }
           ]
         },
@@ -3393,7 +3452,7 @@
       }
     ],
     "success": true,
-    "time": 4169,
+    "time": 4436,
     "cookies": []
   },
   {
@@ -3424,11 +3483,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3438,7 +3497,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 6,
     "cookies": []
   },
   {
@@ -3480,7 +3539,7 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             }
           ]
         },
@@ -3517,7 +3576,7 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             }
           ]
         },
@@ -3575,11 +3634,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3620,11 +3679,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3665,11 +3724,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3710,11 +3769,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3747,11 +3806,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3784,11 +3843,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3821,11 +3880,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3858,11 +3917,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3895,11 +3954,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3932,11 +3991,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3969,11 +4028,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -3983,7 +4042,7 @@
       }
     ],
     "success": true,
-    "time": 18,
+    "time": 17,
     "cookies": []
   },
   {
@@ -4014,11 +4073,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4051,11 +4110,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4088,11 +4147,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4133,11 +4192,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4170,11 +4229,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4215,11 +4274,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4252,11 +4311,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:48 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4266,7 +4325,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 8,
     "cookies": []
   },
   {
@@ -4297,11 +4356,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             },
             {
               "name": "From-Proxy",
@@ -4315,7 +4374,7 @@
       }
     ],
     "success": true,
-    "time": 14,
+    "time": 13,
     "cookies": []
   },
   {
@@ -4346,11 +4405,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4408,11 +4467,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4445,11 +4504,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4495,11 +4554,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4537,11 +4596,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4551,7 +4610,7 @@
       }
     ],
     "success": true,
-    "time": 11,
+    "time": 10,
     "cookies": []
   },
   {
@@ -4586,11 +4645,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4623,11 +4682,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
             }
           ]
         },
@@ -4638,6 +4697,51 @@
     ],
     "success": true,
     "time": 7,
+    "cookies": []
+  },
+  {
+    "filename": "tests/user_in_url.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://bob:secret@localhost:8000/basic-authentication",
+          "queryString": [],
+          "headers": [],
+          "cookies": [],
+          "multipartFormData": [],
+          "body": ""
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "21"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Sun, 22 Nov 2020 07:54:40 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": true,
+    "time": 5,
     "cookies": []
   },
   {
@@ -4668,11 +4772,11 @@
             },
             {
               "name": "Server",
-              "value": "Werkzeug/0.16.1 Python/3.5.3"
+              "value": "Flask Server"
             },
             {
               "name": "Date",
-              "value": "Mon, 09 Nov 2020 19:13:49 GMT"
+              "value": "Sun, 22 Nov 2020 07:54:41 GMT"
             }
           ]
         },
