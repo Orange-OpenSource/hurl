@@ -372,6 +372,9 @@ impl Htmlable for QueryValue {
                     format!("<span class=\"string\">\"{}\"</span>", name.to_html()).as_str(),
                 );
             }
+            QueryValue::Duration {} => {
+                buffer.push_str("<span class=\"query-type\">duration</span>");
+            }
         }
         buffer
     }

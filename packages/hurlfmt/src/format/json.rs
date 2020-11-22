@@ -287,6 +287,9 @@ impl ToJson for QueryValue {
                 attributes.push(("type".to_string(), JValue::String("variable".to_string())));
                 attributes.push(("name".to_string(), JValue::String(name.to_string())));
             }
+            QueryValue::Duration {} => {
+                attributes.push(("type".to_string(), JValue::String("duration".to_string())));
+            }
         };
         JValue::Object(attributes)
     }

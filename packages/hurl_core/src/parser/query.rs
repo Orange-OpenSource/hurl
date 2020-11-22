@@ -55,6 +55,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
             jsonpath_query,
             regex_query,
             variable_query,
+            duration_query,
         ],
         reader,
     )
@@ -146,6 +147,11 @@ fn regex_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
     let space0 = one_or_more_spaces(reader)?;
     let expr = quoted_template(reader)?;
     Ok(SubqueryValue::Regex { space0, expr })
+}
+
+fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("duration", reader)?;
+    Ok(QueryValue::Duration {})
 }
 
 #[cfg(test)]

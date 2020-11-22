@@ -17,6 +17,7 @@
  */
 
 use core::fmt;
+use std::time::Duration;
 
 use super::core::*;
 
@@ -26,6 +27,7 @@ pub struct Response {
     pub status: u32,
     pub headers: Vec<Header>,
     pub body: Vec<u8>,
+    pub duration: Duration,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -97,6 +99,7 @@ pub mod tests {
                 },
             ],
             body: String::into_bytes(String::from("Hello World!")),
+            duration: Default::default(),
         }
     }
 
@@ -111,6 +114,7 @@ pub mod tests {
             body: String::into_bytes(String::from(
                 "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
             )),
+            duration: Default::default(),
         }
     }
 
@@ -134,6 +138,7 @@ xxx
 "#
                 .to_string(),
             ),
+            duration: Default::default(),
         }
     }
 
@@ -161,6 +166,7 @@ xxx
 "#
                 .to_string(),
             ),
+            duration: Default::default(),
         }
     }
 
@@ -189,6 +195,7 @@ xxx
 "#
                 .to_string(),
             ),
+            duration: Default::default(),
         }
     }
 
@@ -210,6 +217,7 @@ xxx
 "#
                 .to_string(),
             ),
+            duration: Default::default(),
         }
     }
 
@@ -228,6 +236,7 @@ xxx
                 },
             ],
             body: vec![255],
+            duration: Default::default(),
         }
     }
 
@@ -241,6 +250,7 @@ xxx
                 value: "12".to_string(),
             }],
             body: vec![],
+            duration: Default::default(),
         };
         assert_eq!(
             response.get_header_values("Content-Length".to_string()),

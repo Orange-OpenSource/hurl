@@ -138,6 +138,7 @@ pub mod tests {
             status: 200,
             headers: vec![],
             body: vec![],
+            duration: Default::default(),
         };
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
@@ -149,6 +150,7 @@ pub mod tests {
                 value: "xx".to_string(),
             }],
             body: vec![],
+            duration: Default::default(),
         };
         assert_eq!(
             response.content_encoding().err().unwrap(),
@@ -163,6 +165,7 @@ pub mod tests {
                 value: "br".to_string(),
             }],
             body: vec![],
+            duration: Default::default(),
         };
         assert_eq!(response.content_encoding().unwrap(), vec![Encoding::Brotli]);
     }
@@ -177,6 +180,7 @@ pub mod tests {
                 value: "br, identity".to_string(),
             }],
             body: vec![],
+            duration: Default::default(),
         };
         assert_eq!(
             response.content_encoding().unwrap(),
@@ -197,6 +201,7 @@ pub mod tests {
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21,
             ],
+            duration: Default::default(),
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
@@ -211,6 +216,7 @@ pub mod tests {
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21,
             ],
+            duration: Default::default(),
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
@@ -219,6 +225,7 @@ pub mod tests {
             status: 200,
             headers: vec![],
             body: b"Hello World!".to_vec(),
+            duration: Default::default(),
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
     }

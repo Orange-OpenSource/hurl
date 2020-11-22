@@ -16,7 +16,6 @@
  *
  */
 use std::collections::HashMap;
-use std::time::Instant;
 
 use crate::http;
 use crate::http::HttpError;
@@ -100,7 +99,6 @@ pub fn run(
     log_verbose("");
     log_request(log_verbose, &http_request);
 
-    let start = Instant::now();
     let http_response = match http_client.execute(&http_request, 0) {
         Ok(response) => response,
         Err(http_error) => {
@@ -140,8 +138,8 @@ pub fn run(
         }
     };
 
-    let time_in_ms = start.elapsed().as_millis();
-    log_verbose(format!("Response Time: {}ms", time_in_ms).as_str());
+    let time_in_ms = http_response.duration.as_millis();
+    log_verbose(format!("Response Time: {}ms", time_in_ms.to_string()).as_str());
 
     let captures = match entry.response.clone() {
         None => vec![],

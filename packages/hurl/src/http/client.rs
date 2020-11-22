@@ -23,6 +23,7 @@ use curl::easy;
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
 use std::time::Duration;
+use std::time::Instant;
 
 use super::core::*;
 use super::request::*;
@@ -161,6 +162,7 @@ impl Client {
             })
             .unwrap();
 
+        let start = Instant::now();
         let mut status_lines = vec![];
         let mut headers = vec![];
         let mut body = Vec::<u8>::new();
@@ -237,6 +239,7 @@ impl Client {
 
             return self.execute(&request, redirect_count);
         }
+        let duration = start.elapsed();
         self.redirect_count = redirect_count;
         self.reset();
 
@@ -245,6 +248,7 @@ impl Client {
             status,
             headers,
             body,
+            duration,
         })
     }
 

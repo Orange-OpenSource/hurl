@@ -305,6 +305,7 @@ impl Lintable<QueryValue> for QueryValue {
                 name: name.clone(),
                 space0: one_whitespace(),
             },
+            QueryValue::Duration {} => QueryValue::Duration {},
         }
     }
 }
