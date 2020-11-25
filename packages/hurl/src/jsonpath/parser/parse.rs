@@ -57,7 +57,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 fn selector_array_index(reader: &mut Reader) -> Result<Selector, Error> {
-    try_literal("[", reader)?;
+    try_left_bracket(reader)?;
     let i = match natural(reader) {
         Err(e) => {
             return Err(Error {
@@ -80,7 +80,7 @@ fn selector_filter(reader: &mut Reader) -> Result<Selector, Error> {
 }
 
 fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
-    try_literal("[", reader)?;
+    try_left_bracket(reader)?;
     match string_value(reader) {
         Err(_) => Err(Error {
             pos: reader.state.pos.clone(),
@@ -132,6 +132,15 @@ fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, Error> {
     try_literal("..", reader)?;
     let k = key_name(reader)?;
     Ok(Selector::RecursiveKey(k))
+}
+
+fn try_left_bracket(reader: &mut Reader) -> Result<(), Error> {
+    let start = reader.state.clone();
+    if literal(".[", reader).is_err() {
+        reader.state = start;
+        try_literal("[", reader)?;
+    }
+    Ok(())
 }
 
 fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
@@ -214,6 +223,21 @@ mod tests {
     use super::*;
 
     #[test]
+    pub fn test_try_left_bracket() {
+        let mut reader = Reader::init("xxx");
+        let error = try_left_bracket(&mut reader).err().unwrap();
+        assert!(error.recoverable);
+
+        let mut reader = Reader::init("[xxx");
+        assert!(try_left_bracket(&mut reader).is_ok());
+        assert_eq!(reader.state.cursor, 1);
+
+        let mut reader = Reader::init(".[xxx");
+        assert!(try_left_bracket(&mut reader).is_ok());
+        assert_eq!(reader.state.cursor, 2);
+    }
+
+    #[test]
     pub fn test_query() {
         let expected_query = Query {
             selectors: vec![Selector::ArrayIndex(2)],
@@ -268,13 +292,44 @@ mod tests {
     }
 
     #[test]
-    pub fn test_selector() {
-        // Array index
+    pub fn test_selector_filter() {
+        // Filter equal on string with single quotes
+        let mut reader = Reader::init("[?(@.key=='value')]");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
+            Selector::Filter(Predicate {
+                key: "key".to_string(),
+                func: PredicateFunc::EqualString("value".to_string()),
+            })
+        );
+        assert_eq!(reader.state.cursor, 19);
+    }
+
+    #[test]
+    pub fn test_selector_recursive() {
+        let mut reader = Reader::init("..book");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
+            Selector::RecursiveKey("book".to_string())
+        );
+        assert_eq!(reader.state.cursor, 6);
+    }
+
+    #[test]
+    pub fn test_selector_array_index() {
         let mut reader = Reader::init("[2]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
         assert_eq!(reader.state.cursor, 3);
 
-        // Key bracket notation
+        // you don't need to keep the exact string
+        // this is not part of the AST
+        let mut reader = Reader::init(".[2]");
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
+        assert_eq!(reader.state.cursor, 4);
+    }
+
+    #[test]
+    pub fn test_key_bracket_selector() {
         let mut reader = Reader::init("['key']");
         assert_eq!(
             selector(&mut reader).unwrap(),
@@ -282,14 +337,23 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 7);
 
+        let mut reader = Reader::init(".['key']");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
+            Selector::NameChild("key".to_string())
+        );
+        assert_eq!(reader.state.cursor, 8);
+
         let mut reader = Reader::init("['key1']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key1".to_string())
         );
         assert_eq!(reader.state.cursor, 8);
+    }
 
-        // Key dot notation
+    #[test]
+    pub fn test_selector_key_dot_notation() {
         let mut reader = Reader::init(".key");
         assert_eq!(
             selector(&mut reader).unwrap(),
@@ -303,24 +367,6 @@ mod tests {
             Selector::NameChild("key1".to_string())
         );
         assert_eq!(reader.state.cursor, 5);
-
-        // Filter equal on string with single quotes
-        let mut reader = Reader::init("[?(@.key=='value')]");
-        assert_eq!(
-            selector(&mut reader).unwrap(),
-            Selector::Filter(Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::EqualString("value".to_string()),
-            })
-        );
-        assert_eq!(reader.state.cursor, 19);
-
-        let mut reader = Reader::init("..book");
-        assert_eq!(
-            selector(&mut reader).unwrap(),
-            Selector::RecursiveKey("book".to_string())
-        );
-        assert_eq!(reader.state.cursor, 6);
     }
 
     #[test]
