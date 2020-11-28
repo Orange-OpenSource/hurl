@@ -438,6 +438,24 @@ impl ToJson for Predicate {
                 attributes.push(("type".to_string(), JValue::String("match".to_string())));
                 attributes.push(("value".to_string(), JValue::String(value.to_string())));
             }
+            PredicateFuncValue::IsInteger {} => {
+                attributes.push(("type".to_string(), JValue::String("isInteger".to_string())));
+            }
+            PredicateFuncValue::IsFloat {} => {
+                attributes.push(("type".to_string(), JValue::String("isFloat".to_string())));
+            }
+            PredicateFuncValue::IsBoolean {} => {
+                attributes.push(("type".to_string(), JValue::String("isBoolean".to_string())));
+            }
+            PredicateFuncValue::IsString {} => {
+                attributes.push(("type".to_string(), JValue::String("isString".to_string())));
+            }
+            PredicateFuncValue::IsCollection {} => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("isCollection".to_string()),
+                ));
+            }
             PredicateFuncValue::Exist {} => {
                 attributes.push(("type".to_string(), JValue::String("exist".to_string())));
             }

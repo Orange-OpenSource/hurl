@@ -72,6 +72,11 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
             contain_predicate,
             include_predicate,
             match_predicate,
+            integer_predicate,
+            float_predicate,
+            boolean_predicate,
+            string_predicate,
+            collection_predicate,
             exist_predicate,
         ],
         reader,
@@ -287,6 +292,31 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
     let space0 = one_or_more_spaces(reader)?;
     let value = quoted_template(reader)?;
     Ok(PredicateFuncValue::Match { space0, value })
+}
+
+fn integer_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isInteger", reader)?;
+    Ok(PredicateFuncValue::IsInteger {})
+}
+
+fn float_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isFloat", reader)?;
+    Ok(PredicateFuncValue::IsFloat {})
+}
+
+fn boolean_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isBoolean", reader)?;
+    Ok(PredicateFuncValue::IsBoolean {})
+}
+
+fn string_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isString", reader)?;
+    Ok(PredicateFuncValue::IsString {})
+}
+
+fn collection_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isCollection", reader)?;
+    Ok(PredicateFuncValue::IsCollection {})
 }
 
 fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
