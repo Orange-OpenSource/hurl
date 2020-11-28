@@ -43,6 +43,10 @@ fn test_bookstore_path() {
         vec![json!("Sayings of the Century")]
     );
     assert_eq!(
+        test_ok("$.store.book.[0].title", value.clone()),
+        vec![json!("Sayings of the Century")]
+    );
+    assert_eq!(
         test_ok("$.store.book[0].title", value.clone()),
         vec![json!("Sayings of the Century")]
     );

@@ -39,3 +39,10 @@ jsonpath "$.tags" includes "test"
 jsonpath "$.tags" not includes "prod"
 jsonpath "$.tags" not includes null
 
+
+GET http://localhost:8000/assert-json/list
+HTTP/1.0 200
+[Asserts]
+jsonpath "$" countEquals 2
+jsonpath "$.[0].name" equals "Bob"
+jsonpath "$[0].name" equals "Bob"
