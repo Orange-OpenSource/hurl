@@ -39,3 +39,11 @@ error: Assert Failure
    |   expected: int <5>
    |
 
+error: Assert Failure
+  --> tests/error_assert_value_error.hurl:9:0
+   |
+ 9 | jsonpath "$.count" isFloat
+   |   actual:   int <2>
+   |   expected: float
+   |
+
