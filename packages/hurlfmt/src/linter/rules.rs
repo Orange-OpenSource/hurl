@@ -508,6 +508,11 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
                 space0: one_whitespace(),
                 value: value.clone(),
             },
+            PredicateFuncValue::IsInteger {} => PredicateFuncValue::IsInteger {},
+            PredicateFuncValue::IsFloat {} => PredicateFuncValue::IsFloat {},
+            PredicateFuncValue::IsBoolean {} => PredicateFuncValue::IsBoolean {},
+            PredicateFuncValue::IsString {} => PredicateFuncValue::IsString {},
+            PredicateFuncValue::IsCollection {} => PredicateFuncValue::IsCollection {},
             PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {},
         }
     }

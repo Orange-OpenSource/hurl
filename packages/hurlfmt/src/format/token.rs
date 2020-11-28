@@ -652,6 +652,22 @@ impl Tokenizable for PredicateFuncValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, value.tokenize());
             }
+
+            PredicateFuncValue::IsInteger {} => {
+                tokens.push(Token::PredicateType(String::from("isInteger")));
+            }
+            PredicateFuncValue::IsFloat {} => {
+                tokens.push(Token::PredicateType(String::from("isFloat")));
+            }
+            PredicateFuncValue::IsBoolean {} => {
+                tokens.push(Token::PredicateType(String::from("isBoolean")));
+            }
+            PredicateFuncValue::IsString {} => {
+                tokens.push(Token::PredicateType(String::from("isString")));
+            }
+            PredicateFuncValue::IsCollection {} => {
+                tokens.push(Token::PredicateType(String::from("isCollection")));
+            }
             PredicateFuncValue::Exist {} => {
                 tokens.push(Token::PredicateType(String::from("exists")));
             }

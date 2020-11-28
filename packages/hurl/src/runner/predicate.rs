@@ -284,6 +284,11 @@ fn expected(
             let expected = eval_template(expected, variables)?;
             Ok(format!("matches regex <{}>", expected))
         }
+        PredicateFuncValue::IsInteger {} => Ok("integer".to_string()),
+        PredicateFuncValue::IsFloat {} => Ok("float".to_string()),
+        PredicateFuncValue::IsBoolean {} => Ok("boolean".to_string()),
+        PredicateFuncValue::IsString {} => Ok("string".to_string()),
+        PredicateFuncValue::IsCollection {} => Ok("collection".to_string()),
         PredicateFuncValue::Exist {} => Ok("something".to_string()),
     }
 }
@@ -497,6 +502,41 @@ fn eval_something(
                 }),
             }
         }
+
+        // types
+        PredicateFuncValue::IsInteger {} => Ok(AssertResult {
+            success: matches!(value, Value::Integer(_)),
+            actual: value.display(),
+            expected: "integer".to_string(),
+            type_mismatch: false,
+        }),
+        PredicateFuncValue::IsFloat {} => Ok(AssertResult {
+            success: matches!(value, Value::Float(_, _)),
+            actual: value.display(),
+            expected: "float".to_string(),
+            type_mismatch: false,
+        }),
+        PredicateFuncValue::IsBoolean {} => Ok(AssertResult {
+            success: matches!(value, Value::Bool(_)),
+            actual: value.display(),
+            expected: "boolean".to_string(),
+            type_mismatch: false,
+        }),
+        PredicateFuncValue::IsString {} => Ok(AssertResult {
+            success: matches!(value, Value::String(_)),
+            actual: value.display(),
+            expected: "string".to_string(),
+            type_mismatch: false,
+        }),
+        PredicateFuncValue::IsCollection {} => Ok(AssertResult {
+            success: matches!(value, Value::Bytes(_))
+                || matches!(value, Value::List(_))
+                || matches!(value, Value::Nodeset(_))
+                || matches!(value, Value::Object(_)),
+            actual: value.display(),
+            expected: "collection".to_string(),
+            type_mismatch: false,
+        }),
 
         // exists
         PredicateFuncValue::Exist {} => match value {
@@ -1165,7 +1205,7 @@ mod tests {
                 success: true,
                 type_mismatch: false,
                 actual: "int <2>".to_string(),
-                expected: "int <1>".to_string()
+                expected: "int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1174,7 +1214,7 @@ mod tests {
                 success: false,
                 type_mismatch: false,
                 actual: "int <1>".to_string(),
-                expected: "int <1>".to_string()
+                expected: "int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1183,7 +1223,7 @@ mod tests {
                 success: true,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
-                expected: "int <1>".to_string()
+                expected: "int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1192,7 +1232,7 @@ mod tests {
                 success: false,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
-                expected: "int <2>".to_string()
+                expected: "int <2>".to_string(),
             }
         );
     }
@@ -1297,6 +1337,38 @@ mod tests {
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "nodeset of size <1>");
         assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+    }
+
+    #[test]
+    fn test_predicate_type() {
+        let variables = HashMap::new();
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::IsInteger {},
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            },
+            &variables,
+            Value::Integer(1),
+        )
+        .unwrap();
+        assert_eq!(assert_result.success, true);
+        assert_eq!(assert_result.type_mismatch, false);
+        assert_eq!(assert_result.actual.as_str(), "int <1>");
+        assert_eq!(assert_result.expected.as_str(), "integer");
+
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::IsInteger {},
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            },
+            &variables,
+            Value::Float(1, 0),
+        )
+        .unwrap();
+        assert_eq!(assert_result.success, false);
+        assert_eq!(assert_result.type_mismatch, false);
+        assert_eq!(assert_result.actual.as_str(), "float <1.0>");
+        assert_eq!(assert_result.expected.as_str(), "integer");
     }
 
     #[test]

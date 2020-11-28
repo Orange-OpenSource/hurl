@@ -591,6 +591,21 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(format!("<span class=\"boolean\">{}</span>", value).as_str());
             }
+            PredicateFuncValue::IsInteger {} => {
+                buffer.push_str("<span class=\"predicate-type\">isInteger</span>");
+            }
+            PredicateFuncValue::IsFloat {} => {
+                buffer.push_str("<span class=\"predicate-type\">isFloat</span>");
+            }
+            PredicateFuncValue::IsBoolean {} => {
+                buffer.push_str("<span class=\"predicate-type\">isBoolean</span>");
+            }
+            PredicateFuncValue::IsString {} => {
+                buffer.push_str("<span class=\"predicate-type\">isString</span>");
+            }
+            PredicateFuncValue::IsCollection {} => {
+                buffer.push_str("<span class=\"predicate-type\">isCollection</span>");
+            }
             PredicateFuncValue::Exist {} => {
                 buffer.push_str("<span class=\"predicate-type\">exists</span>");
             }

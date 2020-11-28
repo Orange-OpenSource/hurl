@@ -422,6 +422,11 @@ pub enum PredicateFuncValue {
     IncludeNull { space0: Whitespace },
     IncludeExpression { space0: Whitespace, value: Expr },
     Match { space0: Whitespace, value: Template },
+    IsInteger {},
+    IsFloat {},
+    IsBoolean {},
+    IsString {},
+    IsCollection {},
     Exist {},
 }
 
