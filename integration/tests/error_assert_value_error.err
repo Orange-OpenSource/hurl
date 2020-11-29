@@ -36,7 +36,7 @@ error: Assert Failure
    |
  8 | jsonpath "$.count" greaterThan 5
    |   actual:   int <2>
-   |   expected: int <5>
+   |   expected: greater than int <5>
    |
 
 error: Assert Failure

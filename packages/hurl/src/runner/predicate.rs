@@ -582,6 +582,12 @@ fn assert_values_equal(actual: Value, expected: Value) -> Result<AssertResult, E
             expected: expected.display(),
             type_mismatch: false,
         }),
+        (Value::Integer(int1), Value::Float(int2, decimal)) => Ok(AssertResult {
+            success: int1 == int2 && decimal == 0,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        }),
         (Value::Float(i1, d1), Value::Float(i2, d2)) => Ok(AssertResult {
             success: i1 == i2 && d1 == d2,
             actual: actual.display(),
@@ -621,93 +627,110 @@ fn assert_values_equal(actual: Value, expected: Value) -> Result<AssertResult, E
     }
 }
 
-fn assert_values_greater(actual: Value, expected: Value) -> Result<AssertResult, Error> {
-    match compare_numbers(actual.clone(), expected.clone()) {
+fn assert_values_greater(
+    actual_value: Value,
+    expected_value: Value,
+) -> Result<AssertResult, Error> {
+    let actual = actual_value.clone().display();
+    let expected = format!("greater than {}", expected_value.clone().display());
+    match compare_numbers(actual_value, expected_value) {
         Some(1) => Ok(AssertResult {
             success: true,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         Some(0) | Some(-1) => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         _ => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: true,
         }),
     }
 }
 
-fn assert_values_greater_or_equal(actual: Value, expected: Value) -> Result<AssertResult, Error> {
-    match compare_numbers(actual.clone(), expected.clone()) {
+fn assert_values_greater_or_equal(
+    actual_value: Value,
+    expected_value: Value,
+) -> Result<AssertResult, Error> {
+    let actual = actual_value.clone().display();
+    let expected = format!("greater or equal than {}", expected_value.clone().display());
+    match compare_numbers(actual_value, expected_value) {
         Some(1) | Some(0) => Ok(AssertResult {
             success: true,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         Some(-1) => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         _ => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: true,
         }),
     }
 }
 
-fn assert_values_less(actual: Value, expected: Value) -> Result<AssertResult, Error> {
-    match compare_numbers(actual.clone(), expected.clone()) {
+fn assert_values_less(actual_value: Value, expected_value: Value) -> Result<AssertResult, Error> {
+    let actual = actual_value.clone().display();
+    let expected = format!("less than {}", expected_value.clone().display());
+    match compare_numbers(actual_value, expected_value) {
         Some(-1) => Ok(AssertResult {
             success: true,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         Some(0) | Some(1) => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         _ => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: true,
         }),
     }
 }
 
-fn assert_values_less_or_equal(actual: Value, expected: Value) -> Result<AssertResult, Error> {
-    match compare_numbers(actual.clone(), expected.clone()) {
+fn assert_values_less_or_equal(
+    actual_value: Value,
+    expected_value: Value,
+) -> Result<AssertResult, Error> {
+    let actual = actual_value.clone().display();
+    let expected = format!("less or equal than {}", expected_value.clone().display());
+    match compare_numbers(actual_value, expected_value) {
         Some(-1) | Some(0) => Ok(AssertResult {
             success: true,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         Some(1) => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: false,
         }),
         _ => Ok(AssertResult {
             success: false,
-            actual: actual.display(),
-            expected: expected.display(),
+            actual,
+            expected,
             type_mismatch: true,
         }),
     }
@@ -724,6 +747,7 @@ fn compare_numbers(actual: Value, expected: Value) -> Option<i32> {
         }
         (Value::Float(i1, d1), Value::Float(i2, d2)) => Some(compare_float((i1, d1), (i2, d2))),
         (Value::Float(i1, d1), Value::Integer(i2)) => Some(compare_float((i1, d1), (i2, 0))),
+        (Value::Integer(i1), Value::Float(i2, d2)) => Some(compare_float((i1, 0), (i2, d2))),
         _ => None,
     }
 }
@@ -1191,7 +1215,10 @@ mod tests {
         );
 
         // 1 integer and 1 float
-        assert!(compare_numbers(Value::Integer(2), Value::Float(2, 0)).is_none());
+        assert_eq!(
+            compare_numbers(Value::Integer(2), Value::Float(2, 0)).unwrap(),
+            0
+        );
 
         // with a non number
         assert!(compare_numbers(Value::Integer(-1), Value::String("hello".to_string())).is_none());
@@ -1205,7 +1232,7 @@ mod tests {
                 success: true,
                 type_mismatch: false,
                 actual: "int <2>".to_string(),
-                expected: "int <1>".to_string(),
+                expected: "greater than int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1214,7 +1241,7 @@ mod tests {
                 success: false,
                 type_mismatch: false,
                 actual: "int <1>".to_string(),
-                expected: "int <1>".to_string(),
+                expected: "greater than int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1223,7 +1250,7 @@ mod tests {
                 success: true,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
-                expected: "int <1>".to_string(),
+                expected: "greater than int <1>".to_string(),
             }
         );
         assert_eq!(
@@ -1232,7 +1259,7 @@ mod tests {
                 success: false,
                 type_mismatch: false,
                 actual: "float <1.1>".to_string(),
-                expected: "int <2>".to_string(),
+                expected: "greater than int <2>".to_string(),
             }
         );
     }
