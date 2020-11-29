@@ -1,6 +1,10 @@
 GET http://localhost:8000/assert-json
 HTTP/1.0 200
 [Asserts]
+jsonpath "$.count" equals 5
+jsonpath "$.count" equals 5.0
+jsonpath "$.count" greaterThan 1
+jsonpath "$.count" greaterThan 1.0
 jsonpath "$.success" equals false
 jsonpath "$.success" not equals null
 jsonpath "$.success" exists
@@ -23,6 +27,7 @@ jsonpath "$.duration" not isInteger
 jsonpath "$.nullable" equals null
 
 {
+  "count": 5,
   "success": false,
   "errors": [{"id":"error1"},{"id":"error2"}],
   "warnings": [],
