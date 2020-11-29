@@ -307,6 +307,27 @@ HTTP/* 302
 
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
 
+# Building
+
+Hurl is written in [Rust](https://www.rust-lang.org/).
+You should [install](https://www.rust-lang.org/tools/install) the
+latest stable release.
+
+Hurl depends on libssl, libcurl and libxml2 native libraries.
+You will need their development files in your platform.
+
+```
+# Ubuntu/Debian
+apt install pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+```
+
+```
+$ git clone https://github.com/Orange-OpenSource/hurl
+$ cd hurl
+$ cargo build --release
+$ ./target/release/hurl --version
+1.0.0
+```
 
 # Feedbacks
 
