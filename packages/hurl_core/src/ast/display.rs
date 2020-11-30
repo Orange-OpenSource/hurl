@@ -120,7 +120,7 @@ impl fmt::Display for CookieAttribute {
         let s = match self.name {
             CookieAttributeName::MaxAge(_) => "Max-Age",
             CookieAttributeName::Value(_) => "Value",
-            CookieAttributeName::Expires(_) => "Expire",
+            CookieAttributeName::Expires(_) => "Expires",
             CookieAttributeName::Domain(_) => "Domain",
             CookieAttributeName::Path(_) => "Path",
             CookieAttributeName::Secure(_) => "Secure",
