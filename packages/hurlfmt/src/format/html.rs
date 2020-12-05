@@ -239,7 +239,7 @@ impl Htmlable for FileParam {
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(format!("<span class=\"string\">{}</span>", self.key.to_html()).as_str());
         buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str(":");
+        buffer.push(':');
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
         buffer.push_str(self.line_terminator0.to_html().as_str());
@@ -257,7 +257,7 @@ impl Htmlable for FileValue {
             format!("<span class=\"string\">{}</span>", self.filename.to_html()).as_str(),
         );
         buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str(";");
+        buffer.push(';');
         buffer.push_str(self.space2.to_html().as_str());
         if let Some(content_type) = self.content_type.clone() {
             buffer.push_str(format!("<span class=\"string\">{}</span>", content_type).as_str());
@@ -385,9 +385,9 @@ impl Htmlable for CookiePath {
         let mut buffer = String::from("");
         buffer.push_str(self.name.to_html().as_str());
         if let Some(attribute) = self.attribute.clone() {
-            buffer.push_str("[");
+            buffer.push('[');
             buffer.push_str(attribute.to_html().as_str());
-            buffer.push_str("]");
+            buffer.push(']');
         }
         buffer
     }
@@ -570,9 +570,9 @@ impl Htmlable for PredicateFuncValue {
             PredicateFuncValue::IncludeExpression { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">includes</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str("\"");
+                buffer.push('"');
                 buffer.push_str(value.to_html().as_str());
-                buffer.push_str("\"");
+                buffer.push('"');
             }
             PredicateFuncValue::Match { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">matches</span>");
@@ -639,7 +639,7 @@ impl Htmlable for Bytes {
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(encoded.as_str());
                 buffer.push_str(space1.to_html().as_str());
-                buffer.push_str(";");
+                buffer.push(';');
                 buffer.push_str("</span>");
             }
             Bytes::File {
@@ -651,7 +651,7 @@ impl Htmlable for Bytes {
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(filename.to_html().as_str());
                 buffer.push_str(space1.to_html().as_str());
-                buffer.push_str(";");
+                buffer.push(';');
                 buffer.push_str("</span>");
             }
             Bytes::RawString { newline0, value } => {
