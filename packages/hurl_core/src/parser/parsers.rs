@@ -271,7 +271,7 @@ fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
             Ok(value) => StatusValue::Specific(value),
             Err(_) => {
                 return Err(Error {
-                    pos: start.clone(),
+                    pos: start,
                     recoverable: false,
                     inner: ParseError::Status {},
                 })
