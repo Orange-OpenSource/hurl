@@ -62,7 +62,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
                     state = State::Template {};
                 } else {
                     value.push('{');
-                    encoded.push_str("{");
+                    encoded.push('{');
 
                     value.push(c);
                     encoded.push_str(&s.clone());
@@ -98,7 +98,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
                 } else {
                     value.push('}');
                     value.push(c);
-                    encoded.push_str("}");
+                    encoded.push('}');
                     encoded.push_str(&s.clone());
                 }
             }
@@ -109,7 +109,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
         State::String {} => {}
         State::FirstOpenBracket {} => {
             value.push('{');
-            encoded.push_str("{");
+            encoded.push('{');
         }
         State::Template {} | State::FirstCloseBracket {} => {
             return Err(error::Error {

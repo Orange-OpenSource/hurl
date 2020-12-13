@@ -235,7 +235,7 @@ fn template_element_string(
                 } else if bracket {
                     bracket = false;
                     value.push('{');
-                    encoded.push_str("{");
+                    encoded.push('{');
                     value.push(c);
                     encoded.push_str(s.as_str());
                 } else {
