@@ -1,5 +1,35 @@
+
+
+[1.0.0 (2020-12-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.0.0)
+========================================================================================================================
+
+Changes:
+
+* Update to Rust 1.48.0 [#107](https://github.com/Orange-OpenSource/hurl/issues/107)
+
+* Add type predicates [#98](https://github.com/Orange-OpenSource/hurl/pull/98)
+
+* Arithmetic predicates for number (Integer or Float) [#95](https://github.com/Orange-OpenSource/hurl/issues/95)
+
+* Add predicates to test value types [#94](https://github.com/Orange-OpenSource/hurl/issues/94)
+
+* Add duration query [#90](https://github.com/Orange-OpenSource/hurl/issues/90)
+
+* Add comparison predicates [#89](https://github.com/Orange-OpenSource/hurl/issues/89)
+
+
+Bugs Fixes:
+
+* Serialization of cookie query for Expires attributes with hurlfmt [#100](https://github.com/Orange-OpenSource/hurl/issues/100)
+
+* Valid Jsonpath query is not parsed [#93](https://github.com/Orange-OpenSource/hurl/issues/93)
+
+
+
+
+
 [0.99.14 (2020-11-17)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#0.99.14)
-==========================================================================================================
+========================================================================================================================
 
 Changes:
 
