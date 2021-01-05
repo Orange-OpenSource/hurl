@@ -40,7 +40,7 @@ pub fn parse(reader: &mut Reader) -> Vec<u8> {
     let mut buf = vec![]; // base64 text
     loop {
         let pad = padding(reader);
-        if pad != "" {
+        if !pad.is_empty() {
             break;
         }
         let save = reader.state.clone();
