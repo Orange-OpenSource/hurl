@@ -327,7 +327,12 @@ $ cd hurl
 $ cargo build --release
 $ ./target/release/hurl --version
 1.0.0
+
+# Install binary
+cargo install --path packages/hurl
 ```
+
+
 
 # Feedbacks
 
