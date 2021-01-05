@@ -760,7 +760,7 @@ impl Tokenizable for LineTerminator {
 impl Tokenizable for Whitespace {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        if self.value != "" {
+        if !self.value.is_empty() {
             tokens.push(Token::Whitespace(self.clone().value));
         }
         tokens

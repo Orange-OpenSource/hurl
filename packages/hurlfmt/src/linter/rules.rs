@@ -685,7 +685,7 @@ impl Lintable<LineTerminator> for LineTerminator {
                 }
             }
             None => {
-                if self.space0.value != "" {
+                if !self.space0.value.is_empty() {
                     errors.push(Error {
                         source_info: self.clone().space0.source_info,
                         inner: LinterError::UnneccessarySpace {},
@@ -709,7 +709,7 @@ impl Lintable<LineTerminator> for LineTerminator {
             Some(comment) => Some(comment.lint()),
         };
         let newline = Whitespace {
-            value: if self.newline.value == "" {
+            value: if self.newline.value.is_empty() {
                 "".to_string()
             } else {
                 "\n".to_string()

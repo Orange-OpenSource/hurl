@@ -59,7 +59,7 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<'static, Expr> {
 fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
-    if name == "" {
+    if name.is_empty() {
         return Err(Error {
             pos: start.pos,
             recoverable: false,

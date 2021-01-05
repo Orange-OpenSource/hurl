@@ -74,7 +74,7 @@ fn execute(
         .split(&contents)
         .map(|l| l.to_string())
         .collect();
-    let optional_filename = if filename == "" {
+    let optional_filename = if filename.is_empty() {
         None
     } else {
         Some(filename.to_string())

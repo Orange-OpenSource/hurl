@@ -453,7 +453,7 @@ impl Client {
         }
 
         let response_code = self.handle.response_code().unwrap();
-        if response_code < 300 || response_code >= 400 {
+        if !(300..400).contains(&response_code) {
             return None;
         }
 
