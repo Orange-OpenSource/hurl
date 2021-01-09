@@ -22,6 +22,7 @@ clap = "2.33.0"
 curl = "0.4.33"
 encoding = "0.2"
 float-cmp = "0.6.0"
+hurl_core = { version = "1.1.0", path = "../hurl_core" }
 libflate = "1.0.2"
 libxml = "0.2.12"
 regex = "1.1.0"
@@ -29,8 +30,6 @@ serde = "1.0.104"
 serde_json = "1.0.40"
 url = "2.1.0"
 
-[dependencies.hurl_core]
-path = "../hurl_core"
 
 
 
