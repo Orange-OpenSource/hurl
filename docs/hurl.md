@@ -271,6 +271,14 @@ Define variable (name/value) to be used in Hurl templates.
 Only string values can be defined.
 
 
+### --variables-file <file> {#variables-file}
+
+Set properties file in which your define your variables.
+
+Each variable is defined as name=value exactly as with [--variable](#variable) option.
+
+Note that defining a variable twice produces an error.
+
 
 ### -v, --verbose {#verbose}
 
