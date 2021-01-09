@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::prelude::*;
-use std::io::{self, Read};
+use std::io::{self, BufReader, Read};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -36,6 +36,7 @@ use hurl::runner::{HurlResult, RunnerOptions};
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
+use std::fs::File;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CLIOptions {
@@ -266,28 +267,67 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIErr
 
 fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, CLIError> {
     let mut variables = HashMap::new();
+
+    if let Some(filename) = matches.value_of("variables_file") {
+        let path = std::path::Path::new(filename);
+        if !path.exists() {
+            return Err(CLIError {
+                message: format!("Properties file {} does not exist", path.display()),
+            });
+        }
+
+        let file = File::open(path).unwrap();
+        let reader = BufReader::new(file);
+        for (index, line) in reader.lines().enumerate() {
+            let line = match line {
+                Ok(s) => s,
+                Err(_) => {
+                    return Err(CLIError {
+                        message: format!("Can not parse line {} of {}", index + 1, path.display()),
+                    })
+                }
+            };
+            let line = line.trim();
+            if line.starts_with('#') || line.is_empty() {
+                continue;
+            }
+            let (name, value) = parse_variable(line)?;
+            if variables.contains_key(name.as_str()) {
+                return Err(CLIError {
+                    message: format!("Variable {} defined twice!", name),
+                });
+            }
+            variables.insert(name.to_string(), value[1..].to_string());
+        }
+    }
+
     if matches.is_present("variable") {
         let input: Vec<_> = matches.values_of("variable").unwrap().collect();
         for s in input {
-            match s.find('=') {
-                None => {
-                    return Err(CLIError {
-                        message: format!("Missing variable value for {}!", s),
-                    });
-                }
-                Some(index) => {
-                    let (name, value) = s.split_at(index);
-                    if variables.contains_key(name) {
-                        return Err(CLIError {
-                            message: format!("Variable {} defined twice!", name),
-                        });
-                    }
-                    variables.insert(name.to_string(), value[1..].to_string());
-                }
-            };
+            let (name, value) = parse_variable(s)?;
+
+            if variables.contains_key(name.as_str()) {
+                return Err(CLIError {
+                    message: format!("Variable {} defined twice!", name),
+                });
+            }
+            variables.insert(name.to_string(), value[1..].to_string());
         }
     }
+
     Ok(variables)
+}
+
+fn parse_variable(s: &str) -> Result<(String, String), CLIError> {
+    match s.find('=') {
+        None => Err(CLIError {
+            message: format!("Missing variable value for {}!", s),
+        }),
+        Some(index) => {
+            let (name, value) = s.split_at(index);
+            Ok((name.to_string(), value.to_string()))
+        }
+    }
 }
 
 fn app() -> clap::App<'static, 'static> {
@@ -448,6 +488,13 @@ fn app() -> clap::App<'static, 'static> {
                 .multiple(true)
                 .number_of_values(1)
                 .help("Define a variable")
+                .takes_value(true),
+        )
+        .arg(
+            clap::Arg::with_name("variables_file")
+                .long("variables-file")
+                .value_name("FILE")
+                .help("Define a properties file in which you define your variables")
                 .takes_value(true),
         )
         .arg(
