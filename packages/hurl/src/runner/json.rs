@@ -18,10 +18,12 @@
 use std::collections::HashMap;
 
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue};
+use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
-use super::core::Error;
+use super::core::{Error, RunnerError};
 use super::template::eval_template;
 use super::value::Value;
+use crate::runner::template::eval_expression;
 
 pub fn eval_json_value(
     json_value: JsonValue,
@@ -50,6 +52,30 @@ pub fn eval_json_value(
                 elems_string.push(s);
             }
             Ok(format!("{{{}{}}}", space0, elems_string.join(",")))
+        }
+        JsonValue::Expression(exp) => {
+            let s = eval_expression(exp.clone(), variables)?;
+
+            // The String can only be null, a bool, a number
+            // It will be easier when your variables value have a type
+            let mut reader = Reader::init(s.as_str());
+            let start = reader.state.clone();
+            if parse_json_number(&mut reader).is_ok() {
+                return Ok(s);
+            }
+            reader.state = start.clone();
+            if parse_json_boolean(&mut reader).is_ok() {
+                return Ok(s);
+            }
+            reader.state = start;
+            if parse_json_null(&mut reader).is_ok() {
+                return Ok(s);
+            }
+            Err(Error {
+                source_info: exp.variable.source_info,
+                inner: RunnerError::InvalidJson { value: s },
+                assert: false,
+            })
         }
     }
 }

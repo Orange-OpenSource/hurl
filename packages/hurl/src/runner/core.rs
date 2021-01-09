@@ -116,6 +116,9 @@ pub enum RunnerError {
     VariableNotDefined {
         name: String,
     },
+    InvalidJson {
+        value: String,
+    },
     InvalidURL(String),
 
     HttpConnection {

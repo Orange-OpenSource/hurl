@@ -2,7 +2,9 @@ POST http://localhost:8000/post-json
 
 {
     "name": "Bob",
-    "password": "secret"
+    "password": "secret",
+    "age": 30,
+    "strict": true
 }
 
 HTTP/1.0 200
@@ -50,5 +52,7 @@ POST http://localhost:8000/post-json
 
 {
     "name": "{{name}}",
-    "password": "secret"
+    "password": "secret",
+    "age": {{age}},
+    "strict": {{strict}}
 }

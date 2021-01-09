@@ -459,7 +459,7 @@ impl ToJson for hurl_core::ast::JsonValue {
     fn to_json(&self) -> JValue {
         match self {
             JsonValue::Null {} => JValue::Null {},
-            JsonValue::Number(s) => JValue::Number(s.clone()),
+            JsonValue::Number(s) => JValue::Number(s.to_string()),
             JsonValue::String(s) => JValue::String(s.to_string()),
             JsonValue::Boolean(v) => JValue::Boolean(*v),
             JsonValue::List { elements, .. } => {
@@ -471,6 +471,7 @@ impl ToJson for hurl_core::ast::JsonValue {
                     .map(|elem| (elem.name.clone(), elem.value.to_json()))
                     .collect(),
             ),
+            JsonValue::Expression(exp) => JValue::String(format!("{{{{{}}}}}", exp.to_string())),
         }
     }
 }

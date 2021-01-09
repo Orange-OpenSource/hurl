@@ -791,10 +791,10 @@ impl Tokenizable for JsonValue {
                 //tokens.push(Token::CodeDelimiter("\"".to_string()));
             }
             JsonValue::Number(value) => {
-                tokens.push(Token::Number(value.clone()));
+                tokens.push(Token::Number(value.to_string()));
             }
             JsonValue::Boolean(value) => {
-                tokens.push(Token::Number(value.to_string()));
+                tokens.push(Token::Boolean(value.to_string()));
             }
             JsonValue::List { space0, elements } => {
                 tokens.push(Token::CodeDelimiter("[".to_string()));
@@ -820,6 +820,9 @@ impl Tokenizable for JsonValue {
             }
             JsonValue::Null {} => {
                 tokens.push(Token::Keyword("null".to_string()));
+            }
+            JsonValue::Expression(exp) => {
+                tokens.append(&mut exp.tokenize());
             }
         }
         tokens

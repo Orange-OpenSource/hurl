@@ -6,9 +6,12 @@ from tests import app
 def post_json():
     assert request.headers['Content-Type'] == 'application/json'
     s = request.data.decode("utf-8")
+    print(s)
     assert s == '''{
     "name": "Bob",
-    "password": "secret"
+    "password": "secret",
+    "age": 30,
+    "strict": true
 }'''
     return ''
 
