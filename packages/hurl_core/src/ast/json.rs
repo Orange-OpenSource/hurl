@@ -16,6 +16,7 @@
  *
  */
 use super::core::Template;
+use crate::ast::Expr;
 
 ///
 /// This the AST for the JSON used within hurl
@@ -26,6 +27,7 @@ use super::core::Template;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Value {
+    Expression(Expr),
     Number(String),
     String(Template),
     Boolean(bool),
@@ -49,6 +51,7 @@ impl Value {
             Value::List { .. } => "list".to_string(),
             Value::Object { .. } => "object".to_string(),
             Value::String(_) => "string".to_string(),
+            Value::Expression(_) => "expression".to_string(),
         }
     }
 }

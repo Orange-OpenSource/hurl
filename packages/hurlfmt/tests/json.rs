@@ -242,6 +242,7 @@ fn format_token(token: Token) -> String {
     match token {
         Token::Whitespace(s)
         | Token::Number(s)
+        | Token::Boolean(s)
         | Token::String(s)
         | Token::Keyword(s)
         | Token::Quote(s)

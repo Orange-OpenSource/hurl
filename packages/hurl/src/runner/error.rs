@@ -48,6 +48,7 @@ impl Error for runner::Error {
             RunnerError::NoQueryResult { .. } => "No query result".to_string(),
             RunnerError::UnsupportedContentEncoding(..) => "Decompression Error".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression Error".to_string(),
+            RunnerError::InvalidJson { .. } => "Invalid Json".to_string(),
         }
     }
 
@@ -135,6 +136,9 @@ impl Error for runner::Error {
             }
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("Could not uncompress response with {}", algorithm)
+            }
+            RunnerError::InvalidJson { value } => {
+                format!("actual value is <{}>", value)
             }
         }
     }

@@ -23,6 +23,7 @@ use super::primitives::*;
 use super::reader::*;
 use super::template::*;
 use super::ParseResult;
+use crate::parser::expr;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     choice(
@@ -31,6 +32,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
             boolean_value,
             string_value,
             number_value,
+            expression_value,
             list_value,
             object_value,
         ],
@@ -38,12 +40,12 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     )
 }
 
-fn null_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn null_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     try_literal("null", reader)?;
     Ok(JsonValue::Null {})
 }
 
-fn boolean_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn boolean_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     let value = boolean(reader)?;
     Ok(JsonValue::Boolean(value))
 }
@@ -161,8 +163,8 @@ fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
     Ok(value)
 }
 
-fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
-    let start = reader.state.pos.clone();
+pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+    let start = reader.state.clone();
 
     let sign = match try_literal("-", reader) {
         Err(_) => "".to_string(),
@@ -174,7 +176,7 @@ fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
                 return Err(error::Error {
-                    pos: start,
+                    pos: start.pos,
                     recoverable: true,
                     inner: error::ParseError::Expecting {
                         value: "number".to_string(),
@@ -224,6 +226,11 @@ fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
         "{}{}{}{}",
         sign, integer, fraction, exponent
     )))
+}
+
+fn expression_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+    let exp = expr::parse(reader)?;
+    Ok(JsonValue::Expression(exp))
 }
 
 fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
@@ -693,6 +700,29 @@ mod tests {
             }
         );
         assert_eq!(error.recoverable, false);
+    }
+
+    #[test]
+    fn test_expression_value() {
+        let mut reader = Reader::init("{{n}}");
+        assert_eq!(
+            expression_value(&mut reader).unwrap(),
+            JsonValue::Expression(Expr {
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 3)
+                },
+                variable: Variable {
+                    name: "n".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 4)
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 4, 1, 4)
+                }
+            })
+        );
+        assert_eq!(reader.state.cursor, 5);
     }
 
     #[test]
