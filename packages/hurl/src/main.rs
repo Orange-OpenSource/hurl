@@ -528,7 +528,9 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
     let insecure = matches.is_present("insecure");
     let follow_location = matches.is_present("follow_location");
-    let cookie_input_file = matches.value_of("cookie_input_file").map(|x| x.to_string());
+    let cookie_input_file = matches
+        .value_of("cookies_input_file")
+        .map(|x| x.to_string());
     let max_redirect = match matches.value_of("max_redirects") {
         None => Some(50),
         Some("-1") => None,
