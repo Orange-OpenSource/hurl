@@ -46,9 +46,6 @@ use super::value::Value;
 /// fn log_verbose(message: &str) { eprintln!("* {}", message); }
 /// fn log_error_message(_warning:bool, message: &str) { eprintln!("{}", message); }
 /// fn log_error(error: &runner::Error, _warning: bool) { eprintln!("* {:#?}", error); }
-/// let log_verbose: fn(&str) = log_verbose;
-/// let log_error_message: fn(bool, &str) = log_error_message;
-/// let log_error: fn(&runner::Error, bool) = log_error;
 ///
 /// // Create an http client
 /// let options = http::ClientOptions {
