@@ -1,5 +1,3 @@
-use std::fs::File;
-use std::io::prelude::*;
 use std::time::Duration;
 
 use hurl::http::*;
@@ -701,15 +699,10 @@ fn test_cookie_storage() {
 
 #[test]
 fn test_cookie_file() {
-    let temp_file = "/tmp/cookies";
-    let mut file = File::create(temp_file).expect("can not create temp file!");
-    file.write_all(b"localhost\tFALSE\t/\tFALSE\t0\tcookie2\tvalueA\n")
-        .unwrap();
-
     let options = ClientOptions {
         follow_location: false,
         max_redirect: None,
-        cookie_input_file: Some(temp_file.to_string()),
+        cookie_input_file: Some("tests/cookies.txt".to_string()),
         proxy: None,
         no_proxy: None,
         verbose: false,

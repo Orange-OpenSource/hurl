@@ -1,0 +1,1 @@
+localhost	FALSE	/	FALSE	0	cookie2	valueA

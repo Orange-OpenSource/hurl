@@ -89,25 +89,8 @@ mod tests {
 
     use super::*;
 
-    #[cfg(test)]
-    pub fn create_test_file() {
-        let path = Path::new("/tmp/data.bin");
-        let display = path.display();
-        if File::open(path).is_err() {
-            match File::create(&path) {
-                Err(why) => panic!("couldn't create {}: {:?}", display, why),
-                Ok(mut file) => match file.write_all(b"Hello World!") {
-                    Err(why) => panic!("couldn't write to {}: {:?}", display, why),
-                    Ok(_) => println!("successfully wrote to {}", display),
-                },
-            }
-        }
-    }
-
     #[test]
     pub fn test_body_file() {
-        create_test_file();
-
         // file, data.bin;
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -117,7 +100,7 @@ mod tests {
         let bytes = Bytes::File {
             space0: whitespace.clone(),
             filename: Filename {
-                value: String::from("/tmp/data.bin"),
+                value: String::from("tests/data.bin"),
                 source_info: SourceInfo::init(1, 7, 1, 15),
             },
             space1: whitespace.clone(),
@@ -125,7 +108,7 @@ mod tests {
 
         let variables = HashMap::new();
         assert_eq!(
-            eval_bytes(bytes, &variables, "current_dir".to_string()).unwrap(),
+            eval_bytes(bytes, &variables, ".".to_string()).unwrap(),
             b"Hello World!"
         );
     }
