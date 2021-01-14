@@ -132,13 +132,14 @@ mod tests {
 
         let variables = HashMap::new();
 
+        let separator = if cfg!(windows) { "\\" } else { "/" };
         let error = eval_bytes(bytes, &variables, "current_dir".to_string())
             .err()
             .unwrap();
         assert_eq!(
             error.inner,
             RunnerError::FileReadAccess {
-                value: String::from("current_dir/data.bin")
+                value: String::from(format!("current_dir{}data.bin", separator))
             }
         );
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
