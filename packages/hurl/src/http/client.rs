@@ -40,7 +40,7 @@ pub enum HttpError {
     InvalidUrl,
     Timeout,
     StatuslineIsMissing,
-    Other { description: String, code: u32 },
+    Other { description: String, code: i32 },
 }
 
 #[derive(Debug)]
@@ -203,7 +203,7 @@ impl Client {
                     28 => Err(HttpError::Timeout),
                     60 => Err(HttpError::SSLCertificate),
                     _ => Err(HttpError::Other {
-                        code: e.code(),
+                        code: e.code() as i32, // due to windows build
                         description: e.description().to_string(),
                     }),
                 };
