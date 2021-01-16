@@ -195,6 +195,11 @@ If you want to combine results from different Hurl executions in a unique html r
 Include the HTTP headers in the output (last entry).
 
 
+### --interactive {#interactive}
+
+Stop between requests.
+This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+
 
 ### --json <file> {#json}
 

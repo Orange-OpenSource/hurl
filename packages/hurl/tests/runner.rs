@@ -67,6 +67,8 @@ fn test_hurl_file() {
         variables,
         to_entry: None,
         context_dir: "current_dir".to_string(),
+        pre_entry: || true,
+        post_entry: || true,
     };
 
     let log_verbose: fn(&str) = log_verbose;
@@ -206,6 +208,8 @@ fn test_hello() {
         variables,
         to_entry: None,
         context_dir: "current_dir".to_string(),
+        pre_entry: || true,
+        post_entry: || true,
     };
     let log_verbose: fn(&str) = log_verbose;
     let log_error_message: fn(bool, &str) = log_error_message;

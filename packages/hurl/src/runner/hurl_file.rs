@@ -70,6 +70,8 @@ use super::value::Value;
 ///        variables,
 ///        to_entry: None,
 ///        context_dir: "current_dir".to_string(),
+///        pre_entry: || true,
+///        post_entry: || true,
 ///  };
 ///
 /// // Run the hurl file
@@ -117,6 +119,11 @@ pub fn run(
         .enumerate()
         .collect::<Vec<(usize, Entry)>>()
     {
+        let exit = (options.pre_entry)();
+        if exit {
+            break;
+        }
+
         let entry_result = entry::run(
             entry,
             http_client,
@@ -130,10 +137,12 @@ pub fn run(
         for e in entry_result.errors.clone() {
             log_error(&e, false);
         }
-        if options.fail_fast && !entry_result.errors.is_empty() {
+        let exit = (options.post_entry)();
+        if exit || (options.fail_fast && !entry_result.errors.is_empty()) {
             break;
         }
     }
+
     let time_in_ms = start.elapsed().as_millis();
     let success = entries
         .iter()

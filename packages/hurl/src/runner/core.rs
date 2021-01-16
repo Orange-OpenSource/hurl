@@ -28,6 +28,8 @@ pub struct RunnerOptions {
     pub variables: HashMap<String, String>,
     pub to_entry: Option<usize>,
     pub context_dir: String,
+    pub pre_entry: fn() -> bool,
+    pub post_entry: fn() -> bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
