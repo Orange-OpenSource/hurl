@@ -171,6 +171,7 @@ fn cookie_value(reader: &mut Reader) -> ParseResult<'static, CookieValue> {
             || *c == '%'
             || *c == '['
             || *c == ']'
+            || *c == '.'
     });
     Ok(CookieValue { value })
 }
