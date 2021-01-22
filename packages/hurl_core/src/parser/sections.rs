@@ -165,13 +165,11 @@ fn cookie_value(reader: &mut Reader) -> ParseResult<'static, CookieValue> {
     //let start = reader.state.clone();
     let value = reader.read_while(|c| {
         c.is_ascii_alphanumeric()
-            || *c == '_'
-            || *c == '-'
-            || *c == '/'
-            || *c == '%'
-            || *c == '['
-            || *c == ']'
-            || *c == '.'
+            || vec![
+                '!', '#', '$', '%', '&', '\'', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=',
+                '>', '?', '@', '[', ']', '^', '_', '`', '~',
+            ]
+            .contains(&c)
     });
     Ok(CookieValue { value })
 }
