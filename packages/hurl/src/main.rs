@@ -29,6 +29,7 @@ use chrono::{DateTime, Local};
 use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
+use hurl::cli::interactive;
 use hurl::html;
 use hurl::http;
 use hurl::runner;
@@ -44,6 +45,7 @@ pub struct CLIOptions {
     pub color: bool,
     pub fail_fast: bool,
     pub insecure: bool,
+    pub interactive: bool,
     pub variables: HashMap<String, String>,
     pub to_entry: Option<usize>,
     pub follow_location: bool,
@@ -168,11 +170,23 @@ fn execute(
                 }
                 Some(filename) => filename,
             };
+            let pre_entry = if cli_options.interactive {
+                interactive::pre_entry
+            } else {
+                || false
+            };
+            let post_entry = if cli_options.interactive {
+                interactive::post_entry
+            } else {
+                || false
+            };
             let options = RunnerOptions {
                 fail_fast: cli_options.fail_fast,
                 variables: cli_options.variables,
                 to_entry: cli_options.to_entry,
                 context_dir,
+                pre_entry,
+                post_entry,
             };
             runner::run_hurl_file(
                 hurl_file,
@@ -412,6 +426,12 @@ fn app() -> clap::App<'static, 'static> {
                 .help("Allow insecure SSL connections"),
         )
         .arg(
+            clap::Arg::with_name("interactive")
+                .long("interactive")
+                .conflicts_with("to_entry")
+                .help("Turn on interactive mode"),
+        )
+        .arg(
             clap::Arg::with_name("json")
                 .long("json")
                 .value_name("FILE")
@@ -470,6 +490,7 @@ fn app() -> clap::App<'static, 'static> {
             clap::Arg::with_name("to_entry")
                 .long("to-entry")
                 .value_name("ENTRY_NUMBER")
+                .conflicts_with("interactive")
                 .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
                 .takes_value(true),
         )
@@ -519,7 +540,7 @@ pub fn unwrap_or_exit<T>(
 }
 
 fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
-    let verbose = matches.is_present("verbose");
+    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
     let color = output_color(matches.clone());
     let fail_fast = !matches.is_present("fail_at_end");
     let variables = variables(matches.clone())?;
@@ -569,7 +590,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
     };
     let compressed = matches.is_present("compressed");
     let user = matches.value_of("user").map(|x| x.to_string());
-
+    let interactive = matches.is_present("interactive");
     Ok(CLIOptions {
         verbose,
         color,
@@ -586,6 +607,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
         connect_timeout,
         compressed,
         user,
+        interactive,
     })
 }
 
@@ -615,7 +637,7 @@ fn main() {
         Some(value) => Some(value.to_string()),
         _ => None,
     };
-    let verbose = matches.is_present("verbose");
+    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
     let log_verbose = cli::make_logger_verbose(verbose);
     let color = output_color(matches.clone());
     let log_error_message = cli::make_logger_error_message(color);
@@ -663,7 +685,7 @@ fn main() {
             &log_error_message,
         );
 
-        if hurl_result.errors().is_empty() {
+        if hurl_result.errors().is_empty() && !cli_options.interactive {
             // default
             // last entry + response + body
             if let Some(entry_result) = hurl_result.entries.last() {

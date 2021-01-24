@@ -22,4 +22,5 @@ pub use self::logger::{
 };
 
 mod color;
+pub mod interactive;
 mod logger;

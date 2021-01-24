@@ -28,6 +28,7 @@ libxml = "0.2.12"
 regex = "1.1.0"
 serde = "1.0.104"
 serde_json = "1.0.40"
+termion = "1.5.5"
 url = "2.1.0"
 
 
