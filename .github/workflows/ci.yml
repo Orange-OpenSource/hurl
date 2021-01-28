@@ -34,7 +34,8 @@ jobs:
     - name: Run Integration Tests
       run: |
          export PATH="$PWD/target/debug:$PATH"
-         integration/integration.py
+         cd integration
+         ./integration.py
 
   rustfmt:
     runs-on: ubuntu-latest
