@@ -1,4 +1,4 @@
-name: releasing
+name: release
 
 on:
   push:
@@ -7,8 +7,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: 1
-  VCPKGRS_DYNAMIC: 1
 
 jobs:
   release-linux:
