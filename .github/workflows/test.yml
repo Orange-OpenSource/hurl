@@ -53,7 +53,7 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run |
+      run: |
         uname -a
         cargo --version
     - name: Build
@@ -86,7 +86,7 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run |
+      run: |
         uname -a
         cargo --version     
     - name: Build

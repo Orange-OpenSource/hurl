@@ -21,7 +21,7 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run |
+      run: |
         uname -a
         cargo --version     
     - name: set Version
@@ -51,7 +51,7 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run |
+      run: |
         uname -a
         cargo --version          
     - name: set Version
