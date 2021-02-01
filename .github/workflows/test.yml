@@ -1,11 +1,9 @@
-name: testing
+name: test
 
 on: [push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: 1
-  VCPKGRS_DYNAMIC: 1
 
 jobs:
   rustfmt:
