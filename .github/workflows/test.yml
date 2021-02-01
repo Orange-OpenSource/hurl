@@ -52,6 +52,9 @@ jobs:
         toolchain: ${{ matrix.rust }}
         override: true
         profile: minimal
+    - name: Check Rust Version
+      run: |
+        ci/check_version.sh        
     - name: Build
       run: |
         cargo build --verbose
@@ -81,6 +84,9 @@ jobs:
         toolchain: ${{ matrix.rust }}
         override: true
         profile: minimal
+    - name: Check Rust Version
+      run: |
+        ci/check_version.sh        
     - name: Build
       run: |
         cargo build --verbose
