@@ -20,6 +20,10 @@ jobs:
         toolchain: stable
         override: true
         profile: minimal
+    - name: Environment
+      run |
+        uname -a
+        cargo --version     
     - name: set Version
       run: |
         echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
@@ -46,6 +50,10 @@ jobs:
         toolchain: stable
         override: true
         profile: minimal
+    - name: Environment
+      run |
+        uname -a
+        cargo --version          
     - name: set Version
       run: |
         echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
