@@ -6,7 +6,7 @@
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
 
-# What's Hurl?
+# What's Hurl? 
 
 Hurl is a command line tool that performs HTTP requests defined in a simple plain text format.
 
@@ -308,6 +308,7 @@ HTTP/* 302
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
 
 # Building
+## linux
 
 Hurl is written in [Rust](https://www.rust-lang.org/).
 You should [install](https://www.rust-lang.org/tools/install) the
@@ -332,7 +333,9 @@ $ ./target/release/hurl --version
 cargo install --path packages/hurl
 ```
 
+## windows64
 
+please follow the [contrib/windows section](contrib/windows/README.md)
 
 # Feedbacks
 
