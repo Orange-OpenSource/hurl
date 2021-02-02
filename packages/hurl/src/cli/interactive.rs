@@ -1,10 +1,12 @@
-extern crate termion;
+#[cfg(target_family = "unix")]
+use {
+    std::io::{stderr, stdin, Write},
+    termion::event::Key,
+    termion::input::TermRead,
+    termion::raw::IntoRawMode,
+};
 
-use std::io::{stderr, stdin, Write};
-use termion::event::Key;
-use termion::input::TermRead;
-use termion::raw::IntoRawMode;
-
+#[cfg(target_family = "unix")]
 pub fn pre_entry() -> bool {
     let stdin = stdin();
     let mut stderr = stderr().into_raw_mode().unwrap();
@@ -35,6 +37,12 @@ pub fn pre_entry() -> bool {
     }
     print!("{}\r{}", termion::clear::CurrentLine, termion::cursor::Show);
     exit
+}
+
+#[cfg(target_family = "windows")]
+pub fn pre_entry() -> bool {
+    eprintln!("interactive not supported yet in windows!");
+    true
 }
 
 pub fn post_entry() -> bool {
