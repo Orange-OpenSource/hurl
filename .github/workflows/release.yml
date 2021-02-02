@@ -1,0 +1,69 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        uname -a
+        cargo --version
+    - name: set Version
+      run: |
+        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
+    - name: Build
+      run: |
+        ci/man.sh
+        ci/release.sh
+        ci/create_tarball.sh linux
+        ci/deb.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-linux-artifacts
+        path: target/upload/*
+
+  release-osx:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        uname -a
+        cargo --version          
+    - name: set Version
+      run: |
+        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
+    - name: Build
+      run: |
+        ci/man.sh
+        ci/release.sh
+        ci/create_tarball.sh osx
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-osx-artifacts
+        path: target/upload/*

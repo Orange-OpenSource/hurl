@@ -1,0 +1,105 @@
+name: test
+
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: rustfmt
+    - name: Check formatting
+      run: |
+        cargo fmt --all -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: clippy
+    - name: Run Clippy
+      run: |
+        cargo clippy -- -D warnings
+
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [stable, nightly]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        uname -a
+        cargo --version
+    - name: Build
+      run: |
+        cargo build --verbose
+    - name: Test Prequisites
+      run: |
+        pip3 install Flask && cd integration && python3 server.py &
+        wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
+    - name: Run Tests
+      run: |
+        cargo test
+    - name: Run Integration Tests
+      run: |
+         export PATH="$PWD/target/debug:$PATH"
+         integration/integration.py
+
+  test-osx:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        rust: [stable, nightly]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        uname -a
+        cargo --version     
+    - name: Build
+      run: |
+        cargo build --verbose
+    - name: Test Prequisites
+      run: |
+        pip3 install Flask && cd integration && python3 server.py &
+        wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-osx.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
+    - name: Run Tests
+      run: |
+        cargo test
+    - name: Run Integration Tests
+      run: |
+         export PATH="$PWD/target/debug:$PATH"
+         integration/integration.py
