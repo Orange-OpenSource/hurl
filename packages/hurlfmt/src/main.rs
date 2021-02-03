@@ -144,12 +144,30 @@ fn main() {
 
     let contents = if filename == "-" {
         let mut contents = String::new();
-        io::stdin()
-            .read_to_string(&mut contents)
-            .expect("Something went wrong reading standard input");
+        if let Err(e) = io::stdin().read_to_string(&mut contents) {
+            log_error_message(
+                false,
+                format!("Input stream can not be read - {}", e.to_string()).as_str(),
+            );
+            std::process::exit(2);
+        }
         contents
     } else {
-        fs::read_to_string(filename).expect("Something went wrong reading the file")
+        match fs::read_to_string(filename) {
+            Ok(s) => s,
+            Err(e) => {
+                log_error_message(
+                    false,
+                    format!(
+                        "Input file {} can not be read - {}",
+                        filename,
+                        e.to_string()
+                    )
+                    .as_str(),
+                );
+                std::process::exit(2);
+            }
+        }
     };
 
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
