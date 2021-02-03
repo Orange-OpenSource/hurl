@@ -660,19 +660,30 @@ fn main() {
     for filename in filenames {
         let contents = if filename == "-" {
             let mut contents = String::new();
-            io::stdin()
-                .read_to_string(&mut contents)
-                .expect("Something went wrong reading standard input");
-            contents
-        } else {
-            if !Path::new(filename).exists() {
+            if let Err(e) = io::stdin().read_to_string(&mut contents) {
                 log_error_message(
                     false,
-                    format!("Input file {} does not exit!", filename).as_str(),
+                    format!("Input stream can not be read - {}", e.to_string()).as_str(),
                 );
-                std::process::exit(1);
+                std::process::exit(2);
             }
-            fs::read_to_string(filename).expect("Something went wrong reading the file")
+            contents
+        } else {
+            match fs::read_to_string(filename) {
+                Ok(s) => s,
+                Err(e) => {
+                    log_error_message(
+                        false,
+                        format!(
+                            "Input file {} can not be read - {}",
+                            filename,
+                            e.to_string()
+                        )
+                        .as_str(),
+                    );
+                    std::process::exit(2);
+                }
+            }
         };
 
         let hurl_result = execute(
