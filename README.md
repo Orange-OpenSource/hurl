@@ -308,28 +308,46 @@ HTTP/* 302
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
 
 # Building
-## linux
 
-Hurl is written in [Rust](https://www.rust-lang.org/).
-You should [install](https://www.rust-lang.org/tools/install) the
-latest stable release.
+## linux, osx
 
-Hurl depends on libssl, libcurl and libxml2 native libraries.
-You will need their development files in your platform.
+Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
 
+```shell
+# debian based distributions
+apt install -y pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+
+# redhat based distributions
+yum install -y pkg-config gcc openssl-devel libxml2-devel
+
+# arch based distributions
+pacman -Sy --noconfirm pkgconf gcc openssl libxml2
+
+# osx
+brew install pkg-config gcc openssl libxml2
 ```
-# Ubuntu/Debian
-apt install pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+
+Hurl is written in [Rust](https://www.rust-lang.org/). You should [install](https://www.rust-lang.org/tools/install) the latest stable release.
+
+```shell
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+rustc --version
+cargo --version
 ```
 
-```
-$ git clone https://github.com/Orange-OpenSource/hurl
-$ cd hurl
-$ cargo build --release
-$ ./target/release/hurl --version
-1.0.0
+clone this project
 
-# Install binary
+```shell
+git clone https://github.com/Orange-OpenSource/hurl
+cd hurl
+cargo build --release
+./target/release/hurl --version
+```
+
+build
+
+```shell
 cargo install --path packages/hurl
 ```
 
