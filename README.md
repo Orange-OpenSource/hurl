@@ -336,7 +336,7 @@ rustc --version
 cargo --version
 ```
 
-clone this project
+Build
 
 ```shell
 git clone https://github.com/Orange-OpenSource/hurl
@@ -345,7 +345,7 @@ cargo build --release
 ./target/release/hurl --version
 ```
 
-build
+Install Binary
 
 ```shell
 cargo install --path packages/hurl
