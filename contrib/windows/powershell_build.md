@@ -43,7 +43,7 @@ git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
 
 ## Fix currently known win64 hurl compilation bugs
-powershell
+
 ```
 (Get-Content c:\hurl\packages\hurl\src\runner\hurl_file.rs).replace('```', '') | Set-Content c:\hurl\packages\hurl\src\runner\hurl_file.rs
 ```
