@@ -15,7 +15,7 @@ def main():
     [test_hurl.test(f) for f in sorted(glob.glob('tests_error_parser/*.hurl'))]
 
     # Dynamic run (with server)
-    [test_hurl.test(f) for f in sorted(glob.glob('tests/*.hurl'))]
+    [test_hurl.test(f) for f in sorted(glob.glob('tests/*.hurl')) + sorted(glob.glob('ssl/*.hurl'))]
 
     print('test integration ok!')
 
