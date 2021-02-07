@@ -774,3 +774,28 @@ fn test_proxy() {
 }
 
 // endregion
+
+#[test]
+fn test_insecure() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
+        insecure: true,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
+        user: None,
+        accept_encoding: None,
+    };
+    let mut client = Client::init(options);
+    let request = default_get_request("https://localhost:8001/hello".to_string());
+
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+
+    let response = client.execute(&request, 0).unwrap();
+    assert_eq!(response.status, 200);
+}
