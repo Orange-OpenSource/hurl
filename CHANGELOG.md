@@ -1,3 +1,35 @@
+[1.1.0 (2021-02-07)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.1.0)
+========================================================================================================================
+
+Changes:
+
+* Add windows build documentation [#150](https://github.com/Orange-OpenSource/hurl/issues/150)
+
+* Add verbose output when a ssl error occurs [#145](https://github.com/Orange-OpenSource/hurl/issues/145)
+
+* Migrate integration scripts to python [#126](https://github.com/Orange-OpenSource/hurl/issues/126)
+
+* Add option --interactive [#121](https://github.com/Orange-OpenSource/hurl/issues/121)
+
+* Improve Template Support in JSON body [#116](https://github.com/Orange-OpenSource/hurl/issues/116)
+
+* Update to Rust 1.49.0 [#112](https://github.com/Orange-OpenSource/hurl/issues/112)
+
+* Add option --variables-file  / --variables [#42](https://github.com/Orange-OpenSource/hurl/issues/42)
+
+
+Bugs Fixes:
+
+* Insecure mode for a full session [#143](https://github.com/Orange-OpenSource/hurl/issues/143)
+
+* Display error message when hurl input can not be decoded [#139](https://github.com/Orange-OpenSource/hurl/issues/139)
+
+* Cookie value in cookie section doesn't accept some value [#132](https://github.com/Orange-OpenSource/hurl/issues/132)
+
+* Running cargo test in windows [#128](https://github.com/Orange-OpenSource/hurl/issues/128)
+
+* Input Cookie file [#124](https://github.com/Orange-OpenSource/hurl/issues/124)
+
 
 
 [1.0.0 (2020-12-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.0.0)
