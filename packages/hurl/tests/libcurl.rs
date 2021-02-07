@@ -520,6 +520,32 @@ fn test_error_could_not_resolve_proxy_name() {
 }
 
 #[test]
+fn test_error_ssl() {
+    let options = ClientOptions {
+        follow_location: false,
+        max_redirect: None,
+        cookie_input_file: None,
+        proxy: None,
+        no_proxy: None,
+        verbose: false,
+        insecure: false,
+        timeout: Default::default(),
+        connect_timeout: Default::default(),
+        user: None,
+        accept_encoding: None,
+    };
+    let mut client = Client::init(options);
+    let request = default_get_request("https://localhost:8001/hello".to_string());
+    let error = client.execute(&request, 0).err().unwrap();
+    assert_eq!(
+        error,
+        HttpError::SSLCertificate(Some(
+            "SSL certificate problem: self signed certificate".to_string()
+        ))
+    );
+}
+
+#[test]
 fn test_timeout() {
     let options = ClientOptions {
         follow_location: false,

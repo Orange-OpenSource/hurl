@@ -133,7 +133,7 @@ pub enum RunnerError {
     Timeout,
     TooManyRedirect,
     CouldNotParseResponse,
-    SSLCertificate,
+    SSLCertificate(String),
 
     UnsupportedContentEncoding(String),
     CouldNotUncompressResponse(String),
