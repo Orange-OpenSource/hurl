@@ -109,7 +109,9 @@ pub fn run(
                 HttpError::Timeout => RunnerError::Timeout,
                 HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
                 HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
-                HttpError::SSLCertificate => RunnerError::SSLCertificate,
+                HttpError::SSLCertificate(description) => RunnerError::SSLCertificate(
+                    description.unwrap_or_else(|| "SSL certificate problem".to_string()),
+                ),
                 HttpError::InvalidUrl => RunnerError::InvalidURL(http_request.url.clone()),
                 HttpError::StatuslineIsMissing => RunnerError::HttpConnection {
                     message: "status line is missing".to_string(),

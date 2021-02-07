@@ -25,7 +25,7 @@ impl Error for runner::Error {
             RunnerError::Timeout => "Http Connection".to_string(),
             RunnerError::TooManyRedirect => "Http Connection".to_string(),
             RunnerError::CouldNotParseResponse => "Http Connection".to_string(),
-            RunnerError::SSLCertificate => "Http Connection".to_string(),
+            RunnerError::SSLCertificate { .. } => "SSL Certificate".to_string(),
             RunnerError::PredicateValue { .. } => "Assert - Predicate Value Failed".to_string(),
             RunnerError::InvalidRegex {} => "Invalid regex".to_string(),
             RunnerError::FileReadAccess { .. } => "File ReadAccess".to_string(),
@@ -67,7 +67,7 @@ impl Error for runner::Error {
             RunnerError::Timeout => "Timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "Too many redirect".to_string(),
             RunnerError::CouldNotParseResponse => "Could not parse response".to_string(),
-            RunnerError::SSLCertificate => "SSL certificate problem".to_string(),
+            RunnerError::SSLCertificate(description) => description.clone(),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {

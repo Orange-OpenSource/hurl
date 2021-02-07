@@ -36,7 +36,7 @@ pub enum HttpError {
     FailToConnect,
     TooManyRedirect,
     CouldNotParseResponse,
-    SSLCertificate,
+    SSLCertificate(Option<String>),
     InvalidUrl,
     Timeout,
     StatuslineIsMissing,
@@ -201,7 +201,9 @@ impl Client {
                     6 => Err(HttpError::CouldNotResolveHost),
                     7 => Err(HttpError::FailToConnect),
                     28 => Err(HttpError::Timeout),
-                    60 => Err(HttpError::SSLCertificate),
+                    60 => Err(HttpError::SSLCertificate(
+                        e.extra_description().map(String::from),
+                    )),
                     _ => Err(HttpError::Other {
                         code: e.code() as i32, // due to windows build
                         description: e.description().to_string(),
