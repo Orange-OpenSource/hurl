@@ -54,6 +54,11 @@ pub struct Client {
     pub redirect_count: usize,
     pub max_redirect: Option<usize>,
     pub verbose: bool,
+    pub verify: bool,
+    pub proxy: Option<String>,
+    pub no_proxy: Option<String>,
+    pub timeout: Duration,
+    pub connect_timeout: Duration,
     pub authorization: Option<String>,
     pub accept_encoding: Option<String>,
 }
@@ -80,6 +85,9 @@ impl Client {
     pub fn init(options: ClientOptions) -> Client {
         let mut h = easy::Easy::new();
 
+        // Set handle attributes
+        // that are not affected by rest
+
         // Activate cookie storage
         // with or without persistence (empty string)
         h.cookie_file(
@@ -90,19 +98,6 @@ impl Client {
         )
         .unwrap();
 
-        if let Some(proxy) = options.proxy {
-            h.proxy(proxy.as_str()).unwrap();
-        }
-        if let Some(s) = options.no_proxy {
-            h.noproxy(s.as_str()).unwrap();
-        }
-        h.verbose(options.verbose).unwrap();
-        h.ssl_verify_host(!options.insecure).unwrap();
-        h.ssl_verify_peer(!options.insecure).unwrap();
-
-        h.timeout(options.timeout).unwrap();
-        h.connect_timeout(options.connect_timeout).unwrap();
-
         let authorization = options.user.map(|user| base64::encode(user.as_bytes()));
         let accept_encoding = options.accept_encoding;
         Client {
@@ -111,17 +106,14 @@ impl Client {
             max_redirect: options.max_redirect,
             redirect_count: 0,
             verbose: options.verbose,
+            verify: !options.insecure,
             authorization,
             accept_encoding,
+            proxy: options.proxy,
+            no_proxy: options.no_proxy,
+            timeout: options.timeout,
+            connect_timeout: options.connect_timeout,
         }
-    }
-
-    ///
-    /// reset HTTP hurl client
-    ///
-    pub fn reset(&mut self) {
-        self.handle.reset();
-        self.handle.verbose(self.verbose).unwrap();
     }
 
     ///
@@ -132,6 +124,21 @@ impl Client {
         request: &Request,
         redirect_count: usize,
     ) -> Result<Response, HttpError> {
+        // set handle attributes
+        // that have not been set or reset
+
+        self.handle.verbose(self.verbose).unwrap();
+        self.handle.ssl_verify_host(self.verify).unwrap();
+        self.handle.ssl_verify_peer(self.verify).unwrap();
+        if let Some(proxy) = self.proxy.clone() {
+            self.handle.proxy(proxy.as_str()).unwrap();
+        }
+        if let Some(s) = self.no_proxy.clone() {
+            self.handle.noproxy(s.as_str()).unwrap();
+        }
+        self.handle.timeout(self.timeout).unwrap();
+        self.handle.connect_timeout(self.connect_timeout).unwrap();
+
         self.set_url(&request.url, &request.querystring);
         self.set_method(&request.method);
 
@@ -243,7 +250,7 @@ impl Client {
         }
         let duration = start.elapsed();
         self.redirect_count = redirect_count;
-        self.reset();
+        self.handle.reset();
 
         Ok(Response {
             version,
