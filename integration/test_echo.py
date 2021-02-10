@@ -4,13 +4,14 @@
 #
 import sys
 import subprocess
+import codecs
 
 def test(hurl_file):
     cmd = ['hurlfmt', '--no-format', hurl_file]
     print(' '.join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
-    expected = open(hurl_file).read()
-    actual = result.stdout.decode("utf-8") 
+    expected = codecs.open(hurl_file, encoding='utf-8-sig').read()  # Input file can be saved with a BOM
+    actual = result.stdout.decode("utf-8")
     if actual != expected:
         print('>>> error in stdout')
         print(f'actual: <{actual}>\nexpected: <{expected}>')

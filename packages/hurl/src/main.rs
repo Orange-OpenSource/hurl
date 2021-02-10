@@ -18,7 +18,6 @@
 
 use std::collections::HashMap;
 use std::env;
-use std::fs;
 use std::io::prelude::*;
 use std::io::{self, BufReader, Read};
 use std::path::{Path, PathBuf};
@@ -30,6 +29,7 @@ use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
 use hurl::cli::interactive;
+use hurl::cli::CLIError;
 use hurl::html;
 use hurl::http;
 use hurl::runner;
@@ -57,10 +57,6 @@ pub struct CLIOptions {
     pub connect_timeout: Duration,
     pub compressed: bool,
     pub user: Option<String>,
-}
-
-pub struct CLIError {
-    pub message: String,
 }
 
 fn execute(
@@ -234,7 +230,7 @@ fn json_file(
         let results = if matches.is_present("append") && std::path::Path::new(&path).exists() {
             log_verbose(format!("Appending session to {}", path.display()).as_str());
 
-            let data = fs::read_to_string(path).unwrap();
+            let data = std::fs::read_to_string(path).unwrap();
             let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
                 Ok(val) => val,
                 Err(_) => {
@@ -243,6 +239,7 @@ fn json_file(
                     });
                 }
             };
+
             match runner::deserialize_results(v) {
                 Err(msg) => {
                     return Err(CLIError {
@@ -669,17 +666,12 @@ fn main() {
             }
             contents
         } else {
-            match fs::read_to_string(filename) {
+            match cli::read_to_string(&filename) {
                 Ok(s) => s,
                 Err(e) => {
                     log_error_message(
                         false,
-                        format!(
-                            "Input file {} can not be read - {}",
-                            filename,
-                            e.to_string()
-                        )
-                        .as_str(),
+                        format!("Input stream can not be read - {}", e.message).as_str(),
                     );
                     std::process::exit(2);
                 }
