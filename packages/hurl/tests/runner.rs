@@ -17,6 +17,7 @@
  */
 extern crate hurl;
 
+use hurl::cli;
 use hurl::http;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
@@ -37,8 +38,8 @@ pub fn log_runner_error(error: &runner::Error, _warning: bool) {
 // can be used for debugging
 #[test]
 fn test_hurl_file() {
-    let filename = "../../integration/tests/post_json.hurl";
-    let content = std::fs::read_to_string(filename).expect("Something went wrong reading the file");
+    let filename = "../../integration/tests/bom.hurl";
+    let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
     let options = http::ClientOptions {

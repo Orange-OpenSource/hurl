@@ -17,7 +17,6 @@
  */
 extern crate clap;
 
-use std::fs;
 use std::io::Write;
 use std::io::{self, Read};
 use std::path::Path;
@@ -153,17 +152,12 @@ fn main() {
         }
         contents
     } else {
-        match fs::read_to_string(filename) {
+        match cli::read_to_string(&filename) {
             Ok(s) => s,
             Err(e) => {
                 log_error_message(
                     false,
-                    format!(
-                        "Input file {} can not be read - {}",
-                        filename,
-                        e.to_string()
-                    )
-                    .as_str(),
+                    format!("Input stream can not be read - {}", e.message).as_str(),
                 );
                 std::process::exit(2);
             }

@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/utf8_bom"},"response":{"version":"HTTP/1.0","status":200,"body":{"type":"raw-string","value":"Hello World!"}}}]}

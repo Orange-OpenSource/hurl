@@ -16,11 +16,18 @@
  *
  */
 
+pub use self::fs::read_to_string;
 pub use self::logger::{
     log_info, make_logger_error_message, make_logger_parser_error, make_logger_runner_error,
     make_logger_verbose,
 };
 
 mod color;
+mod fs;
 pub mod interactive;
 mod logger;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CLIError {
+    pub message: String,
+}
