@@ -5,6 +5,9 @@ authors = ["Fabrice Reix <fabrice.reix@orange.com>"]
 edition = "2018"
 license = "Apache-2.0"
 description = "format Hurl files"
+documentation = "https://hurl.dev"
+homepage = "https://hurl.dev"
+repository = "https://github.com/Orange-OpenSource/hurl"
 
 [features]
 # Treat warnings as a build error.
