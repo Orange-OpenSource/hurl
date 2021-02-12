@@ -5,6 +5,37 @@
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
+Table of Contents
+=================
+
+   * [What's Hurl?](#whats-hurl)
+   * [Also an HTTP Test Tool](#also-an-http-test-tool)
+   * [Powered by curl](#powered-by-curl)
+   * [Why Hurl?](#why-hurl)
+   * [Documentation](#documentation)
+   * [Samples](#samples)
+      * [Getting Data](#getting-data)
+         * [Query Params](#query-params)
+      * [Sending Data](#sending-data)
+         * [Sending HTML Form Datas](#sending-html-form-datas)
+         * [Sending Multipart Form Datas](#sending-multipart-form-datas)
+         * [Posting a JSON Body](#posting-a-json-body)
+         * [Templating a JSON/XML Body](#templating-a-jsonxml-body)
+      * [Testing Response](#testing-response)
+         * [Testing Response Headers](#testing-response-headers)
+         * [Testing REST Apis](#testing-rest-apis)
+         * [Testing HTML Response](#testing-html-response)
+         * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
+      * [Others](#others)
+         * [Testing Endpoint Performance](#testing-endpoint-performance)
+         * [Using SOAP Apis](#using-soap-apis)
+         * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
+   * [Building](#building)
+      * [Linux, macOS](#linux-macos)
+      * [Windows](#windows)
+   * [Feedbacks](#feedbacks)
+
+
 
 # What's Hurl? 
 
@@ -425,7 +456,7 @@ HTTP/* 302
 
 # Building
 
-## linux, osx
+## Linux, macOS
 
 Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
 
@@ -467,7 +498,7 @@ Install Binary
 cargo install --path packages/hurl
 ```
 
-## windows64
+## Windows
 
 please follow the [contrib/windows section](contrib/windows/README.md)
 
