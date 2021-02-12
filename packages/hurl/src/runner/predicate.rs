@@ -302,28 +302,28 @@ fn eval_something(
         // equals int
         PredicateFuncValue::EqualInt {
             value: expected, ..
-        } => assert_values_equal(value, Value::Integer(expected)),
+        } => Ok(assert_values_equal(value, Value::Integer(expected))),
 
         // equals null
-        PredicateFuncValue::EqualNull { .. } => assert_values_equal(value, Value::Null),
+        PredicateFuncValue::EqualNull { .. } => Ok(assert_values_equal(value, Value::Null)),
 
         // equals bool
         PredicateFuncValue::EqualBool {
             value: expected, ..
-        } => assert_values_equal(value, Value::Bool(expected)),
+        } => Ok(assert_values_equal(value, Value::Bool(expected))),
 
         // equals float
         PredicateFuncValue::EqualFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_values_equal(value, Value::Float(int, decimal)),
+        } => Ok(assert_values_equal(value, Value::Float(int, decimal))),
 
         // equals string
         PredicateFuncValue::EqualString {
             value: expected, ..
         } => {
             let expected = eval_template(expected, variables)?;
-            assert_values_equal(value, Value::String(expected))
+            Ok(assert_values_equal(value, Value::String(expected)))
         }
 
         // equals expression
@@ -331,40 +331,49 @@ fn eval_something(
             value: expected, ..
         } => {
             let expected = eval_expr(expected, variables)?;
-            assert_values_equal(value, expected)
+            Ok(assert_values_equal(value, expected))
         }
 
         PredicateFuncValue::GreaterThanInt {
             value: expected, ..
-        } => assert_values_greater(value, Value::Integer(expected)),
+        } => Ok(assert_values_greater(value, Value::Integer(expected))),
         PredicateFuncValue::GreaterThanFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_values_greater(value, Value::Float(int, decimal)),
+        } => Ok(assert_values_greater(value, Value::Float(int, decimal))),
 
         PredicateFuncValue::GreaterThanOrEqualInt {
             value: expected, ..
-        } => assert_values_greater_or_equal(value, Value::Integer(expected)),
+        } => Ok(assert_values_greater_or_equal(
+            value,
+            Value::Integer(expected),
+        )),
         PredicateFuncValue::GreaterThanOrEqualFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_values_greater_or_equal(value, Value::Float(int, decimal)),
+        } => Ok(assert_values_greater_or_equal(
+            value,
+            Value::Float(int, decimal),
+        )),
 
         PredicateFuncValue::LessThanInt {
             value: expected, ..
-        } => assert_values_less(value, Value::Integer(expected)),
+        } => Ok(assert_values_less(value, Value::Integer(expected))),
         PredicateFuncValue::LessThanFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_values_less(value, Value::Float(int, decimal)),
+        } => Ok(assert_values_less(value, Value::Float(int, decimal))),
 
         PredicateFuncValue::LessThanOrEqualInt {
             value: expected, ..
-        } => assert_values_less_or_equal(value, Value::Integer(expected)),
+        } => Ok(assert_values_less_or_equal(value, Value::Integer(expected))),
         PredicateFuncValue::LessThanOrEqualFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_values_less_or_equal(value, Value::Float(int, decimal)),
+        } => Ok(assert_values_less_or_equal(
+            value,
+            Value::Float(int, decimal),
+        )),
 
         // countEquals
         PredicateFuncValue::CountEqual {
@@ -442,34 +451,34 @@ fn eval_something(
             value: expected, ..
         } => {
             let expected = eval_template(expected, variables)?;
-            assert_include(value, Value::String(expected))
+            Ok(assert_include(value, Value::String(expected)))
         }
 
         // includes int
         PredicateFuncValue::IncludeInt {
             value: expected, ..
-        } => assert_include(value, Value::Integer(expected)),
+        } => Ok(assert_include(value, Value::Integer(expected))),
 
         // includes float
         PredicateFuncValue::IncludeFloat {
             value: Float { int, decimal, .. },
             ..
-        } => assert_include(value, Value::Float(int, decimal)),
+        } => Ok(assert_include(value, Value::Float(int, decimal))),
 
         // includes bool
         PredicateFuncValue::IncludeBool {
             value: expected, ..
-        } => assert_include(value, Value::Bool(expected)),
+        } => Ok(assert_include(value, Value::Bool(expected))),
 
         // includes null
-        PredicateFuncValue::IncludeNull { .. } => assert_include(value, Value::Null),
+        PredicateFuncValue::IncludeNull { .. } => Ok(assert_include(value, Value::Null)),
 
         // includes expression
         PredicateFuncValue::IncludeExpression {
             value: expected, ..
         } => {
             let expected = eval_expr(expected, variables)?;
-            assert_include(value, expected)
+            Ok(assert_include(value, expected))
         }
 
         // match string
@@ -556,183 +565,174 @@ fn eval_something(
     }
 }
 
-fn assert_values_equal(actual: Value, expected: Value) -> Result<AssertResult, Error> {
+fn assert_values_equal(actual: Value, expected: Value) -> AssertResult {
     match (actual.clone(), expected.clone()) {
-        (Value::Null {}, Value::Null {}) => Ok(AssertResult {
+        (Value::Null {}, Value::Null {}) => AssertResult {
             success: true,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Bool(value1), Value::Bool(value2)) => Ok(AssertResult {
+        },
+        (Value::Bool(value1), Value::Bool(value2)) => AssertResult {
             success: value1 == value2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Integer(value1), Value::Integer(value2)) => Ok(AssertResult {
+        },
+        (Value::Integer(value1), Value::Integer(value2)) => AssertResult {
             success: value1 == value2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Float(int1, decimal), Value::Integer(int2)) => Ok(AssertResult {
+        },
+        (Value::Float(int1, decimal), Value::Integer(int2)) => AssertResult {
             success: int1 == int2 && decimal == 0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Integer(int1), Value::Float(int2, decimal)) => Ok(AssertResult {
+        },
+        (Value::Integer(int1), Value::Float(int2, decimal)) => AssertResult {
             success: int1 == int2 && decimal == 0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Float(i1, d1), Value::Float(i2, d2)) => Ok(AssertResult {
+        },
+        (Value::Float(i1, d1), Value::Float(i2, d2)) => AssertResult {
             success: i1 == i2 && d1 == d2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::String(value1), Value::String(value2)) => Ok(AssertResult {
+        },
+        (Value::String(value1), Value::String(value2)) => AssertResult {
             success: value1 == value2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::List(value1), Value::List(value2)) => Ok(AssertResult {
+        },
+        (Value::List(value1), Value::List(value2)) => AssertResult {
             success: value1 == value2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Bytes(value1), Value::Bytes(value2)) => Ok(AssertResult {
+        },
+        (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
             success: value1 == value2,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
-        (Value::Unit, _) => Ok(AssertResult {
+        },
+        (Value::Unit, _) => AssertResult {
             success: false,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: true,
-        }),
-        _ => Ok(AssertResult {
+        },
+        _ => AssertResult {
             success: false,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
-        }),
+        },
     }
 }
 
-fn assert_values_greater(
-    actual_value: Value,
-    expected_value: Value,
-) -> Result<AssertResult, Error> {
+fn assert_values_greater(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("greater than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
-        Some(1) => Ok(AssertResult {
+        Some(1) => AssertResult {
             success: true,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        Some(0) | Some(-1) => Ok(AssertResult {
+        },
+        Some(0) | Some(-1) => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        _ => Ok(AssertResult {
+        },
+        _ => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: true,
-        }),
+        },
     }
 }
 
-fn assert_values_greater_or_equal(
-    actual_value: Value,
-    expected_value: Value,
-) -> Result<AssertResult, Error> {
+fn assert_values_greater_or_equal(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("greater or equal than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
-        Some(1) | Some(0) => Ok(AssertResult {
+        Some(1) | Some(0) => AssertResult {
             success: true,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        Some(-1) => Ok(AssertResult {
+        },
+        Some(-1) => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        _ => Ok(AssertResult {
+        },
+        _ => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: true,
-        }),
+        },
     }
 }
 
-fn assert_values_less(actual_value: Value, expected_value: Value) -> Result<AssertResult, Error> {
+fn assert_values_less(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("less than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
-        Some(-1) => Ok(AssertResult {
+        Some(-1) => AssertResult {
             success: true,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        Some(0) | Some(1) => Ok(AssertResult {
+        },
+        Some(0) | Some(1) => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        _ => Ok(AssertResult {
+        },
+        _ => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: true,
-        }),
+        },
     }
 }
 
-fn assert_values_less_or_equal(
-    actual_value: Value,
-    expected_value: Value,
-) -> Result<AssertResult, Error> {
+fn assert_values_less_or_equal(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("less or equal than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
-        Some(-1) | Some(0) => Ok(AssertResult {
+        Some(-1) | Some(0) => AssertResult {
             success: true,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        Some(1) => Ok(AssertResult {
+        },
+        Some(1) => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: false,
-        }),
-        _ => Ok(AssertResult {
+        },
+        _ => AssertResult {
             success: false,
             actual,
             expected,
             type_mismatch: true,
-        }),
+        },
     }
 }
 
@@ -766,31 +766,31 @@ fn compare_float((i1, d1): (i64, u64), (i2, d2): (i64, u64)) -> i32 {
     }
 }
 
-fn assert_include(value: Value, element: Value) -> Result<AssertResult, Error> {
+fn assert_include(value: Value, element: Value) -> AssertResult {
     let expected = format!("includes {}", element.clone().display());
     match value.clone() {
         Value::List(values) => {
             let mut success = false;
             for v in values {
-                let result = assert_values_equal(v, element.clone())?;
+                let result = assert_values_equal(v, element.clone());
                 if result.success {
                     success = true;
                     break;
                 }
             }
-            Ok(AssertResult {
+            AssertResult {
                 success,
                 actual: value.display(),
                 expected,
                 type_mismatch: false,
-            })
+            }
         }
-        _ => Ok(AssertResult {
+        _ => AssertResult {
             success: false,
             actual: value.display(),
             expected,
             type_mismatch: true,
-        }),
+        },
     }
 }
 
@@ -1227,7 +1227,7 @@ mod tests {
     #[test]
     fn test_assert_value_greater() {
         assert_eq!(
-            assert_values_greater(Value::Integer(2), Value::Integer(1)).unwrap(),
+            assert_values_greater(Value::Integer(2), Value::Integer(1)),
             AssertResult {
                 success: true,
                 type_mismatch: false,
@@ -1236,7 +1236,7 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(Value::Integer(1), Value::Integer(1)).unwrap(),
+            assert_values_greater(Value::Integer(1), Value::Integer(1)),
             AssertResult {
                 success: false,
                 type_mismatch: false,
@@ -1245,7 +1245,7 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(Value::Float(1, 1), Value::Integer(1)).unwrap(),
+            assert_values_greater(Value::Float(1, 1), Value::Integer(1)),
             AssertResult {
                 success: true,
                 type_mismatch: false,
@@ -1254,7 +1254,7 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(Value::Float(1, 1), Value::Integer(2)).unwrap(),
+            assert_values_greater(Value::Float(1, 1), Value::Integer(2)),
             AssertResult {
                 success: false,
                 type_mismatch: false,
