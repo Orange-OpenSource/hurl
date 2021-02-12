@@ -144,7 +144,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
     let space1 = zero_or_more_spaces(reader)?;
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
-    let value = cookie_value(reader)?;
+    let value = cookie_value(reader);
     let line_terminator0 = line_terminator(reader)?;
     Ok(Cookie {
         line_terminators,
@@ -161,7 +161,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
 /// The cookie-value must not be wrapped within double-quotes
 /// This is optional in the spec, if you really want to include these optional quotes, you must use directly the header Cookie
 ///
-fn cookie_value(reader: &mut Reader) -> ParseResult<'static, CookieValue> {
+fn cookie_value(reader: &mut Reader) -> CookieValue {
     //let start = reader.state.clone();
     let value = reader.read_while(|c| {
         c.is_ascii_alphanumeric()
@@ -171,7 +171,7 @@ fn cookie_value(reader: &mut Reader) -> ParseResult<'static, CookieValue> {
             ]
             .contains(&c)
     });
-    Ok(CookieValue { value })
+    CookieValue { value }
 }
 
 fn multipart_param(reader: &mut Reader) -> ParseResult<'static, MultipartParam> {
@@ -517,7 +517,7 @@ mod tests {
     fn test_cookie_value() {
         let mut reader = Reader::init("Bar");
         assert_eq!(
-            cookie_value(&mut reader).unwrap(),
+            cookie_value(&mut reader),
             CookieValue {
                 value: String::from("Bar")
             }
@@ -525,7 +525,7 @@ mod tests {
 
         let mut reader = Reader::init("\"Bar\"");
         assert_eq!(
-            cookie_value(&mut reader).unwrap(),
+            cookie_value(&mut reader),
             CookieValue {
                 value: String::from("")
             }
