@@ -2,7 +2,8 @@
 
 <br/>
 
-[![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
+![test](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)
+![release](https://github.com/Orange-OpenSource/hurl/workflows/release/badge.svg)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
 Table of Contents
