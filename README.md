@@ -32,9 +32,9 @@ Chaining multiple requests is easy:
 
 ```hurl
 GET https://api.example.net/health
-GET https://api.example.net/health
-GET https://api.example.net/health
-GET https://api.example.net/health
+GET https://api.example.net/step1
+GET https://api.example.net/step2
+GET https://api.example.net/step3
 ```
 
 # Also an HTTP Test Tool
@@ -86,15 +86,50 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 HTTP/1.1 200
 ```
 
+Hurl can also be used to test HTTP endpoints performances:
+
+```hurl
+GET http://api.example.org/v1/pets
+
+HTTP/1.0 200
+[Asserts]
+duration lessThan 1000  # Duration in ms
+```
+
+# Powered by curl
+
+Hurl is a lightweight binary written in [Rust](https://www.rust-lang.org). Under the hood, Hurl HTTP engine is
+powered by [libcurl](https://curl.haxx.se/libcurl/), one of the most powerful and reliable file transfer library.
+With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests, but it's still the curl that
+we love.
+
+# Why Hurl?
+
+- Text format for both devops and developers
+- Fast command-line for both local dev and continuous integration
+- Single binary, easy to install, with no runtime required
+
 # Documentation
 
-Visit the [Hurl web site](https://hurl.dev) to find out how to install and use Hurl.
+Visit the [Hurl web site](https://hurl.dev) to find out how to install and use Hurl. Precompiled binaries
+for Linux and macOS (Windows really soon!) are also available in the 
+[GitHub releases section](https://github.com/Orange-OpenSource/hurl/releases).
 
 - [Installation](https://hurl.dev/docs/installation.html)
 - [Samples](https://hurl.dev/docs/samples.html)
 - [File Format](https://hurl.dev/docs/entry.html)
 
 # Samples
+
+To run a sample, you can edit a file with the sample content, and use Hurl:
+
+```
+$ vi sample.hurl
+
+GET https://example.net
+
+$ hurl sample.hurl
+```
 
 ## Getting Data
 
@@ -231,7 +266,36 @@ Resulting in a PUT request with the following JSON body:
 
 ## Testing Response
 
+### Testing Response Headers
+
+Use implicit response asserts to test header values:
+
+```hurl
+GET http://www.example.org/index.html
+
+HTTP/1.0 200
+Set-Cookie: theme=light
+Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#headers)
+
+
+Or use explicit response asserts with [predicates](https://hurl.dev/docs/asserting-response.html#predicates):
+
+```hurl
+GET https://example.net
+
+HTTP/1.1 302
+[Asserts]
+header "Location" contains "www.example.net"
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html##header-assert)
+
 ### Testing REST Apis
+
+Asserting JSON body response with [JSONPath](https://goessner.net/articles/JsonPath/):
 
 ```hurl
 GET https//example.org/order
@@ -244,9 +308,32 @@ jsonpath "$.userInfo.firstName" equals "Franck"
 jsonpath "$.userInfo.lastName" equals "Herbert"
 jsonpath "$.hasDevice" equals false
 jsonpath "$.links" countEquals 12
+jsonpath "$.state" not equals null
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
+
+Testing status code:
+
+```hurl
+GET https//example.org/order/435
+
+HTTP/1.1 200
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#version-status)
+
+```hurl
+GET https//example.org/order/435
+
+# Testing status code is in a 200-300 range
+HTTP/1.1 *
+[Asserts]
+status greaterThanOrEquals 200
+status lessThan 300
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#status-assert)
 
 
 ### Testing HTML Response
@@ -267,7 +354,36 @@ xpath "//h2" not exists                             # Similar assert for h2
 
 [Doc](https://hurl.dev/docs/asserting-response.html#xpath-assert)
 
+### Testing Set-Cookie Attributes
+
+```hurl
+GET http://myserver.com/home
+
+HTTP/1.0 200
+[Asserts]
+cookie "JSESSIONID" equals "8400BAFE2F66443613DC38AE3D9D6239"
+cookie "JSESSIONID[Value]" equals "8400BAFE2F66443613DC38AE3D9D6239"
+cookie "JSESSIONID[Expires]" contains "Wed, 13 Jan 2021"
+cookie "JSESSIONID[Secure]" exists
+cookie "JSESSIONID[HttpOnly]" exists
+cookie "JSESSIONID[SameSite]" equals "Lax"
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#cookie-assert)
+
 ## Others
+
+### Testing Endpoint Performance
+
+```hurl
+GET https://sample.org/helloworld
+
+HTTP/* *
+[Asserts]
+duration lessThan 1000   # Check that response time is less than one second
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#duration-assert)
 
 ### Using SOAP Apis
 
