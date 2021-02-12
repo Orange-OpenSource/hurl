@@ -76,7 +76,10 @@ pub fn eval_expression(expr: Expr, variables: &HashMap<String, Value>) -> Result
 
 impl Value {
     pub fn is_renderable(&self) -> bool {
-        matches!(self, Value::Integer(_) | Value::Bool(_) | Value::Float(_, _) | Value::String(_))
+        matches!(
+            self,
+            Value::Integer(_) | Value::Bool(_) | Value::Float(_, _) | Value::String(_)
+        )
     }
 }
 

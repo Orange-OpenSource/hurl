@@ -344,11 +344,17 @@ fn eval_something(
 
         PredicateFuncValue::GreaterThanOrEqualInt {
             value: expected, ..
-        } => Ok(assert_values_greater_or_equal(value, Value::Integer(expected))),
+        } => Ok(assert_values_greater_or_equal(
+            value,
+            Value::Integer(expected),
+        )),
         PredicateFuncValue::GreaterThanOrEqualFloat {
             value: Float { int, decimal, .. },
             ..
-        } => Ok(assert_values_greater_or_equal(value, Value::Float(int, decimal))),
+        } => Ok(assert_values_greater_or_equal(
+            value,
+            Value::Float(int, decimal),
+        )),
 
         PredicateFuncValue::LessThanInt {
             value: expected, ..
@@ -364,7 +370,10 @@ fn eval_something(
         PredicateFuncValue::LessThanOrEqualFloat {
             value: Float { int, decimal, .. },
             ..
-        } => Ok(assert_values_less_or_equal(value, Value::Float(int, decimal))),
+        } => Ok(assert_values_less_or_equal(
+            value,
+            Value::Float(int, decimal),
+        )),
 
         // countEquals
         PredicateFuncValue::CountEqual {
@@ -627,10 +636,7 @@ fn assert_values_equal(actual: Value, expected: Value) -> AssertResult {
     }
 }
 
-fn assert_values_greater(
-    actual_value: Value,
-    expected_value: Value,
-) -> AssertResult {
+fn assert_values_greater(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("greater than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
@@ -655,10 +661,7 @@ fn assert_values_greater(
     }
 }
 
-fn assert_values_greater_or_equal(
-    actual_value: Value,
-    expected_value: Value,
-) -> AssertResult {
+fn assert_values_greater_or_equal(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("greater or equal than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
@@ -708,10 +711,7 @@ fn assert_values_less(actual_value: Value, expected_value: Value) -> AssertResul
     }
 }
 
-fn assert_values_less_or_equal(
-    actual_value: Value,
-    expected_value: Value,
-) -> AssertResult {
+fn assert_values_less_or_equal(actual_value: Value, expected_value: Value) -> AssertResult {
     let actual = actual_value.clone().display();
     let expected = format!("less or equal than {}", expected_value.clone().display());
     match compare_numbers(actual_value, expected_value) {
