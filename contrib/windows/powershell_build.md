@@ -39,6 +39,7 @@ $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYN
 ## Clone hurl project
 
 ```powershell
+git.exe config --global core.autocrlf false
 git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
 
@@ -74,6 +75,14 @@ cd c:\hurl\integration
 python server.py
 ```
 
+Keep original powershell prompt on background, and open one more separate powershell prompt to launch the ssl server
+
+```powershell
+cd c:\hurl\integration
+python ssl/server.py
+```
+
+
 Keep original powershell prompt on background, and open one more separate powershell prompt to launch the proxy
 
 ```powershell
@@ -90,7 +99,8 @@ cargo test --verbose
 launch hurl integration tests
 
 ```powershell
-coming soon ... ;)
+cd c:\hurl\integration
+./integration.py
 ```
 
 ## Generate version.txt file

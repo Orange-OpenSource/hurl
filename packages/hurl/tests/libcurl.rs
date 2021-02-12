@@ -537,12 +537,12 @@ fn test_error_ssl() {
     let mut client = Client::init(options);
     let request = default_get_request("https://localhost:8001/hello".to_string());
     let error = client.execute(&request, 0).err().unwrap();
-    assert_eq!(
-        error,
-        HttpError::SSLCertificate(Some(
-            "SSL certificate problem: self signed certificate".to_string()
-        ))
-    );
+    let message = if cfg!(windows) {
+        "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325)".to_string()
+    } else {
+        "SSL certificate problem: self signed certificate".to_string()
+    };
+    assert_eq!(error, HttpError::SSLCertificate(Some(message)));
 }
 
 #[test]
