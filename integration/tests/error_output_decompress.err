@@ -1,1 +1,1 @@
-warning: Could not uncompress response with gzip
+error: Could not uncompress response with gzip
