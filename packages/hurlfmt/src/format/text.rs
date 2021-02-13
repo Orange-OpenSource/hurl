@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use colored::*;
+
 use hurl_core::ast::*;
 
 use super::token::*;
-use crate::cli::TerminalColor;
 
 pub fn format(hurl_file: HurlFile, color: bool) -> String {
     let mut buffer = String::from("");
@@ -33,7 +34,7 @@ pub fn format_token(token: Token, color: bool) -> String {
         Token::Whitespace(value) => value,
         Token::Method(value) => {
             if color {
-                TerminalColor::LightYellow.format(value)
+                value.yellow().to_string()
             } else {
                 value
             }
@@ -42,14 +43,14 @@ pub fn format_token(token: Token, color: bool) -> String {
         Token::Status(value) => value,
         Token::SectionHeader(value) => {
             if color {
-                TerminalColor::Magenta.format(value)
+                value.magenta().to_string()
             } else {
                 value
             }
         }
         Token::Comment(value) => {
             if color {
-                TerminalColor::LightBlack.format(value)
+                value.bright_black().to_string()
             } else {
                 value
             }
@@ -58,56 +59,56 @@ pub fn format_token(token: Token, color: bool) -> String {
         Token::Colon(value) => value,
         Token::QueryType(value) => {
             if color {
-                TerminalColor::LightCyan.format(value)
+                value.cyan().to_string()
             } else {
                 value
             }
         }
         Token::PredicateType(value) => {
             if color {
-                TerminalColor::LightYellow.format(value)
+                value.yellow().to_string()
             } else {
                 value
             }
         }
         Token::Not(value) => {
             if color {
-                TerminalColor::LightYellow.format(value)
+                value.yellow().to_string()
             } else {
                 value
             }
         }
         Token::Boolean(value) | Token::Number(value) => {
             if color {
-                TerminalColor::Cyan.format(value)
+                value.cyan().to_string()
             } else {
                 value
             }
         }
         Token::String(value) => {
             if color {
-                TerminalColor::Green.format(value)
+                value.green().to_string()
             } else {
                 value
             }
         }
         Token::Quote(value) => {
             if color {
-                TerminalColor::Green.format(value)
+                value.green().to_string()
             } else {
                 value
             }
         }
         Token::CodeDelimiter(value) => {
             if color {
-                TerminalColor::Green.format(value)
+                value.green().to_string()
             } else {
                 value
             }
         }
         Token::CodeVariable(value) => {
             if color {
-                TerminalColor::Green.format(value)
+                value.green().to_string()
             } else {
                 value
             }

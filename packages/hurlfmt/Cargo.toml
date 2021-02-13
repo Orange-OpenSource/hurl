@@ -16,6 +16,7 @@ strict = []
 [dependencies]
 atty = "0.2.13"
 clap = "2.33.0"
+colored = "2"
 hurl_core = { version = "1.1.0", path = "../hurl_core" }
 regex = "1.1.0"
 

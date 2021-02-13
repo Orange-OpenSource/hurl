@@ -16,12 +16,11 @@
  *
  */
 
-use crate::runner;
-
-use super::color::TerminalColor;
-
+use colored::*;
 use hurl_core::error::Error;
 use hurl_core::parser;
+
+use crate::runner;
 
 pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
     move |message| log_verbose(verbose, message)
@@ -57,10 +56,10 @@ pub fn log_info(message: &str) {
 
 fn log_error_message(color: bool, warning: bool, message: &str) {
     let log_type = match (color, warning) {
-        (false, false) => "warning".to_string(),
-        (false, true) => "error".to_string(),
-        (true, false) => TerminalColor::Red.format("error".to_string()),
-        (true, true) => TerminalColor::Yellow.format("warning".to_string()),
+        (false, true) => "warning".to_string(),
+        (false, false) => "error".to_string(),
+        (true, true) => "warning".yellow().bold().to_string(),
+        (true, false) => "error".red().bold().to_string(),
     };
     eprintln!("{}: {}", log_type, message);
 }
@@ -94,9 +93,9 @@ fn log_error(
     let error_type = if !color {
         error_type
     } else if warning {
-        TerminalColor::Yellow.format(error_type)
+        error_type.yellow().to_string()
     } else {
-        TerminalColor::Red.format(error_type)
+        error_type.red().to_string()
     };
     eprintln!("{}: {}", error_type, error.description());
 

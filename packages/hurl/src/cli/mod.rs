@@ -22,7 +22,6 @@ pub use self::logger::{
     make_logger_verbose,
 };
 
-mod color;
 mod fs;
 pub mod interactive;
 mod logger;

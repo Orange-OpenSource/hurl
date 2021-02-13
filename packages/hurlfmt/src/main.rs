@@ -29,6 +29,17 @@ use hurlfmt::cli;
 use hurlfmt::format;
 use hurlfmt::linter::Lintable;
 
+#[cfg(target_family = "unix")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+}
+
+#[cfg(target_family = "windows")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+    colored::control::set_virtual_terminal(true);
+}
+
 fn main() {
     let app = clap::App::new("hurlfmt")
         // .author(clap::crate_authors!())
@@ -93,6 +104,7 @@ fn main() {
         );
 
     let matches = app.clone().get_matches();
+    init_colored();
 
     // Additional checks
     if matches.is_present("standalone") && matches.value_of("format") != Some("html") {
