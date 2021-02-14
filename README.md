@@ -8,10 +8,11 @@
 Table of Contents
 =================
 
-   * [What's Hurl?](#whats-hurl)
-   * [Also an HTTP Test Tool](#also-an-http-test-tool)
-   * [Powered by curl](#powered-by-curl)
-   * [Why Hurl?](#why-hurl)
+   * [Presentation](#presentation)
+      * [What's Hurl?](#whats-hurl)
+      * [Also an HTTP Test Tool](#also-an-http-test-tool)
+      * [Powered by curl](#powered-by-curl)
+      * [Why Hurl?](#why-hurl)
    * [Documentation](#documentation)
    * [Samples](#samples)
       * [Getting Data](#getting-data)
@@ -30,14 +31,19 @@ Table of Contents
          * [Testing Endpoint Performance](#testing-endpoint-performance)
          * [Using SOAP Apis](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
+   * [Usage](#usage)
+      * [Options](#options)
+      * [Environment](#environment)
+      * [Exit codes](#exit-codes)
    * [Building](#building)
       * [Linux, macOS](#linux-macos)
       * [Windows](#windows)
    * [Feedbacks](#feedbacks)
 
 
+# Presentation
 
-# What's Hurl? 
+## What's Hurl? 
 
 Hurl is a command line tool that performs HTTP requests defined in a simple plain text format.
 
@@ -68,7 +74,7 @@ GET https://api.example.net/step2
 GET https://api.example.net/step3
 ```
 
-# Also an HTTP Test Tool
+## Also an HTTP Test Tool
 
 Hurl can run HTTP requests but can also be used to test HTTP responses.
 Different type of queries and predicates are supported, from [XPath](https://en.wikipedia.org/wiki/XPath)
@@ -127,14 +133,14 @@ HTTP/1.0 200
 duration lessThan 1000  # Duration in ms
 ```
 
-# Powered by curl
+## Powered by curl
 
 Hurl is a lightweight binary written in [Rust](https://www.rust-lang.org). Under the hood, Hurl HTTP engine is
 powered by [libcurl](https://curl.haxx.se/libcurl/), one of the most powerful and reliable file transfer library.
 With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests, but it's still the curl that
 we love.
 
-# Why Hurl?
+## Why Hurl?
 
 - Text format for both devops and developers
 - Fast command-line for both local dev and continuous integration
@@ -453,6 +459,66 @@ HTTP/* 302
 ```
 
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
+
+# Usage
+
+## Options
+
+Options that exist in curl have exactly the same semantic.
+
+Option | Description
+ --- | --- 
+`--append` | This option can only be used with `--json`. It appends sessions to existing file instead of overwriting it. This is typically used in a CI pipeline.
+`--color` | Colorize Output
+`-b, --cookie <file>` | Read cookies from file (using the Netscape cookie file format). Combined with `-c, --cookie-jar`, you can simulate a cookie storage between successive Hurl runs.
+`--compressed` | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
+`--connect-timeout <seconds>` | Maximum time in seconds that you allow Hurl's connection to take. See also `-m, --max-time` option.
+`-c, --cookie-jar <file>` | Write cookies to FILE after running the session (only for one session). The file will be written using the Netscape cookie file format. Combined with `-b, --cookie`,you can simulate a cookie storage between successive Hurl runs.
+`--fail-at-end` | Continue executing requests to the end of the Hurl file even when an assert error occurs. By default, Hurl exits after an assert error in the HTTP response. Note that this option does not affect the behavior with multiple input Hurl files. All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
+`--file-root <dir>` | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body. When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
+`-h, --help` | Usage help. This lists all current command line options with a short description.
+`--html <dir>` | Generate html report in dir. If you want to combine results from different Hurl executions in a unique html report, you must also use the options `--json` and `--append`.
+`-i, --include` | Include the HTTP headers in the output (last entry).
+`--interactive` | Stop between requests. This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+`--json <file>`| Write full session(s) to a json file. The format is very closed to HAR format.By default, this file is overwritten by the current run execution. In order to append sessions to an existing json file, the option `--append` must be used. This is typically used in a CI pipeline.
+`--k, --insecure` | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
+`-L, --location` | Follow redirect. You can limit the amount of redirects to follow by using the `--max-redirs` option.
+`-m, --max-time <seconds>` | Maximum time in seconds that you allow a request/response to take. This is the standard timeout. See also `--connect-timeout` option.
+`--max-redirs <num>` | Set maximum number of redirection-followings allowed. By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
+`--no-color` | Do not colorize Output
+`--noproxy <no-proxy-list>` | Comma-separated list of hosts which do not use a proxy. Override value from Environment variable no_proxy.
+`--to-entry <entry-number` | Execute Hurl file to ENTRY_NUMBER (starting at 1). Ignore the remaining of the file. It is useful for debugging a session.
+`-o, --output <file>` | Write output to <file> instead of stdout.
+`-x, --proxy [protocol://]host[:port]` | Use the specified proxy.
+`-u, --user <user:password>` | Add basic Authentication header to each request.
+`--variable <name=value>` | Define variable (name/value) to be used in Hurl templates. Only string values can be defined.
+`--variables-file <file>` | Set properties file in which your define your variables. Each variable is defined as name=value exactly as with `--variable` option. Note that defining a variable twice produces an error.
+`-v, --verbose` | Turn on verbose output on standard error stream. Useful for debugging. A line starting with '>' means data sent by Hurl. A line staring with '&lt;' means data received by Hurl. A line starting with '*' means additional info provided by Hurl. If you only want HTTP headers in the output, -i, \-\-include might be the option you're looking for.
+`-V, --version`| Prints version information
+
+## Environment
+
+Environment variables can only be specified in lowercase.
+
+Using an environment variable to set the proxy has the same effect as using
+the [-x, \-\-proxy](#proxy) option.
+
+Variable | Description
+--- | ---
+`http_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTP.
+`https_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTPS.
+`all_proxy [protocol://]<host>[:port]` | Sets the proxy server to use if no protocol-specific proxy is set.
+`no_proxy <comma-separated list of hosts>` | list of host names that shouldn't go through any proxy.
+
+
+## Exit codes
+
+Value | Description
+--- | ---
+`1` | Failed to parse command-line options.
+`2` | Input File Parsing Error.
+`3` | Runtime error (such as failure to connect to host).
+`4` | Assert Error.
 
 # Building
 
