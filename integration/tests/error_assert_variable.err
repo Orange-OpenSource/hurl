@@ -1,4 +1,4 @@
-[1;31merror[0m: Assert Failure
+error: Assert Failure
   --> tests/error_assert_variable.hurl:8:0
    |
  8 | variable "toto" equals "tata"
@@ -6,14 +6,14 @@
    |   expected: string <tata>
    |
 
-[1;31merror[0m: Undefined Variable
+error: Undefined Variable
   --> tests/error_assert_variable.hurl:9:28
    |
  9 | variable "status" equals {{unknown}}
    |                            ^^^^^^^ You must set the variable unknown
    |
 
-[1;31merror[0m: Assert Failure
+error: Assert Failure
   --> tests/error_assert_variable.hurl:10:0
    |
 10 | variable "status" equals {{type}}
@@ -21,7 +21,7 @@
    |   expected: string <text/html; charset=utf-8>
    |
 
-[1;31merror[0m: Assert Failure
+error: Assert Failure
   --> tests/error_assert_variable.hurl:11:0
    |
 11 | variable "status" equals {{length}}

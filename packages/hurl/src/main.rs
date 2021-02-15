@@ -59,6 +59,17 @@ pub struct CLIOptions {
     pub user: Option<String>,
 }
 
+#[cfg(target_family = "unix")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+}
+
+#[cfg(target_family = "windows")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+    colored::control::set_virtual_terminal(true);
+}
+
 fn execute(
     filename: &str,
     contents: String,
@@ -611,7 +622,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
 fn main() {
     let app = app();
     let matches = app.clone().get_matches();
-
+    init_colored();
     let mut filenames = match matches.values_of("INPUT") {
         None => vec![],
         Some(v) => v.collect(),

@@ -16,14 +16,12 @@
  *
  */
 
-pub use self::color::TerminalColor;
 pub use self::fs::read_to_string;
 pub use self::logger::{
     log_info, make_logger_error_message, make_logger_linter_error, make_logger_parser_error,
     make_logger_verbose,
 };
 
-mod color;
 mod fs;
 mod logger;
 
