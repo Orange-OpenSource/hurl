@@ -19,6 +19,7 @@ jsonpath "$.errors[0]" exists
 jsonpath "$.errors[0]" isCollection
 jsonpath "$.errors[0].id" equals "error1"
 jsonpath "$.errors[0]['id']" equals "error1"
+jsonpath "$.errors[*].id" includes "error1"
 jsonpath "$.duration" equals 1.5
 jsonpath "$.duration" lessThanOrEquals 2.0
 jsonpath "$.duration" lessThan 2

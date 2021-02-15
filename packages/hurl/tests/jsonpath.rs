@@ -38,6 +38,17 @@ fn test_bookstore_path() {
     let value: serde_json::Value =
         serde_json::from_str(s.as_str()).expect("could not parse json file");
 
+    // $.store.book[*].author
+    assert_eq!(
+        test_ok("$.store.book[*].author", value.clone()),
+        vec![
+            json!("Nigel Rees"),
+            json!("Evelyn Waugh"),
+            json!("Herman Melville"),
+            json!("J. R. R. Tolkien")
+        ]
+    );
+
     assert_eq!(
         test_ok("$.store.book[0].title", value.clone()),
         vec![json!("Sayings of the Century")]
