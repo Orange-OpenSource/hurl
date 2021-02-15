@@ -48,6 +48,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
         vec![
             selector_recursive_key,
             selector_array_index,
+            selector_array_wildcard,
             selector_object_key_bracket,
             selector_object_key,
             selector_filter,
@@ -70,6 +71,13 @@ fn selector_array_index(reader: &mut Reader) -> Result<Selector, Error> {
     };
     literal("]", reader)?;
     Ok(Selector::ArrayIndex(i))
+}
+
+fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
+    try_left_bracket(reader)?;
+    try_literal("*", reader)?;
+    literal("]", reader)?;
+    Ok(Selector::ArrayWildcard {})
 }
 
 fn selector_filter(reader: &mut Reader) -> Result<Selector, Error> {
@@ -325,6 +333,19 @@ mod tests {
         // this is not part of the AST
         let mut reader = Reader::init(".[2]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
+        assert_eq!(reader.state.cursor, 4);
+    }
+
+    #[test]
+    pub fn test_selector_wildcard() {
+        let mut reader = Reader::init("[*]");
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
+        assert_eq!(reader.state.cursor, 3);
+
+        // you don't need to keep the exact string
+        // this is not part of the AST
+        let mut reader = Reader::init(".[*]");
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
         assert_eq!(reader.state.cursor, 4);
     }
 

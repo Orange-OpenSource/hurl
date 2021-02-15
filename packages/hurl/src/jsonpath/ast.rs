@@ -28,6 +28,7 @@ pub struct Query {
 pub enum Selector {
     NameChild(String),
     ArrayIndex(usize),
+    ArrayWildcard,
     Filter(Predicate),
     RecursiveKey(String),
 }

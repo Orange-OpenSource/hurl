@@ -45,6 +45,15 @@ impl Selector {
                 None => vec![],
                 Some(value) => vec![value.clone()],
             },
+            Selector::ArrayWildcard {} => {
+                let mut elements = vec![];
+                if let serde_json::Value::Array(values) = root {
+                    for value in values {
+                        elements.push(value);
+                    }
+                }
+                elements
+            }
             Selector::Filter(predicate) => match root {
                 serde_json::Value::Array(elements) => elements
                     .iter()
@@ -238,6 +247,46 @@ mod tests {
                 json!("J. R. R. Tolkien")
             ]
         );
+
+        // $.store.book[*].author
+        let query = Query {
+            selectors: vec![
+                Selector::NameChild("store".to_string()),
+                Selector::NameChild("book".to_string()),
+                Selector::ArrayWildcard {},
+                Selector::NameChild("author".to_string()),
+            ],
+        };
+        assert_eq!(
+            query.eval(json_root()),
+            vec![
+                json!("Nigel Rees"),
+                json!("Evelyn Waugh"),
+                json!("Herman Melville"),
+                json!("J. R. R. Tolkien")
+            ]
+        );
+    }
+
+    #[test]
+    pub fn test_selector_array_index() {
+        assert_eq!(
+            Selector::ArrayIndex(0).eval(json_books()),
+            vec![json_first_book()]
+        );
+    }
+
+    #[test]
+    pub fn test_selector_array_wildcard() {
+        assert_eq!(
+            Selector::ArrayWildcard {}.eval(json_books()),
+            vec![
+                json_first_book(),
+                json_second_book(),
+                json_third_book(),
+                json_fourth_book()
+            ]
+        );
     }
 
     #[test]
@@ -342,7 +391,7 @@ mod tests {
                 key: "key".to_string(),
                 func: PredicateFunc::LessThan(Number {
                     int: 10,
-                    decimal: 0
+                    decimal: 0,
                 }),
             }
             .eval(json!({"key": 1})),
