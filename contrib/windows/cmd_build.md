@@ -76,6 +76,13 @@ cd c:\hurl\integration
 start /B server.py
 ```
 
+launch the ssl server
+
+```cmd
+cd c:\hurl\integration
+start /B ssl/server.py
+```
+
 launch hurl unit tests
 
 ```cmd
@@ -85,8 +92,9 @@ cargo test
 
 launch hurl integration tests
 
-```
-coming soon ... ;)
+```cmd
+cd c:\hurl\integration
+./integration.py
 ```
 
 ## Generate version.txt file
