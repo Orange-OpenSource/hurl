@@ -30,7 +30,7 @@ $ echo GET http://httpbin.org/get | hurl
         "Content-Length": "0",
         "Host": "httpbin.org",
         "User-Agent": "hurl/0.99.10",
-        "X-Amzn-Trace-Id": "Root=1-5eedf4c7-520814d64e2f9249ea44e0f0"
+        "X-Amzn-Trace-Id": "Root=1-5eedf4c7-520814d64e2f9249ea44e0"
       },
       "origin": "1.2.3.4",
       "url": "http://httpbin.org/get"

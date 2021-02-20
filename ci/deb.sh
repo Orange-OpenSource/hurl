@@ -36,8 +36,11 @@ Description: Run and test HTTP requests
 END
 dpkg --build target/debian
 
-#sudo apt install lintian
-#lintian target/debian.deb
+
+echo "Check Lintian"
+sudo apt install lintian
+lintian --verbose target/debian.deb
+
 mkdir -p target/upload
 cp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
 
