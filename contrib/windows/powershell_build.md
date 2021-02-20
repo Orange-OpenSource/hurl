@@ -39,6 +39,7 @@ $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYN
 ## Clone hurl project
 
 ```powershell
+git.exe config --global core.autocrlf false
 git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
 
@@ -57,6 +58,10 @@ New-Item -ItemType "Directory" -Path "c:\hurl\target" -Name "win-package"
 Get-ChildItem -Path "c:\hurl\target\release" -Recurse -Include *.dll -File | Copy-Item -Destination "c:\hurl\target\win-package"
 Get-ChildItem -Path "c:\hurl\target\release" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "c:\hurl\target\win-package"
 ((c:\hurl\target\win-package\hurl.exe --version) -Split " ")[1] > c:\hurl\target\win-package\version.txt
+$oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
+$newpath = $oldpath.Path += ";c:\hurl\target\win-package"
+Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 ```
 
 ## Test your app
@@ -74,6 +79,14 @@ cd c:\hurl\integration
 python server.py
 ```
 
+Keep original powershell prompt on background, and open one more separate powershell prompt to launch the ssl server
+
+```powershell
+cd c:\hurl\integration
+python ssl/server.py
+```
+
+
 Keep original powershell prompt on background, and open one more separate powershell prompt to launch the proxy
 
 ```powershell
@@ -90,7 +103,8 @@ cargo test --verbose
 launch hurl integration tests
 
 ```powershell
-coming soon ... ;)
+cd c:\hurl\integration
+./integration.py
 ```
 
 ## Generate version.txt file

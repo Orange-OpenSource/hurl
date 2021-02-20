@@ -1,9 +1,34 @@
 #!/usr/bin/env python3
 # test hurl file
 #
+import codecs
 import sys
 import subprocess
 import os
+import platform
+
+
+def decode_string(encoded):
+    if encoded.startswith(codecs.BOM_UTF8):
+        return encoded.decode('utf-8-sig')
+    elif encoded.startswith(codecs.BOM_UTF16):
+        encoded = encoded[len(codecs.BOM_UTF16):]
+        return encoded.decode('utf-16')
+    else:
+        return encoded.decode()
+
+
+# return linux, osx or windows
+def get_os():
+    if platform.system() == 'Linux':
+        return 'linux'
+    elif platform.system() == 'Darwin':
+        return 'osx'
+    elif platform.system() == 'Windows':
+        return 'windows'
+    else:
+        raise Error('Invalid Platform ' + platform.system())
+
 
 def test(hurl_file):
   
@@ -21,29 +46,37 @@ def test(hurl_file):
     expected = int(open(f).read().strip())
     if result.returncode != expected:
         print('>>> error in return code')
-        print('expected: {expected}  actual:{result.returncode}')
+        print(f'expected: {expected}  actual:{result.returncode}')
         sys.exit(1)
 
     # stdout
     f = hurl_file.replace('.hurl','.out')
     if os.path.exists(f):
          expected = open(f, 'rb').read()
-         actual = result.stdout 
+         actual = result.stdout
          if expected != actual:
              print('>>> error in stdout')
              print(f'actual: <{actual}>\nexpected: <{expected}>')
              sys.exit(1)
-        
-    # stderr
-    f = hurl_file.replace('.hurl','.err')
-    if os.path.exists(f):
-         expected = open(f).read().strip()
-         actual = result.stderr.decode("utf-8").strip() 
-         if expected != actual:
-             print('>>> error in stderr')
-             print(f'actual: <{actual}>\nexpected: <{expected}>')
-             sys.exit(1)
 
+    # stderr
+    f = hurl_file.replace('.hurl', '.' + get_os() + '.err')
+    if os.path.exists(f):
+        expected = open(f).read().strip()
+        actual = decode_string(result.stderr).strip()
+        if expected != actual:
+            print('>>> error in stderr')
+            print(f'actual: <{actual}>\nexpected: <{expected}>')
+            sys.exit(1)
+    else:
+        f = hurl_file.replace('.hurl', '.err')
+        if os.path.exists(f):
+            expected = open(f).read().strip()
+            actual = decode_string(result.stderr).strip()
+            if expected != actual:
+                print('>>> error in stderr')
+                print(f'actual: <{actual}>\nexpected: <{expected}>')
+                sys.exit(1)
 
 def main():
     for hurl_file in sys.argv[1:]:

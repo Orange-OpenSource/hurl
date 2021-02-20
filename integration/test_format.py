@@ -2,16 +2,27 @@
 # echo hurl file
 # The file is parsed and output exactly as the input
 #
+import codecs
 import sys
 import subprocess
+
+def decode_string(encoded):
+    if encoded.startswith(codecs.BOM_UTF8):
+        return encoded.decode('utf-8-sig')
+    elif encoded.startswith(codecs.BOM_UTF16):
+        encoded = encoded[len(codecs.BOM_UTF16):]
+        return encoded.decode('utf-16')
+    else:
+        return encoded.decode()
+
 
 def test(format_type, hurl_file):
     cmd = ['hurlfmt', '--format', format_type, hurl_file]
     print(' '.join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
     json_file = hurl_file.replace('.hurl','.' + format_type)
-    expected = open(json_file).read().strip()
-    actual = result.stdout.decode("utf-8").strip() 
+    expected = open(json_file, encoding='utf-8').read().strip()
+    actual = decode_string(result.stdout)
     if actual != expected:
         print('>>> error in stdout')
         print(f'actual: <{actual}>\nexpected: <{expected}>')
