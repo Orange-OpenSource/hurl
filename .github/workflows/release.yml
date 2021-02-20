@@ -1,9 +1,6 @@
 name: release
 
-on:
-  push:
-    tags:
-      - '*'
+on: [push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always
@@ -30,6 +27,8 @@ jobs:
     - name: Build
       run: |
         ci/man.sh
+        # Install libcurl dev so that hurl can be built dynamically with libcurl
+        sudo apt install libcurl4-openssl-dev        
         ci/release.sh
         ci/create_tarball.sh linux
         ci/deb.sh
