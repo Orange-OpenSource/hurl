@@ -46,7 +46,7 @@ SectionGroup "executables"
     File "hurl.exe"
     ; Write installation path
     ReadRegStr $0  HKCU "Environment" "Path"
-    WriteRegStr HKCU "Environment" "path" "$0$INSTDIR"
+    WriteRegStr HKCU "Environment" "path" "$0$INSTDIR;"
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
   SectionEnd
