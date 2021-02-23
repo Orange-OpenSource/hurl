@@ -175,7 +175,7 @@ jobs:
         Get-Job -Name mitmdump
         Start-Sleep 5
         cd ..
-        #cargo test --verbose
+        cargo test --verbose
     - name: Run Integration tests
       run: |
         cargo build --release --verbose
