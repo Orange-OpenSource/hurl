@@ -66,7 +66,7 @@ jobs:
         python3 server.py >server.log 2>&1 &
         python3 ssl/server.py >server-ssl.log 2>&1 &
         wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
-    - name: Run Tests
+    - name: Run Tests units
       run: |
         cargo test
     - name: Run Integration Tests
@@ -111,7 +111,7 @@ jobs:
         python3 server.py >server.log 2>&1 &
         python3 ssl/server.py >server-ssl.log 2>&1 &
         wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-osx.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
-    - name: Run Tests
+    - name: Run Tests units
       run: |
         cargo test
     - name: Run Integration Tests
@@ -124,6 +124,78 @@ jobs:
       if: ${{ always() }}
       with:
         name: tests-osx-${{ matrix.rust }}-artifacts
+        path: |
+          integration/server.log
+          integration/server-ssl.log
+
+  test-win64:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        rust: [stable, nightly]
+    env:
+      VCPKGRS_DYNAMIC: 1
+    steps:
+    - name: Set git to use LF
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf       
+    - name: Checkout repository
+      uses: actions/checkout@v2 
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        $Properties = 'Caption', 'CSName', 'Version', 'BuildType', 'OSArchitecture'
+        Get-CimInstance Win32_OperatingSystem | Select-Object $Properties | Format-Table -AutoSize
+        cargo --version
+        $PsVersionTable
+    - name: Install build and tests prequisites
+      run: |
+        # vcpkg build prequisites
+        (Get-Command vcpkg).Path
+        Expand-Archive -PassThru -Force -LiteralPath .\ci\windows\vcpkg_installed.zip -DestinationPath C:\vcpkg\
+        Get-ChildItem C:\vcpkg\installed
+        vcpkg integrate install
+        # fix known win build bugs
+        (Get-Content .\packages\hurl\src\runner\hurl_file.rs).replace('```', '') | Set-Content .\packages\hurl\src\runner\hurl_file.rs
+        # install proxy and server
+        pip3 install Flask mitmproxy   
+    - name: Run Tests units
+      run: |
+        cd .\integration
+        Start-Job -Name mitmdump -ScriptBlock { mitmdump --listen-port 8888 --modify-header "/From-Proxy/Hello" }
+        Start-Job -Name server -ScriptBlock { python server.py > server.log }
+        Start-Job -Name server -ScriptBlock { python ssl/server.py > server-ssl.log }
+        Get-Job -Name server
+        Get-Job -Name mitmdump
+        Start-Sleep 5
+        cd ..
+        cargo test --verbose
+    - name: Run Integration tests
+      run: |
+        cargo build --release --verbose
+        $execdir=[System.Environment]::SystemDirectory
+        Get-ChildItem -Path ".\target\release" -Recurse -Include *.dll -File | Copy-Item -Destination "${execdir}"
+        Get-ChildItem -Path ".\target\release" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "${execdir}"
+        cd .\integration
+        Start-Job -Name mitmdump -ScriptBlock { mitmdump --listen-port 8888 --modify-header "/From-Proxy/Hello" }
+        Start-Job -Name server -ScriptBlock { python server.py > server.log }
+        Start-Job -Name server -ScriptBlock { python ssl/server.py > server-ssl.log }
+        Get-Job -Name server
+        Get-Job -Name mitmdump
+        Start-Sleep 5
+        hurlfmt --no-format tests\assert_base64.hurl
+        python integration.py
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: tests-win64-${{ matrix.rust }}-artifacts
         path: |
           integration/server.log
           integration/server-ssl.log

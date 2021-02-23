@@ -538,7 +538,7 @@ fn test_error_ssl() {
     let request = default_get_request("https://localhost:8001/hello".to_string());
     let error = client.execute(&request, 0).err().unwrap();
     let message = if cfg!(windows) {
-        "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325)".to_string()
+        "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.".to_string()
     } else {
         "SSL certificate problem: self signed certificate".to_string()
     };
