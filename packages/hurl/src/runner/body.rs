@@ -17,8 +17,6 @@
  */
 
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::prelude::*;
 use std::path::Path;
 
 use hurl_core::ast::*;
@@ -63,14 +61,8 @@ pub fn eval_bytes(
                     .unwrap()
                     .to_string()
             };
-            match File::open(absolute_filename.clone()) {
-                Ok(f) => {
-                    let mut bytes = vec![];
-                    for byte in f.bytes() {
-                        bytes.push(byte.unwrap());
-                    }
-                    Ok(bytes)
-                }
+            match std::fs::read(absolute_filename.clone()) {
+                Ok(bytes) => Ok(bytes),
                 Err(_) => Err(Error {
                     source_info: filename.source_info,
                     inner: RunnerError::FileReadAccess {
