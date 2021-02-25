@@ -26,6 +26,7 @@
 pub use self::core::{Error, HurlResult, RunnerError, RunnerOptions};
 pub use self::hurl_file::run as run_hurl_file;
 pub use self::log_deserialize::parse_results as deserialize_results;
+pub use self::value::Value;
 
 mod assert;
 mod body;

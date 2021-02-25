@@ -33,7 +33,7 @@ use hurl::cli::CLIError;
 use hurl::html;
 use hurl::http;
 use hurl::runner;
-use hurl::runner::{HurlResult, RunnerOptions};
+use hurl::runner::{HurlResult, RunnerOptions, Value};
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
@@ -46,7 +46,7 @@ pub struct CLIOptions {
     pub fail_fast: bool,
     pub insecure: bool,
     pub interactive: bool,
-    pub variables: HashMap<String, String>,
+    pub variables: HashMap<String, Value>,
     pub to_entry: Option<usize>,
     pub follow_location: bool,
     pub max_redirect: Option<usize>,
@@ -287,7 +287,7 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIErr
     }
 }
 
-fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, CLIError> {
+fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CLIError> {
     let mut variables = HashMap::new();
 
     if let Some(filename) = matches.value_of("variables_file") {
@@ -313,43 +313,20 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, String>, CLIError> {
             if line.starts_with('#') || line.is_empty() {
                 continue;
             }
-            let (name, value) = parse_variable(line)?;
-            if variables.contains_key(name.as_str()) {
-                return Err(CLIError {
-                    message: format!("Variable {} defined twice!", name),
-                });
-            }
-            variables.insert(name.to_string(), value[1..].to_string());
+            let (name, value) = cli::parse_variable(line)?;
+            variables.insert(name.to_string(), value);
         }
     }
 
     if matches.is_present("variable") {
         let input: Vec<_> = matches.values_of("variable").unwrap().collect();
         for s in input {
-            let (name, value) = parse_variable(s)?;
-
-            if variables.contains_key(name.as_str()) {
-                return Err(CLIError {
-                    message: format!("Variable {} defined twice!", name),
-                });
-            }
-            variables.insert(name.to_string(), value[1..].to_string());
+            let (name, value) = cli::parse_variable(s)?;
+            variables.insert(name.to_string(), value);
         }
     }
 
     Ok(variables)
-}
-
-fn parse_variable(s: &str) -> Result<(String, String), CLIError> {
-    match s.find('=') {
-        None => Err(CLIError {
-            message: format!("Missing variable value for {}!", s),
-        }),
-        Some(index) => {
-            let (name, value) = s.split_at(index);
-            Ok((name.to_string(), value.to_string()))
-        }
-    }
 }
 
 fn app() -> clap::App<'static, 'static> {

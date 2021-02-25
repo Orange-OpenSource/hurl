@@ -21,10 +21,12 @@ pub use self::logger::{
     log_info, make_logger_error_message, make_logger_parser_error, make_logger_runner_error,
     make_logger_verbose,
 };
+pub use self::variables::parse as parse_variable;
 
 mod fs;
 pub mod interactive;
 mod logger;
+mod variables;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CLIError {
