@@ -23,7 +23,6 @@ use hurl_core::ast::*;
 
 use super::core::*;
 use super::entry;
-use super::value::Value;
 
 /// Run a Hurl file with the hurl http client
 ///
@@ -101,7 +100,7 @@ pub fn run(
     let mut variables = HashMap::default();
 
     for (key, value) in options.variables {
-        variables.insert(key.to_string(), Value::String(value.to_string()));
+        variables.insert(key.to_string(), value);
     }
 
     let n = if let Some(to_entry) = options.to_entry {

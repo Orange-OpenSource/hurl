@@ -25,7 +25,7 @@ use super::value::Value;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
     pub fail_fast: bool,
-    pub variables: HashMap<String, String>,
+    pub variables: HashMap<String, Value>,
     pub to_entry: Option<usize>,
     pub context_dir: String,
     pub pre_entry: fn() -> bool,

@@ -30,7 +30,7 @@ pub enum Value {
 
     // can not use simply Float(f64)
     // the trait `std::cmp::Eq` is not implemented for `f64`
-    // integer part, decimal part (9 digits) TODO Clarify your custom type
+    // integer part, decimal part (18 digits) TODO Clarify your custom type
     Float(i64, u64),
 
     String(String),
@@ -55,7 +55,7 @@ impl fmt::Display for Value {
             Value::Object(_) => "Object()".to_string(),
             Value::Nodeset(x) => format!("Nodeset{:?}", x),
             Value::Bytes(x) => format!("Bytes({:x?})", x),
-            Value::Null => "Null".to_string(),
+            Value::Null => "null".to_string(),
             Value::Unit => "Unit".to_string(),
         };
         write!(f, "{}", value)
