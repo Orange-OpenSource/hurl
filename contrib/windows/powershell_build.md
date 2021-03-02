@@ -129,5 +129,5 @@ $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";C:\Program Files (x86)\NSIS\Bin"
 Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-makensis.exe /NOCD /V4 ..\..\contrib\windows\hurl.nsi
+makensis.exe /NOCD /V4 ..\..\ci\windows\hurl.nsi
 ```
