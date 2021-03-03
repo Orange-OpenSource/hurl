@@ -1,3 +1,31 @@
+[1.2.0 (2021-03-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.2.0)
+========================================================================================================================
+
+Hurl 1.2.0 is now available for Windows.
+
+Changes:
+
+* Create release for Windows [#174](https://github.com/Orange-OpenSource/hurl/issues/174)
+
+* Run Test Integ in Windows [#160](https://github.com/Orange-OpenSource/hurl/issues/160)
+
+* Support terminal colors in Windows [#159](https://github.com/Orange-OpenSource/hurl/issues/159)
+
+* Update to Rust 1.50.0 [#156](https://github.com/Orange-OpenSource/hurl/issues/156)
+
+* Support Hurl File with UTF8 BOM [#151](https://github.com/Orange-OpenSource/hurl/issues/151)
+
+* Type input variables [#120](https://github.com/Orange-OpenSource/hurl/issues/120)
+
+
+Bugs Fixes:
+
+* Support wildcard in jsonpath [#169](https://github.com/Orange-OpenSource/hurl/issues/169)
+
+* Reading body file is too slow [#144](https://github.com/Orange-OpenSource/hurl/issues/144)
+
+
+
 [1.1.0 (2021-02-07)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.1.0)
 ========================================================================================================================
 
