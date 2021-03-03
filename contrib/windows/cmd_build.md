@@ -117,5 +117,5 @@ cd c:\hurl\target\win-package
 setx /M path "%path%;C:\Program Files (x86)\NSIS\Bin"
 refreshenv
 cd c:\hurl\target\win-package
-makensis /NOCD /V4 c:\hurl\contrib\windows\hurl.nsi
+makensis /NOCD /V4 c:\hurl\ci\windows\hurl.nsi
 ```

@@ -1,4 +1,4 @@
-; includes
+﻿; includes
 !include "MUI2.nsh"
 
 ; define icons
@@ -26,14 +26,21 @@ Unicode False
 ; The default installation directory
 InstallDir $PROGRAMFILES64\hurl
 
-; Pages
+; Start pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE ..\..\LICENSE
-!insertmacro MUI_LANGUAGE "English"
 
 Page components
 Page directory
 Page instfiles
+
+; Finish page
+!define MUI_FINISHPAGE_LINK 'Click here to visit us at https://hurl.dev/'
+  !define MUI_FINISHPAGE_LINK_LOCATION https://hurl.dev/
+!define MUI_FINISHPAGE_TITLE_3LINES
+  !define MUI_FINISHPAGE_TITLE "Congratulation, hurl ${VERSION} is ready to use on your favorite windows terminal (cmd and powershell)"
+!insertmacro MUI_PAGE_FINISH
+!insertmacro MUI_LANGUAGE English
 
 UninstPage uninstConfirm
 UninstPage instfiles
@@ -46,7 +53,8 @@ SectionGroup "executables"
     File "hurl.exe"
     ; Write installation path
     ReadRegStr $0  HKCU "Environment" "Path"
-    WriteRegStr HKCU "Environment" "path" "$0$INSTDIR;"
+    WriteRegStr HKCU "Environment" "path" "$0;$INSTDIR"
+	SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
   SectionEnd
