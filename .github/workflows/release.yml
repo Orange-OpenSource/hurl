@@ -108,7 +108,7 @@ jobs:
         # create zip
         $hurl_package_version = Get-Content .\target\win-package\version.txt
         cd .\target\win-package
-        Get-ChildItem -Path *.dll, *hurl.exe, *.txt | Compress-Archive -DestinationPath hurl_${hurl_package_version}_win64.zip
+        Get-ChildItem -Path *.dll, *hurl.exe, *.txt | Compress-Archive -DestinationPath hurl-${hurl_package_version}-win64.zip
         Get-ChildItem .\*win64.zip
         cd ..\..
         # create installer
@@ -122,5 +122,5 @@ jobs:
       with:
         name: release-win64-artifacts
         path: |
-          .\target\win-package\hurl_*_installer.exe
-          .\target\win-package\hurl_*_win64.zip
+          .\target\win-package\hurl-*-installer.exe
+          .\target\win-package\hurl-*-win64.zip
