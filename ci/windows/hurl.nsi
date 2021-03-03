@@ -38,7 +38,7 @@ Page instfiles
 !define MUI_FINISHPAGE_LINK 'Click here to visit us at https://hurl.dev/'
   !define MUI_FINISHPAGE_LINK_LOCATION https://hurl.dev/
 !define MUI_FINISHPAGE_TITLE_3LINES
-  !define MUI_FINISHPAGE_TITLE "!! Almost finished !! Please logout/login to be able to use hurl from cmd and powershell !!"
+  !define MUI_FINISHPAGE_TITLE "Congratulation, hurl ${VERSION} is ready to use on your favorite windows terminal (cmd and powershell)"
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE English
 
@@ -54,6 +54,7 @@ SectionGroup "executables"
     ; Write installation path
     ReadRegStr $0  HKCU "Environment" "Path"
     WriteRegStr HKCU "Environment" "path" "$0;$INSTDIR"
+	SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
   SectionEnd
