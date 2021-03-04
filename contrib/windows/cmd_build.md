@@ -108,7 +108,7 @@ hurl.exe --version | cut -d" " -f2 > c:\hurl\target\win-package\version.txt
 ```cmd
 set /P hurl_package_version=<c:\hurl\target\win-package\version.txt
 cd c:\hurl\target\win-package
-7z.exe a -y hurl_%hurl_package_version%_win64.zip *.dll *hurl.exe *.txt
+7z.exe a -y hurl_%hurl-package-version%-win64.zip *.dll *hurl.exe *.txt
 ```
 
 ## Create a real package installer for win64

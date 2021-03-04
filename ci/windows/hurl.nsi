@@ -15,7 +15,7 @@ Name "hurl ${VERSION}"
 
 ; The file to write
 
-OutFile "hurl_${VERSION}_installer.exe"
+OutFile "hurl-${VERSION}-win64-installer.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin
