@@ -601,9 +601,7 @@ fn test_accept_encoding() {
     }));
 }
 
-//
-// TODO: find a way to test it locally
-// #[test]
+#[test]
 fn test_connect_timeout() {
     let options = ClientOptions {
         follow_location: false,
@@ -619,9 +617,13 @@ fn test_connect_timeout() {
         accept_encoding: None,
     };
     let mut client = Client::init(options);
-    let request = default_get_request("http://example.com:81".to_string());
+    let request = default_get_request("http://10.0.0.0".to_string());
     let error = client.execute(&request, 0).err().unwrap();
-    assert_eq!(error, HttpError::Timeout);
+    if cfg!(target_os = "macos") {
+        assert_eq!(error, HttpError::FailToConnect);
+    } else {
+        assert_eq!(error, HttpError::Timeout);
+    }
 }
 // endregion
 
