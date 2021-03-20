@@ -56,9 +56,11 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
             State::FirstOpenBracket {} => {
                 if s.as_str() == "{" {
-                    elements.push(TemplateElement::String { value, encoded });
-                    value = "".to_string();
-                    encoded = "".to_string();
+                    if !value.is_empty() {
+                        elements.push(TemplateElement::String { value, encoded });
+                        value = "".to_string();
+                        encoded = "".to_string();
+                    }
                     state = State::Template {};
                 } else {
                     value.push('{');
@@ -135,13 +137,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_templatize() {
+    fn test_templatize_empty_string() {
         let encoded_string = EncodedString {
             source_info: SourceInfo::init(1, 1, 1, 1),
             chars: vec![],
         };
         assert_eq!(templatize(encoded_string).unwrap(), vec![]);
+    }
 
+    #[test]
+    fn test_templatize_hello_world() {
         // Hi\u0020{{name}}!
         let encoded_string = EncodedString {
             source_info: SourceInfo::init(1, 1, 1, 18),
@@ -230,7 +235,7 @@ mod tests {
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::init(1, 11, 1, 15)
+                        source_info: SourceInfo::init(1, 11, 1, 15),
                     },
                     space1: Whitespace {
                         value: "".to_string(),
@@ -242,6 +247,38 @@ mod tests {
                     encoded: "!".to_string(),
                 },
             ]
+        );
+    }
+
+    #[test]
+    fn test_templatize_expression_only() {
+        // {{x}}!
+        let encoded_string = EncodedString {
+            source_info: SourceInfo::init(1, 1, 1, 7),
+            chars: vec![
+                ('{', "{".to_string(), Pos { line: 1, column: 1 }),
+                ('{', "{".to_string(), Pos { line: 1, column: 2 }),
+                ('x', "x".to_string(), Pos { line: 1, column: 3 }),
+                ('}', "}".to_string(), Pos { line: 1, column: 4 }),
+                ('}', "}".to_string(), Pos { line: 1, column: 4 }),
+            ],
+        };
+        assert_eq!(
+            templatize(encoded_string).unwrap(),
+            vec![TemplateElement::Expression(Expr {
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 3),
+                },
+                variable: Variable {
+                    name: "x".to_string(),
+                    source_info: SourceInfo::init(1, 3, 1, 4),
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 4, 1, 4),
+                },
+            }),]
         );
     }
 
@@ -266,5 +303,25 @@ mod tests {
             }
         );
         assert_eq!(error.recoverable, false);
+    }
+
+    #[test]
+    fn test_escape_bracket() {
+        // \{\{
+        // This is a valid string "{{"
+        let encoded_string = EncodedString {
+            source_info: SourceInfo::init(1, 1, 1, 4),
+            chars: vec![
+                ('{', "\\{".to_string(), Pos { line: 1, column: 1 }),
+                ('{', "\\{".to_string(), Pos { line: 1, column: 2 }),
+            ],
+        };
+        assert_eq!(
+            templatize(encoded_string).unwrap(),
+            vec![TemplateElement::String {
+                value: "{{".to_string(),
+                encoded: "\\{\\{".to_string(),
+            },]
+        );
     }
 }

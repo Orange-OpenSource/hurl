@@ -87,7 +87,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_cookiepath() {
+    fn test_cookiepath_simple() {
         let mut reader = Reader::init("cookie1");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
@@ -104,7 +104,10 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 7);
+    }
 
+    #[test]
+    fn test_cookiepath_with_attribute() {
         let mut reader = Reader::init("cookie1[Domain]");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
@@ -131,7 +134,10 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 15);
+    }
 
+    #[test]
+    fn test_cookiepath_with_template() {
         let mut reader = Reader::init("{{name}}[Domain]");
         assert_eq!(
             cookiepath(&mut reader).unwrap(),
