@@ -161,16 +161,8 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
     // does not return a value
     // non recoverable parser
     // => use combinator recover to make it recoverable
+
     let start = reader.state.clone();
-    if reader.clone().is_eof() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: s.to_string(),
-            },
-        });
-    }
     for c in s.chars() {
         let _state = reader.state.clone();
         match reader.read() {
