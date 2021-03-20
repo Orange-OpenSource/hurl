@@ -358,9 +358,10 @@ fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::SystemTime;
 
     #[test]
-    fn test_unquoted_template() {
+    fn test_unquoted_template_empty() {
         let mut reader = Reader::init("");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
@@ -372,6 +373,38 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 0);
 
+        // let mut reader = Reader::init(" hi");
+        // assert_eq!(
+        //     unquoted_template(&mut reader).unwrap(),
+        //     Template {
+        //         quotes: false,
+        //         elements: vec![],
+        //         source_info: SourceInfo::init(1, 1, 1, 1),
+        //     }
+        // );
+        //
+        // assert_eq!(reader.state.cursor, 0);
+    }
+
+    #[test]
+    fn test_unquoted_template_with_hash() {
+        let mut reader = Reader::init("a#");
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "a".to_string(),
+                    encoded: "a".to_string(),
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 2),
+            }
+        );
+        assert_eq!(reader.state.cursor, 1);
+    }
+
+    #[test]
+    fn test_unquoted_template_with_encoded_hash() {
         let mut reader = Reader::init("a\\u{23}");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
@@ -379,13 +412,16 @@ mod tests {
                 quotes: false,
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
-                    encoded: "a\\u{23}".to_string()
+                    encoded: "a\\u{23}".to_string(),
                 }],
                 source_info: SourceInfo::init(1, 1, 1, 8),
             }
         );
         assert_eq!(reader.state.cursor, 7);
+    }
 
+    #[test]
+    fn test_unquoted_template_hello_world() {
         let mut reader = Reader::init("hello\\u{20}{{name}}!");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
@@ -394,78 +430,55 @@ mod tests {
                 elements: vec![
                     TemplateElement::String {
                         value: "hello ".to_string(),
-                        encoded: "hello\\u{20}".to_string()
+                        encoded: "hello\\u{20}".to_string(),
                     },
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: "".to_string(),
-                            source_info: SourceInfo::init(1, 14, 1, 14)
+                            source_info: SourceInfo::init(1, 14, 1, 14),
                         },
                         variable: Variable {
                             name: "name".to_string(),
-                            source_info: SourceInfo::init(1, 14, 1, 18)
+                            source_info: SourceInfo::init(1, 14, 1, 18),
                         },
                         space1: Whitespace {
                             value: "".to_string(),
-                            source_info: SourceInfo::init(1, 18, 1, 18)
+                            source_info: SourceInfo::init(1, 18, 1, 18),
                         },
                     }),
                     TemplateElement::String {
                         value: "!".to_string(),
-                        encoded: "!".to_string()
+                        encoded: "!".to_string(),
                     },
                 ],
                 source_info: SourceInfo::init(1, 1, 1, 21),
             }
         );
         assert_eq!(reader.state.cursor, 20);
-
-        let mut reader = Reader::init("hello\n");
-        assert_eq!(
-            unquoted_template(&mut reader).unwrap(),
-            Template {
-                quotes: false,
-                elements: vec![TemplateElement::String {
-                    value: "hello".to_string(),
-                    encoded: "hello".to_string()
-                },],
-                source_info: SourceInfo::init(1, 1, 1, 6),
-            }
-        );
-        assert_eq!(reader.state.cursor, 5);
     }
 
     #[test]
     fn test_unquoted_template_trailing_space() {
-        let mut reader = Reader::init("hello # comment");
+        let mut reader = Reader::init("hello world # comment");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
-                    value: "hello".to_string(),
-                    encoded: "hello".to_string()
+                    value: "hello world".to_string(),
+                    encoded: "hello world".to_string(),
                 },],
-                source_info: SourceInfo::init(1, 1, 1, 6),
+                source_info: SourceInfo::init(1, 1, 1, 12),
             }
         );
-        assert_eq!(reader.state.cursor, 5);
-        assert_eq!(reader.state.pos, Pos { line: 1, column: 6 });
-    }
-
-    #[test]
-    fn test_unquoted_template_empty() {
-        let mut reader = Reader::init(" hi");
+        assert_eq!(reader.state.cursor, 11);
         assert_eq!(
-            unquoted_template(&mut reader).unwrap(),
-            Template {
-                quotes: false,
-                elements: vec![],
-                source_info: SourceInfo::init(1, 1, 1, 1),
+            reader.state.pos,
+            Pos {
+                line: 1,
+                column: 12
             }
         );
-
-        assert_eq!(reader.state.cursor, 0);
     }
 
     #[test]
@@ -533,7 +546,7 @@ mod tests {
                 quotes: true,
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
-                    encoded: "a#".to_string()
+                    encoded: "a#".to_string(),
                 }],
                 source_info: SourceInfo::init(1, 1, 1, 5),
             }
@@ -547,7 +560,7 @@ mod tests {
                 quotes: true,
                 elements: vec![TemplateElement::String {
                     value: "{0}".to_string(),
-                    encoded: "{0}".to_string()
+                    encoded: "{0}".to_string(),
                 }],
                 source_info: SourceInfo::init(1, 1, 1, 6),
             }
@@ -564,67 +577,6 @@ mod tests {
         let mut reader = Reader::init("\"Hello\"");
         assert_eq!(quoted_string(&mut reader).unwrap(), "Hello");
         assert_eq!(reader.state.cursor, 7);
-    }
-
-    #[test]
-    fn test_template_element_unquoted_string() {
-        let mut reader = Reader::init("name\\u{23}\\u{20}{{");
-        assert_eq!(
-            template_element_string(|reader1| any_char(vec![], reader1), &mut reader).unwrap(),
-            TemplateElement::String {
-                value: "name# ".to_string(),
-                encoded: "name\\u{23}\\u{20}".to_string(),
-            }
-        );
-        assert_eq!(reader.state.cursor, 16);
-    }
-
-    #[test]
-    fn test_template_element_unquoted_string_single_bracket() {
-        let mut reader = Reader::init("{0}");
-        assert_eq!(
-            template_element_string(|reader1| any_char(vec![], reader1), &mut reader).unwrap(),
-            TemplateElement::String {
-                value: "{0}".to_string(),
-                encoded: "{0}".to_string(),
-            }
-        );
-        assert_eq!(reader.state.cursor, 3);
-    }
-
-    #[test]
-    fn test_template_element_quoted_string() {
-        let mut reader = Reader::init("name#\\u{20}{{");
-        assert_eq!(
-            template_element_string(|reader1| any_char(vec![], reader1), &mut reader).unwrap(),
-            TemplateElement::String {
-                value: "name# ".to_string(),
-                encoded: "name#\\u{20}".to_string(),
-            }
-        );
-        assert_eq!(reader.state.cursor, 11);
-    }
-
-    #[test]
-    fn test_template_element_expression() {
-        let mut reader = Reader::init("{{name}}");
-        assert_eq!(
-            template_element_expression(&mut reader).unwrap(),
-            TemplateElement::Expression(Expr {
-                space0: Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo::init(1, 3, 1, 3)
-                },
-                variable: Variable {
-                    name: "name".to_string(),
-                    source_info: SourceInfo::init(1, 3, 1, 7)
-                },
-                space1: Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo::init(1, 7, 1, 7)
-                },
-            })
-        );
     }
 
     #[test]
@@ -720,5 +672,23 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::HexDigit);
         assert_eq!(error.recoverable, false);
+    }
+
+    #[test]
+    fn test_quoted_template_benchmark() {
+        // benchmark tests not in stable toolchain yet
+        // Simply log duration for the time-being
+        let mut reader = Reader::init(
+            format!(
+                "\"Hello World!\"{}",
+                (0..10000_000).map(|_| "X").collect::<String>()
+            )
+            .as_str(),
+        );
+
+        let now = SystemTime::now();
+        assert!(quoted_template(&mut reader).is_ok());
+        assert_eq!(reader.state.cursor, 14);
+        eprintln!("duration= {}", now.elapsed().unwrap().as_nanos());
     }
 }
