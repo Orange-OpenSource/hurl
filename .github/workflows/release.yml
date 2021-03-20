@@ -124,3 +124,43 @@ jobs:
         path: |
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*-win64.zip
+
+  benchsuite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+      - name: Environment
+        run: |
+          uname -a
+          cargo --version
+      - name: Build
+        run: |
+          # Install libcurl dev so that hurl can be built dynamically with libcurl
+          sudo apt install libcurl4-openssl-dev
+          ci/release.sh
+      - name: Test Prequisites
+        run: |
+          pip3 install Flask
+          cd bench
+          python3 server.py >server.log 2>&1 &
+          sleep 2
+          netstat -an | grep 8000
+      - name: Run Bench Suite
+        run: |
+          export PATH="$PWD/target/release:$PATH"
+          cd bench
+          ./run.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: tests-bench-artifacts
+          path: |
+            bench/server.log
