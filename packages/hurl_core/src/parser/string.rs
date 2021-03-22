@@ -152,7 +152,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut chars = vec![];
     loop {
         let pos = reader.state.pos.clone();
-        match any_char(vec![], reader) {
+        match any_char(vec!['"'], reader) {
             Err(e) => {
                 if e.recoverable {
                     break;
@@ -160,8 +160,10 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
                     return Err(e);
                 }
             }
-            Ok(('"', _)) => break,
             Ok((c, s)) => {
+                if s == "\"" {
+                    break;
+                }
                 chars.push((c, s, pos));
                 end = reader.state.clone().pos;
             }
@@ -340,6 +342,23 @@ mod tests {
     }
 
     #[test]
+    fn test_unquoted_template_with_quote() {
+        let mut reader = Reader::init("\"hi\"");
+        assert_eq!(
+            unquoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "\"hi\"".to_string(),
+                    encoded: "\"hi\"".to_string(),
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 5),
+            }
+        );
+        assert_eq!(reader.state.cursor, 4);
+    }
+
+    #[test]
     fn test_unquoted_template_hello_world() {
         let mut reader = Reader::init("hello\\u{20}{{name}}!");
         assert_eq!(
@@ -488,6 +507,24 @@ mod tests {
     }
 
     #[test]
+    fn test_quoted_template_with_quote() {
+        // "\"hi\""
+        let mut reader = Reader::init("\"\\\"hi\\\"\"");
+        assert_eq!(
+            quoted_template(&mut reader).unwrap(),
+            Template {
+                quotes: true,
+                elements: vec![TemplateElement::String {
+                    value: "\"hi\"".to_string(),
+                    encoded: "\\\"hi\\\"".to_string()
+                }],
+                source_info: SourceInfo::init(1, 1, 1, 9),
+            }
+        );
+        assert_eq!(reader.state.cursor, 8);
+    }
+
+    #[test]
     fn test_quoted_string() {
         let mut reader = Reader::init("\"\"");
         assert_eq!(quoted_string(&mut reader).unwrap(), "");
@@ -527,6 +564,16 @@ mod tests {
             ('#', "#".to_string())
         );
         assert_eq!(reader.state.cursor, 1);
+    }
+
+    #[test]
+    fn test_any_char_quote() {
+        let mut reader = Reader::init("\\\"");
+        assert_eq!(
+            any_char(vec![], &mut reader).unwrap(),
+            ('"', "\\\"".to_string())
+        );
+        assert_eq!(reader.state.cursor, 2);
     }
 
     #[test]
