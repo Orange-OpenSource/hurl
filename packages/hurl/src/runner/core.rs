@@ -121,7 +121,7 @@ pub enum RunnerError {
     InvalidJson {
         value: String,
     },
-    InvalidURL(String),
+    InvalidUrl(String),
 
     HttpConnection {
         url: String,
@@ -133,7 +133,7 @@ pub enum RunnerError {
     Timeout,
     TooManyRedirect,
     CouldNotParseResponse,
-    SSLCertificate(String),
+    SslCertificate(String),
 
     UnsupportedContentEncoding(String),
     CouldNotUncompressResponse(String),

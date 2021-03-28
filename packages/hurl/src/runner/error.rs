@@ -15,7 +15,7 @@ impl Error for runner::Error {
 
     fn description(&self) -> String {
         match &self.inner {
-            RunnerError::InvalidURL(..) => "Invalid url".to_string(),
+            RunnerError::InvalidUrl(..) => "Invalid url".to_string(),
             RunnerError::TemplateVariableNotDefined { .. } => "Undefined Variable".to_string(),
             RunnerError::VariableNotDefined { .. } => "Undefined Variable".to_string(),
             RunnerError::HttpConnection { .. } => "Http Connection".to_string(),
@@ -25,7 +25,7 @@ impl Error for runner::Error {
             RunnerError::Timeout => "Http Connection".to_string(),
             RunnerError::TooManyRedirect => "Http Connection".to_string(),
             RunnerError::CouldNotParseResponse => "Http Connection".to_string(),
-            RunnerError::SSLCertificate { .. } => "SSL Certificate".to_string(),
+            RunnerError::SslCertificate { .. } => "SSL Certificate".to_string(),
             RunnerError::PredicateValue { .. } => "Assert - Predicate Value Failed".to_string(),
             RunnerError::InvalidRegex {} => "Invalid regex".to_string(),
             RunnerError::FileReadAccess { .. } => "File ReadAccess".to_string(),
@@ -54,7 +54,7 @@ impl Error for runner::Error {
 
     fn fixme(&self) -> String {
         match &self.inner {
-            RunnerError::InvalidURL(url) => format!("Invalid url <{}>", url),
+            RunnerError::InvalidUrl(url) => format!("Invalid url <{}>", url),
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("You must set the variable {}", name)
             }
@@ -67,7 +67,7 @@ impl Error for runner::Error {
             RunnerError::Timeout => "Timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "Too many redirect".to_string(),
             RunnerError::CouldNotParseResponse => "Could not parse response".to_string(),
-            RunnerError::SSLCertificate(description) => description.clone(),
+            RunnerError::SslCertificate(description) => description.clone(),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {

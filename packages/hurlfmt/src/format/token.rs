@@ -154,8 +154,7 @@ impl Tokenizable for Status {
 
 impl Tokenizable for Version {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Version(format!(
+        vec![Token::Version(format!(
             "HTTP/{}",
             match self.value {
                 VersionValue::Version1 => String::from("1.0"),
@@ -163,8 +162,7 @@ impl Tokenizable for Version {
                 VersionValue::Version2 => String::from("2"),
                 VersionValue::VersionAny => String::from("*"),
             }
-        )));
-        tokens
+        ))]
     }
 }
 
@@ -340,8 +338,7 @@ impl Tokenizable for FileParam {
 
 impl Tokenizable for FileValue {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Keyword("file,".to_string()));
+        let mut tokens: Vec<Token> = vec![Token::Keyword("file,".to_string())];
         tokens.append(&mut self.space0.tokenize());
         tokens.append(&mut self.filename.tokenize());
         tokens.append(&mut self.space1.tokenize());
@@ -377,9 +374,7 @@ impl Tokenizable for Cookie {
 
 impl Tokenizable for CookieValue {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Value(self.clone().value));
-        tokens
+        vec![Token::Value(self.clone().value)]
     }
 }
 
@@ -486,8 +481,7 @@ impl Tokenizable for CookiePath {
 
 impl Tokenizable for CookieAttribute {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::CodeDelimiter("[".to_string()));
+        let mut tokens: Vec<Token> = vec![Token::CodeDelimiter("[".to_string())];
         add_tokens(&mut tokens, self.space0.tokenize());
         tokens.push(Token::String(self.name.value()));
         add_tokens(&mut tokens, self.space1.tokenize());
@@ -720,9 +714,7 @@ impl Tokenizable for TemplateElement {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             TemplateElement::String { encoded, .. } => {
-                let mut tokens: Vec<Token> = vec![];
-                tokens.push(Token::String(encoded.to_string()));
-                tokens
+                vec![Token::String(encoded.to_string())]
             }
             TemplateElement::Expression(value) => {
                 let mut tokens: Vec<Token> = vec![];
@@ -735,8 +727,7 @@ impl Tokenizable for TemplateElement {
 
 impl Tokenizable for Expr {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::CodeDelimiter(String::from("{{")));
+        let mut tokens: Vec<Token> = vec![Token::CodeDelimiter(String::from("{{"))];
         add_tokens(&mut tokens, self.space0.tokenize());
         tokens.push(Token::CodeVariable(self.variable.name.clone()));
         add_tokens(&mut tokens, self.space1.tokenize());
@@ -769,9 +760,7 @@ impl Tokenizable for Whitespace {
 
 impl Tokenizable for Comment {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Comment(format!("#{}", self.clone().value)));
-        tokens
+        vec![Token::Comment(format!("#{}", self.clone().value))]
     }
 }
 
@@ -831,8 +820,7 @@ impl Tokenizable for JsonValue {
 
 impl Tokenizable for JsonListElement {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Whitespace(self.space0.clone()));
+        let mut tokens: Vec<Token> = vec![Token::Whitespace(self.space0.clone())];
         tokens.append(&mut self.value.tokenize());
         tokens.push(Token::Whitespace(self.space1.clone()));
         tokens
@@ -841,8 +829,7 @@ impl Tokenizable for JsonListElement {
 
 impl Tokenizable for JsonObjectElement {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.push(Token::Whitespace(self.space0.clone()));
+        let mut tokens: Vec<Token> = vec![Token::Whitespace(self.space0.clone())];
         tokens.push(Token::Quote("\"".to_string()));
         tokens.push(Token::String(self.name.clone()));
         tokens.push(Token::Quote("\"".to_string()));

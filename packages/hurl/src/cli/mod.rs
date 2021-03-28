@@ -29,6 +29,6 @@ mod logger;
 mod variables;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CLIError {
+pub struct CliError {
     pub message: String,
 }

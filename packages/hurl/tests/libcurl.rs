@@ -542,7 +542,7 @@ fn test_error_ssl() {
     } else {
         "SSL certificate problem: self signed certificate".to_string()
     };
-    assert_eq!(error, HttpError::SSLCertificate(Some(message)));
+    assert_eq!(error, HttpError::SslCertificate(Some(message)));
 }
 
 #[test]
