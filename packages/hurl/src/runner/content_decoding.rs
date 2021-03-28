@@ -48,9 +48,9 @@ impl Encoding {
     pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, RunnerError> {
         match self {
             Encoding::Identity => Ok(data.to_vec()),
-            Encoding::Gzip => uncompress_gzip(&data[..]),
-            Encoding::Deflate => uncompress_zlib(&data[..]),
-            Encoding::Brotli => uncompress_brotli(&data[..]),
+            Encoding::Gzip => uncompress_gzip(data),
+            Encoding::Deflate => uncompress_zlib(data),
+            Encoding::Brotli => uncompress_brotli(data),
         }
     }
 }

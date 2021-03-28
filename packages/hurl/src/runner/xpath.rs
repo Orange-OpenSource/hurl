@@ -25,7 +25,7 @@ use super::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum XpathError {
-    InvalidXML,
+    InvalidXml,
     InvalidHtml,
     Eval,
     Unsupported,
@@ -36,12 +36,12 @@ pub fn eval_xml(xml: String, expr: String) -> Result<Value, XpathError> {
     match parser.parse_string(xml) {
         Ok(doc) => {
             if doc.get_root_element() == None {
-                Err(XpathError::InvalidXML {})
+                Err(XpathError::InvalidXml {})
             } else {
                 eval(doc, expr)
             }
         }
-        Err(_) => Err(XpathError::InvalidXML {}),
+        Err(_) => Err(XpathError::InvalidXml {}),
     }
 }
 
@@ -151,7 +151,7 @@ mod tests {
             eval_xml(String::from("??"), String::from("//person"))
                 .err()
                 .unwrap(),
-            XpathError::InvalidXML
+            XpathError::InvalidXml
         );
     }
 

@@ -99,7 +99,7 @@ pub fn eval_query(
                     };
                     match result {
                         Ok(value) => Ok(Some(value)),
-                        Err(xpath::XpathError::InvalidXML {}) => Err(Error {
+                        Err(xpath::XpathError::InvalidXml {}) => Err(Error {
                             source_info: query.source_info,
                             inner: RunnerError::QueryInvalidXml,
                             assert: false,

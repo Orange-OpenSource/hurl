@@ -38,8 +38,7 @@ impl ToJson for HurlFile {
 
 impl ToJson for Entry {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("request".to_string(), self.request.to_json()));
+        let mut attributes = vec![("request".to_string(), self.request.to_json())];
         if let Some(response) = self.response.clone() {
             attributes.push(("response".to_string(), response.to_json()));
         }
@@ -49,12 +48,13 @@ impl ToJson for Entry {
 
 impl ToJson for Request {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push((
-            "method".to_string(),
-            JValue::String(self.method.to_string()),
-        ));
-        attributes.push(("url".to_string(), JValue::String(self.url.to_string())));
+        let mut attributes = vec![
+            (
+                "method".to_string(),
+                JValue::String(self.method.to_string()),
+            ),
+            ("url".to_string(), JValue::String(self.url.to_string())),
+        ];
         add_headers(&mut attributes, self.headers.clone());
 
         if !self.clone().querystring_params().is_empty() {
@@ -181,9 +181,10 @@ fn get_json_version(version_value: VersionValue) -> Option<String> {
 
 impl ToJson for KeyValue {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("name".to_string(), JValue::String(self.key.value.clone())));
-        attributes.push(("value".to_string(), JValue::String(self.value.to_string())));
+        let attributes = vec![
+            ("name".to_string(), JValue::String(self.key.value.clone())),
+            ("value".to_string(), JValue::String(self.value.to_string())),
+        ];
         JValue::Object(attributes)
     }
 }
@@ -199,12 +200,13 @@ impl ToJson for MultipartParam {
 
 impl ToJson for FileParam {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("name".to_string(), JValue::String(self.key.value.clone())));
-        attributes.push((
-            "filename".to_string(),
-            JValue::String(self.value.filename.value.clone()),
-        ));
+        let mut attributes = vec![
+            ("name".to_string(), JValue::String(self.key.value.clone())),
+            (
+                "filename".to_string(),
+                JValue::String(self.value.filename.value.clone()),
+            ),
+        ];
         if let Some(content_type) = self.value.content_type.clone() {
             attributes.push(("content_type".to_string(), JValue::String(content_type)));
         }
@@ -214,21 +216,23 @@ impl ToJson for FileParam {
 
 impl ToJson for Cookie {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("name".to_string(), JValue::String(self.name.value.clone())));
-        attributes.push((
-            "value".to_string(),
-            JValue::String(self.value.value.clone()),
-        ));
+        let attributes = vec![
+            ("name".to_string(), JValue::String(self.name.value.clone())),
+            (
+                "value".to_string(),
+                JValue::String(self.value.value.clone()),
+            ),
+        ];
         JValue::Object(attributes)
     }
 }
 
 impl ToJson for Capture {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("name".to_string(), JValue::String(self.name.value.clone())));
-        attributes.push(("query".to_string(), self.query.to_json()));
+        let mut attributes = vec![
+            ("name".to_string(), JValue::String(self.name.value.clone())),
+            ("query".to_string(), self.query.to_json()),
+        ];
         if let Some(subquery) = self.subquery.clone() {
             attributes.push(("subquery".to_string(), subquery.to_json()));
         }
@@ -238,17 +242,16 @@ impl ToJson for Capture {
 
 impl ToJson for Assert {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("query".to_string(), self.query.to_json()));
-        attributes.push(("predicate".to_string(), self.predicate.to_json()));
+        let attributes = vec![
+            ("query".to_string(), self.query.to_json()),
+            ("predicate".to_string(), self.predicate.to_json()),
+        ];
         JValue::Object(attributes)
     }
 }
 
 impl ToJson for Query {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        attributes.push(("type".to_string(), self.value.to_json()));
         self.value.to_json()
     }
 }

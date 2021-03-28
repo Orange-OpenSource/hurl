@@ -16,12 +16,12 @@
  *
  */
 
-use crate::cli::CLIError;
+use crate::cli::CliError;
 use crate::runner::Value;
 
-pub fn parse(s: &str) -> Result<(String, Value), CLIError> {
+pub fn parse(s: &str) -> Result<(String, Value), CliError> {
     match s.find('=') {
-        None => Err(CLIError {
+        None => Err(CliError {
             message: format!("Missing value for variable {}!", s),
         }),
         Some(index) => {
@@ -32,7 +32,7 @@ pub fn parse(s: &str) -> Result<(String, Value), CLIError> {
     }
 }
 
-fn parse_value(s: &str) -> Result<Value, CLIError> {
+fn parse_value(s: &str) -> Result<Value, CliError> {
     if s == "true" {
         Ok(Value::Bool(true))
     } else if s == "false" {
@@ -50,7 +50,7 @@ fn parse_value(s: &str) -> Result<Value, CLIError> {
         if let Some(s) = s.strip_suffix('"') {
             Ok(Value::String(s.to_string()))
         } else {
-            Err(CLIError {
+            Err(CliError {
                 message: "Value should end with a double quote".to_string(),
             })
         }
@@ -98,7 +98,7 @@ pub mod tests {
     fn test_parse_error() {
         assert_eq!(
             parse("name").err().unwrap(),
-            CLIError {
+            CliError {
                 message: "Missing value for variable name!".to_string()
             }
         );
@@ -129,7 +129,7 @@ pub mod tests {
     fn test_parse_value_error() {
         assert_eq!(
             parse_value("\"123").err().unwrap(),
-            CLIError {
+            CliError {
                 message: "Value should end with a double quote".to_string()
             }
         )

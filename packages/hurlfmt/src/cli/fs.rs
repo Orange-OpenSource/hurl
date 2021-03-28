@@ -16,7 +16,7 @@
  *
  */
 
-use crate::cli::CLIError;
+use crate::cli::CliError;
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
@@ -30,11 +30,11 @@ fn strip_bom(bytes: &mut Vec<u8>) {
 
 /// Similar to the standard read_to_string()
 /// But remove any existing BOM
-pub fn read_to_string(filename: &str) -> Result<String, CLIError> {
+pub fn read_to_string(filename: &str) -> Result<String, CliError> {
     let mut f = match File::open(&filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(CLIError {
+            return Err(CliError {
                 message: e.to_string(),
             })
         }
@@ -42,19 +42,19 @@ pub fn read_to_string(filename: &str) -> Result<String, CLIError> {
     let metadata = fs::metadata(&filename).expect("unable to read metadata");
     let mut buffer = vec![0; metadata.len() as usize];
     if let Err(e) = f.read(&mut buffer) {
-        return Err(CLIError {
+        return Err(CliError {
             message: e.to_string(),
         });
     }
     string_from_utf8(buffer)
 }
 
-pub fn string_from_utf8(buffer: Vec<u8>) -> Result<String, CLIError> {
+pub fn string_from_utf8(buffer: Vec<u8>) -> Result<String, CliError> {
     let mut buffer = buffer;
     strip_bom(&mut buffer);
     match String::from_utf8(buffer) {
         Ok(s) => Ok(s),
-        Err(e) => Err(CLIError {
+        Err(e) => Err(CliError {
             message: e.to_string(),
         }),
     }
@@ -94,7 +94,7 @@ pub mod tests {
         );
         assert_eq!(
             string_from_utf8(vec![0xef]).err().unwrap(),
-            CLIError {
+            CliError {
                 message: "incomplete utf-8 byte sequence from index 0".to_string()
             }
         );

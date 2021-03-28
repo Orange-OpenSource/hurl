@@ -34,7 +34,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
         Template {},
         FirstOpenBracket {},
         FirstCloseBracket {},
-    };
+    }
 
     let mut elements = vec![];
 

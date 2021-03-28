@@ -29,7 +29,7 @@ use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
 use hurl::cli::interactive;
-use hurl::cli::CLIError;
+use hurl::cli::CliError;
 use hurl::html;
 use hurl::http;
 use hurl::runner;
@@ -40,7 +40,7 @@ use hurl_core::parser;
 use std::fs::File;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CLIOptions {
+pub struct CliOptions {
     pub verbose: bool,
     pub color: bool,
     pub fail_fast: bool,
@@ -75,7 +75,7 @@ fn execute(
     contents: String,
     current_dir: &Path,
     file_root: Option<String>,
-    cli_options: CLIOptions,
+    cli_options: CliOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
 ) -> HurlResult {
@@ -218,11 +218,11 @@ fn output_color(matches: ArgMatches) -> bool {
     }
 }
 
-fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CLIError> {
+fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
     match matches.value_of("to_entry") {
         Some(value) => match value.parse() {
             Ok(v) => Ok(Some(v)),
-            Err(_) => Err(CLIError {
+            Err(_) => Err(CliError {
                 message: "Invalid value for option --to-entry - must be a positive integer!"
                     .to_string(),
             }),
@@ -234,7 +234,7 @@ fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CLIError> {
 fn json_file(
     matches: ArgMatches,
     log_verbose: impl Fn(&str),
-) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), CLIError> {
+) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), CliError> {
     if let Some(filename) = matches.value_of("json") {
         let path = Path::new(filename);
 
@@ -245,7 +245,7 @@ fn json_file(
             let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
                 Ok(val) => val,
                 Err(_) => {
-                    return Err(CLIError {
+                    return Err(CliError {
                         message: format!("The file {} is not a valid json file", path.display()),
                     });
                 }
@@ -253,7 +253,7 @@ fn json_file(
 
             match runner::deserialize_results(v) {
                 Err(msg) => {
-                    return Err(CLIError {
+                    return Err(CliError {
                         message: format!("Existing Hurl json can not be parsed! -  {}", msg),
                     });
                 }
@@ -269,14 +269,14 @@ fn json_file(
     }
 }
 
-fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIError> {
+fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CliError> {
     if let Some(dir) = matches.value_of("html_report") {
         let path = Path::new(dir);
         if std::path::Path::new(&path).exists() {
             Ok(Some(path.to_path_buf()))
         } else {
             match std::fs::create_dir(path) {
-                Err(_) => Err(CLIError {
+                Err(_) => Err(CliError {
                     message: format!("Html dir {} can not be created", path.display()),
                 }),
                 Ok(_) => Ok(Some(path.to_path_buf())),
@@ -287,13 +287,13 @@ fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CLIErr
     }
 }
 
-fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CLIError> {
+fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     let mut variables = HashMap::new();
 
     if let Some(filename) = matches.value_of("variables_file") {
         let path = std::path::Path::new(filename);
         if !path.exists() {
-            return Err(CLIError {
+            return Err(CliError {
                 message: format!("Properties file {} does not exist", path.display()),
             });
         }
@@ -304,7 +304,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CLIError> {
             let line = match line {
                 Ok(s) => s,
                 Err(_) => {
-                    return Err(CLIError {
+                    return Err(CliError {
                         message: format!("Can not parse line {} of {}", index + 1, path.display()),
                     })
                 }
@@ -513,7 +513,7 @@ fn app() -> clap::App<'static, 'static> {
 
 pub fn unwrap_or_exit<T>(
     log_error_message: &impl Fn(bool, &str),
-    result: Result<T, CLIError>,
+    result: Result<T, CliError>,
 ) -> T {
     match result {
         Ok(v) => v,
@@ -524,7 +524,7 @@ pub fn unwrap_or_exit<T>(
     }
 }
 
-fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
+fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
     let color = output_color(matches.clone());
     let fail_fast = !matches.is_present("fail_at_end");
@@ -543,7 +543,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
         Some(s) => match s.parse::<usize>() {
             Ok(x) => Some(x),
             Err(_) => {
-                return Err(CLIError {
+                return Err(CliError {
                     message: "max_redirs option can not be parsed".to_string(),
                 });
             }
@@ -555,7 +555,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(CLIError {
+                return Err(CliError {
                     message: "max_time option can not be parsed".to_string(),
                 });
             }
@@ -567,7 +567,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
-                return Err(CLIError {
+                return Err(CliError {
                     message: "connect-timeout option can not be parsed".to_string(),
                 });
             }
@@ -576,7 +576,7 @@ fn parse_options(matches: ArgMatches) -> Result<CLIOptions, CLIError> {
     let compressed = matches.is_present("compressed");
     let user = matches.value_of("user").map(|x| x.to_string());
     let interactive = matches.is_present("interactive");
-    Ok(CLIOptions {
+    Ok(CliOptions {
         verbose,
         color,
         fail_fast,
@@ -810,7 +810,7 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     }
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CLIError> {
+fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CliError> {
     match filename {
         None => {
             let stdout = io::stdout();
@@ -825,7 +825,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CLIError> 
             let path = Path::new(filename);
             let mut file = match std::fs::File::create(&path) {
                 Err(why) => {
-                    return Err(CLIError {
+                    return Err(CliError {
                         message: format!("Issue writing to {}: {:?}", path.display(), why),
                     });
                 }
@@ -838,9 +838,9 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CLIError> 
     }
 }
 
-pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CLIError> {
+pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CliError> {
     if n > 1 {
-        Err(CLIError {
+        Err(CliError {
             message: "Only save cookies for a unique session".to_string(),
         })
     } else {
@@ -849,10 +849,10 @@ pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::Path
     }
 }
 
-fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CLIError> {
+fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(CLIError {
+            return Err(CliError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
@@ -865,7 +865,7 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
     .to_string();
     match hurl_results.first() {
         None => {
-            return Err(CLIError {
+            return Err(CliError {
                 message: "Issue fetching results".to_string(),
             });
         }
@@ -878,14 +878,14 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CLIError {
+        return Err(CliError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
     Ok(())
 }
 
-fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CLIError> {
+fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
     //let now: DateTime<Utc> = Utc::now();
     let now: DateTime<Local> = Local::now();
     let html = create_html_index(now.to_rfc2822(), hurl_results);
@@ -894,14 +894,14 @@ fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result
     let file_path = dir_path.join("index.html");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(CLIError {
+            return Err(CliError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CLIError {
+        return Err(CliError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
@@ -909,14 +909,14 @@ fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result
     let file_path = dir_path.join("report.css");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(CLIError {
+            return Err(CliError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(include_bytes!("report.css")) {
-        return Err(CLIError {
+        return Err(CliError {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
