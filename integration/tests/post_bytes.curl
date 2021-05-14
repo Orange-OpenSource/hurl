@@ -1,0 +1,1 @@
+curl 'http://localhost:8000/post-bytes' -H 'Content-Type: application/octet-stream' --data $'\x01\x02\x03'

@@ -33,9 +33,13 @@ def get_os():
 def test(hurl_file):
   
     options_file = hurl_file.replace('.hurl','.options')
+    curl_file = hurl_file.replace('.hurl','.curl')
+
     options = []
     if os.path.exists(options_file):
          options = open(options_file).read().strip().split(' ')
+    if os.path.exists(curl_file):
+        options.append('--verbose')
 
     cmd = ['hurl', hurl_file] + options
     print(' '.join(cmd))
@@ -76,6 +80,31 @@ def test(hurl_file):
             if expected != actual:
                 print('>>> error in stderr')
                 print(f'actual: <{actual}>\nexpected: <{expected}>')
+                sys.exit(1)
+
+    # curl output
+    if os.path.exists(curl_file):
+        expected_commands = []
+        for line in open(curl_file, 'r').readlines():
+             line = line.strip()
+             if line == "" or line.startswith("#"):
+                 continue
+             expected_commands.append(line)
+
+        actual = decode_string(result.stderr).strip()
+        actual_commands= [line[2:] for line in actual.split('\n') if line.startswith('* curl')]
+
+        if len(actual_commands) != len(expected_commands):
+             print('Assert error at %s' % (f))
+             print('expected: %d commands' % len(expected_commands))
+             print('actual:   %d commands' % len(actual_commands))
+             sys.exit(1)
+
+        for i in range(len(expected_commands)):
+            if actual_commands[i] != expected_commands[i]:
+                print('Assert error at %s:%i' % (curl_file, i+1))
+                print('expected: %s' % expected_commands[i])
+                print('actual:   %s' % actual_commands[i])
                 sys.exit(1)
 
 def main():

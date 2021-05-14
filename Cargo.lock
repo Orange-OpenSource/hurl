@@ -342,6 +342,7 @@ dependencies = [
  "hurl_core",
  "libflate",
  "libxml",
+ "percent-encoding",
  "regex",
  "serde",
  "serde_json",

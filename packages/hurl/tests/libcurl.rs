@@ -10,19 +10,7 @@ pub fn new_header(name: &str, value: &str) -> Header {
 }
 
 fn default_client() -> Client {
-    let options = ClientOptions {
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: true,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Duration::from_secs(300),
-        user: None,
-        compressed: false,
-    };
+    let options = ClientOptions::default();
     Client::init(options)
 }
 
@@ -46,6 +34,11 @@ fn default_get_request(url: String) -> Request {
 fn test_hello() {
     let mut client = default_client();
     let request = default_get_request("http://localhost:8000/hello".to_string());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/hello'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.version, Version::Http10);
     assert_eq!(response.status, 200);
@@ -81,6 +74,11 @@ fn test_put() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/put' -X PUT".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -113,6 +111,11 @@ fn test_patch() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/patch/file.txt' -X PATCH -H 'Host: www.example.com' -H 'Content-Type: application/example' -H 'If-Match: \"e0023aa4e\"'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 204);
     assert!(response.body.is_empty());
@@ -142,6 +145,12 @@ fn test_custom_headers() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert!(client.options.curl_args().is_empty());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/custom-headers' -H 'Fruit: Raspberry' -H 'Fruit: Apple' -H 'Fruit: Banana' -H 'Fruit: Grape' -H 'Color: Green'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -182,6 +191,10 @@ fn test_querystring_params() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3'".to_string()
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -222,6 +235,11 @@ fn test_form_params() {
         body: Body::Binary(vec![]),
         content_type: Some("application/x-www-form-urlencoded".to_string()),
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/form-params' --data 'param1=value1' --data 'param2=' --data 'param3=a%3Db' --data 'param4=a%253db'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -255,18 +273,25 @@ fn test_follow_location() {
 
     let options = ClientOptions {
         follow_location: true,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: None,
         proxy: None,
         no_proxy: None,
         verbose: false,
         insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
+        timeout: Duration::new(300, 0),
+        connect_timeout: Duration::new(300, 0),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
+    assert_eq!(client.options.curl_args(), vec!["-L".to_string(),]);
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/redirect' -L".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(
@@ -296,13 +321,19 @@ fn test_max_redirect() {
         no_proxy: None,
         verbose: false,
         insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
+        timeout: Duration::new(300, 0),
+        connect_timeout: Duration::new(300, 0),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/redirect' -L --max-redirs 10".to_string()
+    );
+
     let response = client.execute(&request, 5).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(client.redirect_count, 6);
@@ -352,6 +383,11 @@ fn test_multipart_form_data() {
         body: Body::Binary(vec![]),
         content_type: Some("multipart/form-data".to_string()),
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/multipart-form-data' -F 'key1=value1' -F 'upload1=@data.txt;type=text/plain' -F 'upload2=@data.html;type=text/html' -F 'upload3=@data.txt;type=text/html'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -381,6 +417,10 @@ fn test_post_bytes() {
         body: Body::Binary(b"Hello World!".to_vec()),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/post-base64' -H 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21'".to_string()
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -405,6 +445,11 @@ fn test_expect() {
         body: Body::Text("data".to_string()),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/expect' -H 'Expect: 100-continue' -H 'Content-Type:' --data 'data'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);
@@ -415,16 +460,17 @@ fn test_expect() {
 fn test_basic_authentication() {
     let options = ClientOptions {
         follow_location: false,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: None,
         proxy: None,
         no_proxy: None,
-        verbose: true,
+        verbose: false,
         insecure: false,
-        timeout: Default::default(),
+        timeout: Duration::from_secs(300),
         connect_timeout: Duration::from_secs(300),
         user: Some("bob:secret".to_string()),
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = Request {
@@ -438,6 +484,10 @@ fn test_basic_authentication() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/basic-authentication' --user 'bob:secret'".to_string()
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);
@@ -455,6 +505,10 @@ fn test_basic_authentication() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        request.curl_args(".".to_string()),
+        vec!["'http://bob:secret@localhost:8000/basic-authentication'".to_string()]
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);
@@ -491,6 +545,7 @@ fn test_error_fail_to_connect() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -512,6 +567,7 @@ fn test_error_could_not_resolve_proxy_name() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -533,6 +589,7 @@ fn test_error_ssl() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("https://localhost:8001/hello".to_string());
@@ -559,6 +616,7 @@ fn test_timeout() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/timeout".to_string());
@@ -577,11 +635,13 @@ fn test_accept_encoding() {
         verbose: true,
         insecure: false,
         timeout: Default::default(),
-        connect_timeout: Duration::from_secs(300),
+        connect_timeout: Default::default(),
         user: None,
         compressed: true,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
+
     let request = Request {
         method: Method::Get,
         url: "http://localhost:8000/compressed/gzip".to_string(),
@@ -605,19 +665,24 @@ fn test_accept_encoding() {
 fn test_connect_timeout() {
     let options = ClientOptions {
         follow_location: false,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: None,
         proxy: None,
         no_proxy: None,
         verbose: false,
         insecure: false,
-        timeout: Default::default(),
+        timeout: Duration::from_secs(300),
         connect_timeout: Duration::from_secs(1),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://10.0.0.0".to_string());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://10.0.0.0' --connect-timeout 1".to_string()
+    );
     let error = client.execute(&request, 0).err().unwrap();
     if cfg!(target_os = "macos") {
         assert_eq!(error, HttpError::FailToConnect);
@@ -646,6 +711,13 @@ fn test_cookie() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/cookies/set-request-cookie1-valueA' --cookie 'cookie1=valueA'"
+            .to_string()
+    );
+
+    //assert_eq!(request.cookies(), vec!["cookie1=valueA".to_string(),]);
 
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
@@ -689,6 +761,11 @@ fn test_multiple_request_cookies() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill'".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -729,21 +806,27 @@ fn test_cookie_storage() {
 fn test_cookie_file() {
     let options = ClientOptions {
         follow_location: false,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: Some("tests/cookies.txt".to_string()),
         proxy: None,
         no_proxy: None,
         verbose: false,
         insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
+        timeout: Duration::new(300, 0),
+        connect_timeout: Duration::new(300, 0),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request(
         "http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string(),
     );
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA' --cookie tests/cookies.txt".to_string()
+    );
+
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
@@ -758,19 +841,24 @@ fn test_proxy() {
     // mitmproxy listening on port 8888
     let options = ClientOptions {
         follow_location: false,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: None,
         proxy: Some("localhost:8888".to_string()),
         no_proxy: None,
         verbose: false,
         insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
+        timeout: Duration::new(300, 0),
+        connect_timeout: Duration::new(300, 0),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/proxy".to_string());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'http://localhost:8000/proxy' --proxy 'localhost:8888'".to_string()
+    );
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);
 }
@@ -781,19 +869,25 @@ fn test_proxy() {
 fn test_insecure() {
     let options = ClientOptions {
         follow_location: false,
-        max_redirect: None,
+        max_redirect: Some(50),
         cookie_input_file: None,
         proxy: None,
         no_proxy: None,
         verbose: false,
         insecure: true,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
+        timeout: Duration::new(300, 0),
+        connect_timeout: Duration::new(300, 0),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = Client::init(options);
+    assert_eq!(client.options.curl_args(), vec!["--insecure".to_string()]);
     let request = default_get_request("https://localhost:8001/hello".to_string());
+    assert_eq!(
+        client.curl_command_line(&request),
+        "curl 'https://localhost:8001/hello' --insecure".to_string()
+    );
 
     let response = client.execute(&request, 0).unwrap();
     assert_eq!(response.status, 200);

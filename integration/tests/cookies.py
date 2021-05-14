@@ -74,7 +74,8 @@ def assert_that_cookie2_is_valueb():
 
 @app.route("/cookies/assert-that-cookie2-is-valueA-and-valueB")
 def assert_that_cookie2_is_valuea_and_valueb():
-    assert request.headers['Cookie'] == 'cookie2=valueA; cookie2=ValueB'
+    assert 'cookie2=valueA' in request.headers['Cookie']
+    assert 'cookie2=valueB' in request.headers['Cookie']
     return ''
 
 @app.route("/cookies/set-session-cookie2-valueA-subdomain")

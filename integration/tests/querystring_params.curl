@@ -1,0 +1,4 @@
+curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3'
+curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3'
+curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3'
+curl 'http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F&value3=%2F'

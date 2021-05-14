@@ -54,6 +54,7 @@ fn test_hurl_file() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
@@ -164,6 +165,7 @@ fn test_hello() {
         connect_timeout: Default::default(),
         user: None,
         compressed: false,
+        context_dir: ".".to_string(),
     };
     let mut client = http::Client::init(options);
     let source_info = SourceInfo {

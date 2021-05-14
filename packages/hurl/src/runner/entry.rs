@@ -98,6 +98,13 @@ pub fn run(
     }
     log_verbose("");
     log_request(log_verbose, &http_request);
+    log_verbose(
+        format!(
+            "request can be run with the following curl command:\n* {}\n*",
+            http_client.curl_command_line(&http_request)
+        )
+        .as_str(),
+    );
 
     let http_response = match http_client.execute(&http_request, 0) {
         Ok(response) => response,

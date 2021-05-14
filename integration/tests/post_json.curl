@@ -1,0 +1,8 @@
+curl 'http://localhost:8000/post-json' -H 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "secret",\n    "age": 30,\n    "strict": true\n}'
+curl 'http://localhost:8000/post-json-array' -H 'Content-Type: application/json' --data '[1,2,3]'
+curl 'http://localhost:8000/post-json-string' -H 'Content-Type: application/json' --data '"Hello"'
+curl 'http://localhost:8000/post-json-number' -H 'Content-Type: application/json' --data '100'
+curl 'http://localhost:8000/post-json-numbers' -H 'Content-Type: application/json' --data $'{\n    "natural": 100,\n    "negative": -1,\n    "float": "3.333333333333333",\n    "exponent": 100e100\n}'
+curl 'http://localhost:8000/post-json-boolean' -H 'Content-Type: application/json' --data 'true'
+curl 'http://localhost:8000/get-name'
+curl 'http://localhost:8000/post-json' -H 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "secret",\n    "age": 30,\n    "strict": true\n}'

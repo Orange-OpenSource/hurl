@@ -16,8 +16,9 @@
  *
  */
 
-pub use self::client::{Client, ClientOptions, HttpError};
+pub use self::client::{Client, HttpError};
 pub use self::core::{Cookie, Header};
+pub use self::options::ClientOptions;
 #[cfg(test)]
 pub use self::request::tests::*;
 pub use self::request::{Body, FileParam, Method, MultipartParam, Param, Request, RequestCookie};
@@ -27,5 +28,6 @@ pub use self::response::{Response, Version};
 
 mod client;
 mod core;
+mod options;
 mod request;
 mod response;

@@ -1,0 +1,4 @@
+curl 'http://localhost:8000/cookie-storage/assert-that-cookie1-is-valueA' --cookie 'cookie1=valueA'
+curl 'http://localhost:8000/cookie-storage/assert-that-cookie1-is-not-in-session'
+
+
