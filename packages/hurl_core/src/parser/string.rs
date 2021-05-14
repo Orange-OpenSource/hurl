@@ -128,9 +128,9 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
     let end = reader.state.pos.clone();
     let source_info = SourceInfo { start, end };
     Ok(EncodedString {
-        quotes,
-        encoded,
         value,
+        encoded,
+        quotes,
         source_info,
     })
 }

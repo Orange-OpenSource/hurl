@@ -306,7 +306,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
                 Err(_) => {
                     return Err(CliError {
                         message: format!("Can not parse line {} of {}", index + 1, path.display()),
-                    })
+                    });
                 }
             };
             let line = line.trim();
@@ -581,6 +581,7 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         color,
         fail_fast,
         insecure,
+        interactive,
         variables,
         to_entry,
         follow_location,
@@ -592,7 +593,6 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         connect_timeout,
         compressed,
         user,
-        interactive,
     })
 }
 
@@ -618,10 +618,7 @@ fn main() {
     let current_dir_buf = std::env::current_dir().unwrap();
     let current_dir = current_dir_buf.as_path();
 
-    let file_root = match matches.value_of("file_root") {
-        Some(value) => Some(value.to_string()),
-        _ => None,
-    };
+    let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
     let log_verbose = cli::make_logger_verbose(verbose);
     let color = output_color(matches.clone());

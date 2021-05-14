@@ -62,10 +62,7 @@ impl Reader {
     }
 
     pub fn peek(&mut self) -> Option<char> {
-        match self.buffer.get(self.state.cursor) {
-            None => None,
-            Some(c) => Some(*c),
-        }
+        self.buffer.get(self.state.cursor).copied()
     }
 
     pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {

@@ -166,12 +166,12 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
         Ok(Request {
             method,
             url,
-            querystring,
             headers,
+            querystring,
+            form,
+            multipart,
             cookies,
             body,
-            multipart,
-            form,
             content_type,
         })
     } else {

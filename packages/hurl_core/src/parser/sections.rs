@@ -93,9 +93,9 @@ fn section(reader: &mut Reader) -> ParseResult<'static, Section> {
     Ok(Section {
         line_terminators,
         space0,
-        source_info,
         line_terminator0,
         value,
+        source_info,
     })
 }
 

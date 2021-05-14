@@ -46,10 +46,7 @@ impl Lintable<Entry> for Entry {
     fn lint(&self) -> Entry {
         Entry {
             request: self.request.lint(),
-            response: match self.clone().response {
-                None => None,
-                Some(response) => Some(response.lint()),
-            },
+            response: self.clone().response.map(|response| response.lint()),
         }
     }
 }
@@ -84,10 +81,7 @@ impl Lintable<Request> for Request {
         let url = self.url.clone();
         let line_terminator0 = self.line_terminator0.lint();
         let headers = self.headers.iter().map(|e| e.lint()).collect();
-        let b = match self.clone().body {
-            None => None,
-            Some(body) => Some(body.lint()),
-        };
+        let b = self.clone().body.map(|body| body.lint());
         let mut sections: Vec<Section> = self.sections.iter().map(|e| e.lint()).collect();
         sections.sort_by_key(|k| section_value_index(k.value.clone()));
 
@@ -275,11 +269,7 @@ impl Lintable<QueryValue> for QueryValue {
                 expr: CookiePath { name, attribute },
                 ..
             } => {
-                let attribute = if let Some(attribute) = attribute {
-                    Some(attribute.lint())
-                } else {
-                    None
-                };
+                let attribute = attribute.as_ref().map(|attribute| attribute.lint());
                 QueryValue::Cookie {
                     space0: one_whitespace(),
                     expr: CookiePath {
@@ -704,10 +694,7 @@ impl Lintable<LineTerminator> for LineTerminator {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        let comment = match self.clone().comment {
-            None => None,
-            Some(comment) => Some(comment.lint()),
-        };
+        let comment = self.clone().comment.map(|comment| comment.lint());
         let newline = Whitespace {
             value: if self.newline.value.is_empty() {
                 "".to_string()
