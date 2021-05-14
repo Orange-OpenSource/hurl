@@ -91,10 +91,9 @@ impl Response {
 /// Extract charset from mime-type String
 ///
 fn mime_charset(mime_type: String) -> Option<String> {
-    match mime_type.find("charset=") {
-        None => None,
-        Some(index) => Some(mime_type[(index + 8)..].to_string()),
-    }
+    mime_type
+        .find("charset=")
+        .map(|index| mime_type[(index + 8)..].to_string())
 }
 
 #[cfg(test)]
