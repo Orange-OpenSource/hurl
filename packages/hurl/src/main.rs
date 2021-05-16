@@ -145,11 +145,6 @@ fn execute(
             let connect_timeout = cli_options.connect_timeout;
             let user = cli_options.user;
             let compressed = cli_options.compressed;
-            let accept_encoding = if compressed {
-                Some("gzip, deflate, br".to_string())
-            } else {
-                None
-            };
             let options = http::ClientOptions {
                 follow_location,
                 max_redirect,
@@ -161,7 +156,7 @@ fn execute(
                 timeout,
                 connect_timeout,
                 user,
-                accept_encoding,
+                compressed,
             };
             let mut client = http::Client::init(options);
 

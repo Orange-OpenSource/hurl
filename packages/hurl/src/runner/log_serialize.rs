@@ -106,7 +106,7 @@ impl Serialize for Request {
         if !self.clone().form.is_empty() {
             state.serialize_field("form", &self.clone().form)?;
         }
-        state.serialize_field("body", &base64::encode(&self.body))?;
+        state.serialize_field("body", &base64::encode(&self.body.bytes()))?;
 
         state.end()
     }

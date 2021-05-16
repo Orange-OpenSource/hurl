@@ -29,7 +29,7 @@ pub struct Request {
     pub form: Vec<Param>,
     pub multipart: Vec<MultipartParam>,
     pub cookies: Vec<RequestCookie>,
-    pub body: Vec<u8>,
+    pub body: Body,
     pub content_type: Option<String>,
 }
 
@@ -70,6 +70,23 @@ pub struct FileParam {
 pub struct RequestCookie {
     pub name: String,
     pub value: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Body {
+    Text(String),
+    Binary(Vec<u8>),
+    File(Vec<u8>, String),
+}
+
+impl Body {
+    pub fn bytes(&self) -> Vec<u8> {
+        match self {
+            Body::Text(s) => s.as_bytes().to_vec(),
+            Body::Binary(bs) => bs.clone(),
+            Body::File(bs, _) => bs.clone(),
+        }
+    }
 }
 
 impl fmt::Display for Method {
@@ -131,7 +148,7 @@ pub mod tests {
             querystring: vec![],
             headers: vec![],
             cookies: vec![],
-            body: vec![],
+            body: Body::Binary(vec![]),
             multipart: vec![],
             form: vec![],
             content_type: None,
@@ -163,7 +180,7 @@ pub mod tests {
                     value: String::from("abc123"),
                 },
             ],
-            body: vec![],
+            body: Body::Binary(vec![]),
             multipart: vec![],
             form: vec![],
             content_type: None,
@@ -186,7 +203,7 @@ pub mod tests {
             ],
             headers: vec![],
             cookies: vec![],
-            body: vec![],
+            body: Body::Binary(vec![]),
             multipart: vec![],
             form: vec![],
             content_type: None,
@@ -203,9 +220,7 @@ pub mod tests {
                 value: String::from("application/x-www-form-urlencoded"),
             }],
             cookies: vec![],
-            body: "param1=value1&param2=&param3=a%3db&param4=a%253db"
-                .to_string()
-                .into_bytes(),
+            body: Body::Text("param1=value1&param2=&param3=a%3db&param4=a%253db".to_string()),
             multipart: vec![],
             form: vec![],
             content_type: Some("multipart/form-data".to_string()),

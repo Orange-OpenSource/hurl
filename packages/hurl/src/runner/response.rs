@@ -190,7 +190,7 @@ pub fn eval_asserts(
             }),
             Bytes::File { .. } => {
                 let expected = match eval_body(body.clone(), variables, context_dir) {
-                    Ok(bytes) => Ok(Value::Bytes(bytes)),
+                    Ok(body) => Ok(Value::Bytes(body.bytes())),
                     Err(e) => Err(e),
                 };
                 let actual = Ok(Value::Bytes(http_response.body.clone()));

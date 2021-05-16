@@ -78,9 +78,9 @@ pub fn eval_request(
         cookies.push(cookie);
     }
 
-    let bytes = match request.clone().body {
+    let body = match request.clone().body {
         Some(body) => eval_body(body, variables, context_dir.clone())?,
-        None => vec![],
+        None => http::Body::Binary(vec![]),
     };
 
     let mut multipart = vec![];
@@ -118,12 +118,12 @@ pub fn eval_request(
     Ok(http::Request {
         method,
         url,
-        querystring,
         headers,
-        cookies,
-        body: bytes,
-        multipart,
+        querystring,
         form,
+        multipart,
+        cookies,
+        body,
         content_type,
     })
 }
