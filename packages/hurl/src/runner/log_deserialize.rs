@@ -16,6 +16,7 @@
  *
  */
 
+use crate::http;
 use crate::http::*;
 
 use super::cookie::*;
@@ -160,7 +161,7 @@ pub fn parse_request(value: serde_json::Value) -> Result<Request, ParseError> {
 
         // TODO
         let multipart = vec![];
-        let body = vec![];
+        let body = http::Body::Binary(vec![]);
         let content_type = None;
 
         Ok(Request {
@@ -404,14 +405,14 @@ mod tests {
         .unwrap();
         assert_eq!(
             parse_request(v).unwrap(),
-            Request {
-                method: Method::Get,
+            http::Request {
+                method: http::Method::Get,
                 url: "http://localhost:8000/querystring-params?param1=value1&param2=a%20b"
                     .to_string(),
                 querystring: vec![],
                 headers: vec![],
                 cookies: vec![],
-                body: vec![],
+                body: http::Body::Binary(vec![]),
                 form: vec![],
                 multipart: vec![],
                 content_type: None,

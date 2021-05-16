@@ -20,7 +20,7 @@ pub use self::client::{Client, ClientOptions, HttpError};
 pub use self::core::{Cookie, Header};
 #[cfg(test)]
 pub use self::request::tests::*;
-pub use self::request::{FileParam, Method, MultipartParam, Param, Request, RequestCookie};
+pub use self::request::{Body, FileParam, Method, MultipartParam, Param, Request, RequestCookie};
 #[cfg(test)]
 pub use self::response::tests::*;
 pub use self::response::{Response, Version};

@@ -58,7 +58,7 @@ use super::entry;
 ///        timeout: Default::default(),
 ///        connect_timeout: Default::default(),
 ///        user: None,
-///        accept_encoding: None
+///        compressed: false
 /// };
 /// let mut client = http::Client::init(options);
 ///

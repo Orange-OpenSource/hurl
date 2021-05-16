@@ -53,7 +53,7 @@ fn test_hurl_file() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
@@ -163,7 +163,7 @@ fn test_hello() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = http::Client::init(options);
     let source_info = SourceInfo {

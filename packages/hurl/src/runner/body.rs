@@ -25,12 +25,13 @@ use super::core::{Error, RunnerError};
 use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
+use crate::http;
 
 pub fn eval_body(
     body: Body,
     variables: &HashMap<String, Value>,
     context_dir: String,
-) -> Result<Vec<u8>, Error> {
+) -> Result<http::Body, Error> {
     eval_bytes(body.value, variables, context_dir)
 }
 
@@ -38,31 +39,37 @@ pub fn eval_bytes(
     bytes: Bytes,
     variables: &HashMap<String, Value>,
     context_dir: String,
-) -> Result<Vec<u8>, Error> {
+) -> Result<http::Body, Error> {
     match bytes {
+        // Body::Text
         Bytes::RawString { value, .. } => {
             let value = eval_template(value, variables)?;
-            Ok(value.into_bytes())
+            Ok(http::Body::Text(value))
         }
-        Bytes::Base64 { value, .. } => Ok(value),
-        Bytes::Xml { value, .. } => Ok(value.into_bytes()),
+        Bytes::Xml { value, .. } => Ok(http::Body::Text(value)),
         Bytes::Json { value, .. } => {
             let value = eval_json_value(value, variables)?;
-            Ok(value.into_bytes())
+            Ok(http::Body::Text(value))
         }
+
+        // Body:: Binary
+        Bytes::Base64 { value, .. } => Ok(http::Body::Binary(value)),
+
+        // Body::File
         Bytes::File { filename, .. } => {
-            let path = Path::new(filename.value.as_str());
+            let f = filename.value.as_str();
+            let path = Path::new(f);
             let absolute_filename = if path.is_absolute() {
                 filename.clone().value
             } else {
                 Path::new(context_dir.as_str())
-                    .join(filename.value)
+                    .join(f)
                     .to_str()
                     .unwrap()
                     .to_string()
             };
             match std::fs::read(absolute_filename.clone()) {
-                Ok(bytes) => Ok(bytes),
+                Ok(value) => Ok(http::Body::File(value, f.to_string())),
                 Err(_) => Err(Error {
                     source_info: filename.source_info,
                     inner: RunnerError::FileReadAccess {
@@ -101,7 +108,7 @@ mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_bytes(bytes, &variables, ".".to_string()).unwrap(),
-            b"Hello World!"
+            http::Body::File(b"Hello World!".to_vec(), "tests/data.bin".to_string())
         );
     }
 

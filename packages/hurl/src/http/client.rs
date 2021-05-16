@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use std::io::Read;
 use std::str;
 
@@ -45,22 +44,12 @@ pub enum HttpError {
 
 #[derive(Debug)]
 pub struct Client {
+    pub options: ClientOptions,
     pub handle: Box<easy::Easy>,
-
-    /// unfortunately, follow-location feature from libcurl can not be used
-    /// libcurl returns a single list of headers for the 2 responses
-    /// hurl needs the return the headers only for the second (last) response)
-    pub follow_location: bool,
     pub redirect_count: usize,
-    pub max_redirect: Option<usize>,
-    pub verbose: bool,
-    pub verify: bool,
-    pub proxy: Option<String>,
-    pub no_proxy: Option<String>,
-    pub timeout: Duration,
-    pub connect_timeout: Duration,
-    pub authorization: Option<String>,
-    pub accept_encoding: Option<String>,
+    // unfortunately, follow-location feature from libcurl can not be used
+    // libcurl returns a single list of headers for the 2 responses
+    // hurl needs the return the headers only for the second (last) response)
 }
 
 #[derive(Debug, Clone)]
@@ -75,7 +64,7 @@ pub struct ClientOptions {
     pub timeout: Duration,
     pub connect_timeout: Duration,
     pub user: Option<String>,
-    pub accept_encoding: Option<String>,
+    pub compressed: bool,
 }
 
 impl Client {
@@ -93,26 +82,16 @@ impl Client {
         h.cookie_file(
             options
                 .cookie_input_file
+                .clone()
                 .unwrap_or_else(|| "".to_string())
                 .as_str(),
         )
         .unwrap();
 
-        let authorization = options.user.map(|user| base64::encode(user.as_bytes()));
-        let accept_encoding = options.accept_encoding;
         Client {
+            options,
             handle: Box::new(h),
-            follow_location: options.follow_location,
-            max_redirect: options.max_redirect,
             redirect_count: 0,
-            verbose: options.verbose,
-            verify: !options.insecure,
-            authorization,
-            accept_encoding,
-            proxy: options.proxy,
-            no_proxy: options.no_proxy,
-            timeout: options.timeout,
-            connect_timeout: options.connect_timeout,
         }
     }
 
@@ -127,17 +106,19 @@ impl Client {
         // set handle attributes
         // that have not been set or reset
 
-        self.handle.verbose(self.verbose).unwrap();
-        self.handle.ssl_verify_host(self.verify).unwrap();
-        self.handle.ssl_verify_peer(self.verify).unwrap();
-        if let Some(proxy) = self.proxy.clone() {
+        self.handle.verbose(self.options.verbose).unwrap();
+        self.handle.ssl_verify_host(!self.options.insecure).unwrap();
+        self.handle.ssl_verify_peer(!self.options.insecure).unwrap();
+        if let Some(proxy) = self.options.proxy.clone() {
             self.handle.proxy(proxy.as_str()).unwrap();
         }
-        if let Some(s) = self.no_proxy.clone() {
+        if let Some(s) = self.options.no_proxy.clone() {
             self.handle.noproxy(s.as_str()).unwrap();
         }
-        self.handle.timeout(self.timeout).unwrap();
-        self.handle.connect_timeout(self.connect_timeout).unwrap();
+        self.handle.timeout(self.options.timeout).unwrap();
+        self.handle
+            .connect_timeout(self.options.connect_timeout)
+            .unwrap();
 
         self.set_url(&request.url, &request.querystring);
         self.set_method(&request.method);
@@ -146,9 +127,10 @@ impl Client {
         self.set_form(&request.form);
         self.set_multipart(&request.multipart);
 
-        let b = request.body.clone();
-        let mut data: &[u8] = b.as_ref();
+        let bytes = request.body.bytes();
+        let mut data: &[u8] = bytes.as_ref();
         self.set_body(data);
+
         self.set_headers(&request);
 
         self.handle
@@ -235,12 +217,12 @@ impl Client {
                 form: vec![],
                 multipart: vec![],
                 cookies: vec![],
-                body: vec![],
+                body: Body::Binary(vec![]),
                 content_type: None,
             };
 
             let redirect_count = redirect_count + 1;
-            if let Some(max_redirect) = self.max_redirect {
+            if let Some(max_redirect) = self.options.max_redirect {
                 if redirect_count > max_redirect {
                     return Err(HttpError::TooManyRedirect);
                 }
@@ -327,18 +309,17 @@ impl Client {
                 .unwrap();
         }
 
-        if let Some(authorization) = self.authorization.clone() {
+        if let Some(user) = self.options.user.clone() {
+            let authorization = base64::encode(user.as_bytes());
             if get_header_values(request.headers.clone(), "Authorization".to_string()).is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
                     .unwrap();
             }
         }
-        if let Some(accept_encoding) = self.accept_encoding.clone() {
-            if get_header_values(request.headers.clone(), "Accept-Encoding".to_string()).is_empty()
-            {
-                list.append(format!("Accept-Encoding: {}", accept_encoding).as_str())
-                    .unwrap();
-            }
+        if self.options.compressed
+            && get_header_values(request.headers.clone(), "Accept-Encoding".to_string()).is_empty()
+        {
+            list.append("Accept-Encoding: gzip, deflate, br").unwrap();
         }
 
         self.handle.http_headers(list).unwrap();
@@ -457,7 +438,7 @@ impl Client {
     /// 3. a header Location
     ///
     fn get_follow_location(&mut self, headers: Vec<Header>) -> Option<String> {
-        if !self.follow_location {
+        if !self.options.follow_location {
             return None;
         }
 
@@ -512,7 +493,7 @@ impl Client {
     /// Add cookie to Cookiejar
     ///
     pub fn add_cookie(&mut self, cookie: Cookie) {
-        if self.verbose {
+        if self.options.verbose {
             eprintln!("* add to cookie store: {}", cookie);
         }
         self.handle
@@ -524,7 +505,7 @@ impl Client {
     /// Clear cookie storage
     ///
     pub fn clear_cookie_storage(&mut self) {
-        if self.verbose {
+        if self.options.verbose {
             eprintln!("* clear cookie storage");
         }
         self.handle.cookie_list("ALL").unwrap();

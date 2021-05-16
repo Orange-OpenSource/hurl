@@ -21,7 +21,7 @@ fn default_client() -> Client {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     Client::init(options)
 }
@@ -35,7 +35,7 @@ fn default_get_request(url: String) -> Request {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     }
 }
@@ -78,7 +78,7 @@ fn test_put() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -110,7 +110,7 @@ fn test_patch() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -139,7 +139,7 @@ fn test_custom_headers() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -179,7 +179,7 @@ fn test_querystring_params() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -219,7 +219,7 @@ fn test_form_params() {
         ],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: Some("application/x-www-form-urlencoded".to_string()),
     };
     let response = client.execute(&request, 0).unwrap();
@@ -264,7 +264,7 @@ fn test_follow_location() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let response = client.execute(&request, 0).unwrap();
@@ -299,7 +299,7 @@ fn test_max_redirect() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/redirect".to_string());
@@ -349,7 +349,7 @@ fn test_multipart_form_data() {
             }),
         ],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: Some("multipart/form-data".to_string()),
     };
     let response = client.execute(&request, 0).unwrap();
@@ -378,7 +378,7 @@ fn test_post_bytes() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: b"Hello World!".to_vec(),
+        body: Body::Binary(b"Hello World!".to_vec()),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -402,7 +402,7 @@ fn test_expect() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: b"data".to_vec(),
+        body: Body::Text("data".to_string()),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -424,7 +424,7 @@ fn test_basic_authentication() {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
         user: Some("bob:secret".to_string()),
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = Request {
@@ -435,7 +435,7 @@ fn test_basic_authentication() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -452,7 +452,7 @@ fn test_basic_authentication() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -490,7 +490,7 @@ fn test_error_fail_to_connect() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -511,7 +511,7 @@ fn test_error_could_not_resolve_proxy_name() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -532,7 +532,7 @@ fn test_error_ssl() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("https://localhost:8001/hello".to_string());
@@ -558,7 +558,7 @@ fn test_timeout() {
         timeout: Duration::from_millis(100),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/timeout".to_string());
@@ -579,7 +579,7 @@ fn test_accept_encoding() {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(300),
         user: None,
-        accept_encoding: Some("gzip".to_string()),
+        compressed: true,
     };
     let mut client = Client::init(options);
     let request = Request {
@@ -590,7 +590,7 @@ fn test_accept_encoding() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -614,7 +614,7 @@ fn test_connect_timeout() {
         timeout: Default::default(),
         connect_timeout: Duration::from_secs(1),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://10.0.0.0".to_string());
@@ -643,7 +643,7 @@ fn test_cookie() {
             name: "cookie1".to_string(),
             value: "valueA".to_string(),
         }],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
 
@@ -659,7 +659,7 @@ fn test_cookie() {
         form: vec![],
         multipart: vec![],
         cookies: vec![],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -686,7 +686,7 @@ fn test_multiple_request_cookies() {
                 value: "Bill".to_string(),
             },
         ],
-        body: vec![],
+        body: Body::Binary(vec![]),
         content_type: None,
     };
     let response = client.execute(&request, 0).unwrap();
@@ -738,7 +738,7 @@ fn test_cookie_file() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request(
@@ -767,7 +767,7 @@ fn test_proxy() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/proxy".to_string());
@@ -790,7 +790,7 @@ fn test_insecure() {
         timeout: Default::default(),
         connect_timeout: Default::default(),
         user: None,
-        accept_encoding: None,
+        compressed: false,
     };
     let mut client = Client::init(options);
     let request = default_get_request("https://localhost:8001/hello".to_string());
