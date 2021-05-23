@@ -1,0 +1,3 @@
+curl 'http://localhost:8000/assert-status-code'
+curl 'http://localhost:8000/assert-status-code'
+curl 'http://localhost:8000/assert-status-code'

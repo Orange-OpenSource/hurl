@@ -1,0 +1,7 @@
+curl 'http://localhost:8000/default-headers'
+curl 'http://localhost:8000/default-headers' -H 'User-Agent: hurl/1.0' -H 'Host: localhost:8000'
+curl 'http://localhost:8000/default-headers' -H 'User-Agent: hurl/1.0' -H 'Host: localhost:8000'
+curl 'http://localhost:8000/custom-headers' -H 'Fruit: Raspberry' -H 'Fruit: Apple' -H 'Fruit: Banana' -H 'Fruit: Grape' -H 'Color: Green'
+curl 'http://localhost:8000/custom-headers-utf8' -H 'Beverage: café'
+curl 'http://localhost:8000/custom-headers-quote' -H $'Header1: \''
+curl 'http://localhost:8000/response-headers'

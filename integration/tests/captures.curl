@@ -1,0 +1,3 @@
+curl 'http://localhost:8000/captures'
+curl 'http://localhost:8000/captures-check?param1=value1&param2=Bob'
+curl 'http://localhost:8000/captures-json'

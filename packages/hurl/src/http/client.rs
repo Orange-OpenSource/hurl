@@ -21,12 +21,13 @@ use std::str;
 use curl::easy;
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
-use std::time::Duration;
 use std::time::Instant;
 
 use super::core::*;
+use super::options::ClientOptions;
 use super::request::*;
 use super::response::*;
+use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HttpError {
@@ -52,21 +53,6 @@ pub struct Client {
     // hurl needs the return the headers only for the second (last) response)
 }
 
-#[derive(Debug, Clone)]
-pub struct ClientOptions {
-    pub follow_location: bool,
-    pub max_redirect: Option<usize>,
-    pub cookie_input_file: Option<String>,
-    pub proxy: Option<String>,
-    pub no_proxy: Option<String>,
-    pub verbose: bool,
-    pub insecure: bool,
-    pub timeout: Duration,
-    pub connect_timeout: Duration,
-    pub user: Option<String>,
-    pub compressed: bool,
-}
-
 impl Client {
     ///
     /// Init HTTP hurl client
@@ -75,7 +61,7 @@ impl Client {
         let mut h = easy::Easy::new();
 
         // Set handle attributes
-        // that are not affected by rest
+        // that are not affected by reset
 
         // Activate cookie storage
         // with or without persistence (empty string)
@@ -510,6 +496,67 @@ impl Client {
         }
         self.handle.cookie_list("ALL").unwrap();
     }
+
+    ///
+    /// return curl command-line for the http request run by the client
+    ///
+    pub fn curl_command_line(&mut self, http_request: &Request) -> String {
+        let mut arguments = vec!["curl".to_string()];
+        arguments.append(&mut http_request.curl_args(self.options.context_dir.clone()));
+
+        let cookies = all_cookies(self.get_cookie_storage(), http_request);
+        if !cookies.is_empty() {
+            arguments.push("--cookie".to_string());
+            arguments.push(format!(
+                "'{}'",
+                cookies
+                    .iter()
+                    .map(|c| c.to_string())
+                    .collect::<Vec<String>>()
+                    .join("; ")
+            ));
+        }
+        arguments.append(&mut self.options.curl_args());
+        arguments.join(" ")
+    }
+}
+
+///
+/// return cookies from both cookies from the cookie storage and the request
+///
+pub fn all_cookies(cookie_storage: Vec<Cookie>, request: &Request) -> Vec<RequestCookie> {
+    let mut cookies = request.cookies.clone();
+    cookies.append(
+        &mut cookie_storage
+            .iter()
+            .filter(|c| c.expires != "1") // cookie expired when libcurl set value to 1?
+            .filter(|c| match_cookie(c, request.url.as_str()))
+            .map(|c| RequestCookie {
+                name: (*c).name.clone(),
+                value: c.value.clone(),
+            })
+            .collect(),
+    );
+    cookies
+}
+
+///
+/// Match cookie for a given url
+///
+pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
+    // is it possible to do it with libcurl?
+
+    let url = Url::parse(url).expect("valid url");
+    if let Some(domain) = url.domain() {
+        if cookie.include_subdomain == "FALSE" {
+            if cookie.domain != domain {
+                return false;
+            }
+        } else if !domain.ends_with(cookie.domain.as_str()) {
+            return false;
+        }
+    }
+    url.path().starts_with(cookie.path.as_str())
 }
 
 impl Header {
@@ -599,5 +646,34 @@ mod tests {
         assert_eq!(lines.get(0).unwrap().as_str(), "GET /hello HTTP/1.1");
         assert_eq!(lines.get(1).unwrap().as_str(), "Host: localhost:8000");
         assert_eq!(lines.get(2).unwrap().as_str(), "");
+    }
+
+    #[test]
+    fn test_match_cookie() {
+        let cookie = Cookie {
+            domain: "example.com".to_string(),
+            include_subdomain: "FALSE".to_string(),
+            path: "/".to_string(),
+            https: "".to_string(),
+            expires: "".to_string(),
+            name: "".to_string(),
+            value: "".to_string(),
+        };
+        assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
+        assert_eq!(match_cookie(&cookie, "http://sub.example.com/tata"), false);
+        assert_eq!(match_cookie(&cookie, "http://toto/tata"), false);
+
+        let cookie = Cookie {
+            domain: "example.com".to_string(),
+            include_subdomain: "TRUE".to_string(),
+            path: "/toto".to_string(),
+            https: "".to_string(),
+            expires: "".to_string(),
+            name: "".to_string(),
+            value: "".to_string(),
+        };
+        assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
+        assert_eq!(match_cookie(&cookie, "http://sub.example.com/toto"), true);
+        assert_eq!(match_cookie(&cookie, "http://example.com/tata"), false);
     }
 }

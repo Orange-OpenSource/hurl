@@ -1,0 +1,2 @@
+curl 'http://localhost:8000/post-xml' -H 'Content-Type: application/xml' --data $'<?xml version="1.0"?>\n<drink>café</drink>'
+curl 'http://localhost:8000/post-xml-no-prolog' -H 'Content-Type: application/xml' --data '<drink>café</drink>'

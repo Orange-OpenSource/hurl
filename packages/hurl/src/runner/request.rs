@@ -99,6 +99,12 @@ pub fn eval_request(
     }) = request.body
     {
         Some("application/json".to_string())
+    } else if let Some(Body {
+        value: Bytes::Xml { .. },
+        ..
+    }) = request.body
+    {
+        Some("application/xml".to_string())
     } else {
         None
     };

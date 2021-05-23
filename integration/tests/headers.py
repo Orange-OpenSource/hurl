@@ -4,7 +4,7 @@ from tests import app
 
 @app.route("/default-headers")
 def default_headers():
-    assert 'hurl' in request.headers['User-Agent']
+    assert 'hurl' in request.headers['User-Agent'] or 'curl' in request.headers['User-Agent']
     assert request.headers['Host'] == 'localhost:8000'
     assert 'Content-Length' not in request.headers
     return ''
@@ -22,6 +22,12 @@ def custom_headers():
 def custom_headers_utf8():
     assert len(request.headers['Beverage']) == 5
     assert request.headers['Beverage'] == '\x63\x61\x66\xc3\xa9'
+    return ''
+
+
+@app.route("/custom-headers-quote")
+def custom_headers_quotes():
+    assert request.headers['Header1'] == "'"
     return ''
 
 

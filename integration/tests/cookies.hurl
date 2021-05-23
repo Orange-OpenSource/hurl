@@ -28,7 +28,7 @@ HTTP/1.0 200
 
 GET http://localhost:8000/cookies/assert-that-cookie2-is-valueA-and-valueB
 [Cookies]
-cookie2: ValueB
+cookie2: valueB
 HTTP/1.0 200
 
 

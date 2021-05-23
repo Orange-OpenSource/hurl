@@ -1,0 +1,3 @@
+curl 'http://localhost:8000/post-multilines' -H 'Content-Type:' --data $'name,age\nbob,10\nbill,22\n'
+curl 'http://localhost:8000/get-bob-age'
+curl 'http://localhost:8000/post-multilines' -H 'Content-Type:' --data $'name,age\nbob,10\nbill,22\n'

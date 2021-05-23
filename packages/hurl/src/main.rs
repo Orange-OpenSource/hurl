@@ -32,6 +32,7 @@ use hurl::cli::interactive;
 use hurl::cli::CliError;
 use hurl::html;
 use hurl::http;
+use hurl::http::ClientOptions;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions, Value};
 use hurl_core::ast::{Pos, SourceInfo};
@@ -145,21 +146,6 @@ fn execute(
             let connect_timeout = cli_options.connect_timeout;
             let user = cli_options.user;
             let compressed = cli_options.compressed;
-            let options = http::ClientOptions {
-                follow_location,
-                max_redirect,
-                cookie_input_file,
-                proxy,
-                no_proxy,
-                verbose,
-                insecure,
-                timeout,
-                connect_timeout,
-                user,
-                compressed,
-            };
-            let mut client = http::Client::init(options);
-
             let context_dir = match file_root {
                 None => {
                     if filename == "-" {
@@ -172,6 +158,23 @@ fn execute(
                 }
                 Some(filename) => filename,
             };
+            let options = http::ClientOptions {
+                follow_location,
+                max_redirect,
+                cookie_input_file,
+                proxy,
+                no_proxy,
+                verbose,
+                insecure,
+                timeout,
+                connect_timeout,
+                user,
+                compressed,
+                context_dir: context_dir.clone(),
+            };
+
+            let mut client = http::Client::init(options);
+
             let pre_entry = if cli_options.interactive {
                 interactive::pre_entry
             } else {
@@ -546,7 +549,7 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     };
 
     let timeout = match matches.value_of("max_time") {
-        None => Duration::from_secs(0),
+        None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
@@ -558,7 +561,7 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     };
 
     let connect_timeout = match matches.value_of("connect_timeout") {
-        None => Duration::from_secs(300),
+        None => ClientOptions::default().connect_timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
             Err(_) => {
