@@ -27,6 +27,7 @@ use super::core::*;
 use super::options::ClientOptions;
 use super::request::*;
 use super::response::*;
+use std::str::FromStr;
 use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -452,25 +453,12 @@ impl Client {
         let list = self.handle.cookies().unwrap();
         let mut cookies = vec![];
         for cookie in list.iter() {
-            let line = str::from_utf8(cookie).unwrap().to_string();
-            let fields: Vec<&str> = line.split('\t').collect();
-
-            let domain = fields.get(0).unwrap().to_string();
-            let include_subdomain = fields.get(1).unwrap().to_string();
-            let path = fields.get(2).unwrap().to_string();
-            let https = fields.get(3).unwrap().to_string();
-            let expires = fields.get(4).unwrap().to_string();
-            let name = fields.get(5).unwrap().to_string();
-            let value = fields.get(6).unwrap().to_string();
-            cookies.push(Cookie {
-                domain,
-                include_subdomain,
-                path,
-                https,
-                expires,
-                name,
-                value,
-            });
+            let line = str::from_utf8(cookie).unwrap();
+            if let Ok(cookie) = Cookie::from_str(line) {
+                cookies.push(cookie);
+            } else {
+                eprintln!("warning: line <{}> can not be parsed as cookie", line);
+            }
         }
         cookies
     }
@@ -545,7 +533,6 @@ pub fn all_cookies(cookie_storage: Vec<Cookie>, request: &Request) -> Vec<Reques
 ///
 pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
     // is it possible to do it with libcurl?
-
     let url = Url::parse(url).expect("valid url");
     if let Some(domain) = url.domain() {
         if cookie.include_subdomain == "FALSE" {
@@ -658,6 +645,7 @@ mod tests {
             expires: "".to_string(),
             name: "".to_string(),
             value: "".to_string(),
+            http_only: false,
         };
         assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
         assert_eq!(match_cookie(&cookie, "http://sub.example.com/tata"), false);
@@ -671,6 +659,7 @@ mod tests {
             expires: "".to_string(),
             name: "".to_string(),
             value: "".to_string(),
+            http_only: false,
         };
         assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
         assert_eq!(match_cookie(&cookie, "http://sub.example.com/toto"), true);

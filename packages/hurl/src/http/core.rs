@@ -34,6 +34,7 @@ pub struct Cookie {
     pub expires: String,
     pub name: String,
     pub value: String,
+    pub http_only: bool,
 }
 
 impl fmt::Display for Header {
@@ -46,7 +47,8 @@ impl fmt::Display for Cookie {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            if self.http_only { "#HttpOnly_" } else { "" },
             self.domain,
             self.include_subdomain,
             self.path,
@@ -66,8 +68,12 @@ impl FromStr for Cookie {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
-        let domain = if let Some(&v) = tokens.get(0) {
-            v.to_string()
+        let (http_only, domain) = if let Some(&v) = tokens.get(0) {
+            if let Some(domain) = v.strip_prefix("#HttpOnly_") {
+                (true, domain.to_string())
+            } else {
+                (false, v.to_string())
+            }
         } else {
             return Err(ParseCookieError {});
         };
@@ -99,7 +105,7 @@ impl FromStr for Cookie {
         let value = if let Some(&v) = tokens.get(6) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            "".to_string()
         };
         Ok(Cookie {
             domain,
@@ -109,6 +115,7 @@ impl FromStr for Cookie {
             expires,
             name,
             value,
+            http_only,
         })
     }
 }
@@ -136,9 +143,7 @@ mod tests {
     #[test]
     pub fn parse_cookie_from_str() {
         assert_eq!(
-            Cookie::from_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA")
-                .ok()
-                .unwrap(),
+            Cookie::from_str("httpbin.org\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA").unwrap(),
             Cookie {
                 domain: "httpbin.org".to_string(),
                 include_subdomain: "FALSE".to_string(),
@@ -146,9 +151,24 @@ mod tests {
                 https: "FALSE".to_string(),
                 expires: "0".to_string(),
                 name: "cookie1".to_string(),
-                value: "valueA".to_string()
+                value: "valueA".to_string(),
+                http_only: false,
             }
         );
+        assert_eq!(
+            Cookie::from_str("localhost\tFALSE\t/\tFALSE\t1\tcookie2\t").unwrap(),
+            Cookie {
+                domain: "localhost".to_string(),
+                include_subdomain: "FALSE".to_string(),
+                path: "/".to_string(),
+                https: "FALSE".to_string(),
+                expires: "1".to_string(),
+                name: "cookie2".to_string(),
+                value: "".to_string(),
+                http_only: false,
+            }
+        );
+
         assert_eq!(Cookie::from_str("xxx").err().unwrap(), ParseCookieError {});
     }
 }
