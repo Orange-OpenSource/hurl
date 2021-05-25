@@ -16,35 +16,6 @@
  *
  */
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Html {
-    pub head: Head,
-    pub body: Body,
-}
+pub use self::html::format as format_html;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Head {
-    pub title: String,
-    pub stylesheet: Option<String>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Body {
-    pub children: Vec<Element>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Element {
-    TextElement(String),
-    NodeElement {
-        name: String,
-        attributes: Vec<Attribute>,
-        children: Vec<Element>,
-    },
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Attribute {
-    Class(String),
-    Id(String),
-}
+mod html;

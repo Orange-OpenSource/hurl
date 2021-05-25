@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+body {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    display: block;
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+.status {
+    color: blue;
+}
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+
+.comment {
+    color: dimgray;
+}
+</style></head><body>
+<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-header</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line"><span class="string">Set-Cookie</span><span>:</span> <span class="string">cookie1=value1; Path=/</span></span><span class="line"><span class="string">Set-Cookie</span><span>:</span> <span class="string">cookie2=value2; Path=/</span></span><span class="line section-header">[Asserts]</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Custom"</span> not <span class="predicate-type">exists</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Content-Type"</span> <span class="predicate-type">exists</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Header1"</span> <span class="predicate-type">equals</span> <span class="string">"value1"</span></span><span class="line"><span class="query-type">header</span> <span class="string">"ETag"</span> <span class="predicate-type">equals</span> <span class="string">""33a64df551425fcc55e4d42a148795d9f25f89d4""</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="predicate-type">exists</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="predicate-type">equals</span> <span class="number">3</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="predicate-type">includes</span> <span class="string">"cookie1=value1; Path=/"</span></span><span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> not <span class="predicate-type">includes</span> <span class="string">"cookie4=value4; Path=/"</span></span></div></div></div>
+</body></html>

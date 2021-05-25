@@ -19,20 +19,19 @@
 use std::collections::HashMap;
 use std::env;
 use std::io::prelude::*;
-use std::io::{self, BufReader, Read};
+use std::io::{self, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use atty::Stream;
-use chrono::{DateTime, Local};
 use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
 use hurl::cli::interactive;
 use hurl::cli::CliError;
-use hurl::html;
 use hurl::http;
 use hurl::http::ClientOptions;
+use hurl::report;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions, Value};
 use hurl_core::ast::{Pos, SourceInfo};
@@ -64,6 +63,13 @@ pub struct CliOptions {
 pub fn init_colored() {
     colored::control::set_override(true);
 }
+
+const EXIT_OK: i32 = 0;
+const EXIT_ERROR_COMMANDLINE: i32 = 1;
+const EXIT_ERROR_PARSING: i32 = 2;
+const EXIT_ERROR_RUNTIME: i32 = 3;
+const EXIT_ERROR_ASSERT: i32 = 4;
+const EXIT_ERROR_UNDEFINED: i32 = 127;
 
 #[cfg(target_family = "windows")]
 pub fn init_colored() {
@@ -99,7 +105,7 @@ fn execute(
     match parser::parse_hurl_file(contents.as_str()) {
         Err(e) => {
             log_parser_error(&e, false);
-            std::process::exit(2);
+            std::process::exit(EXIT_ERROR_PARSING);
         }
         Ok(hurl_file) => {
             log_verbose(format!("fail fast: {}", cli_options.fail_fast).as_str());
@@ -517,7 +523,7 @@ pub fn unwrap_or_exit<T>(
         Ok(v) => v,
         Err(e) => {
             log_error_message(false, e.message.as_str());
-            std::process::exit(127);
+            std::process::exit(EXIT_ERROR_UNDEFINED);
         }
     }
 }
@@ -608,7 +614,7 @@ fn main() {
             panic!("panic during printing help");
         }
         println!();
-        std::process::exit(1);
+        std::process::exit(EXIT_ERROR_COMMANDLINE);
     } else if filenames.is_empty() {
         filenames.push("-");
     }
@@ -637,27 +643,12 @@ fn main() {
         }
     };
 
-    for filename in filenames {
-        let contents = if filename == "-" {
-            let mut contents = String::new();
-            if let Err(e) = io::stdin().read_to_string(&mut contents) {
-                log_error_message(
-                    false,
-                    format!("Input stream can not be read - {}", e.to_string()).as_str(),
-                );
-                std::process::exit(2);
-            }
-            contents
-        } else {
-            match cli::read_to_string(&filename) {
-                Ok(s) => s,
-                Err(e) => {
-                    log_error_message(
-                        false,
-                        format!("Input stream can not be read - {}", e.message).as_str(),
-                    );
-                    std::process::exit(2);
-                }
+    for filename in filenames.clone() {
+        let contents = match cli::read_to_string(filename) {
+            Ok(v) => v,
+            Err(e) => {
+                log_error_message(false, e.message.as_str());
+                std::process::exit(EXIT_ERROR_PARSING);
             }
         };
 
@@ -707,7 +698,7 @@ fn main() {
                                     .fixme()
                                     .as_str(),
                                 );
-                                std::process::exit(3);
+                                std::process::exit(EXIT_ERROR_RUNTIME);
                             }
                         }
                     } else {
@@ -744,7 +735,7 @@ fn main() {
                     false,
                     format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
                 );
-                std::process::exit(127)
+                std::process::exit(EXIT_ERROR_UNDEFINED)
             }
             Ok(file) => file,
         };
@@ -754,7 +745,7 @@ fn main() {
                 false,
                 format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
             );
-            std::process::exit(127)
+            std::process::exit(EXIT_ERROR_UNDEFINED)
         }
     }
 
@@ -762,8 +753,12 @@ fn main() {
         log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
         unwrap_or_exit(
             &log_error_message,
-            write_html_report(dir_path, hurl_results.clone()),
+            report::write_html_report(dir_path.clone(), hurl_results.clone()),
         );
+
+        for filename in filenames {
+            unwrap_or_exit(&log_error_message, format_html(filename, dir_path.clone()));
+        }
     }
 
     if let Some(file_path) = cookies_output_file {
@@ -797,12 +792,42 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
         }
     }
     if count_errors_runner > 0 {
-        3
+        EXIT_ERROR_RUNTIME
     } else if count_errors_assert > 0 {
-        4
+        EXIT_ERROR_ASSERT
     } else {
-        0
+        EXIT_OK
     }
+}
+
+fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
+    eprintln!("copy/format to html {}", input_file);
+    let file_path = dir_path.join(format!("{}.html", input_file));
+    eprintln!("file_path= {:?}", file_path);
+    let parent = file_path.parent().expect("a parent");
+    eprintln!("parent={:?}", parent);
+    std::fs::create_dir_all(parent).unwrap();
+
+    eprintln!("create dir all ok");
+    let mut file = match std::fs::File::create(&file_path) {
+        Err(why) => {
+            return Err(CliError {
+                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            });
+        }
+        Ok(file) => file,
+    };
+    let content = cli::read_to_string(input_file).expect("readable hurl file");
+    let hurl_file = parser::parse_hurl_file(content.as_str()).expect("valid hurl file");
+
+    let s = hurl_core::format::format_html(hurl_file, true);
+
+    if let Err(why) = file.write_all(s.as_bytes()) {
+        return Err(CliError {
+            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+        });
+    }
+    Ok(())
 }
 
 fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CliError> {
@@ -878,136 +903,4 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
         });
     }
     Ok(())
-}
-
-fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
-    //let now: DateTime<Utc> = Utc::now();
-    let now: DateTime<Local> = Local::now();
-    let html = create_html_index(now.to_rfc2822(), hurl_results);
-    let s = html.render();
-
-    let file_path = dir_path.join("index.html");
-    let mut file = match std::fs::File::create(&file_path) {
-        Err(why) => {
-            return Err(CliError {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-            });
-        }
-        Ok(file) => file,
-    };
-    if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CliError {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-        });
-    }
-
-    let file_path = dir_path.join("report.css");
-    let mut file = match std::fs::File::create(&file_path) {
-        Err(why) => {
-            return Err(CliError {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-            });
-        }
-        Ok(file) => file,
-    };
-    if let Err(why) = file.write_all(include_bytes!("report.css")) {
-        return Err(CliError {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-        });
-    }
-    Ok(())
-}
-
-fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
-    let head = html::Head {
-        title: "Hurl Report".to_string(),
-        stylesheet: Some("report.css".to_string()),
-    };
-
-    let body = html::Body {
-        children: vec![
-            html::Element::NodeElement {
-                name: "h2".to_string(),
-                attributes: vec![],
-                children: vec![html::Element::TextElement("Hurl Report".to_string())],
-            },
-            html::Element::NodeElement {
-                name: "div".to_string(),
-                attributes: vec![html::Attribute::Class("date".to_string())],
-                children: vec![html::Element::TextElement(now)],
-            },
-            html::Element::NodeElement {
-                name: "table".to_string(),
-                attributes: vec![],
-                children: vec![
-                    create_html_table_header(),
-                    create_html_table_body(hurl_results),
-                ],
-            },
-        ],
-    };
-    html::Html { head, body }
-}
-
-fn create_html_table_header() -> html::Element {
-    html::Element::NodeElement {
-        name: "thead".to_string(),
-        attributes: vec![],
-        children: vec![html::Element::NodeElement {
-            name: "tr".to_string(),
-            attributes: vec![],
-            children: vec![
-                html::Element::NodeElement {
-                    name: "td".to_string(),
-                    attributes: vec![],
-                    children: vec![html::Element::TextElement("filename".to_string())],
-                },
-                html::Element::NodeElement {
-                    name: "td".to_string(),
-                    attributes: vec![],
-                    children: vec![html::Element::TextElement("duration".to_string())],
-                },
-            ],
-        }],
-    }
-}
-
-fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::Element {
-    let children = hurl_results
-        .iter()
-        .map(|result| create_html_result(result.clone()))
-        .collect();
-
-    html::Element::NodeElement {
-        name: "tbody".to_string(),
-        attributes: vec![],
-        children,
-    }
-}
-
-fn create_html_result(result: HurlResult) -> html::Element {
-    let status = if result.success {
-        "success".to_string()
-    } else {
-        "failure".to_string()
-    };
-    html::Element::NodeElement {
-        name: "tr".to_string(),
-        attributes: vec![],
-        children: vec![
-            html::Element::NodeElement {
-                name: "td".to_string(),
-                attributes: vec![html::Attribute::Class(status)],
-                children: vec![html::Element::TextElement(result.filename.clone())],
-            },
-            html::Element::NodeElement {
-                name: "td".to_string(),
-                attributes: vec![],
-                children: vec![html::Element::TextElement(format!(
-                    "{}s",
-                    result.time_in_ms as f64 / 1000.0
-                ))],
-            },
-        ],
-    }
 }

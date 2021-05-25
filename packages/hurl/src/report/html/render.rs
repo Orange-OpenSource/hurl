@@ -83,7 +83,8 @@ impl Attribute {
     fn render(self) -> String {
         match self {
             Attribute::Class(s) => format!("class=\"{}\"", s),
-            Attribute::Id(s) => format!("id=\"{}\"", s),
+            //Attribute::Id(s) => format!("id=\"{}\"", s),
+            Attribute::Href(s) => format!("href=\"{}\"", s),
         }
     }
 }

@@ -221,7 +221,7 @@ fn main() {
                     "json" => format::format_json(hurl_file),
                     "html" => {
                         let standalone = matches.is_present("standalone");
-                        format::format_html(hurl_file, standalone)
+                        hurl_core::format::format_html(hurl_file, standalone)
                     }
                     "ast" => format!("{:#?}", hurl_file),
                     _ => {

@@ -17,5 +17,5 @@ strict = []
 [dependencies]
 float-cmp = "0.6.0"
 sxd-document = "0.3.2"
-
+regex = "1.1.0"
 

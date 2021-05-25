@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+body {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    display: block;
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+.status {
+    color: blue;
+}
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+
+.comment {
+    color: dimgray;
+}
+</style></head><body>
+<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="comment"># -- COMPRESSED HAS NO EFFECT ON NON-COMPRESSED</span></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">12</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line">```Hello World!```</span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">32</span></span><span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">gzip</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line">```Hello World!```</span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">20</span></span><span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">deflate</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line">```Hello World!```</span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span><span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line">```Hello World!```</span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_identity</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span><span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br, identity</span></span><span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span><span class="line">```Hello World!```</span></div></div></div>
+</body></html>
