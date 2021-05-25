@@ -791,6 +791,7 @@ fn test_cookie_storage() {
             expires: "0".to_string(),
             name: "cookie2".to_string(),
             value: "valueA".to_string(),
+            http_only: false
         }
     );
 
