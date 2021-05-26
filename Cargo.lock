@@ -333,6 +333,7 @@ dependencies = [
  "atty",
  "base64",
  "brotli",
+ "cc",
  "chrono",
  "clap",
  "colored",
@@ -419,9 +420,9 @@ checksum = "3286f09f7d4926fc486334f28d8d2e6ebe4f7f9994494b6dab27ddfad2c9b11b"
 
 [[package]]
 name = "libxml"
-version = "0.2.15"
+version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13d529280405174bd6f363d0f8a3086c27e6e60cc0efbc18cf94338f002f461b"
+checksum = "496410f67173a59f4e98954c4e7fabe96f6707d46c5f781eb01d96b2703ea6fc"
 dependencies = [
  "libc",
  "pkg-config",
