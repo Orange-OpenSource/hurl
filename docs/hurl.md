@@ -38,7 +38,7 @@ $ echo GET http://httpbin.org/get | hurl
 ```
 
 
-Output goes to stdout by default.  For output to a file, use the -o option:
+Output goes to stdout by default. For output to a file, use the -o option:
 
 ```
 $ hurl -o output input.hurl
@@ -46,7 +46,7 @@ $ hurl -o output input.hurl
 
 
 
-By default, Hurl executes all the HTTP requests and output the response body of the last http call.
+By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
 
 
