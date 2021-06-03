@@ -17,7 +17,6 @@
  */
 
 // unique entry point to libxml
-extern crate libxml;
 
 use std::ffi::CStr;
 
@@ -61,14 +60,24 @@ pub fn eval_html(html: String, expr: String) -> Result<Value, XpathError> {
     }
 }
 
+extern "C" {
+    pub fn silentErrorFunc(
+        ctx: *mut ::std::os::raw::c_void,
+        msg: *const ::std::os::raw::c_char,
+        ...
+    );
+}
+
 pub fn eval(doc: libxml::tree::Document, expr: String) -> Result<Value, XpathError> {
     let context = match libxml::xpath::Context::new(&doc) {
         Ok(context) => context,
         _ => panic!("error setting context in xpath module"),
     };
+
     unsafe {
-        libxml::bindings::initGenericErrorDefaultFunc(&mut None);
+        libxml::bindings::initGenericErrorDefaultFunc(&mut Some(silentErrorFunc));
     }
+
     let result = match context.evaluate(expr.as_str()) {
         Ok(object) => object,
         Err(_) => return Err(XpathError::Eval {}),
@@ -123,7 +132,7 @@ mod tests {
         assert_eq!(eval_xml(xml.clone(), xpath).unwrap(), Value::from_f64(2.0));
 
         let xpath = String::from("number(//food/banana/@price)");
-        assert_eq!(eval_xml(xml.clone(), xpath).unwrap(), Value::from_f64(1.1));
+        assert_eq!(eval_xml(xml, xpath).unwrap(), Value::from_f64(1.1));
     }
 
     #[test]
@@ -181,7 +190,7 @@ mod tests {
         );
         let xpath = String::from("normalize-space(/html/head/meta/@charset)");
         assert_eq!(
-            eval_html(html.clone(), xpath).unwrap(),
+            eval_html(html, xpath).unwrap(),
             Value::String(String::from("UTF-8"))
         );
     }
@@ -191,6 +200,13 @@ mod tests {
         let html = String::from(r#"<html></html>"#);
         //let xpath = String::from("boolean(count(//a[contains(@href,'xxx')]))");
         let xpath = String::from("boolean(count(//a[contains(@href,'xxx')]))");
-        assert_eq!(eval_html(html.clone(), xpath).unwrap(), Value::Bool(false));
+        assert_eq!(eval_html(html, xpath).unwrap(), Value::Bool(false));
+    }
+
+    #[test]
+    fn test_unregistered_function() {
+        let html = String::from(r#"<html></html>"#);
+        let xpath = String::from("strong(//head/title)");
+        assert_eq!(eval_html(html, xpath).err().unwrap(), XpathError::Eval);
     }
 }
