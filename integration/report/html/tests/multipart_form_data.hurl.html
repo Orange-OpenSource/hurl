@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+body {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    display: block;
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+.status {
+    color: blue;
+}
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+
+.comment {
+    color: dimgray;
+}
+</style></head><body>
+<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multipart-form-data</span></span></div><span class="line section-header">[MultipartFormData]</span></span><span class="line"><span class="string">key1</span><span>:</span> <span class="string">value1</span></span><span class="line"><span class="string"><span class="string">upload1</span></span>: file,<span class="string">data.txt</span>;</span><span class="line"><span class="string"><span class="string">upload2</span></span>: file,<span class="string">data.html</span>;</span><span class="line"><span class="string"><span class="string">upload3</span></span>: file,<span class="string">data.txt</span>; <span class="string">text/html</span></span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><span class="line"></span><span class="line"></span><span class="line"></span></div>
+</body></html>

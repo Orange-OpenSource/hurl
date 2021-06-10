@@ -16,11 +16,36 @@
  *
  */
 
-pub use self::json::format as format_json;
-pub use self::text::format as format_text;
-pub use self::token::{Token, Tokenizable};
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Html {
+    pub head: Head,
+    pub body: Body,
+}
 
-mod json;
-mod serialize_json;
-mod text;
-mod token;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Head {
+    pub title: String,
+    pub stylesheet: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Body {
+    pub children: Vec<Element>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Element {
+    TextElement(String),
+    NodeElement {
+        name: String,
+        attributes: Vec<Attribute>,
+        children: Vec<Element>,
+    },
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Attribute {
+    Class(String),
+    //Id(String),
+    Href(String),
+}

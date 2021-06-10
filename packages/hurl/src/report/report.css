@@ -6,11 +6,18 @@ thead {
     font-weight: bolder;
 }
 
-.success {
+td {
+    padding: 3px 5px;
+}
+
+.summary {
+    padding: 10px;
+}
+.success, .success a {
     color: green;
 }
 
-.failure {
+.failure, .failure a {
     color: red;
 }
 

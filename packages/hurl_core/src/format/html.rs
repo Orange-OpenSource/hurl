@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-use super::text::format_token;
-use super::Tokenizable;
-use hurl_core::ast::*;
+//use hurlfmt::format::text::format_token;
+//use hurlfmt::format::token::Tokenizable;
+use crate::ast::*;
 
 pub trait Htmlable {
     fn to_html(&self) -> String;
@@ -704,12 +704,9 @@ fn xml_escape(s: String) -> String {
         .replace('&', "&amp;")
 }
 
-impl Htmlable for hurl_core::ast::JsonValue {
+impl Htmlable for JsonValue {
     fn to_html(&self) -> String {
-        let mut s = String::from("");
-        for token in self.tokenize() {
-            s.push_str(format_token(token, false).as_str());
-        }
+        let s = self.to_string();
         let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
             .unwrap()
             .split(s.as_str())

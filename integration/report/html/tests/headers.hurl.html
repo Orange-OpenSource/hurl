@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+body {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    display: block;
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+.status {
+    color: blue;
+}
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+
+.comment {
+    color: dimgray;
+}
+</style></head><body>
+<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span></div><span class="line"><span class="string">User-Agent</span><span>:</span> <span class="string">hurl/1.0</span></span><span class="line"><span class="string">Host</span><span>:</span> <span class="string">localhost:8000</span>  <span class="comment"># comment</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/default-headers</span></span></div><span class="line"><span class="string">User-Agent</span><span>:</span> <span class="string">hurl/1.0</span></span><span class="line"><span class="string">Host</span><span>:</span> <span class="string">localhost:8000</span>  <span class="comment"># comment</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers</span></span></div><span class="line"><span class="string">Fruit</span><span>:</span> <span class="string">Raspberry</span></span><span class="line"><span class="string">Fruit</span><span>:</span> <span class="string">Apple</span></span><span class="line"><span class="string">Fruit</span><span>:</span> <span class="string">Banana</span></span><span class="line"><span class="string">Fruit</span><span>:</span> <span class="string">Grape</span></span><span class="line"><span class="string">Color</span><span>:</span> <span class="string">Green</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-utf8</span></span></div><span class="line"><span class="string">Beverage</span><span>:</span> <span class="string">café</span>  <span class="comment"># send the utf8 string - expected to be decoded as ascii in the server side</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/custom-headers-quote</span></span></div><span class="line"><span class="string">Header1</span><span>:</span> <span class="string">'</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/response-headers</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line"><span class="string">Beverage</span><span>:</span> <span class="string">cafe</span>  <span class="comment"># TBC send utf8</span></span></div></div></div>
+</body></html>
