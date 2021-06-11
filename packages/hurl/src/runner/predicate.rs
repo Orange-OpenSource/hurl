@@ -379,30 +379,26 @@ fn eval_something(
         PredicateFuncValue::CountEqual {
             value: expected_value,
             ..
-        } => {
-            let actual = value.clone().display();
-            let expected = format!("count equals to <{}>", expected_value);
-            match value {
-                Value::List(values) => Ok(AssertResult {
-                    success: values.len() as u64 == expected_value,
-                    actual,
-                    expected,
-                    type_mismatch: false,
-                }),
-                Value::Nodeset(n) => Ok(AssertResult {
-                    success: n as u64 == expected_value,
-                    actual,
-                    expected,
-                    type_mismatch: false,
-                }),
-                _ => Ok(AssertResult {
-                    success: false,
-                    actual,
-                    expected,
-                    type_mismatch: true,
-                }),
-            }
-        }
+        } => match value {
+            Value::List(values) => Ok(AssertResult {
+                success: values.len() as u64 == expected_value,
+                actual: values.len().to_string(),
+                expected: expected_value.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Nodeset(n) => Ok(AssertResult {
+                success: n as u64 == expected_value,
+                actual: n.to_string(),
+                expected: expected_value.to_string(),
+                type_mismatch: false,
+            }),
+            _ => Ok(AssertResult {
+                success: false,
+                actual: value.clone().display(),
+                expected: format!("count equals to <{}>", expected_value),
+                type_mismatch: true,
+            }),
+        },
 
         // starts with string
         PredicateFuncValue::StartWith {
@@ -1303,8 +1299,8 @@ mod tests {
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
-        assert_eq!(assert_result.actual.as_str(), "[]");
-        assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+        assert_eq!(assert_result.actual.as_str(), "0");
+        assert_eq!(assert_result.expected.as_str(), "1");
 
         let assert_result = eval_something(
             PredicateFunc {
@@ -1320,8 +1316,8 @@ mod tests {
         .unwrap();
         assert_eq!(assert_result.success, false);
         assert_eq!(assert_result.type_mismatch, false);
-        assert_eq!(assert_result.actual.as_str(), "nodeset of size <3>");
-        assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+        assert_eq!(assert_result.actual.as_str(), "3");
+        assert_eq!(assert_result.expected.as_str(), "1");
     }
 
     #[test]
@@ -1345,8 +1341,8 @@ mod tests {
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
-        assert_eq!(assert_result.actual.as_str(), "[int <1>]");
-        assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+        assert_eq!(assert_result.actual.as_str(), "1");
+        assert_eq!(assert_result.expected.as_str(), "1");
 
         let assert_result = eval_something(
             PredicateFunc {
@@ -1362,8 +1358,8 @@ mod tests {
         .unwrap();
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
-        assert_eq!(assert_result.actual.as_str(), "nodeset of size <1>");
-        assert_eq!(assert_result.expected.as_str(), "count equals to <1>");
+        assert_eq!(assert_result.actual.as_str(), "1");
+        assert_eq!(assert_result.expected.as_str(), "1");
     }
 
     #[test]

@@ -13,3 +13,4 @@ jsonpath "$.message" matches "hi"
 jsonpath "$.message" countEquals 1
 jsonpath "$.toto" exists
 jsonpath "$.message" not exists
+jsonpath "$.list" countEquals 2
