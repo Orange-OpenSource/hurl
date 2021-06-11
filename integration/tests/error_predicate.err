@@ -87,3 +87,11 @@ error: Assert Failure
    |   expected: not something
    |
 
+error: Assert Failure
+  --> tests/error_predicate.hurl:16:0
+   |
+16 | jsonpath "$.list" countEquals 2
+   |   actual:   3
+   |   expected: 2
+   |
+
