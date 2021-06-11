@@ -94,20 +94,12 @@ impl Serialize for Request {
     where
         S: Serializer,
     {
-        // 3 is the number of fields in the struct.
-        let mut state = serializer.serialize_struct("??", 3)?;
-        state.serialize_field("method", &self.clone().method.to_string())?;
+        let mut state = serializer.serialize_struct("Request", 5)?;
+        state.serialize_field("method", &self.clone().method)?;
         state.serialize_field("url", &self.clone().url)?;
-        state.serialize_field("queryString", &self.clone().querystring)?;
         state.serialize_field("headers", &self.clone().headers)?;
-        state.serialize_field("cookies", &self.clone().cookies)?;
-        state.serialize_field("multipartFormData", &self.clone().multipart)?;
-
-        if !self.clone().form.is_empty() {
-            state.serialize_field("form", &self.clone().form)?;
-        }
-        state.serialize_field("body", &base64::encode(&self.body.bytes()))?;
-
+        state.serialize_field("cookies", &self.clone().cookies())?;
+        state.serialize_field("queryString", &self.clone().query_string_params())?;
         state.end()
     }
 }
@@ -118,7 +110,7 @@ impl Serialize for Response {
         S: Serializer,
     {
         // 3 is the number of fields in the struct.
-        let mut state = serializer.serialize_struct("??", 3)?;
+        let mut state = serializer.serialize_struct("Response", 3)?;
         state.serialize_field("httpVersion", &self.clone().version)?;
         state.serialize_field("status", &self.clone().status)?;
         state.serialize_field("cookies", &self.clone().cookies())?;

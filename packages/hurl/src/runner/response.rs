@@ -212,7 +212,7 @@ pub fn eval_asserts(
 
 pub fn eval_captures(
     response: Response,
-    http_response: http::Response,
+    http_response: &http::Response,
     variables: &HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, Error> {
     let mut captures = vec![];
@@ -321,7 +321,7 @@ mod tests {
         assert_eq!(
             eval_captures(
                 user_response(),
-                http::xml_two_users_http_response(),
+                &http::xml_two_users_http_response(),
                 &variables,
             )
             .unwrap(),

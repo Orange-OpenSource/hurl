@@ -124,7 +124,7 @@ pub fn run(
             break;
         }
 
-        let entry_result = entry::run(
+        let entry_results = entry::run(
             entry,
             http_client,
             entry_index,
@@ -133,12 +133,15 @@ pub fn run(
             &log_verbose,
             &log_error_message,
         );
-        entries.push(entry_result.clone());
-        for e in entry_result.errors.clone() {
-            log_error(&e, false);
+
+        for entry_result in entry_results.clone() {
+            for e in entry_result.errors.clone() {
+                log_error(&e, false);
+            }
+            entries.push(entry_result.clone());
         }
         let exit = (options.post_entry)();
-        if exit || (options.fail_fast && !entry_result.errors.is_empty()) {
+        if exit || (options.fail_fast && !entry_results.last().unwrap().errors.is_empty()) {
             break;
         }
     }

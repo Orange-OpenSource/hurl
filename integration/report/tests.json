@@ -6,11 +6,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-base64",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -31,7 +42,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -41,7 +52,7 @@
       }
     ],
     "success": true,
-    "time": 5,
+    "time": 4,
     "cookies": []
   },
   {
@@ -51,11 +62,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-header",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -112,7 +134,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -122,7 +144,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 6,
     "cookies": []
   },
   {
@@ -132,11 +154,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -157,7 +190,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -169,11 +202,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json/index",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -194,7 +238,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -206,11 +250,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -231,7 +286,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -243,11 +298,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-json/list",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -268,7 +334,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -278,7 +344,7 @@
       }
     ],
     "success": true,
-    "time": 23,
+    "time": 26,
     "cookies": []
   },
   {
@@ -288,11 +354,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-match",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -313,7 +390,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -323,7 +400,7 @@
       }
     ],
     "success": true,
-    "time": 21,
+    "time": 19,
     "cookies": []
   },
   {
@@ -333,11 +410,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-regex",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -358,7 +446,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -368,7 +456,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 7,
     "cookies": []
   },
   {
@@ -378,11 +466,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-status-code",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -403,7 +502,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -415,11 +514,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-status-code",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -440,7 +550,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -452,11 +562,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-status-code",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -477,7 +598,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -487,7 +608,7 @@
       }
     ],
     "success": true,
-    "time": 10,
+    "time": 14,
     "cookies": []
   },
   {
@@ -497,11 +618,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-xpath",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -522,7 +654,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -532,7 +664,7 @@
       }
     ],
     "success": true,
-    "time": 4,
+    "time": 6,
     "cookies": []
   },
   {
@@ -542,11 +674,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/basic-authentication",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Authorization",
+              "value": "Basic Ym9iOnNlY3JldA=="
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -567,7 +714,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -577,7 +724,7 @@
       }
     ],
     "success": true,
-    "time": 5,
+    "time": 3,
     "cookies": []
   },
   {
@@ -587,11 +734,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/utf8_bom",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -612,7 +770,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -622,7 +780,7 @@
       }
     ],
     "success": true,
-    "time": 4,
+    "time": 8,
     "cookies": []
   },
   {
@@ -632,11 +790,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/bytes",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -657,7 +826,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -667,7 +836,7 @@
       }
     ],
     "success": true,
-    "time": 4,
+    "time": 5,
     "cookies": []
   },
   {
@@ -677,11 +846,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/capture-and-assert",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -702,7 +882,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -712,7 +892,7 @@
       }
     ],
     "success": true,
-    "time": 5,
+    "time": 7,
     "cookies": []
   },
   {
@@ -722,11 +902,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/captures",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -755,7 +946,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -766,7 +957,22 @@
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/captures-check",
+          "url": "http://localhost:8000/captures-check?param1=value1&param2=Bob",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
           "queryString": [
             {
               "name": "param1",
@@ -776,11 +982,7 @@
               "name": "param2",
               "value": "Bob"
             }
-          ],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          ]
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -801,7 +1003,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -813,11 +1015,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/captures-json",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -838,7 +1051,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -848,7 +1061,7 @@
       }
     ],
     "success": true,
-    "time": 17,
+    "time": 12,
     "cookies": []
   },
   {
@@ -865,11 +1078,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/compressed/none",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -890,7 +1118,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -902,11 +1130,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/compressed/gzip",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -931,7 +1174,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -943,11 +1186,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/compressed/zlib",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -972,7 +1230,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -984,11 +1242,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/compressed/brotli",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1013,7 +1286,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1025,11 +1298,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/compressed/brotli_identity",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1054,7 +1342,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1064,7 +1352,7 @@
       }
     ],
     "success": true,
-    "time": 19,
+    "time": 16,
     "cookies": []
   },
   {
@@ -1074,11 +1362,31 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookie_file",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA"
+            }
+          ],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1099,7 +1407,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1109,7 +1417,7 @@
       }
     ],
     "success": true,
-    "time": 4,
+    "time": 7,
     "cookies": []
   },
   {
@@ -1119,16 +1427,31 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-request-cookie1-valueA",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [
             {
               "name": "cookie1",
               "value": "valueA"
             }
           ],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1149,7 +1472,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1161,11 +1484,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1186,7 +1520,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1198,8 +1532,24 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-multiple-request-cookies",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "user1=Bob; user2=Bill"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [
             {
               "name": "user1",
@@ -1210,8 +1560,7 @@
               "value": "Bill"
             }
           ],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1232,7 +1581,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1244,11 +1593,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set-session-cookie2-valueA",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1279,7 +1639,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1291,11 +1651,31 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueA",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie2=valueA"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie2",
+              "value": "valueA"
+            }
+          ],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1316,7 +1696,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1328,16 +1708,35 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie2-is-valueA-and-valueB",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie2=valueA; cookie2=valueB"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [
+            {
+              "name": "cookie2",
+              "value": "valueA"
+            },
             {
               "name": "cookie2",
               "value": "valueB"
             }
           ],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1358,7 +1757,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1370,11 +1769,31 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/delete-cookie2",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie2=valueA"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie2",
+              "value": "valueA"
+            }
+          ],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1383,7 +1802,7 @@
             {
               "name": "cookie2",
               "value": "",
-              "expires": "Thu, 10 Jun 2021 13:24:11 GMT",
+              "expires": "Tue, 15 Jun 2021 19:19:33 GMT",
               "max_age": 0,
               "path": "/"
             }
@@ -1395,7 +1814,7 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Thu, 10 Jun 2021 13:24:11 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Tue, 15 Jun 2021 19:19:33 GMT; Max-Age=0; Path=/"
             },
             {
               "name": "Server",
@@ -1407,7 +1826,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1419,11 +1838,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/assert-that-cookie2-is-not-in-session",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1444,7 +1874,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1456,11 +1886,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookies/set",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1519,7 +1960,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1529,7 +1970,7 @@
       }
     ],
     "success": true,
-    "time": 36,
+    "time": 28,
     "cookies": []
   },
   {
@@ -1539,11 +1980,31 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookie-storage/assert-that-cookie1-is-valueA",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Cookie",
+              "value": "cookie1=valueA"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "cookie1",
+              "value": "valueA"
+            }
+          ],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1564,7 +2025,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1576,11 +2037,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/cookie-storage/assert-that-cookie1-is-not-in-session",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1601,7 +2073,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1611,7 +2083,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 9,
     "cookies": []
   },
   {
@@ -1621,11 +2093,22 @@
         "request": {
           "method": "DELETE",
           "url": "http://localhost:8000/delete",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1646,7 +2129,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1656,7 +2139,7 @@
       }
     ],
     "success": true,
-    "time": 4,
+    "time": 11,
     "cookies": []
   },
   {
@@ -1673,11 +2156,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/encoding/utf8",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1698,7 +2192,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1710,11 +2204,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/encoding/latin1",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1735,7 +2240,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1745,7 +2250,7 @@
       }
     ],
     "success": true,
-    "time": 10,
+    "time": 7,
     "cookies": []
   },
   {
@@ -1755,11 +2260,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/assert-base64",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1780,7 +2296,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:33 GMT"
             }
           ]
         },
@@ -1800,11 +2316,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error/content-encoding",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1829,7 +2356,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -1839,7 +2366,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 4,
     "cookies": []
   },
   {
@@ -1849,11 +2376,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-decompress",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1878,7 +2420,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -1888,7 +2430,7 @@
       }
     ],
     "success": false,
-    "time": 3,
+    "time": 15,
     "cookies": []
   },
   {
@@ -1898,11 +2440,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-file",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1923,7 +2476,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -1933,7 +2486,7 @@
       }
     ],
     "success": false,
-    "time": 4,
+    "time": 7,
     "cookies": []
   },
   {
@@ -1943,11 +2496,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-header-not-found",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -1968,7 +2532,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:11 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -1978,7 +2542,7 @@
       }
     ],
     "success": false,
-    "time": 3,
+    "time": 10,
     "cookies": []
   },
   {
@@ -1988,11 +2552,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-header-value",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2013,7 +2588,63 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 7,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_assert_http_version.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert/http-version",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2027,62 +2658,28 @@
     "cookies": []
   },
   {
-    "filename": "tests/error_assert_http_version.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/error-assert/http-version",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
-            }
-          ]
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": false,
-    "time": 3,
-    "cookies": []
-  },
-  {
     "filename": "tests/error_assert_invalid_predicate_type.hurl",
     "entries": [
       {
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-invalid-predicate-type",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2103,7 +2700,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2113,7 +2710,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 4,
     "cookies": []
   },
   {
@@ -2123,11 +2720,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert/match-utf8",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2148,7 +2756,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2158,7 +2766,7 @@
       }
     ],
     "success": false,
-    "time": 4,
+    "time": 7,
     "cookies": []
   },
   {
@@ -2168,11 +2776,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-query-cookie",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2213,7 +2832,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2223,7 +2842,7 @@
       }
     ],
     "success": false,
-    "time": 12,
+    "time": 7,
     "cookies": []
   },
   {
@@ -2233,11 +2852,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-query-invalid-regex",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2258,7 +2888,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2268,7 +2898,7 @@
       }
     ],
     "success": false,
-    "time": 4,
+    "time": 10,
     "cookies": []
   },
   {
@@ -2278,11 +2908,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/utf8",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2303,7 +2944,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2313,7 +2954,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 4,
     "cookies": []
   },
   {
@@ -2323,11 +2964,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/not_found",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2348,7 +3000,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2358,7 +3010,7 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 6,
     "cookies": []
   },
   {
@@ -2368,11 +3020,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-template-variable-not-found",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2393,7 +3056,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2403,7 +3066,7 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 10,
     "cookies": []
   },
   {
@@ -2413,11 +3076,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-value",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2438,7 +3112,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2448,7 +3122,7 @@
       }
     ],
     "success": false,
-    "time": 14,
+    "time": 13,
     "cookies": []
   },
   {
@@ -2458,11 +3132,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-variable",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2483,7 +3168,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2503,11 +3188,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-assert-xpath",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2528,7 +3224,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:12 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:34 GMT"
             }
           ]
         },
@@ -2538,7 +3234,7 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 9,
     "cookies": []
   },
   {
@@ -2558,22 +3254,13 @@
     "filename": "tests/error_connect_timeout.hurl",
     "entries": [
       {
-        "request": {
-          "method": "GET",
-          "url": "http://10.0.0.0",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
         "captures": [],
         "asserts": [],
         "time": 0
       }
     ],
     "success": false,
-    "time": 1002,
+    "time": 1004,
     "cookies": []
   },
   {
@@ -2593,22 +3280,13 @@
     "filename": "tests/error_http_connection.hurl",
     "entries": [
       {
-        "request": {
-          "method": "GET",
-          "url": "http://unknown",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
         "captures": [],
         "asserts": [],
         "time": 0
       }
     ],
     "success": false,
-    "time": 34,
+    "time": 8117,
     "cookies": []
   },
   {
@@ -2618,11 +3296,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-invalid-jsonpath",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2643,7 +3332,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:13 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
             }
           ]
         },
@@ -2653,22 +3342,13 @@
       }
     ],
     "success": false,
-    "time": 12,
+    "time": 5,
     "cookies": []
   },
   {
     "filename": "tests/error_invalid_url.hurl",
     "entries": [
       {
-        "request": {
-          "method": "GET",
-          "url": "???",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
         "captures": [],
         "asserts": [],
         "time": 0
@@ -2685,11 +3365,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-invalid-xml",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2710,132 +3401,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
-            }
-          ]
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": false,
-    "time": 5,
-    "cookies": []
-  },
-  {
-    "filename": "tests/error_max_redirect.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/redirect/7",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": false,
-    "time": 46,
-    "cookies": []
-  },
-  {
-    "filename": "tests/error_multipart_form_data.hurl",
-    "entries": [
-      {
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": false,
-    "time": 0,
-    "cookies": []
-  },
-  {
-    "filename": "tests/error_predicate.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/predicate/error/type",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "74"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
-            }
-          ]
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": false,
-    "time": 21,
-    "cookies": []
-  },
-  {
-    "filename": "tests/error_query_header_not_found.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/error-query-header-not-found",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "12"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
             }
           ]
         },
@@ -2849,17 +3415,110 @@
     "cookies": []
   },
   {
-    "filename": "tests/error_query_invalid_json.hurl",
+    "filename": "tests/error_max_redirect.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 21,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_multipart_form_data.hurl",
+    "entries": [
+      {
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 4,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_predicate.hurl",
     "entries": [
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/error-query-invalid-json",
-          "queryString": [],
-          "headers": [],
+          "url": "http://localhost:8000/predicate/error/type",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "126"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 19,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_query_header_not_found.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-query-header-not-found",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2880,7 +3539,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
             }
           ]
         },
@@ -2890,7 +3549,63 @@
       }
     ],
     "success": false,
-    "time": 13,
+    "time": 5,
+    "cookies": []
+  },
+  {
+    "filename": "tests/error_query_invalid_json.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-query-invalid-json",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "12"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": false,
+    "time": 4,
     "cookies": []
   },
   {
@@ -2900,11 +3615,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/error-query-invalid-utf8",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2925,7 +3651,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
             }
           ]
         },
@@ -2935,7 +3661,7 @@
       }
     ],
     "success": false,
-    "time": 6,
+    "time": 7,
     "cookies": []
   },
   {
@@ -2958,11 +3684,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/get-list",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -2983,7 +3720,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:14 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:44 GMT"
             }
           ]
         },
@@ -2998,22 +3735,13 @@
       }
     ],
     "success": false,
-    "time": 5,
+    "time": 7,
     "cookies": []
   },
   {
     "filename": "tests/error_timeout.hurl",
     "entries": [
       {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/timeout",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
         "captures": [],
         "asserts": [],
         "time": 0
@@ -3030,16 +3758,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/expect",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Expect",
               "value": "100-continue"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "4"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3060,7 +3802,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:15 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3070,7 +3812,7 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 5,
     "cookies": []
   },
   {
@@ -3080,11 +3822,126 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/follow-redirect",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 302,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "286"
+            },
+            {
+              "name": "Location",
+              "value": "http://localhost:8000/following-redirect"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/following-redirect",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 302,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "284"
+            },
+            {
+              "name": "Location",
+              "value": "http://localhost:8000/followed-redirect"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/followed-redirect",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3105,7 +3962,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:15 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3115,7 +3972,7 @@
       }
     ],
     "success": true,
-    "time": 11,
+    "time": 8,
     "cookies": []
   },
   {
@@ -3125,29 +3982,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/form-params",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "form": [
+          "headers": [
             {
-              "name": "param1",
-              "value": "value1"
+              "name": "Host",
+              "value": "localhost:8000"
             },
             {
-              "name": "param2",
-              "value": ""
+              "name": "Accept",
+              "value": "*/*"
             },
             {
-              "name": "param3",
-              "value": "a=b"
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
             },
             {
-              "name": "param4",
-              "value": "a%3db"
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "49"
             }
           ],
-          "body": ""
+          "cookies": [],
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3168,7 +4026,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3180,16 +4038,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/form-params",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Content-Type",
               "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "49"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3210,7 +4082,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3220,7 +4092,7 @@
       }
     ],
     "success": true,
-    "time": 15,
+    "time": 13,
     "cookies": []
   },
   {
@@ -3230,11 +4102,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/default-headers",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3255,7 +4138,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3267,20 +4150,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/default-headers",
-          "queryString": [],
           "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/1.0"
-            },
             {
               "name": "Host",
               "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3301,7 +4186,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3313,20 +4198,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/default-headers",
-          "queryString": [],
           "headers": [
-            {
-              "name": "User-Agent",
-              "value": "hurl/1.0"
-            },
             {
               "name": "Host",
               "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3347,7 +4234,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3359,8 +4246,15 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/custom-headers",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Fruit",
               "value": "Raspberry"
@@ -3380,11 +4274,14 @@
             {
               "name": "Color",
               "value": "Green"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3405,7 +4302,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3417,16 +4314,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/custom-headers-utf8",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Beverage",
               "value": "café"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3447,7 +4354,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3459,16 +4366,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/custom-headers-quote",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Header1",
               "value": "'"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3489,7 +4406,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3501,11 +4418,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/response-headers",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3530,7 +4458,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3540,7 +4468,7 @@
       }
     ],
     "success": true,
-    "time": 28,
+    "time": 26,
     "cookies": []
   },
   {
@@ -3550,11 +4478,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/hello",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3575,7 +4514,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3587,11 +4526,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/hello",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3612,7 +4562,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:16 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:46 GMT"
             }
           ]
         },
@@ -3622,7 +4572,7 @@
       }
     ],
     "success": true,
-    "time": 41,
+    "time": 7,
     "cookies": []
   },
   {
@@ -3632,11 +4582,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/include",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3667,7 +4628,7 @@
       }
     ],
     "success": true,
-    "time": 13,
+    "time": 10,
     "cookies": []
   },
   {
@@ -3677,11 +4638,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/large",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3702,7 +4674,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:18 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:48 GMT"
             }
           ]
         },
@@ -3712,7 +4684,7 @@
       }
     ],
     "success": true,
-    "time": 7459,
+    "time": 7520,
     "cookies": []
   },
   {
@@ -3722,11 +4694,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/multipart-form-data",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "616"
+            },
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data; boundary=------------------------8c0af88c4df99c9a"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3747,7 +4738,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:25 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -3757,14 +4748,14 @@
       }
     ],
     "success": true,
-    "time": 6,
+    "time": 11,
     "cookies": []
   },
   {
     "filename": "tests/no_entry.hurl",
     "entries": [],
     "success": true,
-    "time": 1,
+    "time": 0,
     "cookies": []
   },
   {
@@ -3774,11 +4765,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/output/endpoint1",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "17"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3811,11 +4821,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/output/endpoint2",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3846,7 +4867,7 @@
       }
     ],
     "success": true,
-    "time": 12,
+    "time": 14,
     "cookies": []
   },
   {
@@ -3856,11 +4877,14 @@
         "request": {
           "method": "PATCH",
           "url": "http://localhost:8000/patch/file.txt",
-          "queryString": [],
           "headers": [
             {
               "name": "Host",
               "value": "www.example.com"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
             },
             {
               "name": "Content-Type",
@@ -3869,11 +4893,14 @@
             {
               "name": "If-Match",
               "value": "\"e0023aa4e\""
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3898,7 +4925,67 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      }
+    ],
+    "success": true,
+    "time": 7,
+    "cookies": []
+  },
+  {
+    "filename": "tests/post_base64.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:8000/post-base64",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "12"
+            }
+          ],
+          "cookies": [],
+          "queryString": []
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -3912,67 +4999,36 @@
     "cookies": []
   },
   {
-    "filename": "tests/post_base64.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "POST",
-          "url": "http://localhost:8000/post-base64",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
-            }
-          ]
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      }
-    ],
-    "success": true,
-    "time": 5,
-    "cookies": []
-  },
-  {
     "filename": "tests/post_bytes.hurl",
     "entries": [
       {
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-bytes",
-          "queryString": [],
           "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
             {
               "name": "Content-Type",
               "value": "application/octet-stream"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "3"
             }
           ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -3993,7 +5049,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4013,11 +5069,26 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-file",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "12"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4038,7 +5109,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4058,11 +5129,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "82"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4083,7 +5173,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4095,11 +5185,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-array",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "7"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4120,7 +5229,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4132,11 +5241,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-string",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "7"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4157,7 +5285,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4169,11 +5297,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-number",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "3"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4194,7 +5341,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4206,11 +5353,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-numbers",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "101"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4231,7 +5397,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4243,11 +5409,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json-boolean",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "4"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4268,7 +5453,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4280,11 +5465,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/get-name",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4305,7 +5501,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4317,11 +5513,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-json",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "82"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4342,7 +5557,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4352,7 +5567,7 @@
       }
     ],
     "success": true,
-    "time": 27,
+    "time": 28,
     "cookies": []
   },
   {
@@ -4362,11 +5577,26 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-multilines",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "24"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4387,7 +5617,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4399,11 +5629,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/get-bob-age",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4424,7 +5665,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4436,11 +5677,26 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-multilines",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "24"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4461,7 +5717,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4471,7 +5727,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 13,
     "cookies": []
   },
   {
@@ -4481,11 +5737,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-xml",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/xml"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "42"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4506,7 +5781,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4518,11 +5793,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/post-xml-no-prolog",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/xml"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "20"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4543,7 +5837,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4563,11 +5857,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/predicates-string",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4588,7 +5893,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4600,11 +5905,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/predicates-string-empty",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4625,7 +5941,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             }
           ]
         },
@@ -4635,7 +5951,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 10,
     "cookies": []
   },
   {
@@ -4645,11 +5961,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/proxy",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Proxy-Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4670,7 +6001,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:58 GMT"
             },
             {
               "name": "From-Proxy",
@@ -4684,7 +6015,7 @@
       }
     ],
     "success": true,
-    "time": 21,
+    "time": 38,
     "cookies": []
   },
   {
@@ -4694,11 +6025,22 @@
         "request": {
           "method": "PUT",
           "url": "http://localhost:8000/put",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4719,7 +6061,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -4729,7 +6071,7 @@
       }
     ],
     "success": true,
-    "time": 8,
+    "time": 4,
     "cookies": []
   },
   {
@@ -4738,7 +6080,22 @@
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/querystring-params",
+          "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
           "queryString": [
             {
               "name": "param1",
@@ -4756,11 +6113,7 @@
               "name": "param4",
               "value": "1,2,3"
             }
-          ],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          ]
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4781,7 +6134,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -4793,44 +6146,26 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3db&param4=1,2,3",
-          "queryString": [],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
-        },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200,
-          "cookies": [],
           "headers": [
             {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
+              "name": "Host",
+              "value": "localhost:8000"
             },
             {
-              "name": "Content-Length",
-              "value": "0"
+              "name": "Accept",
+              "value": "*/*"
             },
             {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
-          ]
-        },
-        "captures": [],
-        "asserts": [],
-        "time": 0
-      },
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/querystring-params?param1=value1",
+          ],
+          "cookies": [],
           "queryString": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
             {
               "name": "param2",
               "value": ""
@@ -4843,11 +6178,7 @@
               "name": "param4",
               "value": "1,2,3"
             }
-          ],
-          "headers": [],
-          "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          ]
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4868,7 +6199,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -4879,17 +6210,40 @@
       {
         "request": {
           "method": "GET",
-          "url": "http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F",
-          "queryString": [
+          "url": "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3",
+          "headers": [
             {
-              "name": "value3",
-              "value": "/"
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
             }
           ],
-          "headers": [],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": [
+            {
+              "name": "param1",
+              "value": "value1"
+            },
+            {
+              "name": "param2",
+              "value": ""
+            },
+            {
+              "name": "param3",
+              "value": "a=b"
+            },
+            {
+              "name": "param4",
+              "value": "1,2,3"
+            }
+          ]
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4910,7 +6264,68 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
+            }
+          ]
+        },
+        "captures": [],
+        "asserts": [],
+        "time": 0
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F&value3=%2F",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
+          "cookies": [],
+          "queryString": [
+            {
+              "name": "value1",
+              "value": "/"
+            },
+            {
+              "name": "value2",
+              "value": "/"
+            },
+            {
+              "name": "value3",
+              "value": "/"
+            }
+          ]
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200,
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -4920,7 +6335,7 @@
       }
     ],
     "success": true,
-    "time": 19,
+    "time": 18,
     "cookies": []
   },
   {
@@ -4930,11 +6345,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/redirect",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4959,7 +6385,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -4971,11 +6397,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/redirected",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -4996,7 +6433,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -5006,7 +6443,7 @@
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 9,
     "cookies": []
   },
   {
@@ -5016,11 +6453,26 @@
         "request": {
           "method": "GET",
           "url": "http://bob:secret@localhost:8000/basic-authentication",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Authorization",
+              "value": "Basic Ym9iOnNlY3JldA=="
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -5041,7 +6493,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:26 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -5061,11 +6513,22 @@
         "request": {
           "method": "GET",
           "url": "http://localhost:8000/utf8",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": ""
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -5086,7 +6549,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:27 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -5096,7 +6559,7 @@
       }
     ],
     "success": true,
-    "time": 9,
+    "time": 4,
     "cookies": []
   },
   {
@@ -5106,11 +6569,30 @@
         "request": {
           "method": "POST",
           "url": "http://localhost:8000/variables",
-          "queryString": [],
-          "headers": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.3.0"
+            },
+            {
+              "name": "Content-Length",
+              "value": "122"
+            }
+          ],
           "cookies": [],
-          "multipartFormData": [],
-          "body": "ewogICJuYW1lIjogIkplbm5pZmVyIiwKICAiYWdlIjogMzAsCiAgImhlaWdodCI6IDEuNzAwMDAwMDAwMDAwMDAwMDAwLAogICJmZW1hbGUiOiB0cnVlLAogICJpZCI6ICIxMjMiLAogICJhX251bGwiOiBudWxsCn0="
+          "queryString": []
         },
         "response": {
           "httpVersion": "HTTP/1.0",
@@ -5131,7 +6613,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 10 Jun 2021 13:24:27 GMT"
+              "value": "Tue, 15 Jun 2021 19:19:59 GMT"
             }
           ]
         },
@@ -5149,11 +6631,11 @@
           {},
           {}
         ],
-        "time": 6
+        "time": 4
       }
     ],
     "success": true,
-    "time": 7,
+    "time": 5,
     "cookies": []
   }
 ]
