@@ -111,7 +111,7 @@ pub fn run(
         Err(http_error) => {
             let runner_error = match http_error {
                 HttpError::CouldNotResolveProxyName => RunnerError::CouldNotResolveProxyName,
-                HttpError::CouldNotResolveHost => RunnerError::CouldNotResolveHost,
+                HttpError::CouldNotResolveHost(host) => RunnerError::CouldNotResolveHost(host),
                 HttpError::FailToConnect => RunnerError::FailToConnect,
                 HttpError::Timeout => RunnerError::Timeout,
                 HttpError::TooManyRedirect => RunnerError::TooManyRedirect,

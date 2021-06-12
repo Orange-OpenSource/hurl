@@ -128,7 +128,7 @@ pub enum RunnerError {
         message: String,
     },
     CouldNotResolveProxyName,
-    CouldNotResolveHost,
+    CouldNotResolveHost(String),
     FailToConnect,
     Timeout,
     TooManyRedirect,

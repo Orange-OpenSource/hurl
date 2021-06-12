@@ -33,7 +33,7 @@ use url::Url;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HttpError {
     CouldNotResolveProxyName,
-    CouldNotResolveHost,
+    CouldNotResolveHost(String),
     FailToConnect,
     TooManyRedirect,
     CouldNotParseResponse,
@@ -174,7 +174,9 @@ impl Client {
                 return match e.code() {
                     3 => Err(HttpError::InvalidUrl),
                     5 => Err(HttpError::CouldNotResolveProxyName),
-                    6 => Err(HttpError::CouldNotResolveHost),
+                    6 => Err(HttpError::CouldNotResolveHost(extract_host(
+                        request.url.clone(),
+                    ))),
                     7 => Err(HttpError::FailToConnect),
                     28 => Err(HttpError::Timeout),
                     60 => Err(HttpError::SslCertificate(
@@ -563,6 +565,15 @@ impl Header {
             None => None,
         }
     }
+}
+
+///
+/// Extract Hostname for url
+/// assume that that the url is a valud url
+///
+fn extract_host(url: String) -> String {
+    let url = Url::parse(url.as_str()).expect("valid url");
+    url.host().expect("valid host").to_string()
 }
 
 ///

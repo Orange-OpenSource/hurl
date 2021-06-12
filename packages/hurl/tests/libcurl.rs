@@ -523,7 +523,7 @@ fn test_error_could_not_resolve_host() {
     let request = default_get_request("http://unknown".to_string());
     let error = client.execute(&request, 0).err().unwrap();
 
-    assert_eq!(error, HttpError::CouldNotResolveHost);
+    assert_eq!(error, HttpError::CouldNotResolveHost("unknown".to_string()));
 }
 
 #[test]

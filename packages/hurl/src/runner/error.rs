@@ -20,7 +20,7 @@ impl Error for runner::Error {
             RunnerError::VariableNotDefined { .. } => "Undefined Variable".to_string(),
             RunnerError::HttpConnection { .. } => "Http Connection".to_string(),
             RunnerError::CouldNotResolveProxyName => "Http Connection".to_string(),
-            RunnerError::CouldNotResolveHost => "Http Connection".to_string(),
+            RunnerError::CouldNotResolveHost(_) => "Http Connection".to_string(),
             RunnerError::FailToConnect => "Http Connection".to_string(),
             RunnerError::Timeout => "Http Connection".to_string(),
             RunnerError::TooManyRedirect => "Http Connection".to_string(),
@@ -62,7 +62,7 @@ impl Error for runner::Error {
                 format!("can not connect to {} ({})", url, message)
             }
             RunnerError::CouldNotResolveProxyName => "Could not resolve proxy name".to_string(),
-            RunnerError::CouldNotResolveHost => "Could not resolve host".to_string(),
+            RunnerError::CouldNotResolveHost(host) => format!("Could not resolve host <{}>", host),
             RunnerError::FailToConnect => "Fail to connect".to_string(),
             RunnerError::Timeout => "Timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "Too many redirect".to_string(),
