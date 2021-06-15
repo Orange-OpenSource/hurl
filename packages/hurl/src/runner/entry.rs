@@ -29,6 +29,7 @@ use super::value::Value;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
 
 /// Run an entry with the hurl http client
+/// Return one or more EntryResults (if following redirect)
 ///
 /// # Examples
 ///
@@ -54,18 +55,18 @@ pub fn run(
     context_dir: String,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
-) -> EntryResult {
+) -> Vec<EntryResult> {
     let http_request = match eval_request(entry.request.clone(), variables, context_dir.clone()) {
         Ok(r) => r,
         Err(error) => {
-            return EntryResult {
+            return vec![EntryResult {
                 request: None,
                 response: None,
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![error],
                 time_in_ms: 0,
-            };
+            }];
         }
     };
 
@@ -106,8 +107,8 @@ pub fn run(
         .as_str(),
     );
 
-    let http_response = match http_client.execute(&http_request, 0) {
-        Ok(response) => response,
+    let calls = match http_client.execute_with_redirect(&http_request) {
+        Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = match http_error {
                 HttpError::CouldNotResolveProxyName => RunnerError::CouldNotResolveProxyName,
@@ -129,87 +130,100 @@ pub fn run(
                     url: http_request.url.clone(),
                 },
             };
-            return EntryResult {
-                request: Some(http_request.clone()),
+            return vec![EntryResult {
+                request: None,
                 response: None,
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error {
                     source_info: SourceInfo {
-                        start: entry.clone().request.url.source_info.start,
-                        end: entry.clone().request.url.source_info.end,
+                        start: entry.request.url.source_info.start,
+                        end: entry.request.url.source_info.end,
                     },
                     inner: runner_error,
                     assert: false,
                 }],
                 time_in_ms: 0,
+            }];
+        }
+    };
+
+    let mut entry_results = vec![];
+    for (i, (http_request, http_response)) in calls.iter().enumerate() {
+        let mut captures = vec![];
+        let mut asserts = vec![];
+        let mut errors = vec![];
+        let time_in_ms = http_response.duration.as_millis();
+
+        // Last call
+        if i == calls.len() - 1 {
+            captures = match entry.response.clone() {
+                None => vec![],
+                Some(response) => match eval_captures(response, http_response, variables) {
+                    Ok(captures) => captures,
+                    Err(e) => {
+                        return vec![EntryResult {
+                            request: Some(http_request.clone()),
+                            response: Some(http_response.clone()),
+                            captures: vec![],
+                            asserts: vec![],
+                            errors: vec![e],
+                            time_in_ms,
+                        }];
+                    }
+                },
             };
-        }
-    };
-
-    let time_in_ms = http_response.duration.as_millis();
-    log_verbose(format!("Response Time: {}ms", time_in_ms.to_string()).as_str());
-
-    let captures = match entry.response.clone() {
-        None => vec![],
-        Some(response) => match eval_captures(response, http_response.clone(), variables) {
-            Ok(captures) => captures,
-            Err(e) => {
-                return EntryResult {
-                    request: Some(http_request),
-                    response: Some(http_response),
-                    captures: vec![],
-                    asserts: vec![],
-                    errors: vec![e],
-                    time_in_ms,
-                };
+            // update variables now!
+            for capture_result in captures.clone() {
+                variables.insert(capture_result.name, capture_result.value);
             }
-        },
-    };
+            asserts = match entry.response.clone() {
+                None => vec![],
+                Some(response) => eval_asserts(
+                    response,
+                    variables,
+                    http_response.clone(),
+                    context_dir.clone(),
+                ),
+            };
+            errors = asserts
+                .iter()
+                .filter_map(|assert| assert.clone().error())
+                .map(
+                    |Error {
+                         source_info, inner, ..
+                     }| Error {
+                        source_info,
+                        inner,
+                        assert: true,
+                    },
+                )
+                .collect();
 
-    // update variables now!
-    for capture_result in captures.clone() {
-        variables.insert(capture_result.name, capture_result.value);
-    }
-
-    let asserts = match entry.response {
-        None => vec![],
-        Some(response) => eval_asserts(response, variables, http_response.clone(), context_dir),
-    };
-    let errors = asserts
-        .iter()
-        .filter_map(|assert| assert.clone().error())
-        .map(
-            |Error {
-                 source_info, inner, ..
-             }| Error {
-                source_info,
-                inner,
-                assert: true,
-            },
-        )
-        .collect();
-
-    if !captures.is_empty() {
-        log_verbose("Captures");
-        for capture in captures.clone() {
-            log_verbose(format!("{}: {}", capture.name, capture.value).as_str());
+            if !captures.is_empty() {
+                log_verbose("Captures");
+                for capture in captures.clone() {
+                    log_verbose(format!("{}: {}", capture.name, capture.value).as_str());
+                }
+            }
+            log_verbose("");
         }
+
+        let entry_result = EntryResult {
+            request: Some(http_request.clone()),
+            response: Some(http_response.clone()),
+            captures,
+            asserts,
+            errors,
+            time_in_ms,
+        };
+        entry_results.push(entry_result);
     }
 
-    log_verbose("");
-
-    EntryResult {
-        request: Some(http_request),
-        response: Some(http_response),
-        captures,
-        asserts,
-        errors,
-        time_in_ms,
-    }
+    entry_results
 }
 
-pub fn log_request(log_verbose: impl Fn(&str), request: &http::Request) {
+pub fn log_request(log_verbose: impl Fn(&str), request: &http::RequestSpec) {
     log_verbose("Request");
     log_verbose(format!("{} {}", request.method, request.url).as_str());
     for header in request.headers.clone() {

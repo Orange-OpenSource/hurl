@@ -26,6 +26,7 @@ use std::time::Instant;
 use super::core::*;
 use super::options::ClientOptions;
 use super::request::*;
+use super::request_spec::*;
 use super::response::*;
 use std::str::FromStr;
 use url::Url;
@@ -51,7 +52,7 @@ pub struct Client {
     pub redirect_count: usize,
     // unfortunately, follow-location feature from libcurl can not be used
     // libcurl returns a single list of headers for the 2 responses
-    // hurl needs the return the headers only for the second (last) response)
+    // hurl needs to keep everything
 }
 
 impl Client {
@@ -85,15 +86,50 @@ impl Client {
     ///
     /// Execute an http request
     ///
-    pub fn execute(
+    pub fn execute_with_redirect(
         &mut self,
-        request: &Request,
-        redirect_count: usize,
-    ) -> Result<Response, HttpError> {
+        request: &RequestSpec,
+    ) -> Result<Vec<(Request, Response)>, HttpError> {
+        let mut calls = vec![];
+
+        let mut request_spec = request.clone();
+        self.redirect_count = 0;
+        loop {
+            let (request, response) = self.execute(&request_spec)?;
+            calls.push((request, response.clone()));
+            if let Some(url) = self.get_follow_location(response.clone()) {
+                request_spec = RequestSpec {
+                    method: Method::Get,
+                    url,
+                    headers: vec![],
+                    querystring: vec![],
+                    form: vec![],
+                    multipart: vec![],
+                    cookies: vec![],
+                    body: Body::Binary(vec![]),
+                    content_type: None,
+                };
+
+                self.redirect_count += 1;
+                if let Some(max_redirect) = self.options.max_redirect {
+                    if self.redirect_count > max_redirect {
+                        return Err(HttpError::TooManyRedirect);
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        Ok(calls)
+    }
+
+    ///
+    /// Execute an http request
+    ///
+    pub fn execute(&mut self, request: &RequestSpec) -> Result<(Request, Response), HttpError> {
         // set handle attributes
         // that have not been set or reset
-
-        self.handle.verbose(self.options.verbose).unwrap();
+        self.handle.verbose(true).unwrap();
         self.handle.ssl_verify_host(!self.options.insecure).unwrap();
         self.handle.ssl_verify_peer(!self.options.insecure).unwrap();
         if let Some(proxy) = self.options.proxy.clone() {
@@ -107,7 +143,8 @@ impl Client {
             .connect_timeout(self.options.connect_timeout)
             .unwrap();
 
-        self.set_url(&request.url, &request.querystring);
+        let url = self.generate_url(&request.url, &request.querystring);
+        self.handle.url(url.as_str()).unwrap();
         self.set_method(&request.method);
 
         self.set_cookies(&request.cookies);
@@ -120,23 +157,8 @@ impl Client {
 
         self.set_headers(&request);
 
-        self.handle
-            .debug_function(|info_type, data| match info_type {
-                // return all request headers (not one by one)
-                easy::InfoType::HeaderOut => {
-                    let lines = split_lines(data);
-                    for line in lines {
-                        eprintln!("> {}", line);
-                    }
-                }
-                easy::InfoType::HeaderIn => {
-                    if let Some(s) = decode_header(data) {
-                        eprint!("< {}", s);
-                    }
-                }
-                _ => {}
-            })
-            .unwrap();
+        let verbose = self.options.verbose;
+        let mut request_headers: Vec<Header> = vec![];
 
         let start = Instant::now();
         let mut status_lines = vec![];
@@ -149,7 +171,35 @@ impl Client {
                     .read_function(|buf| Ok(data.read(buf).unwrap_or(0)))
                     .unwrap();
             }
+            transfer
+                .debug_function(|info_type, data| match info_type {
+                    // return all request headers (not one by one)
+                    easy::InfoType::HeaderOut => {
+                        let mut lines = split_lines(data);
+                        if verbose {
+                            for line in lines.clone() {
+                                eprintln!("> {}", line);
+                            }
+                        }
 
+                        lines.pop().unwrap();
+                        lines.remove(0); //  method/url
+                        for line in lines {
+                            if let Some(header) = Header::parse(line) {
+                                request_headers.push(header);
+                            }
+                        }
+                    }
+                    easy::InfoType::HeaderIn => {
+                        if let Some(s) = decode_header(data) {
+                            if verbose {
+                                eprint!("< {}", s);
+                            }
+                        }
+                    }
+                    _ => {}
+                })
+                .unwrap();
             transfer
                 .header_function(|h| {
                     if let Some(s) = decode_header(h) {
@@ -196,46 +246,28 @@ impl Client {
             Some(status_line) => self.parse_response_version(status_line.clone())?,
         };
         let headers = self.parse_response_headers(&headers);
-
-        if let Some(url) = self.get_follow_location(headers.clone()) {
-            let request = Request {
-                method: Method::Get,
-                url,
-                headers: vec![],
-                querystring: vec![],
-                form: vec![],
-                multipart: vec![],
-                cookies: vec![],
-                body: Body::Binary(vec![]),
-                content_type: None,
-            };
-
-            let redirect_count = redirect_count + 1;
-            if let Some(max_redirect) = self.options.max_redirect {
-                if redirect_count > max_redirect {
-                    return Err(HttpError::TooManyRedirect);
-                }
-            }
-
-            return self.execute(&request, redirect_count);
-        }
         let duration = start.elapsed();
-        self.redirect_count = redirect_count;
         self.handle.reset();
 
-        Ok(Response {
+        let request = Request {
+            url,
+            method: (&request.method).to_string(),
+            headers: request_headers,
+        };
+        let response = Response {
             version,
             status,
             headers,
             body,
             duration,
-        })
+        };
+        Ok((request, response))
     }
 
     ///
-    /// set url
+    /// generate url
     ///
-    fn set_url(&mut self, url: &str, params: &[Param]) {
+    fn generate_url(&mut self, url: &str, params: &[Param]) -> String {
         let url = if params.is_empty() {
             url.to_string()
         } else {
@@ -249,7 +281,7 @@ impl Client {
             let s = self.encode_params(params);
             format!("{}{}", url, s)
         };
-        self.handle.url(url.as_str()).unwrap();
+        url
     }
 
     ///
@@ -272,7 +304,7 @@ impl Client {
     ///
     /// set request headers
     ///
-    fn set_headers(&mut self, request: &Request) {
+    fn set_headers(&mut self, request: &RequestSpec) {
         let mut list = easy::List::new();
 
         for header in request.headers.clone() {
@@ -426,17 +458,15 @@ impl Client {
     /// 2. a 3xx response code
     /// 3. a header Location
     ///
-    fn get_follow_location(&mut self, headers: Vec<Header>) -> Option<String> {
+    fn get_follow_location(&mut self, response: Response) -> Option<String> {
         if !self.options.follow_location {
             return None;
         }
-
-        let response_code = self.handle.response_code().unwrap();
+        let response_code = response.status;
         if !(300..400).contains(&response_code) {
             return None;
         }
-
-        let location = match get_header_values(headers, "Location".to_string()).get(0) {
+        let location = match get_header_values(response.headers, "Location".to_string()).get(0) {
             None => return None,
             Some(value) => value.clone(),
         };
@@ -490,7 +520,7 @@ impl Client {
     ///
     /// return curl command-line for the http request run by the client
     ///
-    pub fn curl_command_line(&mut self, http_request: &Request) -> String {
+    pub fn curl_command_line(&mut self, http_request: &RequestSpec) -> String {
         let mut arguments = vec!["curl".to_string()];
         arguments.append(&mut http_request.curl_args(self.options.context_dir.clone()));
 
@@ -514,7 +544,7 @@ impl Client {
 ///
 /// return cookies from both cookies from the cookie storage and the request
 ///
-pub fn all_cookies(cookie_storage: Vec<Cookie>, request: &Request) -> Vec<RequestCookie> {
+pub fn all_cookies(cookie_storage: Vec<Cookie>, request: &RequestSpec) -> Vec<RequestCookie> {
     let mut cookies = request.cookies.clone();
     cookies.append(
         &mut cookie_storage

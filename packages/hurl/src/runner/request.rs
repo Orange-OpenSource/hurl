@@ -36,7 +36,7 @@ pub fn eval_request(
     request: Request,
     variables: &HashMap<String, Value>,
     context_dir: String,
-) -> Result<http::Request, Error> {
+) -> Result<http::RequestSpec, Error> {
     let method = eval_method(request.method.clone());
 
     let url = eval_template(request.clone().url, &variables)?;
@@ -121,7 +121,7 @@ pub fn eval_request(
     //            }
     //        }
 
-    Ok(http::Request {
+    Ok(http::RequestSpec {
         method,
         url,
         headers,

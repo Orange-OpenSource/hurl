@@ -37,6 +37,18 @@ pub struct Cookie {
     pub http_only: bool,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RequestCookie {
+    pub name: String,
+    pub value: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Param {
+    pub name: String,
+    pub value: String,
+}
+
 impl fmt::Display for Header {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}: {}", self.name, self.value)
@@ -57,6 +69,18 @@ impl fmt::Display for Cookie {
             self.name,
             self.value
         )
+    }
+}
+
+impl fmt::Display for RequestCookie {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}={}", self.name, self.value)
+    }
+}
+
+impl fmt::Display for Param {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}: {}", self.name, self.value)
     }
 }
 
