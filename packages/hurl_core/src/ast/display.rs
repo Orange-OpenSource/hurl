@@ -131,6 +131,16 @@ impl fmt::Display for CookieAttribute {
     }
 }
 
+impl fmt::Display for Hex {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "hex,{}{}{};",
+            self.space0.value, self.encoded, self.space1.value
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

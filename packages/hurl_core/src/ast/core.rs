@@ -323,6 +323,7 @@ pub enum QueryValue {
         name: Template,
     },
     Duration {},
+    Bytes {},
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -403,6 +404,7 @@ pub enum PredicateFuncValue {
     EqualFloat { space0: Whitespace, value: Float },
     EqualBool { space0: Whitespace, value: bool },
     EqualNull { space0: Whitespace },
+    EqualHex { space0: Whitespace, value: Hex },
     EqualExpression { space0: Whitespace, value: Expr },
     GreaterThanInt { space0: Whitespace, value: i64 },
     GreaterThanFloat { space0: Whitespace, value: Float },
@@ -526,6 +528,14 @@ pub enum Bytes {
         filename: Filename,
         space1: Whitespace,
     },
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Hex {
+    pub space0: Whitespace,
+    pub value: Vec<u8>,
+    pub encoded: String,
+    pub space1: Whitespace,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

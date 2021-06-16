@@ -365,6 +365,7 @@ name = "hurlfmt"
 version = "1.3.0"
 dependencies = [
  "atty",
+ "base64",
  "clap",
  "colored",
  "hurl_core",

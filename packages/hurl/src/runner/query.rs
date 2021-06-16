@@ -203,6 +203,7 @@ pub fn eval_query(
         QueryValue::Duration {} => Ok(Some(Value::Integer(
             http_response.duration.as_millis() as i64
         ))),
+        QueryValue::Bytes {} => Ok(Some(Value::Bytes(http_response.body))),
     }
 }
 
@@ -1005,5 +1006,23 @@ pub mod tests {
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 10));
         assert_eq!(error.inner, RunnerError::InvalidRegex());
+    }
+
+    #[test]
+    fn test_query_bytes() {
+        let variables = HashMap::new();
+        assert_eq!(
+            eval_query(
+                Query {
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    value: QueryValue::Bytes {},
+                },
+                &variables,
+                http::hello_http_response(),
+            )
+            .unwrap()
+            .unwrap(),
+            Value::Bytes(String::into_bytes(String::from("Hello World!")))
+        );
     }
 }
