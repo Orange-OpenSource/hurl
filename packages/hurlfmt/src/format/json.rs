@@ -293,6 +293,9 @@ impl ToJson for QueryValue {
             QueryValue::Duration {} => {
                 attributes.push(("type".to_string(), JValue::String("duration".to_string())));
             }
+            QueryValue::Bytes {} => {
+                attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
+            }
         };
         JValue::Object(attributes)
     }
@@ -343,6 +346,17 @@ impl ToJson for Predicate {
             PredicateFuncValue::EqualNull { .. } => {
                 attributes.push(("type".to_string(), JValue::String("equal".to_string())));
                 attributes.push(("value".to_string(), JValue::Null));
+            }
+            PredicateFuncValue::EqualHex { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("equal".to_string())));
+                let value = JValue::Object(vec![
+                    (
+                        "value".to_string(),
+                        JValue::String(base64::encode(&value.value)),
+                    ),
+                    ("encoding".to_string(), JValue::String("base64".to_string())),
+                ]);
+                attributes.push(("value".to_string(), value));
             }
             PredicateFuncValue::EqualExpression { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("equal".to_string())));

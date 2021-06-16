@@ -103,6 +103,7 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
         Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::EqualBool { space0, value }),
         Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::EqualInt { space0, value }),
         Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::EqualFloat { space0, value }),
+        Ok(PredicateValue::Hex { value }) => Ok(PredicateFuncValue::EqualHex { space0, value }),
         Ok(PredicateValue::Expression { value }) => {
             Ok(PredicateFuncValue::EqualExpression { space0, value })
         }
@@ -273,6 +274,9 @@ fn include_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
         Ok(PredicateValue::Template { value }) => {
             Ok(PredicateFuncValue::IncludeString { space0, value })
         }
+        Ok(PredicateValue::Hex { value: _ }) => {
+            todo!()
+        }
         Ok(PredicateValue::Expression { value }) => {
             Ok(PredicateFuncValue::IncludeExpression { space0, value })
         }
@@ -332,6 +336,7 @@ enum PredicateValue {
     Float { value: Float },
     Bool { value: bool },
     Template { value: Template },
+    Hex { value: Hex },
     Expression { value: Expr },
 }
 
@@ -352,6 +357,10 @@ fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateValue> 
             },
             |p1| match integer(p1) {
                 Ok(value) => Ok(PredicateValue::Int { value }),
+                Err(e) => Err(e),
+            },
+            |p1| match hex(p1) {
+                Ok(value) => Ok(PredicateValue::Hex { value }),
                 Err(e) => Err(e),
             },
             |p1| match expr::parse(p1) {

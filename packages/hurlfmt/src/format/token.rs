@@ -463,6 +463,7 @@ impl Tokenizable for Query {
                 add_tokens(&mut tokens, name.tokenize());
             }
             QueryValue::Duration {} => tokens.push(Token::QueryType(String::from("duration"))),
+            QueryValue::Bytes {} => tokens.push(Token::QueryType(String::from("bytes"))),
         }
         tokens
     }
@@ -550,6 +551,11 @@ impl Tokenizable for PredicateFuncValue {
                 tokens.push(Token::PredicateType(String::from("equals")));
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::EqualHex { space0, value } => {
+                tokens.push(Token::PredicateType(String::from("equals")));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::String(value.to_string()));
             }
             PredicateFuncValue::EqualExpression { space0, value } => {
                 tokens.push(Token::PredicateType(String::from("equals")));

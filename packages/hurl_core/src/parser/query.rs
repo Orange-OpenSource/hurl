@@ -56,6 +56,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
             regex_query,
             variable_query,
             duration_query,
+            bytes_query,
         ],
         reader,
     )
@@ -152,6 +153,11 @@ fn regex_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
 fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("duration", reader)?;
     Ok(QueryValue::Duration {})
+}
+
+fn bytes_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("bytes", reader)?;
+    Ok(QueryValue::Bytes {})
 }
 
 #[cfg(test)]

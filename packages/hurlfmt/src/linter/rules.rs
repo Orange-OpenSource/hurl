@@ -296,6 +296,7 @@ impl Lintable<QueryValue> for QueryValue {
                 space0: one_whitespace(),
             },
             QueryValue::Duration {} => QueryValue::Duration {},
+            QueryValue::Bytes {} => QueryValue::Bytes {},
         }
     }
 }
@@ -402,6 +403,10 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
             PredicateFuncValue::EqualFloat { value, .. } => PredicateFuncValue::EqualFloat {
                 space0: one_whitespace(),
                 value: value.clone(),
+            },
+            PredicateFuncValue::EqualHex { value, .. } => PredicateFuncValue::EqualHex {
+                space0: one_whitespace(),
+                value: value.lint(),
             },
             PredicateFuncValue::EqualExpression { value, .. } => {
                 PredicateFuncValue::EqualExpression {
@@ -662,6 +667,20 @@ fn one_whitespace() -> Whitespace {
     Whitespace {
         value: " ".to_string(),
         source_info: SourceInfo::init(0, 0, 0, 0),
+    }
+}
+impl Lintable<Hex> for Hex {
+    fn errors(&self) -> Vec<Error> {
+        unimplemented!()
+    }
+
+    fn lint(&self) -> Hex {
+        Hex {
+            space0: one_whitespace(),
+            value: self.value.clone(),
+            encoded: self.encoded.clone(),
+            space1: empty_whitespace(),
+        }
     }
 }
 

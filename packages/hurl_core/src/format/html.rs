@@ -375,6 +375,9 @@ impl Htmlable for QueryValue {
             QueryValue::Duration {} => {
                 buffer.push_str("<span class=\"query-type\">duration</span>");
             }
+            QueryValue::Bytes {} => {
+                buffer.push_str("<span class=\"query-type\">bytes</span>");
+            }
         }
         buffer
     }
@@ -462,6 +465,12 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(
                     format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
                 );
+            }
+            PredicateFuncValue::EqualHex { space0, value } => {
+                buffer.push_str("<span class=\"predicate-type\">equals</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer
+                    .push_str(format!("<span class=\"hex\">{}</span>", value.to_string()).as_str());
             }
             PredicateFuncValue::GreaterThanInt { space0, value } => {
                 buffer.push_str("<span class=\"predicate-type\">greaterThan</span>");

@@ -263,6 +263,42 @@ pub fn key_value(reader: &mut Reader) -> ParseResult<'static, KeyValue> {
     })
 }
 
+pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
+    try_literal("hex", reader)?;
+    literal(",", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let mut value: Vec<u8> = vec![];
+    let start = reader.state.cursor;
+    let mut current: i32 = -1;
+    loop {
+        let s = reader.state.clone();
+        match hex_digit(reader) {
+            Ok(d) => {
+                if current != -1 {
+                    value.push((current * 16 + d as i32) as u8);
+                    current = -1;
+                } else {
+                    current = d as i32;
+                }
+            }
+            Err(_) => {
+                reader.state = s;
+                break;
+            }
+        };
+    }
+    let encoded = reader.from(start);
+    let space1 = zero_or_more_spaces(reader)?;
+    literal(";", reader)?;
+
+    Ok(Hex {
+        space0,
+        value,
+        encoded,
+        space1,
+    })
+}
+
 pub fn filename(reader: &mut Reader) -> ParseResult<'static, Filename> {
     // this is an absolure file
     // that you have to write with a relative name
@@ -882,7 +918,7 @@ mod tests {
             Float {
                 int: 1,
                 decimal: 0,
-                decimal_digits: 1
+                decimal_digits: 1,
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -893,7 +929,7 @@ mod tests {
             Float {
                 int: -1,
                 decimal: 0,
-                decimal_digits: 1
+                decimal_digits: 1,
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -904,7 +940,7 @@ mod tests {
             Float {
                 int: 1,
                 decimal: 100_000_000_000_000_000,
-                decimal_digits: 1
+                decimal_digits: 1,
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -915,7 +951,7 @@ mod tests {
             Float {
                 int: 1,
                 decimal: 100_000_000_000_000_000,
-                decimal_digits: 3
+                decimal_digits: 3,
             }
         );
         assert_eq!(reader.state.cursor, 5);
@@ -926,7 +962,7 @@ mod tests {
             Float {
                 int: 1,
                 decimal: 10_000_000_000_000_000,
-                decimal_digits: 2
+                decimal_digits: 2,
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -937,7 +973,7 @@ mod tests {
             Float {
                 int: 1,
                 decimal: 10_000_000_000_000_000,
-                decimal_digits: 3
+                decimal_digits: 3,
             }
         );
         assert_eq!(reader.state.cursor, 5);
@@ -948,7 +984,7 @@ mod tests {
             Float {
                 int: 0,
                 decimal: 333_333_333_333_333_333,
-                decimal_digits: 18
+                decimal_digits: 18,
             }
         );
         assert_eq!(reader.state.cursor, 21);
@@ -1253,5 +1289,42 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::HexDigit {});
         assert_eq!(error.recoverable, true);
+    }
+
+    #[test]
+    fn test_hex() {
+        let mut reader = Reader::init("hex, ff;");
+        assert_eq!(
+            hex(&mut reader).unwrap(),
+            Hex {
+                space0: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo::init(1, 5, 1, 6)
+                },
+                value: vec![255],
+                encoded: "ff".to_string(),
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 8, 1, 8)
+                },
+            }
+        );
+
+        let mut reader = Reader::init("hex,010203 ;");
+        assert_eq!(
+            hex(&mut reader).unwrap(),
+            Hex {
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 5, 1, 5)
+                },
+                value: vec![1, 2, 3],
+                encoded: "010203".to_string(),
+                space1: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo::init(1, 11, 1, 12)
+                },
+            }
+        );
     }
 }

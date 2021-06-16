@@ -164,6 +164,9 @@ fn expected(
             let expected = eval_template(expected, variables)?;
             Ok(format!("string <{}>", expected))
         }
+        PredicateFuncValue::EqualHex {
+            value: expected, ..
+        } => Ok(format!("bytearray <{}>", expected.to_string())),
         PredicateFuncValue::EqualExpression {
             value: expected, ..
         } => {
@@ -326,6 +329,14 @@ fn eval_something(
             Ok(assert_values_equal(value, Value::String(expected)))
         }
 
+        // equals hex
+        PredicateFuncValue::EqualHex {
+            value: Hex {
+                value: expected, ..
+            },
+            ..
+        } => Ok(assert_values_equal(value, Value::Bytes(expected))),
+
         // equals expression
         PredicateFuncValue::EqualExpression {
             value: expected, ..
@@ -389,6 +400,12 @@ fn eval_something(
             Value::Nodeset(n) => Ok(AssertResult {
                 success: n as u64 == expected_value,
                 actual: n.to_string(),
+                expected: expected_value.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Bytes(data) => Ok(AssertResult {
+                success: data.len() as u64 == expected_value,
+                actual: data.len().to_string(),
                 expected: expected_value.to_string(),
                 type_mismatch: false,
             }),
