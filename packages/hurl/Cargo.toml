@@ -19,13 +19,14 @@ strict = []
 [dependencies]
 atty = "0.2.13"
 base64 = "0.11.0"
-brotli="3.3.0"
+brotli = "3.3.0"
 chrono = "0.4.11"
 clap = "2.33.0"
 colored = "2"
 curl = "0.4.33"
 encoding = "0.2"
 float-cmp = "0.6.0"
+hex-literal = "0.3.1"
 hurl_core = { version = "1.1.0", path = "../hurl_core" }
 libflate = "1.0.2"
 libxml = "0.2.17"
@@ -33,13 +34,16 @@ percent-encoding = "2.1.0"
 regex = "1.1.0"
 serde = "1.0.104"
 serde_json = "1.0.40"
+sha2 = "0.9.5"
 url = "2.1.0"
+
 
 [target.'cfg(unix)'.dependencies]
 termion = "1.5.5"
 
 [build-dependencies]
 cc = "1.0.52"
+
 
 
 

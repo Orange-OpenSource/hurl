@@ -296,6 +296,9 @@ impl ToJson for QueryValue {
             QueryValue::Bytes {} => {
                 attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
             }
+            QueryValue::Sha256 {} => {
+                attributes.push(("type".to_string(), JValue::String("sha256".to_string())));
+            }
         };
         JValue::Object(attributes)
     }

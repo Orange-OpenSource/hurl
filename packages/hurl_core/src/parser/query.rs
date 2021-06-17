@@ -57,6 +57,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
             variable_query,
             duration_query,
             bytes_query,
+            sha256_query,
         ],
         reader,
     )
@@ -158,6 +159,11 @@ fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn bytes_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("bytes", reader)?;
     Ok(QueryValue::Bytes {})
+}
+
+fn sha256_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("sha256", reader)?;
+    Ok(QueryValue::Sha256 {})
 }
 
 #[cfg(test)]

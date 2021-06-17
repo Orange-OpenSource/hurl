@@ -19,15 +19,15 @@
 use regex::Regex;
 use std::collections::HashMap;
 
-use crate::http;
-use crate::jsonpath;
-use hurl_core::ast::*;
-
 use super::cookie;
 use super::core::{Error, RunnerError};
 use super::template::eval_template;
 use super::value::Value;
 use super::xpath;
+use crate::http;
+use crate::jsonpath;
+use hurl_core::ast::*;
+use sha2::Digest;
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
@@ -204,6 +204,13 @@ pub fn eval_query(
             http_response.duration.as_millis() as i64
         ))),
         QueryValue::Bytes {} => Ok(Some(Value::Bytes(http_response.body))),
+        QueryValue::Sha256 {} => {
+            let mut hasher = sha2::Sha256::new();
+            hasher.update(http_response.body);
+            let result = hasher.finalize();
+            let bytes = Value::Bytes(result[..].to_vec());
+            Ok(Some(bytes))
+        }
     }
 }
 
@@ -267,6 +274,8 @@ impl Value {
 pub mod tests {
     use super::*;
     use hurl_core::ast::{Pos, SourceInfo};
+    #[macro_use]
+    use hex_literal::hex;
 
     pub fn xpath_invalid_query() -> Query {
         // xpath ???
@@ -555,7 +564,7 @@ pub mod tests {
                 }
             ],
             body: vec![],
-            duration: Default::default()
+            duration: Default::default(),
         };
 
         // cookie "LSID"
@@ -698,7 +707,7 @@ pub mod tests {
         assert_eq!(
             eval_cookie_attribute_name(
                 CookieAttributeName::Domain("_".to_string()),
-                cookie.clone()
+                cookie.clone(),
             ),
             None
         );
@@ -710,14 +719,14 @@ pub mod tests {
         assert_eq!(
             eval_cookie_attribute_name(
                 CookieAttributeName::MaxAge("_".to_string()),
-                cookie.clone()
+                cookie.clone(),
             ),
             None
         );
         assert_eq!(
             eval_cookie_attribute_name(
                 CookieAttributeName::Expires("_".to_string()),
-                cookie.clone()
+                cookie.clone(),
             )
             .unwrap(),
             Value::String("Wed, 13 Jan 2021 22:23:01 GMT".to_string())
@@ -725,7 +734,7 @@ pub mod tests {
         assert_eq!(
             eval_cookie_attribute_name(
                 CookieAttributeName::Secure("_".to_string()),
-                cookie.clone()
+                cookie.clone(),
             )
             .unwrap(),
             Value::Unit
@@ -733,7 +742,7 @@ pub mod tests {
         assert_eq!(
             eval_cookie_attribute_name(
                 CookieAttributeName::HttpOnly("_".to_string()),
-                cookie.clone()
+                cookie.clone(),
             )
             .unwrap(),
             Value::Unit
@@ -1023,6 +1032,32 @@ pub mod tests {
             .unwrap()
             .unwrap(),
             Value::Bytes(String::into_bytes(String::from("Hello World!")))
+        );
+    }
+
+    #[test]
+    fn test_query_sha256() {
+        let variables = HashMap::new();
+        assert_eq!(
+            eval_query(
+                Query {
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    value: QueryValue::Sha256 {},
+                },
+                &variables,
+                http::Response {
+                    version: http::Version::Http10,
+                    status: 200,
+                    headers: vec![],
+                    body: vec![0xff],
+                    duration: Default::default(),
+                },
+            )
+            .unwrap()
+            .unwrap(),
+            Value::Bytes(
+                hex!("a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89").to_vec()
+            )
         );
     }
 }
