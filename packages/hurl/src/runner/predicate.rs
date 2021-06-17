@@ -17,6 +17,7 @@
  */
 use std::collections::HashMap;
 
+use hex;
 use regex::Regex;
 
 use hurl_core::ast::*;
@@ -105,7 +106,7 @@ impl Value {
             ),
             Value::Nodeset(n) => format!("nodeset of size <{}>", n),
             Value::Object(_) => "object".to_string(),
-            Value::Bytes(values) => format!("byte array of size <{}>", values.len()),
+            Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Null => "null".to_string(),
             Value::Unit => "unit".to_string(),
         }
