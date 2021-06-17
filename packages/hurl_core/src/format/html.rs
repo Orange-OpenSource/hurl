@@ -378,6 +378,9 @@ impl Htmlable for QueryValue {
             QueryValue::Bytes {} => {
                 buffer.push_str("<span class=\"query-type\">bytes</span>");
             }
+            QueryValue::Sha256 {} => {
+                buffer.push_str("<span class=\"query-type\">sha256</span>");
+            }
         }
         buffer
     }

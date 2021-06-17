@@ -324,6 +324,7 @@ pub enum QueryValue {
     },
     Duration {},
     Bytes {},
+    Sha256 {},
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

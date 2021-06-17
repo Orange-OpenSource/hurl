@@ -464,6 +464,7 @@ impl Tokenizable for Query {
             }
             QueryValue::Duration {} => tokens.push(Token::QueryType(String::from("duration"))),
             QueryValue::Bytes {} => tokens.push(Token::QueryType(String::from("bytes"))),
+            QueryValue::Sha256 {} => tokens.push(Token::QueryType(String::from("sha256"))),
         }
         tokens
     }
