@@ -57,4 +57,5 @@ pub enum ParseError {
     EscapeChar,
 
     InvalidCookieAttribute,
+    OddNumberOfHexDigits,
 }

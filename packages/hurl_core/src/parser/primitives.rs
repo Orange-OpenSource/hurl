@@ -287,6 +287,13 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
             }
         };
     }
+    if current != -1 {
+        return Err(Error {
+            pos: reader.state.pos.clone(),
+            recoverable: false,
+            inner: ParseError::OddNumberOfHexDigits {},
+        });
+    }
     let encoded = reader.from(start);
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
@@ -1326,5 +1333,13 @@ mod tests {
                 },
             }
         );
+    }
+
+    #[test]
+    fn test_hex_error() {
+        let mut reader = Reader::init("hex,012;");
+        let error = hex(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 8 });
+        assert_eq!(error.inner, ParseError::OddNumberOfHexDigits {});
     }
 }
