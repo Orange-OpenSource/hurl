@@ -111,7 +111,7 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
             Ok(PredicateFuncValue::EqualString { space0, value })
         }
         Err(e) => match e.inner {
-            ParseError::EscapeChar {} => Err(e),
+            ParseError::EscapeChar {} | ParseError::OddNumberOfHexDigits {} => Err(e),
             _ => Err(Error {
                 pos: start.pos,
                 recoverable: false,

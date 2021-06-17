@@ -54,6 +54,7 @@ impl Error for parser::Error {
             ParseError::ResponseSection { .. } => "Parsing section".to_string(),
             ParseError::EscapeChar { .. } => "Parsing escape character".to_string(),
             ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
+            ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
             _ => format!("{:?}", self),
         }
     }
@@ -84,6 +85,9 @@ impl Error for parser::Error {
             ParseError::EscapeChar { .. } => "The escaping sequence is not valid".to_string(),
             ParseError::InvalidCookieAttribute { .. } => {
                 "The cookie attribute is not valid".to_string()
+            }
+            ParseError::OddNumberOfHexDigits { .. } => {
+                "Expecting an even number of hex digits".to_string()
             }
             _ => format!("{:?}", self),
         }
