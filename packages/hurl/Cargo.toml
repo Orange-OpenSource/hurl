@@ -26,6 +26,7 @@ colored = "2"
 curl = "0.4.33"
 encoding = "0.2"
 float-cmp = "0.6.0"
+hex = "0.4.3"
 hex-literal = "0.3.1"
 hurl_core = { version = "1.1.0", path = "../hurl_core" }
 libflate = "1.0.2"
