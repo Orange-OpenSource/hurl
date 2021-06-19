@@ -52,6 +52,7 @@ fn request(reader: &mut Reader) -> ParseResult<'static, Request> {
     let m = method(reader)?;
     let space1 = one_or_more_spaces(reader)?;
     let u = url(reader)?;
+
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = request_sections(reader)?;
@@ -224,6 +225,20 @@ fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
             inner: ParseError::Url {},
         });
     }
+
+    // url should be followed by a line terminator
+    let save = reader.state.clone();
+    if line_terminator(reader).is_err() {
+        reader.state = save;
+        let c = reader.peek().unwrap();
+        return Err(Error {
+            pos: reader.state.pos.clone(),
+            recoverable: false,
+            inner: ParseError::UrlIllegalCharacter(c),
+        });
+    }
+
+    reader.state = save;
     Ok(Template {
         quotes: false,
         elements,
