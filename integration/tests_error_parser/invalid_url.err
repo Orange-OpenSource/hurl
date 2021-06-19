@@ -1,7 +1,7 @@
-error: Parsing literal
+error: Parsing url
   --> tests_error_parser/invalid_url.hurl:1:26
    |
  1 | GET http://localhost:8000> #
-   |                          ^ expecting 'line_terminator'
+   |                          ^ Illegal character <>>
    |
 

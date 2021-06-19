@@ -55,6 +55,7 @@ impl Error for parser::Error {
             ParseError::EscapeChar { .. } => "Parsing escape character".to_string(),
             ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
             ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
+            ParseError::UrlIllegalCharacter(_) => "Parsing url".to_string(),
             _ => format!("{:?}", self),
         }
     }
@@ -89,6 +90,7 @@ impl Error for parser::Error {
             ParseError::OddNumberOfHexDigits { .. } => {
                 "Expecting an even number of hex digits".to_string()
             }
+            ParseError::UrlIllegalCharacter(c) => format!("Illegal character <{}>", c),
             _ => format!("{:?}", self),
         }
     }
