@@ -210,6 +210,30 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
     }
 }
 
+// return the literal string
+pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    match literal(s1, reader) {
+        Ok(_) => Ok(s1.to_string()),
+        Err(_) => {
+            reader.state = start.clone();
+            match literal(s2, reader) {
+                Ok(_) => Ok(s2.to_string()),
+                Err(_) => {
+                    reader.state = start.clone();
+                    return Err(Error {
+                        pos: start.pos,
+                        recoverable: true,
+                        inner: ParseError::Expecting {
+                            value: format!("<{}> or <{}>", s1, s2),
+                        },
+                    });
+                }
+            }
+        }
+    }
+}
+
 pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     let start = reader.state.clone();
     match try_literal("\r\n", reader) {

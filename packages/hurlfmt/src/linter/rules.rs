@@ -389,76 +389,91 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
             PredicateFuncValue::EqualString { value, .. } => PredicateFuncValue::EqualString {
                 space0: one_whitespace(),
                 value: value.clone().lint(),
+                operator: true,
             },
             PredicateFuncValue::EqualInt { value, .. } => PredicateFuncValue::EqualInt {
                 space0: one_whitespace(),
                 value: value.clone(),
+                operator: true,
             },
             PredicateFuncValue::EqualBool { value, .. } => PredicateFuncValue::EqualBool {
                 space0: one_whitespace(),
                 value: value.clone(),
+                operator: true,
             },
             PredicateFuncValue::EqualNull { .. } => PredicateFuncValue::EqualNull {
                 space0: one_whitespace(),
+                operator: true,
             },
             PredicateFuncValue::EqualFloat { value, .. } => PredicateFuncValue::EqualFloat {
                 space0: one_whitespace(),
                 value: value.clone(),
+                operator: true,
             },
             PredicateFuncValue::EqualHex { value, .. } => PredicateFuncValue::EqualHex {
                 space0: one_whitespace(),
                 value: value.lint(),
+                operator: true,
             },
             PredicateFuncValue::EqualExpression { value, .. } => {
                 PredicateFuncValue::EqualExpression {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::GreaterThanInt { value, .. } => {
                 PredicateFuncValue::GreaterThanInt {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::GreaterThanFloat { value, .. } => {
                 PredicateFuncValue::GreaterThanFloat {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::GreaterThanOrEqualInt { value, .. } => {
                 PredicateFuncValue::GreaterThanOrEqualInt {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::GreaterThanOrEqualFloat { value, .. } => {
                 PredicateFuncValue::GreaterThanOrEqualFloat {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::LessThanInt { value, .. } => PredicateFuncValue::GreaterThanInt {
                 space0: one_whitespace(),
                 value: value.clone(),
+                operator: true,
             },
             PredicateFuncValue::LessThanFloat { value, .. } => {
                 PredicateFuncValue::GreaterThanFloat {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::LessThanOrEqualInt { value, .. } => {
                 PredicateFuncValue::GreaterThanOrEqualInt {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::LessThanOrEqualFloat { value, .. } => {
                 PredicateFuncValue::GreaterThanOrEqualFloat {
                     space0: one_whitespace(),
                     value: value.clone(),
+                    operator: true,
                 }
             }
             PredicateFuncValue::Contain { value, .. } => PredicateFuncValue::Contain {

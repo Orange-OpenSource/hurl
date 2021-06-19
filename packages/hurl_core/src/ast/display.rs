@@ -141,6 +141,74 @@ impl fmt::Display for Hex {
     }
 }
 
+impl PredicateFuncValue {
+    pub fn name(&self) -> String {
+        match self {
+            PredicateFuncValue::EqualString { operator, .. }
+            | PredicateFuncValue::EqualInt { operator, .. }
+            | PredicateFuncValue::EqualFloat { operator, .. }
+            | PredicateFuncValue::EqualBool { operator, .. }
+            | PredicateFuncValue::EqualNull { operator, .. }
+            | PredicateFuncValue::EqualHex { operator, .. }
+            | PredicateFuncValue::EqualExpression { operator, .. } => {
+                if *operator {
+                    "==".to_string()
+                } else {
+                    "equals".to_string()
+                }
+            }
+            PredicateFuncValue::GreaterThanInt { operator, .. }
+            | PredicateFuncValue::GreaterThanFloat { operator, .. } => {
+                if *operator {
+                    ">".to_string()
+                } else {
+                    "greaterThan".to_string()
+                }
+            }
+            PredicateFuncValue::GreaterThanOrEqualInt { operator, .. }
+            | PredicateFuncValue::GreaterThanOrEqualFloat { operator, .. } => {
+                if *operator {
+                    ">=".to_string()
+                } else {
+                    "greaterThanOrEquals".to_string()
+                }
+            }
+            PredicateFuncValue::LessThanInt { operator, .. }
+            | PredicateFuncValue::LessThanFloat { operator, .. } => {
+                if *operator {
+                    "<".to_string()
+                } else {
+                    "lessThan".to_string()
+                }
+            }
+            PredicateFuncValue::LessThanOrEqualInt { operator, .. }
+            | PredicateFuncValue::LessThanOrEqualFloat { operator, .. } => {
+                if *operator {
+                    "<=".to_string()
+                } else {
+                    "lessThanOrEquals".to_string()
+                }
+            }
+            PredicateFuncValue::CountEqual { .. } => "countEquals".to_string(),
+            PredicateFuncValue::StartWith { .. } => "startsWith".to_string(),
+            PredicateFuncValue::Contain { .. } => "contains".to_string(),
+            PredicateFuncValue::IncludeString { .. }
+            | PredicateFuncValue::IncludeInt { .. }
+            | PredicateFuncValue::IncludeFloat { .. }
+            | PredicateFuncValue::IncludeBool { .. }
+            | PredicateFuncValue::IncludeNull { .. }
+            | PredicateFuncValue::IncludeExpression { .. } => "includes".to_string(),
+            PredicateFuncValue::Match { .. } => "matches".to_string(),
+            PredicateFuncValue::IsInteger { .. } => "isInteger".to_string(),
+            PredicateFuncValue::IsFloat { .. } => "isFloat".to_string(),
+            PredicateFuncValue::IsBoolean { .. } => "isBoolean".to_string(),
+            PredicateFuncValue::IsString { .. } => "isString".to_string(),
+            PredicateFuncValue::IsCollection { .. } => "isCollection".to_string(),
+            PredicateFuncValue::Exist { .. } => "exists".to_string(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -400,31 +400,119 @@ pub struct PredicateFunc {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum PredicateFuncValue {
-    EqualString { space0: Whitespace, value: Template },
-    EqualInt { space0: Whitespace, value: i64 },
-    EqualFloat { space0: Whitespace, value: Float },
-    EqualBool { space0: Whitespace, value: bool },
-    EqualNull { space0: Whitespace },
-    EqualHex { space0: Whitespace, value: Hex },
-    EqualExpression { space0: Whitespace, value: Expr },
-    GreaterThanInt { space0: Whitespace, value: i64 },
-    GreaterThanFloat { space0: Whitespace, value: Float },
-    GreaterThanOrEqualInt { space0: Whitespace, value: i64 },
-    GreaterThanOrEqualFloat { space0: Whitespace, value: Float },
-    LessThanInt { space0: Whitespace, value: i64 },
-    LessThanFloat { space0: Whitespace, value: Float },
-    LessThanOrEqualInt { space0: Whitespace, value: i64 },
-    LessThanOrEqualFloat { space0: Whitespace, value: Float },
-    CountEqual { space0: Whitespace, value: u64 },
-    StartWith { space0: Whitespace, value: Template },
-    Contain { space0: Whitespace, value: Template },
-    IncludeString { space0: Whitespace, value: Template },
-    IncludeInt { space0: Whitespace, value: i64 },
-    IncludeFloat { space0: Whitespace, value: Float },
-    IncludeBool { space0: Whitespace, value: bool },
-    IncludeNull { space0: Whitespace },
-    IncludeExpression { space0: Whitespace, value: Expr },
-    Match { space0: Whitespace, value: Template },
+    EqualString {
+        space0: Whitespace,
+        value: Template,
+        operator: bool,
+    },
+    EqualInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    EqualFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    EqualBool {
+        space0: Whitespace,
+        value: bool,
+        operator: bool,
+    },
+    EqualNull {
+        space0: Whitespace,
+        operator: bool,
+    },
+    EqualHex {
+        space0: Whitespace,
+        value: Hex,
+        operator: bool,
+    },
+    EqualExpression {
+        space0: Whitespace,
+        value: Expr,
+        operator: bool,
+    },
+    GreaterThanInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    GreaterThanFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    GreaterThanOrEqualInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    GreaterThanOrEqualFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    LessThanInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    LessThanFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    LessThanOrEqualInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    LessThanOrEqualFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    CountEqual {
+        space0: Whitespace,
+        value: u64,
+    },
+    StartWith {
+        space0: Whitespace,
+        value: Template,
+    },
+    Contain {
+        space0: Whitespace,
+        value: Template,
+    },
+    IncludeString {
+        space0: Whitespace,
+        value: Template,
+    },
+    IncludeInt {
+        space0: Whitespace,
+        value: i64,
+    },
+    IncludeFloat {
+        space0: Whitespace,
+        value: Float,
+    },
+    IncludeBool {
+        space0: Whitespace,
+        value: bool,
+    },
+    IncludeNull {
+        space0: Whitespace,
+    },
+    IncludeExpression {
+        space0: Whitespace,
+        value: Expr,
+    },
+    Match {
+        space0: Whitespace,
+        value: Template,
+    },
     IsInteger {},
     IsFloat {},
     IsBoolean {},

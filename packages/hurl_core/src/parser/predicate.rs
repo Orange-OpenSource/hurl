@@ -93,23 +93,48 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
 }
 
 fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("equals", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
+    let operator = try_literals("equals", "==", reader)? == "==";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
     let start = reader.state.clone();
 
     // TODO To be refactored - use idiomatic choice with correct recoverable behaviour
+
     match predicate_value(reader) {
-        Ok(PredicateValue::Null {}) => Ok(PredicateFuncValue::EqualNull { space0 }),
-        Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::EqualBool { space0, value }),
-        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::EqualInt { space0, value }),
-        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::EqualFloat { space0, value }),
-        Ok(PredicateValue::Hex { value }) => Ok(PredicateFuncValue::EqualHex { space0, value }),
-        Ok(PredicateValue::Expression { value }) => {
-            Ok(PredicateFuncValue::EqualExpression { space0, value })
-        }
-        Ok(PredicateValue::Template { value }) => {
-            Ok(PredicateFuncValue::EqualString { space0, value })
-        }
+        Ok(PredicateValue::Null {}) => Ok(PredicateFuncValue::EqualNull { space0, operator }),
+        Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::EqualBool {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::EqualInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::EqualFloat {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Hex { value }) => Ok(PredicateFuncValue::EqualHex {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Expression { value }) => Ok(PredicateFuncValue::EqualExpression {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Template { value }) => Ok(PredicateFuncValue::EqualString {
+            space0,
+            value,
+            operator,
+        }),
         Err(e) => match e.inner {
             ParseError::EscapeChar {} | ParseError::OddNumberOfHexDigits {} => Err(e),
             _ => Err(Error {
@@ -122,17 +147,24 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
 }
 
 fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("greaterThan", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
+    let operator = try_literals("greaterThan", ">=", reader)? == ">=";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
     let start = reader.state.clone();
-
     match predicate_value(reader) {
-        Ok(PredicateValue::Int { value }) => {
-            Ok(PredicateFuncValue::GreaterThanInt { space0, value })
-        }
-        Ok(PredicateValue::Float { value }) => {
-            Ok(PredicateFuncValue::GreaterThanFloat { space0, value })
-        }
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::GreaterThanInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::GreaterThanFloat {
+            space0,
+            value,
+            operator,
+        }),
         Ok(_) => Err(Error {
             pos: start.pos,
             recoverable: false,
@@ -148,18 +180,26 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
         },
     }
 }
-fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("greaterThanOrEquals", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
-    let start = reader.state.clone();
 
+fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    let operator = try_literals("greaterThanOrEquals", ">=", reader)? == ">=";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
+    let start = reader.state.clone();
     match predicate_value(reader) {
-        Ok(PredicateValue::Int { value }) => {
-            Ok(PredicateFuncValue::GreaterThanOrEqualInt { space0, value })
-        }
-        Ok(PredicateValue::Float { value }) => {
-            Ok(PredicateFuncValue::GreaterThanOrEqualFloat { space0, value })
-        }
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::GreaterThanOrEqualInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::GreaterThanOrEqualFloat {
+            space0,
+            value,
+            operator,
+        }),
         Ok(_) => Err(Error {
             pos: start.pos,
             recoverable: false,
@@ -177,15 +217,24 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
 }
 
 fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("lessThan", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
+    let operator = try_literals("lessThan", "<", reader)? == "<";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
     let start = reader.state.clone();
-
     match predicate_value(reader) {
-        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::LessThanInt { space0, value }),
-        Ok(PredicateValue::Float { value }) => {
-            Ok(PredicateFuncValue::LessThanFloat { space0, value })
-        }
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::LessThanInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::LessThanFloat {
+            space0,
+            value,
+            operator,
+        }),
         Ok(_) => Err(Error {
             pos: start.pos,
             recoverable: false,
@@ -201,18 +250,26 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
         },
     }
 }
-fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("lessThanOrEquals", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
-    let start = reader.state.clone();
 
+fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    let operator = try_literals("lessThanOrEquals", "<=", reader)? == "<=";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
+    let start = reader.state.clone();
     match predicate_value(reader) {
-        Ok(PredicateValue::Int { value }) => {
-            Ok(PredicateFuncValue::LessThanOrEqualInt { space0, value })
-        }
-        Ok(PredicateValue::Float { value }) => {
-            Ok(PredicateFuncValue::LessThanOrEqualFloat { space0, value })
-        }
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::LessThanOrEqualInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::LessThanOrEqualFloat {
+            space0,
+            value,
+            operator,
+        }),
         Ok(_) => Err(Error {
             pos: start.pos,
             recoverable: false,
@@ -239,7 +296,7 @@ fn count_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateF
                 pos: save.pos,
                 recoverable: false,
                 inner: ParseError::PredicateValue {},
-            })
+            });
         }
         Ok(value) => value,
     };
@@ -401,6 +458,7 @@ mod tests {
                             source_info: SourceInfo::init(1, 11, 1, 12),
                         },
                         value: true,
+                        operator: false
                     },
                 },
             }
@@ -415,7 +473,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 13
+                column: 13,
             }
         );
         assert_eq!(error.recoverable, false);
@@ -442,6 +500,8 @@ mod tests {
                     value: String::from("  "),
                     source_info: SourceInfo::init(1, 7, 1, 9),
                 },
+
+                operator: false
             }
         );
 
@@ -452,12 +512,13 @@ mod tests {
                 value: Float {
                     int: 1,
                     decimal: 100_000_000_000_000_000,
-                    decimal_digits: 1
+                    decimal_digits: 1,
                 },
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::init(1, 7, 1, 8),
                 },
+                operator: false
             }
         );
 
@@ -470,7 +531,21 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::init(1, 7, 1, 8),
                 },
-            }
+                operator: false
+            },
+        );
+
+        let mut reader = Reader::init("== 2");
+        assert_eq!(
+            equal_predicate(&mut reader).unwrap(),
+            PredicateFuncValue::EqualInt {
+                value: 2,
+                space0: Whitespace {
+                    value: String::from(" "),
+                    source_info: SourceInfo::init(1, 3, 1, 4),
+                },
+                operator: true
+            },
         );
 
         let mut reader = Reader::init("equals \"Bob\"");
@@ -489,6 +564,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::init(1, 7, 1, 8),
                 },
+                operator: false
             }
         );
     }
@@ -517,6 +593,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::init(1, 7, 1, 8),
                 },
+                operator: false
             }
         );
     }
@@ -541,7 +618,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 13
+                column: 13,
             }
         );
         assert_eq!(error.recoverable, false);
@@ -556,7 +633,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 12
+                column: 12,
             }
         );
         assert_eq!(error.recoverable, false);
@@ -589,7 +666,7 @@ mod tests {
                 value: Float {
                     int: 1,
                     decimal: 100_000_000_000_000_000,
-                    decimal_digits: 1
+                    decimal_digits: 1,
                 }
             }
         );

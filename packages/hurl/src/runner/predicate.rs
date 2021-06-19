@@ -17,7 +17,6 @@
  */
 use std::collections::HashMap;
 
-use hex;
 use regex::Regex;
 
 use hurl_core::ast::*;
@@ -841,6 +840,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace,
                     value: 10,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(1, 11, 1, 12),
             },
@@ -876,6 +876,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace,
                     value: 10,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -901,6 +902,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace,
                     value: 10,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -927,6 +929,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace.clone(),
                     value: 10,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -944,6 +947,7 @@ mod tests {
                 value: PredicateFuncValue::EqualBool {
                     space0: whitespace.clone(),
                     value: true,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -965,6 +969,7 @@ mod tests {
                         decimal: 200_000_000_000_000_000,
                         decimal_digits: 0,
                     },
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1013,6 +1018,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace.clone(),
                     value: 1,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1030,6 +1036,7 @@ mod tests {
                 value: PredicateFuncValue::EqualBool {
                     space0: whitespace.clone(),
                     value: false,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1051,6 +1058,7 @@ mod tests {
                         decimal: 1,
                         decimal_digits: 1,
                     },
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1069,6 +1077,7 @@ mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace,
                     value: 1,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1114,6 +1123,7 @@ mod tests {
                 value: PredicateFuncValue::EqualString {
                     space0: whitespace.clone(),
                     value: template.clone(),
+                    operator: false,
                 },
                 source_info: SourceInfo::init(1, 1, 1, 21),
             },
@@ -1139,6 +1149,7 @@ mod tests {
                 value: PredicateFuncValue::EqualString {
                     space0: whitespace,
                     value: template,
+                    operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1422,6 +1433,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: PredicateFuncValue::EqualNull {
                     space0: whitespace(),
+                    operator: false,
                 },
             },
         };
@@ -1471,6 +1483,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: PredicateFuncValue::EqualNull {
                     space0: whitespace(),
+                    operator: false,
                 },
             },
         };
@@ -1493,6 +1506,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: PredicateFuncValue::EqualNull {
                     space0: whitespace(),
+                    operator: false,
                 },
             },
         };
