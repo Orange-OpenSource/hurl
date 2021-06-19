@@ -691,6 +691,7 @@ pub mod tests {
                 value: PredicateFuncValue::EqualInt {
                     space0: whitespace(),
                     value,
+                    operator: false,
                 },
             },
         }

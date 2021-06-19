@@ -445,6 +445,7 @@ mod tests {
                                     }],
                                     source_info: SourceInfo::init(2, 26, 2, 45),
                                 },
+                                operator: false
                             },
                         },
                     },
@@ -782,6 +783,7 @@ mod tests {
                             source_info: SourceInfo::init(1, 27, 1, 28),
                         },
                         value: 5,
+                        operator: false
                     },
                 },
             }
