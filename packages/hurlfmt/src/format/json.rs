@@ -388,7 +388,7 @@ impl ToJson for Predicate {
                 attributes.push(("value".to_string(), JValue::Number(value.to_string())));
             }
             PredicateFuncValue::LessThanInt { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("greater".to_string())));
+                attributes.push(("type".to_string(), JValue::String("less".to_string())));
                 attributes.push(("value".to_string(), JValue::Number(value.to_string())));
             }
             PredicateFuncValue::LessThanFloat { value, .. } => {
