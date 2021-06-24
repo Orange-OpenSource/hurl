@@ -26,7 +26,7 @@ jsonpath "$.duration" equals 1.5
 jsonpath "$.duration" lessThanOrEquals 2.0
 jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" lessThan 2
-jsonpath "$.duration" lessThan 2
+jsonpath "$.duration" < 2
 jsonpath "$.duration" isFloat
 jsonpath "$.duration" not isInteger
 jsonpath "$.nullable" equals null
