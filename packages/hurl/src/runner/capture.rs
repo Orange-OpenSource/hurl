@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use regex::Regex;
+
 use std::collections::HashMap;
 
 use crate::http;
@@ -24,7 +24,6 @@ use hurl_core::ast::*;
 use super::core::RunnerError;
 use super::core::{CaptureResult, Error};
 use super::query::eval_query;
-use super::template::eval_template;
 use super::value::Value;
 
 pub fn eval_capture(
@@ -42,58 +41,9 @@ pub fn eval_capture(
                 assert: false,
             });
         }
-        Some(value) => match capture.subquery {
-            None => value,
-            Some(subquery) => {
-                let value = eval_subquery(subquery.clone(), variables, value)?;
-                match value {
-                    None => {
-                        return Err(Error {
-                            source_info: subquery.source_info,
-                            inner: RunnerError::NoQueryResult {},
-                            assert: false,
-                        });
-                    }
-                    Some(value) => value,
-                }
-            }
-        },
+        Some(value) => value,
     };
     Ok(CaptureResult { name, value })
-}
-
-fn eval_subquery(
-    subquery: Subquery,
-    variables: &HashMap<String, Value>,
-    value: Value,
-) -> Result<Option<Value>, Error> {
-    match subquery.value {
-        SubqueryValue::Regex { expr, .. } => {
-            let source_info = expr.source_info.clone();
-            let expr = eval_template(expr, variables)?;
-            match value {
-                Value::String(s) => match Regex::new(expr.as_str()) {
-                    Ok(re) => match re.captures(s.as_str()) {
-                        Some(captures) => match captures.get(1) {
-                            Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                            None => Ok(None),
-                        },
-                        None => Ok(None),
-                    },
-                    Err(_) => Err(Error {
-                        source_info,
-                        inner: RunnerError::InvalidRegex(),
-                        assert: false,
-                    }),
-                },
-                _ => Err(Error {
-                    source_info: subquery.source_info,
-                    inner: RunnerError::SubqueryInvalidInput,
-                    assert: false,
-                }),
-            }
-        }
-    }
 }
 
 #[cfg(test)]
@@ -124,8 +74,6 @@ pub mod tests {
 
             // xpath count(//user)
             query: query::tests::xpath_count_user_query(),
-            space3: whitespace.clone(),
-            subquery: None,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -154,8 +102,6 @@ pub mod tests {
 
             // xpath count(//user)
             query: query::tests::jsonpath_duration(),
-            space3: whitespace.clone(),
-            subquery: None,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -184,8 +130,6 @@ pub mod tests {
             space2: whitespace.clone(),
 
             query: query::tests::xpath_invalid_query(),
-            space3: whitespace.clone(),
-            subquery: None,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -233,9 +177,9 @@ pub mod tests {
                         source_info: SourceInfo::init(1, 7, 1, 13),
                     },
                 },
+
+                subquery: None,
             },
-            space3: whitespace.clone(),
-            subquery: None,
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -267,76 +211,5 @@ pub mod tests {
                 value: Value::from_f64(1.5),
             }
         );
-    }
-
-    #[test]
-    fn test_subquery_value_regex() {
-        // regex "Hello (.*)!"
-        let variables = HashMap::new();
-        let whitespace = Whitespace {
-            value: String::from(""),
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        };
-        let subquery = Subquery {
-            source_info: SourceInfo::init(1, 1, 1, 20),
-            value: SubqueryValue::Regex {
-                space0: whitespace,
-                expr: Template {
-                    quotes: false,
-                    elements: vec![TemplateElement::String {
-                        value: "Hello (.*)!".to_string(),
-                        encoded: "Hello (.*)!".to_string(),
-                    }],
-                    source_info: SourceInfo::init(1, 7, 1, 20),
-                },
-            },
-        };
-        assert_eq!(
-            eval_subquery(
-                subquery.clone(),
-                &variables,
-                Value::String("Hello Bob!".to_string())
-            )
-            .unwrap()
-            .unwrap(),
-            Value::String("Bob".to_string())
-        );
-        let error = eval_subquery(subquery, &variables, Value::Bool(true))
-            .err()
-            .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
-        assert_eq!(error.inner, RunnerError::SubqueryInvalidInput);
-    }
-
-    #[test]
-    fn test_subquery_value_error() {
-        let variables = HashMap::new();
-        let whitespace = Whitespace {
-            value: String::from(""),
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        };
-        let subquery = Subquery {
-            source_info: SourceInfo::init(1, 1, 1, 20),
-            value: SubqueryValue::Regex {
-                space0: whitespace,
-                expr: Template {
-                    quotes: false,
-                    elements: vec![TemplateElement::String {
-                        value: "???".to_string(),
-                        encoded: "???".to_string(),
-                    }],
-                    source_info: SourceInfo::init(1, 7, 1, 20),
-                },
-            },
-        };
-        let error = eval_subquery(
-            subquery,
-            &variables,
-            Value::String("Hello Bob!".to_string()),
-        )
-        .err()
-        .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 20));
-        assert_eq!(error.inner, RunnerError::InvalidRegex {});
     }
 }

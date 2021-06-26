@@ -229,13 +229,10 @@ impl ToJson for Cookie {
 
 impl ToJson for Capture {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![
+        let attributes = vec![
             ("name".to_string(), JValue::String(self.name.value.clone())),
             ("query".to_string(), self.query.to_json()),
         ];
-        if let Some(subquery) = self.subquery.clone() {
-            attributes.push(("subquery".to_string(), subquery.to_json()));
-        }
         JValue::Object(attributes)
     }
 }
@@ -252,56 +249,58 @@ impl ToJson for Assert {
 
 impl ToJson for Query {
     fn to_json(&self) -> JValue {
-        self.value.to_json()
+        let mut attributes = query_value_attributes(&self.value);
+        if let Some((_, subquery)) = self.subquery.clone() {
+            attributes.push(("subquery".to_string(), subquery.to_json()));
+        }
+        JValue::Object(attributes)
     }
 }
 
-impl ToJson for QueryValue {
-    fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        match self {
-            QueryValue::Status {} => {
-                attributes.push(("type".to_string(), JValue::String("status".to_string())));
-            }
-            QueryValue::Body {} => {
-                attributes.push(("type".to_string(), JValue::String("body".to_string())));
-            }
-            QueryValue::Jsonpath { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("jsonpath".to_string())));
-                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
-            }
-            QueryValue::Header { name, .. } => {
-                attributes.push(("type".to_string(), JValue::String("header".to_string())));
-                attributes.push(("name".to_string(), JValue::String(name.to_string())));
-            }
-            QueryValue::Cookie { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("cookie".to_string())));
-                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
-            }
-            QueryValue::Xpath { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
-                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
-            }
-            QueryValue::Regex { expr, .. } => {
-                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
-                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
-            }
-            QueryValue::Variable { name, .. } => {
-                attributes.push(("type".to_string(), JValue::String("variable".to_string())));
-                attributes.push(("name".to_string(), JValue::String(name.to_string())));
-            }
-            QueryValue::Duration {} => {
-                attributes.push(("type".to_string(), JValue::String("duration".to_string())));
-            }
-            QueryValue::Bytes {} => {
-                attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
-            }
-            QueryValue::Sha256 {} => {
-                attributes.push(("type".to_string(), JValue::String("sha256".to_string())));
-            }
-        };
-        JValue::Object(attributes)
-    }
+fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
+    let mut attributes = vec![];
+    match query_value {
+        QueryValue::Status {} => {
+            attributes.push(("type".to_string(), JValue::String("status".to_string())));
+        }
+        QueryValue::Body {} => {
+            attributes.push(("type".to_string(), JValue::String("body".to_string())));
+        }
+        QueryValue::Jsonpath { expr, .. } => {
+            attributes.push(("type".to_string(), JValue::String("jsonpath".to_string())));
+            attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+        }
+        QueryValue::Header { name, .. } => {
+            attributes.push(("type".to_string(), JValue::String("header".to_string())));
+            attributes.push(("name".to_string(), JValue::String(name.to_string())));
+        }
+        QueryValue::Cookie { expr, .. } => {
+            attributes.push(("type".to_string(), JValue::String("cookie".to_string())));
+            attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+        }
+        QueryValue::Xpath { expr, .. } => {
+            attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
+            attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+        }
+        QueryValue::Regex { expr, .. } => {
+            attributes.push(("type".to_string(), JValue::String("regex".to_string())));
+            attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+        }
+        QueryValue::Variable { name, .. } => {
+            attributes.push(("type".to_string(), JValue::String("variable".to_string())));
+            attributes.push(("name".to_string(), JValue::String(name.to_string())));
+        }
+        QueryValue::Duration {} => {
+            attributes.push(("type".to_string(), JValue::String("duration".to_string())));
+        }
+        QueryValue::Bytes {} => {
+            attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
+        }
+        QueryValue::Sha256 {} => {
+            attributes.push(("type".to_string(), JValue::String("sha256".to_string())));
+        }
+    };
+    attributes
 }
 
 impl ToJson for Subquery {
@@ -317,6 +316,9 @@ impl ToJson for SubqueryValue {
             SubqueryValue::Regex { expr, .. } => {
                 attributes.push(("type".to_string(), JValue::String("regex".to_string())));
                 attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+            }
+            SubqueryValue::Count { .. } => {
+                attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
         }
         JValue::Object(attributes)
@@ -649,6 +651,7 @@ pub mod tests {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -665,8 +668,6 @@ pub mod tests {
             space1: whitespace(),
             space2: whitespace(),
             query: header_query(),
-            space3: whitespace(),
-            subquery: None,
             line_terminator0: line_terminator(),
         }
     }

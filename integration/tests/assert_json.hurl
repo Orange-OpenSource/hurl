@@ -11,9 +11,9 @@ jsonpath "$.success" equals false
 jsonpath "$.success" not equals null
 jsonpath "$.success" exists
 jsonpath "$.success" isBoolean
-jsonpath "$.errors" countEquals 2
+jsonpath "$.errors" count == 2
 jsonpath "$.errors" isCollection
-jsonpath "$.warnings" countEquals 0
+jsonpath "$.warnings" count == 0
 jsonpath "$.toto" not exists
 jsonpath "$.warnings" exists
 jsonpath "$.warnings" exists
@@ -58,6 +58,6 @@ jsonpath "$.tags" not includes null
 GET http://localhost:8000/assert-json/list
 HTTP/1.0 200
 [Asserts]
-jsonpath "$" countEquals 2
+jsonpath "$" count == 2
 jsonpath "$.[0].name" equals "Bob"
 jsonpath "$[0].name" equals "Bob"

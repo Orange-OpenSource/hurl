@@ -394,10 +394,6 @@ impl Tokenizable for Capture {
         tokens.push(Token::Colon(String::from(":")));
         add_tokens(&mut tokens, self.space2.tokenize());
         add_tokens(&mut tokens, self.query.tokenize());
-        add_tokens(&mut tokens, self.space3.tokenize());
-        if let Some(subquery) = self.clone().subquery {
-            add_tokens(&mut tokens, subquery.tokenize())
-        }
         add_tokens(&mut tokens, self.line_terminator0.tokenize());
         tokens
     }
@@ -426,8 +422,19 @@ impl Tokenizable for Assert {
 
 impl Tokenizable for Query {
     fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = self.value.clone().tokenize();
+        if let Some((space, subquery)) = &self.subquery {
+            add_tokens(&mut tokens, space.clone().tokenize());
+            tokens.append(&mut subquery.tokenize());
+        }
+        tokens
+    }
+}
+
+impl Tokenizable for QueryValue {
+    fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        match self.value.clone() {
+        match self.clone() {
             QueryValue::Status {} => tokens.push(Token::QueryType(String::from("status"))),
             QueryValue::Header { space0, name } => {
                 tokens.push(Token::QueryType(String::from("header")));
@@ -500,6 +507,9 @@ impl Tokenizable for Subquery {
                 tokens.push(Token::QueryType(String::from("regex")));
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, expr.tokenize());
+            }
+            SubqueryValue::Count { .. } => {
+                tokens.push(Token::QueryType(String::from("count")));
             }
         }
         tokens

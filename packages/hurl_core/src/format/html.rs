@@ -316,7 +316,12 @@ impl Htmlable for Capture {
 
 impl Htmlable for Query {
     fn to_html(&self) -> String {
-        self.value.to_html()
+        let mut buffer = self.value.clone().to_html();
+        if let Some((space, subquery)) = self.clone().subquery {
+            buffer.push_str(space.to_html().as_str());
+            buffer.push_str(subquery.to_html().as_str());
+        }
+        buffer
     }
 }
 
@@ -381,6 +386,23 @@ impl Htmlable for QueryValue {
             QueryValue::Sha256 {} => {
                 buffer.push_str("<span class=\"query-type\">sha256</span>");
             }
+        }
+        buffer
+    }
+}
+
+impl Htmlable for Subquery {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        match self.value.clone() {
+            SubqueryValue::Regex { expr, space0 } => {
+                buffer.push_str("<span class=\"query-type\">regex</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
+                );
+            }
+            SubqueryValue::Count {} => buffer.push_str("<span class=\"query-type\">count</span>"),
         }
         buffer
     }

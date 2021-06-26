@@ -26,12 +26,33 @@ use super::value::Value;
 use super::xpath;
 use crate::http;
 use crate::jsonpath;
+use crate::runner::subquery::eval_subquery;
 use hurl_core::ast::*;
 use sha2::Digest;
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
 pub fn eval_query(
+    query: Query,
+    variables: &HashMap<String, Value>,
+    http_response: http::Response,
+) -> QueryResult {
+    let value = eval_query_value(query.clone(), variables, http_response)?;
+    if let Some((_, subquery)) = query.subquery {
+        if let Some(value) = value {
+            eval_subquery(subquery, value, variables)
+        } else {
+            Err(Error {
+                source_info: subquery.source_info,
+                inner: RunnerError::SubqueryInvalidInput,
+                assert: false,
+            })
+        }
+    } else {
+        Ok(value)
+    }
+}
+pub fn eval_query_value(
     query: Query,
     variables: &HashMap<String, Value>,
     http_response: http::Response,
@@ -296,6 +317,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 7, 1, 10),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -317,6 +339,7 @@ pub mod tests {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -338,6 +361,7 @@ pub mod tests {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -381,6 +405,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 10, 1, 19),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -403,6 +428,39 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 10, 1, 18),
                 },
             },
+            subquery: None,
+        }
+    }
+
+    pub fn jsonpath_errors_count() -> Query {
+        // jsonpath "$.errors" count
+        Query {
+            source_info: SourceInfo::init(1, 1, 1, 19),
+            value: QueryValue::Jsonpath {
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 9, 1, 10),
+                },
+                expr: Template {
+                    elements: vec![TemplateElement::String {
+                        value: String::from("$.errors"),
+                        encoded: String::from("$.errors"),
+                    }],
+                    quotes: true,
+                    //   delimiter: "".to_string(),
+                    source_info: SourceInfo::init(1, 10, 1, 18),
+                },
+            },
+            subquery: Some((
+                Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                Subquery {
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    value: SubqueryValue::Count {},
+                },
+            )),
         }
     }
 
@@ -425,6 +483,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 10, 1, 18),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -446,6 +505,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 7, 1, 26),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -467,6 +527,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 7, 1, 10),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -478,6 +539,7 @@ pub mod tests {
                 Query {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                     value: QueryValue::Status {},
+                    subquery: None
                 },
                 &variables,
                 http::hello_http_response(),
@@ -508,6 +570,7 @@ pub mod tests {
                     source_info: SourceInfo::init(2, 8, 2, 14),
                 },
             },
+            subquery: None,
         };
         //    let error = query_header.eval(http::hello_http_response()).err().unwrap();
         //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
@@ -538,6 +601,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 8, 1, 16),
                 },
             },
+            subquery: None,
         };
         assert_eq!(
             eval_query(query_header, &variables, http::hello_http_response())
@@ -584,6 +648,7 @@ pub mod tests {
                     attribute: None,
                 },
             },
+            subquery: None,
         };
         assert_eq!(
             eval_query(query, &variables, response.clone())
@@ -613,6 +678,7 @@ pub mod tests {
                     }),
                 },
             },
+            subquery: None,
         };
         assert_eq!(
             eval_query(query, &variables, response.clone())
@@ -642,6 +708,7 @@ pub mod tests {
                     }),
                 },
             },
+            subquery: None,
         };
         assert_eq!(
             eval_query(query, &variables, response.clone())
@@ -671,6 +738,7 @@ pub mod tests {
                     }),
                 },
             },
+            subquery: None,
         };
         assert_eq!(eval_query(query, &variables, response).unwrap(), None);
     }
@@ -761,6 +829,7 @@ pub mod tests {
                 Query {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                     value: QueryValue::Body {},
+                    subquery: None
                 },
                 &variables,
                 http::hello_http_response(),
@@ -773,6 +842,7 @@ pub mod tests {
             Query {
                 source_info: SourceInfo::init(1, 1, 1, 2),
                 value: QueryValue::Body {},
+                subquery: None,
             },
             &variables,
             http::bytes_http_response(),
@@ -830,6 +900,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 7, 1, 10),
                 },
             },
+            subquery: None,
         };
         let error = eval_query(query, &variables, http::xml_two_users_http_response())
             .err()
@@ -884,6 +955,7 @@ pub mod tests {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                 },
             },
+            subquery: None,
         }
     }
 
@@ -920,6 +992,7 @@ pub mod tests {
                     source_info: SourceInfo::init(1, 10, 1, 13),
                 },
             },
+            subquery: None,
         };
 
         let error = eval_query(jsonpath_query, &variables, json_http_response())
@@ -998,6 +1071,13 @@ pub mod tests {
                 )])
             ])
         );
+
+        assert_eq!(
+            eval_query(jsonpath_errors_count(), &variables, json_http_response())
+                .unwrap()
+                .unwrap(),
+            Value::Integer(2)
+        );
     }
 
     #[test]
@@ -1025,6 +1105,7 @@ pub mod tests {
                 Query {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                     value: QueryValue::Bytes {},
+                    subquery: None
                 },
                 &variables,
                 http::hello_http_response(),
@@ -1043,6 +1124,7 @@ pub mod tests {
                 Query {
                     source_info: SourceInfo::init(0, 0, 0, 0),
                     value: QueryValue::Sha256 {},
+                    subquery: None
                 },
                 &variables,
                 http::Response {

@@ -21,7 +21,7 @@ use super::combinators::*;
 use super::error::*;
 use super::predicate::predicate;
 use super::primitives::*;
-use super::query::{query, subquery};
+use super::query::query;
 use super::reader::Reader;
 use super::string::*;
 use super::ParseResult;
@@ -283,28 +283,6 @@ fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
     let q = query(reader)?;
-    let space3 = zero_or_more_spaces(reader)?;
-    let optional_subquery = if space3.value.is_empty() {
-        None
-    } else {
-        optional(subquery, reader)?
-    };
-
-    //    let (space3, subq) = match one_or_more_spaces(reader) {
-    //        Err(_) => {
-    //            reader.state = save;
-    //            (Whitespace { value: "".to_string(), source_info: SourceInfo { start: reader.state.pos.clone(), end: reader.state.pos.clone() } }, None)
-    //        }
-    //        Ok(space3) => {
-    //            match subquery(reader) {
-    //                Err(_) => {
-    //                    reader.state = save;
-    //                    (Whitespace { value: "".to_string(), source_info: SourceInfo { start: reader.state.pos.clone(), end: reader.state.pos.clone() } }, None)
-    //                }
-    //                Ok(subquery) => (space3, Some(subquery))
-    //            }
-    //        }
-    //    };
 
     let line_terminator0 = line_terminator(reader)?;
     Ok(Capture {
@@ -314,8 +292,6 @@ fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
         space1,
         space2,
         query: q,
-        space3,
-        subquery: optional_subquery,
         line_terminator0,
     })
 }
@@ -419,6 +395,7 @@ mod tests {
                                 source_info: SourceInfo::init(2, 8, 2, 18),
                             },
                         },
+                        subquery: None
                     },
                     space1: Whitespace {
                         value: String::from(" "),
@@ -639,6 +616,7 @@ mod tests {
                         source_info: SourceInfo::init(1, 13, 1, 23),
                     },
                 },
+                subquery: None
             }
         );
     }
@@ -666,34 +644,30 @@ mod tests {
                         source_info: SourceInfo::init(1, 15, 1, 25),
                     },
                 },
-            }
-        );
-        assert_eq!(
-            capture0.space3,
-            Whitespace {
-                value: " ".to_string(),
-                source_info: SourceInfo::init(1, 25, 1, 26),
-            }
-        );
 
-        assert_eq!(
-            capture0.subquery.unwrap(),
-            Subquery {
-                source_info: SourceInfo::init(1, 26, 1, 44),
-                value: SubqueryValue::Regex {
-                    space0: Whitespace {
+                subquery: Some((
+                    Whitespace {
                         value: " ".to_string(),
-                        source_info: SourceInfo::init(1, 31, 1, 32),
+                        source_info: SourceInfo::init(1, 25, 1, 26)
                     },
-                    expr: Template {
-                        quotes: true,
-                        elements: vec![TemplateElement::String {
-                            value: "token=(.*)".to_string(),
-                            encoded: "token=(.*)".to_string(),
-                        }],
-                        source_info: SourceInfo::init(1, 32, 1, 44),
-                    },
-                },
+                    Subquery {
+                        source_info: SourceInfo::init(1, 26, 1, 44),
+                        value: SubqueryValue::Regex {
+                            space0: Whitespace {
+                                value: " ".to_string(),
+                                source_info: SourceInfo::init(1, 31, 1, 32)
+                            },
+                            expr: Template {
+                                quotes: true,
+                                elements: vec![TemplateElement::String {
+                                    value: "token=(.*)".to_string(),
+                                    encoded: "token=(.*)".to_string()
+                                }],
+                                source_info: SourceInfo::init(1, 32, 1, 44)
+                            }
+                        }
+                    }
+                ))
             }
         );
         assert_eq!(reader.state.cursor, 43);
@@ -759,6 +733,7 @@ mod tests {
                         source_info: SourceInfo::init(1, 8, 1, 18),
                     },
                 },
+                subquery: None
             }
         );
     }

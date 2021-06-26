@@ -48,7 +48,7 @@ Set-Cookie: HSID=AYQEVnDKrdst; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23
 Set-Cookie: SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/
 
 [Asserts]
-header "Set-Cookie" countEquals 3
+header "Set-Cookie" count == 3
 cookie "LSID" equals "DQAAAKEaem_vYg"
 cookie "LSID[Value]" equals "DQAAAKEaem_vYg"
 cookie "LSID[Expires]" exists

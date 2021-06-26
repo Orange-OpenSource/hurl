@@ -22,25 +22,36 @@ use super::cookiepath::cookiepath;
 use super::primitives::*;
 use super::reader::Reader;
 use super::string::*;
+use super::subquery::subquery;
 use super::ParseResult;
 
 pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
     let start = reader.state.pos.clone();
     let value = query_value(reader)?;
     let end = reader.state.pos.clone();
+
+    let save = reader.state.clone();
+    let space = zero_or_more_spaces(reader)?;
+    let optional_subquery = if space.value.is_empty() {
+        reader.state = save;
+        None
+    } else {
+        match subquery(reader) {
+            Ok(q) => Some((space, q)),
+            Err(e) => {
+                if e.recoverable {
+                    reader.state = save;
+                    None
+                } else {
+                    return Err(e);
+                }
+            }
+        }
+    };
     Ok(Query {
         source_info: SourceInfo { start, end },
         value,
-    })
-}
-
-pub fn subquery(reader: &mut Reader) -> ParseResult<'static, Subquery> {
-    let start = reader.state.pos.clone();
-    let value = subquery_value(reader)?;
-    let end = reader.state.pos.clone();
-    Ok(Subquery {
-        source_info: SourceInfo { start, end },
-        value,
+        subquery: optional_subquery,
     })
 }
 
@@ -140,17 +151,6 @@ fn variable_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     Ok(QueryValue::Variable { space0, name })
 }
 
-fn subquery_value(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
-    choice(vec![regex_subquery], reader)
-}
-
-fn regex_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
-    try_literal("regex", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader)?;
-    Ok(SubqueryValue::Regex { space0, expr })
-}
-
 fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("duration", reader)?;
     Ok(QueryValue::Duration {})
@@ -178,6 +178,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::init(1, 1, 1, 7),
                 value: QueryValue::Status {},
+                subquery: None
             }
         );
     }
@@ -190,6 +191,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::init(1, 1, 1, 7),
                 value: QueryValue::Status {},
+                subquery: None
             }
         );
     }

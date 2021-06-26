@@ -47,6 +47,7 @@ mod predicate;
 mod query;
 mod request;
 mod response;
+mod subquery;
 mod template;
 mod value;
 mod xpath;
