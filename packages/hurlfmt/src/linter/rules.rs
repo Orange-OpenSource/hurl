@@ -454,6 +454,44 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
                     operator: true,
                 }
             }
+            PredicateFuncValue::NotEqualString { value, .. } => {
+                PredicateFuncValue::NotEqualString {
+                    space0: one_whitespace(),
+                    value: value.clone().lint(),
+                    operator: true,
+                }
+            }
+            PredicateFuncValue::NotEqualInt { value, .. } => PredicateFuncValue::NotEqualInt {
+                space0: one_whitespace(),
+                value: value.clone(),
+                operator: true,
+            },
+            PredicateFuncValue::NotEqualBool { value, .. } => PredicateFuncValue::NotEqualBool {
+                space0: one_whitespace(),
+                value: value.clone(),
+                operator: true,
+            },
+            PredicateFuncValue::NotEqualNull { .. } => PredicateFuncValue::NotEqualNull {
+                space0: one_whitespace(),
+                operator: true,
+            },
+            PredicateFuncValue::NotEqualFloat { value, .. } => PredicateFuncValue::NotEqualFloat {
+                space0: one_whitespace(),
+                value: value.clone(),
+                operator: true,
+            },
+            PredicateFuncValue::NotEqualHex { value, .. } => PredicateFuncValue::NotEqualHex {
+                space0: one_whitespace(),
+                value: value.lint(),
+                operator: true,
+            },
+            PredicateFuncValue::NotEqualExpression { value, .. } => {
+                PredicateFuncValue::NotEqualExpression {
+                    space0: one_whitespace(),
+                    value: value.clone(),
+                    operator: true,
+                }
+            }
             PredicateFuncValue::GreaterThanInt { value, .. } => {
                 PredicateFuncValue::GreaterThanInt {
                     space0: one_whitespace(),

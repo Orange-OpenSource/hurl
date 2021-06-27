@@ -573,6 +573,41 @@ impl Tokenizable for PredicateFuncValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
+            PredicateFuncValue::NotEqualNull { space0, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Keyword("null".to_string()));
+            }
+            PredicateFuncValue::NotEqualBool { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Boolean(value.to_string()));
+            }
+            PredicateFuncValue::NotEqualString { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                add_tokens(&mut tokens, value.tokenize());
+            }
+            PredicateFuncValue::NotEqualInt { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::NotEqualFloat { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::Number(value.to_string()));
+            }
+            PredicateFuncValue::NotEqualHex { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.push(Token::String(value.to_string()));
+            }
+            PredicateFuncValue::NotEqualExpression { space0, value, .. } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut value.tokenize());
+            }
             PredicateFuncValue::GreaterThanInt { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());

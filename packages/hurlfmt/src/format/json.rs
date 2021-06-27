@@ -364,7 +364,49 @@ impl ToJson for Predicate {
                 attributes.push(("value".to_string(), value));
             }
             PredicateFuncValue::EqualExpression { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("equal".to_string())));
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String(
+                        "\
+                equal"
+                            .to_string(),
+                    ),
+                ));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::NotEqualInt { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                attributes.push(("value".to_string(), JValue::Number(value.to_string())));
+            }
+            PredicateFuncValue::NotEqualBool { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                attributes.push(("value".to_string(), JValue::Boolean(value)));
+            }
+            PredicateFuncValue::NotEqualString { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+            }
+            PredicateFuncValue::NotEqualFloat { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                attributes.push(("value".to_string(), JValue::Number(value.to_string())));
+            }
+            PredicateFuncValue::NotEqualNull { .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                attributes.push(("value".to_string(), JValue::Null));
+            }
+            PredicateFuncValue::NotEqualHex { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
+                let value = JValue::Object(vec![
+                    (
+                        "value".to_string(),
+                        JValue::String(base64::encode(&value.value)),
+                    ),
+                    ("encoding".to_string(), JValue::String("base64".to_string())),
+                ]);
+                attributes.push(("value".to_string(), value));
+            }
+            PredicateFuncValue::NotEqualExpression { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
                 attributes.push(("value".to_string(), JValue::String(value.to_string())));
             }
             PredicateFuncValue::GreaterThanInt { value, .. } => {

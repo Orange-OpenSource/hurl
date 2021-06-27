@@ -499,6 +499,20 @@ impl Htmlable for PredicateFuncValue {
                     format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
                 );
             }
+            PredicateFuncValue::EqualNull { space0, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str("<span class=\"null\">null</span>");
+            }
+            PredicateFuncValue::EqualBool { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(format!("<span class=\"boolean\">{}</span>", value).as_str());
+            }
             PredicateFuncValue::EqualHex { space0, value, .. } => {
                 buffer.push_str(
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
@@ -506,6 +520,67 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(space0.to_html().as_str());
                 buffer
                     .push_str(format!("<span class=\"hex\">{}</span>", value.to_string()).as_str());
+            }
+            PredicateFuncValue::EqualExpression { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(value.to_html().as_str());
+            }
+            PredicateFuncValue::NotEqualString { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"string\">\"{}\"</span>", value.to_html()).as_str(),
+                );
+            }
+            PredicateFuncValue::NotEqualInt { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(format!("<span class=\"number\">{}</span>", value).as_str());
+            }
+            PredicateFuncValue::NotEqualFloat { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(
+                    format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
+                );
+            }
+            PredicateFuncValue::NotEqualNull { space0, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str("<span class=\"null\">null</span>");
+            }
+            PredicateFuncValue::NotEqualBool { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(format!("<span class=\"boolean\">{}</span>", value).as_str());
+            }
+            PredicateFuncValue::NotEqualHex { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer
+                    .push_str(format!("<span class=\"hex\">{}</span>", value.to_string()).as_str());
+            }
+            PredicateFuncValue::NotEqualExpression { space0, value, .. } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(value.to_html().as_str());
             }
             PredicateFuncValue::GreaterThanInt { space0, value, .. } => {
                 buffer.push_str(
@@ -591,13 +666,7 @@ impl Htmlable for PredicateFuncValue {
                     format!("<span class=\"number\">{}</span>", value.to_string()).as_str(),
                 );
             }
-            PredicateFuncValue::EqualExpression { space0, value, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
-            }
+
             PredicateFuncValue::StartWith { space0, value } => {
                 buffer.push_str(
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
@@ -672,20 +741,6 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(
                     format!("<span class=\"string\">\"{}\"</span>", value.to_html()).as_str(),
                 );
-            }
-            PredicateFuncValue::EqualNull { space0, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str("<span class=\"null\">null</span>");
-            }
-            PredicateFuncValue::EqualBool { space0, value, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(format!("<span class=\"boolean\">{}</span>", value).as_str());
             }
             PredicateFuncValue::IsInteger {} => {
                 buffer.push_str(

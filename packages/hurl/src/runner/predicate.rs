@@ -138,6 +138,9 @@ fn expected(
     match predicate_func.value {
         PredicateFuncValue::EqualInt {
             value: expected, ..
+        }
+        | PredicateFuncValue::NotEqualInt {
+            value: expected, ..
         } => {
             let expected = expected.to_string();
             Ok(format!("int <{}>", expected))
@@ -150,9 +153,23 @@ fn expected(
                     ..
                 },
             ..
+        }
+        | PredicateFuncValue::NotEqualFloat {
+            value:
+                Float {
+                    int: expected_int,
+                    decimal: expected_dec,
+                    ..
+                },
+            ..
         } => Ok(format!("float <{}.{}>", expected_int, expected_dec)),
-        PredicateFuncValue::EqualNull { .. } => Ok("null".to_string()),
+        PredicateFuncValue::EqualNull { .. } | PredicateFuncValue::NotEqualNull { .. } => {
+            Ok("null".to_string())
+        }
         PredicateFuncValue::EqualBool {
+            value: expected, ..
+        }
+        | PredicateFuncValue::NotEqualBool {
             value: expected, ..
         } => {
             let expected = expected.to_string();
@@ -160,14 +177,23 @@ fn expected(
         }
         PredicateFuncValue::EqualString {
             value: expected, ..
+        }
+        | PredicateFuncValue::NotEqualString {
+            value: expected, ..
         } => {
             let expected = eval_template(expected, variables)?;
             Ok(format!("string <{}>", expected))
         }
         PredicateFuncValue::EqualHex {
             value: expected, ..
+        }
+        | PredicateFuncValue::NotEqualHex {
+            value: expected, ..
         } => Ok(format!("bytearray <{}>", expected.to_string())),
         PredicateFuncValue::EqualExpression {
+            value: expected, ..
+        }
+        | PredicateFuncValue::NotEqualExpression {
             value: expected, ..
         } => {
             let expected = eval_expr(expected, variables)?;
@@ -302,47 +328,64 @@ fn eval_something(
     value: Value,
 ) -> Result<AssertResult, Error> {
     match predicate_func.value {
-        // equals int
         PredicateFuncValue::EqualInt {
             value: expected, ..
         } => Ok(assert_values_equal(value, Value::Integer(expected))),
-
-        // equals null
         PredicateFuncValue::EqualNull { .. } => Ok(assert_values_equal(value, Value::Null)),
-
-        // equals bool
         PredicateFuncValue::EqualBool {
             value: expected, ..
         } => Ok(assert_values_equal(value, Value::Bool(expected))),
-
-        // equals float
         PredicateFuncValue::EqualFloat {
             value: Float { int, decimal, .. },
             ..
         } => Ok(assert_values_equal(value, Value::Float(int, decimal))),
-
-        // equals string
         PredicateFuncValue::EqualString {
             value: expected, ..
         } => {
             let expected = eval_template(expected, variables)?;
             Ok(assert_values_equal(value, Value::String(expected)))
         }
-
-        // equals hex
         PredicateFuncValue::EqualHex {
             value: Hex {
                 value: expected, ..
             },
             ..
         } => Ok(assert_values_equal(value, Value::Bytes(expected))),
-
-        // equals expression
         PredicateFuncValue::EqualExpression {
             value: expected, ..
         } => {
             let expected = eval_expr(expected, variables)?;
             Ok(assert_values_equal(value, expected))
+        }
+
+        PredicateFuncValue::NotEqualInt {
+            value: expected, ..
+        } => Ok(assert_values_not_equal(value, Value::Integer(expected))),
+        PredicateFuncValue::NotEqualNull { .. } => Ok(assert_values_equal(value, Value::Null)),
+        PredicateFuncValue::NotEqualBool {
+            value: expected, ..
+        } => Ok(assert_values_not_equal(value, Value::Bool(expected))),
+        PredicateFuncValue::NotEqualFloat {
+            value: Float { int, decimal, .. },
+            ..
+        } => Ok(assert_values_not_equal(value, Value::Float(int, decimal))),
+        PredicateFuncValue::NotEqualString {
+            value: expected, ..
+        } => {
+            let expected = eval_template(expected, variables)?;
+            Ok(assert_values_not_equal(value, Value::String(expected)))
+        }
+        PredicateFuncValue::NotEqualHex {
+            value: Hex {
+                value: expected, ..
+            },
+            ..
+        } => Ok(assert_values_not_equal(value, Value::Bytes(expected))),
+        PredicateFuncValue::NotEqualExpression {
+            value: expected, ..
+        } => {
+            let expected = eval_expr(expected, variables)?;
+            Ok(assert_values_not_equal(value, expected))
         }
 
         PredicateFuncValue::GreaterThanInt {
@@ -642,6 +685,77 @@ fn assert_values_equal(actual: Value, expected: Value) -> AssertResult {
         },
         _ => AssertResult {
             success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+    }
+}
+
+fn assert_values_not_equal(actual: Value, expected: Value) -> AssertResult {
+    match (actual.clone(), expected.clone()) {
+        (Value::Null {}, Value::Null {}) => AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Bool(value1), Value::Bool(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Integer(value1), Value::Integer(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Float(int1, decimal), Value::Integer(int2)) => AssertResult {
+            success: int1 != int2 || decimal != 0,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Integer(int1), Value::Float(int2, decimal)) => AssertResult {
+            success: int1 != int2 && decimal != 0,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Float(i1, d1), Value::Float(i2, d2)) => AssertResult {
+            success: i1 != i2 || d1 != d2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::String(value1), Value::String(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::List(value1), Value::List(value2)) => AssertResult {
+            success: value1 == value2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Bytes(value1), Value::Bytes(value2)) => AssertResult {
+            success: value1 != value2,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: false,
+        },
+        (Value::Unit, _) => AssertResult {
+            success: false,
+            actual: actual.display(),
+            expected: expected.display(),
+            type_mismatch: true,
+        },
+        _ => AssertResult {
+            success: true,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
@@ -1088,6 +1202,32 @@ mod tests {
         assert_eq!(assert_result.success, true);
         assert_eq!(assert_result.type_mismatch, false);
         assert_eq!(assert_result.actual.as_str(), "float <1.0>");
+        assert_eq!(assert_result.expected.as_str(), "int <1>");
+    }
+
+    #[test]
+    fn test_predicate_value_not_equals() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::NotEqualInt {
+                    space0: whitespace.clone(),
+                    value: 1,
+                    operator: false,
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            },
+            &variables,
+            Value::Integer(2),
+        )
+        .unwrap();
+        assert_eq!(assert_result.success, true);
+        assert_eq!(assert_result.type_mismatch, false);
+        assert_eq!(assert_result.actual.as_str(), "int <2>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
     }
 

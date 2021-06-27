@@ -27,25 +27,36 @@ use super::string::*;
 use super::ParseResult;
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<'static, Predicate> {
-    let (not, space0) = match try_literal("not", reader) {
-        Err(_) => (
-            false,
-            Whitespace {
-                value: String::from(""),
-                source_info: SourceInfo {
-                    start: reader.state.clone().pos,
-                    end: reader.state.clone().pos,
-                },
-            },
-        ),
-        Ok(_) => (true, one_or_more_spaces(reader)?),
-    };
+    let (not, space0) = predicate_not(reader);
     let func = predicate_func(reader)?;
     Ok(Predicate {
         not,
         space0,
         predicate_func: func,
     })
+}
+
+// can not fail
+fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
+    let save = reader.state.clone();
+    let no_whitespace = Whitespace {
+        value: "".to_string(),
+        source_info: SourceInfo {
+            start: save.pos.clone(),
+            end: save.pos.clone(),
+        },
+    };
+    if try_literal("not", reader).is_ok() {
+        match one_or_more_spaces(reader) {
+            Ok(space) => (true, space),
+            Err(_) => {
+                reader.state = save;
+                (false, no_whitespace)
+            }
+        }
+    } else {
+        (false, no_whitespace)
+    }
 }
 
 fn predicate_func(reader: &mut Reader) -> ParseResult<'static, PredicateFunc> {
@@ -63,6 +74,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
     match choice(
         vec![
             equal_predicate,
+            not_equal_predicate,
             greater_or_equal_predicate,
             greater_predicate,
             less_or_equal_predicate,
@@ -131,6 +143,58 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
             operator,
         }),
         Ok(PredicateValue::Template { value }) => Ok(PredicateFuncValue::EqualString {
+            space0,
+            value,
+            operator,
+        }),
+        Err(e) => match e.inner {
+            ParseError::EscapeChar {} | ParseError::OddNumberOfHexDigits {} => Err(e),
+            _ => Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::PredicateValue {},
+            }),
+        },
+    }
+}
+
+fn not_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    let operator = try_literals("notEquals", "!=", reader)? == "!=";
+    let space0 = if operator {
+        zero_or_more_spaces(reader)?
+    } else {
+        one_or_more_spaces(reader)?
+    };
+    let start = reader.state.clone();
+
+    match predicate_value(reader) {
+        Ok(PredicateValue::Null {}) => Ok(PredicateFuncValue::EqualNull { space0, operator }),
+        Ok(PredicateValue::Bool { value }) => Ok(PredicateFuncValue::NotEqualBool {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Int { value }) => Ok(PredicateFuncValue::NotEqualInt {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Float { value }) => Ok(PredicateFuncValue::NotEqualFloat {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Hex { value }) => Ok(PredicateFuncValue::NotEqualHex {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Expression { value }) => Ok(PredicateFuncValue::NotEqualExpression {
+            space0,
+            value,
+            operator,
+        }),
+        Ok(PredicateValue::Template { value }) => Ok(PredicateFuncValue::NotEqualString {
             space0,
             value,
             operator,
@@ -438,6 +502,35 @@ mod tests {
     use crate::ast::Pos;
 
     use super::*;
+
+    #[test]
+    fn test_predicate_not() {
+        let mut reader = Reader::init("notXX");
+        assert_eq!(
+            predicate_not(&mut reader),
+            (
+                false,
+                Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                }
+            )
+        );
+        assert_eq!(reader.state.pos, Pos { line: 1, column: 1 });
+
+        let mut reader = Reader::init("not XX");
+        assert_eq!(
+            predicate_not(&mut reader),
+            (
+                true,
+                Whitespace {
+                    value: String::from(" "),
+                    source_info: SourceInfo::init(1, 4, 1, 5),
+                }
+            )
+        );
+        assert_eq!(reader.state.pos, Pos { line: 1, column: 5 });
+    }
 
     #[test]
     fn test_predicate() {

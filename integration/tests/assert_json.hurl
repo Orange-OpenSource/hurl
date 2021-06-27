@@ -4,6 +4,8 @@ HTTP/1.0 200
 jsonpath "$.count" equals 5
 jsonpath "$.count" == 5
 jsonpath "$.count" equals 5.0
+jsonpath "$.count" notEquals 4
+jsonpath "$.count" != 4
 jsonpath "$.count" greaterThan 1
 jsonpath "$.count" greaterThan 1.0
 jsonpath "$.count" >= 1.0
