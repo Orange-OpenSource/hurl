@@ -157,6 +157,19 @@ impl PredicateFuncValue {
                     "equals".to_string()
                 }
             }
+            PredicateFuncValue::NotEqualString { operator, .. }
+            | PredicateFuncValue::NotEqualInt { operator, .. }
+            | PredicateFuncValue::NotEqualFloat { operator, .. }
+            | PredicateFuncValue::NotEqualBool { operator, .. }
+            | PredicateFuncValue::NotEqualNull { operator, .. }
+            | PredicateFuncValue::NotEqualHex { operator, .. }
+            | PredicateFuncValue::NotEqualExpression { operator, .. } => {
+                if *operator {
+                    "!=".to_string()
+                } else {
+                    "notEquals".to_string()
+                }
+            }
             PredicateFuncValue::GreaterThanInt { operator, .. }
             | PredicateFuncValue::GreaterThanFloat { operator, .. } => {
                 if *operator {

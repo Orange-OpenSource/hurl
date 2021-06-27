@@ -434,6 +434,40 @@ pub enum PredicateFuncValue {
         value: Expr,
         operator: bool,
     },
+    NotEqualString {
+        space0: Whitespace,
+        value: Template,
+        operator: bool,
+    },
+    NotEqualInt {
+        space0: Whitespace,
+        value: i64,
+        operator: bool,
+    },
+    NotEqualFloat {
+        space0: Whitespace,
+        value: Float,
+        operator: bool,
+    },
+    NotEqualBool {
+        space0: Whitespace,
+        value: bool,
+        operator: bool,
+    },
+    NotEqualNull {
+        space0: Whitespace,
+        operator: bool,
+    },
+    NotEqualHex {
+        space0: Whitespace,
+        value: Hex,
+        operator: bool,
+    },
+    NotEqualExpression {
+        space0: Whitespace,
+        value: Expr,
+        operator: bool,
+    },
     GreaterThanInt {
         space0: Whitespace,
         value: i64,

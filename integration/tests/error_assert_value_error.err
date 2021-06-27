@@ -9,40 +9,48 @@ error: Assert Failure
 error: Assert Failure
   --> tests/error_assert_value_error.hurl:5:0
    |
- 5 | jsonpath "$.id" equals "000001"
-   |   actual:   none
-   |   expected: string <000001>
+ 5 | header "content-type" notEquals "text/html; charset=utf-8"
+   |   actual:   string <text/html; charset=utf-8>
+   |   expected: string <text/html; charset=utf-8>
    |
 
 error: Assert Failure
   --> tests/error_assert_value_error.hurl:6:0
    |
- 6 | jsonpath "$.values" includes 100
-   |   actual:   [int <1>, int <2>, int <3>]
-   |   expected: includes int <100>
+ 6 | jsonpath "$.id" equals "000001"
+   |   actual:   none
+   |   expected: string <000001>
    |
 
 error: Assert Failure
   --> tests/error_assert_value_error.hurl:7:0
    |
- 7 | jsonpath "$.values" not contains "Hello"
+ 7 | jsonpath "$.values" includes 100
+   |   actual:   [int <1>, int <2>, int <3>]
+   |   expected: includes int <100>
+   |
+
+error: Assert Failure
+  --> tests/error_assert_value_error.hurl:8:0
+   |
+ 8 | jsonpath "$.values" not contains "Hello"
    |   actual:   [int <1>, int <2>, int <3>]
    |   expected: not contains string <Hello>
    |   >>> types between actual and expected are not consistent
    |
 
 error: Assert Failure
-  --> tests/error_assert_value_error.hurl:8:0
+  --> tests/error_assert_value_error.hurl:9:0
    |
- 8 | jsonpath "$.count" greaterThan 5
+ 9 | jsonpath "$.count" greaterThan 5
    |   actual:   int <2>
    |   expected: greater than int <5>
    |
 
 error: Assert Failure
-  --> tests/error_assert_value_error.hurl:9:0
+  --> tests/error_assert_value_error.hurl:10:0
    |
- 9 | jsonpath "$.count" isFloat
+10 | jsonpath "$.count" isFloat
    |   actual:   int <2>
    |   expected: float
    |
