@@ -272,8 +272,6 @@ pub struct Capture {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub query: Query,
-    pub space3: Whitespace,
-    pub subquery: Option<Subquery>,
     pub line_terminator0: LineTerminator,
 }
 
@@ -291,6 +289,7 @@ pub struct Assert {
 pub struct Query {
     pub source_info: SourceInfo,
     pub value: QueryValue,
+    pub subquery: Option<(Whitespace, Subquery)>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -376,6 +375,7 @@ pub struct Subquery {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SubqueryValue {
     Regex { space0: Whitespace, expr: Template },
+    Count {},
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

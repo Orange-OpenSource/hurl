@@ -147,7 +147,7 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
 }
 
 fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    let operator = try_literals("greaterThan", ">=", reader)? == ">=";
+    let operator = try_literals("greaterThan", ">", reader)? == ">";
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {

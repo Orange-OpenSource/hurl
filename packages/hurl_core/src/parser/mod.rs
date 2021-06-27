@@ -47,5 +47,6 @@ mod query;
 mod reader;
 mod sections;
 mod string;
+mod subquery;
 mod template;
 mod xml;

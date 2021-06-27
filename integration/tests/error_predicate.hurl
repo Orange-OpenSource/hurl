@@ -10,7 +10,7 @@ jsonpath "$.number" equals 1.1
 jsonpath "$.message" startsWith "hi"
 jsonpath "$.message" contains "hi"
 jsonpath "$.message" matches "hi"
-jsonpath "$.message" countEquals 1
+jsonpath "$.message" count == 1
 jsonpath "$.toto" exists
 jsonpath "$.message" not exists
-jsonpath "$.list" countEquals 2
+jsonpath "$.list" count == 2

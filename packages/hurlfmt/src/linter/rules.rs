@@ -231,8 +231,6 @@ impl Lintable<Capture> for Capture {
             space1: empty_whitespace(),
             space2: one_whitespace(),
             query: self.query.lint(),
-            space3: self.space3.clone(),
-            subquery: self.subquery.clone(),
             line_terminator0: self.line_terminator0.lint(),
         }
     }
@@ -248,6 +246,10 @@ impl Lintable<Query> for Query {
         Query {
             source_info: SourceInfo::init(0, 0, 0, 0),
             value: self.value.lint(),
+            subquery: self
+                .subquery
+                .clone()
+                .map(|(_, s)| (one_whitespace(), s.lint())),
         }
     }
 }
@@ -298,6 +300,36 @@ impl Lintable<QueryValue> for QueryValue {
             QueryValue::Duration {} => QueryValue::Duration {},
             QueryValue::Bytes {} => QueryValue::Bytes {},
             QueryValue::Sha256 {} => QueryValue::Sha256 {},
+        }
+    }
+}
+
+impl Lintable<Subquery> for Subquery {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> Subquery {
+        let source_info = SourceInfo::init(0, 0, 0, 0);
+        let value = self.value.lint();
+        Subquery { source_info, value }
+    }
+}
+
+impl Lintable<SubqueryValue> for SubqueryValue {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> SubqueryValue {
+        match self {
+            SubqueryValue::Regex { expr, .. } => SubqueryValue::Regex {
+                space0: one_whitespace(),
+                expr: expr.clone(),
+            },
+            SubqueryValue::Count {} => SubqueryValue::Count {},
         }
     }
 }

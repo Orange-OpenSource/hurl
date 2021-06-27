@@ -62,13 +62,11 @@ error: Assert Failure
    |   expected: matches regex <hi>
    |
 
-error: Assert Failure
-  --> tests/error_predicate.hurl:13:0
+error: Subquery error
+  --> tests/error_predicate.hurl:13:22
    |
-13 | jsonpath "$.message" countEquals 1
-   |   actual:   string <0>
-   |   expected: count equals to <1>
-   |   >>> types between actual and expected are not consistent
+13 | jsonpath "$.message" count == 1
+   |                      ^^^^^ Type from query result and subquery do not match
    |
 
 error: Assert Failure
@@ -90,8 +88,8 @@ error: Assert Failure
 error: Assert Failure
   --> tests/error_predicate.hurl:16:0
    |
-16 | jsonpath "$.list" countEquals 2
-   |   actual:   3
-   |   expected: 2
+16 | jsonpath "$.list" count == 2
+   |   actual:   int <3>
+   |   expected: int <2>
    |
 
