@@ -18,6 +18,7 @@
 use super::ast::SourceInfo;
 use super::parser;
 use super::parser::ParseError;
+use core::cmp;
 
 pub trait Error {
     fn source_info(&self) -> SourceInfo;
@@ -41,7 +42,8 @@ impl Error for parser::Error {
             ParseError::Filename { .. } => "Parsing Filename".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),
             ParseError::Space { .. } => "Parsing space".to_string(),
-            ParseError::SectionName { .. } => "Parsing section name".to_string(),
+            ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
+            ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
             ParseError::JsonpathExpr { .. } => "Parsing jsonpath expression".to_string(),
             ParseError::XPathExpr { .. } => "Parsing xpath expression".to_string(),
             ParseError::TemplateVariable { .. } => "Parsing template variable".to_string(),
@@ -62,13 +64,29 @@ impl Error for parser::Error {
 
     fn fixme(&self) -> String {
         match self.inner.clone() {
-            ParseError::Method { .. } => "Available HTTP Method GET, POST, ...".to_string(),
+            ParseError::Method { name }
+            => format!("The HTTP method is not valid. {}", did_you_mean(
+                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"],
+                name.as_str(),
+                "Available HTTP Methods are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE or PATCH",
+            )),
             ParseError::Version { .. } => "The http version must be 1.0, 1.1, 2 or *".to_string(),
             ParseError::Status { .. } => "The http status is not valid".to_string(),
             ParseError::Filename { .. } => "expecting a filename".to_string(),
             ParseError::Expecting { value } => format!("expecting '{}'", value),
             ParseError::Space { .. } => "expecting a space".to_string(),
-            ParseError::SectionName { name } => format!("the section {} is not valid", name),
+            ParseError::RequestSectionName { name }
+            => format!("the section is not valid. {}", did_you_mean(
+                &["QueryStringParams", "FormParams", "MultipartFormData", "Cookies"],
+                name.as_str(),
+                "Valid values are QueryStringParams, FormParams, MultipartFormData or Cookies",
+            )),
+            ParseError::ResponseSectionName { name }
+            => format!("the section is not valid. {}", did_you_mean(
+                &["Captures", "Asserts"],
+                name.as_str(),
+                "Valid values are Captures or Asserts",
+            )),
             ParseError::JsonpathExpr { .. } => "expecting a jsonpath expression".to_string(),
             ParseError::XPathExpr { .. } => "expecting a xpath expression".to_string(),
             ParseError::TemplateVariable { .. } => "expecting a variable".to_string(),
@@ -93,5 +111,88 @@ impl Error for parser::Error {
             ParseError::UrlIllegalCharacter(c) => format!("Illegal character <{}>", c),
             _ => format!("{:?}", self),
         }
+    }
+}
+
+fn did_you_mean(valid_values: &[&str], actual: &str, default: &str) -> String {
+    if let Some(suggest) = suggestion(valid_values, actual) {
+        format!("Did you mean {}?", suggest)
+    } else {
+        default.to_string()
+    }
+}
+
+fn suggestion(valid_values: &[&str], actual: &str) -> Option<String> {
+    for value in valid_values {
+        if levenshtein_distance(
+            value.to_lowercase().as_str(),
+            actual.to_lowercase().as_str(),
+        ) < 2
+        {
+            return Some(value.to_string());
+        }
+    }
+    None
+}
+
+// from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Rust
+fn levenshtein_distance(s1: &str, s2: &str) -> usize {
+    let v1: Vec<char> = s1.chars().collect();
+    let v2: Vec<char> = s2.chars().collect();
+
+    fn min3<T: Ord>(v1: T, v2: T, v3: T) -> T {
+        cmp::min(v1, cmp::min(v2, v3))
+    }
+    fn delta(x: char, y: char) -> usize {
+        if x == y {
+            0
+        } else {
+            1
+        }
+    }
+
+    let mut column: Vec<usize> = (0..=v1.len()).collect();
+    for x in 1..=v2.len() {
+        column[0] = x;
+        let mut lastdiag = x - 1;
+        for y in 1..=v1.len() {
+            let olddiag = column[y];
+            column[y] = min3(
+                column[y] + 1,
+                column[y - 1] + 1,
+                lastdiag + delta(v1[y - 1], v2[x - 1]),
+            );
+            lastdiag = olddiag;
+        }
+    }
+    column[v1.len()]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_levenshtein() {
+        assert_eq!(levenshtein_distance("kitten", "sitting"), 3);
+        assert_eq!(levenshtein_distance("Saturday", "Sunday"), 3);
+    }
+
+    #[test]
+    fn test_suggestion() {
+        let valid_values = ["Captures", "Asserts"];
+        assert_eq!(
+            suggestion(&valid_values, "Asserts"),
+            Some("Asserts".to_string())
+        );
+        assert_eq!(
+            suggestion(&valid_values, "Assert"),
+            Some("Asserts".to_string())
+        );
+        assert_eq!(
+            suggestion(&valid_values, "assert"),
+            Some("Asserts".to_string())
+        );
+        assert_eq!(suggestion(&valid_values, "asser"), None);
     }
 }

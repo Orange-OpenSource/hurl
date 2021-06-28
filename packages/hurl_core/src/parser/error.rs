@@ -28,13 +28,14 @@ pub struct Error {
 pub enum ParseError {
     Expecting { value: String },
 
-    Method {},
+    Method { name: String },
     Version {},
     Status {},
     Filename {},
     FileContentType {},
     Space {},
-    SectionName { name: String },
+    RequestSectionName { name: String },
+    ResponseSectionName { name: String },
     JsonpathExpr {},
     XPathExpr {},
     TemplateVariable {},

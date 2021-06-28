@@ -1,7 +1,7 @@
 error: Parsing literal
-  --> tests_error_parser/predicate_startwith_value.hurl:3:26
+  --> tests_error_parser/predicate_startwith_value.hurl:4:26
    |
- 3 | header "toto" startsWith 1
+ 4 | header "toto" startsWith 1
    |                          ^ expecting '"'
    |
 
