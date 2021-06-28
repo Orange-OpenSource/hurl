@@ -123,7 +123,17 @@ fn response(reader: &mut Reader) -> ParseResult<'static, Response> {
 }
 
 fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
+    if reader.is_eof() {
+        return Err(Error {
+            pos: reader.state.pos.clone(),
+            recoverable: true,
+            inner: ParseError::Method {
+                name: "<EOF>".to_string(),
+            },
+        });
+    }
     let start = reader.state.clone();
+    let name = reader.read_while(|c| c.is_alphanumeric());
     let available_methods = vec![
         ("GET", Method::Get),
         ("HEAD", Method::Head),
@@ -137,15 +147,15 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
     ];
 
     for (s, method) in available_methods {
-        if try_literal(s, reader).is_ok() {
+        if name == s {
             return Ok(method);
         }
     }
-
+    reader.state = start.clone();
     Err(Error {
         pos: start.pos,
-        recoverable: reader.is_eof(),
-        inner: ParseError::Method {},
+        recoverable: false,
+        inner: ParseError::Method { name },
     })
 }
 

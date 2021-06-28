@@ -1,7 +1,7 @@
 error: Parsing predicate
-  --> tests_error_parser/predicate.hurl:3:15
+  --> tests_error_parser/predicate.hurl:4:15
    |
- 3 | header "toto" tata startsWith "hello"
+ 4 | header "toto" tata startsWith "hello"
    |               ^ expecting a predicate
    |
 

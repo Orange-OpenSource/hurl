@@ -27,41 +27,16 @@ use super::string::*;
 use super::ParseResult;
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
-    let sections = zero_or_more(|p1| section(p1), reader)?;
-    for section in sections.clone() {
-        if ![
-            "QueryStringParams",
-            "FormParams",
-            "MultipartFormData",
-            "Cookies",
-        ]
-        .contains(&section.name())
-        {
-            return Err(Error {
-                pos: section.source_info.start,
-                recoverable: false,
-                inner: ParseError::RequestSection,
-            });
-        }
-    }
+    let sections = zero_or_more(|p1| request_section(p1), reader)?;
     Ok(sections)
 }
 
 pub fn response_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
-    let sections = zero_or_more(|p1| section(p1), reader)?;
-    for section in sections.clone() {
-        if !["Captures", "Asserts"].contains(&section.name()) {
-            return Err(Error {
-                pos: section.source_info.start,
-                recoverable: false,
-                inner: ParseError::RequestSection,
-            });
-        }
-    }
+    let sections = zero_or_more(|p1| response_section(p1), reader)?;
     Ok(sections)
 }
 
-fn section(reader: &mut Reader) -> ParseResult<'static, Section> {
+fn request_section(reader: &mut Reader) -> ParseResult<'static, Section> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let start = reader.state.clone();
@@ -76,6 +51,38 @@ fn section(reader: &mut Reader) -> ParseResult<'static, Section> {
         "FormParams" => section_value_form_params(reader)?,
         "MultipartFormData" => section_value_multipart_form_data(reader)?,
         "Cookies" => section_value_cookies(reader)?,
+        _ => {
+            return Err(Error {
+                pos: Pos {
+                    line: start.pos.line,
+                    column: start.pos.column + 1,
+                },
+                recoverable: false,
+                inner: ParseError::RequestSectionName { name: name.clone() },
+            });
+        }
+    };
+
+    Ok(Section {
+        line_terminators,
+        space0,
+        line_terminator0,
+        value,
+        source_info,
+    })
+}
+
+fn response_section(reader: &mut Reader) -> ParseResult<'static, Section> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+    let name = section_name(reader)?;
+    let source_info = SourceInfo {
+        start: start.clone().pos,
+        end: reader.state.clone().pos,
+    };
+    let line_terminator0 = line_terminator(reader)?;
+    let value = match name.as_str() {
         "Captures" => section_value_captures(reader)?,
         "Asserts" => section_value_asserts(reader)?,
         _ => {
@@ -85,7 +92,7 @@ fn section(reader: &mut Reader) -> ParseResult<'static, Section> {
                     column: start.pos.column + 1,
                 },
                 recoverable: false,
-                inner: ParseError::SectionName { name: name.clone() },
+                inner: ParseError::ResponseSectionName { name: name.clone() },
             });
         }
     };
@@ -355,7 +362,7 @@ mod tests {
             Reader::init("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
 
         assert_eq!(
-            section(&mut reader).unwrap(),
+            response_section(&mut reader).unwrap(),
             Section {
                 line_terminators: vec![],
                 space0: Whitespace {
@@ -447,7 +454,7 @@ mod tests {
     fn test_asserts_section_error() {
         let mut reader =
             Reader::init("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
-        let error = section(&mut reader).err().unwrap();
+        let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.inner,
@@ -458,11 +465,11 @@ mod tests {
         assert_eq!(error.recoverable, true);
 
         let mut reader = Reader::init("[Assertsx]\nheader Location equals \"https://google.fr\"\n");
-        let error = section(&mut reader).err().unwrap();
+        let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
             error.inner,
-            ParseError::SectionName {
+            ParseError::ResponseSectionName {
                 name: String::from("Assertsx")
             }
         );
