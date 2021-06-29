@@ -82,7 +82,7 @@ fn status_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn header_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("header", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let name = quoted_template(reader)?;
+    let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Header { space0, name })
 }
 
@@ -112,7 +112,7 @@ fn body_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn xpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Xpath { space0, expr })
 }
 
@@ -121,7 +121,7 @@ fn jsonpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     let space0 = one_or_more_spaces(reader)?;
     //let expr = jsonpath_expr(reader)?;
     //  let start = reader.state.pos.clone();
-    let expr = quoted_template(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     //    let end = reader.state.pos.clone();
     //    let expr = Template {
     //        elements: template.elements.iter().map(|e| match e {
@@ -140,14 +140,14 @@ fn jsonpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn regex_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Regex { space0, expr })
 }
 
 fn variable_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("variable", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let name = quoted_template(reader)?;
+    let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Variable { space0, name })
 }
 

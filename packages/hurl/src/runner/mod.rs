@@ -44,6 +44,7 @@ mod log_deserialize;
 mod log_serialize;
 mod multipart;
 mod predicate;
+mod predicate_value;
 mod query;
 mod request;
 mod response;

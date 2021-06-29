@@ -167,7 +167,7 @@ pub mod tests {
                 source_info: SourceInfo::init(1, 14, 1, 27),
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace.clone(),
-                    value: 3,
+                    value: PredicateValue::Integer(3),
                 },
             },
         };
