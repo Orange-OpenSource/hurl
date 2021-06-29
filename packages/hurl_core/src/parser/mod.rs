@@ -42,6 +42,7 @@ mod expr;
 mod json;
 mod parsers;
 mod predicate;
+mod predicate_value;
 mod primitives;
 mod query;
 mod reader;

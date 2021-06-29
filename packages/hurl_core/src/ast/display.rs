@@ -144,58 +144,42 @@ impl fmt::Display for Hex {
 impl PredicateFuncValue {
     pub fn name(&self) -> String {
         match self {
-            PredicateFuncValue::EqualString { operator, .. }
-            | PredicateFuncValue::EqualInt { operator, .. }
-            | PredicateFuncValue::EqualFloat { operator, .. }
-            | PredicateFuncValue::EqualBool { operator, .. }
-            | PredicateFuncValue::EqualNull { operator, .. }
-            | PredicateFuncValue::EqualHex { operator, .. }
-            | PredicateFuncValue::EqualExpression { operator, .. } => {
+            PredicateFuncValue::Equal { operator, .. } => {
                 if *operator {
                     "==".to_string()
                 } else {
                     "equals".to_string()
                 }
             }
-            PredicateFuncValue::NotEqualString { operator, .. }
-            | PredicateFuncValue::NotEqualInt { operator, .. }
-            | PredicateFuncValue::NotEqualFloat { operator, .. }
-            | PredicateFuncValue::NotEqualBool { operator, .. }
-            | PredicateFuncValue::NotEqualNull { operator, .. }
-            | PredicateFuncValue::NotEqualHex { operator, .. }
-            | PredicateFuncValue::NotEqualExpression { operator, .. } => {
+            PredicateFuncValue::NotEqual { operator, .. } => {
                 if *operator {
                     "!=".to_string()
                 } else {
                     "notEquals".to_string()
                 }
             }
-            PredicateFuncValue::GreaterThanInt { operator, .. }
-            | PredicateFuncValue::GreaterThanFloat { operator, .. } => {
+            PredicateFuncValue::GreaterThan { operator, .. } => {
                 if *operator {
                     ">".to_string()
                 } else {
                     "greaterThan".to_string()
                 }
             }
-            PredicateFuncValue::GreaterThanOrEqualInt { operator, .. }
-            | PredicateFuncValue::GreaterThanOrEqualFloat { operator, .. } => {
+            PredicateFuncValue::GreaterThanOrEqual { operator, .. } => {
                 if *operator {
                     ">=".to_string()
                 } else {
                     "greaterThanOrEquals".to_string()
                 }
             }
-            PredicateFuncValue::LessThanInt { operator, .. }
-            | PredicateFuncValue::LessThanFloat { operator, .. } => {
+            PredicateFuncValue::LessThan { operator, .. } => {
                 if *operator {
                     "<".to_string()
                 } else {
                     "lessThan".to_string()
                 }
             }
-            PredicateFuncValue::LessThanOrEqualInt { operator, .. }
-            | PredicateFuncValue::LessThanOrEqualFloat { operator, .. } => {
+            PredicateFuncValue::LessThanOrEqual { operator, .. } => {
                 if *operator {
                     "<=".to_string()
                 } else {
@@ -205,12 +189,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::CountEqual { .. } => "countEquals".to_string(),
             PredicateFuncValue::StartWith { .. } => "startsWith".to_string(),
             PredicateFuncValue::Contain { .. } => "contains".to_string(),
-            PredicateFuncValue::IncludeString { .. }
-            | PredicateFuncValue::IncludeInt { .. }
-            | PredicateFuncValue::IncludeFloat { .. }
-            | PredicateFuncValue::IncludeBool { .. }
-            | PredicateFuncValue::IncludeNull { .. }
-            | PredicateFuncValue::IncludeExpression { .. } => "includes".to_string(),
+            PredicateFuncValue::Include { .. } => "includes".to_string(),
             PredicateFuncValue::Match { .. } => "matches".to_string(),
             PredicateFuncValue::IsInteger { .. } => "isInteger".to_string(),
             PredicateFuncValue::IsFloat { .. } => "isFloat".to_string(),

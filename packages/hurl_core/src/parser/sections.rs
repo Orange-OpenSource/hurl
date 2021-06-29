@@ -402,7 +402,7 @@ mod tests {
                                 source_info: SourceInfo::init(2, 8, 2, 18),
                             },
                         },
-                        subquery: None
+                        subquery: None,
                     },
                     space1: Whitespace {
                         value: String::from(" "),
@@ -416,20 +416,20 @@ mod tests {
                         },
                         predicate_func: PredicateFunc {
                             source_info: SourceInfo::init(2, 19, 2, 45),
-                            value: PredicateFuncValue::EqualString {
+                            value: PredicateFuncValue::Equal {
                                 space0: Whitespace {
                                     value: String::from(" "),
                                     source_info: SourceInfo::init(2, 25, 2, 26),
                                 },
-                                value: Template {
+                                value: PredicateValue::String(Template {
                                     quotes: true,
                                     elements: vec![TemplateElement::String {
                                         value: "https://google.fr".to_string(),
                                         encoded: "https://google.fr".to_string(),
                                     }],
                                     source_info: SourceInfo::init(2, 26, 2, 45),
-                                },
-                                operator: false
+                                }),
+                                operator: false,
                             },
                         },
                     },
@@ -623,7 +623,7 @@ mod tests {
                         source_info: SourceInfo::init(1, 13, 1, 23),
                     },
                 },
-                subquery: None
+                subquery: None,
             }
         );
     }
@@ -655,26 +655,26 @@ mod tests {
                 subquery: Some((
                     Whitespace {
                         value: " ".to_string(),
-                        source_info: SourceInfo::init(1, 25, 1, 26)
+                        source_info: SourceInfo::init(1, 25, 1, 26),
                     },
                     Subquery {
                         source_info: SourceInfo::init(1, 26, 1, 44),
                         value: SubqueryValue::Regex {
                             space0: Whitespace {
                                 value: " ".to_string(),
-                                source_info: SourceInfo::init(1, 31, 1, 32)
+                                source_info: SourceInfo::init(1, 31, 1, 32),
                             },
                             expr: Template {
                                 quotes: true,
                                 elements: vec![TemplateElement::String {
                                     value: "token=(.*)".to_string(),
-                                    encoded: "token=(.*)".to_string()
+                                    encoded: "token=(.*)".to_string(),
                                 }],
-                                source_info: SourceInfo::init(1, 32, 1, 44)
-                            }
-                        }
+                                source_info: SourceInfo::init(1, 32, 1, 44),
+                            },
+                        },
                     }
-                ))
+                )),
             }
         );
         assert_eq!(reader.state.cursor, 43);
@@ -688,7 +688,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 32,
+                column: 32
             }
         );
         assert_eq!(
@@ -740,7 +740,7 @@ mod tests {
                         source_info: SourceInfo::init(1, 8, 1, 18),
                     },
                 },
-                subquery: None
+                subquery: None,
             }
         );
     }
@@ -759,13 +759,13 @@ mod tests {
                 },
                 predicate_func: PredicateFunc {
                     source_info: SourceInfo::init(1, 21, 1, 29),
-                    value: PredicateFuncValue::EqualInt {
+                    value: PredicateFuncValue::Equal {
                         space0: Whitespace {
                             value: String::from(" "),
                             source_info: SourceInfo::init(1, 27, 1, 28),
                         },
-                        value: 5,
-                        operator: false
+                        value: PredicateValue::Integer(5),
+                        operator: false,
                     },
                 },
             }

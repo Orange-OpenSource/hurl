@@ -148,7 +148,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let quotes = true;
     let start = reader.state.clone().pos;
     let mut end = start.clone();
-    literal("\"", reader)?;
+    try_literal("\"", reader)?;
     let mut chars = vec![];
     loop {
         let pos = reader.state.pos.clone();

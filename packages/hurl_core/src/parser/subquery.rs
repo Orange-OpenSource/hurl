@@ -41,7 +41,7 @@ fn subquery_value(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
 fn regex_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(SubqueryValue::Regex { space0, expr })
 }
 

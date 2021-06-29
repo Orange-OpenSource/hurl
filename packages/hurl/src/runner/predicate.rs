@@ -21,11 +21,12 @@ use regex::Regex;
 
 use hurl_core::ast::*;
 
-use super::core::*;
-use super::core::{Error, RunnerError};
-use super::expr::eval_expr;
+use super::core::Error;
 use super::template::eval_template;
 use super::value::Value;
+use crate::runner::core::PredicateResult;
+use crate::runner::predicate_value::eval_predicate_value;
+use crate::runner::RunnerError;
 
 pub fn eval_predicate(
     predicate: Predicate,
@@ -131,186 +132,79 @@ fn eval_predicate_func(
     }
 }
 
+impl Value {
+    pub fn expected(&self) -> String {
+        match self {
+            Value::Unit => "something".to_string(),
+            Value::Bool(value) => format!("bool <{}>", value),
+            Value::Integer(value) => format!("integer <{}>", value),
+            Value::String(value) => format!("string <{}>", value),
+            Value::List(value) => format!("list of size {}", value.len()),
+            Value::Object(values) => format!("list of size {}", values.len()),
+            Value::Nodeset(size) => format!("list of size {}", size),
+            Value::Bytes(values) => format!("list of size {}", values.len()),
+            Value::Null => "null".to_string(),
+            Value::Float(i, d) => format!("float <{}.{}>", i, d),
+        }
+    }
+}
+
 fn expected(
     predicate_func: PredicateFunc,
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
     match predicate_func.value {
-        PredicateFuncValue::EqualInt {
-            value: expected, ..
+        PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(value.expected())
         }
-        | PredicateFuncValue::NotEqualInt {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("int <{}>", expected))
+        PredicateFuncValue::GreaterThan { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(format!("greater than <{}>", value.expected()))
         }
-        PredicateFuncValue::EqualFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
+        PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(format!("greater than or equals to <{}>", value.expected()))
         }
-        | PredicateFuncValue::NotEqualFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
-        } => Ok(format!("float <{}.{}>", expected_int, expected_dec)),
-        PredicateFuncValue::EqualNull { .. } | PredicateFuncValue::NotEqualNull { .. } => {
-            Ok("null".to_string())
+        PredicateFuncValue::LessThan { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(format!("less than <{}>", value.expected()))
         }
-        PredicateFuncValue::EqualBool {
-            value: expected, ..
+        PredicateFuncValue::LessThanOrEqual { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(format!("less than or equals to <{}>", value.expected()))
         }
-        | PredicateFuncValue::NotEqualBool {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("bool <{}>", expected))
-        }
-        PredicateFuncValue::EqualString {
-            value: expected, ..
-        }
-        | PredicateFuncValue::NotEqualString {
-            value: expected, ..
-        } => {
-            let expected = eval_template(expected, variables)?;
-            Ok(format!("string <{}>", expected))
-        }
-        PredicateFuncValue::EqualHex {
-            value: expected, ..
-        }
-        | PredicateFuncValue::NotEqualHex {
-            value: expected, ..
-        } => Ok(format!("bytearray <{}>", expected.to_string())),
-        PredicateFuncValue::EqualExpression {
-            value: expected, ..
-        }
-        | PredicateFuncValue::NotEqualExpression {
-            value: expected, ..
-        } => {
-            let expected = eval_expr(expected, variables)?;
-            todo!(">> {:?}", expected)
-        }
-
-        PredicateFuncValue::GreaterThanInt {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("greater than <{}>", expected))
-        }
-        PredicateFuncValue::GreaterThanFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
-        } => Ok(format!("greater than <{}.{}>", expected_int, expected_dec)),
-
-        PredicateFuncValue::GreaterThanOrEqualInt {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("greater than or equals to <{}>", expected))
-        }
-        PredicateFuncValue::GreaterThanOrEqualFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
-        } => Ok(format!(
-            "greater than or equals to <{}.{}>",
-            expected_int, expected_dec
-        )),
-
-        PredicateFuncValue::LessThanInt {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("less than <{}>", expected))
-        }
-        PredicateFuncValue::LessThanFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
-        } => Ok(format!("less than <{}.{}>", expected_int, expected_dec)),
-
-        PredicateFuncValue::LessThanOrEqualInt {
-            value: expected, ..
-        } => {
-            let expected = expected.to_string();
-            Ok(format!("less than or equals to <{}>", expected))
-        }
-        PredicateFuncValue::LessThanOrEqualFloat {
-            value:
-                Float {
-                    int: expected_int,
-                    decimal: expected_dec,
-                    ..
-                },
-            ..
-        } => Ok(format!(
-            "less than or equals to <{}.{}>",
-            expected_int, expected_dec
-        )),
 
         PredicateFuncValue::CountEqual {
             value: expected, ..
         } => {
-            let expected = expected.to_string();
-            Ok(format!("count equals to <{}>", expected))
+            let expected = if let PredicateValue::Integer(expected) = expected {
+                expected
+            } else {
+                panic!();
+            };
+            Ok(format!("count equals to <{}>", expected.to_string()))
         }
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("starts with string <{}>", expected))
         }
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("contains string <{}>", expected))
         }
-        PredicateFuncValue::IncludeString {
-            value: expected, ..
-        } => {
-            let expected = eval_template(expected, variables)?;
-            Ok(format!("includes string <{}>", expected))
+        PredicateFuncValue::Include { value, .. } => {
+            let value = eval_predicate_value(value, variables)?;
+            Ok(format!("include {}", value.expected()))
         }
-        PredicateFuncValue::IncludeInt {
-            value: expected, ..
-        } => Ok(format!("includes int <{}>", expected)),
-        PredicateFuncValue::IncludeFloat {
-            value: expected, ..
-        } => Ok(format!("includes float <{}>", expected)),
-        PredicateFuncValue::IncludeNull { .. } => Ok("includes null".to_string()),
-        PredicateFuncValue::IncludeBool {
-            value: expected, ..
-        } => Ok(format!("includes bool <{}>", expected)),
-        PredicateFuncValue::IncludeExpression {
-            value: _expected, ..
-        } => todo!(),
         PredicateFuncValue::Match {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("matches regex <{}>", expected))
         }
         PredicateFuncValue::IsInteger {} => Ok("integer".to_string()),
@@ -322,132 +216,80 @@ fn expected(
     }
 }
 
+pub fn eval_predicate_value_template(
+    predicate_value: PredicateValue,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    let template = if let PredicateValue::String(template) = predicate_value {
+        template
+    } else {
+        panic!()
+    };
+    eval_template(template, variables)
+}
+
 fn eval_something(
     predicate_func: PredicateFunc,
     variables: &HashMap<String, Value>,
     value: Value,
 ) -> Result<AssertResult, Error> {
     match predicate_func.value {
-        PredicateFuncValue::EqualInt {
-            value: expected, ..
-        } => Ok(assert_values_equal(value, Value::Integer(expected))),
-        PredicateFuncValue::EqualNull { .. } => Ok(assert_values_equal(value, Value::Null)),
-        PredicateFuncValue::EqualBool {
-            value: expected, ..
-        } => Ok(assert_values_equal(value, Value::Bool(expected))),
-        PredicateFuncValue::EqualFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_equal(value, Value::Float(int, decimal))),
-        PredicateFuncValue::EqualString {
+        PredicateFuncValue::Equal {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
-            Ok(assert_values_equal(value, Value::String(expected)))
-        }
-        PredicateFuncValue::EqualHex {
-            value: Hex {
-                value: expected, ..
-            },
-            ..
-        } => Ok(assert_values_equal(value, Value::Bytes(expected))),
-        PredicateFuncValue::EqualExpression {
-            value: expected, ..
-        } => {
-            let expected = eval_expr(expected, variables)?;
+            let expected = eval_predicate_value(expected, variables)?;
             Ok(assert_values_equal(value, expected))
         }
-
-        PredicateFuncValue::NotEqualInt {
-            value: expected, ..
-        } => Ok(assert_values_not_equal(value, Value::Integer(expected))),
-        PredicateFuncValue::NotEqualNull { .. } => Ok(assert_values_equal(value, Value::Null)),
-        PredicateFuncValue::NotEqualBool {
-            value: expected, ..
-        } => Ok(assert_values_not_equal(value, Value::Bool(expected))),
-        PredicateFuncValue::NotEqualFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_not_equal(value, Value::Float(int, decimal))),
-        PredicateFuncValue::NotEqualString {
+        PredicateFuncValue::NotEqual {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
-            Ok(assert_values_not_equal(value, Value::String(expected)))
-        }
-        PredicateFuncValue::NotEqualHex {
-            value: Hex {
-                value: expected, ..
-            },
-            ..
-        } => Ok(assert_values_not_equal(value, Value::Bytes(expected))),
-        PredicateFuncValue::NotEqualExpression {
-            value: expected, ..
-        } => {
-            let expected = eval_expr(expected, variables)?;
+            let expected = eval_predicate_value(expected, variables)?;
             Ok(assert_values_not_equal(value, expected))
         }
-
-        PredicateFuncValue::GreaterThanInt {
+        PredicateFuncValue::GreaterThan {
             value: expected, ..
-        } => Ok(assert_values_greater(value, Value::Integer(expected))),
-        PredicateFuncValue::GreaterThanFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_greater(value, Value::Float(int, decimal))),
-
-        PredicateFuncValue::GreaterThanOrEqualInt {
+        } => {
+            let expected = eval_predicate_value(expected, variables)?;
+            Ok(assert_values_greater(value, expected))
+        }
+        PredicateFuncValue::GreaterThanOrEqual {
             value: expected, ..
-        } => Ok(assert_values_greater_or_equal(
-            value,
-            Value::Integer(expected),
-        )),
-        PredicateFuncValue::GreaterThanOrEqualFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_greater_or_equal(
-            value,
-            Value::Float(int, decimal),
-        )),
-
-        PredicateFuncValue::LessThanInt {
+        } => {
+            let expected = eval_predicate_value(expected, variables)?;
+            Ok(assert_values_greater_or_equal(value, expected))
+        }
+        PredicateFuncValue::LessThan {
             value: expected, ..
-        } => Ok(assert_values_less(value, Value::Integer(expected))),
-        PredicateFuncValue::LessThanFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_less(value, Value::Float(int, decimal))),
-
-        PredicateFuncValue::LessThanOrEqualInt {
+        } => {
+            let expected = eval_predicate_value(expected, variables)?;
+            Ok(assert_values_less(value, expected))
+        }
+        PredicateFuncValue::LessThanOrEqual {
             value: expected, ..
-        } => Ok(assert_values_less_or_equal(value, Value::Integer(expected))),
-        PredicateFuncValue::LessThanOrEqualFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_values_less_or_equal(
-            value,
-            Value::Float(int, decimal),
-        )),
+        } => {
+            let expected = eval_predicate_value(expected, variables)?;
+            Ok(assert_values_less_or_equal(value, expected))
+        }
 
         // countEquals
         PredicateFuncValue::CountEqual {
-            value: expected_value,
+            value: PredicateValue::Integer(expected_value),
             ..
         } => match value {
             Value::List(values) => Ok(AssertResult {
-                success: values.len() as u64 == expected_value,
+                success: values.len() as i64 == expected_value,
                 actual: values.len().to_string(),
                 expected: expected_value.to_string(),
                 type_mismatch: false,
             }),
             Value::Nodeset(n) => Ok(AssertResult {
-                success: n as u64 == expected_value,
+                success: n as i64 == expected_value,
                 actual: n.to_string(),
                 expected: expected_value.to_string(),
                 type_mismatch: false,
             }),
             Value::Bytes(data) => Ok(AssertResult {
-                success: data.len() as u64 == expected_value,
+                success: data.len() as i64 == expected_value,
                 actual: data.len().to_string(),
                 expected: expected_value.to_string(),
                 type_mismatch: false,
@@ -464,7 +306,12 @@ fn eval_something(
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let template = if let PredicateValue::String(template) = expected {
+                template
+            } else {
+                panic!("expect a string predicate value")
+            };
+            let expected = eval_template(template, variables)?;
             match value.clone() {
                 Value::String(actual) => Ok(AssertResult {
                     success: actual.as_str().starts_with(expected.as_str()),
@@ -485,7 +332,12 @@ fn eval_something(
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let template = if let PredicateValue::String(template) = expected {
+                template
+            } else {
+                panic!("expect a string predicate value")
+            };
+            let expected = eval_template(template, variables)?;
             match value.clone() {
                 Value::String(actual) => Ok(AssertResult {
                     success: actual.as_str().contains(expected.as_str()),
@@ -502,46 +354,22 @@ fn eval_something(
             }
         }
 
-        // includes String
-        PredicateFuncValue::IncludeString {
+        PredicateFuncValue::Include {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
-            Ok(assert_include(value, Value::String(expected)))
-        }
-
-        // includes int
-        PredicateFuncValue::IncludeInt {
-            value: expected, ..
-        } => Ok(assert_include(value, Value::Integer(expected))),
-
-        // includes float
-        PredicateFuncValue::IncludeFloat {
-            value: Float { int, decimal, .. },
-            ..
-        } => Ok(assert_include(value, Value::Float(int, decimal))),
-
-        // includes bool
-        PredicateFuncValue::IncludeBool {
-            value: expected, ..
-        } => Ok(assert_include(value, Value::Bool(expected))),
-
-        // includes null
-        PredicateFuncValue::IncludeNull { .. } => Ok(assert_include(value, Value::Null)),
-
-        // includes expression
-        PredicateFuncValue::IncludeExpression {
-            value: expected, ..
-        } => {
-            let expected = eval_expr(expected, variables)?;
+            let expected = eval_predicate_value(expected, variables)?;
             Ok(assert_include(value, expected))
         }
 
-        // match string
         PredicateFuncValue::Match {
             value: expected, ..
         } => {
-            let expected = eval_template(expected, variables)?;
+            let template = if let PredicateValue::String(template) = expected {
+                template
+            } else {
+                panic!("expect a string predicate value")
+            };
+            let expected = eval_template(template, variables)?;
             let regex = match Regex::new(expected.as_str()) {
                 Ok(re) => re,
                 Err(_) => {
@@ -618,6 +446,7 @@ fn eval_something(
                 type_mismatch: false,
             }),
         },
+        _ => panic!(),
     }
 }
 
@@ -951,9 +780,9 @@ mod tests {
             not: true,
             space0: whitespace.clone(),
             predicate_func: PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: 10,
+                    value: PredicateValue::Integer(10),
                     operator: false,
                 },
                 source_info: SourceInfo::init(1, 11, 1, 12),
@@ -987,9 +816,9 @@ mod tests {
         };
         let assert_result = eval_predicate_func(
             PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: 10,
+                    value: PredicateValue::Integer(10),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1013,9 +842,9 @@ mod tests {
         };
         let assert_result = eval_predicate_func(
             PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: 10,
+                    value: PredicateValue::Integer(10),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1040,9 +869,9 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: 10,
+                    value: PredicateValue::Integer(10),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1058,9 +887,9 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualBool {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: true,
+                    value: PredicateValue::Bool(true),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1076,13 +905,13 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualFloat {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: Float {
+                    value: PredicateValue::Float(Float {
                         int: 1,
                         decimal: 200_000_000_000_000_000,
                         decimal_digits: 0,
-                    },
+                    }),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1129,9 +958,9 @@ mod tests {
         };
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1147,9 +976,9 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualBool {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: false,
+                    value: PredicateValue::Bool(false),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1165,13 +994,13 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualFloat {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: Float {
+                    value: PredicateValue::Float(Float {
                         int: 1,
                         decimal: 1,
                         decimal_digits: 1,
-                    },
+                    }),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1188,9 +1017,9 @@ mod tests {
         // a float can be equals to an int (but the reverse)
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualInt {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1214,9 +1043,9 @@ mod tests {
         };
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::NotEqualInt {
+                value: PredicateFuncValue::NotEqual {
                     space0: whitespace.clone(),
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1260,9 +1089,9 @@ mod tests {
 
         let error = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualString {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: template.clone(),
+                    value: PredicateValue::String(template.clone()),
                     operator: false,
                 },
                 source_info: SourceInfo::init(1, 1, 1, 21),
@@ -1286,9 +1115,9 @@ mod tests {
         );
         let assert_result = eval_something(
             PredicateFunc {
-                value: PredicateFuncValue::EqualString {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: template,
+                    value: PredicateValue::String(template),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
@@ -1441,7 +1270,7 @@ mod tests {
             PredicateFunc {
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace.clone(),
-                    value: 10,
+                    value: PredicateValue::Integer(10),
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1458,7 +1287,7 @@ mod tests {
             PredicateFunc {
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace.clone(),
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1476,7 +1305,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace,
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                 },
             },
             &variables,
@@ -1500,7 +1329,7 @@ mod tests {
             PredicateFunc {
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace.clone(),
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1517,7 +1346,7 @@ mod tests {
             PredicateFunc {
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace,
-                    value: 1,
+                    value: PredicateValue::Integer(1),
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -1571,9 +1400,10 @@ mod tests {
             space0: whitespace(),
             predicate_func: PredicateFunc {
                 source_info: SourceInfo::init(0, 0, 0, 0),
-                value: PredicateFuncValue::EqualNull {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
+                    value: PredicateValue::Null {},
                 },
             },
         };
@@ -1590,14 +1420,14 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
                 value: PredicateFuncValue::StartWith {
                     space0: whitespace(),
-                    value: Template {
+                    value: PredicateValue::String(Template {
                         quotes: false,
                         elements: vec![TemplateElement::String {
                             value: "toto".to_string(),
                             encoded: "toto".to_string(),
                         }],
                         source_info: SourceInfo::init(0, 0, 0, 0),
-                    },
+                    }),
                 },
             },
         };
@@ -1621,8 +1451,9 @@ mod tests {
             space0: whitespace(),
             predicate_func: PredicateFunc {
                 source_info: SourceInfo::init(0, 0, 0, 0),
-                value: PredicateFuncValue::EqualNull {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace(),
+                    value: PredicateValue::Null {},
                     operator: false,
                 },
             },
@@ -1644,9 +1475,10 @@ mod tests {
             space0: whitespace(),
             predicate_func: PredicateFunc {
                 source_info: SourceInfo::init(0, 0, 0, 0),
-                value: PredicateFuncValue::EqualNull {
+                value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
+                    value: PredicateValue::Null {},
                 },
             },
         };

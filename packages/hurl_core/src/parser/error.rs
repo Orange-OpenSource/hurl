@@ -61,3 +61,20 @@ pub enum ParseError {
     OddNumberOfHexDigits,
     UrlIllegalCharacter(char),
 }
+
+impl Error {
+    pub fn recoverable(&self) -> Error {
+        Error {
+            pos: self.pos.clone(),
+            recoverable: true,
+            inner: self.inner.clone(),
+        }
+    }
+    pub fn non_recoverable(&self) -> Error {
+        Error {
+            pos: self.pos.clone(),
+            recoverable: false,
+            inner: self.inner.clone(),
+        }
+    }
+}

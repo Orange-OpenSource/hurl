@@ -538,120 +538,40 @@ impl Tokenizable for PredicateFuncValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         match self {
-            PredicateFuncValue::EqualNull { space0, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Keyword("null".to_string()));
-            }
-            PredicateFuncValue::EqualBool { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Boolean(value.to_string()));
-            }
-            PredicateFuncValue::EqualString { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
-            }
-            PredicateFuncValue::EqualInt { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::EqualFloat { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::EqualHex { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::String(value.to_string()));
-            }
-            PredicateFuncValue::EqualExpression { space0, value, .. } => {
+            PredicateFuncValue::Equal { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::NotEqualNull { space0, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Keyword("null".to_string()));
-            }
-            PredicateFuncValue::NotEqualBool { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Boolean(value.to_string()));
-            }
-            PredicateFuncValue::NotEqualString { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
-            }
-            PredicateFuncValue::NotEqualInt { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::NotEqualFloat { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::NotEqualHex { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::String(value.to_string()));
-            }
-            PredicateFuncValue::NotEqualExpression { space0, value, .. } => {
+            PredicateFuncValue::NotEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::GreaterThanInt { space0, value, .. } => {
+            PredicateFuncValue::GreaterThan { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
+                tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::GreaterThanFloat { space0, value, .. } => {
+            PredicateFuncValue::GreaterThanOrEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
+                tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::GreaterThanOrEqualInt { space0, value, .. } => {
+            PredicateFuncValue::LessThan { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
+                tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::GreaterThanOrEqualFloat { space0, value, .. } => {
+            PredicateFuncValue::LessThanOrEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::LessThanInt { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::LessThanFloat { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::LessThanOrEqualInt { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::LessThanOrEqualFloat { space0, value, .. } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
+                tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::CountEqual { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Boolean(value.to_string()));
+                tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::StartWith { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
@@ -663,32 +583,7 @@ impl Tokenizable for PredicateFuncValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, value.tokenize());
             }
-            PredicateFuncValue::IncludeString { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
-            }
-            PredicateFuncValue::IncludeInt { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::IncludeFloat { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Number(value.to_string()));
-            }
-            PredicateFuncValue::IncludeNull { space0 } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Keyword("null".to_string()));
-            }
-            PredicateFuncValue::IncludeBool { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::Boolean(value.to_string()));
-            }
-            PredicateFuncValue::IncludeExpression { space0, value } => {
+            PredicateFuncValue::Include { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
                 tokens.append(&mut value.tokenize());
@@ -719,6 +614,20 @@ impl Tokenizable for PredicateFuncValue {
             }
         }
         tokens
+    }
+}
+
+impl Tokenizable for PredicateValue {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            PredicateValue::String(value) => value.tokenize(),
+            PredicateValue::Integer(value) => vec![Token::Number(value.to_string())],
+            PredicateValue::Float(value) => vec![Token::Number(value.to_string())],
+            PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
+            PredicateValue::Null {} => vec![Token::Keyword("null".to_string())],
+            PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
+            PredicateValue::Expression(value) => value.tokenize(),
+        }
     }
 }
 

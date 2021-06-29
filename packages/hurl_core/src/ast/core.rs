@@ -399,153 +399,68 @@ pub struct PredicateFunc {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
+pub enum PredicateValue {
+    String(Template),
+    Integer(i64),
+    Float(Float),
+    Bool(bool),
+    Null {},
+    Hex(Hex),
+    Expression(Expr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[allow(clippy::large_enum_variant)]
 pub enum PredicateFuncValue {
-    EqualString {
+    Equal {
         space0: Whitespace,
-        value: Template,
+        value: PredicateValue,
         operator: bool,
     },
-    EqualInt {
+    NotEqual {
         space0: Whitespace,
-        value: i64,
+        value: PredicateValue,
         operator: bool,
     },
-    EqualFloat {
+    GreaterThan {
         space0: Whitespace,
-        value: Float,
+        value: PredicateValue,
         operator: bool,
     },
-    EqualBool {
+    GreaterThanOrEqual {
         space0: Whitespace,
-        value: bool,
+        value: PredicateValue,
         operator: bool,
     },
-    EqualNull {
+    LessThan {
         space0: Whitespace,
+        value: PredicateValue,
         operator: bool,
     },
-    EqualHex {
+    LessThanOrEqual {
         space0: Whitespace,
-        value: Hex,
-        operator: bool,
-    },
-    EqualExpression {
-        space0: Whitespace,
-        value: Expr,
-        operator: bool,
-    },
-    NotEqualString {
-        space0: Whitespace,
-        value: Template,
-        operator: bool,
-    },
-    NotEqualInt {
-        space0: Whitespace,
-        value: i64,
-        operator: bool,
-    },
-    NotEqualFloat {
-        space0: Whitespace,
-        value: Float,
-        operator: bool,
-    },
-    NotEqualBool {
-        space0: Whitespace,
-        value: bool,
-        operator: bool,
-    },
-    NotEqualNull {
-        space0: Whitespace,
-        operator: bool,
-    },
-    NotEqualHex {
-        space0: Whitespace,
-        value: Hex,
-        operator: bool,
-    },
-    NotEqualExpression {
-        space0: Whitespace,
-        value: Expr,
-        operator: bool,
-    },
-    GreaterThanInt {
-        space0: Whitespace,
-        value: i64,
-        operator: bool,
-    },
-    GreaterThanFloat {
-        space0: Whitespace,
-        value: Float,
-        operator: bool,
-    },
-    GreaterThanOrEqualInt {
-        space0: Whitespace,
-        value: i64,
-        operator: bool,
-    },
-    GreaterThanOrEqualFloat {
-        space0: Whitespace,
-        value: Float,
-        operator: bool,
-    },
-    LessThanInt {
-        space0: Whitespace,
-        value: i64,
-        operator: bool,
-    },
-    LessThanFloat {
-        space0: Whitespace,
-        value: Float,
-        operator: bool,
-    },
-    LessThanOrEqualInt {
-        space0: Whitespace,
-        value: i64,
-        operator: bool,
-    },
-    LessThanOrEqualFloat {
-        space0: Whitespace,
-        value: Float,
+        value: PredicateValue,
         operator: bool,
     },
     CountEqual {
         space0: Whitespace,
-        value: u64,
+        value: PredicateValue,
     },
     StartWith {
         space0: Whitespace,
-        value: Template,
+        value: PredicateValue,
     },
     Contain {
         space0: Whitespace,
-        value: Template,
+        value: PredicateValue,
     },
-    IncludeString {
+    Include {
         space0: Whitespace,
-        value: Template,
-    },
-    IncludeInt {
-        space0: Whitespace,
-        value: i64,
-    },
-    IncludeFloat {
-        space0: Whitespace,
-        value: Float,
-    },
-    IncludeBool {
-        space0: Whitespace,
-        value: bool,
-    },
-    IncludeNull {
-        space0: Whitespace,
-    },
-    IncludeExpression {
-        space0: Whitespace,
-        value: Expr,
+        value: PredicateValue,
     },
     Match {
         space0: Whitespace,
-        value: Template,
+        value: PredicateValue,
     },
     IsInteger {},
     IsFloat {},
