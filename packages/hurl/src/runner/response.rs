@@ -153,7 +153,7 @@ pub fn eval_asserts(
                     source_info: body.space0.source_info.clone(),
                 })
             }
-            Bytes::RawString { value, .. } => {
+            Bytes::RawString(RawString { value, .. }) => {
                 let expected = match eval_template(value.clone(), variables) {
                     Ok(s) => Ok(Value::String(s)),
                     Err(e) => Err(e),

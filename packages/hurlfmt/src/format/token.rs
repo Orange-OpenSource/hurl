@@ -192,11 +192,8 @@ impl Tokenizable for Bytes {
                 tokens.push(Token::String(value.to_string()));
             }
             //            Bytes::MultilineString { value: _ } => {}
-            Bytes::RawString { newline0, value } => {
-                tokens.push(Token::Keyword(String::from("```")));
-                add_tokens(&mut tokens, newline0.tokenize());
+            Bytes::RawString(value) => {
                 tokens.append(&mut value.tokenize());
-                tokens.push(Token::Keyword(String::from("```")));
             }
             Bytes::Base64 {
                 space0,
@@ -621,6 +618,7 @@ impl Tokenizable for PredicateValue {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             PredicateValue::String(value) => value.tokenize(),
+            PredicateValue::Raw(value) => value.tokenize(),
             PredicateValue::Integer(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Float(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
@@ -628,6 +626,18 @@ impl Tokenizable for PredicateValue {
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Expression(value) => value.tokenize(),
         }
+    }
+}
+
+impl Tokenizable for RawString {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![
+            Token::Keyword("```".to_string()),
+            Token::Whitespace(self.newline.value.clone()),
+        ];
+        tokens.append(&mut self.value.tokenize());
+        tokens.push(Token::Keyword("```".to_string()));
+        tokens
     }
 }
 

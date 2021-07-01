@@ -57,6 +57,10 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateVal
                 Ok(value) => Ok(PredicateValue::String(value)),
                 Err(e) => Err(e),
             },
+            |p1| match raw_string(p1) {
+                Ok(value) => Ok(PredicateValue::Raw(value)),
+                Err(e) => Err(e),
+            },
         ],
         reader,
     )

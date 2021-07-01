@@ -33,6 +33,10 @@ pub fn eval_predicate_value(
             let s = eval_template(template, variables)?;
             Ok(Value::String(s))
         }
+        PredicateValue::Raw(value) => {
+            let s = eval_template(value.value, variables)?;
+            Ok(Value::String(s))
+        }
         PredicateValue::Integer(value) => Ok(Value::Integer(value)),
         PredicateValue::Float(value) => Ok(Value::Float(value.int, value.decimal)),
         PredicateValue::Bool(value) => Ok(Value::Bool(value)),

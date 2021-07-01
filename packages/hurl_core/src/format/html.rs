@@ -598,6 +598,7 @@ impl Htmlable for PredicateValue {
             PredicateValue::String(value) => {
                 format!("<span class=\"string\">\"{}\"</span>", value.to_html())
             }
+            PredicateValue::Raw(value) => value.to_html(),
             PredicateValue::Integer(value) => format!("<span class=\"number\">{}</span>", value),
             PredicateValue::Float(value) => {
                 format!("<span class=\"number\">{}</span>", value.to_string())
@@ -609,6 +610,34 @@ impl Htmlable for PredicateValue {
             PredicateValue::Expression(value) => value.to_html(),
             PredicateValue::Null {} => "<span class=\"null\">null</span>".to_string(),
         }
+    }
+}
+
+impl Htmlable for RawString {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("```");
+        if !self.newline.to_html().as_str().is_empty() {
+            buffer.push_str("</span><span class=\"line\">");
+        }
+
+        let end_newline = self.value.to_string().ends_with('\n');
+        let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+            .unwrap()
+            .split(self.value.to_string().trim())
+            .map(|l| l.to_string())
+            .collect();
+
+        buffer.push_str(xml_escape(lines.remove(0)).as_str());
+
+        for line in lines {
+            buffer.push_str("</span><span class=\"line\">");
+            buffer.push_str(xml_escape(line).as_str());
+        }
+        if end_newline {
+            buffer.push_str("</span><span class=\"line\">");
+        }
+        buffer.push_str("```</span>");
+        buffer
     }
 }
 
@@ -652,29 +681,8 @@ impl Htmlable for Bytes {
                 buffer.push(';');
                 buffer.push_str("</span>");
             }
-            Bytes::RawString { newline0, value } => {
-                buffer.push_str("```");
-                if !newline0.to_html().as_str().is_empty() {
-                    buffer.push_str("</span><span class=\"line\">");
-                }
-
-                let end_newline = value.to_string().ends_with('\n');
-                let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
-                    .unwrap()
-                    .split(value.to_string().trim())
-                    .map(|l| l.to_string())
-                    .collect();
-
-                buffer.push_str(xml_escape(lines.remove(0)).as_str());
-
-                for line in lines {
-                    buffer.push_str("</span><span class=\"line\">");
-                    buffer.push_str(xml_escape(line).as_str());
-                }
-                if end_newline {
-                    buffer.push_str("</span><span class=\"line\">");
-                }
-                buffer.push_str("```</span>");
+            Bytes::RawString(value) => {
+                buffer.push_str(value.to_html().as_str());
             }
             Bytes::Json { value } => buffer.push_str(value.to_html().as_str()),
             Bytes::Xml { value } => {
@@ -753,7 +761,7 @@ impl Htmlable for EncodedString {
 
 impl Htmlable for Template {
     fn to_html(&self) -> String {
-        xml_escape(self.to_string())
+        xml_escape(self.to_string().replace("\n", "\\n"))
     }
 }
 
@@ -785,8 +793,8 @@ mod tests {
     #[test]
     fn test_raw_string() {
         // ``````
-        let bytes = Bytes::RawString {
-            newline0: Whitespace {
+        let raw_string = RawString {
+            newline: Whitespace {
                 value: "".to_string(),
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -799,11 +807,11 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(bytes.to_html(), "``````</span>".to_string());
+        assert_eq!(raw_string.to_html(), "``````</span>".to_string());
 
         // ```hello```
-        let bytes = Bytes::RawString {
-            newline0: Whitespace {
+        let raw_string = RawString {
+            newline: Whitespace {
                 value: "".to_string(),
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -816,14 +824,14 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(bytes.to_html(), "```hello```</span>".to_string());
+        assert_eq!(raw_string.to_html(), "```hello```</span>".to_string());
 
         // ```
         // line1
         // line2
         // ```
-        let bytes = Bytes::RawString {
-            newline0: Whitespace {
+        let raw_string = RawString {
+            newline: Whitespace {
                 value: "\n".to_string(),
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
@@ -836,6 +844,6 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(bytes.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```</span>".to_string());
+        assert_eq!(raw_string.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```</span>".to_string());
     }
 }

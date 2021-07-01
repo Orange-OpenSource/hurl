@@ -401,6 +401,7 @@ pub struct PredicateFunc {
 #[allow(clippy::large_enum_variant)]
 pub enum PredicateValue {
     String(Template),
+    Raw(RawString),
     Integer(i64),
     Float(Float),
     Bool(bool),
@@ -476,6 +477,11 @@ pub enum PredicateFuncValue {
 
 // Unique template type for your string
 // quoted and unquoted
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RawString {
+    pub newline: Whitespace,
+    pub value: Template,
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Template {
@@ -551,10 +557,7 @@ pub enum Bytes {
     Xml {
         value: String,
     },
-    RawString {
-        newline0: Whitespace,
-        value: Template,
-    },
+    RawString(RawString),
     Base64 {
         space0: Whitespace,
         value: Vec<u8>,

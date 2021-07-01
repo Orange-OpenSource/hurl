@@ -28,9 +28,18 @@ use super::ParseResult;
 pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     //let start = p.state.clone();
     choice(
-        vec![raw_string, json_bytes, xml_bytes, base64_bytes, file_bytes],
+        vec![
+            raw_string_bytes,
+            json_bytes,
+            xml_bytes,
+            base64_bytes,
+            file_bytes,
+        ],
         reader,
     )
+}
+fn raw_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+    raw_string(reader).map(Bytes::RawString)
 }
 
 fn xml_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
