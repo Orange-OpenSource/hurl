@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/multilines"},"response":{"status":200,"asserts":[{"query":{"type":"body"},"predicate":{"type":"equal","value":"line1\nline2\nline3\n"}},{"query":{"type":"body"},"predicate":{"type":"equal","value":"line1\nline2\nline3\n"}},{"query":{"type":"body"},"predicate":{"type":"equal","value":"line1\nline2\nline3\n"}}]}}]}

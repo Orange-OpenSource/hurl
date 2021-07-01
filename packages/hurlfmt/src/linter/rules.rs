@@ -493,12 +493,26 @@ impl Lintable<PredicateValue> for PredicateValue {
     fn lint(&self) -> PredicateValue {
         match self {
             PredicateValue::String(value) => PredicateValue::String(value.lint()),
+            PredicateValue::Raw(value) => PredicateValue::Raw(value.lint()),
             PredicateValue::Integer(value) => PredicateValue::Integer(*value),
             PredicateValue::Float(value) => PredicateValue::Float(value.clone()),
             PredicateValue::Bool(value) => PredicateValue::Bool(*value),
             PredicateValue::Null {} => PredicateValue::Null {},
             PredicateValue::Hex(value) => PredicateValue::Hex(value.lint()),
             PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),
+        }
+    }
+}
+impl Lintable<RawString> for RawString {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> RawString {
+        RawString {
+            newline: self.newline.clone(),
+            value: self.value.lint(),
         }
     }
 }
@@ -560,10 +574,7 @@ impl Lintable<Bytes> for Bytes {
             Bytes::Json { value } => Bytes::Json {
                 value: value.clone(),
             },
-            Bytes::RawString { newline0, value } => Bytes::RawString {
-                newline0: newline0.clone(),
-                value: value.clone(),
-            },
+            Bytes::RawString(value) => Bytes::RawString(value.lint()),
             Bytes::Xml { value } => Bytes::Xml {
                 value: value.clone(),
             },

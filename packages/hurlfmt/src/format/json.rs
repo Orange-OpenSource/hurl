@@ -154,9 +154,9 @@ impl ToJson for Bytes {
                 attributes.push(("type".to_string(), JValue::String("xml".to_string())));
                 attributes.push(("value".to_string(), JValue::String(value.clone())));
             }
-            Bytes::RawString { value, .. } => {
+            Bytes::RawString(value) => {
                 attributes.push(("type".to_string(), JValue::String("raw-string".to_string())));
-                attributes.push(("value".to_string(), JValue::String(value.to_string())));
+                attributes.push(("value".to_string(), JValue::String(value.value.to_string())));
             }
             Bytes::File { filename, .. } => {
                 attributes.push(("type".to_string(), JValue::String("file".to_string())));
@@ -412,6 +412,7 @@ impl ToJson for PredicateValue {
     fn to_json(&self) -> JValue {
         match self {
             PredicateValue::String(value) => JValue::String(value.to_string()),
+            PredicateValue::Raw(value) => JValue::String(value.value.to_string()),
             PredicateValue::Integer(value) => JValue::Number(value.to_string()),
             PredicateValue::Float(value) => JValue::Number(value.to_string()),
             PredicateValue::Bool(value) => JValue::Boolean(*value),
@@ -425,6 +426,12 @@ impl ToJson for PredicateValue {
             ]),
             PredicateValue::Expression(value) => JValue::String(value.to_string()),
         }
+    }
+}
+
+impl ToJson for RawString {
+    fn to_json(&self) -> JValue {
+        JValue::String(self.value.to_string())
     }
 }
 

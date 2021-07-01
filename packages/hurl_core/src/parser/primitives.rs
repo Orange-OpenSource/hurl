@@ -466,19 +466,19 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
     })
 }
 
-pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, RawString> {
     // one value without newline or multiline mode
     // includes the last newline (consistent with bash EOL)
     try_literal("```", reader)?;
     let save = reader.state.clone();
     match newline(reader) {
-        Ok(newline0) => {
+        Ok(newline) => {
             let value = raw_string_value(reader)?;
-            Ok(Bytes::RawString { newline0, value })
+            Ok(RawString { newline, value })
         }
         Err(_) => {
             reader.state = save;
-            let newline0 = Whitespace {
+            let newline = Whitespace {
                 value: String::from(""),
                 source_info: SourceInfo {
                     start: reader.state.clone().pos,
@@ -486,7 +486,7 @@ pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, Bytes> {
                 },
             };
             let value = raw_string_value(reader)?;
-            Ok(Bytes::RawString { newline0, value })
+            Ok(RawString { newline, value })
         }
     }
 }
@@ -1095,8 +1095,8 @@ mod tests {
         let mut reader = Reader::init("``````");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from(""),
                     source_info: SourceInfo::init(1, 4, 1, 4),
                 },
@@ -1111,8 +1111,8 @@ mod tests {
         let mut reader = Reader::init("```\n```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from("\n"),
                     source_info: SourceInfo::init(1, 4, 2, 1),
                 },
@@ -1126,8 +1126,8 @@ mod tests {
         let mut reader = Reader::init("```\r\n```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from("\r\n"),
                     source_info: SourceInfo::init(1, 4, 2, 1),
                 },
@@ -1145,8 +1145,8 @@ mod tests {
         let mut reader = Reader::init("```Hello World!```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from(""),
                     source_info: SourceInfo::init(1, 4, 1, 4),
                 },
@@ -1163,8 +1163,8 @@ mod tests {
         let mut reader = Reader::init("```Hello\nWorld!\n```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from(""),
                     source_info: SourceInfo::init(1, 4, 1, 4),
                 },
@@ -1185,8 +1185,8 @@ mod tests {
         let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from("\n"),
                     source_info: SourceInfo::init(1, 4, 2, 1),
                 },
@@ -1209,8 +1209,8 @@ mod tests {
         let mut reader = Reader::init("```\n\n```");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from("\n"),
                     source_info: SourceInfo::init(1, 4, 2, 1),
                 },
@@ -1229,8 +1229,8 @@ mod tests {
         let mut reader = Reader::init("```\n\r\n````");
         assert_eq!(
             raw_string(&mut reader).unwrap(),
-            Bytes::RawString {
-                newline0: Whitespace {
+            RawString {
+                newline: Whitespace {
                     value: String::from("\n"),
                     source_info: SourceInfo::init(1, 4, 2, 1),
                 },

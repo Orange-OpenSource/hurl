@@ -485,8 +485,8 @@ mod tests {
                     value: String::from(""),
                     source_info: SourceInfo::init(2, 1, 2, 1),
                 },
-                value: Bytes::RawString {
-                    newline0: Whitespace {
+                value: Bytes::RawString(RawString {
+                    newline: Whitespace {
                         value: "\n".to_string(),
                         source_info: SourceInfo::init(2, 4, 3, 1),
                     },
@@ -498,7 +498,7 @@ mod tests {
                         quotes: false,
                         source_info: SourceInfo::init(3, 1, 4, 1),
                     },
-                },
+                }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: "".to_string(),
