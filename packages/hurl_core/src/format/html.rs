@@ -607,6 +607,7 @@ impl Htmlable for PredicateValue {
             PredicateValue::Hex(value) => {
                 format!("<span class=\"hex\">{}</span>", value.to_string())
             }
+            PredicateValue::Base64(value) => value.to_html(),
             PredicateValue::Expression(value) => value.to_html(),
             PredicateValue::Null {} => "<span class=\"null\">null</span>".to_string(),
         }
@@ -656,30 +657,11 @@ impl Htmlable for Bytes {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         match self {
-            Bytes::Base64 {
-                space0,
-                encoded,
-                space1,
-                ..
-            } => {
-                buffer.push_str("base64,");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(encoded.as_str());
-                buffer.push_str(space1.to_html().as_str());
-                buffer.push(';');
-                buffer.push_str("</span>");
+            Bytes::Base64(value) => {
+                buffer.push_str(value.to_html().as_str());
             }
-            Bytes::File {
-                space0,
-                filename,
-                space1,
-            } => {
-                buffer.push_str("files,");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(filename.to_html().as_str());
-                buffer.push_str(space1.to_html().as_str());
-                buffer.push(';');
-                buffer.push_str("</span>");
+            Bytes::File(value) => {
+                buffer.push_str(value.to_html().as_str());
             }
             Bytes::RawString(value) => {
                 buffer.push_str(value.to_html().as_str());
@@ -699,7 +681,6 @@ impl Htmlable for Bytes {
                 }
             }
         }
-
         buffer
     }
 }
@@ -749,6 +730,32 @@ impl Htmlable for LineTerminator {
             buffer.push_str(format!("#{}", v.value.as_str()).as_str());
             buffer.push_str("</span>");
         }
+        buffer
+    }
+}
+
+impl Htmlable for File {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("<span>");
+        buffer.push_str("file,");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str(self.filename.to_html().as_str());
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push(';');
+        buffer.push_str("</span>");
+        buffer
+    }
+}
+
+impl Htmlable for Base64 {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("<span>");
+        buffer.push_str("base64,");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str(self.encoded.as_str());
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push(';');
+        buffer.push_str("</span>");
         buffer
     }
 }

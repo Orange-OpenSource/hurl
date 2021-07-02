@@ -42,6 +42,7 @@ pub fn eval_predicate_value(
         PredicateValue::Bool(value) => Ok(Value::Bool(value)),
         PredicateValue::Null {} => Ok(Value::Null {}),
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value)),
+        PredicateValue::Base64(value) => Ok(Value::Bytes(value.value)),
         PredicateValue::Expression(expr) => {
             let value = eval_expr(expr, variables)?;
             Ok(value)

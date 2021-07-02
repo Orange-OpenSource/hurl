@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
-
+use super::base64;
 use super::combinators::*;
 use super::error::*;
 use super::reader::Reader;
 use super::string::*;
 use super::template;
 use super::ParseResult;
+use crate::ast::*;
 
 pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     let start = reader.state.clone();
@@ -517,6 +517,43 @@ pub fn raw_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
         quotes: false,
         elements,
         source_info: SourceInfo { start, end },
+    })
+}
+
+pub(crate) fn file(reader: &mut Reader) -> ParseResult<'static, File> {
+    let _start = reader.state.clone();
+    try_literal("file", reader)?;
+    literal(",", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let f = filename(reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    literal(";", reader)?;
+    Ok(File {
+        space0,
+        filename: f,
+        space1,
+    })
+}
+
+pub(crate) fn base64(reader: &mut Reader) -> ParseResult<'static, Base64> {
+    // base64 => can have whitespace
+    // support pqrser position
+    let _start = reader.state.clone();
+    try_literal("base64", reader)?;
+    literal(",", reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    let save_state = reader.state.clone();
+    let value = base64::parse(reader);
+    let count = reader.state.cursor - save_state.cursor;
+    reader.state = save_state;
+    let encoded = reader.read_n(count);
+    let space1 = zero_or_more_spaces(reader)?;
+    literal(";", reader)?;
+    Ok(Base64 {
+        space0,
+        value,
+        encoded,
+        space1,
     })
 }
 
@@ -1365,5 +1402,111 @@ mod tests {
         let error = hex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(error.inner, ParseError::OddNumberOfHexDigits {});
+    }
+
+    #[test]
+    fn test_file() {
+        let mut reader = Reader::init("file,data.xml;");
+        assert_eq!(
+            file(&mut reader).unwrap(),
+            File {
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 6, 1, 6),
+                },
+                filename: Filename {
+                    value: String::from("data.xml"),
+                    source_info: SourceInfo::init(1, 6, 1, 14),
+                },
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 14, 1, 14),
+                },
+            }
+        );
+
+        let mut reader = Reader::init("file, filename1;");
+        assert_eq!(
+            file(&mut reader).unwrap(),
+            File {
+                space0: Whitespace {
+                    value: String::from(" "),
+                    source_info: SourceInfo::init(1, 6, 1, 7),
+                },
+                filename: Filename {
+                    value: String::from("filename1"),
+                    source_info: SourceInfo::init(1, 7, 1, 16),
+                },
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 16, 1, 16),
+                },
+            }
+        );
+
+        let mut reader = Reader::init("file, tmp/filename1;");
+        assert_eq!(
+            file(&mut reader).unwrap(),
+            File {
+                space0: Whitespace {
+                    value: String::from(" "),
+                    source_info: SourceInfo::init(1, 6, 1, 7),
+                },
+                filename: Filename {
+                    value: String::from("tmp/filename1"),
+                    source_info: SourceInfo::init(1, 7, 1, 20),
+                },
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 20, 1, 20),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn test_file_error() {
+        let mut reader = Reader::init("fil; filename1;");
+        let error = file(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert!(error.recoverable);
+
+        let mut reader = Reader::init("file, filename1");
+        let error = file(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 16,
+            }
+        );
+        assert!(!error.recoverable);
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from(";")
+            }
+        );
+    }
+
+    #[test]
+    fn test_base64() {
+        let mut reader = Reader::init("base64,  T WE=;xxx");
+        assert_eq!(
+            base64(&mut reader).unwrap(),
+            Base64 {
+                space0: Whitespace {
+                    value: String::from("  "),
+                    source_info: SourceInfo::init(1, 8, 1, 10),
+                },
+                value: vec![77, 97],
+                encoded: String::from("T WE="),
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 15, 1, 15),
+                },
+            }
+        );
+        assert_eq!(reader.state.cursor, 15);
     }
 }
