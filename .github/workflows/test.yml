@@ -38,6 +38,15 @@ jobs:
       run: |
         cargo clippy -- -D warnings
 
+  dependency-age:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2    
+    - name: Run dependency_age
+      run: |
+        ./ci/dependency_age.sh
+
   test-ubuntu:
     runs-on: ubuntu-latest
     strategy:
