@@ -456,7 +456,7 @@ fn test_multipart_form_data() {
             MultipartParam::FileParam(FileParam {
                 name: "upload2".to_string(),
                 filename: "data.html".to_string(),
-                data: b"Hello <b>World</b>!".to_vec(),
+                data: b"<div>Hello <b>World</b>!</div>".to_vec(),
                 content_type: "text/html".to_string(),
             }),
             MultipartParam::FileParam(FileParam {
@@ -478,7 +478,7 @@ fn test_multipart_form_data() {
     let (request, response) = client.execute(&request_spec).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Content-Length".to_string(),
-        value: "616".to_string(),
+        value: "627".to_string(),
     }));
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());

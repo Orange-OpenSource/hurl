@@ -160,7 +160,6 @@ impl Htmlable for Section {
             )
             .as_str(),
         );
-        buffer.push_str("</span>");
         buffer.push_str(self.value.to_html().as_str());
         buffer
     }
@@ -490,24 +489,20 @@ impl Htmlable for PredicateFuncValue {
             }
             PredicateFuncValue::GreaterThan { space0, value, .. } => {
                 buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                    format!(
+                        "<span class=\"predicate-type\">{}</span>",
+                        encode_html(self.name())
+                    )
+                    .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
             }
-            PredicateFuncValue::GreaterThanOrEqual {
-                space0,
-                value,
-                operator,
-            } => {
+            PredicateFuncValue::GreaterThanOrEqual { space0, value, .. } => {
                 buffer.push_str(
                     format!(
                         "<span class=\"predicate-type\">{}</span>",
-                        if *operator {
-                            ">="
-                        } else {
-                            "greaterThanOrEquals"
-                        }
+                        encode_html(self.name())
                     )
                     .as_str(),
                 );
@@ -516,14 +511,22 @@ impl Htmlable for PredicateFuncValue {
             }
             PredicateFuncValue::LessThan { space0, value, .. } => {
                 buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                    format!(
+                        "<span class=\"predicate-type\">{}</span>",
+                        encode_html(self.name())
+                    )
+                    .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
             }
             PredicateFuncValue::LessThanOrEqual { space0, value, .. } => {
                 buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                    format!(
+                        "<span class=\"predicate-type\">{}</span>",
+                        encode_html(self.name())
+                    )
+                    .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
@@ -637,7 +640,7 @@ impl Htmlable for RawString {
         if end_newline {
             buffer.push_str("</span><span class=\"line\">");
         }
-        buffer.push_str("```</span>");
+        buffer.push_str("```");
         buffer
     }
 }
@@ -649,6 +652,7 @@ impl Htmlable for Body {
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
+        buffer.push_str("</span>");
         buffer
     }
 }
@@ -793,6 +797,10 @@ fn add_line_terminators(buffer: &mut String, line_terminators: Vec<LineTerminato
     }
 }
 
+fn encode_html(s: String) -> String {
+    s.replace(">", "&gt;").replace("<", "&lt;")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -814,7 +822,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "``````</span>".to_string());
+        assert_eq!(raw_string.to_html(), "``````".to_string());
 
         // ```hello```
         let raw_string = RawString {
@@ -831,7 +839,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "```hello```</span>".to_string());
+        assert_eq!(raw_string.to_html(), "```hello```".to_string());
 
         // ```
         // line1
@@ -851,6 +859,6 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```</span>".to_string());
+        assert_eq!(raw_string.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```".to_string());
     }
 }

@@ -16,7 +16,7 @@ def multipart_form_data():
     upload2 = request.files['upload2']
     assert upload2.filename == 'data.html'
     assert upload2.content_type == 'text/html'
-    assert upload2.read() == b'Hello <b>World</b>!'
+    assert upload2.read() == b'<div>Hello <b>World</b>!</div>'
 
     upload3 = request.files['upload3']
     assert upload3.filename == 'data.txt'
