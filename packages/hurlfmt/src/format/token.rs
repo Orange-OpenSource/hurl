@@ -195,29 +195,11 @@ impl Tokenizable for Bytes {
             Bytes::RawString(value) => {
                 tokens.append(&mut value.tokenize());
             }
-            Bytes::Base64 {
-                space0,
-                encoded,
-                space1,
-                ..
-            } => {
-                tokens.push(Token::Keyword(String::from("base64,")));
-                add_tokens(&mut tokens, space0.tokenize());
-                tokens.push(Token::String(encoded.to_string()));
-                add_tokens(&mut tokens, space1.tokenize());
-                tokens.push(Token::Keyword(String::from(";")));
+            Bytes::Base64(value) => {
+                tokens.append(&mut value.tokenize());
             }
-            Bytes::File {
-                space0,
-                filename,
-                space1,
-            } => {
-                tokens.push(Token::Keyword(String::from("file,")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, filename.tokenize());
-                //tokens.push(Token::String(filename.to_string()));
-                add_tokens(&mut tokens, space1.tokenize());
-                tokens.push(Token::Keyword(String::from(";")));
+            Bytes::File(value) => {
+                tokens.append(&mut value.tokenize());
             }
         }
         tokens
@@ -285,6 +267,28 @@ impl Tokenizable for SectionValue {
                 );
             }
         }
+        tokens
+    }
+}
+
+impl Tokenizable for Base64 {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("base64,"))];
+        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.push(Token::String(self.encoded.to_string()));
+        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.push(Token::Keyword(String::from(";")));
+        tokens
+    }
+}
+
+impl Tokenizable for File {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("file,"))];
+        add_tokens(&mut tokens, self.space0.tokenize());
+        add_tokens(&mut tokens, self.filename.tokenize());
+        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.push(Token::Keyword(String::from(";")));
         tokens
     }
 }
@@ -624,6 +628,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
             PredicateValue::Null {} => vec![Token::Keyword("null".to_string())],
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
+            PredicateValue::Base64(value) => value.tokenize(),
             PredicateValue::Expression(value) => value.tokenize(),
         }
     }

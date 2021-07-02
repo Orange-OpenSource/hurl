@@ -175,12 +175,12 @@ pub fn eval_asserts(
                     source_info: value.source_info,
                 })
             }
-            Bytes::Base64 {
+            Bytes::Base64(Base64 {
                 value,
                 space0,
                 space1,
                 ..
-            } => asserts.push(AssertResult::Body {
+            }) => asserts.push(AssertResult::Body {
                 actual: Ok(Value::Bytes(http_response.body.clone())),
                 expected: Ok(Value::Bytes(value)),
                 source_info: SourceInfo {

@@ -17,7 +17,6 @@
  */
 use crate::ast::*;
 
-use super::base64;
 use super::combinators::*;
 use super::json::parse as parse_json;
 use super::primitives::*;
@@ -57,40 +56,11 @@ fn json_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 }
 
 fn file_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
-    let _start = reader.state.clone();
-    try_literal("file", reader)?;
-    literal(",", reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    let f = filename(reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    literal(";", reader)?;
-    Ok(Bytes::File {
-        space0,
-        filename: f,
-        space1,
-    })
+    file(reader).map(Bytes::File)
 }
 
 fn base64_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
-    // base64 => can have whitespace
-    // support pqrser position
-    let _start = reader.state.clone();
-    try_literal("base64", reader)?;
-    literal(",", reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    let save_state = reader.state.clone();
-    let value = base64::parse(reader);
-    let count = reader.state.cursor - save_state.cursor;
-    reader.state = save_state;
-    let encoded = reader.read_n(count);
-    let space1 = zero_or_more_spaces(reader)?;
-    literal(";", reader)?;
-    Ok(Bytes::Base64 {
-        space0,
-        value,
-        encoded,
-        space1,
-    })
+    base64(reader).map(Bytes::Base64)
 }
 
 #[cfg(test)]
@@ -176,28 +146,6 @@ mod tests {
     }
 
     #[test]
-    fn test_bytes_file() {
-        let mut reader = Reader::init("file,data.xml;");
-        assert_eq!(
-            bytes(&mut reader).unwrap(),
-            Bytes::File {
-                space0: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::init(1, 6, 1, 6),
-                },
-                filename: Filename {
-                    value: String::from("data.xml"),
-                    source_info: SourceInfo::init(1, 6, 1, 14),
-                },
-                space1: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::init(1, 14, 1, 14),
-                },
-            }
-        );
-    }
-
-    #[test]
     fn test_bytes_json_error() {
         let mut reader = Reader::init("{ x ");
         let error = bytes(&mut reader).err().unwrap();
@@ -246,92 +194,5 @@ mod tests {
                 value: JsonValue::Number("100".to_string())
             }
         );
-    }
-
-    #[test]
-    fn test_file_bytes() {
-        let mut reader = Reader::init("file, filename1;");
-        assert_eq!(
-            file_bytes(&mut reader).unwrap(),
-            Bytes::File {
-                space0: Whitespace {
-                    value: String::from(" "),
-                    source_info: SourceInfo::init(1, 6, 1, 7),
-                },
-                filename: Filename {
-                    value: String::from("filename1"),
-                    source_info: SourceInfo::init(1, 7, 1, 16),
-                },
-                space1: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::init(1, 16, 1, 16),
-                },
-            }
-        );
-
-        let mut reader = Reader::init("file, tmp/filename1;");
-        assert_eq!(
-            file_bytes(&mut reader).unwrap(),
-            Bytes::File {
-                space0: Whitespace {
-                    value: String::from(" "),
-                    source_info: SourceInfo::init(1, 6, 1, 7),
-                },
-                filename: Filename {
-                    value: String::from("tmp/filename1"),
-                    source_info: SourceInfo::init(1, 7, 1, 20),
-                },
-                space1: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::init(1, 20, 1, 20),
-                },
-            }
-        );
-    }
-
-    #[test]
-    fn test_file_bytes_error() {
-        let mut reader = Reader::init("fil; filename1;");
-        let error = file_bytes(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
-
-        let mut reader = Reader::init("file, filename1");
-        let error = file_bytes(&mut reader).err().unwrap();
-        assert_eq!(
-            error.pos,
-            Pos {
-                line: 1,
-                column: 16,
-            }
-        );
-        assert_eq!(error.recoverable, false);
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from(";")
-            }
-        );
-    }
-
-    #[test]
-    fn test_base64_bytes() {
-        let mut reader = Reader::init("base64,  T WE=;xxx");
-        assert_eq!(
-            base64_bytes(&mut reader).unwrap(),
-            Bytes::Base64 {
-                space0: Whitespace {
-                    value: String::from("  "),
-                    source_info: SourceInfo::init(1, 8, 1, 10),
-                },
-                value: vec![77, 97],
-                encoded: String::from("T WE="),
-                space1: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::init(1, 15, 1, 15),
-                },
-            }
-        );
-        assert_eq!(reader.state.cursor, 15);
     }
 }

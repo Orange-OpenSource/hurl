@@ -49,6 +49,10 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateVal
                 Ok(value) => Ok(PredicateValue::Hex(value)),
                 Err(e) => Err(e),
             },
+            |p1| match base64(p1) {
+                Ok(value) => Ok(PredicateValue::Base64(value)),
+                Err(e) => Err(e),
+            },
             |p1| match expr::parse(p1) {
                 Ok(value) => Ok(PredicateValue::Expression(value)),
                 Err(e) => Err(e),

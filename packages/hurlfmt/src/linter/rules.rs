@@ -499,6 +499,7 @@ impl Lintable<PredicateValue> for PredicateValue {
             PredicateValue::Bool(value) => PredicateValue::Bool(*value),
             PredicateValue::Null {} => PredicateValue::Null {},
             PredicateValue::Hex(value) => PredicateValue::Hex(value.lint()),
+            PredicateValue::Base64(value) => PredicateValue::Base64(value.lint()),
             PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),
         }
     }
@@ -557,20 +558,8 @@ impl Lintable<Bytes> for Bytes {
         //let value = self.value.lint();
         //let line_terminator0 = self.clone().line_terminator0;
         match self {
-            Bytes::File { filename, .. } => Bytes::File {
-                space0: one_whitespace(),
-                filename: Filename {
-                    value: filename.clone().value,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
-                },
-                space1: empty_whitespace(),
-            },
-            Bytes::Base64 { encoded, value, .. } => Bytes::Base64 {
-                space0: one_whitespace(),
-                value: value.clone(),
-                encoded: encoded.clone(),
-                space1: empty_whitespace(),
-            },
+            Bytes::File(value) => Bytes::File(value.lint()),
+            Bytes::Base64(value) => Bytes::Base64(value.lint()),
             Bytes::Json { value } => Bytes::Json {
                 value: value.clone(),
             },
@@ -578,9 +567,38 @@ impl Lintable<Bytes> for Bytes {
             Bytes::Xml { value } => Bytes::Xml {
                 value: value.clone(),
             },
-            //            Bytes::MultilineString { value } => Bytes::MultilineString {
-            //                value: value.clone(),
-            //            },
+        }
+    }
+}
+
+impl Lintable<Base64> for Base64 {
+    fn errors(&self) -> Vec<Error> {
+        unimplemented!()
+    }
+
+    fn lint(&self) -> Base64 {
+        Base64 {
+            space0: one_whitespace(),
+            value: self.value.clone(),
+            encoded: self.encoded.clone(),
+            space1: empty_whitespace(),
+        }
+    }
+}
+
+impl Lintable<File> for File {
+    fn errors(&self) -> Vec<Error> {
+        unimplemented!()
+    }
+
+    fn lint(&self) -> File {
+        File {
+            space0: one_whitespace(),
+            filename: Filename {
+                value: self.filename.clone().value,
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            },
+            space1: empty_whitespace(),
         }
     }
 }

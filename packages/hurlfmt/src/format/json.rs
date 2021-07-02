@@ -140,33 +140,43 @@ impl ToJson for Body {
 
 impl ToJson for Bytes {
     fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
         match self {
-            Bytes::Base64 { encoded, .. } => {
-                attributes.push(("type".to_string(), JValue::String("base64".to_string())));
-                attributes.push(("value".to_string(), JValue::String(encoded.clone())));
-            }
-            Bytes::Json { value } => {
-                attributes.push(("type".to_string(), JValue::String("json".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
-            }
-            Bytes::Xml { value } => {
-                attributes.push(("type".to_string(), JValue::String("xml".to_string())));
-                attributes.push(("value".to_string(), JValue::String(value.clone())));
-            }
-            Bytes::RawString(value) => {
-                attributes.push(("type".to_string(), JValue::String("raw-string".to_string())));
-                attributes.push(("value".to_string(), JValue::String(value.value.to_string())));
-            }
-            Bytes::File { filename, .. } => {
-                attributes.push(("type".to_string(), JValue::String("file".to_string())));
-                attributes.push((
-                    "filename".to_string(),
-                    JValue::String(filename.value.clone()),
-                ));
-            }
+            Bytes::Base64(value) => value.to_json(),
+            Bytes::File(value) => value.to_json(),
+            Bytes::Json { value } => JValue::Object(vec![
+                ("type".to_string(), JValue::String("json".to_string())),
+                ("value".to_string(), value.to_json()),
+            ]),
+            Bytes::Xml { value } => JValue::Object(vec![
+                ("type".to_string(), JValue::String("xml".to_string())),
+                ("value".to_string(), JValue::String(value.clone())),
+            ]),
+            Bytes::RawString(value) => JValue::Object(vec![
+                ("type".to_string(), JValue::String("raw-string".to_string())),
+                ("value".to_string(), JValue::String(value.value.to_string())),
+            ]),
         }
-        JValue::Object(attributes)
+    }
+}
+
+impl ToJson for Base64 {
+    fn to_json(&self) -> JValue {
+        JValue::Object(vec![
+            ("type".to_string(), JValue::String("base64".to_string())),
+            ("value".to_string(), JValue::String(self.encoded.clone())),
+        ])
+    }
+}
+
+impl ToJson for File {
+    fn to_json(&self) -> JValue {
+        JValue::Object(vec![
+            ("type".to_string(), JValue::String("file".to_string())),
+            (
+                "filename".to_string(),
+                JValue::String(self.filename.value.clone()),
+            ),
+        ])
     }
 }
 
@@ -334,53 +344,53 @@ impl ToJson for Predicate {
         match self.predicate_func.value.clone() {
             PredicateFuncValue::Equal { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("equal".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::NotEqual { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("not-equal".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::GreaterThan { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("greater".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
                 attributes.push((
                     "type".to_string(),
                     JValue::String("greater-or-equal".to_string()),
                 ));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::LessThan { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("less".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::LessThanOrEqual { value, .. } => {
                 attributes.push((
                     "type".to_string(),
                     JValue::String("less-or-equal".to_string()),
                 ));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::CountEqual { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::StartWith { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("start-with".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::Contain { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("contain".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::Include { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("include".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::Match { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("match".to_string())));
-                attributes.push(("value".to_string(), value.to_json()));
+                add_predicate_value(&mut attributes, value);
             }
             PredicateFuncValue::IsInteger {} => {
                 attributes.push(("type".to_string(), JValue::String("isInteger".to_string())));
@@ -408,24 +418,31 @@ impl ToJson for Predicate {
     }
 }
 
-impl ToJson for PredicateValue {
-    fn to_json(&self) -> JValue {
-        match self {
-            PredicateValue::String(value) => JValue::String(value.to_string()),
-            PredicateValue::Raw(value) => JValue::String(value.value.to_string()),
-            PredicateValue::Integer(value) => JValue::Number(value.to_string()),
-            PredicateValue::Float(value) => JValue::Number(value.to_string()),
-            PredicateValue::Bool(value) => JValue::Boolean(*value),
-            PredicateValue::Null {} => JValue::Null,
-            PredicateValue::Hex(value) => JValue::Object(vec![
-                (
-                    "value".to_string(),
-                    JValue::String(base64::encode(&value.value)),
-                ),
-                ("encoding".to_string(), JValue::String("base64".to_string())),
-            ]),
-            PredicateValue::Expression(value) => JValue::String(value.to_string()),
-        }
+fn add_predicate_value(attributes: &mut Vec<(String, JValue)>, predicate_value: PredicateValue) {
+    let (value, encoding) = json_predicate_value(predicate_value);
+    attributes.push(("value".to_string(), value));
+    if let Some(encoding) = encoding {
+        attributes.push(("encoding".to_string(), JValue::String(encoding)));
+    }
+}
+
+fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<String>) {
+    match predicate_value {
+        PredicateValue::String(value) => (JValue::String(value.to_string()), None),
+        PredicateValue::Raw(value) => (JValue::String(value.value.to_string()), None),
+        PredicateValue::Integer(value) => (JValue::Number(value.to_string()), None),
+        PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
+        PredicateValue::Bool(value) => (JValue::Boolean(value), None),
+        PredicateValue::Null {} => (JValue::Null, None),
+        PredicateValue::Hex(value) => (
+            JValue::String(base64::encode(&value.value)),
+            Some("base64".to_string()),
+        ),
+        PredicateValue::Base64(value) => (
+            JValue::String(base64::encode(&value.value)),
+            Some("base64".to_string()),
+        ),
+        PredicateValue::Expression(value) => (JValue::String(value.to_string()), None),
     }
 }
 

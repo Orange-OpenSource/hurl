@@ -53,10 +53,10 @@ pub fn eval_bytes(
         }
 
         // Body:: Binary
-        Bytes::Base64 { value, .. } => Ok(http::Body::Binary(value)),
+        Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value)),
 
         // Body::File
-        Bytes::File { filename, .. } => {
+        Bytes::File(File { filename, .. }) => {
             let f = filename.value.as_str();
             let path = Path::new(f);
             let absolute_filename = if path.is_absolute() {
@@ -96,14 +96,14 @@ mod tests {
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
 
-        let bytes = Bytes::File {
+        let bytes = Bytes::File(File {
             space0: whitespace.clone(),
             filename: Filename {
                 value: String::from("tests/data.bin"),
                 source_info: SourceInfo::init(1, 7, 1, 15),
             },
             space1: whitespace.clone(),
-        };
+        });
 
         let variables = HashMap::new();
         assert_eq!(
@@ -120,14 +120,14 @@ mod tests {
             source_info: SourceInfo::init(0, 0, 0, 0),
         };
 
-        let bytes = Bytes::File {
+        let bytes = Bytes::File(File {
             space0: whitespace.clone(),
             filename: Filename {
                 value: String::from("data.bin"),
                 source_info: SourceInfo::init(1, 7, 1, 15),
             },
             space1: whitespace.clone(),
-        };
+        });
 
         let variables = HashMap::new();
 

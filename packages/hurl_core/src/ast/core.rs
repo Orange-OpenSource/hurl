@@ -407,6 +407,7 @@ pub enum PredicateValue {
     Bool(bool),
     Null {},
     Hex(Hex),
+    Base64(Base64),
     Expression(Expr),
 }
 
@@ -475,12 +476,25 @@ pub enum PredicateFuncValue {
 // Primitives
 //
 
-// Unique template type for your string
-// quoted and unquoted
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RawString {
     pub newline: Whitespace,
     pub value: Template,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Base64 {
+    pub space0: Whitespace,
+    pub value: Vec<u8>,
+    pub encoded: String,
+    pub space1: Whitespace,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct File {
+    pub space0: Whitespace,
+    pub filename: Filename,
+    pub space1: Whitespace,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -551,24 +565,11 @@ pub struct LineTerminator {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Bytes {
-    Json {
-        value: json::Value,
-    },
-    Xml {
-        value: String,
-    },
+    Json { value: json::Value },
+    Xml { value: String },
     RawString(RawString),
-    Base64 {
-        space0: Whitespace,
-        value: Vec<u8>,
-        encoded: String,
-        space1: Whitespace,
-    },
-    File {
-        space0: Whitespace,
-        filename: Filename,
-        space1: Whitespace,
-    },
+    Base64(Base64),
+    File(File),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
