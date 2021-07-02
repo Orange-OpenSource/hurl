@@ -3,6 +3,7 @@
 exit_code=0
 color_red=$(echo -ne "\033[1;31m")
 color_green=$(echo -ne "\033[1;32m")
+color_blue=$(echo -ne "\033[1;34m")
 color_reset=$(echo -ne "\033[0m")
 
 for package in packages/* ; do
@@ -19,8 +20,13 @@ for package in packages/* ; do
     if [ "${newest_version}"  == "${actual_version}" ] ; then
       echo "${color_green}newest${color_reset}"
     else
-      echo "${color_red}old, please update to latest ${last_version}${color_reset}"
-      ((exit_code++))
+	  if [ "$1" = "--update" ] ; then
+        sed -i "s/${dependency} = \"${actual_version}\"/${dependency} = \"${last_version}\"/g" "${package}/Cargo.toml"
+		echo "${color_blue}old, updated to ${last_version}${color_reset}" 
+	  else
+        echo "${color_red}old, please update to latest ${last_version}${color_reset}"
+      fi
+	  ((exit_code++))
     fi
 
   done < <(sed -n "/dependencies\]/,/^$/p" "${package}/Cargo.toml" | grep -Ev "\[|path|^$" | tr -d '" ' | tr '=' ' ')
