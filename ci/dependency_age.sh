@@ -9,7 +9,7 @@ color_reset=$(echo -ne "\033[0m")
 for package in packages/* ; do
   echo -e "\n=> dependency age for ${package}\n"
   while read -r dependency actual_version ; do
-    last_version=$(curl -v "https://docs.rs/${dependency}" 2>&1 | grep "< location:" | cut --delimiter "/" --field 5 | grep -E "^[0-9].*.[0-9].*.[0-9]$")
+    last_version=$(curl -I "https://docs.rs/${dependency}" 2>&1 | grep -i "location:" | cut --delimiter "/" --field 5 | grep -E "^[0-9].*.[0-9].*.[0-9]$")
     if [ -z "${last_version}" ] ; then
       echo "${color_red}runtime error${color_reset}, i could not get last version from https://docs.rs/${dependency}"
       exit 1
