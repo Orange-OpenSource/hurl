@@ -294,9 +294,8 @@ impl Value {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use hurl_core::ast::{Pos, SourceInfo};
-    #[macro_use]
     use hex_literal::hex;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     pub fn xpath_invalid_query() -> Query {
         // xpath ???

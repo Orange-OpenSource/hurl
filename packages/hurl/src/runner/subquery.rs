@@ -159,10 +159,6 @@ pub mod tests {
     #[test]
     fn test_subquery_count() {
         let variables = HashMap::new();
-        let whitespace = Whitespace {
-            value: String::from(""),
-            source_info: SourceInfo::init(0, 0, 0, 0),
-        };
         let subquery = Subquery {
             source_info: SourceInfo::init(1, 1, 1, 20),
             value: SubqueryValue::Count {},
