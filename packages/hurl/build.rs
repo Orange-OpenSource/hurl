@@ -6,5 +6,6 @@ fn main() {
     let native_src = project_root.join("native");
     Build::new()
         .file(native_src.join("libxml.c"))
+        .flag_if_supported("-Wno-unused-parameter") // unused parameter in silent callback
         .compile("mylib");
 }

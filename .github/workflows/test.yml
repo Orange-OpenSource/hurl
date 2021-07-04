@@ -69,7 +69,7 @@ jobs:
         wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
     - name: Run Tests units
       run: |
-        cargo test
+        cargo test --features strict
     - name: Run Integration Tests
       run: |
          export PATH="$PWD/target/debug:$PATH"
