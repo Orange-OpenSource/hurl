@@ -664,6 +664,9 @@ impl Htmlable for Bytes {
             Bytes::Base64(value) => {
                 buffer.push_str(value.to_html().as_str());
             }
+            Bytes::Hex(value) => {
+                buffer.push_str(value.to_html().as_str());
+            }
             Bytes::File(value) => {
                 buffer.push_str(value.to_html().as_str());
             }
@@ -755,6 +758,18 @@ impl Htmlable for Base64 {
     fn to_html(&self) -> String {
         let mut buffer = String::from("<span>");
         buffer.push_str("base64,");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str(self.encoded.as_str());
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push(';');
+        buffer.push_str("</span>");
+        buffer
+    }
+}
+impl Htmlable for Hex {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("<span>");
+        buffer.push_str("hex,");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.encoded.as_str());
         buffer.push_str(self.space1.to_html().as_str());
