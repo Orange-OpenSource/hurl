@@ -142,6 +142,7 @@ impl ToJson for Bytes {
     fn to_json(&self) -> JValue {
         match self {
             Bytes::Base64(value) => value.to_json(),
+            Bytes::Hex(value) => value.to_json(),
             Bytes::File(value) => value.to_json(),
             Bytes::Json { value } => JValue::Object(vec![
                 ("type".to_string(), JValue::String("json".to_string())),
@@ -162,8 +163,22 @@ impl ToJson for Bytes {
 impl ToJson for Base64 {
     fn to_json(&self) -> JValue {
         JValue::Object(vec![
-            ("type".to_string(), JValue::String("base64".to_string())),
-            ("value".to_string(), JValue::String(self.encoded.clone())),
+            ("encoding".to_string(), JValue::String("base64".to_string())),
+            (
+                "value".to_string(),
+                JValue::String(base64::encode(&self.value)),
+            ),
+        ])
+    }
+}
+impl ToJson for Hex {
+    fn to_json(&self) -> JValue {
+        JValue::Object(vec![
+            ("encoding".to_string(), JValue::String("base64".to_string())),
+            (
+                "value".to_string(),
+                JValue::String(base64::encode(&self.value)),
+            ),
         ])
     }
 }

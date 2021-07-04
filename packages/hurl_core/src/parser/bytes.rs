@@ -32,6 +32,7 @@ pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
             json_bytes,
             xml_bytes,
             base64_bytes,
+            hex_bytes,
             file_bytes,
         ],
         reader,
@@ -61,6 +62,10 @@ fn file_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 
 fn base64_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     base64(reader).map(Bytes::Base64)
+}
+
+fn hex_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+    hex(reader).map(Bytes::Hex)
 }
 
 #[cfg(test)]

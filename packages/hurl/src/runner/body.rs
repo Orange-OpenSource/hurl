@@ -52,10 +52,8 @@ pub fn eval_bytes(
             Ok(http::Body::Text(value))
         }
 
-        // Body:: Binary
         Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value)),
-
-        // Body::File
+        Bytes::Hex(Hex { value, .. }) => Ok(http::Body::Binary(value)),
         Bytes::File(File { filename, .. }) => {
             let f = filename.value.as_str();
             let path = Path::new(f);

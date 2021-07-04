@@ -560,6 +560,7 @@ impl Lintable<Bytes> for Bytes {
         match self {
             Bytes::File(value) => Bytes::File(value.lint()),
             Bytes::Base64(value) => Bytes::Base64(value.lint()),
+            Bytes::Hex(value) => Bytes::Hex(value.lint()),
             Bytes::Json { value } => Bytes::Json {
                 value: value.clone(),
             },
@@ -578,6 +579,21 @@ impl Lintable<Base64> for Base64 {
 
     fn lint(&self) -> Base64 {
         Base64 {
+            space0: one_whitespace(),
+            value: self.value.clone(),
+            encoded: self.encoded.clone(),
+            space1: empty_whitespace(),
+        }
+    }
+}
+
+impl Lintable<Hex> for Hex {
+    fn errors(&self) -> Vec<Error> {
+        unimplemented!()
+    }
+
+    fn lint(&self) -> Hex {
+        Hex {
             space0: one_whitespace(),
             value: self.value.clone(),
             encoded: self.encoded.clone(),
@@ -686,20 +702,6 @@ fn one_whitespace() -> Whitespace {
     Whitespace {
         value: " ".to_string(),
         source_info: SourceInfo::init(0, 0, 0, 0),
-    }
-}
-impl Lintable<Hex> for Hex {
-    fn errors(&self) -> Vec<Error> {
-        unimplemented!()
-    }
-
-    fn lint(&self) -> Hex {
-        Hex {
-            space0: one_whitespace(),
-            value: self.value.clone(),
-            encoded: self.encoded.clone(),
-            space1: empty_whitespace(),
-        }
     }
 }
 

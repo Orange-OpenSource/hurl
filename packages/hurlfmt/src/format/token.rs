@@ -198,6 +198,9 @@ impl Tokenizable for Bytes {
             Bytes::Base64(value) => {
                 tokens.append(&mut value.tokenize());
             }
+            Bytes::Hex(value) => {
+                tokens.append(&mut value.tokenize());
+            }
             Bytes::File(value) => {
                 tokens.append(&mut value.tokenize());
             }
@@ -274,6 +277,17 @@ impl Tokenizable for SectionValue {
 impl Tokenizable for Base64 {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("base64,"))];
+        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.push(Token::String(self.encoded.to_string()));
+        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.push(Token::Keyword(String::from(";")));
+        tokens
+    }
+}
+
+impl Tokenizable for Hex {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("hex,"))];
         add_tokens(&mut tokens, self.space0.tokenize());
         tokens.push(Token::String(self.encoded.to_string()));
         add_tokens(&mut tokens, self.space1.tokenize());

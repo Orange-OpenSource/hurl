@@ -54,7 +54,7 @@ impl fmt::Display for Value {
             }
             Value::Object(_) => "Object()".to_string(),
             Value::Nodeset(x) => format!("Nodeset{:?}", x),
-            Value::Bytes(x) => format!("Bytes({:x?})", x),
+            Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Null => "null".to_string(),
             Value::Unit => "Unit".to_string(),
         };

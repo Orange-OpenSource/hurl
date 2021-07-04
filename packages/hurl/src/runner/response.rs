@@ -188,6 +188,19 @@ pub fn eval_asserts(
                     end: space1.source_info.start,
                 },
             }),
+            Bytes::Hex(Hex {
+                value,
+                space0,
+                space1,
+                ..
+            }) => asserts.push(AssertResult::Body {
+                actual: Ok(Value::Bytes(http_response.body.clone())),
+                expected: Ok(Value::Bytes(value)),
+                source_info: SourceInfo {
+                    start: space0.source_info.end,
+                    end: space1.source_info.start,
+                },
+            }),
             Bytes::File { .. } => {
                 let expected = match eval_body(body.clone(), variables, context_dir) {
                     Ok(body) => Ok(Value::Bytes(body.bytes())),

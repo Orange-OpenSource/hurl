@@ -570,6 +570,7 @@ pub enum Bytes {
     RawString(RawString),
     Base64(Base64),
     File(File),
+    Hex(Hex),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
