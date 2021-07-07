@@ -55,3 +55,11 @@ error: Assert Failure
    |   expected: float
    |
 
+error: Assert Failure
+  --> tests/error_assert_value_error.hurl:11:0
+   |
+11 | bytes contains hex,00;
+   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20327d>
+   |   expected: contains byte array <00>
+   |
+

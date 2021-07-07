@@ -302,27 +302,29 @@ fn eval_something(
             }),
         },
 
-        // starts with string
+        // starts with string or bytes
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => {
-            let template = if let PredicateValue::String(template) = expected {
-                template
-            } else {
-                panic!("expect a string predicate value")
-            };
-            let expected = eval_template(template, variables)?;
-            match value.clone() {
-                Value::String(actual) => Ok(AssertResult {
-                    success: actual.as_str().starts_with(expected.as_str()),
+            let expected_value = eval_predicate_value(expected, variables)?;
+            let expected = format!("starts with {}", expected_value.clone().display());
+            match (expected_value, value.clone()) {
+                (Value::String(s), Value::String(actual)) => Ok(AssertResult {
+                    success: actual.as_str().starts_with(s.as_str()),
                     actual: value.display(),
-                    expected: format!("starts with string <{}>", expected),
+                    expected,
+                    type_mismatch: false,
+                }),
+                (Value::Bytes(bytes), Value::Bytes(actual)) => Ok(AssertResult {
+                    success: actual.starts_with(&bytes),
+                    actual: value.display(),
+                    expected,
                     type_mismatch: false,
                 }),
                 _ => Ok(AssertResult {
                     success: false,
                     actual: value.display(),
-                    expected: format!("starts with string <{}>", expected),
+                    expected,
                     type_mismatch: true,
                 }),
             }
@@ -332,23 +334,25 @@ fn eval_something(
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
-            let template = if let PredicateValue::String(template) = expected {
-                template
-            } else {
-                panic!("expect a string predicate value")
-            };
-            let expected = eval_template(template, variables)?;
-            match value.clone() {
-                Value::String(actual) => Ok(AssertResult {
-                    success: actual.as_str().contains(expected.as_str()),
+            let expected_value = eval_predicate_value(expected, variables)?;
+            let expected = format!("contains {}", expected_value.clone().display());
+            match (expected_value, value.clone()) {
+                (Value::String(s), Value::String(actual)) => Ok(AssertResult {
+                    success: actual.as_str().contains(s.as_str()),
                     actual: value.display(),
-                    expected: format!("contains string <{}>", expected),
+                    expected,
+                    type_mismatch: false,
+                }),
+                (Value::Bytes(bytes), Value::Bytes(actual)) => Ok(AssertResult {
+                    success: contains(actual.as_slice(), bytes.as_slice()),
+                    actual: value.display(),
+                    expected,
                     type_mismatch: false,
                 }),
                 _ => Ok(AssertResult {
                     success: false,
                     actual: value.display(),
-                    expected: format!("contains string <{}>", expected),
+                    expected,
                     type_mismatch: true,
                 }),
             }
@@ -750,6 +754,12 @@ fn assert_include(value: Value, element: Value) -> AssertResult {
     }
 }
 
+fn contains(haystack: &[u8], needle: &[u8]) -> bool {
+    haystack
+        .windows(needle.len())
+        .any(|window| window == needle)
+}
+
 #[cfg(test)]
 mod tests {
     use super::AssertResult;
@@ -760,6 +770,14 @@ mod tests {
             value: String::from(" "),
             source_info: SourceInfo::init(0, 0, 0, 0),
         }
+    }
+
+    #[test]
+    fn test_contains() {
+        let haystack = [1 as u8, 2 as u8, 3 as u8];
+        assert!(contains(&haystack, &[1 as u8]));
+        assert!(contains(&haystack, &[1 as u8, 2 as u8]));
+        assert!(!contains(&haystack, &[1 as u8, 3 as u8]));
     }
 
     #[test]

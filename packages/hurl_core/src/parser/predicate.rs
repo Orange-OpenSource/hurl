@@ -110,6 +110,10 @@ impl PredicateValue {
     pub fn is_string(&self) -> bool {
         matches!(self, PredicateValue::String(_))
     }
+
+    pub fn is_bytearray(&self) -> bool {
+        matches!(self, PredicateValue::Hex(_)) | matches!(self, PredicateValue::Base64(_))
+    }
 }
 
 fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -254,7 +258,7 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFu
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_string() {
+    if !value.is_string() && !value.is_bytearray() {
         return Err(Error {
             pos: save.pos,
             recoverable: false,
@@ -269,7 +273,7 @@ fn contain_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_string() {
+    if !value.is_string() && !value.is_bytearray() {
         return Err(Error {
             pos: save.pos,
             recoverable: false,
