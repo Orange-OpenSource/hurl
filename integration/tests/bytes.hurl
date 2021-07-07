@@ -2,7 +2,9 @@ GET http://localhost:8000/bytes
 HTTP/1.0 200
 Content-Type: application/octet-stream
 [Asserts]
-bytes equals hex,ff;
-bytes equals base64,/w==;
-bytes count == 1
-sha256 equals hex,a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89;
+bytes equals hex,010203;
+bytes equals base64,AQID;
+bytes count == 3
+bytes startsWith hex,01;
+bytes contains hex,02;
+sha256 equals hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;

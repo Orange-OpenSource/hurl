@@ -8,3 +8,4 @@ jsonpath "$.values" includes 100
 jsonpath "$.values" not contains "Hello"
 jsonpath "$.count" greaterThan 5
 jsonpath "$.count" isFloat
+bytes contains hex,00;
