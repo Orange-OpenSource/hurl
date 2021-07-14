@@ -232,6 +232,10 @@ pub fn eval_query_value(
             let bytes = Value::Bytes(result[..].to_vec());
             Ok(Some(bytes))
         }
+        QueryValue::Md5 {} => {
+            let bytes = md5::compute(http_response.body).to_vec();
+            Ok(Some(Value::Bytes(bytes)))
+        }
     }
 }
 
