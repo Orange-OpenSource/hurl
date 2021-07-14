@@ -385,6 +385,9 @@ impl Htmlable for QueryValue {
             QueryValue::Sha256 {} => {
                 buffer.push_str("<span class=\"query-type\">sha256</span>");
             }
+            QueryValue::Md5 {} => {
+                buffer.push_str("<span class=\"query-type\">md5</span>");
+            }
         }
         buffer
     }

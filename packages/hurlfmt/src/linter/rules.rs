@@ -300,6 +300,7 @@ impl Lintable<QueryValue> for QueryValue {
             QueryValue::Duration {} => QueryValue::Duration {},
             QueryValue::Bytes {} => QueryValue::Bytes {},
             QueryValue::Sha256 {} => QueryValue::Sha256 {},
+            QueryValue::Md5 {} => QueryValue::Md5 {},
         }
     }
 }

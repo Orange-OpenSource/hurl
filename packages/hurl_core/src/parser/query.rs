@@ -69,6 +69,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
             duration_query,
             bytes_query,
             sha256_query,
+            md5_query,
         ],
         reader,
     )
@@ -164,6 +165,11 @@ fn bytes_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn sha256_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("sha256", reader)?;
     Ok(QueryValue::Sha256 {})
+}
+
+fn md5_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("md5", reader)?;
+    Ok(QueryValue::Md5 {})
 }
 
 #[cfg(test)]
