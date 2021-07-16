@@ -8,6 +8,7 @@ jsonpath "$.message" equals 0
 jsonpath "$.empty" equals 0
 jsonpath "$.number" equals 1.1
 jsonpath "$.message" startsWith "hi"
+jsonpath "$.message" endsWith "hi"
 jsonpath "$.message" contains "hi"
 jsonpath "$.message" matches "hi"
 jsonpath "$.message" count == 1

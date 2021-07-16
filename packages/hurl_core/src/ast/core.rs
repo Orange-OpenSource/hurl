@@ -453,6 +453,10 @@ pub enum PredicateFuncValue {
         space0: Whitespace,
         value: PredicateValue,
     },
+    EndWith {
+        space0: Whitespace,
+        value: PredicateValue,
+    },
     Contain {
         space0: Whitespace,
         value: PredicateValue,

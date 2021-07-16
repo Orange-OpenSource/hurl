@@ -188,6 +188,7 @@ impl PredicateFuncValue {
             }
             PredicateFuncValue::CountEqual { .. } => "countEquals".to_string(),
             PredicateFuncValue::StartWith { .. } => "startsWith".to_string(),
+            PredicateFuncValue::EndWith { .. } => "endsWith".to_string(),
             PredicateFuncValue::Contain { .. } => "contains".to_string(),
             PredicateFuncValue::Include { .. } => "includes".to_string(),
             PredicateFuncValue::Match { .. } => "matches".to_string(),

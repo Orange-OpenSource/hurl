@@ -191,6 +191,12 @@ fn expected(
             let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("starts with string <{}>", expected))
         }
+        PredicateFuncValue::EndWith {
+            value: expected, ..
+        } => {
+            let expected = eval_predicate_value_template(expected, variables)?;
+            Ok(format!("ends with string <{}>", expected))
+        }
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
@@ -317,6 +323,33 @@ fn eval_something(
                 }),
                 (Value::Bytes(bytes), Value::Bytes(actual)) => Ok(AssertResult {
                     success: actual.starts_with(&bytes),
+                    actual: value.display(),
+                    expected,
+                    type_mismatch: false,
+                }),
+                _ => Ok(AssertResult {
+                    success: false,
+                    actual: value.display(),
+                    expected,
+                    type_mismatch: true,
+                }),
+            }
+        }
+
+        PredicateFuncValue::EndWith {
+            value: expected, ..
+        } => {
+            let expected_value = eval_predicate_value(expected, variables)?;
+            let expected = format!("ends with {}", expected_value.clone().display());
+            match (expected_value, value.clone()) {
+                (Value::String(s), Value::String(actual)) => Ok(AssertResult {
+                    success: actual.as_str().ends_with(s.as_str()),
+                    actual: value.display(),
+                    expected,
+                    type_mismatch: false,
+                }),
+                (Value::Bytes(bytes), Value::Bytes(actual)) => Ok(AssertResult {
+                    success: actual.ends_with(&bytes),
                     actual: value.display(),
                     expected,
                     type_mismatch: false,

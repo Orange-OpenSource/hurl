@@ -594,6 +594,11 @@ impl Tokenizable for PredicateFuncValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, value.tokenize());
             }
+            PredicateFuncValue::EndWith { space0, value } => {
+                tokens.push(Token::PredicateType(self.name()));
+                add_tokens(&mut tokens, space0.tokenize());
+                add_tokens(&mut tokens, value.tokenize());
+            }
             PredicateFuncValue::Contain { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
                 add_tokens(&mut tokens, space0.tokenize());
