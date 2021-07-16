@@ -471,6 +471,10 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
                 space0: one_whitespace(),
                 value: value.clone().lint(),
             },
+            PredicateFuncValue::EndWith { value, .. } => PredicateFuncValue::EndWith {
+                space0: one_whitespace(),
+                value: value.clone().lint(),
+            },
             PredicateFuncValue::CountEqual { value, .. } => PredicateFuncValue::CountEqual {
                 space0: one_whitespace(),
                 value: value.clone(),

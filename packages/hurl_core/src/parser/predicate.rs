@@ -80,6 +80,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
             less_predicate,
             count_equal_predicate,
             start_with_predicate,
+            end_with_predicate,
             contain_predicate,
             include_predicate,
             match_predicate,
@@ -266,6 +267,21 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFu
         });
     }
     Ok(PredicateFuncValue::StartWith { space0, value })
+}
+
+fn end_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("endsWith", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let save = reader.state.clone();
+    let value = predicate_value(reader)?;
+    if !value.is_string() && !value.is_bytearray() {
+        return Err(Error {
+            pos: save.pos,
+            recoverable: false,
+            inner: ParseError::PredicateValue {},
+        });
+    }
+    Ok(PredicateFuncValue::EndWith { space0, value })
 }
 
 fn contain_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {

@@ -541,6 +541,13 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
             }
+            PredicateFuncValue::EndWith { space0, value } => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(value.to_html().as_str());
+            }
             PredicateFuncValue::Contain { space0, value } => {
                 buffer.push_str(
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),

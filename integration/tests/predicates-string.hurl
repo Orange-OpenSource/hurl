@@ -4,6 +4,7 @@ HTTP/1.0 200
 [Asserts]
 body equals "Hello World!"
 body startsWith "Hello"
+body endsWith "!"
 body contains "llo"
 body matches "Hello [a-zA-Z]+!"
 

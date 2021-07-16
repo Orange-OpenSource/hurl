@@ -398,6 +398,10 @@ impl ToJson for Predicate {
                 attributes.push(("type".to_string(), JValue::String("start-with".to_string())));
                 add_predicate_value(&mut attributes, value);
             }
+            PredicateFuncValue::EndWith { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("end-with".to_string())));
+                add_predicate_value(&mut attributes, value);
+            }
             PredicateFuncValue::Contain { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("contain".to_string())));
                 add_predicate_value(&mut attributes, value);
