@@ -57,6 +57,8 @@ pub struct CliOptions {
     pub connect_timeout: Duration,
     pub compressed: bool,
     pub user: Option<String>,
+    pub json_file: Option<PathBuf>,
+    pub html_dir: Option<PathBuf>,
 }
 
 #[cfg(target_family = "unix")]
@@ -235,62 +237,6 @@ fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
     }
 }
 
-fn json_file(
-    matches: ArgMatches,
-    log_verbose: impl Fn(&str),
-) -> Result<(Vec<HurlResult>, Option<std::path::PathBuf>), CliError> {
-    if let Some(filename) = matches.value_of("json") {
-        let path = Path::new(filename);
-
-        let results = if matches.is_present("append") && std::path::Path::new(&path).exists() {
-            log_verbose(format!("Appending session to {}", path.display()).as_str());
-
-            let data = std::fs::read_to_string(path).unwrap();
-            let v: serde_json::Value = match serde_json::from_str(data.as_str()) {
-                Ok(val) => val,
-                Err(_) => {
-                    return Err(CliError {
-                        message: format!("The file {} is not a valid json file", path.display()),
-                    });
-                }
-            };
-
-            match runner::deserialize_results(v) {
-                Err(msg) => {
-                    return Err(CliError {
-                        message: format!("Existing Hurl json can not be parsed! -  {}", msg),
-                    });
-                }
-                Ok(results) => results,
-            }
-        } else {
-            log_verbose(format!("* Writing session to {}", path.display()).as_str());
-            vec![]
-        };
-        Ok((results, Some(path.to_path_buf())))
-    } else {
-        Ok((vec![], None))
-    }
-}
-
-fn html_report(matches: ArgMatches) -> Result<Option<std::path::PathBuf>, CliError> {
-    if let Some(dir) = matches.value_of("html_report") {
-        let path = Path::new(dir);
-        if std::path::Path::new(&path).exists() {
-            Ok(Some(path.to_path_buf()))
-        } else {
-            match std::fs::create_dir(path) {
-                Err(_) => Err(CliError {
-                    message: format!("Html dir {} can not be created", path.display()),
-                }),
-                Ok(_) => Ok(Some(path.to_path_buf())),
-            }
-        }
-    } else {
-        Ok(None)
-    }
-}
-
 fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     let mut variables = HashMap::new();
 
@@ -396,7 +342,7 @@ fn app() -> clap::App<'static, 'static> {
                 .takes_value(true),
         )
         .arg(
-            clap::Arg::with_name("html_report")
+            clap::Arg::with_name("html")
                 .long("html")
                 .value_name("DIR")
                 .help("Generate html report to dir")
@@ -580,6 +526,42 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let compressed = matches.is_present("compressed");
     let user = matches.value_of("user").map(|x| x.to_string());
     let interactive = matches.is_present("interactive");
+
+    let json_file = if let Some(filename) = matches.value_of("json") {
+        let path = Path::new(filename);
+        Some(path.to_path_buf())
+    } else {
+        None
+    };
+
+    let html_dir = if let Some(dir) = matches.value_of("html") {
+        let path = Path::new(dir);
+        if !path.exists() {
+            match std::fs::create_dir(path) {
+                Err(_) => {
+                    return Err(CliError {
+                        message: format!("Html dir {} can not be created", path.display()),
+                    })
+                }
+                Ok(_) => Some(path.to_path_buf()),
+            }
+        } else if path.is_dir() {
+            Some(path.to_path_buf())
+        } else {
+            return Err(CliError {
+                message: format!("{} is not a valid directory", path.display()),
+            });
+        }
+    } else {
+        None
+    };
+
+    // deprecated
+    if matches.is_present("append") {
+        eprintln!("The option --append is deprecated. Results are automatically appended to existing report.");
+        eprintln!("It will be removed in the next version");
+    }
+
     Ok(CliOptions {
         verbose,
         color,
@@ -597,6 +579,8 @@ fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         connect_timeout,
         compressed,
         user,
+        json_file,
+        html_dir,
     })
 }
 
@@ -628,10 +612,8 @@ fn main() {
     let color = output_color(matches.clone());
     let log_error_message = cli::make_logger_error_message(color);
     let cli_options = unwrap_or_exit(&log_error_message, parse_options(matches.clone()));
+    let mut hurl_results = vec![];
 
-    let (mut hurl_results, json_file) =
-        unwrap_or_exit(&log_error_message, json_file(matches.clone(), &log_verbose));
-    let html_report = unwrap_or_exit(&log_error_message, html_report(matches.clone()));
     let cookies_output_file = match matches.value_of("cookies_output_file") {
         None => None,
         Some(filename) => {
@@ -728,28 +710,15 @@ fn main() {
         hurl_results.push(hurl_result.clone());
     }
 
-    if let Some(file_path) = json_file {
-        let mut file = match std::fs::File::create(&file_path) {
-            Err(why) => {
-                log_error_message(
-                    false,
-                    format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
-                );
-                std::process::exit(EXIT_ERROR_UNDEFINED)
-            }
-            Ok(file) => file,
-        };
-        let serialized = serde_json::to_string_pretty(&hurl_results).unwrap();
-        if let Err(why) = file.write_all(serialized.as_bytes()) {
-            log_error_message(
-                false,
-                format!("Issue writing to {}: {:?}", file_path.display(), why).as_str(),
-            );
-            std::process::exit(EXIT_ERROR_UNDEFINED)
-        }
+    if let Some(file_path) = cli_options.json_file {
+        log_verbose(format!("Writing json report to {}", file_path.display()).as_str());
+        unwrap_or_exit(
+            &log_error_message,
+            report::write_json_report(file_path, hurl_results.clone()),
+        );
     }
 
-    if let Some(dir_path) = html_report {
+    if let Some(dir_path) = cli_options.html_dir {
         log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
         unwrap_or_exit(
             &log_error_message,
@@ -801,14 +770,9 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
 }
 
 fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
-    eprintln!("copy/format to html {}", input_file);
     let file_path = dir_path.join(format!("{}.html", input_file));
-    eprintln!("file_path= {:?}", file_path);
     let parent = file_path.parent().expect("a parent");
-    eprintln!("parent={:?}", parent);
     std::fs::create_dir_all(parent).unwrap();
-
-    eprintln!("create dir all ok");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
             return Err(CliError {

@@ -48,4 +48,5 @@ pub enum Attribute {
     Class(String),
     //Id(String),
     Href(String),
+    Data(String, String),
 }
