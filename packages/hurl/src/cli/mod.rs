@@ -21,11 +21,16 @@ pub use self::logger::{
     log_info, make_logger_error_message, make_logger_parser_error, make_logger_runner_error,
     make_logger_verbose,
 };
+pub use self::options::app;
+pub use self::options::output_color;
+pub use self::options::parse_options;
+pub use self::options::CliOptions;
 pub use self::variables::parse as parse_variable;
 
 mod fs;
 pub mod interactive;
 mod logger;
+mod options;
 mod variables;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
