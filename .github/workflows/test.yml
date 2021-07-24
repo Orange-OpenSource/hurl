@@ -70,6 +70,7 @@ jobs:
         cargo build --verbose
     - name: Test Prequisites
       run: |
+        sudo apt update
         sudo apt install libxml2-utils
         pip3 install Flask
         cd integration
