@@ -71,6 +71,6 @@ mod tests {
 
     #[test]
     pub fn test_number() {
-        assert_eq!(Number { int: 1, decimal: 0 }.to_f64(), 1.0);
+        assert!((Number { int: 1, decimal: 0 }.to_f64() - 1.0).abs() < 0.0000001);
     }
 }

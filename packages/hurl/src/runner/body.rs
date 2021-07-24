@@ -100,7 +100,7 @@ mod tests {
                 value: String::from("tests/data.bin"),
                 source_info: SourceInfo::init(1, 7, 1, 15),
             },
-            space1: whitespace.clone(),
+            space1: whitespace,
         });
 
         let variables = HashMap::new();
@@ -124,7 +124,7 @@ mod tests {
                 value: String::from("data.bin"),
                 source_info: SourceInfo::init(1, 7, 1, 15),
             },
-            space1: whitespace.clone(),
+            space1: whitespace,
         });
 
         let variables = HashMap::new();
@@ -136,7 +136,7 @@ mod tests {
         assert_eq!(
             error.inner,
             RunnerError::FileReadAccess {
-                value: String::from(format!("current_dir{}data.bin", separator))
+                value: format!("current_dir{}data.bin", separator)
             }
         );
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));

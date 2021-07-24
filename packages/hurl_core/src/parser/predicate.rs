@@ -423,7 +423,7 @@ mod tests {
                 column: 13,
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(error.inner, ParseError::PredicateValue {});
     }
 
@@ -432,7 +432,7 @@ mod tests {
         let mut reader = Reader::init("tata equals 1");
         let error = predicate_func(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(error.inner, ParseError::Predicate {});
     }
 
@@ -568,7 +568,7 @@ mod tests {
                 column: 13,
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(error.inner, ParseError::PredicateValue {});
     }
 
@@ -583,7 +583,7 @@ mod tests {
                 column: 12,
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(error.inner, ParseError::PredicateValue {});
     }
 }

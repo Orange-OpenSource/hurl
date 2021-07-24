@@ -232,7 +232,7 @@ mod tests {
                 quotes: false,
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
-            line_terminator0: line_terminator.clone(),
+            line_terminator0: line_terminator,
             headers: vec![],
             sections: vec![],
             body: None,
@@ -368,41 +368,38 @@ mod tests {
 
     #[test]
     fn clear_cookie_store() {
-        assert_eq!(false, cookie_storage_clear(hello_request()));
+        assert!(!cookie_storage_clear(hello_request()));
 
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
             newline: whitespace(),
         };
-        assert_eq!(
-            true,
-            cookie_storage_clear(Request {
-                line_terminators: vec![LineTerminator {
-                    space0: whitespace(),
-                    comment: Some(Comment {
-                        value: "@cookie_storage_clear".to_string()
-                    }),
-                    newline: whitespace(),
-                }],
+        assert!(cookie_storage_clear(Request {
+            line_terminators: vec![LineTerminator {
                 space0: whitespace(),
-                method: Method::Get,
-                space1: whitespace(),
-                url: Template {
-                    elements: vec![TemplateElement::String {
-                        value: String::from("http:///localhost"),
-                        encoded: String::from("http://localhost"),
-                    },],
-                    quotes: false,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
-                },
-                line_terminator0: line_terminator,
-                headers: vec![],
-                sections: vec![],
-                body: None,
+                comment: Some(Comment {
+                    value: "@cookie_storage_clear".to_string()
+                }),
+                newline: whitespace(),
+            }],
+            space0: whitespace(),
+            method: Method::Get,
+            space1: whitespace(),
+            url: Template {
+                elements: vec![TemplateElement::String {
+                    value: String::from("http:///localhost"),
+                    encoded: String::from("http://localhost"),
+                },],
+                quotes: false,
                 source_info: SourceInfo::init(0, 0, 0, 0),
-            })
-        );
+            },
+            line_terminator0: line_terminator,
+            headers: vec![],
+            sections: vec![],
+            body: None,
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        }));
     }
 
     #[test]

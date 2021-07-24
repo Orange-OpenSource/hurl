@@ -187,7 +187,7 @@ mod tests {
                 value: String::from("file")
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]

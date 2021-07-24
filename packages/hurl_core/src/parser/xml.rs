@@ -71,19 +71,19 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("x");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("<<");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("<users><user /></users");
         let error = parse(&mut reader).err().unwrap();

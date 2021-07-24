@@ -34,12 +34,12 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
                 v.push(r);
             }
             Err(e) => {
-                if e.recoverable {
+                return if e.recoverable {
                     p.state.pos = initial_state.pos;
                     p.state.cursor = initial_state.cursor;
-                    return Ok(v);
+                    Ok(v)
                 } else {
-                    return Err(e);
+                    Err(e)
                 };
             }
         }

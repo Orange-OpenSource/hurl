@@ -19,7 +19,6 @@ extern crate hurl;
 
 use std::fs::read_to_string;
 
-use serde_json;
 use serde_json::json;
 
 use hurl::jsonpath;
@@ -89,17 +88,14 @@ fn test_bookstore_path() {
             json!("J. R. R. Tolkien")
         ]
     );
-    assert_eq!(
-        test_ok("$.store.book[?(@.price>100)]", value.clone()),
-        no_result.clone()
-    );
+    assert_eq!(test_ok("$.store.book[?(@.price>100)]", value), no_result);
 }
 
 #[test]
 fn test_array() {
     let array = json!([0, 1, 2, 3]);
-    assert_eq!(test_ok("$[2]", array.clone()), vec![json!(2)]);
+    assert_eq!(test_ok("$[2]", array), vec![json!(2)]);
 
     let array = json!([{"name": "Bob"},{"name": "Bill"}]);
-    assert_eq!(test_ok("$[0].name", array.clone()), vec![json!("Bob")]);
+    assert_eq!(test_ok("$[0].name", array), vec![json!("Bob")]);
 }

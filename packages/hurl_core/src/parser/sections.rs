@@ -462,7 +462,7 @@ mod tests {
                 value: String::from("[")
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("[Assertsx]\nheader Location equals \"https://google.fr\"\n");
         let error = response_section(&mut reader).err().unwrap();
@@ -473,7 +473,7 @@ mod tests {
                 name: String::from("Assertsx")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -489,7 +489,7 @@ mod tests {
         let mut reader = Reader::init("Foo: \"Bar\"");
         let error = cookie(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(
             error.inner,
             ParseError::Expecting {
@@ -697,7 +697,7 @@ mod tests {
                 value: "\"".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("token: header \"Location\" xxx");
         let error = capture(&mut reader).err().unwrap();
@@ -714,7 +714,7 @@ mod tests {
                 value: "line_terminator".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
