@@ -807,10 +807,10 @@ mod tests {
 
     #[test]
     fn test_contains() {
-        let haystack = [1 as u8, 2 as u8, 3 as u8];
-        assert!(contains(&haystack, &[1 as u8]));
-        assert!(contains(&haystack, &[1 as u8, 2 as u8]));
-        assert!(!contains(&haystack, &[1 as u8, 3 as u8]));
+        let haystack = [1, 2, 3];
+        assert!(contains(&haystack, &[1]));
+        assert!(contains(&haystack, &[1, 2]));
+        assert!(!contains(&haystack, &[1, 3]));
     }
 
     #[test]
@@ -878,8 +878,8 @@ mod tests {
             Some(Value::Bool(true)),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <true>");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
     }
@@ -904,8 +904,8 @@ mod tests {
             Some(Value::Unit),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, true);
+        assert!(!assert_result.success);
+        assert!(assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "unit");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
     }
@@ -931,8 +931,8 @@ mod tests {
             Value::Integer(1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "int <10>");
 
@@ -949,8 +949,8 @@ mod tests {
             Value::Bool(false),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
         assert_eq!(assert_result.expected.as_str(), "bool <true>");
 
@@ -971,8 +971,8 @@ mod tests {
             Value::Float(1, 1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
         assert_eq!(
             assert_result.expected.as_str(),
@@ -990,12 +990,12 @@ mod tests {
 
         let assert_result =
             eval_predicate_func(predicate_func.clone(), &variables, Some(Value::Unit)).unwrap();
-        assert_eq!(assert_result.success, true);
+        assert!(assert_result.success);
         assert_eq!(assert_result.actual.as_str(), "unit");
         assert_eq!(assert_result.expected.as_str(), "something");
 
         let assert_result = eval_predicate_func(predicate_func, &variables, None).unwrap();
-        assert_eq!(assert_result.success, false);
+        assert!(!assert_result.success);
         assert_eq!(assert_result.actual.as_str(), "none");
         assert_eq!(assert_result.expected.as_str(), "something");
     }
@@ -1020,8 +1020,8 @@ mod tests {
             Value::Integer(1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
 
@@ -1038,8 +1038,8 @@ mod tests {
             Value::Bool(false),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
         assert_eq!(assert_result.expected.as_str(), "bool <false>");
 
@@ -1060,8 +1060,8 @@ mod tests {
             Value::Float(1, 1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
         assert_eq!(assert_result.expected.as_str(), "float <1.1>");
 
@@ -1079,8 +1079,8 @@ mod tests {
             Value::Float(1, 0),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.0>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
     }
@@ -1095,7 +1095,7 @@ mod tests {
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::NotEqual {
-                    space0: whitespace.clone(),
+                    space0: whitespace,
                     value: PredicateValue::Integer(1),
                     operator: false,
                 },
@@ -1105,8 +1105,8 @@ mod tests {
             Value::Integer(2),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <2>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
     }
@@ -1177,8 +1177,8 @@ mod tests {
             Value::String(String::from("http://localhost:8000")),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(
             assert_result.actual.as_str(),
             "string <http://localhost:8000>"
@@ -1329,8 +1329,8 @@ mod tests {
             Value::Bool(true),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, true);
+        assert!(!assert_result.success);
+        assert!(assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <true>");
         assert_eq!(assert_result.expected.as_str(), "count equals to <10>");
 
@@ -1346,8 +1346,8 @@ mod tests {
             Value::List(vec![]),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "0");
         assert_eq!(assert_result.expected.as_str(), "1");
 
@@ -1363,8 +1363,8 @@ mod tests {
             Value::Nodeset(3),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "3");
         assert_eq!(assert_result.expected.as_str(), "1");
     }
@@ -1388,8 +1388,8 @@ mod tests {
             Value::List(vec![Value::Integer(1)]),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "1");
         assert_eq!(assert_result.expected.as_str(), "1");
 
@@ -1405,8 +1405,8 @@ mod tests {
             Value::Nodeset(1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "1");
         assert_eq!(assert_result.expected.as_str(), "1");
     }
@@ -1423,8 +1423,8 @@ mod tests {
             Value::Integer(1),
         )
         .unwrap();
-        assert_eq!(assert_result.success, true);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "integer");
 
@@ -1437,8 +1437,8 @@ mod tests {
             Value::Float(1, 0),
         )
         .unwrap();
-        assert_eq!(assert_result.success, false);
-        assert_eq!(assert_result.type_mismatch, false);
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.0>");
         assert_eq!(assert_result.expected.as_str(), "integer");
     }

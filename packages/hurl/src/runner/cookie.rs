@@ -211,8 +211,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), None);
-        assert_eq!(cookie.has_secure(), false);
-        assert_eq!(cookie.has_httponly(), false);
+        assert!(!cookie.has_secure());
+        assert!(!cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 
@@ -238,8 +238,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), None);
-        assert_eq!(cookie.has_secure(), false);
-        assert_eq!(cookie.has_httponly(), false);
+        assert!(!cookie.has_secure());
+        assert!(!cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 
@@ -261,8 +261,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), Some(2592000));
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), None);
-        assert_eq!(cookie.has_secure(), false);
-        assert_eq!(cookie.has_httponly(), false);
+        assert!(!cookie.has_secure());
+        assert!(!cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 
@@ -301,8 +301,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), Some("/accounts".to_string()));
-        assert_eq!(cookie.has_secure(), true);
-        assert_eq!(cookie.has_httponly(), true);
+        assert!(cookie.has_secure());
+        assert!(cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 
@@ -341,8 +341,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), Some(".foo.com".to_string()));
         assert_eq!(cookie.path(), Some("/".to_string()));
-        assert_eq!(cookie.has_secure(), false);
-        assert_eq!(cookie.has_httponly(), true);
+        assert!(!cookie.has_secure());
+        assert!(cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 
@@ -387,8 +387,8 @@ pub mod tests {
         assert_eq!(cookie.max_age(), None);
         assert_eq!(cookie.domain(), None);
         assert_eq!(cookie.path(), None);
-        assert_eq!(cookie.has_secure(), false);
-        assert_eq!(cookie.has_httponly(), false);
+        assert!(!cookie.has_secure());
+        assert!(!cookie.has_httponly());
         assert_eq!(cookie.samesite(), None);
     }
 }

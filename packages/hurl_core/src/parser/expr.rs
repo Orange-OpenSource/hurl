@@ -116,7 +116,7 @@ mod tests {
                 value: String::from("}}")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -130,7 +130,7 @@ mod tests {
                 value: String::from("}}")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]

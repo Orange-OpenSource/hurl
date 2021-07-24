@@ -121,7 +121,7 @@ mod tests {
     fn test_reader() {
         let mut reader = Reader::init("hi");
         assert_eq!(reader.state.cursor, 0);
-        assert_eq!(reader.is_eof(), false);
+        assert!(!reader.is_eof());
         assert_eq!(reader.remaining(), "hi".to_string());
 
         assert_eq!(reader.read().unwrap(), 'h');
@@ -129,18 +129,18 @@ mod tests {
         assert_eq!(reader.peek().unwrap(), 'i');
         assert_eq!(reader.state.cursor, 1);
         assert_eq!(reader.read().unwrap(), 'i');
-        assert_eq!(reader.is_eof(), true);
+        assert!(reader.is_eof());
         assert_eq!(reader.read(), None);
     }
 
     #[test]
     fn test_try_predicate() {
         let mut reader = Reader::init("hi");
-        assert_eq!(reader.try_literal("hi"), true);
+        assert!(reader.try_literal("hi"));
         assert_eq!(reader.state.cursor, 2);
 
         let mut reader = Reader::init("hello");
-        assert_eq!(reader.try_literal("hi"), false);
+        assert!(!reader.try_literal("hi"));
         assert_eq!(reader.state.cursor, 0);
     }
 }

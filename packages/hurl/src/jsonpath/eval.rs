@@ -341,61 +341,43 @@ mod tests {
 
     #[test]
     pub fn test_predicate() {
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::EqualString("value".to_string()),
-            }
-            .eval(json!({"key": "value"})),
-            true
-        );
+        assert!(Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::EqualString("value".to_string()),
+        }
+        .eval(json!({"key": "value"})));
 
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::EqualString("value".to_string()),
-            }
-            .eval(json!({"key": "some"})),
-            false
-        );
+        assert!(!Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::EqualString("value".to_string()),
+        }
+        .eval(json!({"key": "some"})));
 
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-            }
-            .eval(json!({"key": 1})),
-            true
-        );
+        assert!(Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+        }
+        .eval(json!({"key": 1})));
 
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-            }
-            .eval(json!({"key": 2})),
-            false
-        );
+        assert!(!Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+        }
+        .eval(json!({"key": 2})));
 
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
-            }
-            .eval(json!({"key": "1"})),
-            false
-        );
+        assert!(!Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+        }
+        .eval(json!({"key": "1"})));
 
-        assert_eq!(
-            Predicate {
-                key: "key".to_string(),
-                func: PredicateFunc::LessThan(Number {
-                    int: 10,
-                    decimal: 0,
-                }),
-            }
-            .eval(json!({"key": 1})),
-            true
-        );
+        assert!(Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::LessThan(Number {
+                int: 10,
+                decimal: 0,
+            }),
+        }
+        .eval(json!({"key": 1})));
     }
 }

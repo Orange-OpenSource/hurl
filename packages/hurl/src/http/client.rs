@@ -688,9 +688,9 @@ mod tests {
             value: "".to_string(),
             http_only: false,
         };
-        assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
-        assert_eq!(match_cookie(&cookie, "http://sub.example.com/tata"), false);
-        assert_eq!(match_cookie(&cookie, "http://toto/tata"), false);
+        assert!(match_cookie(&cookie, "http://example.com/toto"));
+        assert!(!match_cookie(&cookie, "http://sub.example.com/tata"));
+        assert!(!match_cookie(&cookie, "http://toto/tata"));
 
         let cookie = Cookie {
             domain: "example.com".to_string(),
@@ -702,8 +702,8 @@ mod tests {
             value: "".to_string(),
             http_only: false,
         };
-        assert_eq!(match_cookie(&cookie, "http://example.com/toto"), true);
-        assert_eq!(match_cookie(&cookie, "http://sub.example.com/toto"), true);
-        assert_eq!(match_cookie(&cookie, "http://example.com/tata"), false);
+        assert!(match_cookie(&cookie, "http://example.com/toto"));
+        assert!(match_cookie(&cookie, "http://sub.example.com/toto"));
+        assert!(!match_cookie(&cookie, "http://example.com/tata"));
     }
 }

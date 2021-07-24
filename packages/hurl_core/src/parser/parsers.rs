@@ -698,7 +698,7 @@ mod tests {
                 value: String::from("}}")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
         assert_eq!(reader.state.cursor, 14);
     }
 
@@ -719,7 +719,7 @@ mod tests {
                 value: String::from("}}")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -819,6 +819,6 @@ mod tests {
         let mut reader = Reader::init("{x");
         let error = body(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 }

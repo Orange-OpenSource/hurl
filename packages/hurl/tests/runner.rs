@@ -134,7 +134,7 @@ fn hello_request() -> Request {
                 source_info: source_info.clone(),
             },
             space1: whitespace.clone(),
-            space2: whitespace.clone(),
+            space2: whitespace,
             value: Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
@@ -143,11 +143,11 @@ fn hello_request() -> Request {
                 }],
                 source_info: source_info.clone(),
             },
-            line_terminator0: line_terminator.clone(),
+            line_terminator0: line_terminator,
         }],
         sections: vec![],
         body: None,
-        source_info: source_info.clone(),
+        source_info,
     }
 }
 
@@ -195,12 +195,12 @@ fn test_hello() {
                 line_terminator0: LineTerminator {
                     space0: whitespace.clone(),
                     comment: None,
-                    newline: whitespace.clone(),
+                    newline: whitespace,
                 },
                 headers: vec![],
                 sections: vec![],
                 body: None,
-                source_info: source_info.clone(),
+                source_info,
             }),
         }],
         line_terminators: vec![],

@@ -384,13 +384,13 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("[0,1,]");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -408,7 +408,7 @@ mod tests {
                 value: "null".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -429,7 +429,7 @@ mod tests {
                 value: "true|false".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     pub fn json_hello_world_value() -> JsonValue {
@@ -507,7 +507,7 @@ mod tests {
                 value: "\"".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("\"1");
         let error = string_value(&mut reader).err().unwrap();
@@ -518,7 +518,7 @@ mod tests {
                 value: "\"".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("\"{{x\"");
         let error = string_value(&mut reader).err().unwrap();
@@ -529,7 +529,7 @@ mod tests {
                 value: "}}".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -575,12 +575,12 @@ mod tests {
         let mut reader = Reader::init("");
         let error = any_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("\t");
         let error = any_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -602,7 +602,7 @@ mod tests {
                 value: "\\".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
         assert_eq!(reader.state.cursor, 0);
     }
 
@@ -622,7 +622,7 @@ mod tests {
         let error = hex_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, error::ParseError::HexDigit);
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -688,7 +688,7 @@ mod tests {
                 value: "number".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("1.x");
         let error = number_value(&mut reader).err().unwrap();
@@ -699,7 +699,7 @@ mod tests {
                 value: "digits".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -773,7 +773,7 @@ mod tests {
                 value: "[".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("[1, true]");
         let error = list_value(&mut reader).err().unwrap();
@@ -784,13 +784,13 @@ mod tests {
                 value: "number".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("[1, 2,]");
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -820,7 +820,7 @@ mod tests {
                 value: "number".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("\n]");
         let error = list_element(Some("number".to_string()), &mut reader)
@@ -828,7 +828,7 @@ mod tests {
             .unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -879,7 +879,7 @@ mod tests {
                 value: "{".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -888,7 +888,7 @@ mod tests {
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -919,13 +919,13 @@ mod tests {
                 value: "\"".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("\"name\":\n");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(error.inner, error::ParseError::Json {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]

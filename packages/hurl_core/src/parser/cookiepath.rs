@@ -182,13 +182,13 @@ mod tests {
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
         assert_eq!(error.inner, ParseError::InvalidCookieAttribute {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("cookie1[{{field]");
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
         assert_eq!(error.inner, ParseError::InvalidCookieAttribute {});
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]

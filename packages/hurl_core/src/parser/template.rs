@@ -302,7 +302,7 @@ mod tests {
                 value: "}}".to_string()
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]

@@ -206,7 +206,7 @@ mod tests {
                 value: String::from("natural")
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("01");
         let error = natural(&mut reader).err().unwrap();
@@ -217,7 +217,7 @@ mod tests {
                 value: String::from("natural")
             }
         );
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("x");
         let error = natural(&mut reader).err().unwrap();
@@ -228,7 +228,7 @@ mod tests {
                 value: String::from("natural")
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -251,7 +251,7 @@ mod tests {
                 value: String::from("natural")
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -336,7 +336,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("-");
         let error = number(&mut reader).err().unwrap();
@@ -347,7 +347,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("1.");
         let error = number(&mut reader).err().unwrap();
@@ -358,7 +358,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
 
         let mut reader = Reader::init("1.x");
         let error = number(&mut reader).err().unwrap();
@@ -369,7 +369,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -386,7 +386,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("'hi");
         let error = string_value(&mut reader).err().unwrap();
@@ -397,7 +397,7 @@ mod tests {
             }
         );
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]

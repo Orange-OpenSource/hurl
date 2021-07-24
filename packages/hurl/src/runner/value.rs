@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn test_is_scalar() {
-        assert_eq!(Value::Integer(1).is_scalar(), true);
-        assert_eq!(Value::List(vec![]).is_scalar(), false);
+        assert!(Value::Integer(1).is_scalar());
+        assert!(!Value::List(vec![]).is_scalar());
     }
 }

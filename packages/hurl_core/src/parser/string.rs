@@ -581,17 +581,17 @@ mod tests {
         let mut reader = Reader::init("");
         let error = any_char(vec![], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("#");
         let error = any_char(vec!['#'], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
 
         let mut reader = Reader::init("\t");
         let error = any_char(vec![], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
     }
 
     #[test]
@@ -613,7 +613,7 @@ mod tests {
                 value: "\\".to_string()
             }
         );
-        assert_eq!(error.recoverable, true);
+        assert!(error.recoverable);
         assert_eq!(reader.state.cursor, 0);
     }
 
@@ -637,7 +637,7 @@ mod tests {
         let error = hex_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::HexDigit);
-        assert_eq!(error.recoverable, false);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -647,7 +647,7 @@ mod tests {
         let mut reader = Reader::init(
             format!(
                 "\"Hello World!\"{}",
-                (0..10000_000).map(|_| "X").collect::<String>()
+                (0..10_000_000).map(|_| "X").collect::<String>()
             )
             .as_str(),
         );
