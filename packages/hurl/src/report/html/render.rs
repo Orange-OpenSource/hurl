@@ -68,7 +68,7 @@ impl Element {
                             .iter()
                             .map(|a| a.clone().render())
                             .collect::<Vec<String>>()
-                            .join("")
+                            .join(" ")
                     )
                 };
                 let children: Vec<String> = children.iter().map(|e| e.clone().render()).collect();
@@ -85,6 +85,7 @@ impl Attribute {
             Attribute::Class(s) => format!("class=\"{}\"", s),
             //Attribute::Id(s) => format!("id=\"{}\"", s),
             Attribute::Href(s) => format!("href=\"{}\"", s),
+            Attribute::Data(name, value) => format!("data-{}=\"{}\"", name, value),
         }
     }
 }

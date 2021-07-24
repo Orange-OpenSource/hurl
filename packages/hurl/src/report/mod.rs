@@ -15,20 +15,117 @@
  * limitations under the License.
  *
  */
+use chrono::{DateTime, Local};
 use std::io::prelude::*;
 use std::path::PathBuf;
 
-use chrono::{DateTime, Local};
-
 use super::cli::CliError;
+use super::runner;
 use super::runner::HurlResult;
 
 mod html;
 
+pub fn write_json_report(
+    file_path: PathBuf,
+    hurl_results: Vec<HurlResult>,
+) -> Result<(), CliError> {
+    let mut results = parse_json(file_path.clone())?;
+    for result in hurl_results {
+        results.push(result);
+    }
+    let mut file = match std::fs::File::create(&file_path) {
+        Err(why) => {
+            return Err(CliError {
+                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            })
+        }
+        Ok(file) => file,
+    };
+    let serialized = serde_json::to_string_pretty(&results).unwrap();
+    if let Err(why) = file.write_all(serialized.as_bytes()) {
+        Err(CliError {
+            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+        })
+    } else {
+        Ok(())
+    }
+}
+
+pub fn parse_json(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
+    if path.exists() {
+        let s = match std::fs::read_to_string(path.clone()) {
+            Ok(s) => s,
+            Err(why) => {
+                return Err(CliError {
+                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
+                });
+            }
+        };
+        let v: serde_json::Value = match serde_json::from_str(s.as_str()) {
+            Ok(val) => val,
+            Err(_) => {
+                return Err(CliError {
+                    message: format!("The file {} is not a valid json file", path.display()),
+                })
+            }
+        };
+        match runner::deserialize_results(v) {
+            Ok(results) => Ok(results),
+            Err(_) => Err(CliError {
+                message: "Existing Hurl json can not be parsed!".to_string(),
+            }),
+        }
+    } else {
+        Ok(vec![])
+    }
+}
+
+pub fn parse_html(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
+    if path.exists() {
+        let s = match std::fs::read_to_string(path.clone()) {
+            Ok(s) => s,
+            Err(why) => {
+                return Err(CliError {
+                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
+                });
+            }
+        };
+        Ok(parse_html_report(s.as_str()))
+    } else {
+        Ok(vec![])
+    }
+}
+
+fn parse_html_report(html: &str) -> Vec<HurlResult> {
+    let re = regex::Regex::new(
+        r#"(?x)
+        data-duration="(?P<time_in_ms>\d+)"
+        \s+
+        data-status="(?P<status>[a-z]+)"
+        \s+
+        data-filename="(?P<filename>[A-Za-z0-9_./-]+)"
+    "#,
+    )
+    .unwrap();
+    re.captures_iter(html)
+        .map(|cap| HurlResult {
+            filename: cap["filename"].to_string(),
+            entries: vec![],
+            time_in_ms: cap["time_in_ms"].to_string().parse().unwrap(),
+            success: &cap["status"] == "success",
+            cookies: vec![],
+        })
+        .collect::<Vec<HurlResult>>()
+}
+
 pub fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
-    //let now: DateTime<Utc> = Utc::now();
+    let index_path = dir_path.join("index.html");
+    let mut results = parse_html(index_path)?;
+    for result in hurl_results {
+        results.push(result);
+    }
     let now: DateTime<Local> = Local::now();
-    let html = create_html_index(now.to_rfc2822(), hurl_results);
+    let html = create_html_index(now.to_rfc2822(), results);
     let s = html.render();
 
     let file_path = dir_path.join("index.html");
@@ -183,7 +280,12 @@ fn create_html_result(result: HurlResult) -> html::Element {
     };
     html::Element::NodeElement {
         name: "tr".to_string(),
-        attributes: vec![html::Attribute::Class(status.clone())],
+        attributes: vec![
+            html::Attribute::Class(status.clone()),
+            html::Attribute::Data("duration".to_string(), result.time_in_ms.to_string()),
+            html::Attribute::Data("status".to_string(), status.clone()),
+            html::Attribute::Data("filename".to_string(), result.filename.clone()),
+        ],
         children: vec![
             html::Element::NodeElement {
                 name: "td".to_string(),
@@ -220,5 +322,49 @@ mod tests {
         assert_eq!(percentage(100, 100), "100.0%".to_string());
         assert_eq!(percentage(66, 99), "66.7%".to_string());
         assert_eq!(percentage(33, 99), "33.3%".to_string());
+    }
+
+    #[test]
+    fn test_parse_html_report() {
+        let html = r#"<html>
+          <body>
+            <h2>Hurl Report</h2>
+            <table>
+              <tbody>
+                <tr class="success" data-duration="100" data-status="success" data-filename="tests/hello.hurl">
+                  <td><a href="tests/hello.hurl.html">tests/hello.hurl</a></td>
+                  <td>success</td>
+                  <td>0.1s</td>
+                </tr>
+                <tr class="failure" data-duration="200" data-status="failure" data-filename="tests/failure.hurl">
+                  <td><a href="tests/failure.hurl.html">tests/failure.hurl</a></td>
+                  <td>failure</td>
+                  <td>0.2s</td>
+                </tr>
+                </tbody>
+              <table>
+           </body>
+        </html>"#;
+
+        //
+        assert_eq!(
+            parse_html_report(html),
+            vec![
+                HurlResult {
+                    filename: "tests/hello.hurl".to_string(),
+                    entries: vec![],
+                    time_in_ms: 100,
+                    success: true,
+                    cookies: vec![],
+                },
+                HurlResult {
+                    filename: "tests/failure.hurl".to_string(),
+                    entries: vec![],
+                    time_in_ms: 200,
+                    success: false,
+                    cookies: vec![],
+                }
+            ]
+        );
     }
 }
