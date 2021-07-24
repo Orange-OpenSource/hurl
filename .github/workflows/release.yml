@@ -28,6 +28,7 @@ jobs:
       run: |
         ci/man.sh
         # Install libcurl dev so that hurl can be built dynamically with libcurl
+        sudo apt update
         sudo apt install libcurl4-openssl-dev        
         ci/release.sh
         ci/create_tarball.sh linux
