@@ -16,50 +16,21 @@
  *
  */
 
-use std::collections::HashMap;
-use std::env;
 use std::io::prelude::*;
-use std::io::{self, BufReader};
+use std::io::{self};
 use std::path::{Path, PathBuf};
-use std::time::Duration;
 
 use atty::Stream;
-use clap::{AppSettings, ArgMatches};
 
 use hurl::cli;
-use hurl::cli::interactive;
-use hurl::cli::CliError;
+use hurl::cli::{CliError, CliOptions};
 use hurl::http;
-use hurl::http::ClientOptions;
 use hurl::report;
 use hurl::runner;
-use hurl::runner::{HurlResult, RunnerOptions, Value};
+use hurl::runner::{HurlResult, RunnerOptions};
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
-use std::fs::File;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CliOptions {
-    pub verbose: bool,
-    pub color: bool,
-    pub fail_fast: bool,
-    pub insecure: bool,
-    pub interactive: bool,
-    pub variables: HashMap<String, Value>,
-    pub to_entry: Option<usize>,
-    pub follow_location: bool,
-    pub max_redirect: Option<usize>,
-    pub proxy: Option<String>,
-    pub no_proxy: Option<String>,
-    pub cookie_input_file: Option<String>,
-    pub timeout: Duration,
-    pub connect_timeout: Duration,
-    pub compressed: bool,
-    pub user: Option<String>,
-    pub json_file: Option<PathBuf>,
-    pub html_dir: Option<PathBuf>,
-}
 
 #[cfg(target_family = "unix")]
 pub fn init_colored() {
@@ -83,7 +54,6 @@ fn execute(
     filename: &str,
     contents: String,
     current_dir: &Path,
-    file_root: Option<String>,
     cli_options: CliOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
@@ -154,7 +124,7 @@ fn execute(
             let connect_timeout = cli_options.connect_timeout;
             let user = cli_options.user;
             let compressed = cli_options.compressed;
-            let context_dir = match file_root {
+            let context_dir = match cli_options.file_root {
                 None => {
                     if filename == "-" {
                         current_dir.to_str().unwrap().to_string()
@@ -184,12 +154,12 @@ fn execute(
             let mut client = http::Client::init(options);
 
             let pre_entry = if cli_options.interactive {
-                interactive::pre_entry
+                cli::interactive::pre_entry
             } else {
                 || false
             };
             let post_entry = if cli_options.interactive {
-                interactive::post_entry
+                cli::interactive::post_entry
             } else {
                 || false
             };
@@ -214,253 +184,6 @@ fn execute(
     }
 }
 
-fn output_color(matches: ArgMatches) -> bool {
-    if matches.is_present("color") {
-        true
-    } else if matches.is_present("no_color") {
-        false
-    } else {
-        atty::is(Stream::Stdout)
-    }
-}
-
-fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
-    match matches.value_of("to_entry") {
-        Some(value) => match value.parse() {
-            Ok(v) => Ok(Some(v)),
-            Err(_) => Err(CliError {
-                message: "Invalid value for option --to-entry - must be a positive integer!"
-                    .to_string(),
-            }),
-        },
-        None => Ok(None),
-    }
-}
-
-fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
-    let mut variables = HashMap::new();
-
-    if let Some(filename) = matches.value_of("variables_file") {
-        let path = std::path::Path::new(filename);
-        if !path.exists() {
-            return Err(CliError {
-                message: format!("Properties file {} does not exist", path.display()),
-            });
-        }
-
-        let file = File::open(path).unwrap();
-        let reader = BufReader::new(file);
-        for (index, line) in reader.lines().enumerate() {
-            let line = match line {
-                Ok(s) => s,
-                Err(_) => {
-                    return Err(CliError {
-                        message: format!("Can not parse line {} of {}", index + 1, path.display()),
-                    });
-                }
-            };
-            let line = line.trim();
-            if line.starts_with('#') || line.is_empty() {
-                continue;
-            }
-            let (name, value) = cli::parse_variable(line)?;
-            variables.insert(name.to_string(), value);
-        }
-    }
-
-    if matches.is_present("variable") {
-        let input: Vec<_> = matches.values_of("variable").unwrap().collect();
-        for s in input {
-            let (name, value) = cli::parse_variable(s)?;
-            variables.insert(name.to_string(), value);
-        }
-    }
-
-    Ok(variables)
-}
-
-fn app() -> clap::App<'static, 'static> {
-    clap::App::new("hurl")
-        //.author(clap::crate_authors!())
-        .version(clap::crate_version!())
-        .about("Run hurl FILE(s) or standard input")
-        .setting(AppSettings::DeriveDisplayOrder)
-        .setting(AppSettings::UnifiedHelpMessage)
-        .arg(
-            clap::Arg::with_name("INPUT")
-                .help("Sets the input file to use")
-                .required(false)
-                .multiple(true),
-        )
-        .arg(
-            clap::Arg::with_name("append")
-                .long("append")
-                .help("Append sessions to json output"),
-        )
-        .arg(
-            clap::Arg::with_name("color")
-                .long("color")
-                .conflicts_with("no-color")
-                .help("Colorize Output"),
-        )
-        .arg(
-            clap::Arg::with_name("compressed")
-                .long("compressed")
-                .help("Request compressed response (using deflate or gzip)"),
-        )
-        .arg(
-            clap::Arg::with_name("connect_timeout")
-                .long("connect-timeout")
-                .value_name("SECONDS")
-                .help("Maximum time allowed for connection"),
-        )
-        .arg(
-            clap::Arg::with_name("cookies_input_file")
-                .short("b")
-                .long("cookie")
-                .value_name("FILE")
-                .help("Read cookies from FILE"),
-        )
-        .arg(
-            clap::Arg::with_name("cookies_output_file")
-                .short("c")
-                .long("cookie-jar")
-                .value_name("FILE")
-                .help("Write cookies to FILE after running the session (only for one session)"),
-        )
-        .arg(
-            clap::Arg::with_name("fail_at_end")
-                .long("fail-at-end")
-                .help("Fail at end")
-                .takes_value(false),
-        )
-        .arg(
-            clap::Arg::with_name("file_root")
-                .long("file-root")
-                .value_name("DIR")
-                .help("set root filesystem to import file in hurl (default is current directory)")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("html")
-                .long("html")
-                .value_name("DIR")
-                .help("Generate html report to dir")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("include")
-                .short("i")
-                .long("include")
-                .help("Include the HTTP headers in the output"),
-        )
-        .arg(
-            clap::Arg::with_name("insecure")
-                .short("k")
-                .long("insecure")
-                .help("Allow insecure SSL connections"),
-        )
-        .arg(
-            clap::Arg::with_name("interactive")
-                .long("interactive")
-                .conflicts_with("to_entry")
-                .help("Turn on interactive mode"),
-        )
-        .arg(
-            clap::Arg::with_name("json")
-                .long("json")
-                .value_name("FILE")
-                .help("Write full session(s) to json file")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("follow_location")
-                .short("L")
-                .long("location")
-                .help("Follow redirects"),
-        )
-        .arg(
-            clap::Arg::with_name("max_time")
-                .long("max-time")
-                .short("m")
-                .value_name("NUM")
-                .allow_hyphen_values(true)
-                .help("Maximum time allowed for the transfer"),
-        )
-        .arg(
-            clap::Arg::with_name("max_redirects")
-                .long("max-redirs")
-                .value_name("NUM")
-                .allow_hyphen_values(true)
-                .help("Maximum number of redirects allowed"),
-        )
-        .arg(
-            clap::Arg::with_name("no_color")
-                .long("no-color")
-                .conflicts_with("color")
-                .help("Do not colorize Output"),
-        )
-        .arg(
-            clap::Arg::with_name("noproxy")
-                .long("noproxy")
-                .value_name("HOST(S)")
-                .help("List of hosts which do not use proxy")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("output")
-                .short("o")
-                .long("output")
-                .value_name("FILE")
-                .help("Write to FILE instead of stdout"),
-        )
-        .arg(
-            clap::Arg::with_name("proxy")
-                .short("x")
-                .long("proxy")
-                .value_name("[PROTOCOL://]HOST[:PORT]")
-                .help("Use proxy on given protocol/host/port"),
-        )
-        .arg(
-            clap::Arg::with_name("to_entry")
-                .long("to-entry")
-                .value_name("ENTRY_NUMBER")
-                .conflicts_with("interactive")
-                .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("user")
-                .short("u")
-                .long("user")
-                .value_name("user:password")
-                .help("Add basic Authentication header to each request.")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("variable")
-                .long("variable")
-                .value_name("NAME=VALUE")
-                .multiple(true)
-                .number_of_values(1)
-                .help("Define a variable")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("variables_file")
-                .long("variables-file")
-                .value_name("FILE")
-                .help("Define a properties file in which you define your variables")
-                .takes_value(true),
-        )
-        .arg(
-            clap::Arg::with_name("verbose")
-                .short("v")
-                .long("verbose")
-                .help("Turn on verbose output"),
-        )
-}
-
 pub fn unwrap_or_exit<T>(
     log_error_message: &impl Fn(bool, &str),
     result: Result<T, CliError>,
@@ -474,118 +197,8 @@ pub fn unwrap_or_exit<T>(
     }
 }
 
-fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
-    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
-    let color = output_color(matches.clone());
-    let fail_fast = !matches.is_present("fail_at_end");
-    let variables = variables(matches.clone())?;
-    let to_entry = to_entry(matches.clone())?;
-    let proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let insecure = matches.is_present("insecure");
-    let follow_location = matches.is_present("follow_location");
-    let cookie_input_file = matches
-        .value_of("cookies_input_file")
-        .map(|x| x.to_string());
-    let max_redirect = match matches.value_of("max_redirects") {
-        None => Some(50),
-        Some("-1") => None,
-        Some(s) => match s.parse::<usize>() {
-            Ok(x) => Some(x),
-            Err(_) => {
-                return Err(CliError {
-                    message: "max_redirs option can not be parsed".to_string(),
-                });
-            }
-        },
-    };
-
-    let timeout = match matches.value_of("max_time") {
-        None => ClientOptions::default().timeout,
-        Some(s) => match s.parse::<u64>() {
-            Ok(n) => Duration::from_secs(n),
-            Err(_) => {
-                return Err(CliError {
-                    message: "max_time option can not be parsed".to_string(),
-                });
-            }
-        },
-    };
-
-    let connect_timeout = match matches.value_of("connect_timeout") {
-        None => ClientOptions::default().connect_timeout,
-        Some(s) => match s.parse::<u64>() {
-            Ok(n) => Duration::from_secs(n),
-            Err(_) => {
-                return Err(CliError {
-                    message: "connect-timeout option can not be parsed".to_string(),
-                });
-            }
-        },
-    };
-    let compressed = matches.is_present("compressed");
-    let user = matches.value_of("user").map(|x| x.to_string());
-    let interactive = matches.is_present("interactive");
-
-    let json_file = if let Some(filename) = matches.value_of("json") {
-        let path = Path::new(filename);
-        Some(path.to_path_buf())
-    } else {
-        None
-    };
-
-    let html_dir = if let Some(dir) = matches.value_of("html") {
-        let path = Path::new(dir);
-        if !path.exists() {
-            match std::fs::create_dir(path) {
-                Err(_) => {
-                    return Err(CliError {
-                        message: format!("Html dir {} can not be created", path.display()),
-                    })
-                }
-                Ok(_) => Some(path.to_path_buf()),
-            }
-        } else if path.is_dir() {
-            Some(path.to_path_buf())
-        } else {
-            return Err(CliError {
-                message: format!("{} is not a valid directory", path.display()),
-            });
-        }
-    } else {
-        None
-    };
-
-    // deprecated
-    if matches.is_present("append") {
-        eprintln!("The option --append is deprecated. Results are automatically appended to existing report.");
-        eprintln!("It will be removed in the next version");
-    }
-
-    Ok(CliOptions {
-        verbose,
-        color,
-        fail_fast,
-        insecure,
-        interactive,
-        variables,
-        to_entry,
-        follow_location,
-        max_redirect,
-        proxy,
-        no_proxy,
-        cookie_input_file,
-        timeout,
-        connect_timeout,
-        compressed,
-        user,
-        json_file,
-        html_dir,
-    })
-}
-
 fn main() {
-    let app = app();
+    let app = cli::app();
     let matches = app.clone().get_matches();
     init_colored();
     let mut filenames = match matches.values_of("INPUT") {
@@ -606,20 +219,20 @@ fn main() {
     let current_dir_buf = std::env::current_dir().unwrap();
     let current_dir = current_dir_buf.as_path();
 
-    let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
     let log_verbose = cli::make_logger_verbose(verbose);
-    let color = output_color(matches.clone());
+    let color = cli::output_color(matches.clone());
     let log_error_message = cli::make_logger_error_message(color);
-    let cli_options = unwrap_or_exit(&log_error_message, parse_options(matches.clone()));
+    let cli_options = unwrap_or_exit(&log_error_message, cli::parse_options(matches.clone()));
+
     let mut hurl_results = vec![];
 
-    let cookies_output_file = match matches.value_of("cookies_output_file") {
+    let cookies_output_file = match cli_options.cookie_output_file.clone() {
         None => None,
         Some(filename) => {
             let filename = unwrap_or_exit(
                 &log_error_message,
-                cookies_output_file(filename.to_string(), filenames.len()),
+                cookies_output_file(filename, filenames.len()),
             );
             Some(filename)
         }
@@ -638,7 +251,6 @@ fn main() {
             filename,
             contents,
             current_dir,
-            file_root.clone(),
             cli_options.clone(),
             &log_verbose,
             &log_error_message,
@@ -650,7 +262,7 @@ fn main() {
             if let Some(entry_result) = hurl_result.entries.last() {
                 if let Some(response) = entry_result.response.clone() {
                     let mut output = vec![];
-                    if matches.is_present("include") {
+                    if cli_options.include {
                         let status_line = format!(
                             "HTTP/{} {}\n",
                             response.version.to_string(),
@@ -689,7 +301,7 @@ fn main() {
                     output.append(&mut body.clone());
                     unwrap_or_exit(
                         &log_error_message,
-                        write_output(output, matches.value_of("output")),
+                        write_output(output, cli_options.output.clone()),
                     );
                 } else {
                     cli::log_info("no response has been received");
@@ -794,7 +406,7 @@ fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
     Ok(())
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CliError> {
+fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError> {
     match filename {
         None => {
             let stdout = io::stdout();
@@ -806,7 +418,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) -> Result<(), CliError> 
             Ok(())
         }
         Some(filename) => {
-            let path = Path::new(filename);
+            let path = Path::new(filename.as_str());
             let mut file = match std::fs::File::create(&path) {
                 Err(why) => {
                     return Err(CliError {
