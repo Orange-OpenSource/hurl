@@ -3,6 +3,7 @@
 # The file is parsed and output exactly as the input
 #
 import codecs
+import os
 import sys
 import subprocess
 
@@ -17,11 +18,13 @@ def decode_string(encoded):
 
 
 def test(format_type, hurl_file):
+    output_file = hurl_file.replace('.hurl','.' + format_type)
+    if not os.path.exists(output_file):
+        return
     cmd = ['hurlfmt', '--format', format_type, hurl_file]
     print(' '.join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
-    json_file = hurl_file.replace('.hurl','.' + format_type)
-    expected = open(json_file, encoding='utf-8').read().strip()
+    expected = open(output_file, encoding='utf-8').read().strip()
     actual = decode_string(result.stdout)
     if actual != expected:
         print('>>> error in stdout')
