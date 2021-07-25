@@ -17,11 +17,10 @@
  */
 use std::collections::HashMap;
 
-use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue};
+use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
 use super::core::{Error, RunnerError};
-use super::template::eval_template;
 use super::value::Value;
 use crate::runner::template::eval_expression;
 
@@ -33,7 +32,7 @@ pub fn eval_json_value(
         JsonValue::Null {} => Ok("null".to_string()),
         JsonValue::Number(s) => Ok(s),
         JsonValue::String(template) => {
-            let s = eval_template(template, variables)?;
+            let s = eval_json_template(template, variables)?;
             Ok(format!("\"{}\"", s))
         }
         JsonValue::Boolean(v) => Ok(v.to_string()),
@@ -99,6 +98,35 @@ pub fn eval_json_object_element(
     ))
 }
 
+// do not decode
+// keep original encoding
+pub fn eval_json_template(
+    template: Template,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    let Template { elements, .. } = template;
+    {
+        let mut value = String::from("");
+        for elem in elements {
+            match eval_json_template_element(elem, variables) {
+                Ok(v) => value.push_str(v.as_str()),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(value)
+    }
+}
+
+fn eval_json_template_element(
+    template_element: TemplateElement,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    match template_element {
+        TemplateElement::String { encoded, .. } => Ok(encoded),
+        TemplateElement::Expression(expr) => eval_expression(expr, variables),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::super::core::RunnerError;
@@ -142,7 +170,14 @@ mod tests {
             space0: "\n    ".to_string(),
             elements: vec![JsonObjectElement {
                 space0: "".to_string(),
-                name: "firstName".to_string(),
+                name: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "firstName".to_string(),
+                        encoded: "firstName".to_string(),
+                    }],
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                },
                 space1: "".to_string(),
                 space2: " ".to_string(),
                 value: JsonValue::String(Template {
@@ -176,7 +211,7 @@ mod tests {
         );
         assert_eq!(
             eval_json_value(json_hello_world_value(), &variables).unwrap(),
-            "\"Hello Bob!\"".to_string()
+            "\"Hello\\u0020Bob!\"".to_string()
         );
     }
 
@@ -267,7 +302,7 @@ mod tests {
                 &variables
             )
             .unwrap(),
-            "[\"Hi\", \"Hello Bob!\"]".to_string()
+            "[\"Hi\", \"Hello\\u0020Bob!\"]".to_string()
         );
     }
 
@@ -291,6 +326,46 @@ mod tests {
     "firstName": "John"
 }"#
             .to_string()
+        );
+    }
+
+    #[test]
+    fn test_escape_sequence() {
+        let variables = HashMap::new();
+        assert_eq!(
+            eval_json_value(
+                JsonValue::String(Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "\n".to_string(),
+                        encoded: "\\n".to_string(),
+                    }],
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                }),
+                &variables
+            )
+            .unwrap(),
+            "\"\\n\"".to_string()
+        );
+    }
+
+    #[test]
+    fn test_eval_json_template() {
+        let variables = HashMap::new();
+        assert_eq!(
+            eval_json_template(
+                Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "\n".to_string(),
+                        encoded: "\\n".to_string(),
+                    }],
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                },
+                &variables
+            )
+            .unwrap(),
+            "\\n".to_string()
         );
     }
 }

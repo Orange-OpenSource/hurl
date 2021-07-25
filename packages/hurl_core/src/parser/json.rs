@@ -51,6 +51,11 @@ pub fn boolean_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
 }
 
 fn string_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+    let template = string_template(reader)?;
+    Ok(JsonValue::String(template))
+}
+
+fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     try_literal("\"", reader)?;
     let quotes = true;
     let mut chars = vec![];
@@ -79,7 +84,7 @@ fn string_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
         elements,
         source_info: SourceInfo { start, end },
     };
-    Ok(JsonValue::String(template))
+    Ok(template)
 }
 
 fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
@@ -322,11 +327,24 @@ fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     Ok(JsonValue::Object { space0, elements })
 }
 
+fn key(reader: &mut Reader) -> ParseResult<'static, Template> {
+    let save = reader.state.clone();
+    let name = string_template(reader).map_err(|e| e.non_recoverable())?;
+    if name.elements.is_empty() {
+        Err(error::Error {
+            pos: save.pos,
+            recoverable: false,
+            inner: error::ParseError::Json {},
+        })
+    } else {
+        Ok(name)
+    }
+}
 fn object_element(reader: &mut Reader) -> ParseResult<'static, JsonObjectElement> {
     let space0 = whitespace(reader);
-    literal("\"", reader)?;
+    //literal("\"", reader)?;
     let name = key(reader)?;
-    literal("\"", reader)?;
+    //literal("\"", reader)?;
     let space1 = whitespace(reader);
     literal(":", reader)?;
     let save = reader.state.pos.clone();
@@ -350,23 +368,6 @@ fn object_element(reader: &mut Reader) -> ParseResult<'static, JsonObjectElement
         value,
         space3,
     })
-}
-
-fn key(reader: &mut Reader) -> ParseResult<'static, String> {
-    let s = reader
-        .read_while(|c| c.is_alphanumeric() || *c == '@' || *c == '.' || *c == '_' || *c == '-');
-    if s.is_empty() {
-        let pos = reader.state.pos.clone();
-        Err(error::Error {
-            pos,
-            recoverable: false,
-            inner: error::ParseError::Expecting {
-                value: "key".to_string(),
-            },
-        })
-    } else {
-        Ok(s)
-    }
 }
 
 fn whitespace(reader: &mut Reader) -> String {
@@ -860,7 +861,14 @@ mod tests {
                 space0: "\n  ".to_string(),
                 elements: vec![JsonObjectElement {
                     space0: "".to_string(),
-                    name: "a".to_string(),
+                    name: Template {
+                        quotes: true,
+                        elements: vec![TemplateElement::String {
+                            value: "a".to_string(),
+                            encoded: "a".to_string()
+                        }],
+                        source_info: SourceInfo::init(2, 4, 2, 5)
+                    },
                     space1: "".to_string(),
                     space2: " ".to_string(),
                     value: JsonValue::Boolean(true),
@@ -898,7 +906,14 @@ mod tests {
             object_element(&mut reader).unwrap(),
             JsonObjectElement {
                 space0: "".to_string(),
-                name: "a".to_string(),
+                name: Template {
+                    quotes: true,
+                    elements: vec![TemplateElement::String {
+                        value: "a".to_string(),
+                        encoded: "a".to_string()
+                    }],
+                    source_info: SourceInfo::init(1, 2, 1, 3)
+                },
                 space1: "".to_string(),
                 space2: " ".to_string(),
                 value: JsonValue::Boolean(true),
@@ -926,21 +941,6 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(error.inner, error::ParseError::Json {});
         assert!(!error.recoverable);
-    }
-
-    #[test]
-    fn test_key() {
-        let mut reader = Reader::init("name");
-        assert_eq!(key(&mut reader).unwrap(), "name".to_string());
-        assert_eq!(reader.state.cursor, 4);
-
-        let mut reader = Reader::init("@timestamp");
-        assert_eq!(key(&mut reader).unwrap(), "@timestamp".to_string());
-        assert_eq!(reader.state.cursor, 10);
-
-        let mut reader = Reader::init("data.q_client-dns");
-        assert_eq!(key(&mut reader).unwrap(), "data.q_client-dns".to_string());
-        assert_eq!(reader.state.cursor, 17);
     }
 
     #[test]

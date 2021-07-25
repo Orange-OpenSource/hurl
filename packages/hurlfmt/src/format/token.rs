@@ -827,7 +827,7 @@ impl Tokenizable for JsonObjectElement {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Whitespace(self.space0.clone())];
         tokens.push(Token::Quote("\"".to_string()));
-        tokens.push(Token::String(self.name.clone()));
+        tokens.push(Token::String(self.name.to_string()));
         tokens.push(Token::Quote("\"".to_string()));
         tokens.push(Token::Whitespace(self.space1.clone()));
         tokens.push(Token::CodeDelimiter(":".to_string()));

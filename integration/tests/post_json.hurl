@@ -4,7 +4,9 @@ POST http://localhost:8000/post-json
     "name": "Bob",
     "password": "secret",
     "age": 30,
-    "strict": true
+    "strict": true,
+    "spacing": "\n",
+    "g_clef": "\uD834\uDD1E"
 }
 
 HTTP/1.0 200
@@ -48,11 +50,8 @@ HTTP/1.0 200
 [Captures]
 name: body
 
-POST http://localhost:8000/post-json
+POST http://localhost:8000/check_name
 
 {
-    "name": "{{name}}",
-    "password": "secret",
-    "age": {{age}},
-    "strict": {{strict}}
+    "name": "{{name}}"
 }

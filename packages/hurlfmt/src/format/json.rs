@@ -487,7 +487,7 @@ impl ToJson for hurl_core::ast::JsonValue {
             JsonValue::Object { elements, .. } => JValue::Object(
                 elements
                     .iter()
-                    .map(|elem| (elem.name.clone(), elem.value.to_json()))
+                    .map(|elem| (elem.name.to_string(), elem.value.to_json()))
                     .collect(),
             ),
             JsonValue::Expression(exp) => JValue::String(format!("{{{{{}}}}}", exp.to_string())),

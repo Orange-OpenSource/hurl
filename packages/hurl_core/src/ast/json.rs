@@ -16,7 +16,7 @@
  *
  */
 use super::core::Template;
-use crate::ast::{Expr, JsonValue};
+use crate::ast::{Expr, JsonValue, TemplateElement};
 use core::fmt;
 
 ///
@@ -66,7 +66,7 @@ pub struct ListElement {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ObjectElement {
     pub space0: String,
-    pub name: String,
+    pub name: Template,
     pub space1: String,
     pub space2: String,
     pub value: Value,
@@ -121,7 +121,7 @@ impl fmt::Display for ObjectElement {
         let mut s = "".to_string();
         s.push_str(self.space0.as_str());
         s.push('"');
-        s.push_str(self.name.as_str());
+        s.push_str(self.name.to_string().as_str());
         s.push('"');
         s.push_str(self.space1.as_str());
         s.push(':');
@@ -129,6 +129,86 @@ impl fmt::Display for ObjectElement {
         s.push_str(self.value.to_string().as_str());
         s.push_str(self.space3.as_str());
         write!(f, "{}", s)
+    }
+}
+
+impl JsonValue {
+    pub fn encoded(&self) -> String {
+        match self {
+            Value::Expression(expr) => format!("{{{{{}}}}}", expr.to_string()),
+            Value::Number(s) => s.to_string(),
+            Value::String(template) => template.encoded(),
+            Value::Boolean(value) => {
+                if *value {
+                    "true".to_string()
+                } else {
+                    "false".to_string()
+                }
+            }
+            Value::List { space0, elements } => {
+                let elements = elements
+                    .iter()
+                    .map(|e| e.encoded())
+                    .collect::<Vec<String>>();
+                format!("[{}{}]", space0, elements.join(","))
+            }
+            Value::Object { space0, elements } => {
+                let elements = elements
+                    .iter()
+                    .map(|e| e.encoded())
+                    .collect::<Vec<String>>();
+                format!("{{{}{}}}", space0, elements.join(","))
+            }
+            Value::Null { .. } => "null".to_string(),
+        }
+    }
+}
+
+impl ListElement {
+    fn encoded(&self) -> String {
+        let mut s = "".to_string();
+        s.push_str(self.space0.as_str());
+        s.push_str(self.value.encoded().as_str());
+        s.push_str(self.space1.as_str());
+        s
+    }
+}
+
+impl ObjectElement {
+    fn encoded(&self) -> String {
+        let mut s = "".to_string();
+        s.push_str(self.space0.as_str());
+        s.push_str(self.name.encoded().as_str());
+        s.push_str(self.space1.as_str());
+        s.push(':');
+        s.push_str(self.space2.as_str());
+        s.push_str(self.value.encoded().as_str());
+        s.push_str(self.space3.as_str());
+        s
+    }
+}
+
+impl Template {
+    fn encoded(&self) -> String {
+        let mut s = "".to_string();
+        if self.quotes {
+            s.push('"')
+        }
+        let elements: Vec<String> = self.elements.iter().map(|e| e.encoded()).collect();
+        s.push_str(elements.join("").as_str());
+        if self.quotes {
+            s.push('"')
+        }
+        s
+    }
+}
+
+impl TemplateElement {
+    fn encoded(&self) -> String {
+        match self {
+            TemplateElement::String { encoded, .. } => encoded.to_string(),
+            TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr.to_string()),
+        }
     }
 }
 
@@ -144,16 +224,16 @@ mod tests {
             JsonValue::Expression(Expr {
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0)
+                    source_info: SourceInfo::init(0, 0, 0, 0),
                 },
                 variable: Variable {
                     name: "x".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0)
+                    source_info: SourceInfo::init(0, 0, 0, 0),
                 },
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0)
-                }
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
             })
             .to_string()
         );
@@ -178,7 +258,7 @@ mod tests {
             "[]".to_string(),
             JsonValue::List {
                 space0: "".to_string(),
-                elements: vec![]
+                elements: vec![],
             }
             .to_string()
         );
@@ -210,7 +290,7 @@ mod tests {
             "{}".to_string(),
             JsonValue::Object {
                 space0: "".to_string(),
-                elements: vec![]
+                elements: vec![],
             }
             .to_string()
         );
@@ -220,15 +300,66 @@ mod tests {
                 space0: "".to_string(),
                 elements: vec![ObjectElement {
                     space0: " ".to_string(),
-                    name: "id".to_string(),
+                    name: Template {
+                        quotes: true,
+                        elements: vec![TemplateElement::String {
+                            value: "id".to_string(),
+                            encoded: "id".to_string(),
+                        }],
+                        source_info: SourceInfo::init(1, 1, 1, 1),
+                    },
                     space1: "".to_string(),
                     space2: " ".to_string(),
                     value: JsonValue::Number("123".to_string()),
-                    space3: " ".to_string()
-                }]
+                    space3: " ".to_string(),
+                }],
             }
             .to_string()
         );
         assert_eq!("null".to_string(), JsonValue::Null {}.to_string());
+    }
+
+    #[test]
+    fn test_encoded() {
+        assert_eq!(
+            TemplateElement::Expression(Expr {
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                },
+                variable: Variable {
+                    name: "name".to_string(),
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::init(1, 1, 1, 1),
+                },
+            })
+            .encoded(),
+            "{{name}}".to_string()
+        );
+        assert_eq!(
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::Expression(Expr {
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 1, 1, 1),
+                    },
+                    variable: Variable {
+                        name: "name".to_string(),
+                        source_info: SourceInfo::init(1, 1, 1, 1),
+                    },
+                    space1: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::init(1, 1, 1, 1),
+                    },
+                })],
+                source_info: SourceInfo::init(1, 1, 1, 1),
+            }
+            .encoded(),
+            "{{name}}".to_string()
+        );
     }
 }

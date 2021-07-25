@@ -11,7 +11,9 @@ def post_json():
     "name": "Bob",
     "password": "secret",
     "age": 30,
-    "strict": true
+    "strict": true,
+    "spacing": "\\n",
+    "g_clef": "\\uD834\\uDD1E"
 }'''
     return ''
 
@@ -63,3 +65,11 @@ def post_json_numbers():
 def get_name():
     return 'Bob'
 
+@app.route('/check_name', methods=['POST'])
+def check_name():
+    assert request.headers['Content-Type'] == 'application/json'
+    s = request.data.decode("utf-8")
+    assert s == '''{
+    "name": "Bob"
+}'''
+    return ''

@@ -220,7 +220,14 @@ fn value() -> BoxedStrategy<JsonValue> {
                             space0,
                             elements: vec![JsonObjectElement {
                                 space0: "".to_string(),
-                                name: "key1".to_string(),
+                                name: Template {
+                                    quotes: false,
+                                    elements: vec![TemplateElement::String {
+                                        value: "key1".to_string(),
+                                        encoded: "key1".to_string(),
+                                    }],
+                                    source_info: SourceInfo::init(1, 1, 1, 1),
+                                },
                                 space1,
                                 space2,
                                 value,
