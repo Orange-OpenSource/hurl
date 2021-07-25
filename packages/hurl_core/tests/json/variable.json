@@ -1,0 +1,6 @@
+{
+  "name": "{{name}}",
+  "password": "secret",
+  "age": {{age}},
+  "strict": {{strict}}
+}
