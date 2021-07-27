@@ -19,6 +19,7 @@
 use std::io::prelude::*;
 use std::io::{self};
 use std::path::{Path, PathBuf};
+use std::time::Instant;
 
 use atty::Stream;
 
@@ -238,6 +239,7 @@ fn main() {
         }
     };
 
+    let start = Instant::now();
     for filename in filenames.clone() {
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
@@ -321,6 +323,7 @@ fn main() {
 
         hurl_results.push(hurl_result.clone());
     }
+    let duration = start.elapsed().as_millis();
 
     if let Some(file_path) = cli_options.json_file {
         log_verbose(format!("Writing json report to {}", file_path.display()).as_str());
@@ -348,6 +351,10 @@ fn main() {
             &log_error_message,
             write_cookies_file(file_path, hurl_results.clone()),
         );
+    }
+
+    if cli_options.summary {
+        print_summary(duration, hurl_results.clone())
     }
 
     std::process::exit(exit_code(hurl_results));
@@ -479,4 +486,23 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
         });
     }
     Ok(())
+}
+
+fn print_summary(duration: u128, hurl_results: Vec<HurlResult>) {
+    let total = hurl_results.len();
+    let success = hurl_results.iter().filter(|r| r.success).count();
+    let failed = total - success;
+    eprintln!("--------------------------------------------------------------------------------");
+    eprintln!("executed: {}", total);
+    eprintln!(
+        "success: {} ({:.1}%)",
+        success,
+        100.0 * success as f32 / total as f32
+    );
+    eprintln!(
+        "failed: {} ({:.1}%)",
+        failed,
+        100.0 * failed as f32 / total as f32
+    );
+    eprintln!("execution time: {}ms", duration);
 }
