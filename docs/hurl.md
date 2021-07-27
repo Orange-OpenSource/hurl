@@ -260,6 +260,11 @@ Ignore the remaining of the file. It is useful for debugging a session.
 Write output to <file> instead of stdout.
 
 
+### --progress {#progress}
+
+Print filename and status for each test
+
+
 ### --summary {#summary}
 
 Print test metrics at the end of the run
