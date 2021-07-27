@@ -260,6 +260,10 @@ Ignore the remaining of the file. It is useful for debugging a session.
 Write output to <file> instead of stdout.
 
 
+### --summary {#summary}
+
+Print test metrics at the end of the run
+
 
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 

@@ -47,6 +47,7 @@ pub struct CliOptions {
     pub no_proxy: Option<String>,
     pub output: Option<String>,
     pub proxy: Option<String>,
+    pub summary: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
@@ -196,6 +197,11 @@ pub fn app() -> clap::App<'static, 'static> {
                 .help("Use proxy on given protocol/host/port"),
         )
         .arg(
+            clap::Arg::with_name("summary")
+                .long("summary")
+                .help("Print test metrics at the end of the run"),
+        )
+        .arg(
             clap::Arg::with_name("to_entry")
                 .long("to-entry")
                 .value_name("ENTRY_NUMBER")
@@ -303,6 +309,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
     let output = matches.value_of("output").map(|x| x.to_string());
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
+    let summary = matches.is_present("summary");
     let timeout = match matches.value_of("max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
@@ -343,6 +350,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         no_proxy,
         output,
         proxy,
+        summary,
         timeout,
         to_entry,
         user,
