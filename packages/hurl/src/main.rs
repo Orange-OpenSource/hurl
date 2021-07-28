@@ -22,6 +22,7 @@ use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 use atty::Stream;
+use colored::*;
 
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions};
@@ -70,6 +71,9 @@ fn execute(
         Some(filename.to_string())
     };
 
+    if cli_options.progress {
+        eprintln!("{}: running", filename);
+    }
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
     let log_runner_error =
@@ -172,7 +176,7 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            runner::run_hurl_file(
+            let result = runner::run_hurl_file(
                 hurl_file,
                 &mut client,
                 filename.to_string(),
@@ -180,7 +184,17 @@ fn execute(
                 &log_verbose,
                 &log_error_message,
                 &log_runner_error,
-            )
+            );
+            if cli_options.progress {
+                let status = match (result.success, cli_options.color) {
+                    (true, true) => "success".green().to_string(),
+                    (true, false) => "success".to_string(),
+                    (false, true) => "failure".red().to_string(),
+                    (false, false) => "failure".to_string(),
+                };
+                eprintln!("{}: {}", filename, status);
+            }
+            result
         }
     }
 }

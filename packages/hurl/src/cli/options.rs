@@ -46,6 +46,7 @@ pub struct CliOptions {
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
     pub output: Option<String>,
+    pub progress: bool,
     pub proxy: Option<String>,
     pub summary: bool,
     pub timeout: Duration,
@@ -190,6 +191,11 @@ pub fn app() -> clap::App<'static, 'static> {
                 .help("Write to FILE instead of stdout"),
         )
         .arg(
+            clap::Arg::with_name("progress")
+                .long("progress")
+                .help("Print filename and status for each test"),
+        )
+        .arg(
             clap::Arg::with_name("proxy")
                 .short("x")
                 .long("proxy")
@@ -308,6 +314,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     };
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
     let output = matches.value_of("output").map(|x| x.to_string());
+    let progress = matches.is_present("progress");
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
     let summary = matches.is_present("summary");
     let timeout = match matches.value_of("max_time") {
@@ -349,6 +356,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         max_redirect,
         no_proxy,
         output,
+        progress,
         proxy,
         summary,
         timeout,
