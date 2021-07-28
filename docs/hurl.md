@@ -269,6 +269,10 @@ Print filename and status for each test
 
 Print test metrics at the end of the run
 
+### --test {#test}
+
+Activate test mode; equals --output /dev/null --progress --summary
+
 
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 

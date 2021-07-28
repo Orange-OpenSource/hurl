@@ -208,6 +208,11 @@ pub fn app() -> clap::App<'static, 'static> {
                 .help("Print test metrics at the end of the run"),
         )
         .arg(
+            clap::Arg::with_name("test")
+                .long("test")
+                .help("Activate test mode; equals --output /dev/null --progress --summary"),
+        )
+        .arg(
             clap::Arg::with_name("to_entry")
                 .long("to-entry")
                 .value_name("ENTRY_NUMBER")
@@ -313,10 +318,16 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         },
     };
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let output = matches.value_of("output").map(|x| x.to_string());
-    let progress = matches.is_present("progress");
+    let output = if let Some(filename) = matches.value_of("output") {
+        Some(filename.to_string())
+    } else if matches.is_present("test") {
+        Some("/dev/null".to_string())
+    } else {
+        None
+    };
+    let progress = matches.is_present("progress") || matches.is_present("test");
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let summary = matches.is_present("summary");
+    let summary = matches.is_present("summary") || matches.is_present("test");
     let timeout = match matches.value_of("max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
