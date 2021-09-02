@@ -1,3 +1,58 @@
+[1.3.0 (2021-09-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.3.0)
+========================================================================================================================
+
+Changes:
+
+* Simplify JSON/HTML report generation [#241](https://github.com/Orange-OpenSource/hurl/issues/241)
+
+* Add --progress option to print progressive status and executed count [#236](https://github.com/Orange-OpenSource/hurl/issues/236)
+
+* Add endsWith predicate [#234](https://github.com/Orange-OpenSource/hurl/issues/234)
+
+* Add --summary option to print tests metrics [#232](https://github.com/Orange-OpenSource/hurl/issues/232)
+
+* Add md5 query [#231](https://github.com/Orange-OpenSource/hurl/issues/231)
+
+* Add Hex body [#230](https://github.com/Orange-OpenSource/hurl/issues/230)
+
+* Add dependency check in the CI [#226](https://github.com/Orange-OpenSource/hurl/pull/226)
+
+* Use startswith/contains predicate with bytearray [#224](https://github.com/Orange-OpenSource/hurl/issues/224)
+
+* Add subquery count  [#217](https://github.com/Orange-OpenSource/hurl/issues/217)
+
+* Add notEquals (!=) predicate [#216](https://github.com/Orange-OpenSource/hurl/issues/216)
+
+* Accept predicate value raw-string and base64 [#215](https://github.com/Orange-OpenSource/hurl/issues/215)
+
+* improve error messages when syntax is not recognized [#213](https://github.com/Orange-OpenSource/hurl/issues/213)
+
+* Add operators for arithmetic predicates [#210](https://github.com/Orange-OpenSource/hurl/issues/210)
+
+* Improve error messages if the url contains an illegal character [#207](https://github.com/Orange-OpenSource/hurl/issues/207)
+
+* Improve Error message for the countEquals predicate [#195](https://github.com/Orange-OpenSource/hurl/issues/195)
+
+* Improve Error Message "Could not Resolve Host" [#194](https://github.com/Orange-OpenSource/hurl/issues/194)
+
+* Add HTTP Headers in the session json file. [#191](https://github.com/Orange-OpenSource/hurl/issues/191)
+
+* Improve Hurl Report [#190](https://github.com/Orange-OpenSource/hurl/issues/190)
+
+* Output curl command-line in verbose mode [#179](https://github.com/Orange-OpenSource/hurl/issues/179)
+
+* Normalize win64 packages names [#178](https://github.com/Orange-OpenSource/hurl/pull/178)
+
+* Add checksum body query (md5, sha1, sha256) [#102](https://github.com/Orange-OpenSource/hurl/issues/102)
+
+
+Bugs Fixes:
+
+* Fix incorrect JSON export for lessThan predicate [#212](https://github.com/Orange-OpenSource/hurl/issues/212)
+
+* Fix segmentation fault with Invalid XPath Assert [#192](https://github.com/Orange-OpenSource/hurl/issues/192)
+
+
 [1.2.0 (2021-03-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.2.0)
 ========================================================================================================================
 
