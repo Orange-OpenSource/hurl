@@ -52,6 +52,12 @@ pub fn init_colored() {
     colored::control::set_virtual_terminal(true);
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct Progress {
+    pub current: usize,
+    pub total: usize,
+}
+
 fn execute(
     filename: &str,
     contents: String,
@@ -59,6 +65,7 @@ fn execute(
     cli_options: CliOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
+    progress: Option<Progress>,
 ) -> HurlResult {
     let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
@@ -71,8 +78,8 @@ fn execute(
         Some(filename.to_string())
     };
 
-    if cli_options.progress {
-        eprintln!("{}: running", filename);
+    if let Some(Progress { current, total }) = progress {
+        eprintln!("{}: running [{}/{}]", filename, current + 1, total);
     }
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
@@ -254,7 +261,7 @@ fn main() {
     };
 
     let start = Instant::now();
-    for filename in filenames.clone() {
+    for (current, filename) in filenames.iter().enumerate() {
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
             Err(e) => {
@@ -263,6 +270,14 @@ fn main() {
             }
         };
 
+        let progress = if cli_options.progress {
+            Some(Progress {
+                current,
+                total: filenames.len(),
+            })
+        } else {
+            None
+        };
         let hurl_result = execute(
             filename,
             contents,
@@ -270,6 +285,7 @@ fn main() {
             cli_options.clone(),
             &log_verbose,
             &log_error_message,
+            progress,
         );
 
         if hurl_result.errors().is_empty() && !cli_options.interactive {
@@ -323,7 +339,7 @@ fn main() {
                     cli::log_info("no response has been received");
                 }
             } else {
-                let source = if filename == "-" {
+                let source = if *filename == "-" {
                     "".to_string()
                 } else {
                     format!("for file {}", filename).to_string()
