@@ -176,7 +176,7 @@ fn cookie_value(reader: &mut Reader) -> CookieValue {
                 '!', '#', '$', '%', '&', '\'', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=',
                 '>', '?', '@', '[', ']', '^', '_', '`', '~',
             ]
-            .contains(&c)
+            .contains(c)
     });
     CookieValue { value }
 }

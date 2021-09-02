@@ -378,16 +378,9 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for hurl_result in hurl_results.clone() {
-        let runner_errors: Vec<runner::Error> = hurl_result
-            .clone()
-            .errors()
-            .iter()
-            .filter(|e| !e.assert)
-            .cloned()
-            .collect();
-
-        if hurl_result.clone().errors().is_empty() {
-        } else if runner_errors.is_empty() {
+        let errors = hurl_result.clone().errors();
+        if errors.is_empty() {
+        } else if errors.iter().filter(|e| !e.assert).cloned().count() == 0 {
             count_errors_assert += 1;
         } else {
             count_errors_runner += 1;

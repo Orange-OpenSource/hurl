@@ -164,7 +164,7 @@ fn main() {
         }
         contents
     } else {
-        match cli::read_to_string(&filename) {
+        match cli::read_to_string(filename) {
             Ok(s) => s,
             Err(e) => {
                 log_error_message(

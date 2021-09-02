@@ -39,7 +39,7 @@ pub fn eval_request(
 ) -> Result<http::RequestSpec, Error> {
     let method = eval_method(request.method.clone());
 
-    let url = eval_template(request.clone().url, &variables)?;
+    let url = eval_template(request.clone().url, variables)?;
 
     // headers
     let mut headers: Vec<http::Header> = vec![];

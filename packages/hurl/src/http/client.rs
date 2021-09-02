@@ -155,7 +155,7 @@ impl Client {
         let mut data: &[u8] = bytes.as_ref();
         self.set_body(data);
 
-        self.set_headers(&request);
+        self.set_headers(request);
 
         let verbose = self.options.verbose;
         let mut request_headers: Vec<Header> = vec![];
