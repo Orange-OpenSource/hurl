@@ -1,3 +1,13 @@
+[1.3.1 (2021-09-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.3.1)
+========================================================================================================================
+
+Bugs Fixes:
+
+* Accept hyphen in variable name [#258](https://github.com/Orange-OpenSource/hurl/issues/258)
+
+* Support # in header value [#255](https://github.com/Orange-OpenSource/hurl/issues/255)
+
+
 [1.3.0 (2021-09-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.3.0)
 ========================================================================================================================
 
