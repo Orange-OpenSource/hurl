@@ -58,7 +58,7 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<'static, Expr> {
 
 fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
     let start = reader.state.clone();
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
+    let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
         return Err(Error {
             pos: start.pos,
@@ -141,6 +141,15 @@ mod tests {
             Variable {
                 name: String::from("name"),
                 source_info: SourceInfo::init(1, 1, 1, 5),
+            }
+        );
+
+        let mut reader = Reader::init("my-id");
+        assert_eq!(
+            variable_name(&mut reader).unwrap(),
+            Variable {
+                name: String::from("my-id"),
+                source_info: SourceInfo::init(1, 1, 1, 6),
             }
         );
     }
