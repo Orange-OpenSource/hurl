@@ -229,7 +229,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
     try_literal("\\", reader)?;
     let start = reader.state.clone();
     match reader.read() {
-        // Some('#') => Ok('#'),
+        Some('#') => Ok('#'),
         Some('"') => Ok('"'),
         Some('\\') => Ok('\\'),
         Some('/') => Ok('/'),

@@ -24,6 +24,10 @@ def custom_headers_utf8():
     assert request.headers['Beverage'] == '\x63\x61\x66\xc3\xa9'
     return ''
 
+@app.route("/custom-headers-value")
+def custom_headers_value():
+    assert request.headers['Id'] == '#123'
+    return ''
 
 @app.route("/custom-headers-quote")
 def custom_headers_quotes():

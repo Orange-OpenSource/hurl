@@ -24,6 +24,10 @@ GET http://localhost:8000/custom-headers-utf8
 Beverage: café  # send the utf8 string - expected to be decoded as ascii in the server side
 HTTP/1.0 200
 
+GET http://localhost:8000/custom-headers-value
+Id: \#123       # send a hash in the value
+HTTP/1.0 200
+
 GET http://localhost:8000/custom-headers-quote
 Header1: '
 HTTP/1.0 200
