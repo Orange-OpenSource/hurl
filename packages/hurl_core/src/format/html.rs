@@ -81,14 +81,15 @@ impl Htmlable for Request {
         let mut buffer = String::from("");
         buffer.push_str("<span class=\"request\">");
         add_line_terminators(&mut buffer, self.line_terminators.clone());
+
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.method.to_html().as_str());
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str(format!("<span class=\"url\">{}</span>", self.url.to_html()).as_str());
+        buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str("</span>");
+
         for header in self.headers.clone() {
             buffer.push_str(header.to_html().as_str());
         }
@@ -98,9 +99,11 @@ impl Htmlable for Request {
         if let Some(body) = self.body.clone() {
             buffer.push_str(body.to_html().as_str());
         }
+        buffer.push_str("</span>");
         buffer
     }
 }
+
 
 impl Htmlable for Response {
     fn to_html(&self) -> String {
@@ -145,7 +148,7 @@ impl Htmlable for Version {
 
 impl Htmlable for Status {
     fn to_html(&self) -> String {
-        format!("<span class=\"status\">{}</span>", self.value.to_string())
+        format!("<span class=\"number\">{}</span>", self.value.to_string())
     }
 }
 
@@ -159,7 +162,7 @@ impl Htmlable for Section {
                 "<span class=\"line section-header\">[{}]</span>",
                 self.name()
             )
-            .as_str(),
+                .as_str(),
         );
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
@@ -500,7 +503,7 @@ impl Htmlable for PredicateFuncValue {
                         "<span class=\"predicate-type\">{}</span>",
                         encode_html(self.name())
                     )
-                    .as_str(),
+                        .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
@@ -511,7 +514,7 @@ impl Htmlable for PredicateFuncValue {
                         "<span class=\"predicate-type\">{}</span>",
                         encode_html(self.name())
                     )
-                    .as_str(),
+                        .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
@@ -522,7 +525,7 @@ impl Htmlable for PredicateFuncValue {
                         "<span class=\"predicate-type\">{}</span>",
                         encode_html(self.name())
                     )
-                    .as_str(),
+                        .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
@@ -533,7 +536,7 @@ impl Htmlable for PredicateFuncValue {
                         "<span class=\"predicate-type\">{}</span>",
                         encode_html(self.name())
                     )
-                    .as_str(),
+                        .as_str(),
                 );
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
@@ -633,28 +636,35 @@ impl Htmlable for PredicateValue {
 
 impl Htmlable for RawString {
     fn to_html(&self) -> String {
-        let mut buffer = String::from("```");
-        if !self.newline.to_html().as_str().is_empty() {
-            buffer.push_str("</span><span class=\"line\">");
+        let mut buffer = "".to_string();
+        buffer.push_str("<span class=\"line\">```");
+
+        if !self.newline.value.as_str().is_empty() {
+            buffer.push_str(format!("</span>{}<span class=\"line\">", self.newline.value.as_str()).as_str());
         }
 
-        let end_newline = self.value.to_string().ends_with('\n');
         let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
             .unwrap()
             .split(self.value.to_string().trim())
             .map(|l| l.to_string())
+            .filter(|l| !l.is_empty())
             .collect();
 
-        buffer.push_str(xml_escape(lines.remove(0)).as_str());
-
-        for line in lines {
-            buffer.push_str("</span><span class=\"line\">");
-            buffer.push_str(xml_escape(line).as_str());
+        if lines.is_empty() {
+            buffer.push_str("```</span>");
+        } else if lines.len() == 1 {
+            buffer.push_str(encode_html(lines.get(0).unwrap().to_string()).as_str());
+            buffer.push_str("```</span>");
+        } else {
+            buffer.push_str(encode_html(lines.remove(0)).as_str());
+            buffer.push_str("</span>\n");
+            for line in lines {
+                buffer.push_str("<span class=\"line\">");
+                buffer.push_str(encode_html(line).as_str());
+                buffer.push_str("</span>\n");
+            }
+            buffer.push_str("<span class=\"line\">```</span>");
         }
-        if end_newline {
-            buffer.push_str("</span><span class=\"line\">");
-        }
-        buffer.push_str("```");
         buffer
     }
 }
@@ -663,10 +673,8 @@ impl Htmlable for Body {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         add_line_terminators(&mut buffer, self.line_terminators.clone());
-        buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
@@ -674,36 +682,14 @@ impl Htmlable for Body {
 
 impl Htmlable for Bytes {
     fn to_html(&self) -> String {
-        let mut buffer = String::from("");
         match self {
-            Bytes::Base64(value) => {
-                buffer.push_str(value.to_html().as_str());
-            }
-            Bytes::Hex(value) => {
-                buffer.push_str(value.to_html().as_str());
-            }
-            Bytes::File(value) => {
-                buffer.push_str(value.to_html().as_str());
-            }
-            Bytes::RawString(value) => {
-                buffer.push_str(value.to_html().as_str());
-            }
-            Bytes::Json { value } => buffer.push_str(value.to_html().as_str()),
-            Bytes::Xml { value } => {
-                let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
-                    .unwrap()
-                    .split(value.as_str())
-                    .map(|l| l.to_string())
-                    .collect();
-                buffer.push_str(xml_escape(lines.remove(0)).as_str());
-                for line in lines {
-                    buffer.push_str("<span class=\"line\">");
-                    buffer.push_str(xml_escape(line).as_str());
-                    buffer.push_str("</span>");
-                }
-            }
+            Bytes::Base64(value) => value.to_html(),
+            Bytes::Hex(value) => value.to_html(),
+            Bytes::File(value) => value.to_html(),
+            Bytes::RawString(value) => value.to_html(),
+            Bytes::Json { value } => value.to_html(),
+            Bytes::Xml { value } => multilines(encode_html(value.to_string()))
         }
-        buffer
     }
 }
 
@@ -713,15 +699,10 @@ fn xml_escape(s: String) -> String {
         .replace('&', "&amp;")
 }
 
+// Improvement: break into spans within the json value
 impl Htmlable for JsonValue {
     fn to_html(&self) -> String {
-        let s = self.to_string();
-        regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(s.as_str())
-            .map(|l| format!("<span class=\"line\">{}</span>", l))
-            .collect::<Vec<String>>()
-            .join("\n")
+        multilines(self.to_string())
     }
 }
 
@@ -775,6 +756,7 @@ impl Htmlable for Base64 {
         buffer
     }
 }
+
 impl Htmlable for Hex {
     fn to_html(&self) -> String {
         let mut buffer = String::from("<span>");
@@ -822,8 +804,19 @@ fn add_line_terminators(buffer: &mut String, line_terminators: Vec<LineTerminato
 }
 
 fn encode_html(s: String) -> String {
-    s.replace(">", "&gt;").replace("<", "&lt;")
+    s.replace(">", "&gt;")
+        .replace("<", "&lt;")
 }
+
+fn multilines(s: String) -> String {
+    regex::Regex::new(r"\n|\r\n")
+        .unwrap()
+        .split(s.as_str())
+        .map(|l| format!("<span class=\"line\">{}</span>", l))
+        .collect::<Vec<String>>()
+        .join("\n")
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -846,7 +839,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "``````".to_string());
+        assert_eq!(raw_string.to_html(), "<span class=\"line\">``````</span>".to_string());
 
         // ```hello```
         let raw_string = RawString {
@@ -863,7 +856,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "```hello```".to_string());
+        assert_eq!(raw_string.to_html(), "<span class=\"line\">```hello```</span>".to_string());
 
         // ```
         // line1
@@ -883,9 +876,23 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
         };
-        assert_eq!(raw_string.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```".to_string());
+        assert_eq!(
+            raw_string.to_html(),
+            "<span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span>".to_string()
+        );
     }
 
+    #[test]
+    fn test_multilines() {
+        assert_eq!(
+            multilines("{\n   \"id\": 1\n}".to_string()),
+            "<span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span>"
+        );
+        assert_eq!(
+            multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>".to_string()),
+            "<span class=\"line\"><?xml version=\"1.0\"?></span>\n<span class=\"line\"><drink>café</drink></span>"
+        );
+    }
 
     #[test]
     fn test_json() {
@@ -899,17 +906,17 @@ mod tests {
                         elements: vec![
                             TemplateElement::String {
                                 value: "id".to_string(),
-                                encoded: "id".to_string()
+                                encoded: "id".to_string(),
                             }
                         ],
-                        source_info: SourceInfo::init(0,0,0,0)
+                        source_info: SourceInfo::init(0, 0, 0, 0),
                     },
                     space1: "".to_string(),
                     space2: " ".to_string(),
                     value: JsonValue::Number("1".to_string()),
-                    space3: "\n".to_string()
+                    space3: "\n".to_string(),
                 }
-            ]
+            ],
         };
         assert_eq!(
             value.to_html(),
