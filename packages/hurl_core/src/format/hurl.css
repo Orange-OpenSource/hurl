@@ -41,6 +41,10 @@ span.line:before {
     color: teal;
 }
 
+.subquery-type {
+    color: darkblue;
+}
+
 .predicate-type {
     color: darkblue;
 }

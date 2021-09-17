@@ -401,13 +401,13 @@ impl Htmlable for Subquery {
         let mut buffer = String::from("");
         match self.value.clone() {
             SubqueryValue::Regex { expr, space0 } => {
-                buffer.push_str("<span class=\"query-type\">regex</span>");
+                buffer.push_str("<span class=\"subquery-type\">regex</span>");
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(
                     format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
                 );
             }
-            SubqueryValue::Count {} => buffer.push_str("<span class=\"query-type\">count</span>"),
+            SubqueryValue::Count {} => buffer.push_str("<span class=\"subquery-type\">count</span>"),
         }
         buffer
     }
