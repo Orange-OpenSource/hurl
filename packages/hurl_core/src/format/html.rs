@@ -53,12 +53,12 @@ pub fn format(hurl_file: HurlFile, standalone: bool) -> String {
 impl Htmlable for HurlFile {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        buffer.push_str("<div class=\"hurl-file\">");
+        buffer.push_str("<pre><code class=\"language-hurl\">");
         for entry in self.clone().entries {
             buffer.push_str(entry.to_html().as_str());
         }
         add_line_terminators(&mut buffer, self.line_terminators.clone());
-        buffer.push_str("</div>");
+        buffer.push_str("</code></pre>");
         buffer
     }
 }
@@ -66,12 +66,12 @@ impl Htmlable for HurlFile {
 impl Htmlable for Entry {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        buffer.push_str("<div class=\"hurl-entry\">");
+        buffer.push_str("<span class=\"hurl-entry\">");
         buffer.push_str(self.request.to_html().as_str());
         if let Some(response) = self.clone().response {
             buffer.push_str(response.to_html().as_str());
         }
-        buffer.push_str("</div>");
+        buffer.push_str("</span>");
         buffer
     }
 }
@@ -79,7 +79,7 @@ impl Htmlable for Entry {
 impl Htmlable for Request {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        buffer.push_str("<div class=\"request\">");
+        buffer.push_str("<span class=\"request\">");
         add_line_terminators(&mut buffer, self.line_terminators.clone());
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
@@ -88,7 +88,7 @@ impl Htmlable for Request {
         buffer.push_str(format!("<span class=\"url\">{}</span>", self.url.to_html()).as_str());
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer.push_str("</span>");
-        buffer.push_str("</div>");
+        buffer.push_str("</span>");
         for header in self.headers.clone() {
             buffer.push_str(header.to_html().as_str());
         }
@@ -105,7 +105,7 @@ impl Htmlable for Request {
 impl Htmlable for Response {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        buffer.push_str("<div class=\"response\">");
+        buffer.push_str("<span class=\"response\">");
         add_line_terminators(&mut buffer, self.line_terminators.clone());
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
@@ -113,6 +113,7 @@ impl Htmlable for Response {
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str(self.status.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         for header in self.headers.clone() {
             buffer.push_str(header.to_html().as_str());
         }
@@ -122,7 +123,7 @@ impl Htmlable for Response {
         if let Some(body) = self.body.clone() {
             buffer.push_str(body.to_html().as_str());
         }
-        buffer.push_str("</div>");
+        buffer.push_str("</span");
         buffer
     }
 }
@@ -160,6 +161,7 @@ impl Htmlable for Section {
             )
             .as_str(),
         );
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
         buffer
     }
@@ -215,8 +217,8 @@ impl Htmlable for KeyValue {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(format!("<span class=\"string\">{}</span>", self.value.to_html()).as_str());
-        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
 }
@@ -241,8 +243,8 @@ impl Htmlable for FileParam {
         buffer.push(':');
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
 }
@@ -309,6 +311,7 @@ impl Htmlable for Capture {
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.query.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
 }
@@ -443,6 +446,7 @@ impl Htmlable for Assert {
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str(self.predicate.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
 }
@@ -663,6 +667,7 @@ impl Htmlable for Body {
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
         buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
     }
 }
@@ -711,19 +716,12 @@ fn xml_escape(s: String) -> String {
 impl Htmlable for JsonValue {
     fn to_html(&self) -> String {
         let s = self.to_string();
-        let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+        regex::Regex::new(r"\n|\r\n")
             .unwrap()
             .split(s.as_str())
-            .map(|l| l.to_string())
-            .collect();
-        let mut buffer = String::from("");
-        buffer.push_str(lines.remove(0).as_str());
-        for line in lines {
-            buffer.push_str("<span class=\"line\">");
-            buffer.push_str(line.as_str());
-            buffer.push_str("</span>");
-        }
-        buffer
+            .map(|l| format!("<span class=\"line\">{}</span>", l))
+            .collect::<Vec<String>>()
+            .join("\n")
     }
 }
 
@@ -747,6 +745,7 @@ impl Htmlable for LineTerminator {
             buffer.push_str(format!("#{}", v.value.as_str()).as_str());
             buffer.push_str("</span>");
         }
+        buffer.push_str(self.newline.value.as_str());
         buffer
     }
 }
@@ -814,11 +813,11 @@ impl Htmlable for Expr {
 fn add_line_terminators(buffer: &mut String, line_terminators: Vec<LineTerminator>) {
     for line_terminator in line_terminators.clone() {
         buffer.push_str("<span class=\"line\">");
-        buffer.push_str(line_terminator.to_html().as_str());
         if line_terminator.newline.value.is_empty() {
             buffer.push_str("<br>");
         }
         buffer.push_str("</span>");
+        buffer.push_str(line_terminator.to_html().as_str());
     }
 }
 
@@ -885,5 +884,36 @@ mod tests {
             },
         };
         assert_eq!(raw_string.to_html(), "```</span><span class=\"line\">line1</span><span class=\"line\">line2</span><span class=\"line\">```".to_string());
+    }
+
+
+    #[test]
+    fn test_json() {
+        let value = JsonValue::Object {
+            space0: "".to_string(),
+            elements: vec![
+                JsonObjectElement {
+                    space0: "\n   ".to_string(),
+                    name: Template {
+                        quotes: true,
+                        elements: vec![
+                            TemplateElement::String {
+                                value: "id".to_string(),
+                                encoded: "id".to_string()
+                            }
+                        ],
+                        source_info: SourceInfo::init(0,0,0,0)
+                    },
+                    space1: "".to_string(),
+                    space2: " ".to_string(),
+                    value: JsonValue::Number("1".to_string()),
+                    space3: "\n".to_string()
+                }
+            ]
+        };
+        assert_eq!(
+            value.to_html(),
+            "<span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span>"
+        )
     }
 }
