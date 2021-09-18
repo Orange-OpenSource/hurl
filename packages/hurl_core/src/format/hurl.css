@@ -4,7 +4,6 @@ body {
 }
 
 span.line {
-    display: block;
     line-height: 1.2rem;
 }
 
@@ -40,6 +39,10 @@ span.line:before {
 
 .query-type {
     color: teal;
+}
+
+.subquery-type {
+    color: darkblue;
 }
 
 .predicate-type {
