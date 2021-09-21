@@ -1,0 +1,11 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/get-list</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Captures]</span>
+<span class="line"><span class="name">list</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.values"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/undefined</span></span>
+<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="string">param1</span><span>:</span> <span class="string">{{list}}</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.1</span> <span class="number">200</span></span>
+</span></span><span class="line"></span>
+</code></pre>

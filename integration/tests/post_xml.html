@@ -1,1 +1,15 @@
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml</span></span></div><span class="line">&amp;lt;?xml version="1.0"?&amp;gt;<span class="line">&amp;lt;drink&amp;gt;café&amp;lt;/drink&amp;gt;</span></span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml-no-prolog</span></span></div><span class="line">&amp;lt;drink&amp;gt;café&amp;lt;/drink&amp;gt;</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div></div>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># POST the following XML</span>
+<span class="line"></span><span class="comment"># &lt;?xml version="1.0"?&gt;</span>
+<span class="line"></span><span class="comment"># &lt;drink&gt;café&lt;/drink&gt;</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml</span></span>
+<span class="xml"><span class="line">&lt;?xml version="1.0"?&gt;</span>
+<span class="line">&lt;drink&gt;café&lt;/drink&gt;</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml-no-prolog</span></span>
+<span class="xml"><span class="line">&lt;drink&gt;café&lt;/drink&gt;</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span></code></pre>

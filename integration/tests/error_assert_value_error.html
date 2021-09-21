@@ -1,0 +1,11 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-assert-value</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">header</span> <span class="string">"content-type"</span> <span class="predicate-type">equals</span> <span class="string">"XXX"</span></span>
+<span class="line"><span class="query-type">header</span> <span class="string">"content-type"</span> <span class="predicate-type">notEquals</span> <span class="string">"text/html; charset=utf-8"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.id"</span> <span class="predicate-type">equals</span> <span class="string">"000001"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.values"</span> <span class="predicate-type">includes</span> <span class="number">100</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.values"</span> <span class="not">not</span> <span class="predicate-type">contains</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">greaterThan</span> <span class="number">5</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isFloat</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">contains</span> hex,<span class="hex">00</span>;</span></span></span></code></pre>

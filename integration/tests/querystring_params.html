@@ -1,1 +1,30 @@
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params</span></span></div><span class="line section-header">[QueryStringParams]</span><span class="line"><span class="string">param1</span><span>:</span> <span class="string">value1</span></span><span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span><span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span><span class="line"><span class="string">param4</span><span>:</span> <span class="string">1,2,3</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="comment"># same version as raw</span></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params?param1=value1&amp;param2=&amp;param3=a%3db&amp;param4=1,2,3</span></span></div><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="comment"># combine version</span></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params?param1=value1</span></span></div><span class="line section-header">[QueryStringParams]</span><span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span><span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span><span class="line"><span class="string">param4</span><span>:</span> <span class="string">1,2,3</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="comment"># encoding slash</span></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params-encoded?value1=/&amp;value2=%2F</span></span></div><span class="line section-header">[QueryStringParams]</span><span class="line"><span class="string">value3</span><span>:</span><span class="string">/</span></span><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div></div>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params</span></span>
+<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="string">param1</span><span>:</span> <span class="string">value1</span></span>
+<span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span>
+<span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span>
+<span class="line"><span class="string">param4</span><span>:</span> <span class="string">1,2,3</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># same version as raw</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params?param1=value1&amp;param2=&amp;param3=a%3db&amp;param4=1,2,3</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># combine version</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params?param1=value1</span></span>
+<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span>
+<span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span>
+<span class="line"><span class="string">param4</span><span>:</span> <span class="string">1,2,3</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># encoding slash</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params-encoded?value1=/&amp;value2=%2F</span></span>
+<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="string">value3</span><span>:</span><span class="string">/</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span></code></pre>

@@ -1,0 +1,12 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-assert-variable</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Captures]</span>
+<span class="line"><span class="name">status</span><span>:</span> <span class="query-type">status</span></span>
+<span class="line"><span class="name">length</span><span>:</span> <span class="query-type">header</span> <span class="string">"content-length"</span></span>
+<span class="line"><span class="name">type</span><span>:</span> <span class="query-type">header</span> <span class="string">"content-type"</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"toto"</span> <span class="predicate-type">equals</span> <span class="string">"tata"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"status"</span> <span class="predicate-type">equals</span> <span class="expr">{{unknown}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"status"</span> <span class="predicate-type">equals</span> <span class="expr">{{type}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"status"</span> <span class="predicate-type">equals</span> <span class="expr">{{length}}</span></span>
+</span></span></code></pre>

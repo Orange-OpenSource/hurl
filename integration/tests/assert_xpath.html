@@ -1,1 +1,10 @@
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-xpath</span></span></div><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line section-header">[Asserts]</span><span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">equals</span> <span class="string">"café"</span></span><span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">equals</span> <span class="string">"café"</span></span><span class="line"><span class="query-type">xpath</span> <span class="string">"//toto"</span> not <span class="predicate-type">exists</span></span><span class="line"></span><span class="line">&amp;lt;data&amp;gt;café&amp;lt;/data&amp;gt;</span></div></div></div>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-xpath</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">equals</span> <span class="string">"café"</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">equals</span> <span class="string">"caf\u{00e9}"</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//toto"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
+<span class="line"></span>
+<span class="xml"><span class="line">&lt;data&gt;café&lt;/data&gt;</span></span>
+</span></span></code></pre>

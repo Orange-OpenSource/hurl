@@ -9,7 +9,7 @@ def post_json():
     print(s)
     assert s == '''{
     "name": "Bob",
-    "password": "secret",
+    "password": "&secret<>",
     "age": 30,
     "strict": true,
     "spacing": "\\n",

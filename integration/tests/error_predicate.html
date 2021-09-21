@@ -1,0 +1,17 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicate/error/type</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.status"</span> <span class="predicate-type">equals</span> <span class="string">"true"</span></span>
+<span class="line"></span><span class="comment">#jsonpath "$.count" equals "0"</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">equals</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">equals</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.empty"</span> <span class="predicate-type">equals</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.number"</span> <span class="predicate-type">equals</span> <span class="number">1.1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">startsWith</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">endsWith</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">contains</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">matches</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.toto"</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span></span></span></code></pre>

@@ -1,0 +1,16 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-assert-query-cookie</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie1[Secure]"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie1[Secure]"</span> <span class="predicate-type">equals</span> <span class="boolean">false</span></span>      <span class="comment"># This is not valid, Secure attribute exists or not but does have a value</span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie1[Secure]"</span> <span class="not">not</span> <span class="predicate-type">equals</span> <span class="boolean">true</span></span>
+<span class="line"></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2[Secure]"</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2[Secure]"</span> <span class="predicate-type">equals</span> <span class="boolean">true</span></span>       <span class="comment"># This is not valid, Secure attribute exists or not but does have a value</span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2[Secure]"</span> <span class="not">not</span> <span class="predicate-type">equals</span> <span class="boolean">true</span></span>   <span class="comment"># This is not valid, Secure attribute exists or not but does have a value</span>
+</span></span><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span>
+</code></pre>
