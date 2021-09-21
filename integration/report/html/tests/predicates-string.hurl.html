@@ -6,7 +6,6 @@ body {
 }
 
 span.line {
-    display: block;
     line-height: 1.2rem;
 }
 
@@ -33,7 +32,7 @@ span.line:before {
 .version {
     color: black;
 }
-.status {
+.number {
     color: blue;
 }
 .section-header {
@@ -44,6 +43,14 @@ span.line:before {
     color: teal;
 }
 
+.subquery-type {
+    color: darkblue;
+}
+
+.not {
+    color: darkblue;
+}
+
 .predicate-type {
     color: darkblue;
 }
@@ -51,10 +58,54 @@ span.line:before {
 .string {
     color: darkgreen;
 }
-
+.raw {
+    color: darkgreen;
+}
 .comment {
     color: dimgray;
 }
-</style></head><body>
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string</span></span></div><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line section-header">[Asserts]</span><span class="line"><span class="query-type">status</span> <span class="predicate-type">equals</span> <span class="string">"Hello World!"</span></span><span class="line"><span class="query-type">status</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span><span class="line"><span class="query-type">status</span> <span class="predicate-type">endsWith</span> <span class="string">"!"</span></span><span class="line"><span class="query-type">status</span> <span class="predicate-type">contains</span> <span class="string">"llo"</span></span><span class="line"><span class="query-type">status</span> <span class="predicate-type">matches</span> <span class="string">"Hello [a-zA-Z]+!"</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string-empty</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line section-header">[Asserts]</span><span class="line"><span class="query-type">status</span> <span class="predicate-type">equals</span> <span class="string">""</span></span><span class="line"><span class="query-type">status</span> <span class="predicate-type">exists</span></span></div></div><span class="line"></span><span class="line"></span></div>
+.name {
+    color: darkgreen;
+}
+.json {
+    color: darkgreen;
+}
+.xml {
+    color: darkgreen;
+}
+.base64 {
+    color: darkgreen;
+}
+.hex {
+    color: darkgreen;
+}
+.filename {
+    color: darkgreen;
+}
+.cookie-value {
+    color: darkgreen;
+}</style></head><body>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">"Hello World!"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">endsWith</span> <span class="string">"!"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">contains</span> <span class="string">"llo"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">matches</span> <span class="string">"Hello [a-zA-Z]+!"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string-empty</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">""</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">exists</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string-unicode</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">"\u{2708}"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="subquery-type">count</span> <span class="predicate-type">equals</span> <span class="number">3</span></span>
+</span></span></code></pre>
 </body></html>
