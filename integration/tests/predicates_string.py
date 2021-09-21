@@ -9,5 +9,8 @@ def predicates_string():
 def predicates_string_empty():
     return ''
 
+@app.route('/predicates-string-unicode')
+def predicates_string_unicode():
+    return '\u2708'
 
 
