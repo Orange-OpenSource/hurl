@@ -6,7 +6,6 @@ body {
 }
 
 span.line {
-    display: block;
     line-height: 1.2rem;
 }
 
@@ -33,7 +32,7 @@ span.line:before {
 .version {
     color: black;
 }
-.status {
+.number {
     color: blue;
 }
 .section-header {
@@ -44,6 +43,14 @@ span.line:before {
     color: teal;
 }
 
+.subquery-type {
+    color: darkblue;
+}
+
+.not {
+    color: darkblue;
+}
+
 .predicate-type {
     color: darkblue;
 }
@@ -51,10 +58,46 @@ span.line:before {
 .string {
     color: darkgreen;
 }
-
+.raw {
+    color: darkgreen;
+}
 .comment {
     color: dimgray;
 }
-</style></head><body>
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml</span></span></div><span class="line">&amp;lt;?xml version="1.0"?&amp;gt;<span class="line">&amp;lt;drink&amp;gt;café&amp;lt;/drink&amp;gt;</span></span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml-no-prolog</span></span></div><span class="line">&amp;lt;drink&amp;gt;café&amp;lt;/drink&amp;gt;</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div></div>
+.name {
+    color: darkgreen;
+}
+.json {
+    color: darkgreen;
+}
+.xml {
+    color: darkgreen;
+}
+.base64 {
+    color: darkgreen;
+}
+.hex {
+    color: darkgreen;
+}
+.filename {
+    color: darkgreen;
+}
+.cookie-value {
+    color: darkgreen;
+}</style></head><body>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># POST the following XML</span>
+<span class="line"></span><span class="comment"># &lt;?xml version="1.0"?&gt;</span>
+<span class="line"></span><span class="comment"># &lt;drink&gt;café&lt;/drink&gt;</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml</span></span>
+<span class="xml"><span class="line">&lt;?xml version="1.0"?&gt;</span>
+<span class="line">&lt;drink&gt;café&lt;/drink&gt;</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-xml-no-prolog</span></span>
+<span class="xml"><span class="line">&lt;drink&gt;café&lt;/drink&gt;</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span></code></pre>
 </body></html>

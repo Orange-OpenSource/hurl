@@ -6,7 +6,6 @@ body {
 }
 
 span.line {
-    display: block;
     line-height: 1.2rem;
 }
 
@@ -33,7 +32,7 @@ span.line:before {
 .version {
     color: black;
 }
-.status {
+.number {
     color: blue;
 }
 .section-header {
@@ -44,6 +43,14 @@ span.line:before {
     color: teal;
 }
 
+.subquery-type {
+    color: darkblue;
+}
+
+.not {
+    color: darkblue;
+}
+
 .predicate-type {
     color: darkblue;
 }
@@ -51,10 +58,89 @@ span.line:before {
 .string {
     color: darkgreen;
 }
-
+.raw {
+    color: darkgreen;
+}
 .comment {
     color: dimgray;
 }
-</style></head><body>
-<div class="hurl-file"><div class="hurl-entry"><div class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json</span></span></div><span class="line"></span><span class="line">{<span class="line">    "name": "Bob",</span><span class="line">    "password": "secret",</span><span class="line">    "age": 30,</span><span class="line">    "strict": true</span><span class="line">}</span></span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-array</span></span></div><span class="line">[1,2,3]</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-string</span></span></div><span class="line">"Hello"</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-number</span></span></div><span class="line">100</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-numbers</span></span></div><span class="line">{<span class="line">    "natural": 100,</span><span class="line">    "negative": -1,</span><span class="line">    "float": "3.333333333333333",</span><span class="line">    "exponent": 100e100</span><span class="line">}</span></span><div class="response"><span class="line"></span><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-boolean</span></span></div><span class="line">true</span><div class="response"><span class="line"></span><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="comment">#</span></span><span class="line"><span class="comment"># Use variable in your input json</span></span><span class="line"><span class="comment">#</span></span><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/get-name</span></span></div><div class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="status">200</span></span><span class="line section-header">[Captures]</span><span class="line">name<span>:</span> <span class="query-type">status</span></span></div></div><div class="hurl-entry"><div class="request"><span class="line"></span><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json</span></span></div><span class="line"></span><span class="line">{<span class="line">    "name": "{{name}}",</span><span class="line">    "password": "secret",</span><span class="line">    "age": {{age}},</span><span class="line">    "strict": {{strict}}</span><span class="line">}</span></span></div></div>
+.name {
+    color: darkgreen;
+}
+.json {
+    color: darkgreen;
+}
+.xml {
+    color: darkgreen;
+}
+.base64 {
+    color: darkgreen;
+}
+.hex {
+    color: darkgreen;
+}
+.filename {
+    color: darkgreen;
+}
+.cookie-value {
+    color: darkgreen;
+}</style></head><body>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json</span></span>
+<span class="line"></span>
+<span class="json"><span class="line">{</span>
+<span class="line">    "name": "Bob",</span>
+<span class="line">    "password": "&amp;secret&lt;&gt;",</span>
+<span class="line">    "age": 30,</span>
+<span class="line">    "strict": true,</span>
+<span class="line">    "spacing": "\n",</span>
+<span class="line">    "g_clef": "\uD834\uDD1E"</span>
+<span class="line">}</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-array</span></span>
+<span class="json"><span class="line">[1,2,3]</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-string</span></span>
+<span class="json"><span class="line">"Hello"</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-number</span></span>
+<span class="json"><span class="line">100</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-numbers</span></span>
+<span class="json"><span class="line">{</span>
+<span class="line">    "natural": 100,</span>
+<span class="line">    "negative": -1,</span>
+<span class="line">    "float": "3.333333333333333",</span>
+<span class="line">    "exponent": 100e100</span>
+<span class="line">}</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post-json-boolean</span></span>
+<span class="json"><span class="line">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment">#</span>
+<span class="line"></span><span class="comment"># Use variable in your input json</span>
+<span class="line"></span><span class="comment">#</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/get-name</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Captures]</span>
+<span class="line"><span class="name">name</span><span>:</span> <span class="query-type">body</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/check_name</span></span>
+<span class="line"></span>
+<span class="json"><span class="line">{</span>
+<span class="line">    "name": "{{name}}"</span>
+<span class="line">}</span></span>
+</span></span></code></pre>
 </body></html>
