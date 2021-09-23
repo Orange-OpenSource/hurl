@@ -84,8 +84,10 @@ jobs:
       run: |
          export PATH="$PWD/target/debug:$PATH"
          cd integration
+         pip install lxml bs4
          ./integration.py
          ./test_curl_commands.sh tests/*.curl
+         ./test_html_output.py tests/*.html
          xmllint --noout tests/*.html
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
