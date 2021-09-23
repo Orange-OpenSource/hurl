@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import sys
 import glob 
 import test_echo
 import test_lint
