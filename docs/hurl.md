@@ -180,8 +180,7 @@ Usage help. This lists all current command line options with a short description
 
 Generate html report in dir.
 
-If you want to combine results from different Hurl executions in a unique html report, you must also use the options [--json](#json) and [--append](#append).
-
+If the html report already exists, it will be updated with the new test results.
 
 
 ### -i, --include {#include}
@@ -199,10 +198,7 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 
 Write full session(s) to a json file. The format is very closed to HAR format.
 
-By default, this file is overwritten by the current run execution.
-In order to append sessions to an existing json file, the option [--append](#append) must be used.
-This is typically used in a CI pipeline.
-
+If the json file already exists, the file will be updated with the new test results.
 
 
 ### -k, --insecure {#insecure}
