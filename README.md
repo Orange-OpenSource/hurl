@@ -469,7 +469,6 @@ Options that exist in curl have exactly the same semantic.
 
 Option | Description
  --- | --- 
-`--append` | This option can only be used with `--json`. It appends sessions to existing file instead of overwriting it. This is typically used in a CI pipeline.
 `--color` | Colorize Output
 `-b, --cookie <file>` | Read cookies from file (using the Netscape cookie file format). Combined with `-c, --cookie-jar`, you can simulate a cookie storage between successive Hurl runs.
 `--compressed` | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
@@ -478,10 +477,11 @@ Option | Description
 `--fail-at-end` | Continue executing requests to the end of the Hurl file even when an assert error occurs. By default, Hurl exits after an assert error in the HTTP response. Note that this option does not affect the behavior with multiple input Hurl files. All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 `--file-root <dir>` | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body. When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 `-h, --help` | Usage help. This lists all current command line options with a short description.
-`--html <dir>` | Generate html report in dir. If you want to combine results from different Hurl executions in a unique html report, you must also use the options `--json` and `--append`.
+`--html <dir>` | Generate html report in dir. If the html report already exists, it will be updated with the new test results.
 `-i, --include` | Include the HTTP headers in the output (last entry).
 `--interactive` | Stop between requests. This is similar to a break point, You can then continue (Press C) or quit (Press Q).
-`--json <file>`| Write full session(s) to a json file. The format is very closed to HAR format.By default, this file is overwritten by the current run execution. In order to append sessions to an existing json file, the option `--append` must be used. This is typically used in a CI pipeline.
+`--json <file>`| Write full session(s) to a json file. The format is very closed to HAR format. If the json file already exists, the file will be updated with the new test results.
+
 `--k, --insecure` | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 `-L, --location` | Follow redirect. You can limit the amount of redirects to follow by using the `--max-redirs` option.
 `-m, --max-time <seconds>` | Maximum time in seconds that you allow a request/response to take. This is the standard timeout. See also `--connect-timeout` option.
