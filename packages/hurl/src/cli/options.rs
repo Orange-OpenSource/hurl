@@ -69,11 +69,6 @@ pub fn app() -> clap::App<'static, 'static> {
                 .multiple(true),
         )
         .arg(
-            clap::Arg::with_name("append")
-                .long("append")
-                .help("Append sessions to json output"),
-        )
-        .arg(
             clap::Arg::with_name("color")
                 .long("color")
                 .conflicts_with("no-color")
@@ -343,12 +338,6 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let user = matches.value_of("user").map(|x| x.to_string());
     let variables = variables(matches.clone())?;
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
-
-    // deprecated
-    if matches.is_present("append") {
-        eprintln!("The option --append is deprecated. Results are automatically appended to existing report.");
-        eprintln!("It will be removed in the next version");
-    }
 
     Ok(CliOptions {
         color,

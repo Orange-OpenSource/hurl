@@ -118,12 +118,6 @@ Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 Options that exist in curl have exactly the same semantic.
 
 
-### --append {#append}
-
-This option can only be used with [--json](#json). It appends sessions to existing file instead of overwriting it.
-This is typically used in a CI pipeline.
-
-
 ### --color {#color}
 
 Colorize Output
