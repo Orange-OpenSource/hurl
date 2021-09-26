@@ -183,6 +183,11 @@ Generate html report in dir.
 If the html report already exists, it will be updated with the new test results.
 
 
+### --ignore-asserts {#ignore-asserts}
+
+Ignore all asserts defined in the Hurl file.
+
+
 ### -i, --include {#include}
 
 Include the HTTP headers in the output (last entry).

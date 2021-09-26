@@ -28,6 +28,7 @@ pub struct RunnerOptions {
     pub variables: HashMap<String, Value>,
     pub to_entry: Option<usize>,
     pub context_dir: String,
+    pub ignore_asserts: bool,
     pub pre_entry: fn() -> bool,
     pub post_entry: fn() -> bool,
 }

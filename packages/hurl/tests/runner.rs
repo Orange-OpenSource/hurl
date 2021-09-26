@@ -69,6 +69,7 @@ fn test_hurl_file() {
         variables,
         to_entry: None,
         context_dir: "current_dir".to_string(),
+        ignore_asserts: false,
         pre_entry: || true,
         post_entry: || true,
     };
@@ -82,7 +83,7 @@ fn test_hurl_file() {
         &mut client,
         //&mut variables,
         filename.to_string(),
-        options,
+        &options,
         &log_verbose,
         &log_error_message,
         &log_runner_error,
@@ -211,6 +212,7 @@ fn test_hello() {
         variables,
         to_entry: None,
         context_dir: "current_dir".to_string(),
+        ignore_asserts: false,
         pre_entry: || true,
         post_entry: || true,
     };
@@ -221,7 +223,7 @@ fn test_hello() {
         hurl_file,
         &mut client,
         String::from("filename"),
-        options,
+        &options,
         &log_verbose,
         &log_error_message,
         &log_runner_error,
