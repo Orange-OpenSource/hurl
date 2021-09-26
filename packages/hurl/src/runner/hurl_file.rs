@@ -70,6 +70,7 @@ use super::entry;
 ///        variables,
 ///        to_entry: None,
 ///        context_dir: "current_dir".to_string(),
+///        ignore_asserts: false,
 ///        pre_entry: || true,
 ///        post_entry: || true,
 ///  };
@@ -79,7 +80,7 @@ use super::entry;
 ///     hurl_file,
 ///     &mut client,
 ///     filename,
-///     options,
+///     &options,
 ///     &log_verbose,
 ///     &log_error_message,
 ///     &log_error,
@@ -92,7 +93,7 @@ pub fn run(
     hurl_file: HurlFile,
     http_client: &mut http::Client,
     filename: String,
-    options: RunnerOptions,
+    options: &RunnerOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
     log_error: &impl Fn(&Error, bool),
@@ -100,7 +101,7 @@ pub fn run(
     let mut entries = vec![];
     let mut variables = HashMap::default();
 
-    for (key, value) in options.variables {
+    for (key, value) in options.variables.clone() {
         variables.insert(key.to_string(), value);
     }
 
@@ -129,9 +130,9 @@ pub fn run(
             http_client,
             entry_index,
             &mut variables,
-            options.context_dir.clone(),
             &log_verbose,
             &log_error_message,
+            options,
         );
 
         for entry_result in entry_results.clone() {

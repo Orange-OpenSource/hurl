@@ -52,11 +52,15 @@ pub fn run(
     http_client: &mut http::Client,
     entry_index: usize,
     variables: &mut HashMap<String, Value>,
-    context_dir: String,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
+    options: &RunnerOptions,
 ) -> Vec<EntryResult> {
-    let http_request = match eval_request(entry.request.clone(), variables, context_dir.clone()) {
+    let http_request = match eval_request(
+        entry.request.clone(),
+        variables,
+        options.context_dir.clone(),
+    ) {
         Ok(r) => r,
         Err(error) => {
             return vec![EntryResult {
@@ -177,14 +181,18 @@ pub fn run(
             for capture_result in captures.clone() {
                 variables.insert(capture_result.name, capture_result.value);
             }
-            asserts = match entry.response.clone() {
-                None => vec![],
-                Some(response) => eval_asserts(
-                    response,
-                    variables,
-                    http_response.clone(),
-                    context_dir.clone(),
-                ),
+            asserts = if options.ignore_asserts {
+                vec![]
+            } else {
+                match entry.response.clone() {
+                    None => vec![],
+                    Some(response) => eval_asserts(
+                        response,
+                        variables,
+                        http_response.clone(),
+                        options.context_dir.clone(),
+                    ),
+                }
             };
             errors = asserts
                 .iter()

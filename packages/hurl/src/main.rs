@@ -180,6 +180,7 @@ fn execute(
                 variables: cli_options.variables,
                 to_entry: cli_options.to_entry,
                 context_dir,
+                ignore_asserts: cli_options.ignore_asserts,
                 pre_entry,
                 post_entry,
             };
@@ -187,7 +188,7 @@ fn execute(
                 hurl_file,
                 &mut client,
                 filename.to_string(),
-                options,
+                &options,
                 &log_verbose,
                 &log_error_message,
                 &log_runner_error,

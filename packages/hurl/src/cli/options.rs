@@ -39,6 +39,7 @@ pub struct CliOptions {
     pub file_root: Option<String>,
     pub follow_location: bool,
     pub html_dir: Option<PathBuf>,
+    pub ignore_asserts: bool,
     pub include: bool,
     pub insecure: bool,
     pub interactive: bool,
@@ -130,6 +131,11 @@ pub fn app() -> clap::App<'static, 'static> {
                 .short("i")
                 .long("include")
                 .help("Include the HTTP headers in the output"),
+        )
+        .arg(
+            clap::Arg::with_name("ignore_asserts")
+                .long("ignore-asserts")
+                .help("Ignore asserts defined in the Hurl file."),
         )
         .arg(
             clap::Arg::with_name("insecure")
@@ -291,6 +297,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         None
     };
+    let ignore_asserts = matches.is_present("ignore_asserts");
     let include = matches.is_present("include");
     let insecure = matches.is_present("insecure");
     let interactive = matches.is_present("interactive");
@@ -349,6 +356,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         file_root,
         follow_location,
         html_dir,
+        ignore_asserts,
         include,
         insecure,
         interactive,
