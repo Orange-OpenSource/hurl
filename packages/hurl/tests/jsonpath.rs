@@ -88,7 +88,15 @@ fn test_bookstore_path() {
             json!("J. R. R. Tolkien")
         ]
     );
-    assert_eq!(test_ok("$.store.book[?(@.price>100)]", value), no_result);
+    assert_eq!(
+        test_ok("$.store.book[?(@.price>100)]", value.clone()),
+        no_result
+    );
+
+    assert_eq!(
+        test_ok("$..book[?(@.category=='reference')].author", value),
+        vec![json!("Nigel Rees")]
+    );
 }
 
 #[test]
