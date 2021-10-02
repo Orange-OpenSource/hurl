@@ -480,7 +480,7 @@ Option | Description
 `--html <dir>` | Generate html report in dir. If the html report already exists, it will be updated with the new test results.
 `-i, --include` | Include the HTTP headers in the output (last entry).
 `--interactive` | Stop between requests. This is similar to a break point, You can then continue (Press C) or quit (Press Q).
-`--json <file>`| Write full session(s) to a json file. The format is very closed to HAR format. If the json file already exists, the file will be updated with the new test results.
+`--json <file>` | Write full session(s) to a json file. The format is very closed to HAR format. If the json file already exists, the file will be updated with the new test results.
 
 `--k, --insecure` | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 `-L, --location` | Follow redirect. You can limit the amount of redirects to follow by using the `--max-redirs` option.
