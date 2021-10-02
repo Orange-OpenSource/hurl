@@ -481,7 +481,6 @@ Option | Description
 `-i, --include` | Include the HTTP headers in the output (last entry).
 `--interactive` | Stop between requests. This is similar to a break point, You can then continue (Press C) or quit (Press Q).
 `--json <file>` | Write full session(s) to a json file. The format is very closed to HAR format. If the json file already exists, the file will be updated with the new test results.
-
 `--k, --insecure` | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 `-L, --location` | Follow redirect. You can limit the amount of redirects to follow by using the `--max-redirs` option.
 `-m, --max-time <seconds>` | Maximum time in seconds that you allow a request/response to take. This is the standard timeout. See also `--connect-timeout` option.
@@ -495,7 +494,7 @@ Option | Description
 `--variable <name=value>` | Define variable (name/value) to be used in Hurl templates. Only string values can be defined.
 `--variables-file <file>` | Set properties file in which your define your variables. Each variable is defined as name=value exactly as with `--variable` option. Note that defining a variable twice produces an error.
 `-v, --verbose` | Turn on verbose output on standard error stream. Useful for debugging. A line starting with '>' means data sent by Hurl. A line staring with '&lt;' means data received by Hurl. A line starting with '*' means additional info provided by Hurl. If you only want HTTP headers in the output, -i, \-\-include might be the option you're looking for.
-`-V, --version`| Prints version information
+`-V, --version` | Prints version information
 
 ## Environment
 
