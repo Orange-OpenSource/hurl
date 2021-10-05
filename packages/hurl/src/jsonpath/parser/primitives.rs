@@ -99,8 +99,41 @@ pub fn number(reader: &mut Reader) -> ParseResult<'static, Number> {
 
 pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
     try_literal("'", reader)?;
-    let s = reader.read_while(|c| *c != '\'');
-    literal("'", reader)?;
+    let mut s = "".to_string();
+    loop {
+        match reader.read() {
+            None => {
+                return Err(Error {
+                    pos: reader.state.pos.clone(),
+                    recoverable: false,
+                    inner: ParseError::Expecting {
+                        value: String::from("'"),
+                    },
+                })
+            }
+            Some('\'') => break,
+            Some('\\') => {
+                // only single quote can be escaped
+                match reader.read() {
+                    Some('\'') => {
+                        s.push('\'');
+                    }
+                    _ => {
+                        return Err(Error {
+                            pos: reader.state.pos.clone(),
+                            recoverable: false,
+                            inner: ParseError::Expecting {
+                                value: String::from("'"),
+                            },
+                        })
+                    }
+                }
+            }
+            Some(c) => {
+                s.push(c);
+            }
+        }
+    }
     whitespace(reader);
     Ok(s)
 }
@@ -108,7 +141,7 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
 pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
     // // test python or javascript
     //// subset that can used for dot notation
-    let s = reader.read_while(|c| c.is_alphabetic() || *c == '-' || *c == '_');
+    let s = reader.read_while(|c| c.is_alphabetic() || *c == '_');
     whitespace(reader);
     Ok(s)
 }
@@ -376,6 +409,9 @@ mod tests {
     fn test_string_value() {
         let mut reader = Reader::init("'hello'");
         assert_eq!(string_value(&mut reader).unwrap(), "hello".to_string());
+
+        let mut reader = Reader::init("'\\''");
+        assert_eq!(string_value(&mut reader).unwrap(), "'".to_string());
 
         let mut reader = Reader::init("1");
         let error = string_value(&mut reader).err().unwrap();
