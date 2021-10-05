@@ -26,11 +26,22 @@ pub struct Query {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Selector {
+    Wildcard,
     NameChild(String),
-    ArrayIndex(usize),
+    ArrayIndex(Vec<usize>), // one or more indexes (separated by comma)
+    ArraySlice(Slice),
     ArrayWildcard,
     Filter(Predicate),
+    RecursiveWildcard,
     RecursiveKey(String),
+}
+
+// For the time-being
+// use simple slice start:end (without the step)
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Slice {
+    pub start: Option<i64>,
+    pub end: Option<i64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

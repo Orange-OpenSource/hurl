@@ -37,19 +37,49 @@ impl Query {
 impl Selector {
     pub fn eval(self, root: serde_json::Value) -> JsonpathResult {
         match self {
-            Selector::NameChild(field) => match root.get(field) {
-                None => vec![],
-                Some(value) => vec![value.clone()],
-            },
-            Selector::ArrayIndex(index) => match root.get(index) {
-                None => vec![],
-                Some(value) => vec![value.clone()],
-            },
-            Selector::ArrayWildcard {} => {
+            Selector::Wildcard | Selector::ArrayWildcard => {
                 let mut elements = vec![];
                 if let serde_json::Value::Array(values) = root {
                     for value in values {
                         elements.push(value);
+                    }
+                } else if let serde_json::Value::Object(key_values) = root {
+                    for value in key_values.values() {
+                        elements.push(value.clone());
+                    }
+                }
+                elements
+            }
+            Selector::NameChild(field) => match root.get(field) {
+                None => vec![],
+                Some(value) => vec![value.clone()],
+            },
+            Selector::ArrayIndex(indexes) => {
+                let mut values = vec![];
+                for index in indexes {
+                    if let Some(value) = root.get(index) {
+                        values.push(value.clone())
+                    }
+                }
+                values
+            }
+            Selector::ArraySlice(Slice { start, end }) => {
+                let mut elements = vec![];
+                if let serde_json::Value::Array(values) = root {
+                    for (i, value) in values.iter().enumerate() {
+                        if let Some(n) = start {
+                            let n = if n < 0 { values.len() as i64 + n } else { n };
+                            if (i as i64) < n {
+                                continue;
+                            }
+                        }
+                        if let Some(n) = end {
+                            let n = if n < 0 { values.len() as i64 + n } else { n };
+                            if (i as i64) >= n {
+                                continue;
+                            }
+                        }
+                        elements.push(value.clone());
                     }
                 }
                 elements
@@ -86,6 +116,30 @@ impl Selector {
                 }
                 elements
             }
+            Selector::RecursiveWildcard => {
+                let mut elements = vec![];
+                match root {
+                    serde_json::Value::Object(map) => {
+                        for elem in map.values() {
+                            elements.push(elem.clone());
+                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {
+                                elements.push(element);
+                            }
+                        }
+                    }
+                    serde_json::Value::Array(values) => {
+                        for elem in values {
+                            elements.push(elem.clone());
+                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {
+                                elements.push(element);
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+
+                elements
+            }
         }
     }
 }
@@ -95,6 +149,7 @@ impl Predicate {
         match elem {
             serde_json::Value::Object(ref obj) => {
                 match (obj.get(self.key.as_str()), self.func.clone()) {
+                    (Some(_), PredicateFunc::KeyExist {}) => true,
                     (Some(serde_json::Value::Number(v)), PredicateFunc::Equal(ref num)) => {
                         approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
                     } //v.as_f64().unwrap() == num.to_f64(),
@@ -137,7 +192,6 @@ mod tests {
         json!({
             "book": json_books(),
             "bicycle": [
-
             ]
         })
     }
@@ -153,23 +207,25 @@ mod tests {
 
     pub fn json_first_book() -> serde_json::Value {
         json!({
-        "category": "reference",
-        "author": "Nigel Rees",
-        "title": "Sayings of the Century",
-        "price": 8.95
-          })
+            "category": "reference",
+            "author": "Nigel Rees",
+            "title": "Sayings of the Century",
+            "price": 8.95
+        })
     }
 
     pub fn json_second_book() -> serde_json::Value {
-        json!(              { "category": "fiction",
-          "author": "Evelyn Waugh",
-          "title": "Sword of Honour",
-          "price": 12.99
+        json!({
+            "category": "fiction",
+            "author": "Evelyn Waugh",
+            "title": "Sword of Honour",
+            "price": 12.99
         })
     }
 
     pub fn json_third_book() -> serde_json::Value {
-        json!(              { "category": "fiction",
+        json!({
+            "category": "fiction",
             "author": "Herman Melville",
             "title": "Moby Dick",
             "isbn": "0-553-21311-3",
@@ -178,11 +234,12 @@ mod tests {
     }
 
     pub fn json_fourth_book() -> serde_json::Value {
-        json!({ "category": "fiction",
-          "author": "J. R. R. Tolkien",
-          "title": "The Lord of the Rings",
-          "isbn": "0-395-19395-8",
-          "price": 22.99
+        json!({
+            "category": "fiction",
+            "author": "J. R. R. Tolkien",
+            "title": "The Lord of the Rings",
+            "isbn": "0-395-19395-8",
+            "price": 22.99
         })
     }
 
@@ -205,7 +262,7 @@ mod tests {
             selectors: vec![
                 Selector::NameChild("store".to_string()),
                 Selector::NameChild("book".to_string()),
-                Selector::ArrayIndex(0),
+                Selector::ArrayIndex(vec![0]),
                 Selector::NameChild("title".to_string()),
             ],
         };
@@ -271,8 +328,12 @@ mod tests {
     #[test]
     pub fn test_selector_array_index() {
         assert_eq!(
-            Selector::ArrayIndex(0).eval(json_books()),
+            Selector::ArrayIndex(vec![0]).eval(json_books()),
             vec![json_first_book()]
+        );
+        assert_eq!(
+            Selector::ArrayIndex(vec![1, 2]).eval(json_books()),
+            vec![json_second_book(), json_third_book()]
         );
     }
 
@@ -290,37 +351,19 @@ mod tests {
     }
 
     #[test]
-    pub fn test_bookstore() {
-        //    assert_eq!(Selector::NameChild("store".to_string()).eval(json_root()),
-        //               vec![json_store()]
-        //    );
-        //    assert_eq!(Selector::NameChild("book".to_string()).eval(json_store()),
-        //               vec![json_books()]
-        //    );
-        //
-        //    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
-        //               vec![json_first_book()]
-        //    );
-        //
-        //    assert_eq!(Selector::NameChild("title".to_string()).eval(json_first_book()),
-        //               vec![json!("Sayings of the Century")]
-        //    );
-        //
-        //    assert_eq!(Selector::ArrayIndex(0).eval(json_books()),
-        //               vec![json_first_book()]
-        //    );
-        //    assert_eq!(Selector::Filter(Predicate::KeyEqualStringValue("category".to_string(), "reference".to_string())).eval(json_books()),
-        //               vec![json_first_book()]
-        //    );
-        //
-        //    assert_eq!(Selector::Filter(Predicate::KeySmallerThanIntValue("price".to_string(), 10)).eval(json_books()),
-        //               vec![json_first_book(), json_third_book()]
-        //    );
-        //
-        //    assert_eq!(Selector::RecursiveKey("book".to_string()).eval(json_root()),
-        //              vec![json_books()]
-        //    );
+    pub fn test_selector_array_slice() {
+        assert_eq!(
+            Selector::ArraySlice(Slice {
+                start: None,
+                end: Some(2)
+            })
+            .eval(json_books()),
+            vec![json_first_book(), json_second_book(),]
+        );
+    }
 
+    #[test]
+    pub fn test_recursive_key() {
         assert_eq!(
             Selector::RecursiveKey("author".to_string()).eval(json_root()),
             vec![
@@ -336,11 +379,19 @@ mod tests {
     #[test]
     pub fn test_array_index() {
         let value = json!(["first", "second", "third", "forth", "fifth"]);
-        assert_eq!(Selector::ArrayIndex(2).eval(value), vec![json!("third")]);
+        assert_eq!(
+            Selector::ArrayIndex(vec![2]).eval(value),
+            vec![json!("third")]
+        );
     }
 
     #[test]
     pub fn test_predicate() {
+        assert!(Predicate {
+            key: "key".to_string(),
+            func: PredicateFunc::KeyExist {},
+        }
+        .eval(json!({"key": "value"})));
         assert!(Predicate {
             key: "key".to_string(),
             func: PredicateFunc::EqualString("value".to_string()),

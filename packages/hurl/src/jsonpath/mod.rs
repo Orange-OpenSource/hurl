@@ -16,6 +16,34 @@
  *
  */
 
+/*
+ * jsonpath specs
+ * There is no proper specifications for jsonpath.
+ * The defacto one is still https://goessner.net/articles/JsonPath/
+ * Hurl will try to follow this one as closely as possible
+ *
+ * There are a few edge cases for which several implementations differ
+ * The online app https://jsonpath.herokuapp.com/ might be used to test them
+ * We describe below the behaviour that we expect in Hurl.
+ *
+ * Specify a field key in a subscript operator:  $['name']
+ * The key must be enclosed within single quotes only.
+ * The following expressions will not be valid: $["name"] and $[name]
+ *
+ * Accessing a key containing a single quote must be escape:  $['\'']
+ * Key with unicode are supported: $['✈']
+ *
+ * Any character within these quote won't have a specific meaning:
+ * $['*'] selects the element with key '*'. It is different from $[*] which selects all elements
+ * $['.'] selects the element with key '.'.
+ *
+ * The dot notation is usually more readable the the bracket notation
+ * but it is more limited in terms of allowed characters
+ * The following characters are allowed:
+ *   alphanumeric
+ *   _ (underscore)
+ */
+
 pub use self::parser::parse;
 
 mod ast;
