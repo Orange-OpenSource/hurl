@@ -149,9 +149,8 @@ we love.
 
 # Documentation
 
-Visit the [Hurl web site](https://hurl.dev) to find out how to install and use Hurl. Precompiled binaries
-for Linux and macOS (Windows really soon!) are also available in the 
-[GitHub releases section](https://github.com/Orange-OpenSource/hurl/releases).
+Visit the [Hurl web site](https://hurl.dev) to find out how to install and use Hurl.
+Precompiled binaries for Linux, macOS and Windows are also available in the [GitHub releases section](https://github.com/Orange-OpenSource/hurl/releases).
 
 - [Installation](https://hurl.dev/docs/installation.html)
 - [Samples](https://hurl.dev/docs/samples.html)
