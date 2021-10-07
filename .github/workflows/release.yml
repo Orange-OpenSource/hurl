@@ -113,9 +113,10 @@ jobs:
         Get-ChildItem .\*win64.zip
         cd ..\..
         # create installer
-        (Get-Command choco).Path
         choco install --confirm --no-progress nsis   
-        refreshenv     
+        refreshenv
+        Get-Command Expand-Archive
+        Expand-Archive -Path '.\ci\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
         cd .\target\win-package
         makensis.exe /NOCD /V4 ..\..\ci\windows\hurl.nsi
     - name: Archive production artifacts
