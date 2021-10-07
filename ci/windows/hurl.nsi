@@ -52,8 +52,13 @@ SectionGroup "executables"
     SetOutPath $INSTDIR
     File "hurl.exe"
     ; Write installation path
-    ReadRegStr $0  HKCU "Environment" "Path"
-    WriteRegStr HKCU "Environment" "path" "$0;$INSTDIR"
+    EnVar::SetHKCU
+	EnVar::Check "NULL" "NULL"
+	EnVar::DeleteValue "Path" ";$INSTDIR"
+	EnVar::DeleteValue "Path" "$INSTDIR;"
+	EnVar::AddValue "Path" ";$INSTDIR"
+	; ReadRegStr $0  HKCU "Environment" "Path"
+    ; WriteRegStr HKCU "Environment" "path" "$0;$INSTDIR"
 	SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
