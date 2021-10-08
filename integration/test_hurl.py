@@ -44,13 +44,16 @@ def test(hurl_file):
     cmd = ['hurl', hurl_file] + options
     print(' '.join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-   
+
     # exit code 
     f = hurl_file.replace('.hurl','.exit')
     expected = int(open(f).read().strip())
     if result.returncode != expected:
         print('>>> error in return code')
         print(f'expected: {expected}  actual:{result.returncode}')
+        stderr = decode_string(result.stderr).strip()
+        if stderr != '':
+            print(stderr)
         sys.exit(1)
 
     # stdout
