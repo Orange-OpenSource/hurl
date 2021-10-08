@@ -28,6 +28,16 @@ use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
+#[cfg(target_family = "unix")]
+pub fn dev_null() -> String {
+    "/dev/null".to_string()
+}
+
+#[cfg(target_family = "windows")]
+pub fn dev_null() -> String {
+    "nul".to_string()
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
     pub color: bool,
@@ -323,7 +333,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let output = if let Some(filename) = matches.value_of("output") {
         Some(filename.to_string())
     } else if matches.is_present("test") {
-        Some("/dev/null".to_string())
+        Some(dev_null())
     } else {
         None
     };
