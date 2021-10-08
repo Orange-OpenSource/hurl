@@ -1,4 +1,4 @@
-﻿; includes
+; includes
 !include "MUI2.nsh"
 
 ; define icons
@@ -51,15 +51,12 @@ SectionGroup "executables"
     SectionIn RO
     SetOutPath $INSTDIR
     File "hurl.exe"
-    ; Write installation path
+    ; Write installation dir to user Path variable
     EnVar::SetHKCU
-	EnVar::Check "NULL" "NULL"
-	EnVar::DeleteValue "Path" ";$INSTDIR"
-	EnVar::DeleteValue "Path" "$INSTDIR;"
-	EnVar::AddValue "Path" ";$INSTDIR"
-	; ReadRegStr $0  HKCU "Environment" "Path"
-    ; WriteRegStr HKCU "Environment" "path" "$0;$INSTDIR"
-	SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
+    EnVar::Check "NULL" "NULL"
+    EnVar::DeleteValue "Path" "$INSTDIR"
+    EnVar::AddValue "Path" "$INSTDIR"
+    SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
   SectionEnd
@@ -123,8 +120,11 @@ SectionGroupEnd
 
 ; Uninstaller
 Section "Uninstall" 
-  ; Remove files and uninstaller
+  ; Remove installed files
   Delete $INSTDIR\*
-  ; Remove directories
   RMDir "$INSTDIR"
+  ; Remove install dir from user Path variable
+  EnVar::SetHKCU
+  EnVar::Check "NULL" "NULL"	
+  EnVar::DeleteValue "Path" "$INSTDIR"
 SectionEnd
