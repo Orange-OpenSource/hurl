@@ -118,7 +118,7 @@ cd c:\hurl\integration
 ```powershell
 $hurl_package_version = Get-Content c:\hurl\target\win-package\version.txt
 cd c:\hurl\target\win-package
-Get-ChildItem -Path *.dll, *hurl.exe, *.txt | Compress-Archive -DestinationPath hurl-${hurl_package_version}-win64.zip
+Get-ChildItem -Path *.dll, *hurl.exe, *hurlfmt.exe, *.txt, ../../*.md  -Exclude hex_literal* | Compress-Archive -DestinationPath hurl-${hurl_package_version}-win64.zip
 ```
 
 ## Create a real package installer for win64
