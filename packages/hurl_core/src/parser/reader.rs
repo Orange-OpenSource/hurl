@@ -81,6 +81,30 @@ impl Reader {
         }
     }
 
+    // only support escaped spaces for now
+    pub fn read_while_escaping(&mut self, predicate: fn(&char) -> bool) -> String {
+        let mut s = String::from("");
+        let mut escaped = false;
+        loop {
+            match self.peek() {
+                None => return s,
+                Some(c) => {
+                    if escaped && c == ' ' {
+                        escaped = false;
+                        s.push(self.read().unwrap())
+                    } else if c == '\\' {
+                        escaped = true;
+                        let _backslash = self.read().unwrap();
+                    } else if predicate(&c) {
+                        s.push(self.read().unwrap())
+                    } else {
+                        return s;
+                    }
+                }
+            }
+        }
+    }
+
     // assume that you still have count characters to read in your buffer
     pub fn read_n(&mut self, count: usize) -> String {
         let mut s = String::from("");

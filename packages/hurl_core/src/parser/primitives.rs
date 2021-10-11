@@ -331,12 +331,13 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
 }
 
 pub fn filename(reader: &mut Reader) -> ParseResult<'static, Filename> {
-    // this is an absolure file
+    // this is an absolute file
     // that you have to write with a relative name
     // default root_dir is the hurl directory
     let start = reader.state.clone();
-    let s = reader
-        .read_while(|c| c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-');
+    let s = reader.read_while_escaping(|c| {
+        c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-'
+    });
     if s.is_empty() {
         return Err(Error {
             pos: start.pos,
@@ -1462,6 +1463,25 @@ mod tests {
                 },
             }
         );
+
+        let mut reader = Reader::init(r#"file, tmp/filename\ with\ spaces.txt;"#);
+        assert_eq!(
+            file(&mut reader).unwrap(),
+            File {
+                space0: Whitespace {
+                    value: String::from(" "),
+                    source_info: SourceInfo::init(1, 6, 1, 7),
+                },
+                filename: Filename {
+                    value: String::from("tmp/filename with spaces.txt"),
+                    source_info: SourceInfo::init(1, 7, 1, 37),
+                },
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::init(1, 37, 1, 37),
+                },
+            }
+        );
     }
 
     #[test]
@@ -1478,6 +1498,23 @@ mod tests {
             Pos {
                 line: 1,
                 column: 16,
+            }
+        );
+        assert!(!error.recoverable);
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from(";")
+            }
+        );
+
+        let mut reader = Reader::init(r#"file, tmp/filename\ with\ unescaped .txt;"#);
+        let error = file(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 37,
             }
         );
         assert!(!error.recoverable);
