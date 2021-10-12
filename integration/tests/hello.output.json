@@ -1,0 +1,56 @@
+[
+  {
+    "filename": "tests/hello.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "asserts": [
+          {
+            "actual": "1.0",
+            "expected": "1.0"
+          },
+          {},
+          {}
+        ]
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        }
+      },
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/hello"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        }
+      }
+    ],
+    "success": true
+  }
+]

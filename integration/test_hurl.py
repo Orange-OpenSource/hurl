@@ -6,6 +6,8 @@ import sys
 import subprocess
 import os
 import platform
+import check_json_output
+import tempfile
 
 
 def decode_string(encoded):
@@ -34,12 +36,19 @@ def test(hurl_file):
   
     options_file = hurl_file.replace('.hurl','.options')
     curl_file = hurl_file.replace('.hurl','.curl')
+    json_output_file = hurl_file.replace('.hurl','.output.json')
 
     options = []
     if os.path.exists(options_file):
          options = open(options_file).read().strip().split(' ')
     if os.path.exists(curl_file):
         options.append('--verbose')
+        
+    if os.path.exists(json_output_file):
+        json_output_actual_file =  os.path.join(tempfile.mkdtemp(), 'output.json')
+        options.append('--json')
+        options.append(json_output_actual_file)
+
 
     cmd = ['hurl', hurl_file] + options
     print(' '.join(cmd))
@@ -109,6 +118,10 @@ def test(hurl_file):
                 print('expected: %s' % expected_commands[i])
                 print('actual:   %s' % actual_commands[i])
                 sys.exit(1)
+
+    if os.path.exists(json_output_file):
+         check_json_output.check_file(json_output_file, json_output_actual_file)
+
 
 def main():
     for hurl_file in sys.argv[1:]:
