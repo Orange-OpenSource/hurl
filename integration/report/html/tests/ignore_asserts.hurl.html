@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html><head><title>Hurl File</title><style>
+body {
+    counter-reset: line;
+    font-family: monospace;
+}
+
+span.line {
+    line-height: 1.2rem;
+}
+
+span.line:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 1em;
+    margin-right: .5em;
+    color: #888;
+    width: 2.5em;
+    text-align: right;
+}
+
+.method {
+    color: black;
+}
+
+.url {
+    color: darkblue;
+}
+
+.version {
+    color: black;
+}
+.number {
+    color: blue;
+}
+.section-header {
+    color: darkmagenta;
+}
+
+.query-type {
+    color: teal;
+}
+
+.subquery-type {
+    color: darkblue;
+}
+
+.not {
+    color: darkblue;
+}
+
+.predicate-type {
+    color: darkblue;
+}
+
+.string {
+    color: darkgreen;
+}
+.raw {
+    color: darkgreen;
+}
+.comment {
+    color: dimgray;
+}
+.name {
+    color: darkgreen;
+}
+.json {
+    color: darkgreen;
+}
+.xml {
+    color: darkgreen;
+}
+.base64 {
+    color: darkgreen;
+}
+.hex {
+    color: darkgreen;
+}
+.filename {
+    color: darkgreen;
+}
+.cookie-value {
+    color: darkgreen;
+}</style></head><body>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/ignore_asserts</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">666</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"Whatever"</span></span>
+</span></span><span class="line"></span>
+<span class="line"></span>
+</code></pre>
+</body></html>

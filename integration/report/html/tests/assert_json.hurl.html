@@ -111,6 +111,7 @@ span.line:before {
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]['id']"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[*].id"</span> <span class="predicate-type">includes</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id=='error1')].id"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">equals</span> <span class="number">1.5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThanOrEquals</span> <span class="number">2.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;=</span> <span class="number">2.0</span></span>
