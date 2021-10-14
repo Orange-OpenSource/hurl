@@ -77,14 +77,6 @@ fn log_error(
     error: &dyn Error,
     warning: bool,
 ) {
-    let line_number_size = if lines.len() < 100 {
-        2
-    } else if lines.len() < 1000 {
-        3
-    } else {
-        4
-    };
-
     let error_type = if warning {
         String::from("warning")
     } else {
@@ -97,48 +89,41 @@ fn log_error(
     } else {
         error_type.red().to_string()
     };
-    eprintln!("{}: {}", error_type, error.description());
 
-    if let Some(filename) = filename {
-        eprintln!(
+    let error_message = error_string(lines, filename, error);
+    eprintln!("{}: {}\n", error_type, error_message);
+}
+
+pub fn error_string(lines: Vec<String>, filename: Option<String>, error: &dyn Error) -> String {
+    let line_number_size = if lines.len() < 100 {
+        2
+    } else if lines.len() < 1000 {
+        3
+    } else {
+        4
+    };
+
+    let file_info = if let Some(filename) = filename {
+        format!(
             "{}--> {}:{}:{}",
             " ".repeat(line_number_size).as_str(),
             filename,
             error.source_info().start.line,
             error.source_info().start.column,
-        );
-    }
-    eprintln!("{} |", " ".repeat(line_number_size));
+        )
+    } else {
+        "".to_string()
+    };
 
     let line = lines.get(error.source_info().start.line - 1).unwrap();
     let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
-    eprintln!(
-        "{line_number:>width$} |{line}",
-        line_number = error.source_info().start.line,
-        width = line_number_size,
-        line = if line.is_empty() {
-            line
-        } else {
-            format!(" {}", line)
-        }
-    );
 
     // TODO: to clean/Refacto
     // specific case for assert errors
-    if error.source_info().start.column == 0 {
+    let message = if error.source_info().start.column == 0 {
+        let prefix = format!("{} |   ", " ".repeat(line_number_size).as_str());
         let fix_me = &error.fixme();
-        let fixme_lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(fix_me)
-            .collect();
-        // edd an empty line at the end?
-        for line in fixme_lines {
-            eprintln!(
-                "{} |   {}",
-                " ".repeat(line_number_size).as_str(),
-                fixme = line,
-            );
-        }
+        add_line_prefix(fix_me, prefix)
     } else {
         let line = lines.get(error.source_info().start.line - 1).unwrap();
         let width = (error.source_info().end.column - error.source_info().start.column) as usize;
@@ -152,14 +137,137 @@ fn log_error(
                 tab_shift += 1;
             }
         }
-        eprintln!(
+        format!(
             "{} | {}{} {fixme}",
             " ".repeat(line_number_size).as_str(),
             " ".repeat(error.source_info().start.column - 1 + tab_shift * 3),
             "^".repeat(if width > 1 { width } else { 1 }),
             fixme = error.fixme().as_str(),
-        );
+        )
+    };
+
+    format!(
+        r#"{description}
+{file_info}
+{line_number_space} |
+{line_number:>width$} |{line}
+{message}
+{line_number_space} |"#,
+        description = error.description(),
+        file_info = file_info,
+        line_number = error.source_info().start.line,
+        width = line_number_size,
+        line = if line.is_empty() {
+            line
+        } else {
+            format!(" {}", line)
+        },
+        message = message,
+        line_number_space = " ".repeat(line_number_size)
+    )
+}
+
+pub fn add_line_prefix(s: &str, prefix: String) -> String {
+    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n").unwrap().split(s).collect();
+    lines
+        .iter()
+        .map(|line| format!("{}{}", prefix, line,))
+        .collect::<Vec<String>>()
+        .join("\n")
+}
+
+#[cfg(test)]
+pub mod tests {
+    use super::*;
+    use crate::runner;
+    use hurl_core::ast::SourceInfo;
+
+    #[test]
+    fn test_add_line_prefix() {
+        assert_eq!(
+            add_line_prefix("line1\nline2\nline3", ">".to_string()),
+            ">line1\n>line2\n>line3"
+        )
     }
 
-    eprintln!("{} |\n", " ".repeat(line_number_size));
+    #[test]
+    fn test_assert_error_status() {
+        let lines = vec![
+            "GET http://unknown".to_string(),
+            "HTTP/1.0 200".to_string(),
+            "".to_string(),
+        ];
+        let filename = Some("test.hurl".to_string());
+        let error = runner::Error {
+            source_info: SourceInfo::init(2, 10, 2, 13),
+            inner: runner::RunnerError::AssertStatus {
+                actual: "404".to_string(),
+            },
+            assert: true,
+        };
+        assert_eq!(
+            error_string(lines, filename, &error),
+            r#"Assert Status
+  --> test.hurl:2:10
+   |
+ 2 | HTTP/1.0 200
+   |          ^^^ actual value is <404>
+   |"#
+        )
+    }
+
+    #[test]
+    fn test_invalid_xpath_expression() {
+        let lines = vec![
+            "GET http://example.com".to_string(),
+            "HTTP/1.0 200".to_string(),
+            "[Asserts]".to_string(),
+            r#"xpath "strong(//head/title)" equals "Hello""#.to_string(),
+        ];
+        let filename = Some("test.hurl".to_string());
+        let error = runner::Error {
+            source_info: SourceInfo::init(4, 7, 4, 29),
+            inner: runner::RunnerError::QueryInvalidXpathEval {},
+            assert: true,
+        };
+        assert_eq!(
+            error_string(lines, filename, &error),
+            r#"Invalid xpath expression
+  --> test.hurl:4:7
+   |
+ 4 | xpath "strong(//head/title)" equals "Hello"
+   |       ^^^^^^^^^^^^^^^^^^^^^^ The xpath expression is not valid
+   |"#
+        )
+    }
+
+    #[test]
+    fn test_assert_error_jsonpath() {
+        let lines = vec![
+            "GET http://api".to_string(),
+            "HTTP/1.0 200".to_string(),
+            "[Asserts]".to_string(),
+            r#"jsonpath "$.count" >= 5"#.to_string(),
+        ];
+        let filename = Some("test.hurl".to_string());
+        let error = runner::Error {
+            source_info: SourceInfo::init(4, 0, 4, 0),
+            inner: runner::RunnerError::AssertFailure {
+                actual: "int <2>".to_string(),
+                expected: "greater than int <5>".to_string(),
+                type_mismatch: false,
+            },
+            assert: true,
+        };
+        assert_eq!(
+            error_string(lines, filename, &error),
+            r#"Assert Failure
+  --> test.hurl:4:0
+   |
+ 4 | jsonpath "$.count" >= 5
+   |   actual:   int <2>
+   |   expected: greater than int <5>
+   |"#
+        )
+    }
 }
