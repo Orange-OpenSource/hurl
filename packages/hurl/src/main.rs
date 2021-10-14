@@ -27,6 +27,7 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions};
 use hurl::http;
+use hurl::json;
 use hurl::report;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions};
@@ -262,6 +263,12 @@ fn main() {
     };
 
     let start = Instant::now();
+    let mut json_results = vec![];
+
+    if let Some(file_path) = cli_options.json_file.clone() {
+        json_results = unwrap_or_exit(&log_error_message, json::parse_json(file_path));
+    }
+
     for (current, filename) in filenames.iter().enumerate() {
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
@@ -281,7 +288,7 @@ fn main() {
         };
         let hurl_result = execute(
             filename,
-            contents,
+            contents.clone(),
             current_dir,
             cli_options.clone(),
             &log_verbose,
@@ -353,14 +360,24 @@ fn main() {
         }
 
         hurl_results.push(hurl_result.clone());
+
+        if cli_options.json_file.is_some() {
+            let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+                .unwrap()
+                .split(&contents)
+                .map(|l| l.to_string())
+                .collect();
+            let json_result = hurl_result.to_json(&lines);
+            json_results.push(json_result);
+        }
     }
     let duration = start.elapsed().as_millis();
 
-    if let Some(file_path) = cli_options.json_file {
+    if let Some(file_path) = cli_options.json_file.clone() {
         log_verbose(format!("Writing json report to {}", file_path.display()).as_str());
         unwrap_or_exit(
             &log_error_message,
-            report::write_json_report(file_path, hurl_results.clone()),
+            json::write_json_report(file_path, json_results),
         );
     }
 

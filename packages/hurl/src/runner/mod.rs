@@ -23,9 +23,11 @@
 //!
 //!
 
-pub use self::core::{Error, HurlResult, RunnerError, RunnerOptions};
+pub use self::cookie::ResponseCookie;
+pub use self::core::{
+    AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
+};
 pub use self::hurl_file::run as run_hurl_file;
-pub use self::log_deserialize::parse_results as deserialize_results;
 pub use self::value::Value;
 
 mod assert;
@@ -40,8 +42,6 @@ mod expr;
 mod http_response;
 mod hurl_file;
 mod json;
-mod log_deserialize;
-mod log_serialize;
 mod multipart;
 mod predicate;
 mod predicate_value;

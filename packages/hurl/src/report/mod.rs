@@ -20,65 +20,9 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 
 use super::cli::CliError;
-use super::runner;
 use super::runner::HurlResult;
 
 mod html;
-
-pub fn write_json_report(
-    file_path: PathBuf,
-    hurl_results: Vec<HurlResult>,
-) -> Result<(), CliError> {
-    let mut results = parse_json(file_path.clone())?;
-    for result in hurl_results {
-        results.push(result);
-    }
-    let mut file = match std::fs::File::create(&file_path) {
-        Err(why) => {
-            return Err(CliError {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-            })
-        }
-        Ok(file) => file,
-    };
-    let serialized = serde_json::to_string_pretty(&results).unwrap();
-    if let Err(why) = file.write_all(serialized.as_bytes()) {
-        Err(CliError {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-        })
-    } else {
-        Ok(())
-    }
-}
-
-pub fn parse_json(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
-    if path.exists() {
-        let s = match std::fs::read_to_string(path.clone()) {
-            Ok(s) => s,
-            Err(why) => {
-                return Err(CliError {
-                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
-                });
-            }
-        };
-        let v: serde_json::Value = match serde_json::from_str(s.as_str()) {
-            Ok(val) => val,
-            Err(_) => {
-                return Err(CliError {
-                    message: format!("The file {} is not a valid json file", path.display()),
-                })
-            }
-        };
-        match runner::deserialize_results(v) {
-            Ok(results) => Ok(results),
-            Err(_) => Err(CliError {
-                message: "Existing Hurl json can not be parsed!".to_string(),
-            }),
-        }
-    } else {
-        Ok(vec![])
-    }
-}
 
 pub fn parse_html(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
     if path.exists() {
