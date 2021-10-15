@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "tests/error_assert_template_variable_not_found.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-template-variable-not-found"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "asserts": [
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": false,
+            "message": "Undefined Variable\n  --> tests/error_assert_template_variable_not_found.hurl:4:33\n   |\n 4 | header \"content-type\" equals \"{{content_type}}\"\n   |                                 ^^^^^^^^^^^^ You must set the variable content_type\n   |",
+            "line": 4
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -13,11 +13,17 @@
         },
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "success": true,
+            "line": 2
           },
-          {},
-          {}
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": true,
+            "line": 3
+          }
         ]
       },
       {
