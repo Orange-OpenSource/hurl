@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "tests/error_assert_match_utf8.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert/match-utf8"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "asserts": [
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": false,
+            "message": "Invalid Decoding\n  --> tests/error_assert_match_utf8.hurl:4:1\n   |\n 4 | body matches \".*\"\n   | ^^^^ The body can not be decoded with charset 'utf-8'\n   |",
+            "line": 4
+          }
+        ]
+      }
+    ]
+  }
+]

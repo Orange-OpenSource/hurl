@@ -1,0 +1,67 @@
+[
+  {
+    "filename": "tests/error_assert_value_error.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/error-assert-value"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "asserts": [
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": true,
+            "line": 2
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:4:0\n   |\n 4 | header \"content-type\" equals \"XXX\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <XXX>\n   |",
+            "line": 4
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:5:0\n   |\n 5 | header \"content-type\" notEquals \"text/html; charset=utf-8\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <text/html; charset=utf-8>\n   |",
+            "line": 5
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:6:0\n   |\n 6 | jsonpath \"$.id\" equals \"000001\"\n   |   actual:   none\n   |   expected: string <000001>\n   |",
+            "line": 6
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:7:0\n   |\n 7 | jsonpath \"$.values\" includes 100\n   |   actual:   [int <1>, int <2>, int <3>]\n   |   expected: includes int <100>\n   |",
+            "line": 7
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:8:0\n   |\n 8 | jsonpath \"$.values\" not contains \"Hello\"\n   |   actual:   [int <1>, int <2>, int <3>]\n   |   expected: not contains string <Hello>\n   |   >>> types between actual and expected are not consistent\n   |",
+            "line": 8
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:9:0\n   |\n 9 | jsonpath \"$.count\" greaterThan 5\n   |   actual:   int <2>\n   |   expected: greater than int <5>\n   |",
+            "line": 9
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:10:0\n   |\n10 | jsonpath \"$.count\" isFloat\n   |   actual:   int <2>\n   |   expected: float\n   |",
+            "line": 10
+          },
+          {
+            "success": false,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:11:0\n   |\n11 | bytes contains hex,00;\n   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20327d>\n   |   expected: contains byte array <00>\n   |",
+            "line": 11
+          }
+        ]
+      }
+    ]
+  }
+]

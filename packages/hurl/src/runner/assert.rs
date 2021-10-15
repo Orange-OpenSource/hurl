@@ -126,6 +126,15 @@ impl AssertResult {
             _ => None,
         }
     }
+    pub fn line(&self) -> usize {
+        match self {
+            AssertResult::Version { source_info, .. } => source_info.start.line,
+            AssertResult::Status { source_info, .. } => source_info.start.line,
+            AssertResult::Header { source_info, .. } => source_info.start.line,
+            AssertResult::Body { source_info, .. } => source_info.start.line,
+            AssertResult::Explicit { source_info, .. } => source_info.start.line,
+        }
+    }
 }
 
 pub fn eval_assert(

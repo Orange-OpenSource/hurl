@@ -1,0 +1,71 @@
+[
+  {
+    "filename": "tests/assert_header.hurl",
+    "entries": [
+      {
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:8000/assert-header"
+        },
+        "response": {
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "asserts": [
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          },
+          {
+            "line": 13,
+            "success": true
+          },
+          {
+            "line": 14,
+            "success": true
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -247,21 +247,21 @@ impl CaptureResult {
 }
 
 impl AssertResult {
-    fn to_json(&self, _lines: &[String], _filename: String) -> serde_json::Value {
+    fn to_json(&self, lines: &[String], filename: String) -> serde_json::Value {
         let mut map = serde_json::Map::new();
-        if let AssertResult::Version {
-            actual, expected, ..
-        } = self
-        {
-            map.insert(
-                "actual".to_string(),
-                serde_json::Value::String(actual.clone()),
-            );
-            map.insert(
-                "expected".to_string(),
-                serde_json::Value::String(expected.clone()),
-            );
-        };
+
+        let success = self.clone().error().is_none();
+        map.insert("success".to_string(), serde_json::Value::Bool(success));
+
+        if let Some(err) = self.clone().error() {
+            let message = crate::cli::error_string(lines, filename, &err);
+            map.insert("message".to_string(), serde_json::Value::String(message));
+        }
+        map.insert(
+            "line".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(self.line())),
+        );
+
         serde_json::Value::Object(map)
     }
 }
