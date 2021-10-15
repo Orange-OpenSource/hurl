@@ -80,7 +80,7 @@ fn execute(
     };
 
     if let Some(Progress { current, total }) = progress {
-        eprintln!("{}: running [{}/{}]", filename, current + 1, total);
+        eprintln!("{}: RUNNING [{}/{}]", filename, current + 1, total);
     }
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
@@ -196,10 +196,10 @@ fn execute(
             );
             if cli_options.progress {
                 let status = match (result.success, cli_options.color) {
-                    (true, true) => "success".green().to_string(),
-                    (true, false) => "success".to_string(),
-                    (false, true) => "failure".red().to_string(),
-                    (false, false) => "failure".to_string(),
+                    (true, true) => "SUCCESS".green().to_string(),
+                    (true, false) => "SUCCESS".to_string(),
+                    (false, true) => "FAILURE".red().to_string(),
+                    (false, false) => "FAILURE".to_string(),
                 };
                 eprintln!("{}: {}", filename, status);
             }
@@ -534,16 +534,16 @@ fn print_summary(duration: u128, hurl_results: Vec<HurlResult>) {
     let success = hurl_results.iter().filter(|r| r.success).count();
     let failed = total - success;
     eprintln!("--------------------------------------------------------------------------------");
-    eprintln!("executed: {}", total);
+    eprintln!("Executed:  {}", total);
     eprintln!(
-        "success: {} ({:.1}%)",
+        "Succeeded: {} ({:.1}%)",
         success,
         100.0 * success as f32 / total as f32
     );
     eprintln!(
-        "failed: {} ({:.1}%)",
+        "Failed:    {} ({:.1}%)",
         failed,
         100.0 * failed as f32 / total as f32
     );
-    eprintln!("execution time: {}ms", duration);
+    eprintln!("Duration:  {}ms", duration);
 }
