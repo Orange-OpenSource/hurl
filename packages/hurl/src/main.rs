@@ -53,6 +53,29 @@ pub fn init_colored() {
     colored::control::set_virtual_terminal(true);
 }
 
+#[cfg(target_family = "unix")]
+pub fn write_bytes(buf: &[u8]) -> Result<(), CliError> {
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+    handle.write_all(buf).map_err(|_| CliError {
+        message: "Error writing output".to_string(),
+    })
+}
+
+#[cfg(target_family = "windows")]
+pub fn write_bytes(buf: &[u8]) -> Result<(), CliError> {
+    if atty::is(Stream::Stdout) {
+        println!("{}", String::from_utf8_lossy(buf));
+        Ok(())
+    } else {
+        let stdout = io::stdout();
+        let mut handle = stdout.lock();
+        handle.write_all(buf).map_err(|_| CliError {
+            message: "Error writing output".to_string(),
+        })
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Progress {
     pub current: usize,
@@ -456,15 +479,7 @@ fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
 
 fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError> {
     match filename {
-        None => {
-            let stdout = io::stdout();
-            let mut handle = stdout.lock();
-
-            handle
-                .write_all(bytes.as_slice())
-                .expect("writing bytes to console");
-            Ok(())
-        }
+        None => write_bytes(bytes.as_slice()),
         Some(filename) => {
             let path = Path::new(filename.as_str());
             let mut file = match std::fs::File::create(&path) {
