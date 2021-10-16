@@ -90,11 +90,16 @@ fn log_error(
         error_type.red().to_string()
     };
 
-    let error_message = error_string(lines, filename, error);
+    let filename = if let Some(filename) = filename {
+        filename
+    } else {
+        "".to_string()
+    };
+    let error_message = error_string(&lines, filename, error);
     eprintln!("{}: {}\n", error_type, error_message);
 }
 
-pub fn error_string(lines: Vec<String>, filename: Option<String>, error: &dyn Error) -> String {
+pub fn error_string(lines: &[String], filename: String, error: &dyn Error) -> String {
     let line_number_size = if lines.len() < 100 {
         2
     } else if lines.len() < 1000 {
@@ -103,17 +108,13 @@ pub fn error_string(lines: Vec<String>, filename: Option<String>, error: &dyn Er
         4
     };
 
-    let file_info = if let Some(filename) = filename {
-        format!(
-            "{}--> {}:{}:{}",
-            " ".repeat(line_number_size).as_str(),
-            filename,
-            error.source_info().start.line,
-            error.source_info().start.column,
-        )
-    } else {
-        "".to_string()
-    };
+    let file_info = format!(
+        "{}--> {}:{}:{}",
+        " ".repeat(line_number_size).as_str(),
+        filename,
+        error.source_info().start.line,
+        error.source_info().start.column,
+    );
 
     let line = lines.get(error.source_info().start.line - 1).unwrap();
     let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
@@ -197,7 +198,7 @@ pub mod tests {
             "HTTP/1.0 200".to_string(),
             "".to_string(),
         ];
-        let filename = Some("test.hurl".to_string());
+        let filename = "test.hurl".to_string();
         let error = runner::Error {
             source_info: SourceInfo::init(2, 10, 2, 13),
             inner: runner::RunnerError::AssertStatus {
@@ -206,7 +207,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(lines, filename, &error),
+            error_string(&lines, filename, &error),
             r#"Assert Status
   --> test.hurl:2:10
    |
@@ -224,14 +225,14 @@ pub mod tests {
             "[Asserts]".to_string(),
             r#"xpath "strong(//head/title)" equals "Hello""#.to_string(),
         ];
-        let filename = Some("test.hurl".to_string());
+        let filename = "test.hurl".to_string();
         let error = runner::Error {
             source_info: SourceInfo::init(4, 7, 4, 29),
             inner: runner::RunnerError::QueryInvalidXpathEval {},
             assert: true,
         };
         assert_eq!(
-            error_string(lines, filename, &error),
+            error_string(&lines, filename, &error),
             r#"Invalid xpath expression
   --> test.hurl:4:7
    |
@@ -249,7 +250,7 @@ pub mod tests {
             "[Asserts]".to_string(),
             r#"jsonpath "$.count" >= 5"#.to_string(),
         ];
-        let filename = Some("test.hurl".to_string());
+        let filename = "test.hurl".to_string();
         let error = runner::Error {
             source_info: SourceInfo::init(4, 0, 4, 0),
             inner: runner::RunnerError::AssertFailure {
@@ -260,7 +261,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(lines, filename, &error),
+            error_string(&lines, filename, &error),
             r#"Assert Failure
   --> test.hurl:4:0
    |
