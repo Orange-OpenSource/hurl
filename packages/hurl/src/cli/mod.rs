@@ -18,8 +18,8 @@
 
 pub use self::fs::read_to_string;
 pub use self::logger::{
-    log_info, make_logger_error_message, make_logger_parser_error, make_logger_runner_error,
-    make_logger_verbose,
+    error_string, log_info, make_logger_error_message, make_logger_parser_error,
+    make_logger_runner_error, make_logger_verbose,
 };
 pub use self::options::app;
 pub use self::options::output_color;
