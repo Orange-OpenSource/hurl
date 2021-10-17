@@ -3,4 +3,8 @@ from tests import app
 
 @app.route("/~user")
 def url_with_tilde():
-    return ''
+    return 'user'
+
+@app.route("/!$&()*+,;=:@[]")
+def url_weird():
+    return 'weird'
