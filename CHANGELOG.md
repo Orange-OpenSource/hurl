@@ -1,3 +1,34 @@
+[1.4.0 (2021-10-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.4.0)
+========================================================================================================================
+
+Changes:
+
+* Install via Scoop [#289](https://github.com/Orange-OpenSource/hurl/issues/289)
+
+* Support spaces in filenames [#287](https://github.com/Orange-OpenSource/hurl/issues/287)
+
+* Remove deprecated option --append [#262](https://github.com/Orange-OpenSource/hurl/issues/262)
+
+* Improve HTML output for hurlfmt [#260](https://github.com/Orange-OpenSource/hurl/issues/260)
+
+* Add option --ignore-asserts [#254](https://github.com/Orange-OpenSource/hurl/issues/254)
+
+
+Bugs Fixes:
+
+* Support tilde in URL [#294](https://github.com/Orange-OpenSource/hurl/issues/294)
+
+* Fix Windows Terminal output for non-UTF-8 byte sequences [#292](https://github.com/Orange-OpenSource/hurl/issues/292)
+
+* Fix asserts entries in JSON report [#286](https://github.com/Orange-OpenSource/hurl/issues/286)
+
+* Fix --test mode in Windows (/dev/null) [#273](https://github.com/Orange-OpenSource/hurl/issues/273)
+
+* Support key with underscore in jsonpath dot notation [#269](https://github.com/Orange-OpenSource/hurl/issues/269)
+
+* Fix Windows installer PATH [#267](https://github.com/Orange-OpenSource/hurl/issues/267)
+
+
 [1.3.1 (2021-09-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.3.1)
 ========================================================================================================================
 
