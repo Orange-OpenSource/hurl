@@ -534,9 +534,6 @@ yum install -y pkg-config gcc openssl-devel libxml2-devel
 
 # arch based distributions
 pacman -Sy --noconfirm pkgconf gcc openssl libxml2
-
-# osx
-brew install pkg-config gcc openssl libxml2
 ```
 
 Hurl is written in [Rust](https://www.rust-lang.org/). You should [install](https://www.rust-lang.org/tools/install) the latest stable release.
