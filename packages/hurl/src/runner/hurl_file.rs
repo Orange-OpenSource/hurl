@@ -48,6 +48,7 @@ use super::entry;
 ///
 /// // Create an http client
 /// let options = http::ClientOptions {
+///        cacert_file: None,
 ///        follow_location: false,
 ///        max_redirect: None,
 ///        cookie_input_file: None,
