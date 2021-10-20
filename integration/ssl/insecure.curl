@@ -1,0 +1,3 @@
+curl 'https://localhost:8001/hello' --insecure
+curl 'https://localhost:8001/hello' --insecure
+
