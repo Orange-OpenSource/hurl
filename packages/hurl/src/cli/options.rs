@@ -40,6 +40,7 @@ pub fn dev_null() -> String {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
+    pub cacert_file: Option<String>,
     pub color: bool,
     pub compressed: bool,
     pub connect_timeout: Duration,
@@ -78,6 +79,12 @@ pub fn app() -> clap::App<'static, 'static> {
                 .help("Sets the input file to use")
                 .required(false)
                 .multiple(true),
+        )
+        .arg(
+            clap::Arg::with_name("cacert_file")
+                .long("cacert")
+                .value_name("FILE")
+                .help("CA certificate to verify peer against (PEM format)"),
         )
         .arg(
             clap::Arg::with_name("color")
@@ -264,6 +271,17 @@ pub fn app() -> clap::App<'static, 'static> {
 }
 
 pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
+    let cacert_file = match matches.value_of("cacert_file") {
+        None => None,
+        Some(filename) => {
+            if !Path::new(filename).is_file() {
+                let message = format!("File {} does not exist", filename);
+                return Err(CliError { message });
+            } else {
+                Some(filename.to_string())
+            }
+        }
+    };
     let color = output_color(matches.clone());
     let compressed = matches.is_present("compressed");
     let connect_timeout = match matches.value_of("connect_timeout") {
@@ -357,6 +375,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
 
     Ok(CliOptions {
+        cacert_file,
         color,
         compressed,
         connect_timeout,

@@ -131,6 +131,15 @@ Read cookies from file (using the Netscape cookie file format).
 Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
 
+### --cacert {#cacert}
+
+Tells curl to use the specified certificate file to verify the peer.
+The file may contain multiple CA certificates. 
+The certificate(s) must be in PEM format. 
+Normally curl is built to use a default file for this, 
+so this option is typically used to alter that default file.
+
+
 ### --compressed {#compressed}
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.

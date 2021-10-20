@@ -148,6 +148,7 @@ fn execute(
                 }
             }
 
+            let cacert_file = cli_options.cacert_file;
             let follow_location = cli_options.follow_location;
             let verbose = cli_options.verbose;
             let insecure = cli_options.insecure;
@@ -173,6 +174,7 @@ fn execute(
                 Some(filename) => filename,
             };
             let options = http::ClientOptions {
+                cacert_file,
                 follow_location,
                 max_redirect,
                 cookie_input_file,

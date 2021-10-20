@@ -43,6 +43,7 @@ fn test_hurl_file() {
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
     let options = http::ClientOptions {
+        cacert_file: None,
         follow_location: false,
         max_redirect: None,
         cookie_input_file: None,
@@ -155,6 +156,7 @@ fn hello_request() -> Request {
 #[test]
 fn test_hello() {
     let options = http::ClientOptions {
+        cacert_file: None,
         follow_location: false,
         max_redirect: None,
         cookie_input_file: None,

@@ -132,6 +132,11 @@ impl Client {
         self.handle.verbose(true).unwrap();
         self.handle.ssl_verify_host(!self.options.insecure).unwrap();
         self.handle.ssl_verify_peer(!self.options.insecure).unwrap();
+        if let Some(cacert_file) = self.options.cacert_file.clone() {
+            self.handle.cainfo(cacert_file).unwrap();
+            self.handle.ssl_cert_type("PEM").unwrap();
+        }
+
         if let Some(proxy) = self.options.proxy.clone() {
             self.handle.proxy(proxy.as_str()).unwrap();
         }
