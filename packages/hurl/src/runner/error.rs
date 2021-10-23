@@ -58,9 +58,7 @@ impl Error for runner::Error {
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("You must set the variable {}", name)
             }
-            RunnerError::HttpConnection { url, message } => {
-                format!("can not connect to {} ({})", url, message)
-            }
+            RunnerError::HttpConnection { message, .. } => message.to_string(),
             RunnerError::CouldNotResolveProxyName => "Could not resolve proxy name".to_string(),
             RunnerError::CouldNotResolveHost(host) => format!("Could not resolve host <{}>", host),
             RunnerError::FailToConnect => "Fail to connect".to_string(),
