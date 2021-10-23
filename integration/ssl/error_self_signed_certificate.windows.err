@@ -1,6 +1,6 @@
-error: SSL Certificate
+error: Http Connection
   --> ssl/error_self_signed_certificate.hurl:1:5
    |
  1 | GET https://localhost:8001/hello
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (60) schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.
    |
