@@ -21,7 +21,7 @@ use crate::cli::CliError;
 use crate::http::ClientOptions;
 use crate::runner::Value;
 use atty::Stream;
-use clap::{AppSettings, ArgMatches};
+use clap::{App, AppSettings, ArgMatches};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -68,9 +68,8 @@ pub struct CliOptions {
     pub verbose: bool,
 }
 
-pub fn app() -> clap::App<'static, 'static> {
-    clap::App::new("hurl")
-        .version(clap::crate_version!())
+pub fn app() -> App<'static, 'static> {
+    App::new("hurl")
         .about("Run hurl FILE(s) or standard input")
         .setting(AppSettings::DeriveDisplayOrder)
         .setting(AppSettings::UnifiedHelpMessage)
