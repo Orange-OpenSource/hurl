@@ -55,6 +55,7 @@ pub struct CliOptions {
     pub insecure: bool,
     pub interactive: bool,
     pub json_file: Option<PathBuf>,
+    pub junit_file: Option<PathBuf>,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
     pub output: Option<String>,
@@ -170,6 +171,13 @@ pub fn app() -> App<'static, 'static> {
                 .long("json")
                 .value_name("FILE")
                 .help("Write full session(s) to json file")
+                .takes_value(true),
+        )
+        .arg(
+            clap::Arg::with_name("junit")
+                .long("report-junit")
+                .value_name("FILE")
+                .help("Write a Junit XML report to the given file")
                 .takes_value(true),
         )
         .arg(
@@ -334,6 +342,12 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         None
     };
+    let junit_file = if let Some(filename) = matches.value_of("junit") {
+        let path = Path::new(filename);
+        Some(path.to_path_buf())
+    } else {
+        None
+    };
     let max_redirect = match matches.value_of("max_redirects") {
         None => Some(50),
         Some("-1") => None,
@@ -388,6 +402,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         include,
         insecure,
         interactive,
+        junit_file,
         json_file,
         max_redirect,
         no_proxy,

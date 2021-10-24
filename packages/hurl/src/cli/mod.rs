@@ -16,6 +16,8 @@
  *
  */
 
+use std::error::Error;
+
 pub use self::fs::read_to_string;
 pub use self::logger::{
     error_string, log_info, make_logger_error_message, make_logger_parser_error,
@@ -36,4 +38,28 @@ mod variables;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {
     pub message: String,
+}
+
+impl From<Box<dyn Error>> for CliError {
+    fn from(e: Box<dyn Error>) -> Self {
+        Self {
+            message: format!("{:?}", e),
+        }
+    }
+}
+
+impl From<&str> for CliError {
+    fn from(e: &str) -> Self {
+        Self {
+            message: e.to_string(),
+        }
+    }
+}
+
+impl From<String> for CliError {
+    fn from(e: String) -> Self {
+        Self {
+            message: format!("{:?}", e),
+        }
+    }
 }

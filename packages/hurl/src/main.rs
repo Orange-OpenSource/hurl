@@ -410,6 +410,14 @@ fn main() {
         );
     }
 
+    if let Some(junit_path) = cli_options.junit_file {
+        log_verbose(format!("Writing Junit report to {}", junit_path.display()).as_str());
+        unwrap_or_exit(
+            &log_error_message,
+            report::write_junit_report(junit_path, hurl_results.clone()),
+        );
+    }
+
     if let Some(dir_path) = cli_options.html_dir {
         log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
         unwrap_or_exit(
