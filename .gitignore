@@ -4,3 +4,5 @@
 
 target/
 .idea/
+.venv/
+
