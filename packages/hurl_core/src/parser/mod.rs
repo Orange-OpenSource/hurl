@@ -39,6 +39,7 @@ mod combinators;
 mod cookiepath;
 mod error;
 mod expr;
+mod filename;
 mod json;
 mod parsers;
 mod predicate;
