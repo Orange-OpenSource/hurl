@@ -19,6 +19,7 @@ use crate::ast::*;
 
 use super::combinators::*;
 use super::error::*;
+use super::filename;
 use super::predicate::predicate;
 use super::primitives::*;
 use super::query::query;
@@ -220,7 +221,7 @@ fn file_param(reader: &mut Reader) -> ParseResult<'static, FileParam> {
 fn file_value(reader: &mut Reader) -> ParseResult<'static, FileValue> {
     try_literal("file,", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let f = filename(reader)?;
+    let f = filename::parse(reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
     let save = reader.state.clone();
