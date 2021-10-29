@@ -272,7 +272,8 @@ impl Htmlable for FileValue {
 impl Htmlable for Filename {
     fn to_html(&self) -> String {
         let mut buffer = String::from("<span class=\"filename\">");
-        buffer.push_str(self.value.as_str());
+        let s = self.value.replace(' ', "\\ ");
+        buffer.push_str(s.as_str());
         buffer.push_str("</span>");
         buffer
     }

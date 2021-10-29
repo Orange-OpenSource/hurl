@@ -762,7 +762,8 @@ impl Tokenizable for Comment {
 
 impl Tokenizable for Filename {
     fn tokenize(&self) -> Vec<Token> {
-        return vec![Token::String(self.clone().value)];
+        let s = self.clone().value.replace(' ', "\\ ");
+        return vec![Token::String(s)];
     }
 }
 
