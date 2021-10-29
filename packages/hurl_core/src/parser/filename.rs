@@ -84,6 +84,19 @@ mod tests {
     }
 
     #[test]
+    fn test_include_space() {
+        let mut reader = Reader::init("file\\ with\\ spaces");
+        assert_eq!(
+            parse(&mut reader).unwrap(),
+            Filename {
+                value: String::from("file with spaces"),
+                source_info: SourceInfo::init(1, 1, 1, 19),
+            }
+        );
+        assert_eq!(reader.state.cursor, 18);
+    }
+
+    #[test]
     fn test_filename_error() {
         let mut reader = Reader::init("???");
         let error = parse(&mut reader).err().unwrap();
