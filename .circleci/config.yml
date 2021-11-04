@@ -9,28 +9,28 @@ jobs:
     steps:
       - checkout
       - run:
-        name: build
-        command: |
-          uname -a
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          rustc --version
-          cargo --version
-          cargo build
+          name: build
+          command: |
+            uname -a
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            rustc --version
+            cargo --version
+            cargo build
 
-jobs:
   build-macos-arm64:
     macos:
+      xcode: 11.7.0  
     resource_class: arm.medium
     steps:
       - checkout
       - run:
-        name: build
-        command: |
-          uname -a
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          rustc --version
-          cargo --version
-          cargo build
+          name: build
+          command: |
+            uname -a
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            rustc --version
+            cargo --version
+            cargo build
 
 # Orchestrate our job run sequence
 workflows:
