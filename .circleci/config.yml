@@ -1,40 +1,47 @@
 version: 2.1
 
-# Define the jobs we want to run for this project
 jobs:
-  build-ubuntu-arm64:
+  test-ubuntu-arm64:
     machine:
       image: ubuntu-2004:202101-01
     resource_class: arm.medium
     steps:
       - checkout
       - run:
-          name: build
+          name: install prerequisites
           command: |
             uname -a
+            lsb_release || true
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             rustc --version
             cargo --version
-            cargo build
-
-  build-macos-arm64:
-    macos:
-      xcode: 11.7.0  
-    resource_class: arm.medium
-    steps:
-      - checkout
       - run:
           name: build
           command: |
-            uname -a
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-            rustc --version
-            cargo --version
-            cargo build
+            cargo build --verbose
+      - run:
+          name: Run Tests units
+          command: |
+            sudo apt update
+            sudo apt install libxml2-utils
+            pip3 install Flask
+            cd integration
+            python3 server.py >server.log 2>&1 &
+            python3 ssl/server.py >server-ssl.log 2>&1 &
+            wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
+            cargo test --features strict
+      - run:
+          name: Run Integration Tests
+          command: |
+            export PATH="$PWD/target/debug:$PATH"
+            cd integration
+            pip install lxml bs4
+            ./integration.py
+            ./test_curl_commands.sh tests/*.curl
+            ./test_html_output.py tests/*.html
+            xmllint --noout tests/*.html
 
-# Orchestrate our job run sequence
 workflows:
   build_and_test:
     jobs:
-      - build-ubuntu-arm64
-      - build-macos-arm64
+      - test-ubuntu-arm64
