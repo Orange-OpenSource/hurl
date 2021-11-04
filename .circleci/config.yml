@@ -8,39 +8,36 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install prerequisites
+          name: build
           command: |
             uname -a
             lsb_release || true
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             source $HOME/.cargo/env
             rustc --version
-            cargo --version
-      - run:
-          name: build
-          command: |
+            cargo --version          
             cargo build --verbose --color always || true
       - run:
           name: Run Tests units
           command: |
             sudo apt update
-            sudo apt install libxml2-utils
+            sudo apt install -y libxml2-utils mitmproxy
+            mitmdump --version
             pip3 install Flask
             cd integration
             python3 server.py >server.log 2>&1 &
             python3 ssl/server.py >server-ssl.log 2>&1 &
-            sudo apt install mitmproxy -y
-            mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
-            cargo test --features strict || true
+            mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdum.log 2>&1 &
+            cargo test --features strict --verbose --color always || true
       - run:
           name: Run Integration Tests
           command: |
             export PATH="$PWD/target/debug:$PATH"
             cd integration
-            pip install lxml bs4
-            ./integration.py || true
+            pip3 install lxml bs4
+            python3 ./integration.py || true
             ./test_curl_commands.sh tests/*.curl || true
-            ./test_html_output.py tests/*.html || true
+            python3 ./test_html_output.py tests/*.html || true
             xmllint --noout tests/*.html || true
 
 workflows:
