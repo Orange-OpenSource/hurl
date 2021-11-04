@@ -1,6 +1,6 @@
 <a href="https://hurl.dev"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo.svg?sanitize=true" align="center" width="264px"/></a>
 
-<br/>
+<br/>   
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![CircleCI](https://circleci.com/gh/lepapareil/hurl/tree/master.svg?style=svg)](https://circleci.com/gh/lepapareil/hurl/tree/master)
