@@ -2,20 +2,39 @@ version: 2.1
 
 # Define the jobs we want to run for this project
 jobs:
-  build-arm64:
+  build-ubuntu-arm64:
     machine:
       image: ubuntu-2004:202101-01
     resource_class: arm.medium
     steps:
       - checkout
-      - run: uname -a
-      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-      - run: rustc --version
-      - run: cargo --version
-      - run: cargo build
+      - run:
+        name: build
+        command: |
+          uname -a
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          rustc --version
+          cargo --version
+          cargo build
+
+jobs:
+  build-macos-arm64:
+    macos:
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run:
+        name: build
+        command: |
+          uname -a
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          rustc --version
+          cargo --version
+          cargo build
 
 # Orchestrate our job run sequence
 workflows:
   build_and_test:
     jobs:
-      - build-arm64
+      - build-ubuntu-arm64
+      - build-macos-arm64
