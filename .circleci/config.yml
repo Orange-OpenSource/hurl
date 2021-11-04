@@ -1,0 +1,56 @@
+version: 2.1
+
+jobs:
+  test-ubuntu-arm64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: |
+            uname -a
+            lsb_release -a
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            source $HOME/.cargo/env
+            rustc --version
+            cargo --version
+            cargo build --verbose --color always
+      - run:
+          name: Run Tests units
+          command: |
+            sudo apt update
+            sudo apt install -y libxml2-utils
+            python3 -m pip install --upgrade pip
+            pip3 install Flask mitmproxy
+            mitmdump --version
+            cd integration
+            python3 server.py >server.log 2>&1 &
+            python3 ssl/server.py >server-ssl.log 2>&1 &
+            mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
+            cargo test --features strict --verbose --color always
+      - run:
+          name: Run Integration Tests
+          command: |
+            export PATH="$PWD/target/debug:$PATH"
+            cd integration
+            pip3 install lxml bs4
+            python3 ./integration.py
+            ./test_curl_commands.sh tests/*.curl
+            python3 ./test_html_output.py tests/*.html
+            xmllint --noout tests/*.html
+
+      - store_artifacts:
+          path: integration/mitmdump.log
+
+      - store_artifacts:
+          path: integration/server.log
+
+      - store_artifacts:
+          path: integration/server-ssl.log
+
+workflows:
+  arm64:
+    jobs:
+      - test-ubuntu-arm64
