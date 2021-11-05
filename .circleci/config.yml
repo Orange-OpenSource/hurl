@@ -53,6 +53,6 @@ jobs:
           path: integration/server-ssl.log
 
 workflows:
-  arm64:
+  tests-arm64:
     jobs:
       - test-ubuntu-arm64
