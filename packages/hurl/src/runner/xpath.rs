@@ -93,7 +93,7 @@ pub fn eval(doc: libxml::tree::Document, expr: String) -> Result<Value, XpathErr
         libxml::bindings::xmlXPathObjectType_XPATH_STRING => {
             // TO BE CLEANED
             let c_s = unsafe { *result.ptr }.stringval;
-            let c_s2 = c_s as *const i8;
+            let c_s2 = c_s as *const std::os::raw::c_char;
             let x = unsafe { CStr::from_ptr(c_s2) };
             //let x = unsafe { CStr::from_ptr(u8::from(c_s2)) };
             let s = x.to_string_lossy().to_string();
