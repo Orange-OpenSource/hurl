@@ -4,7 +4,7 @@
 set +e
 rm -rf report/*
 find tests -name "*.hurl" | sort | while read -r hurl_file; do
-    options=("--json report/tests.json" "--report-html report/html" "--output /dev/null")
+    options=("--json report/tests.json" "--report-html report/html" "--report-junit report/tests.xml" "--output /dev/null")
     if test -f "${hurl_file%.*}.options"; then
         options+=("$(cat "${hurl_file%.*}.options")")
     fi

@@ -5,11 +5,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 9,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -25,7 +31,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -49,18 +55,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 10
+        "time": 4
       }
     ],
     "filename": "tests/assert_base64.hurl",
     "success": true,
-    "time": 10
+    "time": 5
   },
   {
     "cookies": [
@@ -96,21 +102,57 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          },
+          {
+            "line": 13,
+            "success": true
+          },
+          {
+            "line": 14,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -126,7 +168,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -186,7 +228,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -197,7 +239,7 @@
     ],
     "filename": "tests/assert_header.hurl",
     "success": true,
-    "time": 8
+    "time": 9
   },
   {
     "cookies": [],
@@ -205,43 +247,145 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 37,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          },
+          {
+            "line": 13,
+            "success": true
+          },
+          {
+            "line": 14,
+            "success": true
+          },
+          {
+            "line": 15,
+            "success": true
+          },
+          {
+            "line": 16,
+            "success": true
+          },
+          {
+            "line": 17,
+            "success": true
+          },
+          {
+            "line": 18,
+            "success": true
+          },
+          {
+            "line": 19,
+            "success": true
+          },
+          {
+            "line": 20,
+            "success": true
+          },
+          {
+            "line": 21,
+            "success": true
+          },
+          {
+            "line": 22,
+            "success": true
+          },
+          {
+            "line": 23,
+            "success": true
+          },
+          {
+            "line": 24,
+            "success": true
+          },
+          {
+            "line": 25,
+            "success": true
+          },
+          {
+            "line": 26,
+            "success": true
+          },
+          {
+            "line": 27,
+            "success": true
+          },
+          {
+            "line": 28,
+            "success": true
+          },
+          {
+            "line": 29,
+            "success": true
+          },
+          {
+            "line": 30,
+            "success": true
+          },
+          {
+            "line": 31,
+            "success": true
+          },
+          {
+            "line": 32,
+            "success": true
+          },
+          {
+            "line": 33,
+            "success": true
+          },
+          {
+            "line": 34,
+            "success": true
+          },
+          {
+            "line": 35,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -257,7 +401,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -281,21 +425,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 14
+        "time": 8
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 48,
+            "success": true
           },
-          {}
+          {
+            "line": 48,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -316,7 +463,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -340,25 +487,40 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 53,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 53,
+            "success": true
+          },
+          {
+            "line": 55,
+            "success": true
+          },
+          {
+            "line": 56,
+            "success": true
+          },
+          {
+            "line": 57,
+            "success": true
+          },
+          {
+            "line": 58,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -374,7 +536,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -398,7 +560,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -409,13 +571,25 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 62,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 62,
+            "success": true
+          },
+          {
+            "line": 64,
+            "success": true
+          },
+          {
+            "line": 65,
+            "success": true
+          },
+          {
+            "line": 66,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -431,7 +605,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -455,7 +629,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -466,7 +640,7 @@
     ],
     "filename": "tests/assert_json.hurl",
     "success": true,
-    "time": 36
+    "time": 28
   },
   {
     "cookies": [],
@@ -474,14 +648,29 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -497,7 +686,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -521,18 +710,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 7
       }
     ],
     "filename": "tests/assert_match.hurl",
     "success": true,
-    "time": 17
+    "time": 18
   },
   {
     "cookies": [],
@@ -540,12 +729,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -561,7 +759,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -585,18 +783,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 6
       }
     ],
     "filename": "tests/assert_regex.hurl",
     "success": true,
-    "time": 10
+    "time": 9
   },
   {
     "cookies": [],
@@ -604,10 +802,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -623,7 +824,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -647,21 +848,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 201
         },
-        "time": 3
+        "time": 8
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "*"
+            "line": 7,
+            "success": true
           },
-          {}
+          {
+            "line": 9,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -677,7 +881,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -701,7 +905,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -712,11 +916,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "*"
+            "line": 14,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 16,
+            "success": true
+          },
+          {
+            "line": 17,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -732,7 +942,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -756,7 +966,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -767,7 +977,7 @@
     ],
     "filename": "tests/assert_status_code.hurl",
     "success": true,
-    "time": 10
+    "time": 14
   },
   {
     "cookies": [],
@@ -775,14 +985,29 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -798,7 +1023,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -822,18 +1047,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:06 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 8
+        "time": 3
       }
     ],
     "filename": "tests/assert_xpath.hurl",
     "success": true,
-    "time": 9
+    "time": 4
   },
   {
     "cookies": [],
@@ -841,11 +1066,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -861,7 +1092,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Authorization",
@@ -889,18 +1120,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 5
       }
     ],
     "filename": "tests/basic_authentication.hurl",
     "success": true,
-    "time": 5
+    "time": 6
   },
   {
     "cookies": [],
@@ -908,11 +1139,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -928,7 +1165,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -952,18 +1189,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 9
       }
     ],
     "filename": "tests/bom.hurl",
     "success": true,
-    "time": 6
+    "time": 9
   },
   {
     "cookies": [],
@@ -971,19 +1208,49 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -999,7 +1266,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1023,18 +1290,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 10
+        "time": 7
       }
     ],
     "filename": "tests/bytes.hurl",
     "success": true,
-    "time": 11
+    "time": 8
   },
   {
     "cookies": [],
@@ -1042,11 +1309,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -1067,7 +1340,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1091,7 +1364,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -1102,7 +1375,7 @@
     ],
     "filename": "tests/capture_and_assert.hurl",
     "success": true,
-    "time": 7
+    "time": 6
   },
   {
     "cookies": [],
@@ -1110,12 +1383,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -1140,7 +1422,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1172,21 +1454,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 6
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 16,
+            "success": true
           },
-          {}
+          {
+            "line": 16,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1202,7 +1487,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1235,29 +1520,56 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 7
+        "time": 3
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 20,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 20,
+            "success": true
+          },
+          {
+            "line": 31,
+            "success": true
+          },
+          {
+            "line": 32,
+            "success": true
+          },
+          {
+            "line": 33,
+            "success": true
+          },
+          {
+            "line": 34,
+            "success": true
+          },
+          {
+            "line": 35,
+            "success": true
+          },
+          {
+            "line": 36,
+            "success": true
+          },
+          {
+            "line": 37,
+            "success": true
+          },
+          {
+            "line": 38,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -1326,7 +1638,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1350,13 +1662,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 1
+        "time": 3
       }
     ],
     "filename": "tests/captures.hurl",
@@ -1376,13 +1688,25 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1398,7 +1722,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -1426,25 +1750,40 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 10
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 9,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          },
+          {
+            "line": 13,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1460,7 +1799,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -1492,7 +1831,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -1503,14 +1842,29 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 16,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 16,
+            "success": true
+          },
+          {
+            "line": 17,
+            "success": true
+          },
+          {
+            "line": 18,
+            "success": true
+          },
+          {
+            "line": 19,
+            "success": true
+          },
+          {
+            "line": 20,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1526,7 +1880,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -1558,25 +1912,40 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 6
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 23,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 23,
+            "success": true
+          },
+          {
+            "line": 24,
+            "success": true
+          },
+          {
+            "line": 25,
+            "success": true
+          },
+          {
+            "line": 26,
+            "success": true
+          },
+          {
+            "line": 27,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1592,7 +1961,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -1624,25 +1993,40 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 3
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 30,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 30,
+            "success": true
+          },
+          {
+            "line": 31,
+            "success": true
+          },
+          {
+            "line": 32,
+            "success": true
+          },
+          {
+            "line": 33,
+            "success": true
+          },
+          {
+            "line": 34,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1658,7 +2042,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -1690,18 +2074,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 11
+        "time": 4
       }
     ],
     "filename": "tests/compressed.hurl",
     "success": true,
-    "time": 30
+    "time": 35
   },
   {
     "cookies": [
@@ -1719,10 +2103,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "*"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1747,7 +2134,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1771,18 +2158,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 10
+        "time": 3
       }
     ],
     "filename": "tests/cookie_file.hurl",
     "success": true,
-    "time": 10
+    "time": 4
   },
   {
     "cookies": [
@@ -1800,10 +2187,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 6,
+            "success": true
           },
-          {}
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1828,7 +2218,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1852,21 +2242,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 5
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 10,
+            "success": true
           },
-          {}
+          {
+            "line": 10,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1882,7 +2275,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1906,21 +2299,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 2
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 16,
+            "success": true
           },
-          {}
+          {
+            "line": 16,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -1949,7 +2345,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -1973,7 +2369,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -1984,11 +2380,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 22,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 22,
+            "success": true
+          },
+          {
+            "line": 24,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2004,7 +2406,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2038,21 +2440,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 27,
+            "success": true
           },
-          {}
+          {
+            "line": 27,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2077,7 +2482,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2101,7 +2506,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -2112,10 +2517,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 32,
+            "success": true
           },
-          {}
+          {
+            "line": 32,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2144,7 +2552,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2168,23 +2576,32 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 1
+        "time": 3
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 36,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 36,
+            "success": true
+          },
+          {
+            "line": 38,
+            "success": true
+          },
+          {
+            "line": 39,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2209,7 +2626,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2219,7 +2636,7 @@
         "response": {
           "cookies": [
             {
-              "expires": "Thu, 14 Oct 2021 16:36:07 GMT",
+              "expires": "Mon, 08 Nov 2021 10:38:54 GMT",
               "max_age": "0",
               "name": "cookie2",
               "path": "/",
@@ -2233,7 +2650,7 @@
             },
             {
               "name": "Set-Cookie",
-              "value": "cookie2=; Expires=Thu, 14 Oct 2021 16:36:07 GMT; Max-Age=0; Path=/"
+              "value": "cookie2=; Expires=Mon, 08 Nov 2021 10:38:54 GMT; Max-Age=0; Path=/"
             },
             {
               "name": "Server",
@@ -2245,7 +2662,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -2256,10 +2673,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 42,
+            "success": true
           },
-          {}
+          {
+            "line": 42,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2275,7 +2695,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2299,35 +2719,80 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 45,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 45,
+            "success": true
+          },
+          {
+            "line": 46,
+            "success": true
+          },
+          {
+            "line": 47,
+            "success": true
+          },
+          {
+            "line": 48,
+            "success": true
+          },
+          {
+            "line": 51,
+            "success": true
+          },
+          {
+            "line": 52,
+            "success": true
+          },
+          {
+            "line": 53,
+            "success": true
+          },
+          {
+            "line": 54,
+            "success": true
+          },
+          {
+            "line": 55,
+            "success": true
+          },
+          {
+            "line": 56,
+            "success": true
+          },
+          {
+            "line": 57,
+            "success": true
+          },
+          {
+            "line": 58,
+            "success": true
+          },
+          {
+            "line": 59,
+            "success": true
+          },
+          {
+            "line": 60,
+            "success": true
+          },
+          {
+            "line": 61,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2343,7 +2808,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2405,18 +2870,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 3
       }
     ],
     "filename": "tests/cookies.hurl",
     "success": true,
-    "time": 41
+    "time": 36
   },
   {
     "cookies": [],
@@ -2424,10 +2889,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2452,7 +2920,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2476,21 +2944,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 11
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 12,
+            "success": true
           },
-          {}
+          {
+            "line": 12,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2506,7 +2977,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2530,18 +3001,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 2
       }
     ],
     "filename": "tests/cookie_storage.hurl",
     "success": true,
-    "time": 15
+    "time": 7
   },
   {
     "cookies": [],
@@ -2549,10 +3020,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2568,7 +3042,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "DELETE",
@@ -2592,18 +3066,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:54 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 6
       }
     ],
     "filename": "tests/delete.hurl",
     "success": true,
-    "time": 4
+    "time": 7
   },
   {
     "cookies": [],
@@ -2618,12 +3092,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2639,7 +3122,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2663,23 +3146,32 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 9,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -2695,7 +3187,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2719,18 +3211,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 2
       }
     ],
     "filename": "tests/encoding.hurl",
     "success": true,
-    "time": 14
+    "time": 8
   },
   {
     "cookies": [],
@@ -2738,11 +3230,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 11,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "message": "Assert Body Value\n  --> tests/error_assert_base64.hurl:12:8\n   |\n12 | base64,bGluZTEKbGluZTIKbGluZTMK;\n   |        ^^^^^^^^^^^^^^^^^^^^^^^^ actual value is <hex, 6c696e65310a6c696e65320d0a6c696e65330a;>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -2758,7 +3257,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2782,18 +3281,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 7
+        "time": 4
       }
     ],
     "filename": "tests/error_assert_base64.hurl",
     "success": false,
-    "time": 9
+    "time": 5
   },
   {
     "cookies": [],
@@ -2801,12 +3300,23 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Assert Failure\n  --> tests/error_assert_bytearray.hurl:4:0\n   |\n 4 | bytes equals hex,00;\n   |   actual:   byte array <ff>\n   |   expected: byte array <00>\n   |",
+            "success": false
+          },
+          {
+            "line": 5,
+            "message": "Assert Failure\n  --> tests/error_assert_bytearray.hurl:5:0\n   |\n 5 | sha256 equals hex,a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88;\n   |   actual:   byte array <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89>\n   |   expected: byte array <a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -2822,7 +3332,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2846,18 +3356,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 11
+        "time": 12
       }
     ],
     "filename": "tests/error_assert_bytearray.hurl",
     "success": false,
-    "time": 13
+    "time": 15
   },
   {
     "cookies": [],
@@ -2865,11 +3375,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Decompression Error\n  --> tests/error_assert_content_encoding.hurl:4:1\n   |\n 4 | ```Hello World!```\n   | ^ Compression unknown is not supported\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -2885,7 +3402,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -2913,18 +3430,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 8
+        "time": 5
       }
     ],
     "filename": "tests/error_assert_content_encoding.hurl",
     "success": false,
-    "time": 8
+    "time": 7
   },
   {
     "cookies": [],
@@ -2932,11 +3449,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "message": "Decompression Error\n  --> tests/error_assert_decompress.hurl:3:1\n   |\n 3 | ```Hello World!```\n   | ^ Could not uncompress response with gzip\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -2952,7 +3476,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Accept-Encoding",
@@ -2984,18 +3508,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 6
       }
     ],
     "filename": "tests/error_assert_decompress.hurl",
     "success": false,
-    "time": 4
+    "time": 7
   },
   {
     "cookies": [],
@@ -3003,11 +3527,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 7,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "message": "Assert Body Value\n  --> tests/error_assert_file.hurl:8:1\n   |\n 8 | file,data.txt;\n   | ^ actual value is <hex, 48656c6c6f;>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3023,7 +3554,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3047,18 +3578,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 9
       }
     ],
     "filename": "tests/error_assert_file.hurl",
     "success": false,
-    "time": 8
+    "time": 10
   },
   {
     "cookies": [],
@@ -3066,11 +3597,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "message": "Header not Found\n  --> tests/error_assert_header_not_found.hurl:3:1\n   |\n 3 | Custom: ???\n   | ^^^^^^ This header has not been found in the response\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3086,7 +3624,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3110,18 +3648,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:07 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 8
       }
     ],
     "filename": "tests/error_assert_header_not_found.hurl",
     "success": false,
-    "time": 8
+    "time": 10
   },
   {
     "cookies": [],
@@ -3129,11 +3667,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "message": "Assert Header Value\n  --> tests/error_assert_header_value.hurl:3:15\n   |\n 3 | Content-Type: ???\n   |               ^^^ actual value is <text/html; charset=utf-8>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3149,7 +3694,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3173,13 +3718,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 4
       }
     ],
     "filename": "tests/error_assert_header_value.hurl",
@@ -3192,10 +3737,14 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "2"
+            "line": 2,
+            "message": "Assert Http Version\n  --> tests/error_assert_http_version.hurl:2:6\n   |\n 2 | HTTP/2 200\n   |      ^ actual value is <1.0>\n   |",
+            "success": false
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -3211,7 +3760,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3235,7 +3784,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -3246,7 +3795,7 @@
     ],
     "filename": "tests/error_assert_http_version.hurl",
     "success": false,
-    "time": 5
+    "time": 4
   },
   {
     "cookies": [],
@@ -3254,11 +3803,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Assert Failure\n  --> tests/error_assert_invalid_predicate_type.hurl:4:0\n   |\n 4 | header \"content-type\" equals 1\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: int <1>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3274,7 +3830,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3298,7 +3854,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -3317,11 +3873,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid Decoding\n  --> tests/error_assert_match_utf8.hurl:4:1\n   |\n 4 | body matches \".*\"\n   | ^^^^ The body can not be decoded with charset 'utf-8'\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3337,7 +3900,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3361,18 +3924,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 5
       }
     ],
     "filename": "tests/error_assert_match_utf8.hurl",
     "success": false,
-    "time": 10
+    "time": 6
   },
   {
     "cookies": [
@@ -3390,16 +3953,40 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "message": "Assert Failure\n  --> tests/error_assert_query_cookie.hurl:7:0\n   |\n 7 | cookie \"cookie1[Secure]\" equals false      # This is not valid, Secure attribute exists or not but does have a value\n   |   actual:   none\n   |   expected: bool <false>\n   |",
+            "success": false
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "message": "Assert Failure\n  --> tests/error_assert_query_cookie.hurl:11:0\n   |\n11 | cookie \"cookie2[Secure]\" equals true       # This is not valid, Secure attribute exists or not but does have a value\n   |   actual:   unit\n   |   expected: bool <true>\n   |   >>> types between actual and expected are not consistent\n   |",
+            "success": false
+          },
+          {
+            "line": 12,
+            "message": "Assert Failure\n  --> tests/error_assert_query_cookie.hurl:12:0\n   |\n12 | cookie \"cookie2[Secure]\" not equals true   # This is not valid, Secure attribute exists or not but does have a value\n   |   actual:   unit\n   |   expected: not bool <true>\n   |   >>> types between actual and expected are not consistent\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3415,7 +4002,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3459,18 +4046,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 8
+        "time": 5
       }
     ],
     "filename": "tests/error_assert_query_cookie.hurl",
     "success": false,
-    "time": 12
+    "time": 8
   },
   {
     "cookies": [],
@@ -3478,11 +4065,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid regex\n  --> tests/error_assert_query_invalid_regex.hurl:4:7\n   |\n 4 | regex \"[x\" exists\n   |       ^^^^ Regex expression is not valid\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3498,7 +4092,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3522,18 +4116,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 5
       }
     ],
     "filename": "tests/error_assert_query_invalid_regex.hurl",
     "success": false,
-    "time": 7
+    "time": 6
   },
   {
     "cookies": [],
@@ -3541,11 +4135,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid xpath expression\n  --> tests/error_assert_query_invalid_xpath.hurl:4:7\n   |\n 4 | xpath \"//\" equals 1\n   |       ^^^^ The xpath expression is not valid\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3561,7 +4162,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3585,18 +4186,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 8
       }
     ],
     "filename": "tests/error_assert_query_invalid_xpath.hurl",
     "success": false,
-    "time": 5
+    "time": 9
   },
   {
     "cookies": [],
@@ -3604,10 +4205,14 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "message": "Assert Status\n  --> tests/error_assert_status.hurl:2:10\n   |\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3623,7 +4228,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3647,18 +4252,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 404
         },
-        "time": 8
+        "time": 4
       }
     ],
     "filename": "tests/error_assert_status.hurl",
     "success": false,
-    "time": 9
+    "time": 4
   },
   {
     "cookies": [],
@@ -3666,11 +4271,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Undefined Variable\n  --> tests/error_assert_template_variable_not_found.hurl:4:33\n   |\n 4 | header \"content-type\" equals \"{{content_type}}\"\n   |                                 ^^^^^^^^^^^^ You must set the variable content_type\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3686,7 +4298,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3710,18 +4322,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:55 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 12
       }
     ],
     "filename": "tests/error_assert_template_variable_not_found.hurl",
     "success": false,
-    "time": 5
+    "time": 13
   },
   {
     "cookies": [],
@@ -3729,18 +4341,53 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:4:0\n   |\n 4 | header \"content-type\" equals \"XXX\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <XXX>\n   |",
+            "success": false
+          },
+          {
+            "line": 5,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:5:0\n   |\n 5 | header \"content-type\" notEquals \"text/html; charset=utf-8\"\n   |   actual:   string <text/html; charset=utf-8>\n   |   expected: string <text/html; charset=utf-8>\n   |",
+            "success": false
+          },
+          {
+            "line": 6,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:6:0\n   |\n 6 | jsonpath \"$.id\" equals \"000001\"\n   |   actual:   none\n   |   expected: string <000001>\n   |",
+            "success": false
+          },
+          {
+            "line": 7,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:7:0\n   |\n 7 | jsonpath \"$.values\" includes 100\n   |   actual:   [int <1>, int <2>, int <3>]\n   |   expected: includes int <100>\n   |",
+            "success": false
+          },
+          {
+            "line": 8,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:8:0\n   |\n 8 | jsonpath \"$.values\" not contains \"Hello\"\n   |   actual:   [int <1>, int <2>, int <3>]\n   |   expected: not contains string <Hello>\n   |   >>> types between actual and expected are not consistent\n   |",
+            "success": false
+          },
+          {
+            "line": 9,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:9:0\n   |\n 9 | jsonpath \"$.count\" greaterThan 5\n   |   actual:   int <2>\n   |   expected: greater than int <5>\n   |",
+            "success": false
+          },
+          {
+            "line": 10,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:10:0\n   |\n10 | jsonpath \"$.count\" isFloat\n   |   actual:   int <2>\n   |   expected: float\n   |",
+            "success": false
+          },
+          {
+            "line": 11,
+            "message": "Assert Failure\n  --> tests/error_assert_value_error.hurl:11:0\n   |\n11 | bytes contains hex,00;\n   |   actual:   byte array <7b202276616c756573223a205b312c322c335d2c2022636f756e74223a20327d>\n   |   expected: contains byte array <00>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3756,7 +4403,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3780,7 +4427,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:56 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -3799,14 +4446,33 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 8,
+            "message": "Assert Failure\n  --> tests/error_assert_variable.hurl:8:0\n   |\n 8 | variable \"toto\" equals \"tata\"\n   |   actual:   none\n   |   expected: string <tata>\n   |",
+            "success": false
+          },
+          {
+            "line": 9,
+            "message": "Undefined Variable\n  --> tests/error_assert_variable.hurl:9:28\n   |\n 9 | variable \"status\" equals {{unknown}}\n   |                            ^^^^^^^ You must set the variable unknown\n   |",
+            "success": false
+          },
+          {
+            "line": 10,
+            "message": "Assert Failure\n  --> tests/error_assert_variable.hurl:10:0\n   |\n10 | variable \"status\" equals {{type}}\n   |   actual:   int <200>\n   |   expected: string <text/html; charset=utf-8>\n   |",
+            "success": false
+          },
+          {
+            "line": 11,
+            "message": "Assert Failure\n  --> tests/error_assert_variable.hurl:11:0\n   |\n11 | variable \"status\" equals {{length}}\n   |   actual:   int <200>\n   |   expected: string <0>\n   |",
+            "success": false
+          }
         ],
         "captures": [
           {
@@ -3835,7 +4501,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3859,18 +4525,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:56 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 11
       }
     ],
     "filename": "tests/error_assert_variable.hurl",
     "success": false,
-    "time": 9
+    "time": 15
   },
   {
     "cookies": [],
@@ -3878,11 +4544,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid xpath expression\n  --> tests/error_assert_xpath.hurl:4:7\n   |\n 4 | xpath \"strong(//head/title)\" equals \"Welcome to Quiz!\"\n   |       ^^^^^^^^^^^^^^^^^^^^^^ The xpath expression is not valid\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -3898,7 +4571,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -3922,18 +4595,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:08 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:56 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 7
+        "time": 5
       }
     ],
     "filename": "tests/error_assert_xpath.hurl",
     "success": false,
-    "time": 9
+    "time": 6
   },
   {
     "cookies": [],
@@ -3985,7 +4658,7 @@
     ],
     "filename": "tests/error_http_connection.hurl",
     "success": false,
-    "time": 36
+    "time": 30
   },
   {
     "cookies": [],
@@ -3993,11 +4666,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid jsonpath\n  --> tests/error_invalid_jsonpath.hurl:4:10\n   |\n 4 | jsonpath \"\" equals false\n   |          ^^ the jsonpath expression '' is not valid\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4013,7 +4693,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4037,18 +4717,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:57 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 7
       }
     ],
     "filename": "tests/error_invalid_jsonpath.hurl",
     "success": false,
-    "time": 10
+    "time": 8
   },
   {
     "cookies": [],
@@ -4069,11 +4749,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid XML\n  --> tests/error_invalid_xml.hurl:4:1\n   |\n 4 | xpath \"xx\" equals 1\n   | ^^^^^^^^^^ The Http response is not a valid XML\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4089,7 +4776,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4113,18 +4800,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:57 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 8
       }
     ],
     "filename": "tests/error_invalid_xml.hurl",
     "success": false,
-    "time": 9
+    "time": 11
   },
   {
     "cookies": [],
@@ -4137,7 +4824,7 @@
     ],
     "filename": "tests/error_max_redirect.hurl",
     "success": false,
-    "time": 20
+    "time": 28
   },
   {
     "cookies": [],
@@ -4158,23 +4845,78 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:4:0\n   |\n 4 | jsonpath \"$.status\" equals \"true\"\n   |   actual:   bool <true>\n   |   expected: string <true>\n   |",
+            "success": false
+          },
+          {
+            "line": 6,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:6:0\n   |\n 6 | jsonpath \"$.count\" equals 0\n   |   actual:   int <1>\n   |   expected: int <0>\n   |",
+            "success": false
+          },
+          {
+            "line": 7,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:7:0\n   |\n 7 | jsonpath \"$.message\" equals 0\n   |   actual:   string <0>\n   |   expected: int <0>\n   |",
+            "success": false
+          },
+          {
+            "line": 8,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:8:0\n   |\n 8 | jsonpath \"$.empty\" equals 0\n   |   actual:   string <>\n   |   expected: int <0>\n   |",
+            "success": false
+          },
+          {
+            "line": 9,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:9:0\n   |\n 9 | jsonpath \"$.number\" equals 1.1\n   |   actual:   float <1.0>\n   |   expected: float <1.100000000000000000>\n   |",
+            "success": false
+          },
+          {
+            "line": 10,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:10:0\n   |\n10 | jsonpath \"$.message\" startsWith \"hi\"\n   |   actual:   string <0>\n   |   expected: starts with string <hi>\n   |",
+            "success": false
+          },
+          {
+            "line": 11,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:11:0\n   |\n11 | jsonpath \"$.message\" endsWith \"hi\"\n   |   actual:   string <0>\n   |   expected: ends with string <hi>\n   |",
+            "success": false
+          },
+          {
+            "line": 12,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:12:0\n   |\n12 | jsonpath \"$.message\" contains \"hi\"\n   |   actual:   string <0>\n   |   expected: contains string <hi>\n   |",
+            "success": false
+          },
+          {
+            "line": 13,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:13:0\n   |\n13 | jsonpath \"$.message\" matches \"hi\"\n   |   actual:   string <0>\n   |   expected: matches regex <hi>\n   |",
+            "success": false
+          },
+          {
+            "line": 14,
+            "message": "Subquery error\n  --> tests/error_predicate.hurl:14:22\n   |\n14 | jsonpath \"$.message\" count == 1\n   |                      ^^^^^ Type from query result and subquery do not match\n   |",
+            "success": false
+          },
+          {
+            "line": 15,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:15:0\n   |\n15 | jsonpath \"$.toto\" exists\n   |   actual:   none\n   |   expected: something\n   |",
+            "success": false
+          },
+          {
+            "line": 16,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:16:0\n   |\n16 | jsonpath \"$.message\" not exists\n   |   actual:   string <0>\n   |   expected: not something\n   |",
+            "success": false
+          },
+          {
+            "line": 17,
+            "message": "Assert Failure\n  --> tests/error_predicate.hurl:17:0\n   |\n17 | jsonpath \"$.list\" count == 2\n   |   actual:   int <3>\n   |   expected: int <2>\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4190,7 +4932,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4214,18 +4956,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:58 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 5
       }
     ],
     "filename": "tests/error_predicate.hurl",
     "success": false,
-    "time": 19
+    "time": 16
   },
   {
     "cookies": [],
@@ -4233,11 +4975,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "message": "Header not Found\n  --> tests/error_query_header_not_found.hurl:3:1\n   |\n 3 | Custom: XXX\n   | ^^^^^^ This header has not been found in the response\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4253,7 +5002,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4277,18 +5026,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:58 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 7
       }
     ],
     "filename": "tests/error_query_header_not_found.hurl",
     "success": false,
-    "time": 4
+    "time": 7
   },
   {
     "cookies": [],
@@ -4296,11 +5045,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid Json\n  --> tests/error_query_invalid_json.hurl:4:1\n   |\n 4 | jsonpath \"$.errors\" count == 2\n   | ^^^^^^^^^^^^^^^^^^^ The http response is not a valid json\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4316,7 +5072,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4340,13 +5096,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:58 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 4
       }
     ],
     "filename": "tests/error_query_invalid_json.hurl",
@@ -4359,11 +5115,18 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "message": "Invalid Decoding\n  --> tests/error_query_invalid_utf8.hurl:4:1\n   |\n 4 | jsonpath \"$.errors\" count == 2\n   | ^^^^^^^^^^^^^^^^^^^ The body can not be decoded with charset 'utf-8'\n   |",
+            "success": false
+          }
         ],
         "captures": [],
         "request": {
@@ -4379,7 +5142,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4403,18 +5166,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:58 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 5
       }
     ],
     "filename": "tests/error_query_invalid_utf8.hurl",
     "success": false,
-    "time": 5
+    "time": 6
   },
   {
     "cookies": [],
@@ -4427,7 +5190,7 @@
     ],
     "filename": "tests/error_template_variable_not_found.hurl",
     "success": false,
-    "time": 5
+    "time": 0
   },
   {
     "cookies": [],
@@ -4435,10 +5198,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -4463,7 +5229,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4487,13 +5253,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:10 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:58 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 4
       },
       {
         "asserts": [],
@@ -4503,7 +5269,7 @@
     ],
     "filename": "tests/error_template_variable_not_renderable.hurl",
     "success": false,
-    "time": 7
+    "time": 6
   },
   {
     "cookies": [],
@@ -4516,7 +5282,7 @@
     ],
     "filename": "tests/error_timeout.hurl",
     "success": false,
-    "time": 1006
+    "time": 1003
   },
   {
     "cookies": [],
@@ -4524,10 +5290,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 5,
+            "success": true
           },
-          {}
+          {
+            "line": 5,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -4547,7 +5316,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -4575,18 +5344,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 10
       }
     ],
     "filename": "tests/expect.hurl",
     "success": true,
-    "time": 4
+    "time": 11
   },
   {
     "cookies": [],
@@ -4607,7 +5376,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4635,13 +5404,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 302
         },
-        "time": 6
+        "time": 4
       },
       {
         "asserts": [],
@@ -4659,7 +5428,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4687,22 +5456,28 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 302
         },
-        "time": 3
+        "time": 10
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -4718,7 +5493,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4742,91 +5517,32 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
-            }
-          ],
-          "httpVersion": "HTTP/1.0",
-          "status": 200
-        },
-        "time": 5
-      }
-    ],
-    "filename": "tests/follow_redirect.hurl",
-    "success": true,
-    "time": 22
-  },
-  {
-    "cookies": [],
-    "entries": [
-      {
-        "asserts": [
-          {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
-        ],
-        "captures": [],
-        "request": {
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Host",
-              "value": "localhost:8000"
-            },
-            {
-              "name": "Accept",
-              "value": "*/*"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/x-www-form-urlencoded"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
-            },
-            {
-              "name": "Content-Length",
-              "value": "49"
-            }
-          ],
-          "method": "POST",
-          "queryString": [],
-          "url": "http://localhost:8000/form-params"
-        },
-        "response": {
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
         "time": 3
-      },
+      }
+    ],
+    "filename": "tests/follow_redirect.hurl",
+    "success": true,
+    "time": 18
+  },
+  {
+    "cookies": [],
+    "entries": [
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -4846,7 +5562,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -4874,18 +5590,83 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 1
+        "time": 6
+      },
+      {
+        "asserts": [
+          {
+            "line": 15,
+            "success": true
+          },
+          {
+            "line": 15,
+            "success": true
+          }
+        ],
+        "captures": [],
+        "request": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.5.0-snapshot"
+            },
+            {
+              "name": "Content-Length",
+              "value": "49"
+            }
+          ],
+          "method": "POST",
+          "queryString": [],
+          "url": "http://localhost:8000/form-params"
+        },
+        "response": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
+            }
+          ],
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "time": 3
       }
     ],
     "filename": "tests/form_params.hurl",
     "success": true,
-    "time": 6
+    "time": 13
   },
   {
     "cookies": [],
@@ -4893,10 +5674,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -4912,7 +5696,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -4936,7 +5720,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -4947,10 +5731,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 7,
+            "success": true
           },
-          {}
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -4990,7 +5777,64 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
+            }
+          ],
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "time": 4
+      },
+      {
+        "asserts": [
+          {
+            "line": 13,
+            "success": true
+          },
+          {
+            "line": 13,
+            "success": true
+          }
+        ],
+        "captures": [],
+        "request": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.0"
+            }
+          ],
+          "method": "GET",
+          "queryString": [],
+          "url": "http://localhost:8000/default-headers"
+        },
+        "response": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -5001,64 +5845,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 21,
+            "success": true
           },
-          {}
-        ],
-        "captures": [],
-        "request": {
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Host",
-              "value": "localhost:8000"
-            },
-            {
-              "name": "Accept",
-              "value": "*/*"
-            },
-            {
-              "name": "User-Agent",
-              "value": "hurl/1.0"
-            }
-          ],
-          "method": "GET",
-          "queryString": [],
-          "url": "http://localhost:8000/default-headers"
-        },
-        "response": {
-          "cookies": [],
-          "headers": [
-            {
-              "name": "Content-Type",
-              "value": "text/html; charset=utf-8"
-            },
-            {
-              "name": "Content-Length",
-              "value": "0"
-            },
-            {
-              "name": "Server",
-              "value": "Flask Server"
-            },
-            {
-              "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
-            }
-          ],
-          "httpVersion": "HTTP/1.0",
-          "status": 200
-        },
-        "time": 4
-      },
-      {
-        "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
-          },
-          {}
+            "line": 21,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5094,7 +5887,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5118,21 +5911,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 14
+        "time": 6
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 25,
+            "success": true
           },
-          {}
+          {
+            "line": 25,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5152,7 +5948,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5176,7 +5972,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -5187,10 +5983,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 29,
+            "success": true
           },
-          {}
+          {
+            "line": 29,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5210,7 +6009,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5234,21 +6033,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 7
+        "time": 2
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 33,
+            "success": true
           },
-          {}
+          {
+            "line": 33,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5268,7 +6070,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5292,22 +6094,28 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 10
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 36,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 36,
+            "success": true
+          },
+          {
+            "line": 37,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5323,7 +6131,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5351,18 +6159,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:38:59 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 3
       }
     ],
     "filename": "tests/headers.hurl",
     "success": true,
-    "time": 43
+    "time": 38
   },
   {
     "cookies": [],
@@ -5370,11 +6178,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5390,7 +6204,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5414,22 +6228,28 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:00 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 10
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 6,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5445,7 +6265,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5469,7 +6289,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:00 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -5480,11 +6300,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 10,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 10,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5500,7 +6326,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5524,7 +6350,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:00 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -5535,11 +6361,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 14,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 14,
+            "success": true
+          },
+          {
+            "line": 15,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5555,7 +6387,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5579,18 +6411,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:00 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 6
       }
     ],
     "filename": "tests/hello.hurl",
     "success": true,
-    "time": 14
+    "time": 25
   },
   {
     "cookies": [],
@@ -5611,7 +6443,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5635,18 +6467,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:12 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:00 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 7
+        "time": 5
       }
     ],
     "filename": "tests/ignore_asserts.hurl",
     "success": true,
-    "time": 10
+    "time": 6
   },
   {
     "cookies": [],
@@ -5654,11 +6486,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5674,7 +6512,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5704,12 +6542,12 @@
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 5
       }
     ],
     "filename": "tests/include.hurl",
     "success": true,
-    "time": 4
+    "time": 6
   },
   {
     "cookies": [],
@@ -5717,13 +6555,25 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5739,7 +6589,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5763,18 +6613,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:14 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:02 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6394
+        "time": 6276
       }
     ],
     "filename": "tests/large.hurl",
     "success": true,
-    "time": 8323
+    "time": 8161
   },
   {
     "cookies": [],
@@ -5782,13 +6632,25 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "*"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5804,7 +6666,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -5828,18 +6690,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 10
       }
     ],
     "filename": "tests/multilines.hurl",
     "success": true,
-    "time": 4
+    "time": 11
   },
   {
     "cookies": [],
@@ -5847,10 +6709,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5866,7 +6731,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -5874,7 +6739,7 @@
             },
             {
               "name": "Content-Type",
-              "value": "multipart/form-data; boundary=------------------------b4b4275347237a0d"
+              "value": "multipart/form-data; boundary=------------------------7fc1acc47208f0d6"
             }
           ],
           "method": "POST",
@@ -5898,18 +6763,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 15
       }
     ],
     "filename": "tests/multipart_form_data.hurl",
     "success": true,
-    "time": 5
+    "time": 17
   },
   {
     "cookies": [],
@@ -5924,10 +6789,78 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
+        ],
+        "captures": [],
+        "request": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.5.0-snapshot"
+            }
+          ],
+          "method": "GET",
+          "queryString": [],
+          "url": "http://localhost:8000/non-utf8"
+        },
+        "response": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "5"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
+            }
+          ],
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "time": 5
+      }
+    ],
+    "filename": "tests/non_utf8.hurl",
+    "success": true,
+    "time": 6
+  },
+  {
+    "cookies": [],
+    "entries": [
+      {
+        "asserts": [
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -5947,7 +6880,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -5981,15 +6914,18 @@
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6005,7 +6941,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -6035,12 +6971,12 @@
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 3
       }
     ],
     "filename": "tests/output.hurl",
     "success": true,
-    "time": 11
+    "time": 9
   },
   {
     "cookies": [],
@@ -6048,12 +6984,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 10,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6077,7 +7022,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "PATCH",
@@ -6105,18 +7050,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 204
         },
-        "time": 3
+        "time": 9
       }
     ],
     "filename": "tests/patch.hurl",
     "success": true,
-    "time": 4
+    "time": 10
   },
   {
     "cookies": [],
@@ -6124,10 +7069,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 4,
+            "success": true
           },
-          {}
+          {
+            "line": 4,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6143,7 +7091,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6171,7 +7119,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -6190,10 +7138,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 5,
+            "success": true
           },
-          {}
+          {
+            "line": 5,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6213,7 +7164,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6241,7 +7192,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:12 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -6252,7 +7203,7 @@
     ],
     "filename": "tests/post_bytes.hurl",
     "success": true,
-    "time": 5
+    "time": 4
   },
   {
     "cookies": [],
@@ -6260,10 +7211,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 4,
+            "success": true
           },
-          {}
+          {
+            "line": 4,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6279,7 +7233,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6307,18 +7261,79 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 5
+      },
+      {
+        "asserts": [
+          {
+            "line": 9,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          }
+        ],
+        "captures": [],
+        "request": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.5.0-snapshot"
+            },
+            {
+              "name": "Content-Length",
+              "value": "12"
+            }
+          ],
+          "method": "POST",
+          "queryString": [],
+          "url": "http://localhost:8000/post-file"
+        },
+        "response": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
+            }
+          ],
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "time": 2
       }
     ],
     "filename": "tests/post_file.hurl",
     "success": true,
-    "time": 5
+    "time": 8
   },
   {
     "cookies": [],
@@ -6326,10 +7341,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 12,
+            "success": true
           },
-          {}
+          {
+            "line": 12,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6349,7 +7367,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6377,21 +7395,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 8
+        "time": 5
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 17,
+            "success": true
           },
-          {}
+          {
+            "line": 17,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6411,7 +7432,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6439,21 +7460,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:24 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 22,
+            "success": true
           },
-          {}
+          {
+            "line": 22,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6473,7 +7497,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6501,21 +7525,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 5
+        "time": 2
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 27,
+            "success": true
           },
-          {}
+          {
+            "line": 27,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6535,7 +7562,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6563,21 +7590,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 1
+        "time": 2
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 38,
+            "success": true
           },
-          {}
+          {
+            "line": 38,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6597,7 +7627,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6625,21 +7655,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 9
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 43,
+            "success": true
           },
-          {}
+          {
+            "line": 43,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6659,7 +7692,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6687,7 +7720,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -6698,10 +7731,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 49,
+            "success": true
           },
-          {}
+          {
+            "line": 49,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -6722,7 +7758,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -6746,13 +7782,13 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 9
+        "time": 3
       },
       {
         "asserts": [],
@@ -6774,7 +7810,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6802,7 +7838,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -6813,7 +7849,7 @@
     ],
     "filename": "tests/post_json.hurl",
     "success": true,
-    "time": 36
+    "time": 34
   },
   {
     "cookies": [],
@@ -6821,10 +7857,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6840,7 +7879,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6868,21 +7907,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 8
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 12,
+            "success": true
           },
-          {}
+          {
+            "line": 12,
+            "success": true
+          }
         ],
         "captures": [
           {
@@ -6903,7 +7945,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -6927,21 +7969,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 5
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 23,
+            "success": true
           },
-          {}
+          {
+            "line": 23,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -6957,7 +8002,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -6985,18 +8030,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 6
       }
     ],
     "filename": "tests/post_multilines.hurl",
     "success": true,
-    "time": 14
+    "time": 18
   },
   {
     "cookies": [],
@@ -7004,10 +8049,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 8,
+            "success": true
           },
-          {}
+          {
+            "line": 8,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7027,7 +8075,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -7055,21 +8103,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 8
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 14,
+            "success": true
           },
-          {}
+          {
+            "line": 14,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7089,7 +8140,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -7117,7 +8168,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -7128,7 +8179,7 @@
     ],
     "filename": "tests/post_xml.hurl",
     "success": true,
-    "time": 9
+    "time": 15
   },
   {
     "cookies": [],
@@ -7136,15 +8187,33 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          },
+          {
+            "line": 8,
+            "success": true
+          },
+          {
+            "line": 9,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7160,7 +8229,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7184,23 +8253,32 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 6
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 13,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 13,
+            "success": true
+          },
+          {
+            "line": 15,
+            "success": true
+          },
+          {
+            "line": 16,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7216,7 +8294,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7240,7 +8318,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -7251,12 +8329,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 19,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 19,
+            "success": true
+          },
+          {
+            "line": 21,
+            "success": true
+          },
+          {
+            "line": 22,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7272,7 +8359,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7296,18 +8383,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 1
+        "time": 4
       }
     ],
     "filename": "tests/predicates-string.hurl",
     "success": true,
-    "time": 11
+    "time": 18
   },
   {
     "cookies": [],
@@ -7315,11 +8402,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 6,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7339,7 +8432,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7363,7 +8456,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             },
             {
               "name": "From-Proxy",
@@ -7373,12 +8466,12 @@
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 22
+        "time": 33
       }
     ],
     "filename": "tests/proxy.hurl",
     "success": true,
-    "time": 22
+    "time": 34
   },
   {
     "cookies": [],
@@ -7386,10 +8479,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7405,7 +8501,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "PUT",
@@ -7429,18 +8525,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 6
+        "time": 5
       }
     ],
     "filename": "tests/put.hurl",
     "success": true,
-    "time": 7
+    "time": 5
   },
   {
     "cookies": [],
@@ -7448,10 +8544,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 7,
+            "success": true
           },
-          {}
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7467,7 +8566,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7508,7 +8607,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -7519,10 +8618,13 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 13,
+            "success": true
           },
-          {}
+          {
+            "line": 13,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7538,7 +8640,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7579,21 +8681,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 4
+        "time": 3
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 22,
+            "success": true
           },
-          {}
+          {
+            "line": 22,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7609,7 +8714,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7650,21 +8755,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 2
+        "time": 4
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 29,
+            "success": true
           },
-          {}
+          {
+            "line": 29,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7680,7 +8788,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7717,7 +8825,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:13 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -7728,7 +8836,7 @@
     ],
     "filename": "tests/querystring_params.hurl",
     "success": true,
-    "time": 14
+    "time": 16
   },
   {
     "cookies": [],
@@ -7736,11 +8844,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7756,7 +8870,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7784,21 +8898,24 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 302
         },
-        "time": 4
+        "time": 7
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 6,
+            "success": true
           },
-          {}
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7814,7 +8931,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7838,18 +8955,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:25 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 2
       }
     ],
     "filename": "tests/redirect.hurl",
     "success": true,
-    "time": 9
+    "time": 10
   },
   {
     "cookies": [],
@@ -7857,13 +8974,25 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 4,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7879,7 +9008,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7903,18 +9032,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 7
       }
     ],
     "filename": "tests/subquery_count.hurl",
     "success": true,
-    "time": 4
+    "time": 8
   },
   {
     "cookies": [],
@@ -7922,11 +9051,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -7942,7 +9077,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -7966,7 +9101,7 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -7977,7 +9112,7 @@
     ],
     "filename": "tests/test_mode.hurl",
     "success": true,
-    "time": 3
+    "time": 4
   },
   {
     "cookies": [],
@@ -7985,10 +9120,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -8004,7 +9146,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -8020,7 +9162,7 @@
             },
             {
               "name": "Content-Length",
-              "value": "0"
+              "value": "4"
             },
             {
               "name": "Server",
@@ -8028,21 +9170,28 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 10
+        "time": 6
       },
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 6,
+            "success": true
           },
-          {}
+          {
+            "line": 6,
+            "success": true
+          },
+          {
+            "line": 7,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -8058,7 +9207,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -8074,7 +9223,7 @@
             },
             {
               "name": "Content-Length",
-              "value": "0"
+              "value": "4"
             },
             {
               "name": "Server",
@@ -8082,7 +9231,68 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
+            }
+          ],
+          "httpVersion": "HTTP/1.0",
+          "status": 200
+        },
+        "time": 3
+      },
+      {
+        "asserts": [
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 11,
+            "success": true
+          },
+          {
+            "line": 12,
+            "success": true
+          }
+        ],
+        "captures": [],
+        "request": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "User-Agent",
+              "value": "hurl/1.5.0-snapshot"
+            }
+          ],
+          "method": "GET",
+          "queryString": [],
+          "url": "http://localhost:8000/!$&()*+,;=:@[]"
+        },
+        "response": {
+          "cookies": [],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "5"
+            },
+            {
+              "name": "Server",
+              "value": "Flask Server"
+            },
+            {
+              "name": "Date",
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
@@ -8093,7 +9303,7 @@
     ],
     "filename": "tests/url.hurl",
     "success": true,
-    "time": 13
+    "time": 12
   },
   {
     "cookies": [],
@@ -8101,11 +9311,17 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 2,
+            "success": true
           },
-          {},
-          {}
+          {
+            "line": 2,
+            "success": true
+          },
+          {
+            "line": 3,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -8125,7 +9341,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -8149,18 +9365,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 13
+        "time": 4
       }
     ],
     "filename": "tests/user_in_url.hurl",
     "success": true,
-    "time": 14
+    "time": 5
   },
   {
     "cookies": [],
@@ -8168,12 +9384,21 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "1.0"
+            "line": 3,
+            "success": true
           },
-          {},
-          {},
-          {}
+          {
+            "line": 3,
+            "success": true
+          },
+          {
+            "line": 5,
+            "success": true
+          },
+          {
+            "line": 6,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -8189,7 +9414,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             }
           ],
           "method": "GET",
@@ -8213,18 +9438,18 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 13
+        "time": 3
       }
     ],
     "filename": "tests/utf8.hurl",
     "success": true,
-    "time": 14
+    "time": 4
   },
   {
     "cookies": [],
@@ -8232,16 +9457,37 @@
       {
         "asserts": [
           {
-            "actual": "1.0",
-            "expected": "*"
+            "line": 17,
+            "success": true
           },
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "line": 17,
+            "success": true
+          },
+          {
+            "line": 19,
+            "success": true
+          },
+          {
+            "line": 20,
+            "success": true
+          },
+          {
+            "line": 21,
+            "success": true
+          },
+          {
+            "line": 22,
+            "success": true
+          },
+          {
+            "line": 23,
+            "success": true
+          },
+          {
+            "line": 24,
+            "success": true
+          }
         ],
         "captures": [],
         "request": {
@@ -8285,7 +9531,7 @@
             },
             {
               "name": "User-Agent",
-              "value": "hurl/1.4.0-snapshot"
+              "value": "hurl/1.5.0-snapshot"
             },
             {
               "name": "Content-Length",
@@ -8313,17 +9559,17 @@
             },
             {
               "name": "Date",
-              "value": "Thu, 14 Oct 2021 16:36:26 GMT"
+              "value": "Mon, 08 Nov 2021 10:39:14 GMT"
             }
           ],
           "httpVersion": "HTTP/1.0",
           "status": 200
         },
-        "time": 3
+        "time": 4
       }
     ],
     "filename": "tests/variables.hurl",
     "success": true,
-    "time": 4
+    "time": 6
   }
 ]
