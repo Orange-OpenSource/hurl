@@ -100,6 +100,11 @@ jobs:
           integration/server-ssl.log
           integration/report/tests.json
           integration/report/tests.xml
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      if: ${{ always() }}
+      with:
+        report_paths: 'integration/report/tests.xml'
   test-osx:
     runs-on: macos-latest
     strategy:
