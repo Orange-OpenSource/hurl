@@ -90,6 +90,11 @@ jobs:
          ./test_html_output.py tests/*.html
          xmllint --noout tests/*.html
          ./report.sh
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      if: ${{ always() }}
+      with:
+        report_paths: 'integration/report/tests.xml'
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
@@ -100,11 +105,56 @@ jobs:
           integration/server-ssl.log
           integration/report/tests.json
           integration/report/tests.xml
+  test-archlinux-x64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2    
+    - uses: addnab/docker-run-action@v3
+      with:
+        image: archlinux
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        run: |
+          set -eu
+          uname -a
+          uname -m
+          echo "----- install build prerequisites -----"
+          pacman -Syy --noconfirm
+          pacman -Sy --noconfirm curl base-devel libxml2 python3 python-pip
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustc --version
+          cargo --version
+          echo "----- build -----"
+          cargo build --verbose
+          echo "----- install servers prerequisites -----"
+          python3 -m pip install --upgrade pip --quiet
+          pip3 install lxml bs4 Flask mitmproxy
+          export PATH="$PWD/target/debug:$PATH"
+          echo "----- start servers -----"
+          cd integration
+          python3 server.py >server.log 2>&1 &
+          python3 ssl/server.py >server-ssl.log 2>&1 &
+          mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
+          ps auxww | grep -v grep | grep -E "server.py|mitmdump"
+          echo "----- tests units -----"
+          cargo test --features strict
+          echo "----- integration tests -----"
+          ./integration.py
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v2
       if: ${{ always() }}
       with:
         report_paths: 'integration/report/tests.xml'
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: tests-archlinux-x64-artifacts
+        path: |
+          integration/mitmdump.log
+          integration/server.log
+          integration/server-ssl.log
   test-osx:
     runs-on: macos-latest
     strategy:
@@ -141,6 +191,11 @@ jobs:
          export PATH="$PWD/target/debug:$PATH"
          cd integration
          ./integration.py
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      if: ${{ always() }}
+      with:
+        report_paths: 'integration/report/tests.xml'
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
@@ -213,6 +268,11 @@ jobs:
         Start-Sleep 5
         hurlfmt --no-format tests\assert_base64.hurl
         python integration.py
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      if: ${{ always() }}
+      with:
+        report_paths: 'integration/report/tests.xml'
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
