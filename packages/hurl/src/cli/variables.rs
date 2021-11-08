@@ -32,7 +32,7 @@ pub fn parse(s: &str) -> Result<(String, Value), CliError> {
     }
 }
 
-fn parse_value(s: &str) -> Result<Value, CliError> {
+pub fn parse_value(s: &str) -> Result<Value, CliError> {
     if s == "true" {
         Ok(Value::Bool(true))
     } else if s == "false" {

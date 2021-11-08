@@ -459,6 +459,14 @@ fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
 fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     let mut variables = HashMap::new();
 
+    // use environment variables prefix by HURL_
+    for (env_name, env_value) in std::env::vars() {
+        if let Some(name) = env_name.strip_prefix("HURL_") {
+            let value = cli::parse_variable_value(env_value.as_str())?;
+            variables.insert(name.to_string(), value);
+        }
+    }
+
     if let Some(filename) = matches.value_of("variables_file") {
         let path = std::path::Path::new(filename);
         if !path.exists() {

@@ -37,6 +37,7 @@ def test(hurl_file):
     options_file = hurl_file.replace('.hurl','.options')
     curl_file = hurl_file.replace('.hurl','.curl')
     json_output_file = hurl_file.replace('.hurl','.output.json')
+    profile_file = hurl_file.replace('.hurl','.profile')
 
     options = []
     if os.path.exists(options_file):
@@ -47,9 +48,20 @@ def test(hurl_file):
     if os.path.exists(json_output_file):
         options.append('--json')
 
+    env = os.environ.copy()
+    if os.path.exists(profile_file):
+        for line in open(profile_file).readlines():
+            line = line.strip()
+            if line == '':
+                continue
+            index = line.index('=')
+            name = line[:index]
+            value = line[(index+1):]
+            env[name] = value
+
     cmd = ['hurl', hurl_file] + options
     print(' '.join(cmd))
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,env=env)
 
     # exit code 
     f = hurl_file.replace('.hurl','.exit')
