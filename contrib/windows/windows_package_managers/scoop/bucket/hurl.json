@@ -1,0 +1,26 @@
+{
+    "version": "1.4.0",
+    "description": "Command line tool that performs HTTP requests defined in a simple plain text format",
+    "homepage": "https://hurl.dev",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64.zip",
+            "hash": "78255bb838095a1015679f92189074c1162edd51b5edc1dda7b863ba7304c4b5"
+        }
+    },
+    "bin": [
+        "hurl.exe",
+        "hurlfmt.exe"
+    ],
+    "checkver": {
+        "github": "https://github.com/Orange-OpenSource/hurl"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Orange-OpenSource/hurl/releases/download/$version/hurl-$version-win64.zip"
+            }
+        }
+    }
+}
