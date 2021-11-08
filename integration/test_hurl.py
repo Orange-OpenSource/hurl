@@ -43,12 +43,9 @@ def test(hurl_file):
          options = open(options_file).read().strip().split(' ')
     if os.path.exists(curl_file):
         options.append('--verbose')
-        
-    if os.path.exists(json_output_file):
-        json_output_actual_file =  os.path.join(tempfile.mkdtemp(), 'output.json')
-        options.append('--json')
-        options.append(json_output_actual_file)
 
+    if os.path.exists(json_output_file):
+        options.append('--json')
 
     cmd = ['hurl', hurl_file] + options
     print(' '.join(cmd))
@@ -74,6 +71,12 @@ def test(hurl_file):
              print('>>> error in stdout')
              print(f'actual: <{actual}>\nexpected: <{expected}>')
              sys.exit(1)
+
+    # stdout (json)
+    if os.path.exists(json_output_file):
+        expected = open(json_output_file).read()
+        actual = result.stdout
+        check_json_output.check(expected, actual)
 
     # stderr
     f = hurl_file.replace('.hurl', '.' + get_os() + '.err')
@@ -118,9 +121,6 @@ def test(hurl_file):
                 print('expected: %s' % expected_commands[i])
                 print('actual:   %s' % actual_commands[i])
                 sys.exit(1)
-
-    if os.path.exists(json_output_file):
-         check_json_output.check_file(json_output_file, json_output_actual_file)
 
 
 def main():

@@ -1,32 +1,30 @@
-[
-  {
-    "filename": "tests/error_query_header_not_found.hurl",
-    "entries": [
-      {
-        "request": {
-          "method": "GET",
-          "url": "http://localhost:8000/error-query-header-not-found"
+{
+  "filename": "tests/error_query_header_not_found.hurl",
+  "entries": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8000/error-query-header-not-found"
+      },
+      "response": {
+        "httpVersion": "HTTP/1.0",
+        "status": 200
+      },
+      "asserts": [
+        {
+          "success": true,
+          "line": 2
         },
-        "response": {
-          "httpVersion": "HTTP/1.0",
-          "status": 200
+        {
+          "success": true,
+          "line": 2
         },
-        "asserts": [
-          {
-            "success": true,
-            "line": 2
-          },
-          {
-            "success": true,
-            "line": 2
-          },
-          {
-            "success": false,
-            "message": "Header not Found\n  --> tests/error_query_header_not_found.hurl:3:1\n   |\n 3 | Custom: XXX\n   | ^^^^^^ This header has not been found in the response\n   |",
-            "line": 3
-          }
-        ]
-      }
-    ]
-  }
-]
+        {
+          "success": false,
+          "message": "Header not Found\n  --> tests/error_query_header_not_found.hurl:3:1\n   |\n 3 | Custom: XXX\n   | ^^^^^^ This header has not been found in the response\n   |",
+          "line": 3
+        }
+      ]
+    }
+  ]
+}

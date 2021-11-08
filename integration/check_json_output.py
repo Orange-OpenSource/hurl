@@ -2,13 +2,10 @@
 import json
 import sys
 
-
-def check_file(expected_file, actual_file):
-    expected_tests = json.loads(open(expected_file).read())
-    actual_tests = json.loads(open(actual_file).read())
-    assert len(expected_tests) == 1
-    assert len(actual_tests) == 1
-    check_output(expected_tests[0], actual_tests[0])
+def check(expected, actual):
+    expected_test = json.loads(expected)
+    actual_test = json.loads(actual)
+    check_output(expected_test, actual_test)
 
 
 def check_output(expected_test, actual_test):
@@ -77,7 +74,9 @@ def main():
         sys.exit(1)
     expected_file = sys.argv[1]
     actual_file = sys.argv[2]
-    check_file(expected_file, actual_file)
+    expected = open(expected_file).read()
+    actual = open(actual_file).read()
+    check_file(expected, actual)
 
 
 if __name__ == '__main__':

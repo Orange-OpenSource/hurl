@@ -26,7 +26,7 @@ pub use self::logger::{
 pub use self::options::app;
 pub use self::options::output_color;
 pub use self::options::parse_options;
-pub use self::options::CliOptions;
+pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
 
 mod fs;

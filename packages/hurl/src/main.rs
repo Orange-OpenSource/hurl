@@ -27,9 +27,8 @@ use colored::*;
 
 use curl::Version;
 use hurl::cli;
-use hurl::cli::{CliError, CliOptions};
+use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
-use hurl::json;
 use hurl::report;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions};
@@ -292,11 +291,6 @@ fn main() {
     };
 
     let start = Instant::now();
-    let mut json_results = vec![];
-
-    if let Some(file_path) = cli_options.json_file.clone() {
-        json_results = unwrap_or_exit(&log_error_message, json::parse_json(file_path));
-    }
 
     for (current, filename) in filenames.iter().enumerate() {
         let contents = match cli::read_to_string(filename) {
@@ -368,10 +362,13 @@ fn main() {
                         response.body
                     };
                     output.append(&mut body.clone());
-                    unwrap_or_exit(
-                        &log_error_message,
-                        write_output(output, cli_options.output.clone()),
-                    );
+
+                    if matches!(cli_options.output_type, OutputType::ResponseBody) {
+                        unwrap_or_exit(
+                            &log_error_message,
+                            write_output(output, cli_options.output.clone()),
+                        );
+                    }
                 } else {
                     cli::log_info("no response has been received");
                 }
@@ -390,24 +387,19 @@ fn main() {
 
         hurl_results.push(hurl_result.clone());
 
-        if cli_options.json_file.is_some() {
+        if matches!(cli_options.output_type, OutputType::Json) {
             let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
                 .unwrap()
                 .split(&contents)
                 .map(|l| l.to_string())
                 .collect();
             let json_result = hurl_result.to_json(&lines);
-            json_results.push(json_result);
+            let serialized = serde_json::to_string(&json_result).unwrap();
+            unwrap_or_exit(
+                &log_error_message,
+                write_output(serialized.into_bytes(), cli_options.output.clone()),
+            );
         }
-    }
-    let duration = start.elapsed().as_millis();
-
-    if let Some(file_path) = cli_options.json_file.clone() {
-        log_verbose(format!("Writing json report to {}", file_path.display()).as_str());
-        unwrap_or_exit(
-            &log_error_message,
-            json::write_json_report(file_path, json_results),
-        );
     }
 
     if let Some(junit_path) = cli_options.junit_file {
@@ -438,8 +430,13 @@ fn main() {
         );
     }
 
-    if cli_options.summary {
-        print_summary(duration, hurl_results.clone())
+    if matches!(cli_options.output_type, OutputType::Summary) {
+        let duration = start.elapsed().as_millis();
+        let summary = get_summary(duration, hurl_results.clone());
+        unwrap_or_exit(
+            &log_error_message,
+            write_output(summary.into_bytes(), cli_options.output.clone()),
+        );
     }
 
     std::process::exit(exit_code(hurl_results));
@@ -558,23 +555,32 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
     Ok(())
 }
 
-fn print_summary(duration: u128, hurl_results: Vec<HurlResult>) {
+fn get_summary(duration: u128, hurl_results: Vec<HurlResult>) -> String {
     let total = hurl_results.len();
     let success = hurl_results.iter().filter(|r| r.success).count();
     let failed = total - success;
-    eprintln!("--------------------------------------------------------------------------------");
-    eprintln!("Executed:  {}", total);
-    eprintln!(
-        "Succeeded: {} ({:.1}%)",
-        success,
-        100.0 * success as f32 / total as f32
+    let mut s =
+        "--------------------------------------------------------------------------------\n"
+            .to_string();
+    s.push_str(format!("Executed:  {}\n", total).as_str());
+    s.push_str(
+        format!(
+            "Succeeded: {} ({:.1}%)\n",
+            success,
+            100.0 * success as f32 / total as f32
+        )
+        .as_str(),
     );
-    eprintln!(
-        "Failed:    {} ({:.1}%)",
-        failed,
-        100.0 * failed as f32 / total as f32
+    s.push_str(
+        format!(
+            "Failed:    {} ({:.1}%)\n",
+            failed,
+            100.0 * failed as f32 / total as f32
+        )
+        .as_str(),
     );
-    eprintln!("Duration:  {}ms", duration);
+    s.push_str(format!("Duration:  {}ms\n", duration).as_str());
+    s
 }
 
 fn get_version_info() -> String {

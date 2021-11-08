@@ -28,16 +28,6 @@ use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
-#[cfg(target_family = "unix")]
-pub fn dev_null() -> String {
-    "/dev/null".to_string()
-}
-
-#[cfg(target_family = "windows")]
-pub fn dev_null() -> String {
-    "nul".to_string()
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
     pub cacert_file: Option<String>,
@@ -54,14 +44,13 @@ pub struct CliOptions {
     pub include: bool,
     pub insecure: bool,
     pub interactive: bool,
-    pub json_file: Option<PathBuf>,
     pub junit_file: Option<PathBuf>,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
     pub output: Option<String>,
+    pub output_type: OutputType,
     pub progress: bool,
     pub proxy: Option<String>,
-    pub summary: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
@@ -69,6 +58,12 @@ pub struct CliOptions {
     pub verbose: bool,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum OutputType {
+    ResponseBody,
+    Summary,
+    Json,
+}
 pub fn app() -> App<'static, 'static> {
     App::new("hurl")
         .about("Run hurl FILE(s) or standard input")
@@ -169,9 +164,8 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("json")
                 .long("json")
-                .value_name("FILE")
-                .help("Write full session(s) to json file")
-                .takes_value(true),
+                .conflicts_with("summary")
+                .help("Write full session(s) to json output"),
         )
         .arg(
             clap::Arg::with_name("junit")
@@ -237,12 +231,13 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("summary")
                 .long("summary")
+                .conflicts_with("json")
                 .help("Print test metrics at the end of the run"),
         )
         .arg(
             clap::Arg::with_name("test")
                 .long("test")
-                .help("Activate test mode; equals --output /dev/null --progress --summary"),
+                .help("This option has been deprecated. It will be removed in the next release"),
         )
         .arg(
             clap::Arg::with_name("to_entry")
@@ -355,12 +350,6 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let include = matches.is_present("include");
     let insecure = matches.is_present("insecure");
     let interactive = matches.is_present("interactive");
-    let json_file = if let Some(filename) = matches.value_of("json") {
-        let path = Path::new(filename);
-        Some(path.to_path_buf())
-    } else {
-        None
-    };
     let junit_file = if let Some(filename) = matches.value_of("junit") {
         let path = Path::new(filename);
         Some(path.to_path_buf())
@@ -380,16 +369,24 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         },
     };
     let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let output = if let Some(filename) = matches.value_of("output") {
-        Some(filename.to_string())
-    } else if matches.is_present("test") {
-        Some(dev_null())
+    let output = matches
+        .value_of("output")
+        .map(|filename| filename.to_string());
+    let output_type = if matches.is_present("summary") {
+        OutputType::Summary
+    } else if matches.is_present("json") {
+        OutputType::Json
     } else {
-        None
+        OutputType::ResponseBody
     };
     let progress = matches.is_present("progress") || matches.is_present("test");
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let summary = matches.is_present("summary") || matches.is_present("test");
+
+    if matches.is_present("test") {
+        eprintln!("The option --test is deprecated");
+        eprintln!("It will be removed in the next version");
+    }
+
     let timeout = match matches.value_of("max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
@@ -422,13 +419,12 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         insecure,
         interactive,
         junit_file,
-        json_file,
         max_redirect,
         no_proxy,
         output,
+        output_type,
         progress,
         proxy,
-        summary,
         timeout,
         to_entry,
         user,
