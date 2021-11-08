@@ -7,59 +7,6 @@
 [![Crates.io](https://img.shields.io/crates/v/hurl.svg)](https://crates.io/crates/hurl)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
-Table of Contents
-=================
-   * [Presentation](#presentation)
-      * [What's Hurl?](#whats-hurl)
-      * [Also an HTTP Test Tool](#also-an-http-test-tool)
-      * [Why Hurl?](#why-hurl)
-      * [Powered by curl](#powered-by-curl)
-      * [Feedbacks](#feedbacks)
-      * [Resources](#resources)
-   * [Samples](#samples)
-      * [Getting Data](#getting-data)
-         * [Query Params](#query-params)
-      * [Sending Data](#sending-data)
-         * [Sending HTML Form Datas](#sending-html-form-datas)
-         * [Sending Multipart Form Datas](#sending-multipart-form-datas)
-         * [Posting a JSON Body](#posting-a-json-body)
-         * [Templating a JSON / XML Body](#templating-a-json--xml-body)
-      * [Testing Response](#testing-response)
-         * [Testing Response Headers](#testing-response-headers)
-         * [Testing REST Apis](#testing-rest-apis)
-         * [Testing HTML Response](#testing-html-response)
-         * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
-      * [Others](#others)
-         * [Testing Endpoint Performance](#testing-endpoint-performance)
-         * [Using SOAP Apis](#using-soap-apis)
-         * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
-         * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
-   * [Man Page](#man-page)
-      * [Name](#name)
-      * [Synopsis](#synopsis)
-      * [Description](#description)
-      * [Hurl File Format](#hurl-file-format)
-         * [Capturing values](#capturing-values)
-         * [Asserts](#asserts)
-      * [Options](#options)
-      * [Environment](#environment)
-      * [Exit Codes](#exit-codes)
-      * [WWW](#www)
-      * [See Also](#see-also)
-   * [Installation](#installation)
-      * [Binaries Installation](#binaries-installation)
-         * [Linux](#linux)
-            * [Debian / Ubuntu](#debian--ubuntu)
-            * [Arch Linux / Manjaro](#arch-linux--manjaro)
-         * [macOS](#macos)
-         * [Windows](#windows)
-            * [Zip File](#zip-file)
-            * [Installer](#installer)
-         * [Cargo](#cargo)
-      * [Building From Sources](#building-from-sources)
-         * [Build on Linux, macOS](#build-on-linux-macos)
-         * [Build on Windows](#build-on-windows)
-
 # Presentation
 
 ## What's Hurl?
@@ -184,7 +131,7 @@ but it's still the [curl] that we love.
 
 ## Feedbacks
 
-Hurl file format and runners are still in beta, any [feedback, suggestion, bugs or improvements] 
+Hurl is still in beta, any [feedback, suggestion, bugs or improvements] 
 are welcome.
 
 ```hurl
@@ -204,6 +151,51 @@ HTTP/1.1 200
 
 [GitHub]
 
+Table of Contents
+=================
+   * [Samples](#samples)
+      * [Getting Data](#getting-data)
+         * [Query Params](#query-params)
+      * [Sending Data](#sending-data)
+         * [Sending HTML Form Datas](#sending-html-form-datas)
+         * [Sending Multipart Form Datas](#sending-multipart-form-datas)
+         * [Posting a JSON Body](#posting-a-json-body)
+         * [Templating a JSON / XML Body](#templating-a-json--xml-body)
+      * [Testing Response](#testing-response)
+         * [Testing Response Headers](#testing-response-headers)
+         * [Testing REST Apis](#testing-rest-apis)
+         * [Testing HTML Response](#testing-html-response)
+         * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
+      * [Others](#others)
+         * [Testing Endpoint Performance](#testing-endpoint-performance)
+         * [Using SOAP Apis](#using-soap-apis)
+         * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
+         * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
+   * [Man Page](#man-page)
+      * [Name](#name)
+      * [Synopsis](#synopsis)
+      * [Description](#description)
+      * [Hurl File Format](#hurl-file-format)
+         * [Capturing values](#capturing-values)
+         * [Asserts](#asserts)
+      * [Options](#options)
+      * [Environment](#environment)
+      * [Exit Codes](#exit-codes)
+      * [WWW](#www)
+      * [See Also](#see-also)
+   * [Installation](#installation)
+      * [Binaries Installation](#binaries-installation)
+         * [Linux](#linux)
+            * [Debian / Ubuntu](#debian--ubuntu)
+            * [Arch Linux / Manjaro](#arch-linux--manjaro)
+         * [macOS](#macos)
+         * [Windows](#windows)
+            * [Zip File](#zip-file)
+            * [Installer](#installer)
+         * [Cargo](#cargo)
+      * [Building From Sources](#building-from-sources)
+         * [Build on Linux, macOS](#build-on-linux-macos)
+         * [Build on Windows](#build-on-windows)
 # Samples
 
 To run a sample, you can edit a file with the sample content, and use Hurl:
