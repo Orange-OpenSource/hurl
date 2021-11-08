@@ -28,6 +28,7 @@ pub use self::options::output_color;
 pub use self::options::parse_options;
 pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
+pub use self::variables::parse_value as parse_variable_value;
 
 mod fs;
 pub mod interactive;
