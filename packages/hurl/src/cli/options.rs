@@ -228,6 +228,13 @@ pub fn app() -> App<'static, 'static> {
                 .help("Use proxy on given protocol/host/port"),
         )
         .arg(
+            clap::Arg::with_name("report_html")
+                .long("report-html")
+                .value_name("DIR")
+                .help("Generate html report to dir")
+                .takes_value(true),
+        )
+        .arg(
             clap::Arg::with_name("summary")
                 .long("summary")
                 .help("Print test metrics at the end of the run"),
@@ -311,7 +318,19 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let fail_fast = !matches.is_present("fail_at_end");
     let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let follow_location = matches.is_present("follow_location");
-    let html_dir = if let Some(dir) = matches.value_of("html") {
+
+    // deprecated
+    // Support --report-html and --html only for the current version
+    if matches.is_present("html") {
+        eprintln!("The option --html is deprecated. It has been renamed to --report-html.");
+        eprintln!("It will be removed in the next version");
+    }
+    let report_html = if let Some(dir) = matches.value_of("html") {
+        Some(dir)
+    } else {
+        matches.value_of("report_html")
+    };
+    let html_dir = if let Some(dir) = report_html {
         let path = Path::new(dir);
         if !path.exists() {
             match std::fs::create_dir(path) {
