@@ -1100,3 +1100,19 @@ fn test_insecure() {
     assert_eq!(request.url, "https://localhost:8001/hello");
     assert_eq!(response.status, 200);
 }
+
+#[test]
+fn test_version() {
+    // This test if only informative for the time-being
+
+    let output = std::process::Command::new("curl")
+        .args(["--version"])
+        .output()
+        .expect("failed to execute process");
+    let curl_version = std::str::from_utf8(&output.stdout).unwrap();
+    let index = curl_version.find("libcurl").expect("libcurl substring");
+    let expected_version = &curl_version[index..];
+    eprintln!("{:?}", expected_version);
+    let versions = libcurl_version_info();
+    eprintln!("{:?}", versions);
+}

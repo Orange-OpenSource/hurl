@@ -26,6 +26,7 @@ pub use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpe
 #[cfg(test)]
 pub use self::response::tests::*;
 pub use self::response::{Response, Version};
+pub use self::version::libcurl_version_info;
 
 mod client;
 mod core;
@@ -33,3 +34,4 @@ mod options;
 mod request;
 mod request_spec;
 mod response;
+mod version;

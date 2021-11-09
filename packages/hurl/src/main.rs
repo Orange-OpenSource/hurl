@@ -16,7 +16,6 @@
  *
  */
 
-use std::fmt::Write as FmtWrite;
 use std::io::prelude::*;
 use std::io::{self};
 use std::path::{Path, PathBuf};
@@ -25,7 +24,6 @@ use std::time::Instant;
 use atty::Stream;
 use colored::*;
 
-use curl::Version;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
@@ -248,7 +246,11 @@ pub fn unwrap_or_exit<T>(
 }
 
 fn main() {
-    let version_info = get_version_info();
+    let version_info = format!(
+        "{} {}",
+        clap::crate_version!(),
+        http::libcurl_version_info().join(" ")
+    );
     let app = cli::app().version(version_info.as_str());
     let matches = app.clone().get_matches();
     init_colored();
@@ -581,38 +583,4 @@ fn get_summary(duration: u128, hurl_results: Vec<HurlResult>) -> String {
     );
     s.push_str(format!("Duration:  {}ms\n", duration).as_str());
     s
-}
-
-fn get_version_info() -> String {
-    let mut ver_string = String::new();
-    let curl_v = Version::get();
-    writeln!(ver_string, clap::crate_version!()).expect("Failed to write hurl version string");
-    for (lib, ver) in [
-        ("libcurl", Some(curl_v.version())),
-        ("", curl_v.ssl_version()),
-        ("zlib", curl_v.libz_version()),
-        ("", curl_v.nghttp2_version()),
-        ("ares", curl_v.ares_version()),
-        ("brotli", curl_v.brotli_version()),
-        ("gsasl", curl_v.gsasl_version()),
-        ("hyper", curl_v.hyper_version()),
-        (
-            "iconv",
-            curl_v.iconv_version_num().map(|v| v.to_string()).as_deref(),
-        ),
-        ("libidn", curl_v.libidn_version()),
-        ("libssh", curl_v.libssh_version()),
-        ("quic", curl_v.quic_version()),
-    ] {
-        if let Some(version) = ver {
-            if !lib.is_empty() {
-                write!(ver_string, "{}/{} ", lib, version)
-                    .expect("Failed to write custom lib version");
-            } else {
-                write!(ver_string, "{} ", version).expect("Failed to write lib version string");
-            }
-        }
-    }
-    writeln!(ver_string).expect("Failed to write version string");
-    ver_string
 }
