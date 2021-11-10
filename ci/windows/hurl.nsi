@@ -1,14 +1,18 @@
 ; includes
 !include "MUI2.nsh"
+!include "FileFunc.nsh"
 
 ; define icons
 !define MUI_ICON "..\..\ci\windows\logo.ico"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "..\..\ci\windows\logo.png"
+!define MUI_HEADERIMAGE_BITMAP "..\..\ci\windows\logo.bmp"
 !define MUI_HEADERIMAGE_RIGHT
 
 ; define version
 !define /file VERSION "version.txt"
+
+; define windows uninstall panel regestry path
+!define UNINSTALLPANELKEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Hurl"
 
 ; The name of the installer
 Name "hurl ${VERSION}"
@@ -59,6 +63,22 @@ SectionGroup "executables"
     SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
+    ; Write windows uninstall panel informations  
+    ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+    IntFmt $0 "0x%08X" $0
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl - Command line tool that runs HTTP requests defined in a simple plain text format."
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayVersion" "${VERSION}"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLUpdateInfo" "https://github.com/Orange-OpenSource/hurl/releases"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLInfoAbout" "https://github.com/Orange-OpenSource/hurl"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "HelpLink" "https://www.hurl.dev"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "RegCompany" "Orange-OpenSource"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "Readme" "$INSTDIR\README.md"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "NoModify" 1
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "NoRepair" 1
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "InstallLocation" "$INSTDIR"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "Publisher" "Orange-OpenSource"    
+    WriteRegDWORD HKLM "${UNINSTALLPANELKEY}" "EstimatedSize" "$0"
   SectionEnd
   Section "hurlfmt.exe"
     SectionIn RO
@@ -123,6 +143,8 @@ Section "Uninstall"
   ; Remove installed files
   Delete $INSTDIR\*
   RMDir "$INSTDIR"
+  ; Remove entry from windows uninstaller panel
+  DeleteRegKey HKLM "${UNINSTALLPANELKEY}"
   ; Remove install dir from user Path variable
   EnVar::SetHKCU
   EnVar::Check "NULL" "NULL"	
