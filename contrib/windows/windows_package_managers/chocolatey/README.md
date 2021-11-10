@@ -1,6 +1,6 @@
 # how to manage hurl chocolatey package
 
-First update *.nuspec and tools/*.ps1 files and execute local installer:
+First update *.nuspec and tools/*.ps1 files and then execute local installer:
 
 ```
 choco pack
@@ -9,7 +9,7 @@ hurl --version
 echo GET google.fr | hurl --location
 ```
 
-Then push package to offical chocolatey repository
+and finally push package to official chocolatey repository
 
 ```
 choco apikey -k [API_KEY_HERE] -source https://push.chocolatey.org/
