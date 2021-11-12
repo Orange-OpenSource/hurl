@@ -7,9 +7,7 @@
 [![Crates.io](https://img.shields.io/crates/v/hurl.svg)](https://crates.io/crates/hurl)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
-# Presentation
-
-## What's Hurl?
+# What's Hurl?
 
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
@@ -42,7 +40,7 @@ GET https://api.example.net/step2
 GET https://api.example.net/step3
 ```
 
-## Also an HTTP Test Tool
+# Also an HTTP Test Tool
 
 Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response, 
@@ -114,7 +112,7 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
 
-## Why Hurl?
+# Why Hurl?
 
 <ul class="showcase-container">
  <li><b>Text Format:</b> for both devops and developers</li>
@@ -122,14 +120,14 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
  <li><b>Single Binary:</b> easy to install, with no runtime required</li>
 </ul>
 
-## Powered by curl
+# Powered by curl
 
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is 
 powered by [libcurl], one of the most powerful and reliable file transfer library. 
 With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests, 
 but it's still the [curl] that we love.
 
-## Feedbacks
+# Feedbacks
 
 Hurl is still in beta, any [feedback, suggestion, bugs or improvements] 
 are welcome.
@@ -143,7 +141,7 @@ POST https://hurl.dev/api/feedback
 HTTP/1.1 200
 ```
 
-## Resources
+# Resources
 
 [License]
 
@@ -192,6 +190,9 @@ Table of Contents
          * [Windows](#windows)
             * [Zip File](#zip-file)
             * [Installer](#installer)
+            * [Chocolatey](#chocolatey)
+            * [Scoop](#scoop)
+            * [Windows Package Manager](#windows-package-manager)
          * [Cargo](#cargo)
       * [Building From Sources](#building-from-sources)
          * [Build on Linux, macOS](#build-on-linux-macos)
@@ -752,7 +753,6 @@ hurl --version
 hurl 1.4.0
 ```
 
-
 #### Debian / Ubuntu
 
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
@@ -786,11 +786,27 @@ hurl 1.4.0
 
 Hurl can be installed from a standalone zip file [hurl-1.4.0-win64.zip]. You will need to update your `PATH` variable.
 
-
 #### Installer
 
-An installer [hurl-1.4.0-win64-installer.exe] is also available. 
+An installer [hurl-1.4.0-win64-installer.exe] is also available.
 
+#### Chocolatey
+
+```
+choco install hurl
+```
+
+#### Scoop
+
+```
+scoop install hurl
+```
+
+#### Windows Package Manager
+
+```
+winget install hurl
+```
 
 ### Cargo
 
