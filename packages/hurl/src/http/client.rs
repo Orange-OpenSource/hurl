@@ -554,7 +554,10 @@ pub fn all_cookies(cookie_storage: Vec<Cookie>, request: &RequestSpec) -> Vec<Re
 ///
 pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
     // is it possible to do it with libcurl?
-    let url = Url::parse(url).expect("valid url");
+    let url = match Url::parse(url) {
+        Ok(url) => url,
+        Err(_) => return false,
+    };
     if let Some(domain) = url.domain() {
         if cookie.include_subdomain == "FALSE" {
             if cookie.domain != domain {
