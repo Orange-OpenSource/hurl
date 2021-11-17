@@ -106,7 +106,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2    
-    - uses: addnab/docker-run-action@v3
+    - name: Test in docker
+      uses: addnab/docker-run-action@v3
       with:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
@@ -142,6 +143,53 @@ jobs:
       if: ${{ always() }}
       with:
         name: tests-archlinux-x64-artifacts
+        path: |
+          integration/mitmdump.log
+          integration/server.log
+          integration/server-ssl.log
+
+  test-fedora-x64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2    
+    - name: Test in docker
+      uses: addnab/docker-run-action@v3
+      with:
+        image: fedora
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        run: |
+          set -eu
+          uname -a
+          uname -m
+          echo "----- install build prerequisites -----"
+          yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustc --version
+          cargo --version
+          echo "----- build -----"
+          cargo build --verbose
+          echo "----- install servers prerequisites -----"
+          yum install -y python3-devel python3-pip
+          python3 -m pip install --upgrade pip --quiet
+          pip3 install lxml bs4 Flask mitmproxy
+          export PATH="$PWD/target/debug:$PATH"
+          echo "----- start servers -----"
+          cd integration
+          python3 server.py >server.log 2>&1 &
+          python3 ssl/server.py >server-ssl.log 2>&1 &
+          mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
+          ps auxww | grep -v grep | grep -E "server.py|mitmdump"
+          echo "----- tests units -----"
+          cargo test --features strict
+          echo "----- integration tests -----"
+          ./integration.py
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: tests-fedora-x64-artifacts
         path: |
           integration/mitmdump.log
           integration/server.log
