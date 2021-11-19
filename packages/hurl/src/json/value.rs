@@ -23,10 +23,7 @@ impl Value {
         match self {
             Value::Bool(v) => serde_json::Value::Bool(*v),
             Value::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),
-            Value::Float(i, d) => {
-                let value = *i as f64 + (*d as f64) / 1_000_000_000_000_000_000.0;
-                serde_json::Value::Number(serde_json::Number::from_f64(value).unwrap())
-            }
+            Value::Float(f) => serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap()),
             Value::String(s) => serde_json::Value::String(s.clone()),
             Value::List(values) => {
                 let values = values.iter().map(|v| v.to_json()).collect();

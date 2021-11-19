@@ -457,9 +457,8 @@ mod tests {
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
                 value: PredicateValue::Float(Float {
-                    int: 1,
-                    decimal: 100_000_000_000_000_000,
-                    decimal_digits: 1,
+                    value: 1.1,
+                    encoded: "1.1".to_string()
                 }),
                 space0: Whitespace {
                     value: String::from(" "),

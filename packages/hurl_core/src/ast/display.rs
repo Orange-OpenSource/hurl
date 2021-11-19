@@ -90,11 +90,7 @@ impl fmt::Display for TemplateElement {
 
 impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let decimal_str: String = format!("{:018}", self.decimal)
-            .chars()
-            .take(self.decimal_digits)
-            .collect();
-        write!(f, "{}.{}", self.int, decimal_str)
+        write!(f, "{}", self.encoded)
     }
 }
 
@@ -246,36 +242,32 @@ mod tests {
     fn test_float() {
         assert_eq!(
             Float {
-                int: 1,
-                decimal: 0,
-                decimal_digits: 1,
+                value: 1.0,
+                encoded: "1.0".to_string()
             }
             .to_string(),
             "1.0"
         );
         assert_eq!(
             Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 2,
+                value: 1.01,
+                encoded: "1.01".to_string()
             }
             .to_string(),
             "1.01"
         );
         assert_eq!(
             Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 3,
+                value: 1.01,
+                encoded: "1.010".to_string()
             }
             .to_string(),
             "1.010"
         );
         assert_eq!(
             Float {
-                int: -1,
-                decimal: 333_333_333_333_333_333,
-                decimal_digits: 3,
+                value: -1.333,
+                encoded: "-1.333".to_string()
             }
             .to_string(),
             "-1.333"
@@ -295,15 +287,15 @@ mod tests {
                     quotes: false,
                     elements: vec![TemplateElement::String {
                         value: "LSID".to_string(),
-                        encoded: "unused".to_string()
+                        encoded: "unused".to_string(),
                     }],
-                    source_info: SourceInfo::init(0, 0, 0, 0)
+                    source_info: SourceInfo::init(0, 0, 0, 0),
                 },
                 attribute: Some(CookieAttribute {
                     space0: whitespace(),
                     name: CookieAttributeName::MaxAge("Max-Age".to_string()),
-                    space1: whitespace()
-                })
+                    space1: whitespace(),
+                }),
             }
             .to_string(),
             "LSID[Max-Age]".to_string()

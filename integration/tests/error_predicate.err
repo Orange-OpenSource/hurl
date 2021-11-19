@@ -35,7 +35,7 @@ error: Assert Failure
    |
  9 | jsonpath "$.number" equals 1.1
    |   actual:   float <1.0>
-   |   expected: float <1.100000000000000000>
+   |   expected: float <1.1>
    |
 
 error: Assert Failure

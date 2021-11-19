@@ -404,8 +404,12 @@ pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
 pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
     // non recoverable after the dot
     // an integer is parsed ok as float => no like a computer language
-    let int = integer(reader)?;
-
+    let start = reader.state.cursor;
+    let sign = match try_literal("-", reader) {
+        Err(_) => "",
+        Ok(_) => "-",
+    };
+    let nat = natural(reader)?;
     try_literal(".", reader)?;
 
     if reader.is_eof() {
@@ -428,13 +432,9 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
             },
         });
     }
-    let decimal = format!("{:0<18}", s).parse().unwrap();
-    let decimal_digits = s.len();
-    Ok(Float {
-        int,
-        decimal,
-        decimal_digits,
-    })
+    let value = format!("{}{}.{}", sign, nat, s).parse().unwrap();
+    let encoded = reader.from(start);
+    Ok(Float { value, encoded })
 }
 
 pub fn raw_string(reader: &mut Reader) -> ParseResult<'static, RawString> {
@@ -918,9 +918,8 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 1,
-                decimal: 0,
-                decimal_digits: 1,
+                value: 1.0,
+                encoded: "1.0".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -929,9 +928,8 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: -1,
-                decimal: 0,
-                decimal_digits: 1,
+                value: -1.0,
+                encoded: "-1.0".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -940,9 +938,8 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 1,
-                decimal: 100_000_000_000_000_000,
-                decimal_digits: 1,
+                value: 1.1,
+                encoded: "1.1".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -951,9 +948,8 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 1,
-                decimal: 100_000_000_000_000_000,
-                decimal_digits: 3,
+                value: 1.1,
+                encoded: "1.100".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 5);
@@ -962,9 +958,8 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 2,
+                value: 1.01,
+                encoded: "1.01".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -973,23 +968,22 @@ mod tests {
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 1,
-                decimal: 10_000_000_000_000_000,
-                decimal_digits: 3,
+                value: 1.01,
+                encoded: "1.010".to_string()
             }
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("-0.333333333333333333");
+        // provide more digits than necessary
+        let mut reader = Reader::init("-0.3333333333333333333");
         assert_eq!(
             float(&mut reader).unwrap(),
             Float {
-                int: 0,
-                decimal: 333_333_333_333_333_333,
-                decimal_digits: 18,
+                value: -0.3333333333333333,
+                encoded: "-0.3333333333333333333".to_string()
             }
         );
-        assert_eq!(reader.state.cursor, 21);
+        assert_eq!(reader.state.cursor, 22);
     }
 
     #[test]

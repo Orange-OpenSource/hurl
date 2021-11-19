@@ -38,7 +38,7 @@ pub fn eval_predicate_value(
             Ok(Value::String(s))
         }
         PredicateValue::Integer(value) => Ok(Value::Integer(value)),
-        PredicateValue::Float(value) => Ok(Value::Float(value.int, value.decimal)),
+        PredicateValue::Float(value) => Ok(Value::Float(value.value)),
         PredicateValue::Bool(value) => Ok(Value::Bool(value)),
         PredicateValue::Null {} => Ok(Value::Null {}),
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value)),

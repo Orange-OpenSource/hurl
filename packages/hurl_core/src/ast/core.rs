@@ -550,16 +550,18 @@ pub struct Number {
 // different representation for the same float value
 // 1.01 and 1.010
 
-// TBC: Issue with equality for f64
-// represent your float only with integers
-// must be easily compared to the ast float value
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub struct Float {
-    pub int: i64,
-    pub decimal: u64,
-    // use 18 digits
-    pub decimal_digits: usize, // number of digits
+    pub value: f64,
+    pub encoded: String, // as defined in Hurl
 }
+
+impl PartialEq for Float {
+    fn eq(&self, other: &Self) -> bool {
+        self.encoded == other.encoded
+    }
+}
+impl Eq for Float {}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LineTerminator {

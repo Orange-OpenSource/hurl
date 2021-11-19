@@ -1,0 +1,22 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/float</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[1]"</span> <span class="predicate-type">==</span> <span class="number">0.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">==</span> <span class="number">0.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">==</span> <span class="number">0.0000000000000001</span></span>    <span class="comment"># too small</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[3]"</span> <span class="predicate-type">==</span> <span class="number">0.000000000000001</span></span>     <span class="comment"># The smallest decimal</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[4]"</span> <span class="predicate-type">==</span> <span class="number">0.333</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[4]"</span> <span class="predicate-type">!=</span> <span class="number">0.3333333333333333</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[5]"</span> <span class="predicate-type">==</span> <span class="number">0.3333333333333333</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[5]"</span> <span class="predicate-type">==</span> <span class="number">0.333333333333333333</span></span>  <span class="comment"># exceeding floating-point precision in expected value</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[6]"</span> <span class="predicate-type">==</span> <span class="number">0.333333333333333333</span></span>  <span class="comment"># exceeding floating-point precision in json response</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[7]"</span> <span class="predicate-type">==</span> <span class="number">1.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[7]"</span> <span class="predicate-type">==</span> <span class="number">1</span></span>                     <span class="comment"># using an expected integer</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[8]"</span> <span class="predicate-type">==</span> <span class="number">1.001</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[9]"</span> <span class="predicate-type">==</span> <span class="number">1.07</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[9]"</span> <span class="predicate-type">==</span> <span class="number">1.070</span></span>                 <span class="comment"># additional trailing zero in expected value</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[10]"</span> <span class="predicate-type">==</span> <span class="number">1.07</span></span>                 <span class="comment"># additional trailing zero in json response</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[11]"</span> <span class="predicate-type">==</span> <span class="number">1.1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[12]"</span> <span class="predicate-type">==</span> <span class="number">1.5</span></span>
+<span class="json"><span class="line">[ -2.2, 0.0, 0.0000000000000001, 0.000000000000001, 0.333, 0.3333333333333333, 0.333333333333333333, 1.0, 1.001, 1.07, 1.070, 1.1, 1.5 ]</span></span>
+</span></span></code></pre>
