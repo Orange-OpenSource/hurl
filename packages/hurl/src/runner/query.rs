@@ -934,7 +934,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Float(2, 0)
+            Value::Float(2.0)
         );
     }
 

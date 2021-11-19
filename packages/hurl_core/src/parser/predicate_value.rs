@@ -103,9 +103,8 @@ mod tests {
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Float(Float {
-                int: 1,
-                decimal: 100_000_000_000_000_000,
-                decimal_digits: 1,
+                value: 1.1,
+                encoded: "1.1".to_string(),
             })
         );
     }

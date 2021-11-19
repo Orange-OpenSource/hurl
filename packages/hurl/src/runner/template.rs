@@ -78,11 +78,7 @@ impl Value {
     pub fn is_renderable(&self) -> bool {
         matches!(
             self,
-            Value::Integer(_)
-                | Value::Bool(_)
-                | Value::Float(_, _)
-                | Value::String(_)
-                | Value::Null
+            Value::Integer(_) | Value::Bool(_) | Value::Float(_) | Value::String(_) | Value::Null
         )
     }
 }

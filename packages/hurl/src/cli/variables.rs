@@ -42,10 +42,7 @@ pub fn parse_value(s: &str) -> Result<Value, CliError> {
     } else if let Ok(v) = s.parse::<i64>() {
         Ok(Value::Integer(v))
     } else if let Ok(v) = s.parse::<f64>() {
-        Ok(Value::Float(
-            v.trunc() as i64,
-            (v.fract() * 1_000_000_000_000_000_000.0).round() as u64,
-        ))
+        Ok(Value::Float(v))
     } else if let Some(s) = s.strip_prefix('"') {
         if let Some(s) = s.strip_suffix('"') {
             Ok(Value::String(s.to_string()))
@@ -79,10 +76,7 @@ pub mod tests {
         );
         assert_eq!(
             parse("height=1.7").unwrap(),
-            (
-                "height".to_string(),
-                Value::Float(1, 700_000_000_000_000_000)
-            )
+            ("height".to_string(), Value::Float(1.7))
         );
         assert_eq!(
             parse("id=\"123\"").unwrap(),
@@ -112,12 +106,9 @@ pub mod tests {
         );
         assert_eq!(parse_value("true").unwrap(), Value::Bool(true));
         assert_eq!(parse_value("30").unwrap(), Value::Integer(30));
-        assert_eq!(
-            parse_value("1.7").unwrap(),
-            Value::Float(1, 700_000_000_000_000_000)
-        );
-        assert_eq!(parse_value("1.0").unwrap(), Value::Float(1, 0));
-        assert_eq!(parse_value("-1.0").unwrap(), Value::Float(-1, 0));
+        assert_eq!(parse_value("1.7").unwrap(), Value::Float(1.7));
+        assert_eq!(parse_value("1.0").unwrap(), Value::Float(1.0));
+        assert_eq!(parse_value("-1.0").unwrap(), Value::Float(-1.0));
         assert_eq!(
             parse_value("\"123\"").unwrap(),
             Value::String("123".to_string())

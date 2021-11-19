@@ -340,7 +340,7 @@ mod tests {
             .unwrap(),
             vec![CaptureResult {
                 name: "UserCount".to_string(),
-                value: Value::Float(2, 0),
+                value: Value::Float(2.0),
             }]
         );
     }

@@ -95,7 +95,7 @@ impl Value {
             Value::Bool(v) => format!("bool <{}>", v.to_string()),
             Value::Integer(v) => format!("int <{}>", v.to_string()),
             Value::String(v) => format!("string <{}>", v),
-            Value::Float(i, d) => format!("float <{}.{}>", i, d),
+            Value::Float(f) => format!("float <{}>", format_float(f)),
             Value::List(values) => format!(
                 "[{}]",
                 values
@@ -135,17 +135,25 @@ fn eval_predicate_func(
 impl Value {
     pub fn expected(&self) -> String {
         match self {
-            Value::Unit => "something".to_string(),
             Value::Bool(value) => format!("bool <{}>", value),
-            Value::Integer(value) => format!("integer <{}>", value),
-            Value::String(value) => format!("string <{}>", value),
-            Value::List(value) => format!("list of size {}", value.len()),
-            Value::Object(values) => format!("list of size {}", values.len()),
-            Value::Nodeset(size) => format!("list of size {}", size),
             Value::Bytes(values) => format!("list of size {}", values.len()),
+            Value::Float(f) => format!("float <{}>", format_float(*f)),
+            Value::Integer(value) => format!("integer <{}>", value),
+            Value::List(value) => format!("list of size {}", value.len()),
+            Value::Nodeset(size) => format!("list of size {}", size),
             Value::Null => "null".to_string(),
-            Value::Float(i, d) => format!("float <{}.{}>", i, d),
+            Value::Object(values) => format!("list of size {}", values.len()),
+            Value::String(value) => format!("string <{}>", value),
+            Value::Unit => "something".to_string(),
         }
+    }
+}
+
+fn format_float(value: f64) -> String {
+    if value.fract() < f64::EPSILON {
+        format!("{}.0", value)
+    } else {
+        value.to_string()
     }
 }
 
@@ -441,7 +449,7 @@ fn eval_something(
             type_mismatch: false,
         }),
         PredicateFuncValue::IsFloat {} => Ok(AssertResult {
-            success: matches!(value, Value::Float(_, _)),
+            success: matches!(value, Value::Float(_)),
             actual: value.display(),
             expected: "float".to_string(),
             type_mismatch: false,
@@ -507,20 +515,20 @@ fn assert_values_equal(actual: Value, expected: Value) -> AssertResult {
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Float(int1, decimal), Value::Integer(int2)) => AssertResult {
-            success: int1 == int2 && decimal == 0,
+        (Value::Float(f), Value::Integer(i)) => AssertResult {
+            success: (f.trunc() - i as f64).abs() < f64::EPSILON && f.fract() == 0.0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Integer(int1), Value::Float(int2, decimal)) => AssertResult {
-            success: int1 == int2 && decimal == 0,
+        (Value::Integer(i), Value::Float(f)) => AssertResult {
+            success: (f.trunc() - i as f64).abs() < f64::EPSILON && f.fract() == 0.0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Float(i1, d1), Value::Float(i2, d2)) => AssertResult {
-            success: i1 == i2 && d1 == d2,
+        (Value::Float(f1), Value::Float(f2)) => AssertResult {
+            success: (f1 - f2).abs() < f64::EPSILON,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
@@ -578,20 +586,20 @@ fn assert_values_not_equal(actual: Value, expected: Value) -> AssertResult {
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Float(int1, decimal), Value::Integer(int2)) => AssertResult {
-            success: int1 != int2 || decimal != 0,
+        (Value::Float(f), Value::Integer(i)) => AssertResult {
+            success: (f.trunc() - i as f64).abs() > f64::EPSILON || f.fract() != 0.0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Integer(int1), Value::Float(int2, decimal)) => AssertResult {
-            success: int1 != int2 && decimal != 0,
+        (Value::Integer(i), Value::Float(f)) => AssertResult {
+            success: (f.trunc() - i as f64).abs() > f64::EPSILON || f.fract() != 0.0,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
         },
-        (Value::Float(i1, d1), Value::Float(i2, d2)) => AssertResult {
-            success: i1 != i2 || d1 != d2,
+        (Value::Float(f1), Value::Float(f2)) => AssertResult {
+            success: (f1 - f2).abs() > f64::EPSILON,
             actual: actual.display(),
             expected: expected.display(),
             type_mismatch: false,
@@ -731,28 +739,20 @@ fn assert_values_less_or_equal(actual_value: Value, expected_value: Value) -> As
 
 // return -1, 0 or 1
 // none if one of the value is not a number
-// attention: actual and expected are not symetrical
-// you can expect an Integer with actual float, but not the reverse
 fn compare_numbers(actual: Value, expected: Value) -> Option<i32> {
     match (actual, expected) {
-        (Value::Integer(value1), Value::Integer(value2)) => {
-            Some(compare_float((value1, 0), (value2, 0)))
-        }
-        (Value::Float(i1, d1), Value::Float(i2, d2)) => Some(compare_float((i1, d1), (i2, d2))),
-        (Value::Float(i1, d1), Value::Integer(i2)) => Some(compare_float((i1, d1), (i2, 0))),
-        (Value::Integer(i1), Value::Float(i2, d2)) => Some(compare_float((i1, 0), (i2, d2))),
+        (Value::Integer(i1), Value::Integer(i2)) => Some(compare_float(i1 as f64, i2 as f64)),
+        (Value::Float(f1), Value::Float(f2)) => Some(compare_float(f1, f2)),
+        (Value::Float(f1), Value::Integer(i2)) => Some(compare_float(f1, i2 as f64)),
+        (Value::Integer(i1), Value::Float(f2)) => Some(compare_float(i1 as f64, f2)),
         _ => None,
     }
 }
 
-fn compare_float((i1, d1): (i64, u64), (i2, d2): (i64, u64)) -> i32 {
-    if i1 > i2 {
+fn compare_float(f1: f64, f2: f64) -> i32 {
+    if f1 > f2 {
         1
-    } else if i1 < i2 {
-        -1
-    } else if (i1 > 0 && d1 > d2) || (i1 < 0 && d1 < d2) {
-        1
-    } else if (i1 > 0 && d1 < d2) || (i1 < 0 && d1 > d2) {
+    } else if f1 < f2 {
         -1
     } else {
         0
@@ -959,25 +959,21 @@ mod tests {
                 value: PredicateFuncValue::Equal {
                     space0: whitespace,
                     value: PredicateValue::Float(Float {
-                        int: 1,
-                        decimal: 200_000_000_000_000_000,
-                        decimal_digits: 0,
+                        value: 1.2,
+                        encoded: "1.2".to_string(),
                     }),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
             &variables,
-            Value::Float(1, 1),
+            Value::Float(1.1),
         )
         .unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
-        assert_eq!(
-            assert_result.expected.as_str(),
-            "float <1.200000000000000000>"
-        );
+        assert_eq!(assert_result.expected.as_str(), "float <1.2>");
     }
 
     #[test]
@@ -1001,7 +997,7 @@ mod tests {
     }
 
     #[test]
-    fn test_predicate_value_equals() {
+    fn test_predicate_value_equals_integers() {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -1010,7 +1006,7 @@ mod tests {
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::Equal {
-                    space0: whitespace.clone(),
+                    space0: whitespace,
                     value: PredicateValue::Integer(1),
                     operator: false,
                 },
@@ -1024,11 +1020,19 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
         assert_eq!(assert_result.expected.as_str(), "int <1>");
+    }
 
+    #[test]
+    fn test_predicate_value_equals_booleans() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::Equal {
-                    space0: whitespace.clone(),
+                    space0: whitespace,
                     value: PredicateValue::Bool(false),
                     operator: false,
                 },
@@ -1042,29 +1046,44 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
         assert_eq!(assert_result.expected.as_str(), "bool <false>");
+    }
 
+    #[test]
+    fn test_predicate_value_equals_floats() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::Equal {
-                    space0: whitespace.clone(),
+                    space0: whitespace,
                     value: PredicateValue::Float(Float {
-                        int: 1,
-                        decimal: 1,
-                        decimal_digits: 1,
+                        value: 1.1,
+                        encoded: "1.1".to_string(),
                     }),
                     operator: false,
                 },
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
             &variables,
-            Value::Float(1, 1),
+            Value::Float(1.1),
         )
         .unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
         assert_eq!(assert_result.expected.as_str(), "float <1.1>");
+    }
 
+    #[test]
+    fn test_predicate_value_equals_float_integer() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
         // a float can be equals to an int (but the reverse)
         let assert_result = eval_something(
             PredicateFunc {
@@ -1076,7 +1095,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
             &variables,
-            Value::Float(1, 0),
+            Value::Float(1.0),
         )
         .unwrap();
         assert!(assert_result.success);
@@ -1191,12 +1210,12 @@ mod tests {
 
     #[test]
     fn test_compare_float() {
-        assert_eq!(compare_float((2, 3), (1, 2)), 1);
-        assert_eq!(compare_float((2, 3), (2, 2)), 1);
-        assert_eq!(compare_float((2, 3), (-4, 2)), 1);
-        assert_eq!(compare_float((2, 3), (2, 3)), 0);
-        assert_eq!(compare_float((2, 3), (3, 2)), -1);
-        assert_eq!(compare_float((2, 3), (2, 4)), -1);
+        assert_eq!(compare_float(2.3, 1.2), 1);
+        assert_eq!(compare_float(2.3, 2.2), 1);
+        assert_eq!(compare_float(2.3, -4.2), 1);
+        assert_eq!(compare_float(2.3, 2.3), 0);
+        assert_eq!(compare_float(2.3, 3.2), -1);
+        assert_eq!(compare_float(2.3, 2.4), -1);
     }
 
     #[test]
@@ -1221,47 +1240,47 @@ mod tests {
 
         // 2 floats
         assert_eq!(
-            compare_numbers(Value::Float(2, 3), Value::Float(1, 2)).unwrap(),
+            compare_numbers(Value::Float(2.3), Value::Float(1.2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(Value::Float(2, 3), Value::Float(2, 2)).unwrap(),
+            compare_numbers(Value::Float(2.3), Value::Float(2.2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(Value::Float(1, 2), Value::Float(1, 5)).unwrap(),
+            compare_numbers(Value::Float(1.2), Value::Float(1.5)).unwrap(),
             -1
         );
         assert_eq!(
-            compare_numbers(Value::Float(-2, 1), Value::Float(-3, 1)).unwrap(),
+            compare_numbers(Value::Float(-2.1), Value::Float(-3.1)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(Value::Float(1, 1), Value::Float(-2, 1)).unwrap(),
+            compare_numbers(Value::Float(1.1), Value::Float(-2.1)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(Value::Float(1, 1), Value::Float(1, 1)).unwrap(),
+            compare_numbers(Value::Float(1.1), Value::Float(1.1)).unwrap(),
             0
         );
 
         // 1 float and 1 integer
         assert_eq!(
-            compare_numbers(Value::Float(2, 3), Value::Integer(2)).unwrap(),
+            compare_numbers(Value::Float(2.3), Value::Integer(2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(Value::Float(2, 3), Value::Integer(3)).unwrap(),
+            compare_numbers(Value::Float(2.3), Value::Integer(3)).unwrap(),
             -1
         );
         assert_eq!(
-            compare_numbers(Value::Float(2, 0), Value::Integer(2)).unwrap(),
+            compare_numbers(Value::Float(2.0), Value::Integer(2)).unwrap(),
             0
         );
 
         // 1 integer and 1 float
         assert_eq!(
-            compare_numbers(Value::Integer(2), Value::Float(2, 0)).unwrap(),
+            compare_numbers(Value::Integer(2), Value::Float(2.0)).unwrap(),
             0
         );
 
@@ -1290,7 +1309,7 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(Value::Float(1, 1), Value::Integer(1)),
+            assert_values_greater(Value::Float(1.1), Value::Integer(1)),
             AssertResult {
                 success: true,
                 type_mismatch: false,
@@ -1299,7 +1318,7 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(Value::Float(1, 1), Value::Integer(2)),
+            assert_values_greater(Value::Float(1.1), Value::Integer(2)),
             AssertResult {
                 success: false,
                 type_mismatch: false,
@@ -1434,7 +1453,7 @@ mod tests {
                 source_info: SourceInfo::init(0, 0, 0, 0),
             },
             &variables,
-            Value::Float(1, 0),
+            Value::Float(1.0),
         )
         .unwrap();
         assert!(!assert_result.success);
