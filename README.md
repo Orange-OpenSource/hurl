@@ -153,6 +153,7 @@ Table of Contents
 =================
    * [Samples](#samples)
       * [Getting Data](#getting-data)
+         * [HTTP Headers](#http-headers)
          * [Query Params](#query-params)
       * [Sending Data](#sending-data)
          * [Sending HTML Form Datas](#sending-html-form-datas)
@@ -201,7 +202,7 @@ Table of Contents
 
 To run a sample, you can edit a file with the sample content, and use Hurl:
 
-```
+```shell
 $ vi sample.hurl
 
 GET https://example.net
@@ -220,6 +221,8 @@ GET https://example.net
 
 [Doc](https://hurl.dev/docs/request.html#method)
 
+### HTTP Headers
+
 A simple GET with headers:
 
 ```hurl
@@ -232,6 +235,25 @@ Connection: keep-alive
 ```
 
 [Doc](https://hurl.dev/docs/request.html#headers)
+
+Headers can be used to perform [Basic authentication]. Given a login `bob` 
+with password `secret`:
+
+In a shell:
+
+```shell
+$ echo -n 'bob:secret' | base64
+Ym9iOnNlY3JldA==
+```
+
+Then, use [`Authorization` header] to add basic authentication to a request:
+
+```hurl
+GET https://example.com/protected
+Authorization: Basic Ym9iOnNlY3JldA==
+```
+
+Alternatively, on can use [`--user` option].
 
 ### Query Params
 
@@ -329,7 +351,7 @@ Content-Type: application/json
 
 Variables can be initialized via command line:
 
-```bash
+```shell
 $ hurl --variable key0=apple \
        --variable key1=true \
        --variable key2=null \
@@ -382,10 +404,10 @@ header "Location" contains "www.example.net"
 
 ### Testing REST Apis
 
-Asserting JSON body response with [JSONPath]:
+Asserting JSON body response (node values, collection count etc...) with [JSONPath]:
 
 ```hurl
-GET https//example.org/order
+GET https://example.org/order
 screencapability: low
 
 HTTP/1.1 200
@@ -403,7 +425,7 @@ jsonpath "$.state" != null
 Testing status code:
 
 ```hurl
-GET https//example.org/order/435
+GET https://example.org/order/435
 
 HTTP/1.1 200
 ```
@@ -411,7 +433,7 @@ HTTP/1.1 200
 [Doc](https://hurl.dev/docs/asserting-response.html#version-status)
 
 ```hurl
-GET https//example.org/order/435
+GET https://example.org/order/435
 
 # Testing status code is in a 200-300 range
 HTTP/1.1 *
@@ -745,11 +767,11 @@ curl(1)  hurlfmt(1)
 Precompiled binary is available at [hurl-1.4.0-x86_64-linux.tar.gz]:
 
 ```shell
-INSTALL_DIR=/tmp
-curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-export PATH=$INSTALL_DIR/hurl-1.4.0:$PATH
+$ INSTALL_DIR=/tmp
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-1.4.0:$PATH
 
-hurl --version
+$ hurl --version
 hurl 1.4.0
 ```
 
@@ -758,8 +780,8 @@ hurl 1.4.0
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl_1.4.0_amd64.deb
-sudo dpkg -i hurl_1.4.0_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl_1.4.0_amd64.deb
+$ sudo dpkg -i hurl_1.4.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -773,10 +795,10 @@ Precompiled binary is available at [hurl-1.4.0-x86_64-osx.tar.gz].
 Hurl can also be installed with [Homebrew]:
 
 ```shell
-brew tap jcamiel/hurl
-brew install hurl
+$ brew tap jcamiel/hurl
+$ brew install hurl
 
-hurl --version
+$ hurl --version
 hurl 1.4.0
 ```
 
@@ -792,28 +814,28 @@ An installer [hurl-1.4.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
-```
-choco install hurl
+```shell
+$ choco install hurl
 ```
 
 #### Scoop
 
-```
-scoop install hurl
+```shell
+$ scoop install hurl
 ```
 
 #### Windows Package Manager
 
-```
-winget install hurl
+```shell
+$ winget install hurl
 ```
 
 ### Cargo
 
 If you're a Rust programmer, Hurl can be installed with cargo.
 
-```
-cargo install hurl
+```shell
+$ cargo install hurl
 ```
 
 ## Building From Sources
@@ -838,19 +860,19 @@ pacman -Sy --noconfirm pkgconf gcc openssl libxml2
 Hurl is written in [Rust]. You should [install] the latest stable release.
 
 ```shell
-curl https://sh.rustup.rs -sSf | sh -s -- -y
-source $HOME/.cargo/env
-rustc --version
-cargo --version
+$ curl https://sh.rustup.rs -sSf | sh -s -- -y
+$ source $HOME/.cargo/env
+$ rustc --version
+$ cargo --version
 ```
 
 Build
 
 ```shell
-git clone https://github.com/Orange-OpenSource/hurl
-cd hurl
-cargo build --release
-./target/release/hurl --version
+$ git clone https://github.com/Orange-OpenSource/hurl
+$ cd hurl
+$ cargo build --release
+$ ./target/release/hurl --version
 ```
 
 ### Build on Windows
@@ -875,6 +897,9 @@ Please follow the [contrib on Windows section].
 [raw string body]: https://hurl.dev/docs/request.html#raw-string-body
 [predicates]: https://hurl.dev/docs/asserting-response.html#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
+[Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
+[`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+[`--user` option]: https://hurl.dev/docs/man-page.html#user
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.4.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64.zip
 [hurl-1.4.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64-installer.exe
