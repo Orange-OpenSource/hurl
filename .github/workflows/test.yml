@@ -47,11 +47,52 @@ jobs:
       run: |
         ./ci/dependency_age.sh
 
-  test-ubuntu:
+  benchsuite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+      - name: Environment
+        run: |
+          uname -a
+          cargo --version
+      - name: Build
+        run: |
+          # Install libcurl dev so that hurl can be built dynamically with libcurl
+          sudo apt update
+          sudo apt install libcurl4-openssl-dev
+          ci/release.sh
+      - name: Test Prequisites
+        run: |
+          pip3 install Flask
+          cd bench
+          python3 server.py >server.log 2>&1 &
+          sleep 2
+          netstat -an | grep 8000
+      - name: Run Bench Suite
+        run: |
+          export PATH="$PWD/target/release:$PATH"
+          cd bench
+          ./run.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: tests-bench-artifacts
+          path: |
+            bench/server.log
+
+  test-ubuntu-x64:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, nightly]
+        rust: [stable]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -101,12 +142,12 @@ jobs:
           integration/report/tests.json
           integration/report/tests.xml
 
-  test-archlinux-x64:
+  test-docker-archlinux-x64:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2    
-    - name: Test in docker
+    - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
@@ -148,12 +189,12 @@ jobs:
           integration/server.log
           integration/server-ssl.log
 
-  test-fedora-x64:
+  test-docker-fedora-x64:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2    
-    - name: Test in docker
+    - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
       with:
         image: fedora
@@ -195,11 +236,11 @@ jobs:
           integration/server.log
           integration/server-ssl.log
 
-  test-osx:
+  test-osx-x64:
     runs-on: macos-latest
     strategy:
       matrix:
-        rust: [stable, nightly]
+        rust: [stable]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -240,11 +281,11 @@ jobs:
           integration/server.log
           integration/server-ssl.log
 
-  test-win64:
+  test-windows-x64:
     runs-on: windows-latest
     strategy:
       matrix:
-        rust: [stable, nightly]
+        rust: [stable]
     env:
       VCPKGRS_DYNAMIC: 1
     steps:
