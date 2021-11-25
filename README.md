@@ -1,5 +1,5 @@
-![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-dark.svg#gh-dark-mode-only)
-![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-light.svg#gh-light-mode-only)
+![Hurl Logo](/docs/logo-dark.svg#gh-dark-mode-only)
+![Hurl Logo](/docs/logo-light.svg#gh-light-mode-only)
 
 
 <br/>
