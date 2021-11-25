@@ -1,4 +1,4 @@
-<img src="/Orange-OpenSource/hurl/raw/add-logo-dark-github-readme/docs/logo-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" style="max-width: 100%;">
+<img src="/Orange-OpenSource/hurl/raw/add-logo-dark-github-readme/docs/logo-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" style="width: 254px;">
 
 
 
