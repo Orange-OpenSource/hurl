@@ -1,7 +1,6 @@
-<a href="https://hurl.dev">
-    ![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-dark.svg#gh-light-mode-only)
-    ![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-light.svg#gh-dark-mode-only)
-</a>
+![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-dark.svg#gh-light-mode-only)
+![Hurl Logo](https://raw.githubusercontent.com/Orange-OpenSource/hurl/add-logo-dark-github-readme/docs/logo-light.svg#gh-dark-mode-only)
+
 
 <br/>
 
