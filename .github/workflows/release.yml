@@ -6,7 +6,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  release-linux:
+  release-generic-linux-x64:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -32,14 +32,45 @@ jobs:
         sudo apt install libcurl4-openssl-dev        
         ci/release.sh
         ci/create_tarball.sh linux
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-generic-linux-x64-artifacts
+        path: target/upload/*
+ 
+  release-deb-x64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        uname -a
+        cargo --version
+    - name: set Version
+      run: |
+        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
+    - name: Build
+      run: |
+        ci/man.sh
+        # Install libcurl dev so that hurl can be built dynamically with libcurl
+        sudo apt update
+        sudo apt install libcurl4-openssl-dev        
+        ci/release.sh
         ci/deb.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: release-linux-artifacts
+        name: release-deb-x64-artifacts
         path: target/upload/*
 
-  release-osx:
+  release-osx-x64:
     runs-on: macos-latest
     steps:
     - name: Checkout repository
@@ -65,10 +96,10 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: release-osx-artifacts
+        name: release-osx-x64-artifacts
         path: target/upload/*
  
-  release-win64:
+  release-windows-x64:
     runs-on: windows-latest
     env:
       VCPKGRS_DYNAMIC: 1
@@ -122,48 +153,7 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: release-win64-artifacts
+        name: release-windows-x64-artifacts
         path: |
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*-win64.zip
-
-  benchsuite:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
-      - name: Environment
-        run: |
-          uname -a
-          cargo --version
-      - name: Build
-        run: |
-          # Install libcurl dev so that hurl can be built dynamically with libcurl
-          sudo apt update
-          sudo apt install libcurl4-openssl-dev
-          ci/release.sh
-      - name: Test Prequisites
-        run: |
-          pip3 install Flask
-          cd bench
-          python3 server.py >server.log 2>&1 &
-          sleep 2
-          netstat -an | grep 8000
-      - name: Run Bench Suite
-        run: |
-          export PATH="$PWD/target/release:$PATH"
-          cd bench
-          ./run.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        if: ${{ always() }}
-        with:
-          name: tests-bench-artifacts
-          path: |
-            bench/server.log
