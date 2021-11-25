@@ -1,4 +1,4 @@
-<a href="https://hurl.dev"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo.svg?sanitize=true" align="center" width="264px"/></a>
+<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" width="264px"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-light.svg?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px"">
 
 <br/>
 
