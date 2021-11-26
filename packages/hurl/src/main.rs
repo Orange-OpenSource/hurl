@@ -397,9 +397,10 @@ fn main() {
                 .collect();
             let json_result = hurl_result.to_json(&lines);
             let serialized = serde_json::to_string(&json_result).unwrap();
+            let s = format!("{}\n", serialized);
             unwrap_or_exit(
                 &log_error_message,
-                write_output(serialized.into_bytes(), cli_options.output.clone()),
+                write_output(s.into_bytes(), cli_options.output.clone()),
             );
         }
     }
