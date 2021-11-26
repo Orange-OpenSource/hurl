@@ -123,7 +123,7 @@ impl Client {
     pub fn execute(&mut self, request: &RequestSpec) -> Result<(Request, Response), HttpError> {
         // set handle attributes
         // that have not been set or reset
-        self.handle.verbose(true).unwrap();
+        self.handle.verbose(self.options.verbose).unwrap();
         self.handle.ssl_verify_host(!self.options.insecure).unwrap();
         self.handle.ssl_verify_peer(!self.options.insecure).unwrap();
         if let Some(cacert_file) = self.options.cacert_file.clone() {
