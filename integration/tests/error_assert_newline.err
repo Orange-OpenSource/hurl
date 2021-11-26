@@ -1,0 +1,9 @@
+error: Assert Body Value
+  --> tests/error_assert_newline.hurl:9:4
+   |
+ 9 | ```<p>Hello</p>
+   |    ^ actual value is <<p>Hello</p>
+
+>
+   |
+

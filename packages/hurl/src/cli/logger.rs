@@ -127,7 +127,11 @@ pub fn error_string(lines: &[String], filename: String, error: &dyn Error) -> St
         add_line_prefix(fix_me, prefix)
     } else {
         let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let width = (error.source_info().end.column - error.source_info().start.column) as usize;
+        let width = if error.source_info().end.column > error.source_info().start.column {
+            (error.source_info().end.column - error.source_info().start.column) as usize
+        } else {
+            0
+        };
 
         let mut tab_shift = 0;
         for (i, c) in line.chars().enumerate() {
@@ -268,6 +272,36 @@ pub mod tests {
  4 | jsonpath "$.count" >= 5
    |   actual:   int <2>
    |   expected: greater than int <5>
+   |"#
+        )
+    }
+
+    #[test]
+    fn test_assert_error_newline() {
+        let lines = vec![
+            "GET http://localhost".to_string(),
+            "HTTP/1.0 200".to_string(),
+            "```<p>Hello</p>".to_string(),
+            "```".to_string(),
+        ];
+        let filename = "test.hurl".to_string();
+        let error = runner::Error {
+            source_info: SourceInfo::init(3, 4, 4, 1),
+            inner: runner::RunnerError::AssertBodyValueError {
+                actual: "<p>Hello</p>\n\n".to_string(),
+                expected: "<p>Hello</p>\n".to_string(),
+            },
+            assert: true,
+        };
+        assert_eq!(
+            error_string(&lines, filename, &error),
+            r#"Assert Body Value
+  --> test.hurl:3:4
+   |
+ 3 | ```<p>Hello</p>
+   |    ^ actual value is <<p>Hello</p>
+
+>
    |"#
         )
     }
