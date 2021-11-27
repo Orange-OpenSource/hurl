@@ -294,6 +294,19 @@ fn main() {
 
     let start = Instant::now();
 
+    let doc = if let Ok(doc) = report::create_or_get_junit_report(cli_options.junit_file.clone()) {
+        doc
+    } else {
+        log_error_message(false, "Error creating Junit XML report");
+        std::process::exit(EXIT_ERROR_UNDEFINED);
+    };
+    let mut testsuite = if let Ok(doc) = report::add_testsuite(&doc) {
+        doc
+    } else {
+        log_error_message(false, "Error creating Junit XML report");
+        std::process::exit(EXIT_ERROR_UNDEFINED);
+    };
+
     for (current, filename) in filenames.iter().enumerate() {
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
@@ -389,12 +402,12 @@ fn main() {
 
         hurl_results.push(hurl_result.clone());
 
+        let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+            .unwrap()
+            .split(&contents)
+            .map(|l| l.to_string())
+            .collect();
         if matches!(cli_options.output_type, OutputType::Json) {
-            let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
-                .unwrap()
-                .split(&contents)
-                .map(|l| l.to_string())
-                .collect();
             let json_result = hurl_result.to_json(&lines);
             let serialized = serde_json::to_string(&json_result).unwrap();
             let s = format!("{}\n", serialized);
@@ -403,14 +416,19 @@ fn main() {
                 write_output(s.into_bytes(), cli_options.output.clone()),
             );
         }
+        if cli_options.junit_file.is_some() {
+            unwrap_or_exit(
+                &log_error_message,
+                report::add_testcase(&doc, &mut testsuite, hurl_result, &lines),
+            );
+        }
     }
 
-    if let Some(junit_path) = cli_options.junit_file {
-        log_verbose(format!("Writing Junit report to {}", junit_path.display()).as_str());
-        unwrap_or_exit(
-            &log_error_message,
-            report::write_junit_report(junit_path, hurl_results.clone()),
-        );
+    if let Some(file_path) = cli_options.junit_file.clone() {
+        log_verbose(format!("Writing Junit report to {}", file_path.display()).as_str());
+        if doc.save_file(&file_path.to_string_lossy()).is_err() {
+            log_error_message(false, format!("Failed to save to {:?}", file_path).as_str());
+        }
     }
 
     if let Some(dir_path) = cli_options.html_dir {

@@ -24,8 +24,9 @@ use super::runner::HurlResult;
 mod html;
 mod junit;
 
-pub use junit::create_junit_report;
-pub use junit::write_junit_report;
+pub use junit::add_testcase;
+pub use junit::add_testsuite;
+pub use junit::create_or_get_junit_report;
 
 pub fn parse_html(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
     if path.exists() {
