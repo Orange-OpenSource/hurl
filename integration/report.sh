@@ -25,7 +25,7 @@ done
 
 total=$(ls tests/*.hurl | wc -l)
 total_in_json=$(cat build/tests.json | wc -l)
-total_in_xml=$(cat build/tests.xml | xmllint --xpath '//testcase' - | wc -l)
+total_in_xml=$(cat build/tests.xml | xmllint --xpath '//testcase' - | grep 'testcase id' | wc -l)
 
 # Do not fail yet
 echo "Total Number of tests"
