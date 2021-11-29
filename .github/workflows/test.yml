@@ -158,13 +158,14 @@ jobs:
           uname -m
           echo "----- install build prerequisites -----"
           pacman -Syy --noconfirm
-          pacman -Sy --noconfirm curl icu base-devel libxml2 python3 python-pip cargo
+          pacman -Sy --noconfirm curl icu base-devel libxml2 python3 cargo
+          curl -O https://bootstrap.pypa.io/get-pip.py
+          python3 get-pip.py
           rustc --version
           cargo --version
           echo "----- build -----"
           cargo build --verbose
           echo "----- install servers prerequisites -----"
-          python3 -m pip install --upgrade pip --quiet
           pip3 install lxml bs4 Flask mitmproxy
           export PATH="$PWD/target/debug:$PATH"
           echo "----- start servers -----"
