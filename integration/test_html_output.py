@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Extract hurl file from html output
 import sys
 from bs4 import BeautifulSoup
