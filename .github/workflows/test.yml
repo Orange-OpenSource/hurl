@@ -158,9 +158,7 @@ jobs:
           uname -m
           echo "----- install build prerequisites -----"
           pacman -Syy --noconfirm
-          pacman -Sy --noconfirm curl icu base-devel libxml2 python3 python-pip
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source $HOME/.cargo/env
+          pacman -Sy --noconfirm curl icu base-devel libxml2 python3 python-pip cargo
           rustc --version
           cargo --version
           echo "----- build -----"
@@ -204,15 +202,12 @@ jobs:
           uname -a
           uname -m
           echo "----- install build prerequisites -----"
-          yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source $HOME/.cargo/env
+          yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip cargo
           rustc --version
           cargo --version
           echo "----- build -----"
           cargo build --verbose
           echo "----- install servers prerequisites -----"
-          yum install -y python3-devel python3-pip
           python3 -m pip install --upgrade pip --quiet
           pip3 install lxml bs4 Flask mitmproxy
           export PATH="$PWD/target/debug:$PATH"
@@ -253,6 +248,8 @@ jobs:
           echo "----- install build prerequisites -----"
           apk update --quiet
           apk add --quiet bash cargo curl build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
+          rustc --version
+          cargo --version
           echo "----- build -----"
           cargo build --verbose
           export PATH="$PWD/target/debug:$PATH"
@@ -269,10 +266,6 @@ jobs:
           cargo test --features strict
           echo "----- integration tests -----"
           ./integration.py
-          ./test_curl_commands.sh tests/*.curl
-          ./test_html_output.py tests/*.html
-          xmllint --noout tests/*.html
-          ls -l /work/integration/*.log
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
