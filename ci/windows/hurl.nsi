@@ -68,6 +68,7 @@ SectionGroup "executables"
     IntFmt $0 "0x%08X" $0
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl - Command line tool that runs HTTP requests defined in a simple plain text format."
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayVersion" "${VERSION}"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayIcon" "$INSTDIR\hurl.exe"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLUpdateInfo" "https://github.com/Orange-OpenSource/hurl/releases"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLInfoAbout" "https://github.com/Orange-OpenSource/hurl"
