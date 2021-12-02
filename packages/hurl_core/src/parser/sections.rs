@@ -28,12 +28,12 @@ use super::string::*;
 use super::ParseResult;
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
-    let sections = zero_or_more(|p1| request_section(p1), reader)?;
+    let sections = zero_or_more(request_section, reader)?;
     Ok(sections)
 }
 
 pub fn response_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
-    let sections = zero_or_more(|p1| response_section(p1), reader)?;
+    let sections = zero_or_more(response_section, reader)?;
     Ok(sections)
 }
 
@@ -115,32 +115,32 @@ fn section_name(reader: &mut Reader) -> ParseResult<'static, String> {
 }
 
 fn section_value_query_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let items = zero_or_more(|p1| key_value(p1), reader)?;
+    let items = zero_or_more(key_value, reader)?;
     Ok(SectionValue::QueryParams(items))
 }
 
 fn section_value_form_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let items = zero_or_more(|p1| key_value(p1), reader)?;
+    let items = zero_or_more(key_value, reader)?;
     Ok(SectionValue::FormParams(items))
 }
 
 fn section_value_multipart_form_data(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let items = zero_or_more(|p1| multipart_param(p1), reader)?;
+    let items = zero_or_more(multipart_param, reader)?;
     Ok(SectionValue::MultipartFormData(items))
 }
 
 fn section_value_cookies(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let items = zero_or_more(|p1| cookie(p1), reader)?;
+    let items = zero_or_more(cookie, reader)?;
     Ok(SectionValue::Cookies(items))
 }
 
 fn section_value_captures(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let items = zero_or_more(|p1| capture(p1), reader)?;
+    let items = zero_or_more(capture, reader)?;
     Ok(SectionValue::Captures(items))
 }
 
 fn section_value_asserts(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let asserts = zero_or_more(|p1| assert(p1), reader)?;
+    let asserts = zero_or_more(assert, reader)?;
     Ok(SectionValue::Asserts(asserts))
 }
 

@@ -265,7 +265,7 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
 }
 
 fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
-    let mut digits = one_or_more(|p1| hex_digit(p1), reader)?;
+    let mut digits = one_or_more(hex_digit, reader)?;
     let mut v = 0;
     let mut weight = 1;
     digits.reverse();

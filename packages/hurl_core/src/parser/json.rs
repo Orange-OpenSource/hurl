@@ -160,10 +160,10 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
 }
 
 fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
-    let digit1 = nonrecover(|r| hex_digit(r), reader)?;
-    let digit2 = nonrecover(|r| hex_digit(r), reader)?;
-    let digit3 = nonrecover(|r| hex_digit(r), reader)?;
-    let digit4 = nonrecover(|r| hex_digit(r), reader)?;
+    let digit1 = nonrecover(hex_digit, reader)?;
+    let digit2 = nonrecover(hex_digit, reader)?;
+    let digit3 = nonrecover(hex_digit, reader)?;
+    let digit4 = nonrecover(hex_digit, reader)?;
     let value = digit1 * (16 ^ 3) + digit2 * (16 ^ 2) + digit3 * 16 + digit4;
     Ok(value)
 }
