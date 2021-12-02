@@ -281,7 +281,7 @@ impl Value {
             }
             serde_json::Value::String(s) => Value::String(s.to_string()),
             serde_json::Value::Array(elements) => {
-                Value::List(elements.iter().map(|e| Value::from_json(e)).collect())
+                Value::List(elements.iter().map(Value::from_json).collect())
             }
             serde_json::Value::Object(map) => {
                 let mut elements = vec![];

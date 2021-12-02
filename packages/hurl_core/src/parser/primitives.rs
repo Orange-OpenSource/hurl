@@ -98,7 +98,7 @@ pub fn zero_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespac
 pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminator> {
     // let start = p.state.clone();
     let space0 = zero_or_more_spaces(reader)?;
-    let comment = optional(|p1| comment(p1), reader)?;
+    let comment = optional(comment, reader)?;
     let nl = if reader.is_eof() {
         Whitespace {
             value: "".to_string(),
@@ -132,7 +132,7 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminat
 }
 
 pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<'static, Vec<LineTerminator>> {
-    zero_or_more(|p2| recover(|p1| line_terminator(p1), p2), reader)
+    zero_or_more(|p2| recover(line_terminator, p2), reader)
 }
 
 pub fn comment(reader: &mut Reader) -> ParseResult<'static, Comment> {

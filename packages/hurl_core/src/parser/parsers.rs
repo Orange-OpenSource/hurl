@@ -27,7 +27,7 @@ use super::url::url;
 use super::ParseResult;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
-    let entries = zero_or_more(|p1| entry(p1), reader)?;
+    let entries = zero_or_more(entry, reader)?;
     let line_terminators = optional_line_terminators(reader)?;
     eof(reader)?;
     Ok(HurlFile {
@@ -38,7 +38,7 @@ pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
 
 fn entry(reader: &mut Reader) -> ParseResult<'static, Entry> {
     let req = request(reader)?;
-    let resp = optional(|p1| response(p1), reader)?;
+    let resp = optional(response, reader)?;
     Ok(Entry {
         request: req,
         response: resp,
@@ -56,7 +56,7 @@ fn request(reader: &mut Reader) -> ParseResult<'static, Request> {
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = request_sections(reader)?;
-    let b = optional(|p1| body(p1), reader)?;
+    let b = optional(body, reader)?;
     let source_info = SourceInfo::init(
         start.pos.line,
         start.pos.column,
@@ -102,7 +102,7 @@ fn response(reader: &mut Reader) -> ParseResult<'static, Response> {
     let line_terminator0 = line_terminator(reader)?;
     let headers = zero_or_more(key_value, reader)?;
     let sections = response_sections(reader)?;
-    let b = optional(|p1| body(p1), reader)?;
+    let b = optional(body, reader)?;
     Ok(Response {
         line_terminators,
         space0,
