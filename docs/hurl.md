@@ -189,11 +189,10 @@ Include the HTTP headers in the output (last entry).
 Stop between requests.
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
 
-### --json <file> {#json}
+### --json {#json}
 
-Write full session(s) to a json file. The format is very closed to HAR format.
+Output each hurl file result to JSON. The format is very closed to HAR format. 
 
-If the json file already exists, the file will be updated with the new test results.
 
 ### -k, --insecure {#insecure}
 
@@ -214,9 +213,13 @@ See also [--connect-timeout](#connect-timeout) option.
 Set maximum number of redirection-followings allowed
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
-### --no-color {#color}
+### --no-color {#no-color}
 
 Do not colorize Output
+
+### --no-output {#no-output}
+
+Suppress output. By default, Hurl outputs the body of the last response.
 
 ### --noproxy <no-proxy-list> {#noproxy}
 
@@ -234,15 +237,15 @@ Write output to <file> instead of stdout.
 
 ### --progress {#progress}
 
-Print filename and status for each test
+Print filename and status for each test (on stderr)
 
 ### --summary {#summary}
 
-Print test metrics at the end of the run
+Print test metrics at the end of the run (on stderr)
 
 ### --test {#test}
 
-Activate test mode; equals --output /dev/null --progress --summary
+Activate test mode; equals --no-output --progress --summary
 
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 

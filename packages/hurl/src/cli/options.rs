@@ -51,6 +51,7 @@ pub struct CliOptions {
     pub output_type: OutputType,
     pub progress: bool,
     pub proxy: Option<String>,
+    pub summary: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
@@ -61,8 +62,8 @@ pub struct CliOptions {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OutputType {
     ResponseBody,
-    Summary,
     Json,
+    NoOutput,
 }
 pub fn app() -> App<'static, 'static> {
     App::new("hurl")
@@ -84,7 +85,7 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("color")
                 .long("color")
-                .conflicts_with("no-color")
+                .conflicts_with("no_color")
                 .help("Colorize Output"),
         )
         .arg(
@@ -164,8 +165,8 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("json")
                 .long("json")
-                .conflicts_with("summary")
-                .help("Write full session(s) to json output"),
+                .conflicts_with("no_output")
+                .help("Output each hurl file result to JSON"),
         )
         .arg(
             clap::Arg::with_name("junit")
@@ -196,6 +197,12 @@ pub fn app() -> App<'static, 'static> {
                 .help("Do not colorize Output"),
         )
         .arg(
+            clap::Arg::with_name("no_output")
+                .long("no-output")
+                .conflicts_with("json")
+                .help("Suppress output. By default, Hurl outputs the body of the last response."),
+        )
+        .arg(
             clap::Arg::with_name("noproxy")
                 .long("noproxy")
                 .value_name("HOST(S)")
@@ -212,7 +219,7 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("progress")
                 .long("progress")
-                .help("Print filename and status for each test"),
+                .help("Print filename and status for each test (stderr)"),
         )
         .arg(
             clap::Arg::with_name("proxy")
@@ -231,13 +238,12 @@ pub fn app() -> App<'static, 'static> {
         .arg(
             clap::Arg::with_name("summary")
                 .long("summary")
-                .conflicts_with("json")
-                .help("Print test metrics at the end of the run"),
+                .help("Print test metrics at the end of the run (stderr)"),
         )
         .arg(
             clap::Arg::with_name("test")
                 .long("test")
-                .help("This option has been deprecated. It will be removed in the next release"),
+                .help("Activate test mode; equals --no-output --progress --summary"),
         )
         .arg(
             clap::Arg::with_name("to_entry")
@@ -372,21 +378,16 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let output = matches
         .value_of("output")
         .map(|filename| filename.to_string());
-    let output_type = if matches.is_present("summary") {
-        OutputType::Summary
-    } else if matches.is_present("json") {
+    let output_type = if matches.is_present("json") {
         OutputType::Json
+    } else if matches.is_present("no_output") || matches.is_present("test") {
+        OutputType::NoOutput
     } else {
         OutputType::ResponseBody
     };
     let progress = matches.is_present("progress") || matches.is_present("test");
     let proxy = matches.value_of("proxy").map(|x| x.to_string());
-
-    if matches.is_present("test") {
-        eprintln!("The option --test is deprecated");
-        eprintln!("It will be removed in the next version");
-    }
-
+    let summary = matches.is_present("summary") || matches.is_present("test");
     let timeout = match matches.value_of("max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
@@ -425,6 +426,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         output_type,
         progress,
         proxy,
+        summary,
         timeout,
         to_entry,
         user,
