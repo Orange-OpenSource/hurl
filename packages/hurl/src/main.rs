@@ -333,8 +333,12 @@ fn main() {
             &log_error_message,
             progress,
         );
+        hurl_results.push(hurl_result.clone());
 
-        if hurl_result.errors().is_empty() && !cli_options.interactive {
+        if matches!(cli_options.output_type, OutputType::ResponseBody)
+            && hurl_result.errors().is_empty()
+            && !cli_options.interactive
+        {
             // default
             // last entry + response + body
             if let Some(entry_result) = hurl_result.entries.last() {
@@ -377,13 +381,10 @@ fn main() {
                         response.body
                     };
                     output.append(&mut body.clone());
-
-                    if matches!(cli_options.output_type, OutputType::ResponseBody) {
-                        unwrap_or_exit(
-                            &log_error_message,
-                            write_output(output, cli_options.output.clone()),
-                        );
-                    }
+                    unwrap_or_exit(
+                        &log_error_message,
+                        write_output(output, cli_options.output.clone()),
+                    );
                 } else {
                     cli::log_info("no response has been received");
                 }
@@ -399,8 +400,6 @@ fn main() {
                 );
             };
         }
-
-        hurl_results.push(hurl_result.clone());
 
         let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
             .unwrap()
@@ -451,13 +450,10 @@ fn main() {
         );
     }
 
-    if matches!(cli_options.output_type, OutputType::Summary) {
+    if cli_options.summary {
         let duration = start.elapsed().as_millis();
         let summary = get_summary(duration, hurl_results.clone());
-        unwrap_or_exit(
-            &log_error_message,
-            write_output(summary.into_bytes(), cli_options.output.clone()),
-        );
+        eprintln!("{}", summary.as_str());
     }
 
     std::process::exit(exit_code(hurl_results));
