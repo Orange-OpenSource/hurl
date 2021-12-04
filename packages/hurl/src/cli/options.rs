@@ -39,6 +39,7 @@ pub struct CliOptions {
     pub fail_fast: bool,
     pub file_root: Option<String>,
     pub follow_location: bool,
+    pub glob_files: Vec<String>,
     pub html_dir: Option<PathBuf>,
     pub ignore_asserts: bool,
     pub include: bool,
@@ -131,6 +132,14 @@ pub fn app() -> App<'static, 'static> {
                 .short("L")
                 .long("location")
                 .help("Follow redirects"),
+        )
+        .arg(
+            clap::Arg::with_name("glob")
+                .long("glob")
+                .value_name("GLOB")
+                .multiple(true)
+                .number_of_values(1)
+                .help("Specify input files that match the given blob. Multiple glob flags may be used."),
         )
         .arg(
             clap::Arg::with_name("html")
@@ -319,7 +328,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let fail_fast = !matches.is_present("fail_at_end");
     let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let follow_location = matches.is_present("follow_location");
-
+    let glob_files = match_glob_files(matches.clone())?;
     // deprecated
     // Support --report-html and --html only for the current version
     if matches.is_present("html") {
@@ -414,6 +423,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         fail_fast,
         file_root,
         follow_location,
+        glob_files,
         html_dir,
         ignore_asserts,
         include,
@@ -506,4 +516,40 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     }
 
     Ok(variables)
+}
+
+pub fn match_glob_files(matches: ArgMatches) -> Result<Vec<String>, CliError> {
+    let mut filenames = vec![];
+    if matches.is_present("glob") {
+        let exprs: Vec<&str> = matches.values_of("glob").unwrap().collect();
+        for expr in exprs {
+            eprintln!("expr={}", expr);
+            let paths = match glob::glob(expr) {
+                Ok(paths) => paths,
+                Err(_) => {
+                    return Err(CliError {
+                        message: "Failed to read glob pattern".to_string(),
+                    })
+                }
+            };
+            for entry in paths {
+                match entry {
+                    Ok(path) => match path.into_os_string().into_string() {
+                        Ok(filename) => filenames.push(filename),
+                        Err(_) => {
+                            return Err(CliError {
+                                message: "Failed to read glob pattern".to_string(),
+                            })
+                        }
+                    },
+                    Err(_) => {
+                        return Err(CliError {
+                            message: "Failed to read glob pattern".to_string(),
+                        })
+                    }
+                }
+            }
+        }
+    }
+    Ok(filenames)
 }

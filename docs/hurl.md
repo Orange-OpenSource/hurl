@@ -166,6 +166,11 @@ All the input files are executed independently. The result of one file does not 
 Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
+## --glob <glob> {#glob}
+
+Specify input files that match the given blob. 
+Multiple glob flags may be used.
+
 ### -h, --help {#help}
 
 Usage help. This lists all current command line options with a short description.

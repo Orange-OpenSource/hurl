@@ -255,10 +255,21 @@ fn main() {
     let matches = app.clone().get_matches();
     init_colored();
 
-    let mut filenames = match matches.values_of("INPUT") {
-        None => vec![],
-        Some(v) => v.collect(),
+    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
+    let log_verbose = cli::make_logger_verbose(verbose);
+    let color = cli::output_color(matches.clone());
+    let log_error_message = cli::make_logger_error_message(color);
+    let cli_options = unwrap_or_exit(&log_error_message, cli::parse_options(matches.clone()));
+
+    let mut filenames = vec![];
+    if let Some(values) = matches.values_of("INPUT") {
+        for value in values {
+            filenames.push(value.to_string());
+        }
     };
+    for filename in &cli_options.glob_files {
+        filenames.push(filename.to_string());
+    }
 
     if filenames.is_empty() && atty::is(Stream::Stdin) {
         if app.clone().print_help().is_err() {
@@ -267,17 +278,11 @@ fn main() {
         println!();
         std::process::exit(EXIT_ERROR_COMMANDLINE);
     } else if filenames.is_empty() {
-        filenames.push("-");
+        filenames.push("-".to_string());
     }
 
     let current_dir_buf = std::env::current_dir().unwrap();
     let current_dir = current_dir_buf.as_path();
-
-    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
-    let log_verbose = cli::make_logger_verbose(verbose);
-    let color = cli::output_color(matches.clone());
-    let log_error_message = cli::make_logger_error_message(color);
-    let cli_options = unwrap_or_exit(&log_error_message, cli::parse_options(matches.clone()));
 
     let mut hurl_results = vec![];
 
@@ -389,7 +394,7 @@ fn main() {
                     cli::log_info("no response has been received");
                 }
             } else {
-                let source = if *filename == "-" {
+                let source = if filename.as_str() == "-" {
                     "".to_string()
                 } else {
                     format!("for file {}", filename).to_string()
@@ -438,7 +443,10 @@ fn main() {
         );
 
         for filename in filenames {
-            unwrap_or_exit(&log_error_message, format_html(filename, dir_path.clone()));
+            unwrap_or_exit(
+                &log_error_message,
+                format_html(filename.as_str(), dir_path.clone()),
+            );
         }
     }
 
