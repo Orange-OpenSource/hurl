@@ -298,19 +298,7 @@ fn main() {
     };
 
     let start = Instant::now();
-
-    let doc = if let Ok(doc) = report::create_or_get_junit_report(cli_options.junit_file.clone()) {
-        doc
-    } else {
-        log_error_message(false, "Error creating Junit XML report");
-        std::process::exit(EXIT_ERROR_UNDEFINED);
-    };
-    let mut testsuite = if let Ok(doc) = report::add_testsuite(&doc) {
-        doc
-    } else {
-        log_error_message(false, "Error creating Junit XML report");
-        std::process::exit(EXIT_ERROR_UNDEFINED);
-    };
+    let mut testcases = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
         let contents = match cli::read_to_string(filename) {
@@ -421,18 +409,17 @@ fn main() {
             );
         }
         if cli_options.junit_file.is_some() {
-            unwrap_or_exit(
-                &log_error_message,
-                report::add_testcase(&doc, &mut testsuite, hurl_result, &lines),
-            );
+            let testcase = report::Testcase::from_hurl_result(&hurl_result, &lines);
+            testcases.push(testcase);
         }
     }
 
-    if let Some(file_path) = cli_options.junit_file.clone() {
-        log_verbose(format!("Writing Junit report to {}", file_path.display()).as_str());
-        if doc.save_file(&file_path.to_string_lossy()).is_err() {
-            log_error_message(false, format!("Failed to save to {:?}", file_path).as_str());
-        }
+    if let Some(filename) = cli_options.junit_file.clone() {
+        log_verbose(format!("Writing Junit report to {}", filename).as_str());
+        unwrap_or_exit(
+            &log_error_message,
+            report::create_junit_report(filename, testcases),
+        );
     }
 
     if let Some(dir_path) = cli_options.html_dir {

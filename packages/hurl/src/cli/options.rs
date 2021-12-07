@@ -45,7 +45,7 @@ pub struct CliOptions {
     pub include: bool,
     pub insecure: bool,
     pub interactive: bool,
-    pub junit_file: Option<PathBuf>,
+    pub junit_file: Option<String>,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
     pub output: Option<String>,
@@ -365,12 +365,9 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let include = matches.is_present("include");
     let insecure = matches.is_present("insecure");
     let interactive = matches.is_present("interactive");
-    let junit_file = if let Some(filename) = matches.value_of("junit") {
-        let path = Path::new(filename);
-        Some(path.to_path_buf())
-    } else {
-        None
-    };
+    let junit_file = matches
+        .value_of("junit")
+        .map(|filename| filename.to_string());
     let max_redirect = match matches.value_of("max_redirects") {
         None => Some(50),
         Some("-1") => None,
