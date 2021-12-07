@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate clap;
-
 use std::io::Write;
 use std::io::{self, Read};
 use std::path::Path;

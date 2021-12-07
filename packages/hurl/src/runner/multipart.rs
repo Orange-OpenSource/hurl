@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate libxml;
-
 use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs::File;

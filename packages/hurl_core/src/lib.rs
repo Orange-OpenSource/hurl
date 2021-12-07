@@ -17,8 +17,6 @@
  */
 #![cfg_attr(feature = "strict", deny(warnings))]
 
-extern crate float_cmp;
-
 pub mod ast;
 pub mod error;
 pub mod format;

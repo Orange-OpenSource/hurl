@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate hurl;
 
 use hurl::jsonpath;
 use serde_json::json;
