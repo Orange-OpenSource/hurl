@@ -54,88 +54,75 @@
 // </testsuites>
 //
 
-use crate::{cli::CliError, runner::HurlResult};
-use libxml::parser::Parser;
-use libxml::tree::{Document, Node};
+use std::fs::File;
 
-mod result;
+use xmltree::{Element, XMLNode};
 
-type JunitError = String;
+pub use testcase::Testcase;
 
-///
-/// Get XML document
-/// The document is created if it does not exist
-///
-pub fn create_or_get_junit_report(
-    file_path: Option<std::path::PathBuf>,
-) -> Result<Document, CliError> {
-    if let Some(file_path) = file_path {
-        if file_path.exists() {
-            let parser = Parser::default();
-            let doc = parser
-                .parse_string(
-                    std::fs::read_to_string(file_path.clone()).map_err(|e| CliError {
-                        message: format!("Failed to read file {:?}: {:?}", file_path, e),
-                    })?,
-                )
-                .map_err(|e| CliError {
-                    message: format!("Failed to parse file {:?}: {:?}", file_path, e),
-                })?;
-            Ok(doc)
-        } else {
-            let mut doc = Document::new().map_err(|e| CliError {
-                message: format!("Failed to produce junit report: {:?}", e),
-            })?;
-            let testsuites =
-                Node::new("testsuites", None, &doc).expect("Could not create testsuites node");
-            doc.set_root_element(&testsuites);
-            Ok(doc)
+use crate::cli::CliError;
+
+mod testcase;
+
+pub fn create_report(filename: String, testcases: Vec<Testcase>) -> Result<(), CliError> {
+    let mut testsuites = vec![];
+
+    let path = std::path::Path::new(&filename);
+    if path.exists() {
+        let s = match std::fs::read_to_string(path) {
+            Ok(s) => s,
+            Err(why) => {
+                return Err(CliError {
+                    message: format!("Issue reading {} to string to {:?}", path.display(), why),
+                });
+            }
+        };
+        let root = Element::parse(s.as_bytes()).unwrap();
+        for child in root.children {
+            if let XMLNode::Element(_) = child.clone() {
+                testsuites.push(child.clone());
+            }
         }
-    } else {
-        let mut doc = Document::new().map_err(|e| CliError {
+    }
+
+    let testsuite = create_testsuite(testcases);
+    testsuites.push(testsuite);
+    let report = Element {
+        name: "testsuites".to_string(),
+        prefix: None,
+        namespace: None,
+        namespaces: None,
+        attributes: indexmap::map::IndexMap::new(),
+        children: testsuites,
+    };
+    let file = match File::create(filename) {
+        Ok(f) => f,
+        Err(e) => {
+            return Err(CliError {
+                message: format!("Failed to produce junit report: {:?}", e),
+            });
+        }
+    };
+    match report.write(file) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(CliError {
             message: format!("Failed to produce junit report: {:?}", e),
-        })?;
-        let testsuites =
-            Node::new("testsuites", None, &doc).expect("Could not create testsuites node");
-        doc.set_root_element(&testsuites);
-        Ok(doc)
+        }),
     }
 }
 
-///
-/// Add testsuite to XML document
-///
-pub fn add_testsuite(doc: &libxml::tree::Document) -> Result<libxml::tree::Node, JunitError> {
-    let mut testsuite = match Node::new("testsuite", None, doc) {
-        Ok(v) => v,
-        Err(_) => return Err("can not create node testsuite".to_string()),
+fn create_testsuite(testcases: Vec<Testcase>) -> XMLNode {
+    let children = testcases
+        .iter()
+        .map(|t| XMLNode::Element(t.to_xml()))
+        .collect();
+    let element = Element {
+        name: "testsuite".to_string(),
+        prefix: None,
+        namespace: None,
+        namespaces: None,
+        attributes: indexmap::map::IndexMap::new(),
+        children,
     };
-
-    let mut testsuites = match doc.get_root_element() {
-        Some(v) => v,
-        None => return Err("can not get root element".to_string()),
-    };
-    match testsuites.add_child(&mut testsuite) {
-        Ok(_) => {}
-        Err(_) => return Err("can not add child".to_string()),
-    }
-    Ok(testsuite)
-}
-
-///
-/// Add Testcase in the testsuite the XML document
-///
-pub fn add_testcase(
-    doc: &Document,
-    testsuite: &mut Node,
-    hurl_result: HurlResult,
-    lines: &[String],
-) -> Result<(), CliError> {
-    let mut testcase = hurl_result.to_testcase(doc, lines)?;
-    if testsuite.add_child(&mut testcase).is_err() {
-        return Err(CliError {
-            message: "can not add child".to_string(),
-        });
-    }
-    Ok(())
+    XMLNode::Element(element)
 }
