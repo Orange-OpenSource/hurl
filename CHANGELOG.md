@@ -1,5 +1,52 @@
+[1.5.0 (2021-12-09)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.5.0)
+========================================================================================================================
+
+Thanks to
+[@humphd](https://github.com/humphd),
+[@tbolon](https://github.com/tbolon),
+[@ansscfc](https://github.com/ansscfc),
+[@atcol](https://github.com/atcol),
+[@realtica](https://github.com/realtica),
+[@ramkumarkb](https://github.com/ramkumarkb)
+
+Changes:
+
+* Support globs with --test arg [#387](https://github.com/Orange-OpenSource/hurl/issues/387) 
+
+* Add ARM Testing with Circle CI [#335](https://github.com/Orange-OpenSource/hurl/issues/335)
+
+* Option --html renamed to --report-html [#333](https://github.com/Orange-OpenSource/hurl/issues/333)
+
+* Add option --cacert [#314](https://github.com/Orange-OpenSource/hurl/issues/314)
+
+* Display libcurl error code/message [#310](https://github.com/Orange-OpenSource/hurl/issues/310)
+
+* Display curl -V version in hurl -V [#309](https://github.com/Orange-OpenSource/hurl/issues/309)
+
+* Allow bare --json parameter to write json to stdout [#283](https://github.com/Orange-OpenSource/hurl/issues/283)
+
+* Using Environment Variables in Hurl files [#122](https://github.com/Orange-OpenSource/hurl/issues/122)
+
+
+Bugs Fixes:
+
+* Fix memory allocation [#380](https://github.com/Orange-OpenSource/hurl/issues/380)
+
+* Fix Decimal float values [#363](https://github.com/Orange-OpenSource/hurl/issues/363)
+
+* Fix build for ARM [#334](https://github.com/Orange-OpenSource/hurl/issues/334)
+
+
+
 [1.4.0 (2021-10-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.4.0)
 ========================================================================================================================
+
+Thanks to 
+[@youhavethewrong](https://github.com/youhavethewrong),
+[@fourjay](https://github.com/fourjay),
+[@tbolon](https://github.com/tbolon),
+[@Morreski](https://github.com/Morreski),
+[@andrejohansson](https://github.com/andrejohansson)
 
 Changes:
 
