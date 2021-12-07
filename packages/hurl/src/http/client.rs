@@ -123,6 +123,10 @@ impl Client {
     pub fn execute(&mut self, request: &RequestSpec) -> Result<(Request, Response), HttpError> {
         // set handle attributes
         // that have not been set or reset
+
+        // We force libcurl verbose mode regardless of Hurl verbose option to be able
+        // to capture HTTP request headers in libcurl `debug_function`. That's the only
+        // way to get access to the outgoing headers.
         self.handle.verbose(true).unwrap();
         self.handle.ssl_verify_host(!self.options.insecure).unwrap();
         self.handle.ssl_verify_peer(!self.options.insecure).unwrap();
