@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate hurl;
-
 use hurl::cli;
 use hurl::http;
 use hurl::runner;

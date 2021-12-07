@@ -15,9 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate libxml;
-extern crate serde_json;
-extern crate url as external_url;
 
 use std::collections::HashMap;
 #[allow(unused)]

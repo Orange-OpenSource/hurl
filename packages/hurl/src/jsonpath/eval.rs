@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-extern crate serde_json;
 
 use super::ast::*;
+use float_cmp::approx_eq;
 
 pub type JsonpathResult = Vec<serde_json::Value>;
 

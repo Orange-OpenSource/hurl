@@ -17,9 +17,6 @@
  */
 #![cfg_attr(feature = "strict", deny(warnings))]
 
-#[macro_use]
-extern crate float_cmp;
-
 pub mod cli;
 pub mod http;
 pub mod json;

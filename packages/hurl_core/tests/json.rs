@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-extern crate hurl_core;
-
 use hurl_core::ast::JsonValue;
 use std::fs;
 use std::fs::File;

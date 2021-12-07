@@ -16,8 +16,6 @@
  *
  */
 
-extern crate proptest;
-
 use std::fs;
 
 use proptest::prelude::prop::test_runner::TestRunner;
