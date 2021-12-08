@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" width="264px"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-light.svg?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
+<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-light.svg" alt="Hurl Logo" width="264px">
 
 <br/>
 
@@ -200,7 +200,7 @@ Table of Contents
          * [Build on Windows](#build-on-windows)
 # Samples
 
-To run a sample, you can edit a file with the sample content, and use Hurl:
+To run a sample, edit a file with the sample content, and run Hurl:
 
 ```shell
 $ vi sample.hurl
@@ -210,6 +210,7 @@ GET https://example.net
 $ hurl sample.hurl
 ```
 
+You can check [Hurl tests suit] for more samples.
 
 ## Getting Data
 
@@ -253,7 +254,7 @@ GET https://example.com/protected
 Authorization: Basic Ym9iOnNlY3JldA==
 ```
 
-Alternatively, on can use [`--user` option].
+Alternatively, one can use [`--user` option].
 
 ### Query Params
 
@@ -418,9 +419,11 @@ jsonpath "$.userInfo.lastName" == "Herbert"
 jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
+jsonpath "$.order" matches "^order-\\d{8}$"     # metacharacters beginining with \ must be escaped 
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
+
 
 Testing status code:
 
@@ -900,6 +903,7 @@ Please follow the [contrib on Windows section].
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`--user` option]: https://hurl.dev/docs/man-page.html#user
+[Hurl tests suit]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.4.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64.zip
 [hurl-1.4.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64-installer.exe
