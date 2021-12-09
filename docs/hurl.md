@@ -168,8 +168,11 @@ When this is not explicitly defined, the files are relative to the current direc
 
 ### --glob <glob> {#glob}
 
-Specify input files that match the given blob. 
-Multiple glob flags may be used.
+Specify input files that match the given blob.
+
+Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
+However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, 
+you must use single quotes or double quotes around each pattern.
 
 ### -h, --help {#help}
 
