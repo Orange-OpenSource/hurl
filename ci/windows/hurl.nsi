@@ -66,7 +66,7 @@ SectionGroup "executables"
     ; Write windows uninstall panel informations  
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
-    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl - Command line tool that runs HTTP requests defined in a simple plain text format."
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayVersion" "${VERSION}"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayIcon" "$INSTDIR\hurl.exe"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
