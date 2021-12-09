@@ -11,11 +11,13 @@ Thanks to
 
 Changes:
 
-* Support globs with --test arg [#387](https://github.com/Orange-OpenSource/hurl/issues/387) 
+* Support globs with --test arg [#387](https://github.com/Orange-OpenSource/hurl/issues/387)
 
 * Add ARM Testing with Circle CI [#335](https://github.com/Orange-OpenSource/hurl/issues/335)
 
 * Option --html renamed to --report-html [#333](https://github.com/Orange-OpenSource/hurl/issues/333)
+
+* Add JUnit XML Report Output [#326](https://github.com/Orange-OpenSource/hurl/issues/326)
 
 * Add option --cacert [#314](https://github.com/Orange-OpenSource/hurl/issues/314)
 
@@ -23,9 +25,10 @@ Changes:
 
 * Display curl -V version in hurl -V [#309](https://github.com/Orange-OpenSource/hurl/issues/309)
 
-* Allow bare --json parameter to write json to stdout [#283](https://github.com/Orange-OpenSource/hurl/issues/283)
+* Use --json parameter to write JSON to stdout [#283](https://github.com/Orange-OpenSource/hurl/issues/283)
 
 * Using Environment Variables in Hurl files [#122](https://github.com/Orange-OpenSource/hurl/issues/122)
+
 
 
 Bugs Fixes:
