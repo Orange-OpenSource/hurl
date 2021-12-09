@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>hurl</id>
-    <version>1.4.0</version>
-    <title>HURL - http requests defined in a simple plain text format</title>
+    <version>{version}</version>
+    <title>Hurl</title>
     <authors>Fabrice REIX, Jean Christophe AMIEL, Orange-OpenSource</authors>
     <owners>Orange-OpenSource</owners>
     <projectUrl>https://hurl.dev</projectUrl>
@@ -15,28 +15,14 @@
     <docsUrl>https://hurl.dev/docs/man-page.html</docsUrl>
     <bugTrackerUrl>https://github.com/Orange-OpenSource/hurl/issues</bugTrackerUrl>
     <tags>hurl curl http https cli http-client testing-tool integration-tool automation-tool api-testing cross-platform</tags>
-    <summary>Hurl is a command line tool that performs HTTP requests defined in a simple plain text format.</summary>
+    <summary>Hurl is a command line tool that runs HTTP requests defined in a simple plain text format</summary>
     <description><![CDATA[
+Hurl is a command line tool that runs HTTP requests defined in a simple plain text format.
 It can perform requests, capture values and evaluate queries on headers and body response.
 Hurl is very versatile: it can be used for both fetching data and testing HTTP sessions.
 ]]></description>
     <releaseNotes><![CDATA[
-# Enhancement:
-
-- Install via Scoop #289
-- Support spaces in filenames #287
-- Remove deprecated option --append #262
-- Improve HTML output for hurlfmt #260
-- Add option --ignore-asserts #254
-
-# Bugs Fixes:
-
-- Support tilde in URL #294
-- Fix Windows Terminal output for non-UTF-8 byte sequences #292
-- Fix asserts entries in JSON report #286
-- Fix --test mode in Windows (/dev/null) #273
-- Support key with underscore in jsonpath dot notation #269
-- Fix Windows installer PATH #267
+{changelog}
 ]]></releaseNotes>
   </metadata>
   <files>
