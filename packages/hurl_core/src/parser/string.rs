@@ -152,23 +152,23 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut chars = vec![];
     loop {
         let pos = reader.state.pos.clone();
+        let save = reader.state.clone();
         match any_char(vec!['"'], reader) {
             Err(e) => {
                 if e.recoverable {
+                    reader.state = save;
                     break;
                 } else {
                     return Err(e);
                 }
             }
             Ok((c, s)) => {
-                if s == "\"" {
-                    break;
-                }
                 chars.push((c, s, pos));
                 end = reader.state.clone().pos;
             }
         }
     }
+    literal("\"", reader)?;
     let encoded_string = template::EncodedString {
         source_info: SourceInfo {
             start: start.clone(),
@@ -522,6 +522,20 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 8);
+    }
+
+    #[test]
+    fn test_quoted_template_error_missing_closing_quote() {
+        let mut reader = Reader::init("\"not found");
+        let error = quoted_template(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 11
+            }
+        );
+        assert!(!error.recoverable);
     }
 
     #[test]

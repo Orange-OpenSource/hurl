@@ -117,4 +117,24 @@ mod tests {
         assert_eq!(error.inner, ParseError::PredicateValue {});
         assert!(!error.recoverable);
     }
+
+    #[test]
+    fn test_predicate_value_error_missing_quote() {
+        let mut reader = Reader::init("\"not_found");
+        let error = predicate_value(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 11
+            }
+        );
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "\"".to_string()
+            }
+        );
+        assert!(!error.recoverable);
+    }
 }
