@@ -80,6 +80,15 @@ impl Request {
         }
         return vec![];
     }
+
+    pub fn basic_auth(self) -> Option<KeyValue> {
+        for section in self.sections {
+            if let SectionValue::BasicAuth(kv) = section.value {
+                return Some(kv);
+            }
+        }
+        None
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -193,6 +202,7 @@ impl Section {
         match self.value {
             SectionValue::Asserts(_) => "Asserts",
             SectionValue::QueryParams(_) => "QueryStringParams",
+            SectionValue::BasicAuth(_) => "BasicAuth",
             SectionValue::FormParams(_) => "FormParams",
             SectionValue::Cookies(_) => "Cookies",
             SectionValue::Captures(_) => "Captures",
@@ -202,8 +212,10 @@ impl Section {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[allow(clippy::large_enum_variant)]
 pub enum SectionValue {
     QueryParams(Vec<KeyValue>),
+    BasicAuth(KeyValue),
     FormParams(Vec<KeyValue>),
     MultipartFormData(Vec<MultipartParam>),
     Cookies(Vec<Cookie>),

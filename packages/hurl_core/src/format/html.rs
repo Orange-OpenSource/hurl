@@ -183,6 +183,7 @@ impl Htmlable for SectionValue {
                     buffer.push_str(item.to_html().as_str())
                 }
             }
+            SectionValue::BasicAuth(item) => buffer.push_str(item.to_html().as_str()),
             SectionValue::FormParams(items) => {
                 for item in items {
                     buffer.push_str(item.to_html().as_str())

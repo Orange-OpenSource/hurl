@@ -46,6 +46,16 @@ pub fn eval_request(
         headers.push(http::Header { name, value });
     }
 
+    if let Some(kv) = request.clone().basic_auth() {
+        let value = eval_template(kv.value, variables)?;
+        let user_password = format!("{}:{}", kv.key.value, value);
+        let authorization = base64::encode(user_password.as_bytes());
+
+        let name = "Authorization".to_string();
+        let value = format!("Basic {}", authorization);
+        headers.push(http::Header { name, value });
+    }
+
     let mut querystring: Vec<http::Param> = vec![];
     for param in request.clone().querystring_params() {
         let name = param.key.value;
