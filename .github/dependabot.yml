@@ -6,25 +6,28 @@
 version: 2
 updates:
   - package-ecosystem: "cargo"
+    assignees:
+      - "fabricereix"
     directory: "/packages/hurl"
     schedule:
       interval: "daily"
-    time: "06:00"  
-    assignees:
-      - "fabricereix"
+      time: "06:00"
+      timezone: "Europe/Paris"
 
   - package-ecosystem: "cargo"
+    assignees:
+      - "fabricereix"
     directory: "/packages/hurl_core"
     schedule:
       interval: "daily"
-    time: "06:00"  
-    assignees:
-      - "fabricereix"
+      time: "06:00"
+      timezone: "Europe/Paris"
 
   - package-ecosystem: "cargo"
+    assignees:
+      - "fabricereix"
     directory: "/packages/hurlfmt"
     schedule:
       interval: "daily"
-    time: "06:00"  
-    assignees:
-      - "fabricereix"
+      time: "06:00"
+      timezone: "Europe/Paris"
