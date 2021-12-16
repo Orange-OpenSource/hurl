@@ -194,6 +194,7 @@ Table of Contents
             * [Scoop](#scoop)
             * [Windows Package Manager](#windows-package-manager)
          * [Cargo](#cargo)
+         * [Docker](#docker)
       * [Building From Sources](#building-from-sources)
          * [Build on Linux, macOS](#build-on-linux-macos)
          * [Build on Windows](#build-on-windows)
@@ -774,9 +775,6 @@ Precompiled binary is available at [hurl-1.5.0-x86_64-linux.tar.gz]:
 $ INSTALL_DIR=/tmp
 $ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
 $ export PATH=$INSTALL_DIR/hurl-1.5.0:$PATH
-
-$ hurl --version
-hurl 1.5.0
 ```
 
 #### Debian / Ubuntu
@@ -801,9 +799,6 @@ Hurl can also be installed with [Homebrew]:
 ```shell
 $ brew tap jcamiel/hurl
 $ brew install hurl
-
-$ hurl --version
-hurl 1.5.0
 ```
 
 ### Windows
@@ -840,6 +835,12 @@ If you're a Rust programmer, Hurl can be installed with cargo.
 
 ```shell
 $ cargo install hurl
+```
+
+### Docker
+
+```
+$ docker pull orangeopensource/hurl
 ```
 
 ## Building From Sources
