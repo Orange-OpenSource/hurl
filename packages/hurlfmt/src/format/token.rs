@@ -245,6 +245,9 @@ impl Tokenizable for SectionValue {
                     items.iter().flat_map(|e| e.tokenize()).collect(),
                 );
             }
+            SectionValue::BasicAuth(item) => {
+                tokens.append(&mut item.tokenize());
+            }
             SectionValue::FormParams(items) => {
                 add_tokens(
                     &mut tokens,

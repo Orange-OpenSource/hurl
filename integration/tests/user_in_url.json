@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://bob:secret@localhost:8000/basic-authentication"},"response":{"version":"HTTP/1.0","status":200,"body":{"type":"raw-string","value":"You are authenticated"}}}]}

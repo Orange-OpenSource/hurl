@@ -169,6 +169,7 @@ impl Lintable<SectionValue> for SectionValue {
             SectionValue::QueryParams(params) => {
                 SectionValue::QueryParams(params.iter().map(|e| e.lint()).collect())
             }
+            SectionValue::BasicAuth(param) => SectionValue::BasicAuth(param.lint()),
             SectionValue::Captures(captures) => {
                 SectionValue::Captures(captures.iter().map(|e| e.lint()).collect())
             }
@@ -191,8 +192,9 @@ impl Lintable<SectionValue> for SectionValue {
 fn section_value_index(section_value: SectionValue) -> u32 {
     match section_value {
         SectionValue::QueryParams(_) => 0,
-        SectionValue::FormParams(_) => 1,
-        SectionValue::MultipartFormData(_) => 2,
+        SectionValue::BasicAuth(_) => 1,
+        SectionValue::FormParams(_) => 2,
+        SectionValue::MultipartFormData(_) => 3,
         SectionValue::Cookies(_) => 3,
         SectionValue::Captures(_) => 0,
         SectionValue::Asserts(_) => 1,

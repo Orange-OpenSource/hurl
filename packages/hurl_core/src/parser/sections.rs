@@ -49,6 +49,7 @@ fn request_section(reader: &mut Reader) -> ParseResult<'static, Section> {
     let line_terminator0 = line_terminator(reader)?;
     let value = match name.as_str() {
         "QueryStringParams" => section_value_query_params(reader)?,
+        "BasicAuth" => section_value_basic_auth(reader)?,
         "FormParams" => section_value_form_params(reader)?,
         "MultipartFormData" => section_value_multipart_form_data(reader)?,
         "Cookies" => section_value_cookies(reader)?,
@@ -117,6 +118,11 @@ fn section_name(reader: &mut Reader) -> ParseResult<'static, String> {
 fn section_value_query_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
     let items = zero_or_more(key_value, reader)?;
     Ok(SectionValue::QueryParams(items))
+}
+
+fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+    let kv = key_value(reader)?;
+    Ok(SectionValue::BasicAuth(kv))
 }
 
 fn section_value_form_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
