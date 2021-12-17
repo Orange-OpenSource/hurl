@@ -1,18 +1,31 @@
-.date {
-    margin-bottom: 10px;
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.4;
 }
 
-thead {
-    font-weight: bolder;
-}
-
-td {
-    padding: 3px 5px;
+h2 {
+    color: #ff0288;
+    font-size: 2.5rem;
 }
 
 .summary {
-    padding: 10px;
+    margin: 32px 0 32px 0;
+    font-size: 1.25rem;
 }
+
+.date {
+    margin-bottom: 20px;
+}
+
+td {
+    padding: 4px 8px 4px 0;
+}
+
+thead {
+    font-weight: bold;
+}
+
 .success, .success a {
     color: green;
 }
@@ -20,8 +33,3 @@ td {
 .failure, .failure a {
     color: red;
 }
-
-
-
-
-

@@ -113,7 +113,7 @@ fn percentage(count: usize, total: usize) -> String {
 
 fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
     let head = html::Head {
-        title: "Hurl Report".to_string(),
+        title: "Test Report".to_string(),
         stylesheet: Some("report.css".to_string()),
     };
 
@@ -126,7 +126,7 @@ fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
             html::Element::NodeElement {
                 name: "h2".to_string(),
                 attributes: vec![],
-                children: vec![html::Element::TextElement("Hurl Report".to_string())],
+                children: vec![html::Element::TextElement("Test Report".to_string())],
             },
             html::Element::NodeElement {
                 name: "div".to_string(),
@@ -141,7 +141,7 @@ fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
                         name: "div".to_string(),
                         attributes: vec![html::Attribute::Class("count".to_string())],
                         children: vec![html::Element::TextElement(format!(
-                            "total: {} (100%)",
+                            "Executed: {} (100%)",
                             count_total
                         ))],
                     },
@@ -149,18 +149,18 @@ fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
                         name: "div".to_string(),
                         attributes: vec![html::Attribute::Class("count".to_string())],
                         children: vec![html::Element::TextElement(format!(
-                            "failure: {} ({})",
-                            count_failure,
-                            percentage(count_failure, count_total)
+                            "Succeeded: {} ({})",
+                            count_success,
+                            percentage(count_success, count_total)
                         ))],
                     },
                     html::Element::NodeElement {
                         name: "div".to_string(),
                         attributes: vec![html::Attribute::Class("count".to_string())],
                         children: vec![html::Element::TextElement(format!(
-                            "success: {} ({})",
-                            count_success,
-                            percentage(count_success, count_total)
+                            "Failed: {} ({})",
+                            count_failure,
+                            percentage(count_failure, count_total)
                         ))],
                     },
                 ],
