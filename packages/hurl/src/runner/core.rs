@@ -18,7 +18,7 @@
 use std::collections::HashMap;
 
 use crate::http;
-use hurl_core::ast::SourceInfo;
+use hurl_core::ast::{Entry, SourceInfo};
 
 use super::value::Value;
 
@@ -29,7 +29,7 @@ pub struct RunnerOptions {
     pub to_entry: Option<usize>,
     pub context_dir: String,
     pub ignore_asserts: bool,
-    pub pre_entry: fn() -> bool,
+    pub pre_entry: fn(Entry) -> bool,
     pub post_entry: fn() -> bool,
 }
 
