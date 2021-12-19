@@ -72,7 +72,7 @@ use super::entry;
 ///        to_entry: None,
 ///        context_dir: "current_dir".to_string(),
 ///        ignore_asserts: false,
-///        pre_entry: || true,
+///        pre_entry: |_| true,
 ///        post_entry: || true,
 ///  };
 ///
@@ -121,7 +121,7 @@ pub fn run(
         .enumerate()
         .collect::<Vec<(usize, Entry)>>()
     {
-        let exit = (options.pre_entry)();
+        let exit = (options.pre_entry)(entry.clone());
         if exit {
             break;
         }

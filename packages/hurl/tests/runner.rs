@@ -69,7 +69,7 @@ fn test_hurl_file() {
         to_entry: None,
         context_dir: "current_dir".to_string(),
         ignore_asserts: false,
-        pre_entry: || true,
+        pre_entry: |_| true,
         post_entry: || true,
     };
 
@@ -213,7 +213,7 @@ fn test_hello() {
         to_entry: None,
         context_dir: "current_dir".to_string(),
         ignore_asserts: false,
-        pre_entry: || true,
+        pre_entry: |_| true,
         post_entry: || true,
     };
     let log_verbose: fn(&str) = log_verbose;

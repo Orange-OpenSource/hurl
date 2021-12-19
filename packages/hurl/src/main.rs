@@ -193,7 +193,7 @@ fn execute(
             let pre_entry = if cli_options.interactive {
                 cli::interactive::pre_entry
             } else {
-                || false
+                |_| false
             };
             let post_entry = if cli_options.interactive {
                 cli::interactive::post_entry
