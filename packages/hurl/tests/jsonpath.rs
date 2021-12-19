@@ -368,6 +368,41 @@ fn test_key_access() {
     assert_eq!(results, values);
 }
 
+fn fruit_prices_value() -> serde_json::Value {
+    serde_json::from_str(
+        r#"
+          {
+    "fruit": [
+        {
+            "name": "apple",
+            "price": {
+                "US": 100,
+                "UN": 110
+            }
+        },
+        {
+            "name": "grape",
+            "price": {
+                "US": 200,
+                "UN": 150
+            }
+        }
+    ]
+}
+            "#,
+    )
+    .unwrap()
+}
+
+#[test]
+fn test_filter_nested_object() {
+    let expr = jsonpath::parse("$.fruit[?(@.price.US==200)].name").unwrap();
+    assert_eq!(expr.eval(fruit_prices_value()), vec![json!("grape")]);
+
+    let expr = jsonpath::parse("$.fruit[?(@.pricex.US==200)].name").unwrap();
+    assert!(expr.eval(fruit_prices_value()).is_empty());
+}
+
 #[test]
 fn test_parsing_error() {
     // not supported yet
