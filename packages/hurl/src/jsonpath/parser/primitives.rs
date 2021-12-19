@@ -139,11 +139,49 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
 }
 
 pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
-    // // test python or javascript
-    //// subset that can used for dot notation
-    let s = reader.read_while(|c| c.is_alphabetic() || *c == '_');
+    // test python or javascript
+    // subset that can used for dot notation
+    // The key must not be empty and must not start with a digit
+
+    let first_char = match reader.read() {
+        Some(c) => {
+            if c.is_alphabetic() || c == '_' {
+                c
+            } else {
+                return Err(Error {
+                    pos: reader.state.pos.clone(),
+                    recoverable: false,
+                    inner: ParseError::Expecting {
+                        value: "key".to_string(),
+                    },
+                });
+            }
+        }
+        None => {
+            return Err(Error {
+                pos: reader.state.pos.clone(),
+                recoverable: false,
+                inner: ParseError::Expecting {
+                    value: "key".to_string(),
+                },
+            })
+        }
+    };
+    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
     whitespace(reader);
-    Ok(s)
+    Ok(format!("{}{}", first_char, s))
+}
+
+// key1.key2.key3
+pub fn key_path(reader: &mut Reader) -> Result<Vec<String>, Error> {
+    let root = key_name(reader)?;
+    let mut path = vec![root];
+    while let Some('.') = reader.peek() {
+        reader.read();
+        let key = key_name(reader)?;
+        path.push(key);
+    }
+    Ok(path)
 }
 
 pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
@@ -440,6 +478,41 @@ mod tests {
     fn test_key_name() {
         let mut reader = Reader::init("id'");
         assert_eq!(key_name(&mut reader).unwrap(), "id".to_string());
+
+        let mut reader = Reader::init("id123");
+        assert_eq!(key_name(&mut reader).unwrap(), "id123".to_string());
+
+        let mut reader = Reader::init(".");
+        let error = key_name(&mut reader).err().unwrap();
+        assert!(!error.recoverable);
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "key".to_string()
+            }
+        );
+
+        let mut reader = Reader::init("1id");
+        let error = key_name(&mut reader).err().unwrap();
+        assert!(!error.recoverable);
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "key".to_string()
+            }
+        );
+    }
+
+    #[test]
+    fn test_key_path() {
+        let mut reader = Reader::init("id");
+        assert_eq!(key_path(&mut reader).unwrap(), vec!["id".to_string()]);
+
+        let mut reader = Reader::init("key1.key2");
+        assert_eq!(
+            key_path(&mut reader).unwrap(),
+            vec!["key1".to_string(), "key2".to_string()]
+        );
     }
 
     #[test]

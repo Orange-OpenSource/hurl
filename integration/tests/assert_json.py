@@ -25,3 +25,24 @@ def assert_json_list():
   { "id": 2, "name": "Bill"}
 ]''', mimetype='application/json')
 
+@app.route("/assert-json/filter")
+def assert_json_filter():
+    return Response('''{
+    "fruit": [
+        {
+            "name": "apple",
+            "price": {
+                "US": 100,
+                "UN": 110
+            }
+        },
+        {
+            "name": "grape",
+            "price": {
+                "US": 200,
+                "UN": 150
+            }
+        }
+    ]
+}''', mimetype='application/json')
+

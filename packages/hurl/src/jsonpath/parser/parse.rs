@@ -227,7 +227,7 @@ fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     // @.key==value   Equal(Key,Value)
     // @.key>=value   GreaterThanOrEqual(Key, Value)
     literal("@.", reader)?; // assume key value for the time being
-    let key = key_name(reader)?;
+    let key = key_path(reader)?;
     let state = reader.state.clone();
     let func = match predicate_func(reader) {
         Ok(f) => f,
@@ -378,7 +378,7 @@ mod tests {
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
-                key: "isbn".to_string(),
+                key: vec!["isbn".to_string()],
                 func: PredicateFunc::KeyExist {},
             })
         );
@@ -389,7 +389,7 @@ mod tests {
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
-                key: "key".to_string(),
+                key: vec!["key".to_string()],
                 func: PredicateFunc::EqualString("value".to_string()),
             })
         );
@@ -399,7 +399,7 @@ mod tests {
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
-                key: "price".to_string(),
+                key: vec!["price".to_string()],
                 func: PredicateFunc::LessThan(Number {
                     int: 10,
                     decimal: 0
@@ -528,7 +528,7 @@ mod tests {
         assert_eq!(
             predicate(&mut Reader::init("@.isbn")).unwrap(),
             Predicate {
-                key: "isbn".to_string(),
+                key: vec!["isbn".to_string()],
                 func: PredicateFunc::KeyExist {},
             }
         );
@@ -537,7 +537,7 @@ mod tests {
         assert_eq!(
             predicate(&mut Reader::init("@.key=='value'")).unwrap(),
             Predicate {
-                key: "key".to_string(),
+                key: vec!["key".to_string()],
                 func: PredicateFunc::EqualString("value".to_string()),
             }
         );
@@ -546,7 +546,16 @@ mod tests {
         assert_eq!(
             predicate(&mut Reader::init("@.key==1")).unwrap(),
             Predicate {
-                key: "key".to_string(),
+                key: vec!["key".to_string()],
+                func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
+            }
+        );
+
+        // Filter equal on int for key in object
+        assert_eq!(
+            predicate(&mut Reader::init("@.obj.key==1")).unwrap(),
+            Predicate {
+                key: vec!["obj".to_string(), "key".to_string()],
                 func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
             }
         );
@@ -555,7 +564,7 @@ mod tests {
         assert_eq!(
             predicate(&mut Reader::init("@.price<10")).unwrap(),
             Predicate {
-                key: "price".to_string(),
+                key: vec!["price".to_string()],
                 func: PredicateFunc::LessThan(Number {
                     int: 10,
                     decimal: 0

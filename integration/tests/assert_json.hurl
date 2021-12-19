@@ -64,3 +64,8 @@ HTTP/1.0 200
 jsonpath "$" count == 2
 jsonpath "$.[0].name" equals "Bob"
 jsonpath "$[0].name" equals "Bob"
+
+GET http://localhost:8000/assert-json/filter
+HTTP/1.0 200
+[Asserts]
+jsonpath "$.fruit[?(@.price.US==200)].name" equals "grape"

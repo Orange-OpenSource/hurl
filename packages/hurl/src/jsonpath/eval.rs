@@ -147,35 +147,54 @@ impl Selector {
 impl Predicate {
     pub fn eval(&self, elem: serde_json::Value) -> bool {
         match elem {
-            serde_json::Value::Object(ref obj) => {
-                match (obj.get(self.key.as_str()), self.func.clone()) {
-                    (Some(_), PredicateFunc::KeyExist {}) => true,
-                    (Some(serde_json::Value::Number(v)), PredicateFunc::Equal(ref num)) => {
-                        approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
-                    } //v.as_f64().unwrap() == num.to_f64(),
-                    (Some(serde_json::Value::Number(v)), PredicateFunc::GreaterThan(ref num)) => {
-                        v.as_f64().unwrap() > num.to_f64()
+            serde_json::Value::Object(_) => {
+                if let Some(value) = extract_value(elem, self.key.clone()) {
+                    match (value, self.func.clone()) {
+                        (_, PredicateFunc::KeyExist {}) => true,
+                        (serde_json::Value::Number(v), PredicateFunc::Equal(ref num)) => {
+                            approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
+                        } //v.as_f64().unwrap() == num.to_f64(),
+                        (serde_json::Value::Number(v), PredicateFunc::GreaterThan(ref num)) => {
+                            v.as_f64().unwrap() > num.to_f64()
+                        }
+                        (
+                            serde_json::Value::Number(v),
+                            PredicateFunc::GreaterThanOrEqual(ref num),
+                        ) => v.as_f64().unwrap() >= num.to_f64(),
+                        (serde_json::Value::Number(v), PredicateFunc::LessThan(ref num)) => {
+                            v.as_f64().unwrap() < num.to_f64()
+                        }
+                        (serde_json::Value::Number(v), PredicateFunc::LessThanOrEqual(ref num)) => {
+                            v.as_f64().unwrap() <= num.to_f64()
+                        }
+                        (serde_json::Value::String(v), PredicateFunc::EqualString(ref s)) => {
+                            v == *s
+                        }
+                        _ => false,
                     }
-                    (
-                        Some(serde_json::Value::Number(v)),
-                        PredicateFunc::GreaterThanOrEqual(ref num),
-                    ) => v.as_f64().unwrap() >= num.to_f64(),
-                    (Some(serde_json::Value::Number(v)), PredicateFunc::LessThan(ref num)) => {
-                        v.as_f64().unwrap() < num.to_f64()
-                    }
-                    (
-                        Some(serde_json::Value::Number(v)),
-                        PredicateFunc::LessThanOrEqual(ref num),
-                    ) => v.as_f64().unwrap() <= num.to_f64(),
-                    (Some(serde_json::Value::String(v)), PredicateFunc::EqualString(ref s)) => {
-                        v == s
-                    }
-                    _ => false,
+                } else {
+                    false
                 }
             }
             _ => false,
         }
     }
+}
+
+fn extract_value(obj: serde_json::Value, key_path: Vec<String>) -> Option<serde_json::Value> {
+    let mut path = key_path;
+    let mut value = obj;
+    loop {
+        if path.is_empty() {
+            break;
+        }
+        let key = path.remove(0);
+        match value.get(key) {
+            None => return None,
+            Some(v) => value = v.clone(),
+        }
+    }
+    Some(value)
 }
 
 #[cfg(test)]
@@ -277,7 +296,7 @@ mod tests {
                 Selector::NameChild("store".to_string()),
                 Selector::NameChild("book".to_string()),
                 Selector::Filter(Predicate {
-                    key: "price".to_string(),
+                    key: vec!["price".to_string()],
                     func: PredicateFunc::LessThan(Number {
                         int: 10,
                         decimal: 0,
@@ -355,7 +374,7 @@ mod tests {
         assert_eq!(
             Selector::ArraySlice(Slice {
                 start: None,
-                end: Some(2)
+                end: Some(2),
             })
             .eval(json_books()),
             vec![json_first_book(), json_second_book(),]
@@ -388,47 +407,64 @@ mod tests {
     #[test]
     pub fn test_predicate() {
         assert!(Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::KeyExist {},
         }
         .eval(json!({"key": "value"})));
         assert!(Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::EqualString("value".to_string()),
         }
         .eval(json!({"key": "value"})));
 
         assert!(!Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::EqualString("value".to_string()),
         }
         .eval(json!({"key": "some"})));
 
         assert!(Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
         }
         .eval(json!({"key": 1})));
 
         assert!(!Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
         }
         .eval(json!({"key": 2})));
 
         assert!(!Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
         }
         .eval(json!({"key": "1"})));
 
         assert!(Predicate {
-            key: "key".to_string(),
+            key: vec!["key".to_string()],
             func: PredicateFunc::LessThan(Number {
                 int: 10,
                 decimal: 0,
             }),
         }
         .eval(json!({"key": 1})));
+    }
+
+    #[test]
+    pub fn test_extract_value() {
+        assert_eq!(
+            extract_value(json!({"key": 1}), vec!["key".to_string()]).unwrap(),
+            json!(1)
+        );
+        assert!(extract_value(json!({"key": 1}), vec!["unknown".to_string()]).is_none());
+        assert_eq!(
+            extract_value(
+                json!({"key1": {"key2": 1}}),
+                vec!["key1".to_string(), "key2".to_string()]
+            )
+            .unwrap(),
+            json!(1)
+        );
     }
 }

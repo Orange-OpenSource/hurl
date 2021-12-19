@@ -46,7 +46,7 @@ pub struct Slice {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Predicate {
-    pub key: String,
+    pub key: Vec<String>,
     pub func: PredicateFunc,
 }
 
