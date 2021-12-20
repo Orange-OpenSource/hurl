@@ -797,7 +797,6 @@ Precompiled binary is available at [hurl-1.5.0-x86_64-osx.tar.gz].
 Hurl can also be installed with [Homebrew]:
 
 ```shell
-$ brew tap jcamiel/hurl
 $ brew install hurl
 ```
 
