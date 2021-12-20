@@ -108,7 +108,7 @@ jobs:
         cargo --version
     - name: Build
       run: |
-        cargo build --verbose
+        cargo build --verbose --locked
     - name: Test Prequisites
       run: |
         sudo apt update
