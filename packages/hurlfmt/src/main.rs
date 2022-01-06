@@ -22,6 +22,7 @@ use std::process;
 
 use atty::Stream;
 
+use clap::AppSettings;
 use hurl_core::parser;
 use hurlfmt::cli;
 use hurlfmt::format;
@@ -42,61 +43,62 @@ fn main() {
     let app = clap::App::new("hurlfmt")
         // .author(clap::crate_authors!())
         .version(clap::crate_version!())
+        .setting(AppSettings::DisableColoredHelp)
         .about("Format hurl FILE")
         .arg(
-            clap::Arg::with_name("INPUT")
+            clap::Arg::new("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
                 .index(1),
         )
         .arg(
-            clap::Arg::with_name("check")
+            clap::Arg::new("check")
                 .long("check")
                 .conflicts_with("format")
                 .conflicts_with("output")
                 .help("Run in 'check' mode"),
         )
         .arg(
-            clap::Arg::with_name("color")
+            clap::Arg::new("color")
                 .long("color")
                 .conflicts_with("no_color")
                 .conflicts_with("in_place")
                 .help("Colorize Output"),
         )
         .arg(
-            clap::Arg::with_name("format")
+            clap::Arg::new("format")
                 .long("format")
                 .conflicts_with("check")
                 .value_name("FORMAT")
                 .help("Specify output format: text (default), json or html"),
         )
         .arg(
-            clap::Arg::with_name("in_place")
+            clap::Arg::new("in_place")
                 .long("in-place")
                 .conflicts_with("output")
                 .conflicts_with("color")
                 .help("Modify file in place"),
         )
         .arg(
-            clap::Arg::with_name("no_color")
+            clap::Arg::new("no_color")
                 .long("no-color")
                 .conflicts_with("color")
                 .help("Do not colorize output"),
         )
         .arg(
-            clap::Arg::with_name("no_format")
+            clap::Arg::new("no_format")
                 .long("no-format")
                 .help("Do not format output"),
         )
         .arg(
-            clap::Arg::with_name("output")
-                .short("o")
+            clap::Arg::new("output")
+                .short('o')
                 .long("output")
                 .value_name("FILE")
                 .help("Write to FILE instead of stdout"),
         )
         .arg(
-            clap::Arg::with_name("standalone")
+            clap::Arg::new("standalone")
                 .long("standalone")
                 .help("Standalone Html"),
         );

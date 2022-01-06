@@ -251,7 +251,7 @@ fn main() {
         clap::crate_version!(),
         http::libcurl_version_info().join(" ")
     );
-    let app = cli::app().version(version_info.as_str());
+    let app = cli::app(version_info.as_str());
     let matches = app.clone().get_matches();
     init_colored();
 
