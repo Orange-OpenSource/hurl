@@ -171,8 +171,7 @@ When this is not explicitly defined, the files are relative to the current direc
 Specify input files that match the given blob.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
-However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, 
-you must use single quotes or double quotes around each pattern.
+However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
 ### -h, --help {#help}
 
@@ -253,7 +252,7 @@ Print test metrics at the end of the run (on stderr)
 
 ### --test {#test}
 
-Activate test mode; equals --no-output --progress --summary
+Activate test mode; equals [--no-output](#no-output) [--progress](#progress) [--summary](#summary)
 
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 
