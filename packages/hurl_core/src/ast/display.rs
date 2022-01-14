@@ -37,7 +37,7 @@ impl fmt::Display for Method {
 
 impl fmt::Display for Version {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value.to_string())
+        write!(f, "{}", self.value)
     }
 }
 
@@ -55,7 +55,7 @@ impl fmt::Display for VersionValue {
 
 impl fmt::Display for Status {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value.to_string())
+        write!(f, "{}", self.value)
     }
 }
 
@@ -63,7 +63,7 @@ impl fmt::Display for StatusValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             StatusValue::Any => write!(f, "*"),
-            StatusValue::Specific(v) => write!(f, "{}", v.to_string()),
+            StatusValue::Specific(v) => write!(f, "{}", v),
         }
     }
 }
@@ -82,7 +82,7 @@ impl fmt::Display for TemplateElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
             TemplateElement::String { value, .. } => value.clone(),
-            TemplateElement::Expression(value) => format!("{{{{{}}}}}", value.to_string()),
+            TemplateElement::Expression(value) => format!("{{{{{}}}}}", value),
         };
         write!(f, "{}", s)
     }
@@ -104,7 +104,7 @@ impl fmt::Display for CookiePath {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = self.name.to_string();
         if let Some(attribute) = self.attribute.clone() {
-            let s = format!("[{}]", attribute.to_string());
+            let s = format!("[{}]", attribute);
             buf.push_str(s.as_str());
         }
         write!(f, "{}", buf)

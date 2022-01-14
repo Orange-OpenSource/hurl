@@ -39,7 +39,7 @@ impl Testcase {
         let mut failures = vec![];
         let mut errors = vec![];
 
-        for error in hurl_result.errors().clone() {
+        for error in hurl_result.errors() {
             let message = cli::error_string(lines, hurl_result.filename.clone(), &error);
             if error.assert {
                 failures.push(message);

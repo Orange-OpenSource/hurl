@@ -69,7 +69,7 @@ impl Error for runner::Error {
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {
-                format!("actual value is <{}>", value.to_string())
+                format!("actual value is <{}>", value)
             }
             RunnerError::InvalidRegex {} => "Regex expression is not valid".to_string(),
             RunnerError::FileReadAccess { value } => format!("File {} can not be read", value),

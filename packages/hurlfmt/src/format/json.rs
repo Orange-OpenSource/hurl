@@ -490,7 +490,7 @@ impl ToJson for hurl_core::ast::JsonValue {
                     .map(|elem| (elem.name.to_string(), elem.value.to_json()))
                     .collect(),
             ),
-            JsonValue::Expression(exp) => JValue::String(format!("{{{{{}}}}}", exp.to_string())),
+            JsonValue::Expression(exp) => JValue::String(format!("{{{{{}}}}}", exp)),
         }
     }
 }

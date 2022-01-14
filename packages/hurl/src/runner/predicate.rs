@@ -92,8 +92,8 @@ struct AssertResult {
 impl Value {
     pub fn display(self) -> String {
         match self {
-            Value::Bool(v) => format!("bool <{}>", v.to_string()),
-            Value::Integer(v) => format!("int <{}>", v.to_string()),
+            Value::Bool(v) => format!("bool <{}>", v),
+            Value::Integer(v) => format!("int <{}>", v),
             Value::String(v) => format!("string <{}>", v),
             Value::Float(f) => format!("float <{}>", format_float(f)),
             Value::List(values) => format!(
@@ -191,7 +191,7 @@ fn expected(
             } else {
                 panic!();
             };
-            Ok(format!("count equals to <{}>", expected.to_string()))
+            Ok(format!("count equals to <{}>", expected))
         }
         PredicateFuncValue::StartWith {
             value: expected, ..
