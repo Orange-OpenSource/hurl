@@ -119,7 +119,7 @@ fn execute(
             log_verbose(format!("insecure: {}", cli_options.insecure).as_str());
             log_verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
             if let Some(n) = cli_options.max_redirect {
-                log_verbose(format!("max redirect: {}", n.to_string()).as_str());
+                log_verbose(format!("max redirect: {}", n).as_str());
             }
             if let Some(proxy) = cli_options.proxy.clone() {
                 log_verbose(format!("proxy: {}", proxy).as_str());
@@ -135,12 +135,8 @@ fn execute(
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
                     log_verbose(
-                        format!(
-                            "executing {}/{} entries",
-                            to_entry.to_string(),
-                            hurl_file.entries.len().to_string()
-                        )
-                        .as_str(),
+                        format!("executing {}/{} entries", to_entry, hurl_file.entries.len())
+                            .as_str(),
                     );
                 } else {
                     log_verbose("executing all entries");
@@ -338,11 +334,8 @@ fn main() {
                 if let Some(response) = entry_result.response.clone() {
                     let mut output = vec![];
                     if cli_options.include {
-                        let status_line = format!(
-                            "HTTP/{} {}\n",
-                            response.version.to_string(),
-                            response.status.to_string()
-                        );
+                        let status_line =
+                            format!("HTTP/{} {}\n", response.version, response.status);
                         output.append(&mut status_line.into_bytes());
                         for header in response.headers.clone() {
                             let header_line = format!("{}: {}\n", header.name, header.value);
@@ -457,7 +450,7 @@ fn main() {
 fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
-    for hurl_result in hurl_results.clone() {
+    for hurl_result in hurl_results {
         let errors = hurl_result.clone().errors();
         if errors.is_empty() {
         } else if errors.iter().filter(|e| !e.assert).cloned().count() == 0 {

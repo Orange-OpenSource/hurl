@@ -36,7 +36,7 @@ pub fn read_to_string(filename: &str) -> Result<String, CliError> {
         let mut contents = String::new();
         return if let Err(e) = std::io::stdin().read_to_string(&mut contents) {
             Err(CliError {
-                message: format!("Input stream can not be read - {}", e.to_string()),
+                message: format!("Input stream can not be read - {}", e),
             })
         } else {
             return Ok(contents);

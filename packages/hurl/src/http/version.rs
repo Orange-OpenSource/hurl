@@ -33,23 +33,23 @@ pub fn libcurl_version_info() -> Vec<String> {
         versions.push(s.to_string());
     }
     if let Some(s) = version.libz_version() {
-        versions.push(format!("zlib/{}", s.to_string()));
+        versions.push(format!("zlib/{}", s));
     }
     if let Some(s) = version.brotli_version() {
-        versions.push(format!("brotli/{}", s.to_string()));
+        versions.push(format!("brotli/{}", s));
     }
     if let Some(s) = version.zstd_version() {
         versions.push(s.to_string());
     }
     if let Some(s) = version.ares_version() {
-        versions.push(format!("c-ares/{}", s.to_string()));
+        versions.push(format!("c-ares/{}", s));
     }
     if let Some(s) = version.libidn_version() {
-        versions.push(format!("libidn2/{}", s.to_string()));
+        versions.push(format!("libidn2/{}", s));
     }
     if let Some(s) = version.iconv_version_num() {
         if s != 0 {
-            versions.push(format!("iconv/{}", s.to_string()));
+            versions.push(format!("iconv/{}", s));
         }
     }
     if let Some(s) = version.libssh_version() {
@@ -62,10 +62,10 @@ pub fn libcurl_version_info() -> Vec<String> {
         versions.push(s.to_string());
     }
     if let Some(s) = version.hyper_version() {
-        versions.push(format!("hyper/{}", s.to_string()));
+        versions.push(format!("hyper/{}", s));
     }
     if let Some(s) = version.gsasl_version() {
-        versions.push(format!("libgsal/{}", s.to_string()));
+        versions.push(format!("libgsal/{}", s));
     }
     versions
 }

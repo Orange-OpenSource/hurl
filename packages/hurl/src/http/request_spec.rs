@@ -97,8 +97,8 @@ impl fmt::Display for Method {
 impl fmt::Display for MultipartParam {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            MultipartParam::Param(param) => write!(f, "{}", param.to_string()),
-            MultipartParam::FileParam(param) => write!(f, "{}", param.to_string()),
+            MultipartParam::Param(param) => write!(f, "{}", param),
+            MultipartParam::FileParam(param) => write!(f, "{}", param),
         }
     }
 }
@@ -132,9 +132,9 @@ impl RequestSpec {
         let url = if querystring.as_str() == "" {
             self.url.to_string()
         } else if self.url.to_string().contains('?') {
-            format!("{}&{}", self.url.to_string(), querystring)
+            format!("{}&{}", self.url, querystring)
         } else {
-            format!("{}?{}", self.url.to_string(), querystring)
+            format!("{}?{}", self.url, querystring)
         };
         let mut arguments = vec![format!("'{}'", url)];
 

@@ -76,9 +76,9 @@ pub struct ObjectElement {
 impl fmt::Display for JsonValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
-            Value::Expression(expr) => format!("{{{{{}}}}}", expr.to_string()),
+            Value::Expression(expr) => format!("{{{{{}}}}}", expr),
             Value::Number(s) => s.to_string(),
-            Value::String(template) => format!("\"{}\"", template.to_string()),
+            Value::String(template) => format!("\"{}\"", template),
             Value::Boolean(value) => {
                 if *value {
                     "true".to_string()
@@ -135,7 +135,7 @@ impl fmt::Display for ObjectElement {
 impl JsonValue {
     pub fn encoded(&self) -> String {
         match self {
-            Value::Expression(expr) => format!("{{{{{}}}}}", expr.to_string()),
+            Value::Expression(expr) => format!("{{{{{}}}}}", expr),
             Value::Number(s) => s.to_string(),
             Value::String(template) => template.encoded(),
             Value::Boolean(value) => {
@@ -207,7 +207,7 @@ impl TemplateElement {
     fn encoded(&self) -> String {
         match self {
             TemplateElement::String { encoded, .. } => encoded.to_string(),
-            TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr.to_string()),
+            TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
         }
     }
 }

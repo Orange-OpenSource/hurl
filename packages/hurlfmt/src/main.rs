@@ -158,7 +158,7 @@ fn main() {
         if let Err(e) = io::stdin().read_to_string(&mut contents) {
             log_error_message(
                 false,
-                format!("Input stream can not be read - {}", e.to_string()).as_str(),
+                format!("Input stream can not be read - {}", e).as_str(),
             );
             std::process::exit(2);
         }
