@@ -1,3 +1,4 @@
+use std::default::Default;
 use std::time::Duration;
 
 use hurl::http::*;
@@ -341,19 +342,8 @@ fn test_follow_location() {
     let request_spec = default_get_request("http://localhost:8000/redirect".to_string());
 
     let options = ClientOptions {
-        cacert_file: None,
         follow_location: true,
-        max_redirect: Some(50),
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::new(300, 0),
-        connect_timeout: Duration::new(300, 0),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     assert_eq!(client.options.curl_args(), vec!["-L".to_string(),]);
@@ -395,19 +385,9 @@ fn test_follow_location() {
 #[test]
 fn test_max_redirect() {
     let options = ClientOptions {
-        cacert_file: None,
         follow_location: true,
         max_redirect: Some(10),
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::new(300, 0),
-        connect_timeout: Duration::new(300, 0),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
 
@@ -562,19 +542,8 @@ fn test_expect() {
 #[test]
 fn test_basic_authentication() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: Some(50),
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::from_secs(300),
-        connect_timeout: Duration::from_secs(300),
         user: Some("bob:secret".to_string()),
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = RequestSpec {
@@ -631,18 +600,7 @@ fn test_basic_authentication() {
 fn test_cacert() {
     let options = ClientOptions {
         cacert_file: Some("tests/cert.pem".to_string()),
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request("https://localhost:8001/hello".to_string());
@@ -676,19 +634,8 @@ fn test_error_fail_to_connect() {
     }
 
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
         proxy: Some("localhost:9999".to_string()),
-        no_proxy: None,
-        verbose: true,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request = default_get_request("http://localhost:8000/hello".to_string());
@@ -704,19 +651,8 @@ fn test_error_fail_to_connect() {
 #[test]
 fn test_error_could_not_resolve_proxy_name() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
         proxy: Some("unknown".to_string()),
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request("http://localhost:8000/hello".to_string());
@@ -730,21 +666,7 @@ fn test_error_could_not_resolve_proxy_name() {
 
 #[test]
 fn test_error_ssl() {
-    let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
-    };
+    let options = ClientOptions::default();
     let mut client = Client::init(options);
     let request_spec = default_get_request("https://localhost:8001/hello".to_string());
     let error = client.execute(&request_spec).err().unwrap();
@@ -762,19 +684,8 @@ fn test_error_ssl() {
 #[test]
 fn test_timeout() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
         timeout: Duration::from_millis(100),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request("http://localhost:8000/timeout".to_string());
@@ -789,19 +700,8 @@ fn test_timeout() {
 #[test]
 fn test_accept_encoding() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: true,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
         compressed: true,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
 
@@ -831,19 +731,8 @@ fn test_accept_encoding() {
 #[test]
 fn test_connect_timeout() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: Some(50),
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::from_secs(300),
         connect_timeout: Duration::from_secs(1),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request("http://10.0.0.0".to_string());
@@ -999,19 +888,8 @@ fn test_cookie_storage() {
 #[test]
 fn test_cookie_file() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: Some(50),
         cookie_input_file: Some("tests/cookies.txt".to_string()),
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::new(300, 0),
-        connect_timeout: Duration::new(300, 0),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request(
@@ -1044,19 +922,8 @@ fn test_cookie_file() {
 fn test_proxy() {
     // mitmproxy listening on port 8888
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: Some(50),
-        cookie_input_file: None,
         proxy: Some("localhost:8888".to_string()),
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Duration::new(300, 0),
-        connect_timeout: Duration::new(300, 0),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     let request_spec = default_get_request("http://localhost:8000/proxy".to_string());
@@ -1074,19 +941,8 @@ fn test_proxy() {
 #[test]
 fn test_insecure() {
     let options = ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: Some(50),
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
         insecure: true,
-        timeout: Duration::new(300, 0),
-        connect_timeout: Duration::new(300, 0),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
+        ..Default::default()
     };
     let mut client = Client::init(options);
     assert_eq!(client.options.curl_args(), vec!["--insecure".to_string()]);
