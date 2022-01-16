@@ -305,7 +305,7 @@ impl Client {
                 .unwrap();
         }
 
-        if get_header_values(request.headers.clone(), "Content-Type".to_string()).is_empty() {
+        if get_header_values(&request.headers, "Content-Type").is_empty() {
             if let Some(s) = request.content_type.clone() {
                 list.append(format!("Content-Type: {}", s).as_str())
                     .unwrap();
@@ -314,24 +314,24 @@ impl Client {
             }
         }
 
-        if get_header_values(request.headers.clone(), "Expect".to_string()).is_empty() {
+        if get_header_values(&request.headers, "Expect").is_empty() {
             list.append("Expect:").unwrap(); // remove header Expect
         }
 
-        if get_header_values(request.headers.clone(), "User-Agent".to_string()).is_empty() {
+        if get_header_values(&request.headers, "User-Agent").is_empty() {
             list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str())
                 .unwrap();
         }
 
         if let Some(user) = self.options.user.clone() {
             let authorization = base64::encode(user.as_bytes());
-            if get_header_values(request.headers.clone(), "Authorization".to_string()).is_empty() {
+            if get_header_values(&request.headers, "Authorization").is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
                     .unwrap();
             }
         }
         if self.options.compressed
-            && get_header_values(request.headers.clone(), "Accept-Encoding".to_string()).is_empty()
+            && get_header_values(&request.headers, "Accept-Encoding").is_empty()
         {
             list.append("Accept-Encoding: gzip, deflate, br").unwrap();
         }
@@ -459,7 +459,7 @@ impl Client {
         if !(300..400).contains(&response_code) {
             return None;
         }
-        let location = match get_header_values(response.headers, "Location".to_string()).get(0) {
+        let location = match get_header_values(&response.headers, "Location").get(0) {
             None => return None,
             Some(value) => value.clone(),
         };
