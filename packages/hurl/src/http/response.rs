@@ -53,7 +53,7 @@ impl Response {
     /// return a list of headers values for the given header name
     ///
     pub fn get_header_values(&self, expected_name: String) -> Vec<String> {
-        get_header_values(self.headers.clone(), expected_name)
+        get_header_values(&self.headers, &expected_name)
     }
 
     ///
