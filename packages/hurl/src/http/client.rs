@@ -300,13 +300,13 @@ impl Client {
     fn set_headers(&mut self, request: &RequestSpec) {
         let mut list = easy::List::new();
 
-        for header in request.headers.clone() {
+        for header in &request.headers {
             list.append(format!("{}: {}", header.name, header.value).as_str())
                 .unwrap();
         }
 
         if get_header_values(&request.headers, "Content-Type").is_empty() {
-            if let Some(s) = request.content_type.clone() {
+            if let Some(ref s) = request.content_type {
                 list.append(format!("Content-Type: {}", s).as_str())
                     .unwrap();
             } else {
@@ -323,7 +323,7 @@ impl Client {
                 .unwrap();
         }
 
-        if let Some(user) = self.options.user.clone() {
+        if let Some(ref user) = self.options.user {
             let authorization = base64::encode(user.as_bytes());
             if get_header_values(&request.headers, "Authorization").is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
