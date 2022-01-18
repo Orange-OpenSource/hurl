@@ -158,7 +158,10 @@ jobs:
           uname -m
           echo "----- install build prerequisites -----"
           pacman -Syy --noconfirm
-          pacman -Sy --noconfirm curl icu base-devel libxml2 python3 cargo
+          pacman -Sy --noconfirm curl icu base-devel libxml2 python3
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
+          sh rustup.sh -y
+          source $HOME/.cargo/env
           curl -O https://bootstrap.pypa.io/get-pip.py
           python3 get-pip.py
           rustc --version
@@ -203,7 +206,10 @@ jobs:
           uname -a
           uname -m
           echo "----- install build prerequisites -----"
-          yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip cargo
+          yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
+          sh rustup.sh -y
+          source $HOME/.cargo/env
           rustc --version
           cargo --version
           echo "----- build -----"
@@ -248,7 +254,10 @@ jobs:
           uname -m
           echo "----- install build prerequisites -----"
           apk update --quiet
-          apk add --quiet bash cargo curl build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
+          apk add --quiet bash curl build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
+          sh rustup.sh -y
+          source $HOME/.cargo/env
           rustc --version
           cargo --version
           echo "----- build -----"
