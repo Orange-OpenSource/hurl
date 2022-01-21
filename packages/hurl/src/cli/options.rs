@@ -56,6 +56,7 @@ pub struct CliOptions {
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
+    pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
 }
@@ -273,6 +274,14 @@ pub fn app(version: &str) -> App {
                 .takes_value(true),
         )
         .arg(
+            clap::Arg::new("user_agent")
+                .short('A')
+                .long("user-agent")
+                .value_name("name")
+                .help("Specify the User-Agent string to send to the HTTP server.")
+                .takes_value(true),
+        )
+        .arg(
             clap::Arg::new("variable")
                 .long("variable")
                 .value_name("NAME=VALUE")
@@ -409,6 +418,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     };
     let to_entry = to_entry(matches.clone())?;
     let user = matches.value_of("user").map(|x| x.to_string());
+    let user_agent = matches.value_of("user_agent").map(|x| x.to_string());
     let variables = variables(matches.clone())?;
     let verbose = matches.is_present("verbose") || matches.is_present("interactive");
 
@@ -439,6 +449,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         timeout,
         to_entry,
         user,
+        user_agent,
         variables,
         verbose,
     })
