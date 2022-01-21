@@ -40,21 +40,7 @@ fn test_hurl_file() {
     let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
-    let options = http::ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
-    };
+    let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
@@ -153,21 +139,7 @@ fn hello_request() -> Request {
 
 #[test]
 fn test_hello() {
-    let options = http::ClientOptions {
-        cacert_file: None,
-        follow_location: false,
-        max_redirect: None,
-        cookie_input_file: None,
-        proxy: None,
-        no_proxy: None,
-        verbose: false,
-        insecure: false,
-        timeout: Default::default(),
-        connect_timeout: Default::default(),
-        user: None,
-        compressed: false,
-        context_dir: ".".to_string(),
-    };
+    let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
