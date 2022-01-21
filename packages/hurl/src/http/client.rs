@@ -319,7 +319,11 @@ impl Client {
         }
 
         if get_header_values(&request.headers, "User-Agent").is_empty() {
-            list.append(format!("User-Agent: hurl/{}", clap::crate_version!()).as_str())
+            let user_agent = match self.options.user_agent {
+                Some(ref u) => u.clone(),
+                None => format!("hurl/{}", clap::crate_version!()),
+            };
+            list.append(format!("User-Agent: {}", user_agent).as_str())
                 .unwrap();
         }
 
