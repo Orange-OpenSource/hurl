@@ -59,6 +59,7 @@ use super::entry;
 ///        timeout: Default::default(),
 ///        connect_timeout: Default::default(),
 ///        user: None,
+///        user_agent: None,
 ///        compressed: false,
 ///        context_dir: "".to_string(),
 /// };
