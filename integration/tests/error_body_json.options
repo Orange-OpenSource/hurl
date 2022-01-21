@@ -1,1 +1,2 @@
---variable success=invalid
+--variable
+success=invalid

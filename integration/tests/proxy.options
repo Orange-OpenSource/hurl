@@ -1,1 +1,2 @@
---proxy localhost:8888
+--proxy
+localhost:8888

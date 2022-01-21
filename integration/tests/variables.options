@@ -1,1 +1,4 @@
---variables-file tests/variables.properties --variable female=true
+--variables-file
+tests/variables.properties
+--variable
+female=true

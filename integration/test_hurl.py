@@ -41,7 +41,7 @@ def test(hurl_file):
 
     options = []
     if os.path.exists(options_file):
-         options = open(options_file).read().strip().split(' ')
+         options = open(options_file).read().strip().split('\n')
     if os.path.exists(curl_file):
         options.append('--verbose')
 

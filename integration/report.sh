@@ -9,7 +9,7 @@ export HURL_name=Bob
 find tests -name "*.hurl" | sort | while read -r hurl_file; do
     options=("--report-html build/html" "--report-junit build/tests.xml" "--json" )
     if test -f "${hurl_file%.*}.options"; then
-        options+=("$(cat "${hurl_file%.*}.options")")
+        options+=("$(< "${hurl_file%.*}.options" tr '\n' ' ') ")
     fi
     cmd="hurl $hurl_file ${options[*]}"
     echo "$cmd"

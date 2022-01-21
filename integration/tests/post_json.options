@@ -1,1 +1,4 @@
---variable age=30 --variable strict=true
+--variable
+age=30
+--variable
+strict=true

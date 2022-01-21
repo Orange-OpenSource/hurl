@@ -1,1 +1,2 @@
---cookie tests/cookie_file.cookies
+--cookie
+tests/cookie_file.cookies
