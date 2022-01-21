@@ -155,6 +155,7 @@ fn execute(
             let timeout = cli_options.timeout;
             let connect_timeout = cli_options.connect_timeout;
             let user = cli_options.user;
+            let user_agent = cli_options.user_agent;
             let compressed = cli_options.compressed;
             let context_dir = match cli_options.file_root {
                 None => {
@@ -180,6 +181,7 @@ fn execute(
                 timeout,
                 connect_timeout,
                 user,
+                user_agent,
                 compressed,
                 context_dir: context_dir.clone(),
             };
