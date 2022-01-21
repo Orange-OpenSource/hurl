@@ -1,2 +1,4 @@
---location --max-redirs 5
+--location
+--max-redirs
+5
 

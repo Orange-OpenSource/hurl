@@ -1,1 +1,2 @@
---user bob:secret
+--user
+bob:secret
