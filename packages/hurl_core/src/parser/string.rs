@@ -97,7 +97,13 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                     match reader.read() {
                         None => break,
                         Some(c) => {
-                            if c.is_alphanumeric() || c == '_' || c == '-' || c == '.' {
+                            if c.is_alphanumeric()
+                                || c == '_'
+                                || c == '-'
+                                || c == '.'
+                                || c == '['
+                                || c == ']'
+                            {
                                 value.push(c);
                                 encoded.push_str(reader.from(save.cursor).as_str())
                             } else {
@@ -113,8 +119,8 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
         }
     }
 
-    // check nonempty
-    if value.is_empty() {
+    // check nonempty/ starts with [
+    if value.is_empty() || encoded.starts_with('[') {
         return Err(Error {
             pos: start,
             recoverable: true,
@@ -444,6 +450,56 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 15);
+    }
+
+    #[test]
+    fn test_unquoted_key_with_square_bracket() {
+        let mut reader = Reader::init("values\\u{5b}0\\u{5d} :");
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "values[0]".to_string(),
+                encoded: "values\\u{5b}0\\u{5d}".to_string(),
+                quotes: false,
+                source_info: SourceInfo::init(1, 1, 1, 20),
+            }
+        );
+        assert_eq!(reader.state.cursor, 19);
+
+        let mut reader = Reader::init("values[0] :");
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "values[0]".to_string(),
+                encoded: "values[0]".to_string(),
+                quotes: false,
+                source_info: SourceInfo::init(1, 1, 1, 10),
+            }
+        );
+        assert_eq!(reader.state.cursor, 9);
+    }
+
+    #[test]
+    fn test_unquoted_keys_ignore_start_square_bracket() {
+        let mut reader = Reader::init("[0]:");
+        let error = unquoted_string_key(&mut reader).err().unwrap();
+        assert!(error.recoverable);
+        assert_eq!(reader.state.cursor, 3);
+    }
+
+    #[test]
+    fn test_unquoted_keys_accept_start_escape_square_bracket() {
+        let mut reader = Reader::init("\\u{5b}0\\u{5d}");
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "[0]".to_string(),
+                encoded: "\\u{5b}0\\u{5d}".to_string(),
+                quotes: false,
+                source_info: SourceInfo::init(1, 1, 1, 14),
+            }
+        );
+        assert_eq!(reader.state.cursor, 13);
     }
 
     #[test]
