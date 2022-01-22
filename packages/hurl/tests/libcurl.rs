@@ -280,6 +280,14 @@ fn test_form_params() {
                 name: "param4".to_string(),
                 value: "a%3db".to_string(),
             },
+            Param {
+                name: "values[0]".to_string(),
+                value: "0".to_string(),
+            },
+            Param {
+                name: "values[1]".to_string(),
+                value: "1".to_string(),
+            },
         ],
         multipart: vec![],
         cookies: vec![],
@@ -288,7 +296,7 @@ fn test_form_params() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec),
-        "curl 'http://localhost:8000/form-params' --data 'param1=value1' --data 'param2=' --data 'param3=a%3Db' --data 'param4=a%253db'".to_string()
+        "curl 'http://localhost:8000/form-params' --data 'param1=value1' --data 'param2=' --data 'param3=a%3Db' --data 'param4=a%253db' --data 'values[0]=0' --data 'values[1]=1'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec).unwrap();

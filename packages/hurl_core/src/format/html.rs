@@ -215,7 +215,7 @@ impl Htmlable for KeyValue {
         add_line_terminators(&mut buffer, self.line_terminators.clone());
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(format!("<span class=\"string\">{}</span>", self.key.value).as_str());
+        buffer.push_str(format!("<span class=\"string\">{}</span>", self.key.encoded).as_str());
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
