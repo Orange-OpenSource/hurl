@@ -38,7 +38,7 @@ pub fn eval_multipart_param(
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
             let name = key.value;
-            let value = eval_template(value, variables)?;
+            let value = eval_template(&value, variables)?;
             Ok(http::MultipartParam::Param(http::Param { name, value }))
         }
         MultipartParam::FileParam(param) => {

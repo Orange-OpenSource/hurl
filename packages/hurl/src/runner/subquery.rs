@@ -42,7 +42,7 @@ fn eval_regex(
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
 ) -> Result<Option<Value>, Error> {
-    let templ = eval_template(expr.clone(), variables)?;
+    let templ = eval_template(&expr, variables)?;
     match value {
         Value::String(s) => match Regex::new(templ.as_str()) {
             Ok(re) => match re.captures(s.as_str()) {

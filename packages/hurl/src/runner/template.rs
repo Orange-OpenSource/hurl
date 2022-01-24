@@ -22,21 +22,21 @@ use hurl_core::ast::*;
 use super::core::{Error, RunnerError};
 use super::value::Value;
 
+/// Renders to string a `template` given a map of variables.
+///
 pub fn eval_template(
-    template: Template,
+    template: &Template,
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
     let Template { elements, .. } = template;
-    {
-        let mut value = String::from("");
-        for elem in elements {
-            match eval_template_element(elem, variables) {
-                Ok(v) => value.push_str(v.as_str()),
-                Err(e) => return Err(e),
-            }
+    let mut value = String::from("");
+    for elem in elements {
+        match eval_template_element(elem.clone(), variables) {
+            Ok(v) => value.push_str(v.as_str()),
+            Err(e) => return Err(e),
         }
-        Ok(value)
     }
+    Ok(value)
 }
 
 fn eval_template_element(

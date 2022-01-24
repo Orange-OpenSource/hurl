@@ -60,7 +60,7 @@ pub fn eval_query_value(
     match query.value.clone() {
         QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
         QueryValue::Header { name, .. } => {
-            let header_name = eval_template(name, variables)?;
+            let header_name = eval_template(&name, variables)?;
             let values = http_response.get_header(header_name);
             if values.is_empty() {
                 Ok(None)
@@ -79,7 +79,7 @@ pub fn eval_query_value(
             expr: CookiePath { name, attribute },
             ..
         } => {
-            let cookie_name = eval_template(name, variables)?;
+            let cookie_name = eval_template(&name, variables)?;
             match http_response.get_cookie(cookie_name) {
                 None => Ok(None),
                 Some(cookie) => {
@@ -105,7 +105,7 @@ pub fn eval_query_value(
         }
         QueryValue::Xpath { expr, .. } => {
             let source_info = expr.source_info.clone();
-            let value = eval_template(expr, variables)?;
+            let value = eval_template(&expr, variables)?;
             match http_response.text() {
                 Err(inner) => Err(Error {
                     source_info: query.source_info,
@@ -143,7 +143,7 @@ pub fn eval_query_value(
             }
         }
         QueryValue::Jsonpath { expr, .. } => {
-            let value = eval_template(expr.clone(), variables)?;
+            let value = eval_template(&expr, variables)?;
             let source_info = expr.source_info;
             let jsonpath_query = match jsonpath::parse(value.as_str()) {
                 Ok(q) => q,
@@ -186,7 +186,7 @@ pub fn eval_query_value(
             }
         }
         QueryValue::Regex { expr, .. } => {
-            let value = eval_template(expr.clone(), variables)?;
+            let value = eval_template(&expr, variables)?;
             let source_info = expr.source_info;
             let s = match http_response.text() {
                 Err(inner) => {
@@ -214,7 +214,7 @@ pub fn eval_query_value(
             }
         }
         QueryValue::Variable { name, .. } => {
-            let name = eval_template(name, variables)?;
+            let name = eval_template(&name, variables)?;
             if let Some(value) = variables.get(name.as_str()) {
                 Ok(Some(value.clone()))
             } else {

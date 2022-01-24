@@ -43,7 +43,7 @@ pub fn eval_bytes(
     match bytes {
         // Body::Text
         Bytes::RawString(RawString { value, .. }) => {
-            let value = eval_template(value, variables)?;
+            let value = eval_template(&value, variables)?;
             Ok(http::Body::Text(value))
         }
         Bytes::Xml { value, .. } => Ok(http::Body::Text(value)),
