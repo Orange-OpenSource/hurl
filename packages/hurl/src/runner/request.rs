@@ -36,18 +36,18 @@ pub fn eval_request(
 ) -> Result<http::RequestSpec, Error> {
     let method = eval_method(request.method.clone());
 
-    let url = eval_template(request.clone().url, variables)?;
+    let url = eval_template(&request.url, variables)?;
 
     // headers
     let mut headers: Vec<http::Header> = vec![];
     for header in request.clone().headers {
         let name = header.key.value;
-        let value = eval_template(header.value, variables)?;
+        let value = eval_template(&header.value, variables)?;
         headers.push(http::Header { name, value });
     }
 
     if let Some(kv) = request.clone().basic_auth() {
-        let value = eval_template(kv.value, variables)?;
+        let value = eval_template(&kv.value, variables)?;
         let user_password = format!("{}:{}", kv.key.value, value);
         let authorization = base64::encode(user_password.as_bytes());
 
@@ -59,14 +59,14 @@ pub fn eval_request(
     let mut querystring: Vec<http::Param> = vec![];
     for param in request.clone().querystring_params() {
         let name = param.key.value;
-        let value = eval_template(param.value, variables)?;
+        let value = eval_template(&param.value, variables)?;
         querystring.push(http::Param { name, value });
     }
 
     let mut form: Vec<http::Param> = vec![];
     for param in request.clone().form_params() {
         let name = param.key.value;
-        let value = eval_template(param.value, variables)?;
+        let value = eval_template(&param.value, variables)?;
         form.push(http::Param { name, value });
     }
     //        if !self.clone().form_params().is_empty() {

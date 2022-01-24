@@ -239,7 +239,7 @@ pub fn eval_predicate_value_template(
     } else {
         panic!()
     };
-    eval_template(template, variables)
+    eval_template(&template, variables)
 }
 
 fn eval_something(
@@ -414,7 +414,7 @@ fn eval_something(
             } else {
                 panic!("expect a string predicate value")
             };
-            let expected = eval_template(template, variables)?;
+            let expected = eval_template(&template, variables)?;
             let regex = match Regex::new(expected.as_str()) {
                 Ok(re) => re,
                 Err(_) => {

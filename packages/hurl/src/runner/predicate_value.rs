@@ -30,11 +30,11 @@ pub fn eval_predicate_value(
 ) -> Result<Value, Error> {
     match predicate_value {
         PredicateValue::String(template) => {
-            let s = eval_template(template, variables)?;
+            let s = eval_template(&template, variables)?;
             Ok(Value::String(s))
         }
         PredicateValue::Raw(value) => {
-            let s = eval_template(value.value, variables)?;
+            let s = eval_template(&value.value, variables)?;
             Ok(Value::String(s))
         }
         PredicateValue::Integer(value) => Ok(Value::Integer(value)),

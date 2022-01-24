@@ -53,7 +53,7 @@ pub fn eval_asserts(
     }
 
     for header in response.clone().headers {
-        match eval_template(header.value.clone(), variables) {
+        match eval_template(&header.value, variables) {
             Err(e) => {
                 asserts.push(AssertResult::Header {
                     actual: Err(e),
@@ -154,7 +154,7 @@ pub fn eval_asserts(
                 })
             }
             Bytes::RawString(RawString { value, .. }) => {
-                let expected = match eval_template(value.clone(), variables) {
+                let expected = match eval_template(&value, variables) {
                     Ok(s) => Ok(Value::String(s)),
                     Err(e) => Err(e),
                 };
