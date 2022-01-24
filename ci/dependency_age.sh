@@ -26,7 +26,7 @@ for package in packages/* ; do
     fi 
     else
       if [ "$1" = "--update" ] ; then
-        sed --in-place "s/${dependency}.*=.*\"${actual_version}\"/${dependency} = \"${last_version}\"/g" "${package}/Cargo.toml"
+        sed -i" " "s/${dependency}.*=.*\"${actual_version}\"/${dependency} = \"${last_version}\"/g" "${package}/Cargo.toml"
 	grep --silent "${dependency} = \"${last_version}\"" "${package}/Cargo.toml" && \
 	echo "${color_blue}old, updated to ${last_version}${color_reset}" || \
 	echo "${color_red}error, update to ${last_version} fails, please check ${package}/Cargo.toml format and syntax${color_reset}"
@@ -36,7 +36,7 @@ for package in packages/* ; do
       ((exit_code++))
     fi
 
-  done < <(sed --silent "/dependencies\]/,/^$/p" "${package}/Cargo.toml" | grep --extended-regexp --invert-match "\[|path|^$" | tr --delete '" ' | tr '=' ' ')
+  done < <(sed -n "/dependencies\]/,/^$/p" "${package}/Cargo.toml" | grep --extended-regexp --invert-match "\[|path|^$" | tr -d '" ' | tr '=' ' ')
 done
 
 if [ "$1" != "--update" ] && [ "${exit_code}" -gt 0 ] ; then
