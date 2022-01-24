@@ -23,7 +23,6 @@ use super::core::{Error, RunnerError};
 use super::value::Value;
 
 /// Renders to string a `template` given a map of variables.
-///
 pub fn eval_template(
     template: &Template,
     variables: &HashMap<String, Value>,
@@ -31,7 +30,7 @@ pub fn eval_template(
     let Template { elements, .. } = template;
     let mut value = String::from("");
     for elem in elements {
-        match eval_template_element(elem.clone(), variables) {
+        match eval_template_element(elem, variables) {
             Ok(v) => value.push_str(v.as_str()),
             Err(e) => return Err(e),
         }
@@ -40,12 +39,12 @@ pub fn eval_template(
 }
 
 fn eval_template_element(
-    template_element: TemplateElement,
+    template_element: &TemplateElement,
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
     match template_element {
-        TemplateElement::String { value, .. } => Ok(value),
-        TemplateElement::Expression(expr) => eval_expression(expr, variables),
+        TemplateElement::String { value, .. } => Ok(value.clone()),
+        TemplateElement::Expression(expr) => eval_expression(expr.clone(), variables),
     }
 }
 
@@ -112,7 +111,7 @@ mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_template_element(
-                TemplateElement::String {
+                &TemplateElement::String {
                     value: "World".to_string(),
                     encoded: "World".to_string(),
                 },
@@ -125,7 +124,7 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("World".to_string()));
         assert_eq!(
-            eval_template_element(template_element_expression(), &variables).unwrap(),
+            eval_template_element(&template_element_expression(), &variables).unwrap(),
             "World".to_string()
         );
     }
@@ -137,7 +136,7 @@ mod tests {
             "name".to_string(),
             Value::List(vec![Value::Integer(1), Value::Integer(2)]),
         );
-        let error = eval_template_element(template_element_expression(), &variables)
+        let error = eval_template_element(&template_element_expression(), &variables)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 3, 1, 7));
