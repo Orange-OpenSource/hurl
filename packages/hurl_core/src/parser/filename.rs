@@ -23,7 +23,7 @@ use super::ParseResult;
 use crate::ast::*;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
-    // this is an absolute file
+    // This is an absolute file
     // that you have to write with a relative name
     // default root_dir is the hurl directory
     let start = reader.state.clone();
@@ -31,13 +31,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
         c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-'
     });
     if s.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Filename {},
-        });
-    }
-    if s.starts_with('/') {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
