@@ -190,6 +190,10 @@ pub enum RunnerError {
     UnrenderableVariable {
         value: String,
     },
+
+    UnauthorizedFileAccess {
+        path: PathBuf,
+    },
 }
 
 // endregion

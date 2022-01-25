@@ -43,6 +43,7 @@ mod http_response;
 mod hurl_file;
 mod json;
 mod multipart;
+mod path;
 mod predicate;
 mod predicate_value;
 mod query;

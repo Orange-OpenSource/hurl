@@ -26,6 +26,7 @@ use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
 use crate::http;
+use crate::runner::path;
 
 pub fn eval_body(
     body: Body,
@@ -57,17 +58,24 @@ pub fn eval_bytes(
         Bytes::File(File { filename, .. }) => {
             let f = filename.value.as_str();
             let path = Path::new(f);
-            let absolute_filename = if path.is_absolute() {
-                filename.clone().value
-            } else {
-                context_dir.join(f).to_str().unwrap().to_string()
-            };
-            match std::fs::read(absolute_filename.clone()) {
+            let absolute_path = context_dir.join(path);
+            // In order not to leak any private date, we check that the user provided file
+            // is a child of the context directory.
+            if !path::is_descendant(&absolute_path, context_dir) {
+                return Err(Error {
+                    source_info: filename.source_info,
+                    inner: RunnerError::UnauthorizedFileAccess {
+                        path: absolute_path,
+                    },
+                    assert: false,
+                });
+            }
+            match std::fs::read(&absolute_path) {
                 Ok(value) => Ok(http::Body::File(value, f.to_string())),
                 Err(_) => Err(Error {
                     source_info: filename.source_info,
                     inner: RunnerError::FileReadAccess {
-                        value: absolute_filename,
+                        value: absolute_path.to_str().unwrap().to_string(),
                     },
                     assert: false,
                 }),
