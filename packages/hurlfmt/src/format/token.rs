@@ -653,6 +653,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
             PredicateValue::Expression(value) => value.tokenize(),
+            PredicateValue::Regex(value) => value.tokenize(),
         }
     }
 }
@@ -732,6 +733,13 @@ impl Tokenizable for Expr {
         add_tokens(&mut tokens, self.space1.tokenize());
         tokens.push(Token::CodeDelimiter(String::from("}}")));
         tokens
+    }
+}
+
+impl Tokenizable for Regex {
+    fn tokenize(&self) -> Vec<Token> {
+        let s = str::replace(self.inner.as_str(), "/", "\\/");
+        vec![Token::String(format!("/{}/", s))]
     }
 }
 

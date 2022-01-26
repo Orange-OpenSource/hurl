@@ -636,6 +636,7 @@ impl Htmlable for PredicateValue {
             PredicateValue::Base64(value) => value.to_html(),
             PredicateValue::Expression(value) => value.to_html(),
             PredicateValue::Null {} => "<span class=\"null\">null</span>".to_string(),
+            PredicateValue::Regex(value) => value.to_html(),
         }
     }
 }
@@ -797,6 +798,12 @@ impl Htmlable for Hex {
     }
 }
 
+impl Htmlable for Regex {
+    fn to_html(&self) -> String {
+        let s = str::replace(self.inner.as_str(), "/", "\\/");
+        format!("<span class=\"regex\">/{}/</span>", s)
+    }
+}
 impl Htmlable for EncodedString {
     fn to_html(&self) -> String {
         format!("<span class=\"string\">{}</span>", self.encoded)

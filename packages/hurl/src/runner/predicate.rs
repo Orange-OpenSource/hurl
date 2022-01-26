@@ -17,7 +17,7 @@
  */
 use std::collections::HashMap;
 
-use regex::Regex;
+use regex;
 
 use hurl_core::ast::*;
 
@@ -109,6 +109,7 @@ impl Value {
             Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Null => "null".to_string(),
             Value::Unit => "unit".to_string(),
+            Value::Regex(value) => format!("regex <{}>", value.as_str()),
         }
     }
 }
@@ -145,6 +146,7 @@ impl Value {
             Value::Object(values) => format!("list of size {}", values.len()),
             Value::String(value) => format!("string <{}>", value),
             Value::Unit => "something".to_string(),
+            Value::Regex(value) => format!("regex <{}>", value),
         }
     }
 }
@@ -409,33 +411,34 @@ fn eval_something(
         PredicateFuncValue::Match {
             value: expected, ..
         } => {
-            let template = if let PredicateValue::String(template) = expected {
-                template
-            } else {
-                panic!("expect a string predicate value")
-            };
-            let expected = eval_template(&template, variables)?;
-            let regex = match Regex::new(expected.as_str()) {
-                Ok(re) => re,
-                Err(_) => {
-                    return Err(Error {
-                        source_info: predicate_func.source_info.clone(),
-                        inner: RunnerError::InvalidRegex(),
-                        assert: false,
-                    });
+            let regex = match expected {
+                PredicateValue::String(template) => {
+                    let expected = eval_template(&template, variables)?;
+                    match regex::Regex::new(expected.as_str()) {
+                        Ok(re) => re,
+                        Err(_) => {
+                            return Err(Error {
+                                source_info: predicate_func.source_info.clone(),
+                                inner: RunnerError::InvalidRegex(),
+                                assert: false,
+                            });
+                        }
+                    }
                 }
+                PredicateValue::Regex(regex) => regex.inner,
+                _ => panic!("expect a string predicate value"), // should have failed in parsing
             };
             match value.clone() {
                 Value::String(actual) => Ok(AssertResult {
                     success: regex.is_match(actual.as_str()),
                     actual: value.display(),
-                    expected: format!("matches regex <{}>", expected),
+                    expected: format!("matches regex <{}>", regex),
                     type_mismatch: false,
                 }),
                 _ => Ok(AssertResult {
                     success: false,
                     actual: value.display(),
-                    expected: format!("matches regex <{}>", expected),
+                    expected: format!("matches regex <{}>", regex),
                     type_mismatch: true,
                 }),
             }
@@ -1555,5 +1558,33 @@ mod tests {
 
         let variables = HashMap::new();
         assert!(eval_predicate(predicate, &variables, None).is_ok());
+    }
+
+    #[test]
+    fn test_predicate_match() {
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(" "),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        };
+        // // a float can be equals to an int (but the reverse)
+        let assert_result = eval_something(
+            PredicateFunc {
+                value: PredicateFuncValue::Match {
+                    space0: whitespace,
+                    value: PredicateValue::Regex(Regex {
+                        inner: regex::Regex::new(r#"a{3}"#).unwrap(),
+                    }),
+                },
+                source_info: SourceInfo::init(0, 0, 0, 0),
+            },
+            &variables,
+            Value::String("aa".to_string()),
+        )
+        .unwrap();
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "string <aa>");
+        assert_eq!(assert_result.expected.as_str(), "matches regex <a{3}>");
     }
 }

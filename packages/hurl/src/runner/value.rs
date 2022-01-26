@@ -33,6 +33,7 @@ pub enum Value {
     Object(Vec<(String, Value)>),
     String(String),
     Unit,
+    Regex(regex::Regex),
 }
 
 // You must implement it yourself because of the Float
@@ -53,6 +54,7 @@ impl PartialEq for Value {
         }
     }
 }
+
 impl Eq for Value {}
 
 impl fmt::Display for Value {
@@ -71,6 +73,10 @@ impl fmt::Display for Value {
             Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Null => "null".to_string(),
             Value::Unit => "Unit".to_string(),
+            Value::Regex(x) => {
+                let s = str::replace(x.as_str(), "/", "\\/");
+                format!("/{}/", s)
+            }
         };
         write!(f, "{}", value)
     }
@@ -97,6 +103,7 @@ impl Value {
             Value::Bytes(_) => "bytes".to_string(),
             Value::Null => "null".to_string(),
             Value::Unit => "unit".to_string(),
+            Value::Regex(_) => "regex".to_string(),
         }
     }
 

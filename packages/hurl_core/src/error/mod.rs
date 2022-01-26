@@ -93,7 +93,7 @@ impl Error for parser::Error {
             ParseError::Json { .. } => "json error".to_string(),
             ParseError::Predicate { .. } => "expecting a predicate".to_string(),
             ParseError::PredicateValue { .. } => "invalid predicate value".to_string(),
-            ParseError::RegexExpr { .. } => "Invalid Regex expression".to_string(),
+            ParseError::RegexExpr { message } => format!("Invalid Regex expression: {}", message),
             ParseError::DuplicateSection { .. } => "The section is already defined".to_string(),
             ParseError::RequestSection { .. } => {
                 "This is not a valid section for a request".to_string()

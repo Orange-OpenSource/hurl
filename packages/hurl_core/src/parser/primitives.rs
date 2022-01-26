@@ -332,6 +332,71 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
     })
 }
 
+pub fn regex(reader: &mut Reader) -> ParseResult<'static, Regex> {
+    try_literal("/", reader)?;
+    let start = reader.state.pos.clone();
+    let mut s = String::from("");
+
+    // Hurl escaping /
+    // in order to avoid terminating the regex
+    // eg. \a\b/
+    //
+    // Other escaped sequences such as \* are part of the regex expression
+    // They are not part of the syntax of Hurl itself.
+    loop {
+        match reader.read() {
+            None => {
+                return Err(Error {
+                    pos: reader.state.pos.clone(),
+                    recoverable: false,
+                    inner: ParseError::Eof {},
+                })
+            }
+            Some('/') => break,
+            Some('\\') => {
+                if let Some('/') = reader.peek() {
+                    reader.read();
+                    s.push('/');
+                } else {
+                    s.push('\\');
+                }
+            }
+            Some(c) => s.push(c),
+        }
+    }
+    match regex::Regex::new(s.as_str()) {
+        Ok(inner) => Ok(Regex { inner }),
+        Err(e) => {
+            let message = match e {
+                regex::Error::Syntax(s) => {
+                    // The regex syntax error from the crate returns a multiline String
+                    // For example
+                    //     regex parse error:
+                    //         x{a}
+                    //           ^
+                    //     error: repetition quantifier expects a valid decimal
+                    //
+                    // To fit nicely in Hurl Error reporting, you need an error message string that does not spread on multiple lines
+                    // You will assume that the error most relevant description is on the last line
+                    let lines = s.split('\n').clone().collect::<Vec<&str>>();
+                    let last_line = lines.last().expect("at least one line");
+                    last_line
+                        .strip_prefix("error: ")
+                        .unwrap_or(last_line)
+                        .to_string()
+                }
+                regex::Error::CompiledTooBig(_) => "Size limit exceeded".to_string(),
+                _ => "unknown".to_string(),
+            };
+            Err(Error {
+                pos: start,
+                recoverable: false,
+                inner: ParseError::RegexExpr { message },
+            })
+        }
+    }
+}
+
 pub fn null(reader: &mut Reader) -> ParseResult<'static, ()> {
     try_literal("null", reader)
 }
@@ -1330,6 +1395,66 @@ mod tests {
         let error = hex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(error.inner, ParseError::OddNumberOfHexDigits {});
+    }
+
+    #[test]
+    fn test_regex() {
+        let mut reader = Reader::init(r#"/a{3}/"#);
+        assert_eq!(
+            regex(&mut reader).unwrap(),
+            Regex {
+                inner: regex::Regex::new(r#"a{3}"#).unwrap()
+            }
+        );
+
+        let mut reader = Reader::init(r#"/a\/b/"#);
+        assert_eq!(
+            regex(&mut reader).unwrap(),
+            Regex {
+                inner: regex::Regex::new(r#"a/b"#).unwrap()
+            }
+        );
+
+        let mut reader = Reader::init(r#"/a\.b/"#);
+        assert_eq!(
+            regex(&mut reader).unwrap(),
+            Regex {
+                inner: regex::Regex::new(r#"a\.b"#).unwrap()
+            }
+        );
+
+        let mut reader = Reader::init(r#"/\d{4}-\d{2}-\d{2}/"#);
+        assert_eq!(
+            regex(&mut reader).unwrap(),
+            Regex {
+                inner: regex::Regex::new(r#"\d{4}-\d{2}-\d{2}"#).unwrap()
+            }
+        );
+    }
+
+    #[test]
+    fn test_regex_error() {
+        let mut reader = Reader::init("xxx");
+        let error = regex(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert!(error.recoverable);
+
+        let mut reader = Reader::init("/xxx");
+        let error = regex(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 5 });
+        assert!(!error.recoverable);
+        assert_eq!(error.inner, ParseError::Eof {});
+
+        let mut reader = Reader::init("/x{a}/");
+        let error = regex(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 2 });
+        assert!(!error.recoverable);
+        assert_eq!(
+            error.inner,
+            ParseError::RegexExpr {
+                message: "repetition quantifier expects a valid decimal".to_string()
+            }
+        );
     }
 
     #[test]

@@ -422,6 +422,7 @@ pub enum PredicateValue {
     Hex(Hex),
     Base64(Base64),
     Expression(Expr),
+    Regex(Regex),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -599,6 +600,19 @@ pub struct Hex {
     pub encoded: String,
     pub space1: Whitespace,
 }
+
+// Literal Regex
+#[derive(Clone, Debug)]
+pub struct Regex {
+    pub inner: regex::Regex,
+}
+
+impl PartialEq for Regex {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner.to_string() == other.inner.to_string()
+    }
+}
+impl Eq for Regex {}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Pos {

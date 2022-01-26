@@ -51,6 +51,7 @@ impl Value {
                 serde_json::Value::String(encoded)
             }
             Value::Null => serde_json::Value::Null,
+            Value::Regex(value) => serde_json::Value::String(value.to_string()),
             Value::Unit => todo!("how to serialize that in json?"),
         }
     }

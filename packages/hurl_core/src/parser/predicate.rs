@@ -311,7 +311,7 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_string() {
+    if !matches!(value, PredicateValue::String(_)) && !matches!(value, PredicateValue::Regex(_)) {
         return Err(Error {
             pos: save.pos,
             recoverable: false,
