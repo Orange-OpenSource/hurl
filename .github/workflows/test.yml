@@ -273,7 +273,7 @@ jobs:
           mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
           ps auxww | grep -v grep | grep -E "server.py|mitmdump"
           echo "----- tests units -----"
-          cargo test --features strict
+          cargo test --features strict --tests
           echo "----- integration tests -----"
           ./integration.py
     - name: Archive production artifacts
