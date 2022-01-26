@@ -31,7 +31,7 @@ hex = "0.4.3"
 hex-literal = "0.3.4"
 hurl_core = { version = "1.6.0-snapshot", path = "../hurl_core" }
 indexmap = "1.8.0"
-libflate = "1.1.1"
+libflate = "1.1.2"
 libxml = "0.3.0"
 md5 = "0.7.0"
 percent-encoding = "2.1.0"
