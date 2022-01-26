@@ -47,5 +47,6 @@ pub fn eval_predicate_value(
             let value = eval_expr(expr, variables)?;
             Ok(value)
         }
+        PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner)),
     }
 }

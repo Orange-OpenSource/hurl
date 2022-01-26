@@ -137,6 +137,12 @@ impl fmt::Display for Hex {
     }
 }
 
+impl fmt::Display for Regex {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.inner)
+    }
+}
+
 impl PredicateFuncValue {
     pub fn name(&self) -> String {
         match self {

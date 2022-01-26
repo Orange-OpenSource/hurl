@@ -508,6 +508,7 @@ impl Lintable<PredicateValue> for PredicateValue {
             PredicateValue::Hex(value) => PredicateValue::Hex(value.lint()),
             PredicateValue::Base64(value) => PredicateValue::Base64(value.lint()),
             PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),
+            PredicateValue::Regex(value) => PredicateValue::Regex(value.clone()),
         }
     }
 }

@@ -43,7 +43,7 @@ pub enum ParseError {
     Xml {},
     Predicate,
     PredicateValue,
-    RegexExpr,
+    RegexExpr { message: String },
 
     Unexpected { character: String },
     Eof {},

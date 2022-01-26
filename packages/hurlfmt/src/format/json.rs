@@ -465,6 +465,9 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
             Some("base64".to_string()),
         ),
         PredicateValue::Expression(value) => (JValue::String(value.to_string()), None),
+        PredicateValue::Regex(value) => {
+            (JValue::String(value.to_string()), Some("regex".to_string()))
+        }
     }
 }
 
