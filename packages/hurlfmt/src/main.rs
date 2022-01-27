@@ -36,7 +36,7 @@ pub fn init_colored() {
 #[cfg(target_family = "windows")]
 pub fn init_colored() {
     colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true);
+    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 fn main() {
