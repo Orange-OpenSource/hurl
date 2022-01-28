@@ -22,6 +22,7 @@ use hurl::runner::RunnerOptions;
 use hurl_core::ast::*;
 use hurl_core::parser;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 pub fn log_verbose(message: &str) {
     eprintln!("* {}", message);
@@ -53,7 +54,7 @@ fn test_hurl_file() {
         fail_fast: false,
         variables,
         to_entry: None,
-        context_dir: "current_dir".to_string(),
+        context_dir: PathBuf::new(),
         ignore_asserts: false,
         pre_entry: |_| true,
         post_entry: || true,
@@ -183,7 +184,7 @@ fn test_hello() {
         fail_fast: true,
         variables,
         to_entry: None,
-        context_dir: "current_dir".to_string(),
+        context_dir: PathBuf::new(),
         ignore_asserts: false,
         pre_entry: |_| true,
         post_entry: || true,

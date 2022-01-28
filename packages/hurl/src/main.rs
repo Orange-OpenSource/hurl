@@ -160,14 +160,13 @@ fn execute(
             let context_dir = match cli_options.file_root {
                 None => {
                     if filename == "-" {
-                        current_dir.to_str().unwrap().to_string()
+                        current_dir
                     } else {
                         let path = Path::new(filename);
-                        let parent = path.parent();
-                        parent.unwrap().to_str().unwrap().to_string()
+                        path.parent().unwrap()
                     }
                 }
-                Some(filename) => filename,
+                Some(ref filename) => Path::new(filename),
             };
             let options = http::ClientOptions {
                 cacert_file,
@@ -183,7 +182,7 @@ fn execute(
                 user,
                 user_agent,
                 compressed,
-                context_dir: context_dir.clone(),
+                context_dir: context_dir.to_path_buf(),
             };
 
             let mut client = http::Client::init(options);
@@ -202,7 +201,7 @@ fn execute(
                 fail_fast: cli_options.fail_fast,
                 variables: cli_options.variables,
                 to_entry: cli_options.to_entry,
-                context_dir,
+                context_dir: context_dir.to_path_buf(),
                 ignore_asserts: cli_options.ignore_asserts,
                 pre_entry,
                 post_entry,

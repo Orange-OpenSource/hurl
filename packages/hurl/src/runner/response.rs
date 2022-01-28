@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::path::Path;
 
 use crate::http;
 use hurl_core::ast::*;
@@ -32,7 +33,7 @@ pub fn eval_asserts(
     response: Response,
     variables: &HashMap<String, Value>,
     http_response: http::Response,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
 
@@ -292,7 +293,7 @@ mod tests {
     #[test]
     pub fn test_eval_asserts() {
         let variables = HashMap::new();
-        let context_dir = "undefined".to_string();
+        let context_dir = Path::new("");
         assert_eq!(
             eval_asserts(
                 user_response(),

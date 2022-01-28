@@ -30,7 +30,7 @@ use crate::http;
 pub fn eval_body(
     body: Body,
     variables: &HashMap<String, Value>,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Result<http::Body, Error> {
     eval_bytes(body.value, variables, context_dir)
 }
@@ -38,7 +38,7 @@ pub fn eval_body(
 pub fn eval_bytes(
     bytes: Bytes,
     variables: &HashMap<String, Value>,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Result<http::Body, Error> {
     match bytes {
         // Body::Text
@@ -60,11 +60,7 @@ pub fn eval_bytes(
             let absolute_filename = if path.is_absolute() {
                 filename.clone().value
             } else {
-                Path::new(context_dir.as_str())
-                    .join(f)
-                    .to_str()
-                    .unwrap()
-                    .to_string()
+                context_dir.join(f).to_str().unwrap().to_string()
             };
             match std::fs::read(absolute_filename.clone()) {
                 Ok(value) => Ok(http::Body::File(value, f.to_string())),
@@ -105,7 +101,7 @@ mod tests {
 
         let variables = HashMap::new();
         assert_eq!(
-            eval_bytes(bytes, &variables, ".".to_string()).unwrap(),
+            eval_bytes(bytes, &variables, Path::new("")).unwrap(),
             http::Body::File(b"Hello World!".to_vec(), "tests/data.bin".to_string())
         );
     }
@@ -130,7 +126,7 @@ mod tests {
         let variables = HashMap::new();
 
         let separator = if cfg!(windows) { "\\" } else { "/" };
-        let error = eval_bytes(bytes, &variables, "current_dir".to_string())
+        let error = eval_bytes(bytes, &variables, Path::new("current_dir"))
             .err()
             .unwrap();
         assert_eq!(

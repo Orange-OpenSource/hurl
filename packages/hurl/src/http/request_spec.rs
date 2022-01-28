@@ -17,6 +17,7 @@
  */
 
 use core::fmt;
+use std::path::Path;
 
 use super::core::*;
 
@@ -118,7 +119,7 @@ impl RequestSpec {
     /// return request as curl arguments
     /// It does not contain the requests cookies (they will be accessed from the client)
     ///
-    pub fn curl_args(&self, context_dir: String) -> Vec<String> {
+    pub fn curl_args(&self, context_dir: &Path) -> Vec<String> {
         let querystring = if self.querystring.is_empty() {
             "".to_string()
         } else {
@@ -183,7 +184,7 @@ impl RequestSpec {
         }
         for param in self.multipart.clone() {
             arguments.push("-F".to_string());
-            arguments.push(format!("'{}'", param.curl_arg(context_dir.clone())));
+            arguments.push(format!("'{}'", param.curl_arg(context_dir)));
         }
 
         if !self.body.bytes().is_empty() {
@@ -199,12 +200,9 @@ impl RequestSpec {
                 }
                 Body::Binary(bytes) => arguments.push(format!("$'{}'", encode_bytes(bytes))),
                 Body::File(_, filename) => {
-                    let prefix = if context_dir.as_str() == "." {
-                        "".to_string()
-                    } else {
-                        format!("{}/", context_dir)
-                    };
-                    arguments.push(format!("'@{}{}'", prefix, filename))
+                    let path = Path::new(&filename);
+                    let path = context_dir.join(path);
+                    arguments.push(format!("'@{}'", path.to_str().unwrap()))
                 }
             }
         }
@@ -275,7 +273,7 @@ impl Param {
 }
 
 impl MultipartParam {
-    pub fn curl_arg(&self, context_dir: String) -> String {
+    pub fn curl_arg(&self, context_dir: &Path) -> String {
         match self {
             MultipartParam::Param(param) => param.curl_arg(),
             MultipartParam::FileParam(FileParam {
@@ -284,12 +282,9 @@ impl MultipartParam {
                 content_type,
                 ..
             }) => {
-                let prefix = if context_dir.as_str() == "." {
-                    "".to_string()
-                } else {
-                    format!("{}/", context_dir)
-                };
-                let value = format!("@{}{};type={}", prefix, filename, content_type);
+                let path = Path::new(&filename);
+                let path = context_dir.join(path);
+                let value = format!("@{};type={}", path.to_str().unwrap(), content_type);
                 format!("{}={}", name, value)
             }
         }
@@ -512,11 +507,11 @@ pub mod tests {
     #[test]
     fn requests_curl_args() {
         assert_eq!(
-            hello_http_request().curl_args(".".to_string()),
+            hello_http_request().curl_args(Path::new("")),
             vec!["'http://localhost:8000/hello'".to_string()]
         );
         assert_eq!(
-            custom_http_request().curl_args(".".to_string()),
+            custom_http_request().curl_args(Path::new("")),
             vec![
                 "'http://localhost/custom'".to_string(),
                 "-H".to_string(),
@@ -526,13 +521,13 @@ pub mod tests {
             ]
         );
         assert_eq!(
-            query_http_request().curl_args(".".to_string()),
+            query_http_request().curl_args(Path::new("")),
             vec![
                 "'http://localhost:8000/querystring-params?param1=value1&param2=a%20b'".to_string()
             ]
         );
         assert_eq!(
-            form_http_request().curl_args(".".to_string()),
+            form_http_request().curl_args(Path::new("")),
             vec![
                 "'http://localhost/form-params'".to_string(),
                 "-H".to_string(),
