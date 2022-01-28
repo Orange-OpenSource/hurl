@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
 use std::time::Duration;
 
 #[derive(Debug, Clone)]
@@ -32,7 +33,7 @@ pub struct ClientOptions {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub compressed: bool,
-    pub context_dir: String,
+    pub context_dir: PathBuf,
 }
 
 impl Default for ClientOptions {
@@ -51,7 +52,7 @@ impl Default for ClientOptions {
             user: None,
             user_agent: None,
             compressed: false,
-            context_dir: ".".to_string(),
+            context_dir: PathBuf::new(),
         }
     }
 }
@@ -136,7 +137,7 @@ mod tests {
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
                 compressed: true,
-                context_dir: "".to_string()
+                context_dir: PathBuf::new()
             }
             .curl_args(),
             [

@@ -59,7 +59,7 @@ pub fn run(
     let http_request = match eval_request(
         entry.request.clone(),
         variables,
-        options.context_dir.clone(),
+        options.context_dir.as_path(),
     ) {
         Ok(r) => r,
         Err(error) => {
@@ -182,7 +182,7 @@ pub fn run(
                         response,
                         variables,
                         http_response.clone(),
-                        options.context_dir.clone(),
+                        options.context_dir.as_path(),
                     ),
                 }
             };

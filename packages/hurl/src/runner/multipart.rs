@@ -33,7 +33,7 @@ use super::value::Value;
 pub fn eval_multipart_param(
     multipart_param: MultipartParam,
     variables: &HashMap<String, Value>,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Result<http::MultipartParam, Error> {
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
@@ -50,7 +50,7 @@ pub fn eval_multipart_param(
 
 pub fn eval_file_param(
     file_param: FileParam,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Result<http::FileParam, Error> {
     let name = file_param.key.value;
 
@@ -59,7 +59,7 @@ pub fn eval_file_param(
     let absolute_filename = if path.is_absolute() {
         filename.value.clone()
     } else {
-        Path::new(context_dir.as_str())
+        context_dir
             .join(filename.value.clone())
             .to_str()
             .unwrap()
@@ -179,7 +179,7 @@ mod tests {
                     },
                     line_terminator0: line_terminator,
                 },
-                "tests".to_string()
+                Path::new("tests")
             )
             .unwrap(),
             http::FileParam {

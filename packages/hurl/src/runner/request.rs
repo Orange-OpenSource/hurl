@@ -19,6 +19,7 @@
 use std::collections::HashMap;
 #[allow(unused)]
 use std::io::prelude::*;
+use std::path::Path;
 
 use crate::http;
 use hurl_core::ast::*;
@@ -32,7 +33,7 @@ use crate::runner::multipart::eval_multipart_param;
 pub fn eval_request(
     request: Request,
     variables: &HashMap<String, Value>,
-    context_dir: String,
+    context_dir: &Path,
 ) -> Result<http::RequestSpec, Error> {
     let method = eval_method(request.method.clone());
 
@@ -86,13 +87,13 @@ pub fn eval_request(
     }
 
     let body = match request.clone().body {
-        Some(body) => eval_body(body, variables, context_dir.clone())?,
+        Some(body) => eval_body(body, variables, context_dir)?,
         None => http::Body::Binary(vec![]),
     };
 
     let mut multipart = vec![];
     for multipart_param in request.clone().multipart_form_data() {
-        let param = eval_multipart_param(multipart_param, variables, context_dir.clone())?;
+        let param = eval_multipart_param(multipart_param, variables, context_dir)?;
         multipart.push(param);
     }
 
@@ -337,7 +338,7 @@ mod tests {
     #[test]
     pub fn test_error_variable() {
         let variables = HashMap::new();
-        let error = eval_request(hello_request(), &variables, "current_dir".to_string())
+        let error = eval_request(hello_request(), &variables, Path::new(""))
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
@@ -356,8 +357,7 @@ mod tests {
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let http_request =
-            eval_request(hello_request(), &variables, "current_dir".to_string()).unwrap();
+        let http_request = eval_request(hello_request(), &variables, Path::new("")).unwrap();
         assert_eq!(http_request, http::hello_http_request());
     }
 
@@ -368,8 +368,7 @@ mod tests {
             String::from("param1"),
             Value::String(String::from("value1")),
         );
-        let http_request =
-            eval_request(query_request(), &variables, "current_dir".to_string()).unwrap();
+        let http_request = eval_request(query_request(), &variables, Path::new("")).unwrap();
         assert_eq!(http_request, http::query_http_request());
     }
 

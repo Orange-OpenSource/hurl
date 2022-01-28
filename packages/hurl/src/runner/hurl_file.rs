@@ -29,6 +29,7 @@ use super::entry;
 /// # Example
 ///
 /// ```
+/// use std::path::PathBuf;
 /// use hurl_core::parser;
 /// use hurl::http;
 /// use hurl::runner;
@@ -47,22 +48,7 @@ use super::entry;
 /// fn log_error(error: &runner::Error, _warning: bool) { eprintln!("* {:#?}", error); }
 ///
 /// // Create an http client
-/// let options = http::ClientOptions {
-///        cacert_file: None,
-///        follow_location: false,
-///        max_redirect: None,
-///        cookie_input_file: None,
-///        proxy: None,
-///        no_proxy: None,
-///        verbose: false,
-///        insecure: false,
-///        timeout: Default::default(),
-///        connect_timeout: Default::default(),
-///        user: None,
-///        user_agent: None,
-///        compressed: false,
-///        context_dir: "".to_string(),
-/// };
+/// let options = http::ClientOptions::default();
 /// let mut client = http::Client::init(options);
 ///
 /// // Define runner options
@@ -71,7 +57,7 @@ use super::entry;
 ///        fail_fast: false,
 ///        variables,
 ///        to_entry: None,
-///        context_dir: "current_dir".to_string(),
+///        context_dir: PathBuf::new(),
 ///        ignore_asserts: false,
 ///        pre_entry: |_| true,
 ///        post_entry: || true,

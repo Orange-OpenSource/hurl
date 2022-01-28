@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 use crate::http;
 use hurl_core::ast::{Entry, SourceInfo};
@@ -27,7 +28,7 @@ pub struct RunnerOptions {
     pub fail_fast: bool,
     pub variables: HashMap<String, Value>,
     pub to_entry: Option<usize>,
-    pub context_dir: String,
+    pub context_dir: PathBuf,
     pub ignore_asserts: bool,
     pub pre_entry: fn(Entry) -> bool,
     pub post_entry: fn() -> bool,
