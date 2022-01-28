@@ -43,12 +43,6 @@ git.exe config --global core.autocrlf false
 git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
 
-## Fix currently known win64 hurl compilation bugs
-
-```
-(Get-Content c:\hurl\packages\hurl\src\runner\hurl_file.rs).replace('```', '') | Set-Content c:\hurl\packages\hurl\src\runner\hurl_file.rs
-```
-
 ## Build win64 exe binary
 
 ```powershell
@@ -97,7 +91,7 @@ focus on original powershell prompt and launch hurl unit tests
 
 ```powershell
 cd c:\hurl\integration
-cargo test --verbose
+cargo test --features strict --tests
 ```
 
 launch hurl integration tests

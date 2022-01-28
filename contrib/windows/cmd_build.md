@@ -40,13 +40,6 @@ vcpkg integrate install
 git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
 
-## Fix currently known win64 hurl compilation bugs
-
-```cmd
-cp -frp c:\hurl\packages\hurl\src\runner\hurl_file.rs c:\hurl\packages\hurl\src\runner\hurl_file.rs.ori
-%ChocolateyInstall%\bin\sed.exe "s/```//g" c:\hurl\packages\hurl\src\runner\hurl_file.rs.ori  > c:\hurl\packages\hurl\src\runner\hurl_file.rs
-```
-
 ## Build win64 exe binary
 
 ```cmd
@@ -87,7 +80,7 @@ launch hurl unit tests
 
 ```cmd
 cd c:\hurl
-cargo test
+cargo test --features strict --tests
 ```
 
 launch hurl integration tests
