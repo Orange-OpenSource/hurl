@@ -364,8 +364,6 @@ jobs:
         Expand-Archive -PassThru -Force -LiteralPath .\ci\windows\vcpkg_installed.zip -DestinationPath C:\vcpkg\
         Get-ChildItem C:\vcpkg\installed
         vcpkg integrate install
-        # fix known win build bugs
-        (Get-Content .\packages\hurl\src\runner\hurl_file.rs).replace('```', '') | Set-Content .\packages\hurl\src\runner\hurl_file.rs
         # install proxy and server
         pip3 install Flask mitmproxy   
     - name: Run Tests units
@@ -378,7 +376,7 @@ jobs:
         Get-Job -Name mitmdump
         Start-Sleep 5
         cd ..
-        cargo test --verbose
+        cargo test --features strict --tests
     - name: Run Integration tests
       run: |
         cargo build --release --verbose
