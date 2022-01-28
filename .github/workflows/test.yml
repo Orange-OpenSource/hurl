@@ -127,7 +127,7 @@ jobs:
          cd integration
          pip install lxml bs4
          ./integration.py
-         ./test_curl_commands.sh tests/*.curl
+         ./test_curl_commands.sh $(find ./tests -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
          ./test_html_output.py tests/*.html
          xmllint --noout tests/*.html
          ./report.sh
