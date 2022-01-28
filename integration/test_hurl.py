@@ -33,11 +33,19 @@ def get_os():
 
 
 def test(hurl_file):
-  
-    options_file = hurl_file.replace('.hurl','.options')
-    curl_file = hurl_file.replace('.hurl','.curl')
-    json_output_file = hurl_file.replace('.hurl','.output.json')
-    profile_file = hurl_file.replace('.hurl','.profile')
+
+    options_file = hurl_file.replace('.hurl', '.options')
+
+    # For .curl file, we can have specific os expected file in order to test
+    # os differences like included path (/ vs \ path components separator)
+    os_curl_file = hurl_file.replace('.hurl', '.' + get_os() + '.curl')
+    if os.path.exists(os_curl_file):
+        curl_file = os_curl_file
+    else:
+        curl_file = hurl_file.replace('.hurl', '.curl')
+
+    json_output_file = hurl_file.replace('.hurl', '.output.json')
+    profile_file = hurl_file.replace('.hurl', '.profile')
 
     options = []
     if os.path.exists(options_file):
