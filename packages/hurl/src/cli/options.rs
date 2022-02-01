@@ -145,13 +145,6 @@ pub fn app(version: &str) -> App {
                 .help("Specify input files that match the given blob. Multiple glob flags may be used."),
         )
         .arg(
-            clap::Arg::new("html")
-                .long("html")
-                .value_name("DIR")
-                .help("Generate html report to dir")
-                .takes_value(true),
-        )
-        .arg(
             clap::Arg::new("include")
                 .short('i')
                 .long("include")
@@ -340,17 +333,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let follow_location = matches.is_present("follow_location");
     let glob_files = match_glob_files(matches.clone())?;
-    // deprecated
-    // Support --report-html and --html only for the current version
-    if matches.is_present("html") {
-        eprintln!("The option --html is deprecated. It has been renamed to --report-html.");
-        eprintln!("It will be removed in the next version");
-    }
-    let report_html = if let Some(dir) = matches.value_of("html") {
-        Some(dir)
-    } else {
-        matches.value_of("report_html")
-    };
+    let report_html = matches.value_of("report_html");
     let html_dir = if let Some(dir) = report_html {
         let path = Path::new(dir);
         if !path.exists() {
