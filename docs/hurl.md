@@ -177,12 +177,6 @@ However, to avoid your shell accidentally expanding glob patterns before Hurl ha
 
 Usage help. This lists all current command line options with a short description.
 
-### --html <dir> {#html}
-
-Generate html report in dir.
-
-If the html report already exists, it will be updated with the new test results.
-
 ### --ignore-asserts {#ignore-asserts}
 
 Ignore all asserts defined in the Hurl file.
@@ -199,7 +193,6 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 ### --json {#json}
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
-
 
 ### -k, --insecure {#insecure}
 
@@ -245,6 +238,18 @@ Write output to <file> instead of stdout.
 ### --progress {#progress}
 
 Print filename and status for each test (on stderr)
+
+### --report-junit <file> {#report-junit}
+
+Generate JUNIT <file>.
+
+If the <file> report already exists, it will be updated with the new test results.
+
+### --report-html <dir> {#report-html}
+
+Generate HTML report in dir.
+
+If the HTML report already exists, it will be updated with the new test results.
 
 ### --summary {#summary}
 
