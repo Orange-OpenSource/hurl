@@ -1,0 +1,7 @@
+error: Unauthorized file access
+  --> tests/error_file_unauthorized.hurl:2:6
+   |
+ 2 | file,/secret.txt;
+   |      ^^^^^^^^^^^ Unauthorized access to file /secret.txt, check --file-root option
+   |
+
