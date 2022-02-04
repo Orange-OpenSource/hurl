@@ -140,7 +140,10 @@ impl Error for runner::Error {
                 format!("actual value is <{}>", value)
             }
             RunnerError::UnauthorizedFileAccess { path } => {
-                format!("Unauthorized access to file {}, check --file-root option", path.to_str().unwrap())
+                format!(
+                    "Unauthorized access to file {}, check --file-root option",
+                    path.to_str().unwrap()
+                )
             }
         }
     }
