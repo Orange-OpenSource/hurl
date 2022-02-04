@@ -95,11 +95,5 @@ mod tests {
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.inner, ParseError::Filename {});
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-
-        // can not absolute
-        let mut reader = Reader::init("/tmp/data.bin");
-        let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Filename {});
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
     }
 }
