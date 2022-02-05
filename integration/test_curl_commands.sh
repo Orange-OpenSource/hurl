@@ -1,9 +1,9 @@
 #!/bin/bash
 set -eu
 
-for f in $*; do
+for f in "$@"; do
     echo "** $f"
-    cat "$f" | grep -v '^$' | grep -v '^#' | while read -r line;  do
+    grep -v '^$' <"$f" | grep -v '^#' | while read -r line;  do
         echo "$line"
         cmd="$line --no-progress-meter --output /dev/null --fail"
         echo "$cmd" | bash  || (echo ">>> Error <<<<" && exit 1)
