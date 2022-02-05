@@ -181,7 +181,7 @@ fn cookie_value(reader: &mut Reader) -> CookieValue {
         c.is_ascii_alphanumeric()
             || vec![
                 '!', '#', '$', '%', '&', '\'', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=',
-                '>', '?', '@', '[', ']', '^', '_', '`', '~',
+                '>', '?', '@', '[', ']', '^', '_', '`', '~', '|', '"', ';', ',',
             ]
             .contains(c)
     });
@@ -493,7 +493,7 @@ mod tests {
 
     #[test]
     fn test_cookie_error() {
-        let mut reader = Reader::init("Foo: \"Bar\"");
+        let mut reader = Reader::init("Foo: {Bar}");
         let error = cookie(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert!(!error.recoverable);
@@ -519,7 +519,7 @@ mod tests {
         assert_eq!(
             cookie_value(&mut reader),
             CookieValue {
-                value: String::from("")
+                value: String::from("\"Bar\"")
             }
         );
     }
