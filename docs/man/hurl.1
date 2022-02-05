@@ -1,4 +1,4 @@
-.TH hurl 1 "13 Dec 2021" "hurl 1.6.0-snapshot" " Hurl Manual"
+.TH hurl 1 "05 Feb 2022" "hurl 1.6.0-snapshot" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -158,18 +158,11 @@ When this is not explicitly defined, the files are relative to the current direc
 Specify input files that match the given blob.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
-However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, 
-you must use single quotes or double quotes around each pattern.
+However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
 .IP "-h, --help "
 
 Usage help. This lists all current command line options with a short description.
-
-.IP "--html <dir> "
-
-Generate html report in dir.
-
-If the html report already exists, it will be updated with the new test results.
 
 .IP "--ignore-asserts "
 
@@ -187,7 +180,6 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 .IP "--json "
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
-
 
 .IP "-k, --insecure "
 
@@ -234,13 +226,25 @@ Write output to <file> instead of stdout.
 
 Print filename and status for each test (on stderr)
 
+.IP "--report-junit <file> "
+
+Generate JUNIT <file>.
+
+If the <file> report already exists, it will be updated with the new test results.
+
+.IP "--report-html <dir> "
+
+Generate HTML report in dir.
+
+If the HTML report already exists, it will be updated with the new test results.
+
 .IP "--summary "
 
 Print test metrics at the end of the run (on stderr)
 
 .IP "--test "
 
-Activate test mode; equals --no-output --progress --summary
+Activate test mode; equals \fI--no-output](#no-output) [--progress](#progress) [--summary\fP
 
 .IP "-x, --proxy [protocol://]host[:port] "
 
