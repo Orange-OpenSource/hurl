@@ -47,6 +47,20 @@ jobs:
       run: |
         ./ci/dependency_age.sh
 
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Check Shell Scripts
+        run: |
+          find -name *.sh | xargs shellcheck
+      - name: Check Python Scripts
+        run: |
+          pip3 install black
+          black --check integration
+
+
   benchsuite:
     runs-on: ubuntu-latest
     steps:
