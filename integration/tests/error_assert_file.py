@@ -1,5 +1,6 @@
 from tests import app
 
+
 @app.route("/error-assert-file")
 def error_assert_file():
-    return 'Hello'
+    return "Hello"
