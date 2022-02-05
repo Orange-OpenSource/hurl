@@ -1,7 +1,0 @@
-error: Parsing Filename
-  --> tests_error_parser/invalid_file.hurl:2:6
-   |
- 2 | file,/data.bin;
-   |      ^ expecting a filename
-   |
-
