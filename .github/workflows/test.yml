@@ -58,7 +58,7 @@ jobs:
       - name: Check Python Scripts
         run: |
           pip3 install black
-          black --check integration
+          black --check .
 
 
   benchsuite:
