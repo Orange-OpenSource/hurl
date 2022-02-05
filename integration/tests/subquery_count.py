@@ -1,10 +1,12 @@
 from tests import app
 from flask import Response
 
+
 @app.route("/subquery-count")
 def subquery_count():
-    return Response('''{
+    return Response(
+        """{
   "users": ["Bob", "Bill", "Bruce"]
-}''', mimetype='application/json')
-
-
+}""",
+        mimetype="application/json",
+    )

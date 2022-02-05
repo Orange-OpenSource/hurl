@@ -1,11 +1,10 @@
 from tests import app
 from flask import request
 
-@app.route("/expect", methods=['POST'])
+
+@app.route("/expect", methods=["POST"])
 def expect():
-    assert request.headers['Expect'] == '100-continue'
+    assert request.headers["Expect"] == "100-continue"
     s = request.data.decode("utf-8")
-    assert s == '''data'''
-    return ''
-
-
+    assert s == """data"""
+    return ""

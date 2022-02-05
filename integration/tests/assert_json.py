@@ -1,9 +1,11 @@
 from tests import app
 from flask import Response
 
+
 @app.route("/assert-json")
 def assert_json():
-    return Response('''{
+    return Response(
+        """{
   "count": 5,
   "success": false,
   "errors": [{"id":"error1"},{"id":"error2"}],
@@ -11,23 +13,31 @@ def assert_json():
   "duration": 1.5,
   "tags": ["test"],
   "nullable": null
-}''', mimetype='application/json')
+}""",
+        mimetype="application/json",
+    )
 
 
 @app.route("/assert-json/index")
 def assert_json_index():
     return "1"
 
+
 @app.route("/assert-json/list")
 def assert_json_list():
-    return Response('''[
+    return Response(
+        """[
   { "id": 1, "name": "Bob"},
   { "id": 2, "name": "Bill"}
-]''', mimetype='application/json')
+]""",
+        mimetype="application/json",
+    )
+
 
 @app.route("/assert-json/filter")
 def assert_json_filter():
-    return Response('''{
+    return Response(
+        """{
     "fruit": [
         {
             "name": "apple",
@@ -44,5 +54,6 @@ def assert_json_filter():
             }
         }
     ]
-}''', mimetype='application/json')
-
+}""",
+        mimetype="application/json",
+    )
