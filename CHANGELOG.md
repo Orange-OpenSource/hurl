@@ -1,3 +1,40 @@
+[1.6.0 (2022-02-10)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.6.0)
+========================================================================================================================
+
+Thanks to
+[@linjan](https://github.com/linjan),
+[@adworacz](https://github.com/adworacz),
+[@humphd](https://github.com/humphd),
+[@jpluscplusm](https://github.com/humphd),
+
+
+Changes:
+
+* Add -A/--user-agent curl option to specify a User Agent for all requests of a file [#452](https://github.com/Orange-OpenSource/hurl/issues/452)
+
+* Support filter with nested object in jsonpath expression [#423](https://github.com/Orange-OpenSource/hurl/issues/423)
+
+* Add BasicAuth section [#360](https://github.com/Orange-OpenSource/hurl/issues/360)
+
+* Add next request in interactive mode [#268](https://github.com/Orange-OpenSource/hurl/issues/268)
+
+* Improving pattern for regex capture and matches predicates [#4](https://github.com/Orange-OpenSource/hurl/issues/4)
+
+
+Bugs Fixes:
+
+* Add additional characters in cookie value [#466](https://github.com/Orange-OpenSource/hurl/issues/466)
+
+* Add square brackets in key-string [#457](https://github.com/Orange-OpenSource/hurl/issues/457)
+
+* Fix Build in Alpine [#448](https://github.com/Orange-OpenSource/hurl/issues/448)
+
+* Check that data file is a child of user provided context dir [#405](https://github.com/Orange-OpenSource/hurl/issues/405)
+
+* Report error on missing closing quote for quoted String [#403](https://github.com/Orange-OpenSource/hurl/issues/403)
+
+
+
 [1.5.0 (2021-12-09)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.5.0)
 ========================================================================================================================
 
