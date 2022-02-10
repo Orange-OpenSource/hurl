@@ -144,6 +144,8 @@ HTTP/1.1 200
 
 [License]
 
+[Blog]
+
 [Documentation]
 
 [GitHub]
@@ -705,9 +707,8 @@ Option | Description
 <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;file&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [-b, --cookie](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
 <a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
-<a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given blob.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, <br/>you must use single quotes or double quotes around each pattern.<br/>
+<a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given blob.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
 <a href="#help" id="help"><code>-h, --help</code></a> | Usage help. This lists all current command line options with a short description.<br/>
-<a href="#html" id="html"><code>--html &lt;dir&gt;</code></a> | Generate html report in dir.<br/><br/>If the html report already exists, it will be updated with the new test results.<br/>
 <a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a> | Ignore all asserts defined in the Hurl file.<br/>
 <a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
 <a href="#interactive" id="interactive"><code>--interactive</code></a> | Stop between requests.<br/>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br/>
@@ -722,10 +723,13 @@ Option | Description
 <a href="#to-entry" id="to-entry"><code>--to-entry &lt;entry-number&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
 <a href="#output" id="output"><code>-o, --output &lt;file&gt;</code></a> | Write output to <file> instead of stdout.<br/>
 <a href="#progress" id="progress"><code>--progress</code></a> | Print filename and status for each test (on stderr)<br/>
+<a href="#report-junit" id="report-junit"><code>--report-junit &lt;file&gt;</code></a> | Generate JUNIT <file>.<br/><br/>If the <file> report already exists, it will be updated with the new test results.<br/>
+<a href="#report-html" id="report-html"><code>--report-html &lt;dir&gt;</code></a> | Generate HTML report in dir.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
 <a href="#summary" id="summary"><code>--summary</code></a> | Print test metrics at the end of the run (on stderr)<br/>
-<a href="#test" id="test"><code>--test</code></a> | Activate test mode; equals --no-output --progress --summary<br/>
+<a href="#test" id="test"><code>--test</code></a> | Activate test mode; equals [--no-output](#no-output) [--progress](#progress) [--summary](#summary)<br/>
 <a href="#proxy" id="proxy"><code>-x, --proxy [protocol://]host[:port]</code></a> | Use the specified proxy.<br/>
 <a href="#user" id="user"><code>-u, --user &lt;user:password&gt;</code></a> | Add basic Authentication header to each request.<br/>
+<a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;name&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
 <a href="#variable" id="variable"><code>--variable &lt;name=value&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>Only string values can be defined.<br/>
 <a href="#variables-file" id="variables-file"><code>--variables-file &lt;file&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [--variable](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
 <a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, -i, --include might be the option you're looking for.<br/>
@@ -769,12 +773,12 @@ curl(1)  hurlfmt(1)
 
 ### Linux
 
-Precompiled binary is available at [hurl-1.5.0-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-1.6.0-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-1.5.0:$PATH
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-1.6.0:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -782,8 +786,8 @@ $ export PATH=$INSTALL_DIR/hurl-1.5.0:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl_1.5.0_amd64.deb
-$ sudo dpkg -i hurl_1.5.0_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl_1.6.0_amd64.deb
+$ sudo dpkg -i hurl_1.6.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -792,7 +796,7 @@ $ sudo dpkg -i hurl_1.5.0_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.5.0-x86_64-osx.tar.gz].
+Precompiled binary is available at [hurl-1.6.0-x86_64-osx.tar.gz].
 
 Hurl can also be installed with [Homebrew]:
 
@@ -804,11 +808,11 @@ $ brew install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-1.5.0-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-1.6.0-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-1.5.0-win64-installer.exe] is also available.
+An installer [hurl-1.6.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -838,7 +842,7 @@ $ cargo install hurl
 
 ### Docker
 
-```
+```shell
 $ docker pull orangeopensource/hurl
 ```
 
@@ -894,6 +898,7 @@ Please follow the [contrib on Windows section].
 [Feedback, suggestion, bugs or improvements]: https://github.com/Orange-OpenSource/hurl/issues
 [License]: https://hurl.dev/docs/license.html
 [Documentation]: https://hurl.dev/docs/installation.html
+[Blog]: https://hurl.dev/blog/
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [JSON body]: https://hurl.dev/docs/request.html#json-body
@@ -906,10 +911,10 @@ Please follow the [contrib on Windows section].
 [`--user` option]: https://hurl.dev/docs/man-page.html#user
 [Hurl tests suit]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-1.5.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-win64.zip
-[hurl-1.5.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-win64-installer.exe
-[hurl-1.5.0-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-x86_64-osx.tar.gz
-[hurl-1.5.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.5.0/hurl-1.5.0-x86_64-linux.tar.gz
+[hurl-1.6.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64.zip
+[hurl-1.6.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64-installer.exe
+[hurl-1.6.0-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-osx.tar.gz
+[hurl-1.6.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-linux.tar.gz
 [Homebrew]: https://brew.sh
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
