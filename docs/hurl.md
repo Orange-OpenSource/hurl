@@ -267,6 +267,10 @@ Use the specified proxy.
 
 Add basic Authentication header to each request.
 
+### -A, --user-agent <name> {#user-agent}
+
+Specify the User-Agent string to send to the HTTP server.
+
 ### --variable <name=value> {#variable}
 
 Define variable (name/value) to be used in Hurl templates.
