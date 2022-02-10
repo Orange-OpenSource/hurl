@@ -1,3 +1,41 @@
+[1.6.0 (2022-02-10)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.6.0)
+========================================================================================================================
+
+Thanks to
+[@linjan](https://github.com/linjan),
+[@adworacz](https://github.com/adworacz),
+[@humphd](https://github.com/humphd),
+[@jpluscplusm](https://github.com/humphd),
+
+Changes:
+
+* Add -A/--user-agent curl option to specify a User Agent for all requests of a file [#452](https://github.com/Orange-OpenSource/hurl/issues/452)
+
+* Support filter with nested object in jsonpath expression [#423](https://github.com/Orange-OpenSource/hurl/issues/423)
+
+* Support inclusion of user/password in request without using --user [#360](https://github.com/Orange-OpenSource/hurl/issues/360)
+
+* Add next request in interactive mode [#268](https://github.com/Orange-OpenSource/hurl/issues/268)
+
+* Improving pattern for regex capture and matches predicates [#4](https://github.com/Orange-OpenSource/hurl/issues/4)
+
+
+Bugs Fixes:
+
+* Support pipe character ('|') in Cookies section [#466](https://github.com/Orange-OpenSource/hurl/issues/466)
+
+* MultipartFormData section doesn't accept some key-value pair [#457](https://github.com/Orange-OpenSource/hurl/issues/457)
+
+* Alpine tests in CI doesn't use latest rust build chain [#448](https://github.com/Orange-OpenSource/hurl/issues/448)
+
+* Arbitrary files can be included in body request/response [#405](https://github.com/Orange-OpenSource/hurl/issues/405)
+
+* Should error on missing closing quote [#403](https://github.com/Orange-OpenSource/hurl/issues/403)
+
+
+
+
+
 [1.5.0 (2021-12-09)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.5.0)
 ========================================================================================================================
 
