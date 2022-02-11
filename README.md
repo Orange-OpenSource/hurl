@@ -51,7 +51,7 @@ It is well adapted for <b>REST / JSON apis</b>
 ```hurl
 POST https://api.example.net/tests
 {
-    "id": "456",
+    "id": "4568",
     "evaluate": true
 }
 
@@ -59,7 +59,7 @@ HTTP/1.1 200
 [Asserts]
 jsonpath "$.status" == "RUNNING"    # Check the status code
 jsonpath "$.tests" count == 25      # Check the number of items
-
+jsonpath "$.id" matches /\d{4}/     # Check the format of the id
 ```
 
 <b>HTML content</b>
@@ -156,6 +156,7 @@ Table of Contents
       * [Getting Data](#getting-data)
          * [HTTP Headers](#http-headers)
          * [Query Params](#query-params)
+         * [Basic Authentification](#basic-authentification)
       * [Sending Data](#sending-data)
          * [Sending HTML Form Datas](#sending-html-form-datas)
          * [Sending Multipart Form Datas](#sending-multipart-form-datas)
@@ -239,25 +240,6 @@ Connection: keep-alive
 
 [Doc](https://hurl.dev/docs/request.html#headers)
 
-Headers can be used to perform [Basic authentication]. Given a login `bob` 
-with password `secret`:
-
-In a shell:
-
-```shell
-$ echo -n 'bob:secret' | base64
-Ym9iOnNlY3JldA==
-```
-
-Then, use [`Authorization` header] to add basic authentication to a request:
-
-```hurl
-GET https://example.com/protected
-Authorization: Basic Ym9iOnNlY3JldA==
-```
-
-Alternatively, one can use [`--user` option].
-
 ### Query Params
 
 ```hurl
@@ -275,6 +257,28 @@ GET https://example.net/news?order=newest&search=something%20to%20search&count=1
 ```
 
 [Doc](https://hurl.dev/docs/request.html#query-parameters)
+
+### Basic Authentification
+
+```hurl
+GET http://example.com/protected
+[BasicAuth]
+bob: secret
+```
+
+[Doc](https://hurl.dev/docs/request.html#basic-authentification)
+
+This is equivalent to construct the request with a [Authorization] header:
+
+```hurl
+# Authorization header value can be computed with `echo -n 'bob:secret' | base64`
+GET http://example.com/protected
+Authorization: Basic Ym9iOnNlY3JldA== 
+```
+
+Basic authentification allows per request authentification.
+If you want to add basic authentification to all the request of a Hurl file
+you could use [`-u/--user` option].
 
 ## Sending Data
 
@@ -355,10 +359,10 @@ Content-Type: application/json
 Variables can be initialized via command line:
 
 ```shell
-$ hurl --variable key0=apple \
-       --variable key1=true \
-       --variable key2=null \
-       --variable key3=42 \
+$ hurl --variable a_string=apple \
+       --variable a_bool=true \
+       --variable a_null=null \
+       --variable a_number=42 \
        test.hurl
 ```
 
@@ -421,7 +425,8 @@ jsonpath "$.userInfo.lastName" == "Herbert"
 jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
-jsonpath "$.order" matches "^order-\\d{8}$"     # metacharacters beginining with \ must be escaped 
+jsonpath "$.order" matches "^order-\\d{8}$"
+jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex litteral
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
@@ -464,6 +469,7 @@ xpath "count(//p)" == 2  # Check the number of p
 xpath "//p" count == 2  # Similar assert for p
 xpath "boolean(count(//h2))" == false  # Check there is no h2  
 xpath "//h2" not exists  # Similar assert for h2
+xpath "string(//div[1])" matches /Hello.*/
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#xpath-assert)
@@ -908,8 +914,9 @@ Please follow the [contrib on Windows section].
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`--user` option]: https://hurl.dev/docs/man-page.html#user
 [Hurl tests suit]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests
+[Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+[`-u/--user` option]: https://hurl.dev/docs/man-page.html#user
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.6.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64.zip
 [hurl-1.6.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64-installer.exe
