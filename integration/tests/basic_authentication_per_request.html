@@ -3,13 +3,18 @@
 <span class="raw"><span class="line">```You are authenticated```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/basic-authentication-per-request</span></span>
-<span class="line"><span class="string">Authorization</span><span>:</span> <span class="string">Basic Ym9iOnNlY3JldA==</span></span>
+<span class="line"><span class="string">Authorization</span><span>:</span> <span class="string">Basic Ym9iOnNlY3JldA==</span></span>       <span class="comment"># Header value can be computed with `echo -n 'bob:secret' | base64`</span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="raw"><span class="line">```You are authenticated```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># We can also use a BasicAuth section to specify user and password</span>
+<span class="line"></span><span class="comment"># without any base64 encoding.</span>
+<span class="line"></span><span class="comment"># Note that spaces surrounded user and password are trimmed. If you</span>
+<span class="line"></span><span class="comment"># really want a space in your password (!!), you could use Hurl</span>
+<span class="line"></span><span class="comment"># unicode literal \u{20}.</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/basic-authentication-per-request</span></span>
 <span class="line section-header">[BasicAuth]</span>
-<span class="line"><span class="string">bob</span><span>:</span><span class="string">secret</span></span>
+<span class="line"><span class="string">bob</span><span>:</span> <span class="string">secret</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="raw"><span class="line">```You are authenticated```</span></span>
 </span></span></code></pre>
