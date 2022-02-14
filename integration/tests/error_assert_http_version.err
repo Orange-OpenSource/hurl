@@ -1,7 +1,0 @@
-error: Assert Http Version
-  --> tests/error_assert_http_version.hurl:2:6
-   |
- 2 | HTTP/2 200
-   |      ^ actual value is <1.0>
-   |
-

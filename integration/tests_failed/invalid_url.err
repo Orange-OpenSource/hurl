@@ -1,0 +1,7 @@
+error: Http Connection
+  --> tests_failed/invalid_url.hurl:1:5
+   |
+ 1 | GET ???
+   |     ^^^ (3) URL using bad/illegal format or missing URL
+   |
+

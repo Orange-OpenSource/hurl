@@ -1,7 +1,0 @@
-error: Http Connection
-  --> tests/error_max_redirect.hurl:1:5
-   |
- 1 | GET http://localhost:8000/redirect/7
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Too many redirect
-   |
-

@@ -1,0 +1,7 @@
+error: Assert Body Value
+  --> tests_failed/assert_file.hurl:8:1
+   |
+ 8 | file,data.txt;
+   | ^ actual value is <hex, 48656c6c6f;>
+   |
+

@@ -1,0 +1,7 @@
+error: Invalid Json
+  --> tests_failed/body_json.hurl:3:18
+   |
+ 3 |     "success": {{success}}
+   |                  ^^^^^^^ actual value is <invalid>
+   |
+

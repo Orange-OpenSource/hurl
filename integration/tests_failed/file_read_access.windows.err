@@ -1,0 +1,7 @@
+error: File ReadAccess
+  --> tests_failed/file_read_access.hurl:2:6
+   |
+ 2 | file,does_not_exist;
+   |      ^^^^^^^^^^^^^^ File tests_failed\does_not_exist can not be read
+   |
+

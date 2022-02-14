@@ -1,7 +1,0 @@
-error: Invalid Json
-  --> tests/error_query_invalid_json.hurl:4:1
-   |
- 4 | jsonpath "$.errors" count == 2
-   | ^^^^^^^^^^^^^^^^^^^ The http response is not a valid json
-   |
-

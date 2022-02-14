@@ -23,7 +23,7 @@ function read_options() {
 
 }
 
-find tests -name "*.hurl" | sort | while read -r hurl_file; do
+find tests_{ok,failed} -name "*.hurl" | sort | while read -r hurl_file; do
     options_file="${hurl_file%.*}.options"
     options="--report-html build/html --report-junit build/tests.xml --json $(read_options "$options_file")"
     cmd="hurl $hurl_file $options"
@@ -38,7 +38,7 @@ done
 
 set -e
 
-total=$(find tests -name '*.hurl' | wc -l)
+total=$(find tests_{ok,failed} -name '*.hurl' | wc -l)
 total_in_json=$( wc -l < build/tests.json)
 total_in_xml=$(xmllint --xpath '//testcase' - < build/tests.xml| grep -c 'testcase id')
 

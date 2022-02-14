@@ -1,7 +1,0 @@
-error: Invalid Decoding
-  --> tests/error_assert_match_utf8.hurl:4:1
-   |
- 4 | body matches ".*"
-   | ^^^^ The body can not be decoded with charset 'utf-8'
-   |
-

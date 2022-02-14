@@ -1,2 +1,0 @@
-curl 'http://localhost:8000/post-file' -H 'Content-Type:' --data '@tests/data.bin'
-curl 'http://localhost:8000/post-file' -H 'Content-Type:' --data '@tests/post_file_with space'

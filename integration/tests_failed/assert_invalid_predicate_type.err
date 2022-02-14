@@ -1,0 +1,8 @@
+error: Assert Failure
+  --> tests_failed/assert_invalid_predicate_type.hurl:4:0
+   |
+ 4 | header "content-type" equals 1
+   |   actual:   string <text/html; charset=utf-8>
+   |   expected: int <1>
+   |
+

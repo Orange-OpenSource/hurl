@@ -1,0 +1,4 @@
+--variables-file
+tests_ok/variables.properties
+--variable
+female=true
