@@ -1,0 +1,7 @@
+error: Invalid XML
+  --> tests_failed/invalid_xml.hurl:4:1
+   |
+ 4 | xpath "xx" equals 1
+   | ^^^^^^^^^^ The Http response is not a valid XML
+   |
+

@@ -1,7 +1,0 @@
-error: Assert Body Value
-  --> tests/error_assert_base64.hurl:12:8
-   |
-12 | base64,bGluZTEKbGluZTIKbGluZTMK;
-   |        ^^^^^^^^^^^^^^^^^^^^^^^^ actual value is <hex, 6c696e65310a6c696e65320d0a6c696e65330a;>
-   |
-

@@ -40,9 +40,12 @@ jobs:
             pip3 install lxml bs4 --quiet
             echo "================= Integration tests ================="            
             python3 ./integration.py
-            ./test_curl_commands.sh $(find ./tests -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
-            python3 ./test_html_output.py tests/*.html
-            xmllint --noout tests/*.html
+            ./test_curl_commands.sh $(find ./tests_ok -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
+            python3 ./test_html_output.py tests_ok/*.html
+            xmllint --noout tests_ok/*.html
+            ./test_curl_commands.sh $(find ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
+            python3 ./test_html_output.py tests_failed/*.html
+            xmllint --noout tests_failed/*.html
       - store_artifacts:
           path: integration/mitmdump.log
 

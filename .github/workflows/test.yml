@@ -142,8 +142,10 @@ jobs:
          pip install lxml bs4
          ./integration.py
          ./test_curl_commands.sh $(find ./tests -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
-         ./test_html_output.py tests/*.html
-         xmllint --noout tests/*.html
+         ./test_html_output.py tests_ok/*.html
+         ./test_html_output.py tests_failed/*.html
+          xmllint --noout tests_ok/*.html
+          xmllint --noout tests_failed/*.html
          ./report.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2

@@ -1,0 +1,7 @@
+error: Assert Header Value
+  --> tests_failed/assert_header_value.hurl:3:15
+   |
+ 3 | Content-Type: ???
+   |               ^^^ actual value is <text/html; charset=utf-8>
+   |
+

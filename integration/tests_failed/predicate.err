@@ -1,0 +1,103 @@
+error: Assert Failure
+  --> tests_failed/predicate.hurl:4:0
+   |
+ 4 | jsonpath "$.status" equals "true"
+   |   actual:   bool <true>
+   |   expected: string <true>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:6:0
+   |
+ 6 | jsonpath "$.count" equals 0
+   |   actual:   int <1>
+   |   expected: int <0>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:7:0
+   |
+ 7 | jsonpath "$.message" equals 0
+   |   actual:   string <0>
+   |   expected: int <0>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:8:0
+   |
+ 8 | jsonpath "$.empty" equals 0
+   |   actual:   string <>
+   |   expected: int <0>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:9:0
+   |
+ 9 | jsonpath "$.number" equals 1.1
+   |   actual:   float <1.0>
+   |   expected: float <1.1>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:10:0
+   |
+10 | jsonpath "$.message" startsWith "hi"
+   |   actual:   string <0>
+   |   expected: starts with string <hi>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:11:0
+   |
+11 | jsonpath "$.message" endsWith "hi"
+   |   actual:   string <0>
+   |   expected: ends with string <hi>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:12:0
+   |
+12 | jsonpath "$.message" contains "hi"
+   |   actual:   string <0>
+   |   expected: contains string <hi>
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:13:0
+   |
+13 | jsonpath "$.message" matches "hi"
+   |   actual:   string <0>
+   |   expected: matches regex <hi>
+   |
+
+error: Subquery error
+  --> tests_failed/predicate.hurl:14:22
+   |
+14 | jsonpath "$.message" count == 1
+   |                      ^^^^^ Type from query result and subquery do not match
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:15:0
+   |
+15 | jsonpath "$.toto" exists
+   |   actual:   none
+   |   expected: something
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:16:0
+   |
+16 | jsonpath "$.message" not exists
+   |   actual:   string <0>
+   |   expected: not something
+   |
+
+error: Assert Failure
+  --> tests_failed/predicate.hurl:17:0
+   |
+17 | jsonpath "$.list" count == 2
+   |   actual:   int <3>
+   |   expected: int <2>
+   |
+

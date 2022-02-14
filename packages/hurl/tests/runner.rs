@@ -37,7 +37,7 @@ pub fn log_runner_error(error: &runner::Error, _warning: bool) {
 // can be used for debugging
 #[test]
 fn test_hurl_file() {
-    let filename = "../../integration/tests/bom.hurl";
+    let filename = "../../integration/tests_ok/bom.hurl";
     let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();

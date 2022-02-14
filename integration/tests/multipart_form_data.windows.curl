@@ -1,1 +1,0 @@
-curl 'http://localhost:8000/multipart-form-data' -F 'key1=value1' -F 'upload1=@tests\data.txt;type=text/plain' -F 'upload2=@tests\data.html;type=text/html' -F 'upload3=@tests\data.txt;type=text/html'

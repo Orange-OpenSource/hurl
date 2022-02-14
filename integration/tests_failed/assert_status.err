@@ -1,0 +1,7 @@
+error: Assert Status
+  --> tests_failed/assert_status.hurl:2:10
+   |
+ 2 | HTTP/1.0 200
+   |          ^^^ actual value is <404>
+   |
+

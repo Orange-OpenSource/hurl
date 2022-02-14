@@ -14,15 +14,24 @@ def main():
     # Static run (without server)
     [
         test_echo.test(f)
-        for f in get_files("tests/*.hurl") + get_files("tests_error_lint/*.hurl")
+        for f in get_files("tests_ok/*.hurl")
+        + get_files("tests_failed/*.hurl")
+        + get_files("tests_error_lint/*.hurl")
     ]
-    [test_format.test("json", f) for f in get_files("tests/*.hurl")]
-    [test_format.test("html", f) for f in get_files("tests/*.hurl")]
+    [test_format.test("json", f) for f in get_files("tests_ok/*.hurl")]
+    [test_format.test("json", f) for f in get_files("tests_failed/*.hurl")]
+    [test_format.test("html", f) for f in get_files("tests_ok/*.hurl")]
+    [test_format.test("html", f) for f in get_files("tests_failed/*.hurl")]
     [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
     [test_hurl.test(f) for f in get_files("tests_error_parser/*.hurl")]
 
     # Dynamic run (with server)
-    [test_hurl.test(f) for f in get_files("tests/*.hurl") + get_files("ssl/*.hurl")]
+    [
+        test_hurl.test(f)
+        for f in get_files("tests_ok/*.hurl")
+        + get_files("tests_failed/*.hurl")
+        + get_files("ssl/*.hurl")
+    ]
 
     print("test integration ok!")
 
