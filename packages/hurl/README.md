@@ -51,7 +51,7 @@ It is well adapted for <b>REST / JSON apis</b>
 ```hurl
 POST https://api.example.net/tests
 {
-    "id": "456",
+    "id": "4568",
     "evaluate": true
 }
 
@@ -59,7 +59,7 @@ HTTP/1.1 200
 [Asserts]
 jsonpath "$.status" == "RUNNING"    # Check the status code
 jsonpath "$.tests" count == 25      # Check the number of items
-
+jsonpath "$.id" matches /\d{4}/     # Check the format of the id
 ```
 
 <b>HTML content</b>
@@ -144,6 +144,8 @@ HTTP/1.1 200
 
 [License]
 
+[Blog]
+
 [Documentation]
 
 [GitHub]
@@ -154,6 +156,7 @@ Table of Contents
       * [Getting Data](#getting-data)
          * [HTTP Headers](#http-headers)
          * [Query Params](#query-params)
+         * [Basic Authentification](#basic-authentification)
       * [Sending Data](#sending-data)
          * [Sending HTML Form Datas](#sending-html-form-datas)
          * [Sending Multipart Form Datas](#sending-multipart-form-datas)
@@ -194,6 +197,7 @@ Table of Contents
             * [Scoop](#scoop)
             * [Windows Package Manager](#windows-package-manager)
          * [Cargo](#cargo)
+         * [Docker](#docker)
       * [Building From Sources](#building-from-sources)
          * [Build on Linux, macOS](#build-on-linux-macos)
          * [Build on Windows](#build-on-windows)
@@ -236,25 +240,6 @@ Connection: keep-alive
 
 [Doc](https://hurl.dev/docs/request.html#headers)
 
-Headers can be used to perform [Basic authentication]. Given a login `bob` 
-with password `secret`:
-
-In a shell:
-
-```shell
-$ echo -n 'bob:secret' | base64
-Ym9iOnNlY3JldA==
-```
-
-Then, use [`Authorization` header] to add basic authentication to a request:
-
-```hurl
-GET https://example.com/protected
-Authorization: Basic Ym9iOnNlY3JldA==
-```
-
-Alternatively, one can use [`--user` option].
-
 ### Query Params
 
 ```hurl
@@ -272,6 +257,28 @@ GET https://example.net/news?order=newest&search=something%20to%20search&count=1
 ```
 
 [Doc](https://hurl.dev/docs/request.html#query-parameters)
+
+### Basic Authentification
+
+```hurl
+GET http://example.com/protected
+[BasicAuth]
+bob: secret
+```
+
+[Doc](https://hurl.dev/docs/request.html#basic-authentification)
+
+This is equivalent to construct the request with a [Authorization] header:
+
+```hurl
+# Authorization header value can be computed with `echo -n 'bob:secret' | base64`
+GET http://example.com/protected
+Authorization: Basic Ym9iOnNlY3JldA== 
+```
+
+Basic authentification allows per request authentification.
+If you want to add basic authentification to all the request of a Hurl file
+you could use [`-u/--user` option].
 
 ## Sending Data
 
@@ -352,10 +359,10 @@ Content-Type: application/json
 Variables can be initialized via command line:
 
 ```shell
-$ hurl --variable key0=apple \
-       --variable key1=true \
-       --variable key2=null \
-       --variable key3=42 \
+$ hurl --variable a_string=apple \
+       --variable a_bool=true \
+       --variable a_null=null \
+       --variable a_number=42 \
        test.hurl
 ```
 
@@ -418,7 +425,8 @@ jsonpath "$.userInfo.lastName" == "Herbert"
 jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
-jsonpath "$.order" matches "^order-\\d{8}$"     # metacharacters beginining with \ must be escaped 
+jsonpath "$.order" matches "^order-\\d{8}$"
+jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex litteral
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
@@ -461,6 +469,7 @@ xpath "count(//p)" == 2  # Check the number of p
 xpath "//p" count == 2  # Similar assert for p
 xpath "boolean(count(//h2))" == false  # Check there is no h2  
 xpath "//h2" not exists  # Similar assert for h2
+xpath "string(//div[1])" matches /Hello.*/
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#xpath-assert)
@@ -704,9 +713,8 @@ Option | Description
 <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;file&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [-b, --cookie](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
 <a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
-<a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given blob. <br/>Multiple glob flags may be used.<br/>
+<a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given blob.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
 <a href="#help" id="help"><code>-h, --help</code></a> | Usage help. This lists all current command line options with a short description.<br/>
-<a href="#html" id="html"><code>--html &lt;dir&gt;</code></a> | Generate html report in dir.<br/><br/>If the html report already exists, it will be updated with the new test results.<br/>
 <a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a> | Ignore all asserts defined in the Hurl file.<br/>
 <a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
 <a href="#interactive" id="interactive"><code>--interactive</code></a> | Stop between requests.<br/>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br/>
@@ -721,10 +729,13 @@ Option | Description
 <a href="#to-entry" id="to-entry"><code>--to-entry &lt;entry-number&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
 <a href="#output" id="output"><code>-o, --output &lt;file&gt;</code></a> | Write output to <file> instead of stdout.<br/>
 <a href="#progress" id="progress"><code>--progress</code></a> | Print filename and status for each test (on stderr)<br/>
+<a href="#report-junit" id="report-junit"><code>--report-junit &lt;file&gt;</code></a> | Generate JUNIT <file>.<br/><br/>If the <file> report already exists, it will be updated with the new test results.<br/>
+<a href="#report-html" id="report-html"><code>--report-html &lt;dir&gt;</code></a> | Generate HTML report in dir.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
 <a href="#summary" id="summary"><code>--summary</code></a> | Print test metrics at the end of the run (on stderr)<br/>
-<a href="#test" id="test"><code>--test</code></a> | Activate test mode; equals --no-output --progress --summary<br/>
+<a href="#test" id="test"><code>--test</code></a> | Activate test mode; equals [--no-output](#no-output) [--progress](#progress) [--summary](#summary)<br/>
 <a href="#proxy" id="proxy"><code>-x, --proxy [protocol://]host[:port]</code></a> | Use the specified proxy.<br/>
 <a href="#user" id="user"><code>-u, --user &lt;user:password&gt;</code></a> | Add basic Authentication header to each request.<br/>
+<a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;name&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
 <a href="#variable" id="variable"><code>--variable &lt;name=value&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>Only string values can be defined.<br/>
 <a href="#variables-file" id="variables-file"><code>--variables-file &lt;file&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [--variable](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
 <a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, -i, --include might be the option you're looking for.<br/>
@@ -768,15 +779,12 @@ curl(1)  hurlfmt(1)
 
 ### Linux
 
-Precompiled binary is available at [hurl-1.4.0-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-1.6.0-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-1.4.0:$PATH
-
-$ hurl --version
-hurl 1.4.0
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-1.6.0:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -784,8 +792,8 @@ hurl 1.4.0
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl_1.4.0_amd64.deb
-$ sudo dpkg -i hurl_1.4.0_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl_1.6.0_amd64.deb
+$ sudo dpkg -i hurl_1.6.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -794,27 +802,23 @@ $ sudo dpkg -i hurl_1.4.0_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.4.0-x86_64-osx.tar.gz].
+Precompiled binary is available at [hurl-1.6.0-x86_64-osx.tar.gz].
 
 Hurl can also be installed with [Homebrew]:
 
 ```shell
-$ brew tap jcamiel/hurl
 $ brew install hurl
-
-$ hurl --version
-hurl 1.4.0
 ```
 
 ### Windows
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-1.4.0-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-1.6.0-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-1.4.0-win64-installer.exe] is also available.
+An installer [hurl-1.6.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -840,6 +844,12 @@ If you're a Rust programmer, Hurl can be installed with cargo.
 
 ```shell
 $ cargo install hurl
+```
+
+### Docker
+
+```shell
+$ docker pull orangeopensource/hurl
 ```
 
 ## Building From Sources
@@ -893,7 +903,8 @@ Please follow the [contrib on Windows section].
 [the installation section]: https://hurl.dev/docs/installation.html
 [Feedback, suggestion, bugs or improvements]: https://github.com/Orange-OpenSource/hurl/issues
 [License]: https://hurl.dev/docs/license.html
-[Documentation]: https://hurl.dev/docs/man-page.html
+[Documentation]: https://hurl.dev/docs/installation.html
+[Blog]: https://hurl.dev/blog/
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
 [JSON body]: https://hurl.dev/docs/request.html#json-body
@@ -903,13 +914,14 @@ Please follow the [contrib on Windows section].
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`--user` option]: https://hurl.dev/docs/man-page.html#user
 [Hurl tests suit]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests
+[Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+[`-u/--user` option]: https://hurl.dev/docs/man-page.html#user
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-1.4.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64.zip
-[hurl-1.4.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-win64-installer.exe
-[hurl-1.4.0-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-x86_64-osx.tar.gz
-[hurl-1.4.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.4.0/hurl-1.4.0-x86_64-linux.tar.gz
+[hurl-1.6.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64.zip
+[hurl-1.6.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-win64-installer.exe
+[hurl-1.6.0-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-osx.tar.gz
+[hurl-1.6.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.0/hurl-1.6.0-x86_64-linux.tar.gz
 [Homebrew]: https://brew.sh
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
