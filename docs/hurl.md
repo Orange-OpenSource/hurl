@@ -88,14 +88,14 @@ At the minimum, the response includes the asserts on the HTTP version and status
 
 ```hurl
 GET http:/google.com
-HTTP/1.1 302
+HTTP/1.1 301
 ```
 
 It can also include asserts on the response headers
 
 ```hurl
 GET http:/google.com
-HTTP/1.1 302
+HTTP/1.1 301
 Location: http://www.google.com
 ```
 
@@ -103,9 +103,9 @@ You can also include explicit asserts combining query and predicate
 
 ```hurl
 GET http:/google.com
-HTTP/1.1 302
+HTTP/1.1 301
 [Asserts]
-xpath "//title" == "301 Moved"
+xpath "string(//title)" == "301 Moved"
 ```
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
