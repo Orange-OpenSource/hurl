@@ -117,23 +117,16 @@ Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
 Options that exist in curl have exactly the same semantic.
 
+### --cacert {#cacert}
+
+Tells curl to use the specified certificate file to verify the peer.
+The file may contain multiple CA certificates.
+The certificate(s) must be in PEM format.
+Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 ### --color {#color}
 
 Colorize Output
-
-### -b, --cookie <file> {#cookie}
-
-Read cookies from file (using the Netscape cookie file format).
-
-Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
-
-### --cacert {#cacert}
-
-Tells curl to use the specified certificate file to verify the peer.
-The file may contain multiple CA certificates. 
-The certificate(s) must be in PEM format. 
-Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 ### --compressed {#compressed}
 
@@ -144,6 +137,12 @@ Request a compressed response using one of the algorithms br, gzip, deflate and 
 Maximum time in seconds that you allow Hurl's connection to take.
 
 See also [-m, --max-time](#max-time) option.
+
+### -b, --cookie <file> {#cookie}
+
+Read cookies from file (using the Netscape cookie file format).
+
+Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
 ### -c, --cookie-jar <file> {#cookie-jar}
 
@@ -166,6 +165,10 @@ All the input files are executed independently. The result of one file does not 
 Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
+### -L, --location {#location}
+
+Follow redirect.  You can limit the amount of redirects to follow by using the [--max-redirs](#max-redirs) option.
+
 ### --glob <glob> {#glob}
 
 Specify input files that match the given blob.
@@ -173,17 +176,17 @@ Specify input files that match the given blob.
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
-### -h, --help {#help}
+### -i, --include {#include}
 
-Usage help. This lists all current command line options with a short description.
+Include the HTTP headers in the output (last entry).
 
 ### --ignore-asserts {#ignore-asserts}
 
 Ignore all asserts defined in the Hurl file.
 
-### -i, --include {#include}
+### -k, --insecure {#insecure}
 
-Include the HTTP headers in the output (last entry).
+This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
 ### --interactive {#interactive}
 
@@ -194,24 +197,16 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
 
-### -k, --insecure {#insecure}
+### --max-redirs <num> {#max-redirs}
 
-This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
-
-### -L, --location {#location}
-
-Follow redirect.  You can limit the amount of redirects to follow by using the [--max-redirs](#max-redirs) option.
+Set maximum number of redirection-followings allowed
+By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 ### -m, --max-time <seconds> {#max-time}
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
 See also [--connect-timeout](#connect-timeout) option.
-
-### --max-redirs <num> {#max-redirs}
-
-Set maximum number of redirection-followings allowed
-By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 ### --no-color {#no-color}
 
@@ -226,11 +221,6 @@ Suppress output. By default, Hurl outputs the body of the last response.
 Comma-separated list of hosts which do not use a proxy.
 Override value from Environment variable no_proxy.
 
-### --to-entry <entry-number> {#to-entry}
-
-Execute Hurl file to ENTRY_NUMBER (starting at 1).
-Ignore the remaining of the file. It is useful for debugging a session.
-
 ### -o, --output <file> {#output}
 
 Write output to <file> instead of stdout.
@@ -238,6 +228,10 @@ Write output to <file> instead of stdout.
 ### --progress {#progress}
 
 Print filename and status for each test (on stderr)
+
+### -x, --proxy [protocol://]host[:port] {#proxy}
+
+Use the specified proxy.
 
 ### --report-junit <file> {#report-junit}
 
@@ -259,9 +253,10 @@ Print test metrics at the end of the run (on stderr)
 
 Activate test mode; equals [--no-output](#no-output) [--progress](#progress) [--summary](#summary)
 
-### -x, --proxy [protocol://]host[:port] {#proxy}
+### --to-entry <entry-number> {#to-entry}
 
-Use the specified proxy.
+Execute Hurl file to ENTRY_NUMBER (starting at 1).
+Ignore the remaining of the file. It is useful for debugging a session.
 
 ### -u, --user <user:password> {#user}
 
@@ -294,6 +289,10 @@ A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
+
+### -h, --help {#help}
+
+Usage help. This lists all current command line options with a short description.
 
 ### -V, --version {#version}
 

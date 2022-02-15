@@ -1,4 +1,4 @@
-.TH hurl 1 "05 Feb 2022" "hurl 1.6.0-snapshot" " Hurl Manual"
+.TH hurl 1 "15 Feb 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -104,23 +104,16 @@ Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
 Options that exist in curl have exactly the same semantic.
 
+.IP "--cacert "
+
+Tells curl to use the specified certificate file to verify the peer.
+The file may contain multiple CA certificates.
+The certificate(s) must be in PEM format.
+Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 .IP "--color "
 
 Colorize Output
-
-.IP "-b, --cookie <file> "
-
-Read cookies from file (using the Netscape cookie file format).
-
-Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
-
-.IP "--cacert "
-
-Tells curl to use the specified certificate file to verify the peer.
-The file may contain multiple CA certificates. 
-The certificate(s) must be in PEM format. 
-Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 .IP "--compressed "
 
@@ -131,6 +124,12 @@ Request a compressed response using one of the algorithms br, gzip, deflate and 
 Maximum time in seconds that you allow Hurl's connection to take.
 
 See also \fI-m, --max-time\fP option.
+
+.IP "-b, --cookie <file> "
+
+Read cookies from file (using the Netscape cookie file format).
+
+Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
 
 .IP "-c, --cookie-jar <file> "
 
@@ -153,6 +152,10 @@ All the input files are executed independently. The result of one file does not 
 Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
+.IP "-L, --location "
+
+Follow redirect.  You can limit the amount of redirects to follow by using the \fI--max-redirs\fP option.
+
 .IP "--glob <glob> "
 
 Specify input files that match the given blob.
@@ -160,17 +163,17 @@ Specify input files that match the given blob.
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
-.IP "-h, --help "
+.IP "-i, --include "
 
-Usage help. This lists all current command line options with a short description.
+Include the HTTP headers in the output (last entry).
 
 .IP "--ignore-asserts "
 
 Ignore all asserts defined in the Hurl file.
 
-.IP "-i, --include "
+.IP "-k, --insecure "
 
-Include the HTTP headers in the output (last entry).
+This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
 .IP "--interactive "
 
@@ -181,24 +184,16 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
 
-.IP "-k, --insecure "
+.IP "--max-redirs <num> "
 
-This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
-
-.IP "-L, --location "
-
-Follow redirect.  You can limit the amount of redirects to follow by using the \fI--max-redirs\fP option.
+Set maximum number of redirection-followings allowed
+By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 .IP "-m, --max-time <seconds> "
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
 See also \fI--connect-timeout\fP option.
-
-.IP "--max-redirs <num> "
-
-Set maximum number of redirection-followings allowed
-By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 .IP "--no-color "
 
@@ -213,11 +208,6 @@ Suppress output. By default, Hurl outputs the body of the last response.
 Comma-separated list of hosts which do not use a proxy.
 Override value from Environment variable no_proxy.
 
-.IP "--to-entry <entry-number> "
-
-Execute Hurl file to ENTRY_NUMBER (starting at 1).
-Ignore the remaining of the file. It is useful for debugging a session.
-
 .IP "-o, --output <file> "
 
 Write output to <file> instead of stdout.
@@ -225,6 +215,10 @@ Write output to <file> instead of stdout.
 .IP "--progress "
 
 Print filename and status for each test (on stderr)
+
+.IP "-x, --proxy [protocol://]host[:port] "
+
+Use the specified proxy.
 
 .IP "--report-junit <file> "
 
@@ -246,13 +240,18 @@ Print test metrics at the end of the run (on stderr)
 
 Activate test mode; equals \fI--no-output](#no-output) [--progress](#progress) [--summary\fP
 
-.IP "-x, --proxy [protocol://]host[:port] "
+.IP "--to-entry <entry-number> "
 
-Use the specified proxy.
+Execute Hurl file to ENTRY_NUMBER (starting at 1).
+Ignore the remaining of the file. It is useful for debugging a session.
 
 .IP "-u, --user <user:password> "
 
 Add basic Authentication header to each request.
+
+.IP "-A, --user-agent <name> "
+
+Specify the User-Agent string to send to the HTTP server.
 
 .IP "--variable <name=value> "
 
@@ -277,6 +276,10 @@ A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
+
+.IP "-h, --help "
+
+Usage help. This lists all current command line options with a short description.
 
 .IP "-V, --version "
 
