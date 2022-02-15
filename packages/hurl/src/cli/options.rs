@@ -174,11 +174,11 @@ pub fn app(version: &str) -> App {
                 .help("Output each hurl file result to JSON"),
         )
         .arg(
-            clap::Arg::new("junit")
-                .long("report-junit")
-                .value_name("FILE")
-                .help("Write a Junit XML report to the given file")
-                .takes_value(true),
+            clap::Arg::new("max_redirects")
+                .long("max-redirs")
+                .value_name("NUM")
+                .allow_hyphen_values(true)
+                .help("Maximum number of redirects allowed"),
         )
         .arg(
             clap::Arg::new("max_time")
@@ -187,13 +187,6 @@ pub fn app(version: &str) -> App {
                 .value_name("NUM")
                 .allow_hyphen_values(true)
                 .help("Maximum time allowed for the transfer"),
-        )
-        .arg(
-            clap::Arg::new("max_redirects")
-                .long("max-redirs")
-                .value_name("NUM")
-                .allow_hyphen_values(true)
-                .help("Maximum number of redirects allowed"),
         )
         .arg(
             clap::Arg::new("no_color")
@@ -232,6 +225,13 @@ pub fn app(version: &str) -> App {
                 .long("proxy")
                 .value_name("[PROTOCOL://]HOST[:PORT]")
                 .help("Use proxy on given protocol/host/port"),
+        )
+        .arg(
+            clap::Arg::new("junit")
+                .long("report-junit")
+                .value_name("FILE")
+                .help("Write a Junit XML report to the given file")
+                .takes_value(true),
         )
         .arg(
             clap::Arg::new("report_html")
