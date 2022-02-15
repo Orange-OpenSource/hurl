@@ -269,7 +269,6 @@ Specify the User-Agent string to send to the HTTP server.
 ### --variable <name=value> {#variable}
 
 Define variable (name/value) to be used in Hurl templates.
-Only string values can be defined.
 
 ### --variables-file <file> {#variables-file}
 
@@ -308,7 +307,6 @@ Using an environment variable to set the proxy has the same effect as using the 
 
 Sets the proxy server to use for HTTP.
 
-
 ### https_proxy [protocol://]<host>[:port]
 
 Sets the proxy server to use for HTTPS.
@@ -320,6 +318,10 @@ Sets the proxy server to use if no protocol-specific proxy is set.
 ### no_proxy <comma-separated list of hosts>
 
 list of host names that shouldn't go through any proxy.
+
+### HURL_name value
+
+Define variable (name/value) to be used in Hurl templates. This is similar than [--variable](#variable) and [--variables-file](#variables-file) options.
 
 ## EXIT CODES
 
