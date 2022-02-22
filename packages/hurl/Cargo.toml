@@ -50,5 +50,5 @@ termion = "1.5.6"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.0.72"
+cc = "1.0.73"
 
