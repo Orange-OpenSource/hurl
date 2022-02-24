@@ -846,7 +846,7 @@ fn add_line_terminators(buffer: &mut String, line_terminators: Vec<LineTerminato
 }
 
 fn encode_html(s: String) -> String {
-    s.replace(">", "&gt;").replace("<", "&lt;")
+    s.replace('>', "&gt;").replace('<', "&lt;")
 }
 
 fn multilines(s: String) -> String {

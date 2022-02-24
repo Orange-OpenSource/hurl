@@ -195,7 +195,7 @@ impl RequestSpec {
                     arguments.push(format!(
                         "{}'{}'",
                         prefix,
-                        s.replace("\\", "\\\\").replace("\n", "\\n")
+                        s.replace('\\', "\\\\").replace('\n', "\\n")
                     ))
                 }
                 Body::Binary(bytes) => arguments.push(format!("$'{}'", encode_bytes(bytes))),
