@@ -15,7 +15,8 @@ def post_json():
     "age": 30,
     "strict": true,
     "spacing": "\\n",
-    "g_clef": "\\uD834\\uDD1E"
+    "g_clef": "\\uD834\\uDD1E",
+    "items": [true, \"true\", 1]
 }"""
     )
     return ""

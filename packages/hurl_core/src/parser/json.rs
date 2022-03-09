@@ -245,8 +245,8 @@ fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
 
     // at least one element
     if !reader.remaining().starts_with(']') {
-        let first_element = list_element(None, reader)?;
-        elements.push(first_element.clone());
+        let first_element = list_element(reader)?;
+        elements.push(first_element);
 
         loop {
             if reader.remaining().starts_with(']') {
@@ -256,7 +256,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
                 break;
             }
             literal(",", reader)?;
-            let element = list_element(Some(first_element.value._type()), reader)?;
+            let element = list_element(reader)?;
             elements.push(element);
         }
     }
@@ -265,13 +265,9 @@ fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     Ok(JsonValue::List { space0, elements })
 }
 
-fn list_element(
-    _type: Option<String>,
-    reader: &mut Reader,
-) -> ParseResult<'static, JsonListElement> {
+fn list_element(reader: &mut Reader) -> ParseResult<'static, JsonListElement> {
     let save = reader.state.pos.clone();
     let space0 = whitespace(reader);
-    let pos = reader.state.pos.clone();
     let value = match parse(reader) {
         Ok(r) => r,
         Err(_) => {
@@ -282,15 +278,6 @@ fn list_element(
             })
         }
     };
-    if let Some(t) = _type {
-        if t != value._type() {
-            return Err(error::Error {
-                pos,
-                recoverable: false,
-                inner: error::ParseError::Expecting { value: t },
-            });
-        }
-    }
     let space1 = whitespace(reader);
     Ok(JsonListElement {
         space0,
@@ -776,17 +763,6 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("[1, true]");
-        let error = list_value(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 5 });
-        assert_eq!(
-            error.inner,
-            error::ParseError::Expecting {
-                value: "number".to_string()
-            }
-        );
-        assert!(!error.recoverable);
-
         let mut reader = Reader::init("[1, 2,]");
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
@@ -798,7 +774,7 @@ mod tests {
     fn test_list_element() {
         let mut reader = Reader::init("true");
         assert_eq!(
-            list_element(None, &mut reader).unwrap(),
+            list_element(&mut reader).unwrap(),
             JsonListElement {
                 space0: "".to_string(),
                 value: JsonValue::Boolean(true),
@@ -806,30 +782,6 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 4);
-    }
-
-    #[test]
-    fn test_list_element_error() {
-        let mut reader = Reader::init("true");
-        let error = list_element(Some("number".to_string()), &mut reader)
-            .err()
-            .unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            error::ParseError::Expecting {
-                value: "number".to_string()
-            }
-        );
-        assert!(!error.recoverable);
-
-        let mut reader = Reader::init("\n]");
-        let error = list_element(Some("number".to_string()), &mut reader)
-            .err()
-            .unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, error::ParseError::Json {});
-        assert!(!error.recoverable);
     }
 
     #[test]
