@@ -6,7 +6,8 @@ POST http://localhost:8000/post-json
     "age": 30,
     "strict": true,
     "spacing": "\n",
-    "g_clef": "\uD834\uDD1E"
+    "g_clef": "\uD834\uDD1E",
+    "items": [true, "true", 1]
 }
 
 HTTP/1.0 200
