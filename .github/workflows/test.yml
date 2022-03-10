@@ -68,12 +68,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Install
         run: |
-          ci/install_rust_latest.sh
-      - name: Build
-        run: |
           # Install libcurl dev so that hurl can be built dynamically with libcurl
           sudo apt update
           sudo apt install libcurl4-openssl-dev
+          ci/install_rust_latest.sh
+      - name: Build
+        run: |
           ci/release.sh
       - name: Test Prequisites
         run: |
@@ -105,19 +105,16 @@ jobs:
       uses: actions/checkout@v2
     - name: Install
       run: |
+        sudo apt update
+        sudo apt install libxml2-utils
+        python3 -m pip install --upgrade pip --quiet
         ci/install_rust_latest.sh
     - name: Build
       run: |
         cargo build --verbose --locked
     - name: Test Prequisites
       run: |
-        sudo apt update
-        sudo apt install libxml2-utils
-        pip3 install Flask
-        cd integration
-        python3 server.py >server.log 2>&1 &
-        python3 ssl/server.py >server-ssl.log 2>&1 &
-        wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-linux.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
+        ci/test_prerequisites.sh
     - name: Run Tests units
       run: |
         cargo test --features strict
@@ -125,7 +122,6 @@ jobs:
       run: |
          export PATH="$PWD/target/debug:$PATH"
          cd integration
-         pip install lxml bs4
          ./integration.py
          ./test_curl_commands.sh $(find ./tests_ok -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
          ./test_html_output.py tests_ok/*.html
@@ -159,28 +155,13 @@ jobs:
           set -eu
           uname -a
           uname -m
-          echo "----- install build prerequisites -----"
+          echo "----- install prerequisite packages -----"
           pacman -Syy --noconfirm
           pacman -Sy --noconfirm curl icu base-devel libxml2 python3
-          ci/install_rust_latest.sh
-          source $HOME/.cargo/env
           curl -O https://bootstrap.pypa.io/get-pip.py
           python3 get-pip.py
-          echo "----- build -----"
-          cargo build --verbose
-          echo "----- install servers prerequisites -----"
-          pip3 install lxml bs4 Flask mitmproxy
-          export PATH="$PWD/target/debug:$PATH"
-          echo "----- start servers -----"
-          cd integration
-          python3 server.py >server.log 2>&1 &
-          python3 ssl/server.py >server-ssl.log 2>&1 &
-          mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
-          ps auxww | grep -v grep | grep -E "server.py|mitmdump"
-          echo "----- tests units -----"
-          cargo test --features strict
-          echo "----- integration tests -----"
-          ./integration.py
+          ci/install_rust_latest.sh
+          ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
@@ -205,26 +186,11 @@ jobs:
           set -eu
           uname -a
           uname -m
-          echo "----- install build prerequisites -----"
+          echo "----- install prerequisite packages -----"
           yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip
-          ci/install_rust_latest.sh
-          source $HOME/.cargo/env
-          echo "----- build -----"
-          cargo build --verbose
-          echo "----- install servers prerequisites -----"
           python3 -m pip install --upgrade pip --quiet
-          pip3 install lxml bs4 Flask mitmproxy
-          export PATH="$PWD/target/debug:$PATH"
-          echo "----- start servers -----"
-          cd integration
-          python3 server.py >server.log 2>&1 &
-          python3 ssl/server.py >server-ssl.log 2>&1 &
-          mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
-          ps auxww | grep -v grep | grep -E "server.py|mitmdump"
-          echo "----- tests units -----"
-          cargo test --features strict
-          echo "----- integration tests -----"
-          ./integration.py
+          ci/install_rust_latest.sh
+          ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
@@ -249,27 +215,12 @@ jobs:
           set -eu
           uname -a
           uname -m
-          echo "----- install build prerequisites -----"
+          echo "----- install prerequisite packages -----"
           apk update --quiet
           apk add --quiet bash curl build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
-          ci/install_rust_latest.sh
-          source $HOME/.cargo/env
-          echo "----- build -----"
-          cargo build --verbose
-          export PATH="$PWD/target/debug:$PATH"
-          echo "----- install servers prerequisites -----"
           python3 -m pip install --upgrade pip --quiet
-          pip3 install lxml bs4 Flask mitmproxy --quiet
-          echo "----- start servers -----"
-          cd integration
-          python3 server.py >server.log 2>&1 &
-          python3 ssl/server.py >server-ssl.log 2>&1 &
-          mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
-          ps auxww | grep -v grep | grep -E "server.py|mitmdump"
-          echo "----- tests units -----"
-          cargo test --features strict --tests
-          echo "----- integration tests -----"
-          ./integration.py
+          ci/install_rust_latest.sh
+          ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
