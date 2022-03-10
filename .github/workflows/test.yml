@@ -66,16 +66,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
-      - name: Environment
+      - name: Install
         run: |
-          uname -a
-          cargo --version
+          ci/install_rust_latest.sh
       - name: Build
         run: |
           # Install libcurl dev so that hurl can be built dynamically with libcurl
@@ -110,16 +103,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust }}
-        override: true
-        profile: minimal
-    - name: Environment
+    - name: Install
       run: |
-        uname -a
-        cargo --version
+        ci/install_rust_latest.sh
     - name: Build
       run: |
         cargo build --verbose --locked
@@ -176,13 +162,10 @@ jobs:
           echo "----- install build prerequisites -----"
           pacman -Syy --noconfirm
           pacman -Sy --noconfirm curl icu base-devel libxml2 python3
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
-          sh rustup.sh -y
+          ci/install_rust_latest.sh
           source $HOME/.cargo/env
           curl -O https://bootstrap.pypa.io/get-pip.py
           python3 get-pip.py
-          rustc --version
-          cargo --version
           echo "----- build -----"
           cargo build --verbose
           echo "----- install servers prerequisites -----"
@@ -224,11 +207,8 @@ jobs:
           uname -m
           echo "----- install build prerequisites -----"
           yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
-          sh rustup.sh -y
+          ci/install_rust_latest.sh
           source $HOME/.cargo/env
-          rustc --version
-          cargo --version
           echo "----- build -----"
           cargo build --verbose
           echo "----- install servers prerequisites -----"
@@ -272,11 +252,8 @@ jobs:
           echo "----- install build prerequisites -----"
           apk update --quiet
           apk add --quiet bash curl build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh
-          sh rustup.sh -y
+          ci/install_rust_latest.sh
           source $HOME/.cargo/env
-          rustc --version
-          cargo --version
           echo "----- build -----"
           cargo build --verbose
           export PATH="$PWD/target/debug:$PATH"
