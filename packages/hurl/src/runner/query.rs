@@ -114,9 +114,9 @@ pub fn eval_query_value(
                 }),
                 Ok(xml) => {
                     let result = if http_response.is_html() {
-                        xpath::eval_html(xml, value.clone())
+                        xpath::eval_html(&xml, &value)
                     } else {
-                        xpath::eval_xml(xml, value.clone())
+                        xpath::eval_xml(&xml, &value)
                     };
                     match result {
                         Ok(value) => Ok(Some(value)),
