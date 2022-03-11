@@ -118,7 +118,6 @@ fn register_namespaces(doc: &libxml::tree::Document, context: &libxml::xpath::Co
 /// * `support_ns` - `true` if we need to support XML namespaces, `false` otherwise
 ///
 fn eval(doc: &libxml::tree::Document, expr: &str, support_ns: bool) -> Result<Value, XpathError> {
-
     let context = libxml::xpath::Context::new(doc).expect("error setting context in xpath module");
 
     // libxml2 prints to sdtout warning and errors, so we mut it.
@@ -159,7 +158,6 @@ fn eval(doc: &libxml::tree::Document, expr: &str, support_ns: bool) -> Result<Va
     }
 }
 
-
 /// A XML namespace
 #[derive(Debug, PartialEq, Eq)]
 struct Namespace {
@@ -168,7 +166,6 @@ struct Namespace {
 }
 
 impl Namespace {
-
     /// Create a Namespace given a libxml2 namespace reference.
     ///
     /// # Arguments
@@ -198,14 +195,16 @@ fn get_namespaces(node: &libxml::tree::Node) -> Vec<Namespace> {
     let mut all_ns = Vec::new();
 
     // Get namespaces from the current node
-    let ns: Vec<Namespace> = node.get_namespace_declarations()
+    let ns: Vec<Namespace> = node
+        .get_namespace_declarations()
         .into_iter()
         .map(|n| Namespace::from(&n))
         .collect();
     all_ns.extend(ns);
 
     // Get children namespaces
-    let ns: Vec<Namespace> = node.get_child_nodes()
+    let ns: Vec<Namespace> = node
+        .get_child_nodes()
         .into_iter()
         .flat_map(|c| get_namespaces(&c))
         .collect();
@@ -213,7 +212,6 @@ fn get_namespaces(node: &libxml::tree::Node) -> Vec<Namespace> {
 
     all_ns
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -243,18 +241,8 @@ mod tests {
 
     #[test]
     fn test_error_eval() {
-        assert_eq!(
-            eval_xml("<a/>", "^^^")
-                .err()
-                .unwrap(),
-            XpathError::Eval {}
-        );
-        assert_eq!(
-            eval_xml("<a/>", "//")
-                .err()
-                .unwrap(),
-            XpathError::Eval {}
-        );
+        assert_eq!(eval_xml("<a/>", "^^^").err().unwrap(), XpathError::Eval {});
+        assert_eq!(eval_xml("<a/>", "//").err().unwrap(), XpathError::Eval {});
         // assert_eq!(1,2);
     }
 
@@ -263,9 +251,7 @@ mod tests {
     #[test]
     fn test_invalid_xml() {
         assert_eq!(
-            eval_xml("??", "//person")
-                .err()
-                .unwrap(),
+            eval_xml("??", "//person").err().unwrap(),
             XpathError::InvalidXml
         );
     }
@@ -273,19 +259,14 @@ mod tests {
     #[test]
     fn test_cafe() {
         assert_eq!(
-            eval_xml(
-                "<data>café</data>",
-                "normalize-space(//data)"
-            )
-            .unwrap(),
+            eval_xml("<data>café</data>", "normalize-space(//data)").unwrap(),
             Value::String(String::from("café"))
         );
     }
 
     #[test]
     fn test_html() {
-        let html =
-            r#"<html>
+        let html = r#"<html>
   <head>
     <meta charset="UTF-8"\>
   </head>
@@ -326,16 +307,29 @@ mod tests {
 </a:books>"#;
 
         let expr = "string(//a:books/b:book/b:title)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("Dune".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("Dune".to_string())
+        );
 
         let expr = "string(//a:books/b:book/c:author)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("Franck Herbert".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("Franck Herbert".to_string())
+        );
 
         let expr = "string(//*[name()='a:books']/*[name()='b:book']/*[name()='c:author'])";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("Franck Herbert".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("Franck Herbert".to_string())
+        );
 
-        let expr = "string(//*[local-name()='books']/*[local-name()='book']/*[local-name()='author'])";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("Franck Herbert".to_string()));
+        let expr =
+            "string(//*[local-name()='books']/*[local-name()='book']/*[local-name()='author'])";
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("Franck Herbert".to_string())
+        );
     }
 
     #[test]
@@ -347,13 +341,22 @@ mod tests {
 </svg>"#;
 
         let expr = "string(//_:svg/_:text)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("SVG".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("SVG".to_string())
+        );
 
         let expr = "string(//*[name()='svg']/*[name()='text'])";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("SVG".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("SVG".to_string())
+        );
 
         let expr = "string(//*[local-name()='svg']/*[local-name()='text'])";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("SVG".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("SVG".to_string())
+        );
     }
 
     #[test]
@@ -374,13 +377,22 @@ mod tests {
 </soap:Envelope>"#;
 
         let expr = "string(//soap:Envelope/soap:Body/ns1:OTA_AirAvailRS/@TransactionIdentifier)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("TID$16459590516432752971.demo2144".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("TID$16459590516432752971.demo2144".to_string())
+        );
 
         let expr = "string(//*[name()='soap:Envelope']/*[name()='soap:Body']/*[name()='ns1:OTA_AirAvailRS']/@TransactionIdentifier)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("TID$16459590516432752971.demo2144".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("TID$16459590516432752971.demo2144".to_string())
+        );
 
         let expr = "string(//*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='OTA_AirAvailRS']/@TransactionIdentifier)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("TID$16459590516432752971.demo2144".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("TID$16459590516432752971.demo2144".to_string())
+        );
     }
 
     #[test]
@@ -401,10 +413,16 @@ mod tests {
         "#;
 
         let expr = "string(//_:book/_:title)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("Cheaper by the Dozen".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("Cheaper by the Dozen".to_string())
+        );
 
         let expr = "string(//_:book/isbn:number)";
-        assert_eq!(eval_xml(xml, expr).unwrap(), Value::String("1568491379".to_string()));
+        assert_eq!(
+            eval_xml(xml, expr).unwrap(),
+            Value::String("1568491379".to_string())
+        );
 
         let expr = "//*[name()='book']/*[name()='notes']";
         assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));
@@ -412,6 +430,4 @@ mod tests {
         let expr = "//_:book/_:notes/*[local-name()='p']";
         assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));
     }
-
-
 }
