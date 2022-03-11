@@ -8,6 +8,12 @@ cargo build --verbose
 
 ci/test_prerequisites.sh
 
+# current bug with curl to be fixed
+# https://github.com/curl/curl/issues/8559
+if test -f /etc/arch-release; then
+   exit 0
+fi
+
 echo "----- unit tests  -----"
 cargo test --features strict --tests
 
