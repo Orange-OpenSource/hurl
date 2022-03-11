@@ -134,14 +134,14 @@ def test(hurl_file):
         ]
 
         if len(actual_commands) != len(expected_commands):
-            print("Assert error at %s" % (f))
+            print("curl commands error at %s" % (curl_file))
             print("expected: %d commands" % len(expected_commands))
             print("actual:   %d commands" % len(actual_commands))
             sys.exit(1)
 
         for i in range(len(expected_commands)):
             if actual_commands[i] != expected_commands[i]:
-                print("Assert error at %s:%i" % (curl_file, i + 1))
+                print("curl command error at %s:%i" % (curl_file, i + 1))
                 print("expected: %s" % expected_commands[i])
                 print("actual:   %s" % actual_commands[i])
                 sys.exit(1)
