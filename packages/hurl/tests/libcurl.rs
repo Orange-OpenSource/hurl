@@ -984,3 +984,19 @@ fn test_version() {
     let versions = libcurl_version_info();
     eprintln!("{:?}", versions);
 }
+
+// This test function can be used to reproduce bug
+#[test]
+fn test_libcurl_directly() {
+    use curl;
+    use std::io::{stdout, Write};
+
+    let mut easy = curl::easy::Easy::new();
+    easy.url("http://localhost:8000/hello").unwrap();
+    easy.write_function(|data| {
+        stdout().write_all(data).unwrap();
+        Ok(data.len())
+    })
+    .unwrap();
+    easy.perform().unwrap();
+}
