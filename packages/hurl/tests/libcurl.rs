@@ -753,16 +753,12 @@ fn test_connect_timeout() {
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl { code, description } = error {
         eprintln!("description={}", description);
-        if cfg!(target_os = "macos") {
-            assert_eq!(code, 7);
-            assert_eq!(description, "Couldn't connect to server");
-        } else {
-            assert_eq!(code, 28);
-            assert!(
-                description.starts_with("Connection timed out")
-                    || description.starts_with("Connection timeout")
-            );
-        }
+        assert!(code == 7 || code == 28);
+        assert!(
+            description.starts_with("Couldn't connect to server")
+                || description.starts_with("Connection timed out")
+                || description.starts_with("Connection timeout")
+        );
     }
 }
 // endregion
