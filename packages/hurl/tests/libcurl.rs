@@ -606,6 +606,7 @@ fn test_basic_authentication() {
 }
 
 #[test]
+#[ignore]
 fn test_cacert() {
     let options = ClientOptions {
         cacert_file: Some("tests/cert.pem".to_string()),
