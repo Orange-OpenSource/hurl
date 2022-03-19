@@ -870,6 +870,10 @@ yum install -y pkg-config gcc openssl-devel libxml2-devel
 
 # arch based distributions
 pacman -Sy --noconfirm pkgconf gcc openssl libxml2
+
+# macos
+xcode-select --install
+brew install pkg-config
 ```
 
 Hurl is written in [Rust]. You should [install] the latest stable release.
