@@ -753,6 +753,12 @@ fn test_connect_timeout() {
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl { code, description } = error {
         eprintln!("description={}", description);
+        // TODO: remove the 7 / "Couldn't connect to server" case
+        // On Linux/Windows libcurl version, the correct error message
+        // is 28 / "Connection timeout" | "Connection timed out"
+        // On macOS <= 11.6.4, the built-in libcurl use
+        // 7 / "Couldn't connect to server" errors. On the GitHub CI, macOS images are 11.6.4.
+        // So we keep this code until a newer macOS image is used in the GitHub actions.
         assert!(code == 7 || code == 28);
         assert!(
             description.starts_with("Couldn't connect to server")
