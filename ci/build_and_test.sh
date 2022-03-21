@@ -2,13 +2,18 @@
 set -e
 
 echo "----- build -----"
+# Disable shellcheck SC1090:
 # shellcheck source=/dev/null
 source ~/.cargo/env
 cargo build --verbose
 
+# Basic Hurl version display
+target/debug/hurl --version
+target/debug/hurlfmt --version
+
 ci/test_prerequisites.sh
 
-# current bug with curl to be fixed
+# Current bug with curl to be fixed
 # https://github.com/curl/curl/issues/8559
 if test -f /etc/arch-release; then
    exit 0
