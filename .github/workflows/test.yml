@@ -106,12 +106,14 @@ jobs:
     - name: Install
       run: |
         sudo apt update
-        sudo apt install libxml2-utils
+        sudo apt install libcurl4-openssl-dev libxml2-utils
         python3 -m pip install --upgrade pip --quiet
         ci/install_rust_latest.sh
     - name: Build
       run: |
-        cargo build --verbose --locked
+        cargo build --release --verbose --locked
+        target/release/hurl --version
+        curl --version
     - name: Test Prequisites
       run: |
         ci/test_prerequisites.sh
@@ -251,7 +253,9 @@ jobs:
         cargo --version     
     - name: Build
       run: |
-        cargo build --verbose
+        cargo build --release --verbose --locked
+        target/release/hurl --version
+        curl --version
     - name: Test Prequisites
       run: |
         pip3 install Flask
@@ -324,10 +328,12 @@ jobs:
         cargo test --features strict --tests
     - name: Run Integration tests
       run: |
-        cargo build --release --verbose
+        cargo build --release --verbose --locked
+        target\release\hurl.exe --version
         $execdir=[System.Environment]::SystemDirectory
         Get-ChildItem -Path ".\target\release" -Recurse -Include *.dll -File | Copy-Item -Destination "${execdir}"
         Get-ChildItem -Path ".\target\release" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "${execdir}"
+
         cd .\integration
         Start-Job -Name mitmdump -ScriptBlock { mitmdump --listen-port 8888 --modify-header "/From-Proxy/Hello" }
         Start-Job -Name server -ScriptBlock { python server.py > server.log }
