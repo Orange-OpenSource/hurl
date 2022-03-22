@@ -16,7 +16,9 @@ jobs:
             source $HOME/.cargo/env
             rustc --version
             cargo --version
-            cargo build --verbose --color always
+            cargo build --release --verbose --locked --color always
+            target/release/hurl --version
+            curl --version
       - run:
           name: Tests units and integration tests
           command: |
