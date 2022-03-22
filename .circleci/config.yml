@@ -3,25 +3,28 @@ version: 2.1
 jobs:
   test-ubuntu-arm64:
     machine:
-      image: ubuntu-2004:202111-02
+      image: ubuntu-2004:202201-02
     resource_class: arm.medium
     steps:
       - checkout
       - run:
           name: Build
           command: |
+            export CARGO_NET_GIT_FETCH_WITH_CLI=true
             uname -a
             lsb_release -a
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             source $HOME/.cargo/env
             rustc --version
             cargo --version
-            cargo build --verbose --color always
+            sudo apt update -qq
+            sudo apt install -y -qq libxml2-utils libcurl4-openssl-dev
+            cargo build --release --verbose --locked --color always
+            target/release/hurl --version
+            curl --version
       - run:
           name: Tests units and integration tests
           command: |
-            sudo apt update -qq
-            sudo apt install -y -qq libxml2-utils
             python3 -m pip install --upgrade pip --quiet
             pip3 install Flask mitmproxy --quiet
             mitmdump --version
@@ -32,8 +35,6 @@ jobs:
             mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
             echo "================= Tests units ================="
             cargo test --features strict --verbose --color always
-            sudo apt update -qq
-            sudo apt install -y -qq libxml2-utils
             python3 -m pip install --upgrade pip
             pip3 install Flask mitmproxy --quiet
             mitmdump --version
