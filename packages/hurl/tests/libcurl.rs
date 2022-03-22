@@ -551,7 +551,7 @@ fn test_expect() {
 #[test]
 fn test_basic_authentication() {
     let options = ClientOptions {
-        user: Some("bob:secret".to_string()),
+        user: Some("bob@email.com:secret".to_string()),
         ..Default::default()
     };
     let mut client = Client::init(options);
@@ -568,12 +568,13 @@ fn test_basic_authentication() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec),
-        "curl 'http://localhost:8000/basic-authentication' --user 'bob:secret'".to_string()
+        "curl 'http://localhost:8000/basic-authentication' --user 'bob@email.com:secret'"
+            .to_string()
     );
     let (request, response) = client.execute(&request_spec).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
-        value: "Basic Ym9iOnNlY3JldA==".to_string(),
+        value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
     }));
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);
@@ -582,7 +583,7 @@ fn test_basic_authentication() {
     let mut client = default_client();
     let request_spec = RequestSpec {
         method: Method::Get,
-        url: "http://bob:secret@localhost:8000/basic-authentication".to_string(),
+        url: "http://bob%40email.com:secret@localhost:8000/basic-authentication".to_string(),
         headers: vec![],
         querystring: vec![],
         form: vec![],
@@ -593,12 +594,12 @@ fn test_basic_authentication() {
     };
     assert_eq!(
         request_spec.curl_args(Path::new("")),
-        vec!["'http://bob:secret@localhost:8000/basic-authentication'".to_string()]
+        vec!["'http://bob%40email.com:secret@localhost:8000/basic-authentication'".to_string()]
     );
     let (request, response) = client.execute(&request_spec).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
-        value: "Basic Ym9iOnNlY3JldA==".to_string(),
+        value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
     }));
     assert_eq!(response.status, 200);
     assert_eq!(response.version, Version::Http10);

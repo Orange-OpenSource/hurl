@@ -103,6 +103,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                                 || c == '.'
                                 || c == '['
                                 || c == ']'
+                                || c == '@'
                             {
                                 value.push(c);
                                 encoded.push_str(reader.from(save.cursor).as_str())
