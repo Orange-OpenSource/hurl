@@ -1,0 +1,8 @@
+error: Assert Failure
+  --> tests_failed/query_match_none.hurl:4:0
+   |
+ 4 | header "Location" matches /^foo$/
+   |   actual:   none
+   |   expected: matches regex <^foo$>
+   |
+
