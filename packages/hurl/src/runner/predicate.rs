@@ -236,12 +236,12 @@ pub fn eval_predicate_value_template(
     predicate_value: PredicateValue,
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
-    let template = if let PredicateValue::String(template) = predicate_value {
-        template
-    } else {
-        panic!()
-    };
-    eval_template(&template, variables)
+    match predicate_value {
+        PredicateValue::String(template) => eval_template(&template, variables),
+        PredicateValue::Regex(regex) => Ok(regex.inner.to_string()),
+        // All others value should have failed in parsing:
+        _ => panic!("expect a string or a regex predicate value"),
+    }
 }
 
 fn eval_something(
