@@ -1,3 +1,16 @@
+[1.6.1 (2022-03-25)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.6.1)
+========================================================================================================================
+
+Thanks to
+[@humphd](https://github.com/humphd)
+
+Bugs Fixes:
+
+* Support @ for the username in [BasicAuth] section [#513](https://github.com/Orange-OpenSource/hurl/issues/513)
+
+* Fix panicking while processing expected Regex value [#514](https://github.com/Orange-OpenSource/hurl/issues/514)
+
+
 [1.6.0 (2022-02-10)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.6.0)
 ========================================================================================================================
 
