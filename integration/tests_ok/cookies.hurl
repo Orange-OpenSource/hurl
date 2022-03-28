@@ -21,7 +21,7 @@ HTTP/1.0 200
 GET http://localhost:8000/cookies/set-session-cookie2-valueA
 HTTP/1.0 200
 [Asserts]
-cookie "cookie2" equals "valueA"
+cookie "cookie2" == "valueA"
 
 GET http://localhost:8000/cookies/assert-that-cookie2-is-valueA
 HTTP/1.0 200
@@ -35,8 +35,8 @@ HTTP/1.0 200
 GET http://localhost:8000/cookies/delete-cookie2
 HTTP/1.0 200
 [Asserts]
-cookie "cookie2" equals ""
-cookie "cookie2[Max-Age]" equals 0
+cookie "cookie2" == ""
+cookie "cookie2[Max-Age]" == 0
 
 GET http://localhost:8000/cookies/assert-that-cookie2-is-not-in-session
 HTTP/1.0 200
@@ -50,12 +50,12 @@ Set-Cookie: SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 
 [Asserts]
 header "Set-Cookie" count == 3
 cookie "LSID" equals "DQAAAKEaem_vYg"
-cookie "LSID[Value]" equals "DQAAAKEaem_vYg"
+cookie "LSID[Value]" == "DQAAAKEaem_vYg"
 cookie "LSID[Expires]" exists
-cookie "LSID[Expires]" equals "Wed, 13 Jan 2021 22:23:01 GMT"
+cookie "LSID[Expires]" == "Wed, 13 Jan 2021 22:23:01 GMT"
 cookie "LSID[Max-Age]" not exists
 cookie "LSID[Domain]" not exists
-cookie "LSID[Path]" equals "/accounts"
+cookie "LSID[Path]" == "/accounts"
 cookie "LSID[Secure]" exists
 cookie "LSID[HttpOnly]" exists
 cookie "LSID[SameSite]" not exists

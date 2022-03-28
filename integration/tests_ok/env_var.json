@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/env-var","query_string_params":[{"name":"name","value":"{{name}}"}]},"response":{"version":"HTTP/1.0","status":200}}]}

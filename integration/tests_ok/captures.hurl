@@ -5,8 +5,8 @@ HTTP/1.0 200
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
 [Asserts]
-variable "param1" equals "value1"
-variable "param2" equals "Bob"
+variable "param1" == "value1"
+variable "param2" == "Bob"
 
 GET http://localhost:8000/captures-check
 [QueryStringParams]
@@ -30,11 +30,11 @@ all:        jsonpath "$"
 [Asserts]
 variable "a_null" exists
 variable "undefined" not exists
-variable "a_null" equals {{a_null}}
-variable "an_integer" equals {{an_integer}}
-variable "a_float" equals {{a_float}}
-variable "a_bool" equals {{a_bool}}
-variable "a_string" equals {{a_string}}
-variable "a_list" equals {{a_list}}
+variable "a_null" == {{a_null}}
+variable "an_integer" == {{an_integer}}
+variable "a_float" == {{a_float}}
+variable "a_bool" == {{a_bool}}
+variable "a_string" == {{a_string}}
+variable "a_list" == {{a_list}}
 
 

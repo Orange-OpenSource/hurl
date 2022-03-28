@@ -1,16 +1,16 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">equals</span> <span class="number">5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">equals</span> <span class="number">5.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">notEquals</span> <span class="number">4</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">equals</span> <span class="number">5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">!=</span> <span class="number">4</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">greaterThan</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="not">not</span> <span class="predicate-type">equals</span> <span class="number">4</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;</span> <span class="number">1.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">greaterThan</span> <span class="number">1.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;=</span> <span class="number">1.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">equals</span> <span class="boolean">false</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="not">not</span> <span class="predicate-type">equals</span> <span class="null">null</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">==</span> <span class="boolean">false</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">!=</span> <span class="null">null</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">isBoolean</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
@@ -21,18 +21,18 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.warnings"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="predicate-type">isCollection</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]['id']"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]['id']"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[*].id"</span> <span class="predicate-type">includes</span> <span class="string">"error1"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id=='error1')].id"</span> <span class="predicate-type">equals</span> <span class="string">"error1"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">equals</span> <span class="number">1.5</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThanOrEquals</span> <span class="number">2.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id=='error1')].id"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">==</span> <span class="number">1.5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;=</span> <span class="number">2.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThan</span> <span class="number">2</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThanOrEquals</span> <span class="number">2.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThan</span> <span class="number">2</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">isFloat</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="not">not</span> <span class="predicate-type">isInteger</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.nullable"</span> <span class="predicate-type">equals</span> <span class="null">null</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.nullable"</span> <span class="predicate-type">==</span> <span class="null">null</span></span>
 <span class="line"></span>
 <span class="json"><span class="line">{</span>
 <span class="line">  "count": 5,</span>
@@ -52,7 +52,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[{{index}}].id"</span> <span class="predicate-type">equals</span> <span class="string">"error2"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[{{index}}].id"</span> <span class="predicate-type">==</span> <span class="string">"error2"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags"</span> <span class="predicate-type">includes</span> <span class="string">"test"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags"</span> <span class="not">not</span> <span class="predicate-type">includes</span> <span class="string">"prod"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags"</span> <span class="not">not</span> <span class="predicate-type">includes</span> <span class="null">null</span></span>
@@ -62,8 +62,8 @@
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[0].name"</span> <span class="predicate-type">equals</span> <span class="string">"Bob"</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[0].name"</span> <span class="predicate-type">equals</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[0].name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[0].name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/filter</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>

@@ -5,8 +5,8 @@
 <span class="line"><span class="name">param1</span><span>:</span> <span class="query-type">header</span> <span class="string">"header1"</span></span>
 <span class="line"><span class="name">param2</span><span>:</span> <span class="query-type">header</span> <span class="string">"header2"</span> <span class="subquery-type">regex</span> <span class="string">"Hello (.*)!"</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"param1"</span> <span class="predicate-type">equals</span> <span class="string">"value1"</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"param2"</span> <span class="predicate-type">equals</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"param1"</span> <span class="predicate-type">==</span> <span class="string">"value1"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"param2"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/captures-check</span></span>
 <span class="line section-header">[QueryStringParams]</span>
@@ -30,12 +30,12 @@
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"a_null"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"undefined"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"a_null"</span> <span class="predicate-type">equals</span> <span class="expr">{{a_null}}</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"an_integer"</span> <span class="predicate-type">equals</span> <span class="expr">{{an_integer}}</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"a_float"</span> <span class="predicate-type">equals</span> <span class="expr">{{a_float}}</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"a_bool"</span> <span class="predicate-type">equals</span> <span class="expr">{{a_bool}}</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"a_string"</span> <span class="predicate-type">equals</span> <span class="expr">{{a_string}}</span></span>
-<span class="line"><span class="query-type">variable</span> <span class="string">"a_list"</span> <span class="predicate-type">equals</span> <span class="expr">{{a_list}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"a_null"</span> <span class="predicate-type">==</span> <span class="expr">{{a_null}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"an_integer"</span> <span class="predicate-type">==</span> <span class="expr">{{an_integer}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"a_float"</span> <span class="predicate-type">==</span> <span class="expr">{{a_float}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"a_bool"</span> <span class="predicate-type">==</span> <span class="expr">{{a_bool}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"a_string"</span> <span class="predicate-type">==</span> <span class="expr">{{a_string}}</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"a_list"</span> <span class="predicate-type">==</span> <span class="expr">{{a_list}}</span></span>
 </span></span><span class="line"></span>
 <span class="line"></span>
 </code></pre>

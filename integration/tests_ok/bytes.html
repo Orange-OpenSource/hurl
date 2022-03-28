@@ -2,12 +2,12 @@
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">application/octet-stream</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">equals</span> hex,<span class="hex">010203</span>;</span>
-<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">equals</span> base64,<span class="base64">AQID</span>;</span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">==</span> hex,<span class="hex">010203</span>;</span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">==</span> base64,<span class="base64">AQID</span>;</span>
 <span class="line"><span class="query-type">bytes</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 <span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">01</span>;</span>
 <span class="line"><span class="query-type">bytes</span> <span class="predicate-type">endsWith</span> hex,<span class="hex">03</span>;</span>
 <span class="line"><span class="query-type">bytes</span> <span class="predicate-type">contains</span> hex,<span class="hex">02</span>;</span>
-<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">equals</span> hex,<span class="hex">039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81</span>;</span>
-<span class="line"><span class="query-type">md5</span> <span class="predicate-type">equals</span> hex,<span class="hex">5289df737df57326fcdd22597afb1fac</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">5289df737df57326fcdd22597afb1fac</span>;</span>
 </span></span></code></pre>

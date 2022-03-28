@@ -3,6 +3,6 @@ HTTP/1.0 200
 [Captures]
 content_type: header "content-type"
 [Asserts]
-header "content-type" equals "{{content_type}}"
+header "content-type" == "{{content_type}}"
 
 
