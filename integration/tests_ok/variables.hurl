@@ -16,9 +16,9 @@ A_Null: {{a_null}}
 
 HTTP/* 200
 [Asserts]
-variable "name" equals "Jennifer"
-variable "female" equals true
-variable "age" equals 30 
-variable "height" equals 1.70
-variable "a_null" equals null 
-variable "my-id" equals "123"
+variable "name" == "Jennifer"
+variable "female" == true
+variable "age" == 30
+variable "height" == 1.70
+variable "a_null" == null
+variable "my-id" == "123"

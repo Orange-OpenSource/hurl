@@ -6,12 +6,12 @@ HTTP/1.0 201
 GET http://localhost:8000/assert-status-code
 HTTP/* *
 [Asserts]
-status not equals 200
+status != 200
 
 
 # simply check that the status code is OK
 GET http://localhost:8000/assert-status-code
 HTTP/* *
 [Asserts]
-status greaterThanOrEquals 200
-status lessThan 300
+status >= 200
+status < 300

@@ -2,22 +2,23 @@
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">"Hello World!"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"Hello World!"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">endsWith</span> <span class="string">"!"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">contains</span> <span class="string">"llo"</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">matches</span> <span class="string">"Hello [a-zA-Z]+!"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">matches</span> <span class="regex">/Hello [a-zA-Z]+!/</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string-empty</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">""</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">""</span></span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">exists</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-string-unicode</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">equals</span> <span class="string">"\u{2708}"</span></span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"\u{2708}"</span></span>
 <span class="line"><span class="query-type">bytes</span> <span class="subquery-type">count</span> <span class="predicate-type">equals</span> <span class="number">3</span></span>
 </span></span></code></pre>

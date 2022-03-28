@@ -21,7 +21,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/set-session-cookie2-valueA</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2"</span> <span class="predicate-type">equals</span> <span class="string">"valueA"</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2"</span> <span class="predicate-type">==</span> <span class="string">"valueA"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/assert-that-cookie2-is-valueA</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
@@ -35,8 +35,8 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/delete-cookie2</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2"</span> <span class="predicate-type">equals</span> <span class="string">""</span></span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2[Max-Age]"</span> <span class="predicate-type">equals</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2"</span> <span class="predicate-type">==</span> <span class="string">""</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"cookie2[Max-Age]"</span> <span class="predicate-type">==</span> <span class="number">0</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/assert-that-cookie2-is-not-in-session</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
@@ -50,12 +50,12 @@
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID"</span> <span class="predicate-type">equals</span> <span class="string">"DQAAAKEaem_vYg"</span></span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Value]"</span> <span class="predicate-type">equals</span> <span class="string">"DQAAAKEaem_vYg"</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Value]"</span> <span class="predicate-type">==</span> <span class="string">"DQAAAKEaem_vYg"</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Expires]"</span> <span class="predicate-type">exists</span></span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Expires]"</span> <span class="predicate-type">equals</span> <span class="string">"Wed, 13 Jan 2021 22:23:01 GMT"</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Expires]"</span> <span class="predicate-type">==</span> <span class="string">"Wed, 13 Jan 2021 22:23:01 GMT"</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Max-Age]"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Domain]"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
-<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Path]"</span> <span class="predicate-type">equals</span> <span class="string">"/accounts"</span></span>
+<span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Path]"</span> <span class="predicate-type">==</span> <span class="string">"/accounts"</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[Secure]"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[HttpOnly]"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">cookie</span> <span class="string">"LSID[SameSite]"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>

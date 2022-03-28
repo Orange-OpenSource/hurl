@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/non-utf8"},"response":{"version":"HTTP/1.0","status":200}}]}
