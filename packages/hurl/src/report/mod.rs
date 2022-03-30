@@ -16,7 +16,7 @@
  */
 use chrono::{DateTime, Local};
 use std::io::prelude::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use super::cli::CliError;
 use super::runner::HurlResult;
@@ -55,12 +55,23 @@ fn parse_html_report(html: &str) -> Vec<HurlResult> {
     )
     .unwrap();
     re.captures_iter(html)
-        .map(|cap| HurlResult {
-            filename: cap["filename"].to_string(),
-            entries: vec![],
-            time_in_ms: cap["time_in_ms"].to_string().parse().unwrap(),
-            success: &cap["status"] == "success",
-            cookies: vec![],
+        .map(|cap| {
+            let filename = cap["filename"].to_string();
+            // The HTML filename is using a relative path relatively in the report
+            // to make the report portable
+            // But the original Hurl file is really an absolute file
+            let filename = format!("/{}", filename);
+            let entries = vec![];
+            let time_in_ms = cap["time_in_ms"].to_string().parse().unwrap();
+            let success = &cap["status"] == "success";
+            let cookies = vec![];
+            HurlResult {
+                filename,
+                entries,
+                time_in_ms,
+                success,
+                cookies,
+            }
         })
         .collect::<Vec<HurlResult>>()
 }
@@ -219,19 +230,31 @@ fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::Element {
     }
 }
 
+///
+/// return the canonical fullname relative to / (technically a relative path)
+/// The function will panic if the input file does not exist
+///
+pub fn canonicalize_filename(input_file: &str) -> String {
+    let relative_input_file = Path::new(input_file).canonicalize().expect("existing file");
+    let relative_input_file = relative_input_file.to_string_lossy();
+    relative_input_file.trim_start_matches('/').to_string()
+}
+
 fn create_html_result(result: HurlResult) -> html::Element {
     let status = if result.success {
         "success".to_string()
     } else {
         "failure".to_string()
     };
+    let relative_input_file = canonicalize_filename(&result.filename);
+
     html::Element::NodeElement {
         name: "tr".to_string(),
         attributes: vec![
             html::Attribute::Class(status.clone()),
             html::Attribute::Data("duration".to_string(), result.time_in_ms.to_string()),
             html::Attribute::Data("status".to_string(), status.clone()),
-            html::Attribute::Data("filename".to_string(), result.filename.clone()),
+            html::Attribute::Data("filename".to_string(), relative_input_file.to_string()),
         ],
         children: vec![
             html::Element::NodeElement {
@@ -239,8 +262,11 @@ fn create_html_result(result: HurlResult) -> html::Element {
                 attributes: vec![],
                 children: vec![html::Element::NodeElement {
                     name: "a".to_string(),
-                    attributes: vec![html::Attribute::Href(format!("{}.html", result.filename))],
-                    children: vec![html::Element::TextElement(result.filename.clone())],
+                    attributes: vec![html::Attribute::Href(format!(
+                        "{}.html",
+                        relative_input_file
+                    ))],
+                    children: vec![html::Element::TextElement(relative_input_file)],
                 }],
             },
             html::Element::NodeElement {
@@ -298,14 +324,14 @@ mod tests {
             parse_html_report(html),
             vec![
                 HurlResult {
-                    filename: "tests/hello.hurl".to_string(),
+                    filename: "/tests/hello.hurl".to_string(),
                     entries: vec![],
                     time_in_ms: 100,
                     success: true,
                     cookies: vec![],
                 },
                 HurlResult {
-                    filename: "tests/failure.hurl".to_string(),
+                    filename: "/tests/failure.hurl".to_string(),
                     entries: vec![],
                     time_in_ms: 200,
                     success: false,

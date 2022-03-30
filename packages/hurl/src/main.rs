@@ -28,6 +28,7 @@ use hurl::cli;
 use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
 use hurl::report;
+use hurl::report::canonicalize_filename;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerOptions};
 use hurl_core::ast::{Pos, SourceInfo};
@@ -470,13 +471,19 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
 }
 
 fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
-    let file_path = dir_path.join(format!("{}.html", input_file));
-    let parent = file_path.parent().expect("a parent");
+    let relative_input_file = canonicalize_filename(input_file);
+    let absolute_input_file = dir_path.join(format!("{}.html", relative_input_file));
+
+    let parent = absolute_input_file.parent().expect("a parent");
     std::fs::create_dir_all(parent).unwrap();
-    let mut file = match std::fs::File::create(&file_path) {
+    let mut file = match std::fs::File::create(&absolute_input_file) {
         Err(why) => {
             return Err(CliError {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+                message: format!(
+                    "Issue writing to {}: {:?}",
+                    absolute_input_file.display(),
+                    why
+                ),
             });
         }
         Ok(file) => file,
@@ -488,7 +495,11 @@ fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
 
     if let Err(why) = file.write_all(s.as_bytes()) {
         return Err(CliError {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            message: format!(
+                "Issue writing to {}: {:?}",
+                absolute_input_file.display(),
+                why
+            ),
         });
     }
     Ok(())
