@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 echo "----- install servers prerequisites -----"
-pip3 install lxml bs4 Flask mitmproxy
+pip3 install --requirement integration/requirements-frozen.txt
+pip3 install lxml bs4
 echo "----- start servers -----"
 cd integration
 python3 server.py >server.log 2>&1 &

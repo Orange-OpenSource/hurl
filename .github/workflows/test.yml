@@ -77,7 +77,7 @@ jobs:
           ci/release.sh
       - name: Test Prequisites
         run: |
-          pip3 install Flask
+          pip3 install --requirement integration/requirements-frozen.txt
           cd bench
           python3 server.py >server.log 2>&1 &
           sleep 2
@@ -258,11 +258,11 @@ jobs:
         curl --version
     - name: Test Prequisites
       run: |
-        pip3 install Flask
+        pip3 install --requirement integration/requirements-frozen.txt
         cd integration
         python3 server.py >server.log 2>&1 &
         python3 ssl/server.py >server-ssl.log 2>&1 &
-        wget https://snapshots.mitmproxy.org/5.2/mitmproxy-5.2-osx.tar.gz -O - | tar -xz && ./mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
+        mitmdump -p 8888 --modify-header "/From-Proxy/Hello" &
     - name: Run Tests units
       run: |
         cargo test
@@ -314,7 +314,7 @@ jobs:
         Get-ChildItem C:\vcpkg\installed
         vcpkg integrate install
         # install proxy and server
-        pip3 install Flask mitmproxy   
+        pip3 install --requirement integration/requirements-frozen.txt
     - name: Run Tests units
       run: |
         cd .\integration
