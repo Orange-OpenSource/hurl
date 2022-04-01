@@ -26,7 +26,7 @@ jobs:
           name: Tests units and integration tests
           command: |
             python3 -m pip install --upgrade pip --quiet
-            pip3 install Flask mitmproxy --quiet
+            pip3 install --requirement integration/requirements-frozen.txt
             mitmdump --version
             export PATH="$PWD/target/debug:$PATH"
             cd integration
@@ -35,10 +35,8 @@ jobs:
             mitmdump -p 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
             echo "================= Tests units ================="
             cargo test --features strict --verbose --color always
-            python3 -m pip install --upgrade pip
-            pip3 install Flask mitmproxy --quiet
             mitmdump --version
-            pip3 install lxml bs4 --quiet
+            pip3 install lxml bs4
             echo "================= Integration tests ================="            
             python3 ./integration.py
             ./test_curl_commands.sh $(find ./tests_ok -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
