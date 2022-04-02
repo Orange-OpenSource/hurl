@@ -6,3 +6,4 @@ target/
 .idea/
 .venv/
 build/
+integration/*.log
