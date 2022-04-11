@@ -1,4 +1,4 @@
-curl 'http://localhost:8000/post-json' -H 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "&secret<>",\n    "age": 30,\n    "strict": true,\n    "spacing": "\\n",\n    "g_clef": "\\uD834\\uDD1E",\n    "items": [true, "true", 1]\n}'
+curl 'http://localhost:8000/post-json' -H 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "&secret\\\\\'<>",\n    "age": 30,\n    "strict": true,\n    "spacing": "\\n",\n    "g_clef": "\\uD834\\uDD1E",\n    "items": [true, "true", 1]\n}'
 curl 'http://localhost:8000/post-json-array' -H 'Content-Type: application/json' --data '[1,2,3]'
 curl 'http://localhost:8000/post-json-string' -H 'Content-Type: application/json' --data '"Hello"'
 curl 'http://localhost:8000/post-json-number' -H 'Content-Type: application/json' --data '100'
