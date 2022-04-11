@@ -33,5 +33,6 @@ mod core;
 mod options;
 mod request;
 mod request_spec;
+mod request_spec_curl_args;
 mod response;
 mod version;
