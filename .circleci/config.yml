@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test-ubuntu-arm64:
     machine:
-      image: ubuntu-2004:202201-02
+      image: ubuntu-2004:current
     resource_class: arm.medium
     steps:
       - checkout
