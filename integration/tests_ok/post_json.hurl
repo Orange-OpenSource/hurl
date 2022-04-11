@@ -2,7 +2,7 @@ POST http://localhost:8000/post-json
 
 {
     "name": "Bob",
-    "password": "&secret<>",
+    "password": "&secret\\'<>",
     "age": 30,
     "strict": true,
     "spacing": "\n",

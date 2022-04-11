@@ -11,7 +11,7 @@ def post_json():
         s
         == """{
     "name": "Bob",
-    "password": "&secret<>",
+    "password": "&secret\\\\'<>",
     "age": 30,
     "strict": true,
     "spacing": "\\n",
