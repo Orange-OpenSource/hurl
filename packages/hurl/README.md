@@ -190,6 +190,7 @@ Table of Contents
          * [Linux](#linux)
             * [Debian / Ubuntu](#debian--ubuntu)
             * [Arch Linux / Manjaro](#arch-linux--manjaro)
+            * [NixOS / Nix](#nixos--nix)
          * [macOS](#macos)
          * [Windows](#windows)
             * [Zip File](#zip-file)
@@ -803,7 +804,11 @@ $ sudo dpkg -i hurl_1.6.1_amd64.deb
 
 #### Arch Linux / Manjaro
 
-[`hurl-bin` package] for Arch Linux and derived distros are available via [AUR].
+[`hurl-bin` package] for Arch Linux and derived distros is available via [AUR].
+
+#### NixOS / Nix
+
+[NixOS / Nix package] is available on stable channel.
 
 ### macOS
 
@@ -869,7 +874,7 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 #### Debian based distributions
 
 ```shell
-$ apt install -y pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
 ```
 
 #### Red Hat based distributions
@@ -948,4 +953,5 @@ Please follow the [contrib on Windows section].
 [install]: https://www.rust-lang.org/tools/install
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
+[NixOS / Nix package]: https://search.nixos.org/packages?channel=21.11&from=0&size=1&sort=relevance&type=packages&query=hurl
 
