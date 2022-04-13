@@ -869,7 +869,7 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 #### Debian based distributions
 
 ```shell
-$ apt install -y pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
+$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev
 ```
 
 #### Red Hat based distributions
