@@ -1,0 +1,140 @@
+.TH hurl 1 "15 Feb 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
+.SH NAME
+
+hurlfmt - format Hurl files
+
+
+.SH SYNOPSIS
+
+.B hurlfmt
+[options] [FILE]
+
+
+.SH DESCRIPTION
+
+.B hurlfmt
+formats Hurl files and converts to other formats.
+
+With no FILE, read standard input.
+
+
+By default, hurlfmt outputs a formatted and colorized version of the input hurl file.
+
+    $ hurl hello.hurl
+    GET http://localhost:8000/hello
+
+    HTTP/1.0 200
+
+
+
+hurlfmt can be used to convert to other format.
+
+
+    $ hurl hello.hurl --output json | jq
+    {
+      "entries": [
+        {
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8000/hello"
+          },
+          "response": {
+            "version": "HTTP/1.0",
+            "status": 200
+          }
+        }
+      ]
+    }
+
+
+
+
+.SH OPTIONS
+
+
+.IP "--check "
+
+Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise. 
+
+This can not be used with \fI--output\fP.
+
+This option is not stable yet.
+
+
+.IP "--color "
+
+Colorize Output.
+ 
+This can not be used \fI--in-place\fP.
+
+
+.IP "--format "
+
+Specify output format: text (default), json or html.
+
+
+.IP "-h, --help "
+
+Usage help.
+
+
+.IP "--inplace "
+
+Modify file in place.
+
+This can be used only with text output.
+
+
+.IP "--no-color "
+
+Do not colorize Output.
+
+
+.IP "--no-format "
+
+Do not format output. 
+
+By default text output is automatically formatted.
+
+
+.IP "-o, --output <file> "
+
+Write output to <file> instead of stdout.
+
+
+.IP "--standalone "
+
+Output full html file with css instead of html fragment (default).
+     
+This can be used only with html output.
+
+
+.IP "-V, --version "
+
+Prints version information
+
+
+
+
+.SH EXIT CODES
+
+.IP "1"
+
+Failed to parse command-line options.
+
+
+.IP "2"
+
+Input File Parsing Error.
+
+
+.SH WWW
+
+\fIhttps://hurl.dev\fP
+
+
+.SH SEE ALSO
+
+hurl(1)
+
+
