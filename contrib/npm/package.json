@@ -1,0 +1,45 @@
+{
+  "name": "@orangeopensource/hurl",
+  "version": "1.6.5",
+  "description": "Run and Test HTTP Requests with plain text and curl",
+  "author": "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>",
+  "contributors": [
+    "Fabrice Reix <fabrice.reix@orange.com>",
+    "Filipe Pinto <filipe.pinto@orange.com>",
+    "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Orange-OpenSource/hurl.git"
+  },
+  "homepage": "https://hurl.dev",
+  "license": "Apache-2.0",
+  "bin": {
+    "hurl": "hurl.js",
+    "hurlfmt": "hurlfmt.js"
+  },
+  "scripts": {
+    "postinstall": "node ./install.js"
+  },
+  "dependencies": {
+    "axios": "0.27.2",
+    "console.table": "0.10.0",
+    "extract-zip": "2.0.1",
+    "rimraf": "3.0.2",
+    "tar": "6.1.11"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "cli",
+    "http",
+    "curl",
+    "integration-testing",
+    "http-client",
+    "testing-tools",
+    "api-testing"
+  ],
+  "man": [
+    "./docs/hurl.1",
+    "./docs/hurlfmt.1"
+  ]
+}
