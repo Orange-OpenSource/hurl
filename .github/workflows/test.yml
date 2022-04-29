@@ -233,7 +233,7 @@ jobs:
           integration/server.log
           integration/server-ssl.log
 
-  test-osx-x64:
+  test-macos-x64:
     runs-on: macos-latest
     strategy:
       matrix:
@@ -275,7 +275,7 @@ jobs:
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
-        name: tests-osx-${{ matrix.rust }}-artifacts
+        name: tests-macos-${{ matrix.rust }}-artifacts
         path: |
           integration/server.log
           integration/server-ssl.log

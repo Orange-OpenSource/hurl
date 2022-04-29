@@ -70,7 +70,7 @@ jobs:
         name: release-deb-x64-artifacts
         path: target/upload/*
 
-  release-osx-x64:
+  release-macos-x64:
     runs-on: macos-latest
     steps:
     - name: Checkout repository
@@ -92,11 +92,11 @@ jobs:
       run: |
         ci/man.sh
         ci/release.sh
-        ci/create_tarball.sh osx
+        ci/create_tarball.sh macos
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: release-osx-x64-artifacts
+        name: release-macos-x64-artifacts
         path: target/upload/*
  
   release-windows-x64:
