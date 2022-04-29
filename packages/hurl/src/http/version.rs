@@ -39,7 +39,7 @@ pub fn libcurl_version_info() -> Vec<String> {
         versions.push(format!("brotli/{}", s));
     }
     if let Some(s) = version.zstd_version() {
-        versions.push(s.to_string());
+        versions.push(format!("zstd/{}", s));
     }
     if let Some(s) = version.ares_version() {
         versions.push(format!("c-ares/{}", s));
@@ -53,13 +53,13 @@ pub fn libcurl_version_info() -> Vec<String> {
         }
     }
     if let Some(s) = version.libssh_version() {
-        versions.push(s.to_string());
+        versions.push(format!("libssh/{}", s));
     }
     if let Some(s) = version.nghttp2_version() {
-        versions.push(s.to_string());
+        versions.push(format!("nghttp2/{}", s));
     }
     if let Some(s) = version.quic_version() {
-        versions.push(s.to_string());
+        versions.push(format!("quic/{}", s));
     }
     if let Some(s) = version.hyper_version() {
         versions.push(format!("hyper/{}", s));
