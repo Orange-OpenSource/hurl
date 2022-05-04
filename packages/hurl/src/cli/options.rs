@@ -332,7 +332,7 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     let fail_fast = !matches.is_present("fail_at_end");
     let file_root = matches.value_of("file_root").map(|value| value.to_string());
     let follow_location = matches.is_present("follow_location");
-    let glob_files = match_glob_files(matches.clone())?;
+    let glob_files = match_glob_files(&matches)?;
     let report_html = matches.value_of("report_html");
     let html_dir = if let Some(dir) = report_html {
         let path = Path::new(dir);
@@ -511,12 +511,17 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     Ok(variables)
 }
 
-pub fn match_glob_files(matches: ArgMatches) -> Result<Vec<String>, CliError> {
+///
+/// Returns a list of path names that match `matches`.
+///
+/// # Arguments
+/// * `matches` - A pattern to be matched
+///
+fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
     let mut filenames = vec![];
     if matches.is_present("glob") {
         let exprs: Vec<&str> = matches.values_of("glob").unwrap().collect();
         for expr in exprs {
-            eprintln!("expr={}", expr);
             let paths = match glob::glob(expr) {
                 Ok(paths) => paths,
                 Err(_) => {
