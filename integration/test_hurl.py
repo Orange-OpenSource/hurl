@@ -68,6 +68,7 @@ def test(hurl_file):
             env[name] = value
 
     cmd = ["hurl", hurl_file] + options
+    # cmd = ["cargo", "run", "--bin", "hurl", "--", hurl_file] + options
     print(" ".join(cmd))
     result = subprocess.run(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env
