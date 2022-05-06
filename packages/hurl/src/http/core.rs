@@ -151,7 +151,7 @@ pub fn get_header_values(headers: &[Header], expected_name: &str) -> Vec<String>
     headers
         .iter()
         .filter_map(|Header { name, value }| {
-            if name == expected_name {
+            if name.to_lowercase() == expected_name.to_lowercase() {
                 Some(value.to_string())
             } else {
                 None

@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect
+from flask import redirect, Response
 
 
 @app.route("/follow-redirect")
@@ -9,7 +9,17 @@ def follow_redirect():
 
 @app.route("/following-redirect")
 def following_redirect():
-    return redirect("http://localhost:8000/followed-redirect")
+    # For this redirection, we construct the response instead of using
+    # Flask `redirect` function to make a redirection with a 'location' header (instead of 'Location').
+    response = Response(
+        response="<!DOCTYPE html>\n"
+        "<title>Redirecting...</title>\n"
+        "<h1>Redirecting...</h1>\n",
+        status=302,
+        mimetype="text/html",
+    )
+    response.headers["location"] = "http://localhost:8000/followed-redirect"
+    return response
 
 
 @app.route("/followed-redirect")
