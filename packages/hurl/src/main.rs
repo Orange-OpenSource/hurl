@@ -116,18 +116,19 @@ fn execute(
             std::process::exit(EXIT_ERROR_PARSING);
         }
         Ok(hurl_file) => {
-            log_verbose(format!("fail fast: {}", cli_options.fail_fast).as_str());
-            log_verbose(format!("insecure: {}", cli_options.insecure).as_str());
-            log_verbose(format!("follow redirect: {}", cli_options.follow_location).as_str());
+            log_verbose("Options:");
+            log_verbose(format!("    fail fast: {}", cli_options.fail_fast).as_str());
+            log_verbose(format!("    insecure: {}", cli_options.insecure).as_str());
+            log_verbose(format!("    follow redirect: {}", cli_options.follow_location).as_str());
             if let Some(n) = cli_options.max_redirect {
-                log_verbose(format!("max redirect: {}", n).as_str());
+                log_verbose(format!("    max redirect: {}", n).as_str());
             }
             if let Some(proxy) = cli_options.proxy.clone() {
-                log_verbose(format!("proxy: {}", proxy).as_str());
+                log_verbose(format!("    proxy: {}", proxy).as_str());
             }
 
             if !cli_options.variables.is_empty() {
-                log_verbose("variables:");
+                log_verbose("Variables:");
                 for (name, value) in cli_options.variables.clone() {
                     log_verbose(format!("    {}={}", name, value).as_str());
                 }
@@ -136,11 +137,11 @@ fn execute(
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
                     log_verbose(
-                        format!("executing {}/{} entries", to_entry, hurl_file.entries.len())
+                        format!("Executing {}/{} entries", to_entry, hurl_file.entries.len())
                             .as_str(),
                     );
                 } else {
-                    log_verbose("executing all entries");
+                    log_verbose("Executing all entries");
                 }
             }
 
