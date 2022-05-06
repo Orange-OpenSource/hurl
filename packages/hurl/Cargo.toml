@@ -40,7 +40,7 @@ serde = "1.0.137"
 serde_json = "1.0.81"
 sha2 = "0.10.2"
 url = "2.2.2"
-xmltree = { version = "0.10",  features = ["attribute-order"] }
+xmltree = { version = "0.10.3",  features = ["attribute-order"] }
 
 
 [target.'cfg(unix)'.dependencies]
