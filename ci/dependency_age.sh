@@ -36,7 +36,7 @@ for package in packages/* ; do
       ((exit_code++))
     fi
 
-  done < <(sed -n "/dependencies\]/,/^$/p" "${package}/Cargo.toml" | grep --extended-regexp --invert-match "\[|path|^$" | tr -d '" ' | tr '=' ' ')
+  done < <(sed -n "/dependencies\]/,/^$/p" "${package}/Cargo.toml" | grep --extended-regexp --invert-match "^\[|path|^$" | cut --delimiter ',' --field 1 | sed "s/version//g" | tr -d '"{=' | tr -s ' ')
 done
 
 if [ "$1" != "--update" ] && [ "${exit_code}" -gt 0 ] ; then
