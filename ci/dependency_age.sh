@@ -26,8 +26,9 @@ for package in packages/* ; do
     fi 
     else
       if [ "$1" = "--update" ] ; then
-        sed -i" " "s/${dependency}.*=.*\"${actual_version}\"/${dependency} = \"${last_version}\"/g" "${package}/Cargo.toml"
-	grep --silent "${dependency} = \"${last_version}\"" "${package}/Cargo.toml" && \
+        sed -i" " "s/${dependency} = { version = \"${actual_version}\"/${dependency} = { version = \"${last_version}\"/g" "${package}/Cargo.toml"
+        sed -i" " "s/${dependency} = \"${actual_version}\"/${dependency} = \"${last_version}\"/g" "${package}/Cargo.toml"
+	grep --extended-regexp --silent "${dependency}.*=.*\"${last_version}\"" "${package}/Cargo.toml" && \
 	echo "${color_blue}old, updated to ${last_version}${color_reset}" || \
 	echo "${color_red}error, update to ${last_version} fails, please check ${package}/Cargo.toml format and syntax${color_reset}"
       else
