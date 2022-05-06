@@ -75,7 +75,7 @@ pub fn run(
     };
 
     log_verbose("------------------------------------------------------------------------------");
-    log_verbose(format!("executing entry {}", entry_index + 1).as_str());
+    log_verbose(format!("Executing entry {}", entry_index + 1).as_str());
 
     //
     // Experimental features
@@ -105,7 +105,7 @@ pub fn run(
     log_request(log_verbose, &http_request);
     log_verbose(
         format!(
-            "request can be run with the following curl command:\n* {}\n*",
+            "Request can be run with the following curl command:\n* {}\n*",
             http_client.curl_command_line(&http_request)
         )
         .as_str(),
@@ -224,7 +224,7 @@ pub fn run(
 }
 
 pub fn log_request(log_verbose: impl Fn(&str), request: &http::RequestSpec) {
-    log_verbose("Request");
+    log_verbose("Request:");
     log_verbose(format!("{} {}", request.method, request.url).as_str());
     for header in request.headers.clone() {
         log_verbose(header.to_string().as_str());
@@ -255,7 +255,7 @@ pub fn log_request(log_verbose: impl Fn(&str), request: &http::RequestSpec) {
     }
     if let Some(s) = request.content_type.clone() {
         log_verbose("");
-        log_verbose(format!("implicit content-type={}", s).as_str());
+        log_verbose(format!("Implicit content-type={}", s).as_str());
     }
     log_verbose("");
 }
