@@ -16,17 +16,19 @@
  *
  */
 
-use crate::cli;
-use crate::cli::CliError;
-use crate::http::ClientOptions;
-use crate::runner::Value;
-use atty::Stream;
-use clap::{App, AppSettings, ArgMatches};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
+
+use atty::Stream;
+use clap::{AppSettings, ArgMatches, Command};
+
+use crate::cli;
+use crate::cli::CliError;
+use crate::http::ClientOptions;
+use crate::runner::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -68,11 +70,11 @@ pub enum OutputType {
     NoOutput,
 }
 
-pub fn app(version: &str) -> App {
-    clap::App::new("hurl")
+pub fn app(version: &str) -> Command {
+    Command::new("hurl")
         .about("Run hurl FILE(s) or standard input")
         .setting(AppSettings::DeriveDisplayOrder)
-        .setting(AppSettings::DisableColoredHelp)
+        .disable_colored_help(true)
         .version(version)
         .arg(
             clap::Arg::new("INPUT")

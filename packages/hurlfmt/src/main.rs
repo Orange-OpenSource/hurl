@@ -22,7 +22,6 @@ use std::process;
 
 use atty::Stream;
 
-use clap::AppSettings;
 use hurl_core::parser;
 use hurlfmt::cli;
 use hurlfmt::format;
@@ -40,10 +39,10 @@ pub fn init_colored() {
 }
 
 fn main() {
-    let app = clap::App::new("hurlfmt")
+    let app = clap::Command::new("hurlfmt")
         // .author(clap::crate_authors!())
         .version(clap::crate_version!())
-        .setting(AppSettings::DisableColoredHelp)
+        .disable_colored_help(true)
         .about("Format hurl FILE")
         .arg(
             clap::Arg::new("INPUT")
