@@ -29,6 +29,7 @@ pub use self::response::{Response, Version};
 pub use self::version::libcurl_version_info;
 
 mod client;
+mod content_decoding;
 mod core;
 mod options;
 mod request;

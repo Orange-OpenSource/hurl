@@ -24,7 +24,7 @@ use std::io::prelude::*;
 
 use crate::http;
 
-use super::core::RunnerError;
+use crate::runner::RunnerError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Encoding {
@@ -35,6 +35,11 @@ pub enum Encoding {
 }
 
 impl Encoding {
+    /// Returns an encoding from an HTTP header value.
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - A Content-Encoding header value
     pub fn parse(s: &str) -> Result<Encoding, RunnerError> {
         match s {
             "br" => Ok(Encoding::Brotli),
@@ -45,6 +50,11 @@ impl Encoding {
         }
     }
 
+    /// Decompress bytes.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - A compressed bytes array
     pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, RunnerError> {
         match self {
             Encoding::Identity => Ok(data.to_vec()),
@@ -56,8 +66,9 @@ impl Encoding {
 }
 
 impl http::Response {
+    /// Returns list of encoding from HTTP response headers.
     fn content_encoding(&self) -> Result<Vec<Encoding>, RunnerError> {
-        for header in self.headers.clone() {
+        for header in &self.headers {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
                 let mut encodings = vec![];
                 for value in header.value.as_str().split(',') {
@@ -70,6 +81,7 @@ impl http::Response {
         Ok(vec![])
     }
 
+    /// Decompress HTTP body response.
     pub fn uncompress_body(&self) -> Result<Vec<u8>, RunnerError> {
         let encodings = self.content_encoding()?;
         let mut data = self.body.clone();
@@ -80,6 +92,11 @@ impl http::Response {
     }
 }
 
+/// Decompress Brotli compressed data.
+///
+/// # Arguments
+///
+/// * data - Compressed bytes.
 fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
     let mut reader = brotli::Decompressor::new(data, 4096);
     let mut buf = [0u8; 4096];
@@ -94,6 +111,11 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
     Ok(buf[..n].to_vec())
 }
 
+/// Decompress GZip compressed data.
+///
+/// # Arguments
+///
+/// * data - Compressed bytes.
 fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
     let mut decoder = match libflate::gzip::Decoder::new(data) {
         Ok(v) => v,
@@ -106,6 +128,11 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
     }
 }
 
+/// Decompress Zlib compressed data.
+///
+/// # Arguments
+///
+/// * data - Compressed bytes.
 fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
     let mut decoder = match libflate::zlib::Decoder::new(data) {
         Ok(v) => v,

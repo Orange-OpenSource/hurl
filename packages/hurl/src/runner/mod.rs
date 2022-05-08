@@ -33,7 +33,6 @@ pub use self::value::Value;
 mod assert;
 mod body;
 mod capture;
-mod content_decoding;
 mod cookie;
 mod core;
 mod entry;
