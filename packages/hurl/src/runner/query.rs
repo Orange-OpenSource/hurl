@@ -224,16 +224,43 @@ pub fn eval_query_value(
         QueryValue::Duration {} => Ok(Some(Value::Integer(
             http_response.duration.as_millis() as i64
         ))),
-        QueryValue::Bytes {} => Ok(Some(Value::Bytes(http_response.body))),
+        QueryValue::Bytes {} => match http_response.uncompress_body() {
+            Ok(s) => Ok(Some(Value::Bytes(s))),
+            Err(inner) => Err(Error {
+                source_info: query.source_info,
+                inner,
+                assert: false,
+            }),
+        },
         QueryValue::Sha256 {} => {
+            let bytes = match http_response.uncompress_body() {
+                Ok(s) => s,
+                Err(inner) => {
+                    return Err(Error {
+                        source_info: query.source_info,
+                        inner,
+                        assert: false,
+                    })
+                }
+            };
             let mut hasher = sha2::Sha256::new();
-            hasher.update(http_response.body);
+            hasher.update(bytes);
             let result = hasher.finalize();
             let bytes = Value::Bytes(result[..].to_vec());
             Ok(Some(bytes))
         }
         QueryValue::Md5 {} => {
-            let bytes = md5::compute(http_response.body).to_vec();
+            let bytes = match http_response.uncompress_body() {
+                Ok(s) => s,
+                Err(inner) => {
+                    return Err(Error {
+                        source_info: query.source_info,
+                        inner,
+                        assert: false,
+                    })
+                }
+            };
+            let bytes = md5::compute(bytes).to_vec();
             Ok(Some(Value::Bytes(bytes)))
         }
     }
