@@ -3,6 +3,11 @@
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">12</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
 <span class="raw"><span class="line">```Hello World!```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
@@ -10,6 +15,11 @@
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">32</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">gzip</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
 <span class="raw"><span class="line">```Hello World!```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
@@ -17,6 +27,11 @@
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">20</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">deflate</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
 <span class="raw"><span class="line">```Hello World!```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
@@ -24,6 +39,11 @@
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
 <span class="raw"><span class="line">```Hello World!```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_identity</span></span>
@@ -31,4 +51,10 @@
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br, identity</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
-<span class="raw"><span class="line">```Hello World!```</span></span></span></span></code></pre>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span></code></pre>
