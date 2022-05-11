@@ -280,6 +280,52 @@ jobs:
           integration/server.log
           integration/server-ssl.log
 
+  test-emulated-raspios-arm-x64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v3
+      with:
+        path: |
+          target
+          venv
+          root
+        key: ${{ runner.os }}-test-emulated-raspios-arm-x64      
+    - uses: pguyot/arm-runner-action@v2
+      with:
+        cpu: cortex-a53
+        cpu_info: cpuinfo/raspberrypi_4b
+        image_additional_mb: 8192
+        copy_artifact_path: target;venv;root
+        base_image: raspios_lite_arm64:latest
+        commands: |
+          set -eu
+          uname -a ; uname -m ; lsb_release -a
+          # read cache
+          chown root:root /hurl/target /hurl/venv /root || true
+          chmod -R 777 /hurl/target /hurl/venv /root || true          
+          cp -fr /hurl/root/* /root/ || true
+          rm -fr /hurl/root || true
+          echo "# init fastest build"
+          mkdir -p /hurl/.cargo
+          echo '[target.aarch64-unknown-linux-gnu]' > /hurl/.cargo/config.toml
+          echo 'linker = "clang"' >> ./.cargo/config.toml
+          echo 'rustflags = ["-Clink-arg=-fuse-ld=lld"]' >> /hurl/.cargo/config.toml
+          cat /hurl/.cargo/config.toml
+          echo "# Install build prerequistes"
+          apt -qq --silent update
+          apt -qq --silent install -y clang lld build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libxml2-utils python3 python3-pip python3-venv
+          echo "# Execute tests"
+          [ ! -d "/hurl/venv" ] && python3 -m venv /hurl/venv
+          . /hurl/venv/bin/activate ; which python3
+          python3 -m pip install pip --upgrade
+          ./ci/install_rust_latest.sh
+          ./ci/build_and_test.sh
+          echo "# pre-write cache"
+          cp -fr /root /hurl/root || true
+          chown root:root /hurl/target /hurl/venv /hurl/root || true
+          chmod -R 777 /hurl/target /hurl/venv /hurl/root || true
+
   test-windows-x64:
     runs-on: windows-latest
     strategy:
@@ -333,7 +379,6 @@ jobs:
         $execdir=[System.Environment]::SystemDirectory
         Get-ChildItem -Path ".\target\release" -Recurse -Include *.dll -File | Copy-Item -Destination "${execdir}"
         Get-ChildItem -Path ".\target\release" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "${execdir}"
-
         cd .\integration
         Start-Job -Name mitmdump -ScriptBlock { mitmdump --listen-port 8888 --modify-header "/From-Proxy/Hello" }
         Start-Job -Name server -ScriptBlock { python server.py > server.log }
