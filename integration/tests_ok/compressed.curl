@@ -15,5 +15,6 @@ curl 'http://localhost:8000/compressed/brotli' --compressed
 curl 'http://localhost:8000/compressed/brotli' --compressed
 curl 'http://localhost:8000/compressed/brotli' --compressed
 curl 'http://localhost:8000/compressed/brotli' --compressed
+curl 'http://localhost:8000/compressed/brotli_large' --compressed
 curl 'http://localhost:8000/compressed/brotli_identity' --compressed
 

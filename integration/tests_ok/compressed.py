@@ -42,6 +42,17 @@ def compressed_brotli():
     return resp
 
 
+@app.route("/compressed/brotli_large")
+def compressed_brotli_large():
+    assert "br" in request.headers["Accept-Encoding"]
+    with open("tests_ok/cat.jpg.br", "rb") as f:
+        data = f.read()
+    resp = make_response(data)
+    resp.headers["Content-Encoding"] = "br"
+    resp.headers["Content-Type"] = "image/jpeg"
+    return resp
+
+
 @app.route("/compressed/brotli_identity")
 def compressed_brotli_identity():
     assert "br" in request.headers["Accept-Encoding"]
