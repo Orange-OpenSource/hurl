@@ -5,7 +5,7 @@ Content-Type: application/octet-stream
 Content-Length: 536870912
 
 [Asserts]
-duration <= 15000   # Duration in ms
+duration <= 30000   # Duration in ms
 
 
 
