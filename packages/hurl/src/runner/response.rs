@@ -29,6 +29,14 @@ use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
 
+/// Returns a list of response assert results.
+///
+/// # Arguments
+///
+/// * `response` - The spec HTTP response
+/// * `variables` - A map of input variables
+/// * `http_response` - The actual HTTP response
+/// * `context_dir` - The context directory for files
 pub fn eval_asserts(
     response: Response,
     variables: &HashMap<String, Value>,
@@ -110,111 +118,9 @@ pub fn eval_asserts(
         }
     }
 
-    // implicit assert on body
-    if let Some(body) = response.clone().body {
-        match body.value {
-            Bytes::Json { value } => {
-                let expected = match eval_json_value(value, variables) {
-                    Ok(s) => Ok(Value::String(s)),
-                    Err(e) => Err(e),
-                };
-                let actual = match http_response.text() {
-                    Ok(s) => Ok(Value::String(s)),
-                    Err(e) => Err(Error {
-                        source_info: SourceInfo {
-                            start: body.space0.source_info.end.clone(),
-                            end: body.space0.source_info.end.clone(),
-                        },
-                        inner: e,
-                        assert: true,
-                    }),
-                };
-                asserts.push(AssertResult::Body {
-                    actual,
-                    expected,
-                    source_info: body.space0.source_info.clone(),
-                })
-            }
-            Bytes::Xml { value } => {
-                let expected = Ok(Value::String(value));
-                let actual = match http_response.text() {
-                    Ok(s) => Ok(Value::String(s)),
-                    Err(e) => Err(Error {
-                        source_info: SourceInfo {
-                            start: body.space0.source_info.end.clone(),
-                            end: body.space0.source_info.end.clone(),
-                        },
-                        inner: e,
-                        assert: true,
-                    }),
-                };
-                asserts.push(AssertResult::Body {
-                    actual,
-                    expected,
-                    source_info: body.space0.source_info.clone(),
-                })
-            }
-            Bytes::RawString(RawString { value, .. }) => {
-                let expected = match eval_template(&value, variables) {
-                    Ok(s) => Ok(Value::String(s)),
-                    Err(e) => Err(e),
-                };
-                let actual = match http_response.text() {
-                    Ok(s) => Ok(Value::String(s)),
-                    Err(e) => Err(Error {
-                        source_info: SourceInfo {
-                            start: body.space0.source_info.end.clone(),
-                            end: body.space0.source_info.end.clone(),
-                        },
-                        inner: e,
-                        assert: true,
-                    }),
-                };
-                asserts.push(AssertResult::Body {
-                    actual,
-                    expected,
-                    source_info: value.source_info,
-                })
-            }
-            Bytes::Base64(Base64 {
-                value,
-                space0,
-                space1,
-                ..
-            }) => asserts.push(AssertResult::Body {
-                actual: Ok(Value::Bytes(http_response.body.clone())),
-                expected: Ok(Value::Bytes(value)),
-                source_info: SourceInfo {
-                    start: space0.source_info.end,
-                    end: space1.source_info.start,
-                },
-            }),
-            Bytes::Hex(Hex {
-                value,
-                space0,
-                space1,
-                ..
-            }) => asserts.push(AssertResult::Body {
-                actual: Ok(Value::Bytes(http_response.body.clone())),
-                expected: Ok(Value::Bytes(value)),
-                source_info: SourceInfo {
-                    start: space0.source_info.end,
-                    end: space1.source_info.start,
-                },
-            }),
-            Bytes::File { .. } => {
-                let expected = match eval_body(body.clone(), variables, context_dir) {
-                    Ok(body) => Ok(Value::Bytes(body.bytes())),
-                    Err(e) => Err(e),
-                };
-                let actual = Ok(Value::Bytes(http_response.body.clone()));
-                asserts.push(AssertResult::Body {
-                    actual,
-                    expected,
-                    source_info: body.space0.source_info.clone(),
-                })
-            }
-        };
+    if let Some(body) = &response.body {
+        let assert = eval_implicit_body_asserts(body, variables, &http_response, context_dir);
+        asserts.push(assert);
     }
 
     for assert in response.asserts() {
@@ -222,6 +128,163 @@ pub fn eval_asserts(
         asserts.push(assert_result);
     }
     asserts
+}
+
+/// Check the body of an actual HTTP response against a spec body.
+///
+/// # Arguments
+///
+/// * `spec_body` - The spec HTTP response body
+/// * `variables` - A map of input variables
+/// * `http_response` - The actual HTTP response
+/// * `context_dir` - The context directory for files
+fn eval_implicit_body_asserts(
+    spec_body: &Body,
+    variables: &HashMap<String, Value>,
+    http_response: &http::Response,
+    context_dir: &Path,
+) -> AssertResult {
+    match &spec_body.value {
+        Bytes::Json { value } => {
+            let expected = match eval_json_value(value.clone(), variables) {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(e),
+            };
+            let actual = match http_response.text() {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: spec_body.space0.source_info.clone(),
+            }
+        }
+        Bytes::Xml { value } => {
+            let expected = Ok(Value::String(value.to_string()));
+            let actual = match http_response.text() {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: spec_body.space0.source_info.clone(),
+            }
+        }
+        Bytes::RawString(RawString { value, .. }) => {
+            let expected = match eval_template(value, variables) {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(e),
+            };
+            let actual = match http_response.text() {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: value.source_info.clone(),
+            }
+        }
+        Bytes::Base64(Base64 {
+            value,
+            space0,
+            space1,
+            ..
+        }) => {
+            let expected = Ok(Value::Bytes(value.to_vec()));
+            let actual = match http_response.uncompress_body() {
+                Ok(b) => Ok(Value::Bytes(b)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: SourceInfo {
+                    start: space0.source_info.end.clone(),
+                    end: space1.source_info.start.clone(),
+                },
+            }
+        }
+        Bytes::Hex(Hex {
+            value,
+            space0,
+            space1,
+            ..
+        }) => {
+            let expected = Ok(Value::Bytes(value.to_vec()));
+            let actual = match http_response.uncompress_body() {
+                Ok(b) => Ok(Value::Bytes(b)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: SourceInfo {
+                    start: space0.source_info.end.clone(),
+                    end: space1.source_info.start.clone(),
+                },
+            }
+        }
+        Bytes::File { .. } => {
+            let expected = match eval_body(spec_body.clone(), variables, context_dir) {
+                Ok(body) => Ok(Value::Bytes(body.bytes())),
+                Err(e) => Err(e),
+            };
+            let actual = match http_response.uncompress_body() {
+                Ok(b) => Ok(Value::Bytes(b)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: e,
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: spec_body.space0.source_info.clone(),
+            }
+        }
+    }
 }
 
 pub fn eval_captures(
@@ -324,7 +387,7 @@ mod tests {
                         },
                         assert: true,
                     })),
-                }
+                },
             ]
         );
     }
