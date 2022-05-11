@@ -121,6 +121,15 @@ GET http://localhost:8000/compressed/brotli
 HTTP/1.0 200
 file,hello.txt;
 
+# Test a large brotli compressed body:
+GET http://localhost:8000/compressed/brotli_large
+HTTP/1.0 200
+Content-Encoding: br
+Content-Type: image/jpeg
+[Asserts]
+bytes startsWith hex,ffd8ffe0;   # JPEG magic number
+file,cat.jpg;
+
 GET http://localhost:8000/compressed/brotli_identity
 HTTP/1.0 200
 Content-Length: 17

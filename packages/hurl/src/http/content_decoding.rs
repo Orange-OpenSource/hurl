@@ -98,17 +98,15 @@ impl http::Response {
 ///
 /// * data - Compressed bytes.
 fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
-    let mut reader = brotli::Decompressor::new(data, 4096);
-    let mut buf = [0u8; 4096];
-    let n = match reader.read(&mut buf[..]) {
-        Err(_) => {
-            return Err(RunnerError::CouldNotUncompressResponse(
-                "brotli".to_string(),
-            ));
-        }
-        Ok(size) => size,
-    };
-    Ok(buf[..n].to_vec())
+    let buffer_size = 4096;
+    let mut reader = brotli::Decompressor::new(data, buffer_size);
+    let mut buf = Vec::new();
+    match reader.read_to_end(&mut buf) {
+        Ok(_) => Ok(buf),
+        Err(_) => Err(RunnerError::CouldNotUncompressResponse(
+            "brotli".to_string(),
+        )),
+    }
 }
 
 /// Decompress GZip compressed data.
@@ -226,7 +224,7 @@ pub mod tests {
             }],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
-                0x64, 0x21,
+                0x64, 0x21, 0x03,
             ],
             duration: Default::default(),
         };
@@ -241,7 +239,7 @@ pub mod tests {
             }],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
-                0x64, 0x21,
+                0x64, 0x21, 0x03,
             ],
             duration: Default::default(),
         };
@@ -261,7 +259,7 @@ pub mod tests {
     fn test_uncompress_brotli() {
         let data = vec![
             0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
-            0x64, 0x21,
+            0x64, 0x21, 0x03,
         ];
         assert_eq!(uncompress_brotli(&data[..]).unwrap(), b"Hello World!");
     }
