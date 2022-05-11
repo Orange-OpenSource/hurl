@@ -1,4 +1,7 @@
-# -- COMPRESSED HAS NO EFFECT ON NON-COMPRESSED
+# Uncompressed body tests:
+# ---------------------------
+# --compressed has no effect on non compressed.
+
 GET http://localhost:8000/compressed/none
 HTTP/1.0 200
 Content-Length: 12
@@ -9,6 +12,25 @@ bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```Hello World!```
+
+# Test base64 implicit body:
+GET http://localhost:8000/compressed/none
+HTTP/1.0 200
+base64,SGVsbG8gV29ybGQh;
+
+# Test hex implicit body:
+GET http://localhost:8000/compressed/none
+HTTP/1.0 200
+hex,48656c6c6f20576f726c6421;
+
+# Test file implicit body:
+GET http://localhost:8000/compressed/none
+HTTP/1.0 200
+file,hello.txt;
+
+
+# GZip compressed body tests:
+# ---------------------------
 
 GET http://localhost:8000/compressed/gzip
 HTTP/1.0 200
@@ -22,6 +44,25 @@ sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```Hello World!```
 
+# Test base64 implicit body:
+GET http://localhost:8000/compressed/gzip
+HTTP/1.0 200
+base64,SGVsbG8gV29ybGQh;
+
+# Test hex implicit body:
+GET http://localhost:8000/compressed/gzip
+HTTP/1.0 200
+hex,48656c6c6f20576f726c6421;
+
+# Test file implicit body:
+GET http://localhost:8000/compressed/gzip
+HTTP/1.0 200
+file,hello.txt;
+
+
+# ZLib compressed body tests:
+# ---------------------------
+
 GET http://localhost:8000/compressed/zlib
 HTTP/1.0 200
 Content-Length: 20
@@ -34,6 +75,25 @@ sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```Hello World!```
 
+# Test base64 implicit body:
+GET http://localhost:8000/compressed/zlib
+HTTP/1.0 200
+base64,SGVsbG8gV29ybGQh;
+
+# Test hex implicit body:
+GET http://localhost:8000/compressed/zlib
+HTTP/1.0 200
+hex,48656c6c6f20576f726c6421;
+
+# Test file implicit body:
+GET http://localhost:8000/compressed/zlib
+HTTP/1.0 200
+file,hello.txt;
+
+
+# Brotli compressed body tests:
+# ---------------------------
+
 GET http://localhost:8000/compressed/brotli
 HTTP/1.0 200
 Content-Length: 17
@@ -45,6 +105,21 @@ bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```Hello World!```
+
+# Test base64 implicit body:
+GET http://localhost:8000/compressed/brotli
+HTTP/1.0 200
+base64,SGVsbG8gV29ybGQh;
+
+# Test hex implicit body:
+GET http://localhost:8000/compressed/brotli
+HTTP/1.0 200
+hex,48656c6c6f20576f726c6421;
+
+# Test file implicit body:
+GET http://localhost:8000/compressed/brotli
+HTTP/1.0 200
+file,hello.txt;
 
 GET http://localhost:8000/compressed/brotli_identity
 HTTP/1.0 200

@@ -28,7 +28,7 @@ def test(format_type, hurl_file):
     expected = open(output_file, encoding="utf-8").read().strip()
     actual = decode_string(result.stdout)
     if actual != expected:
-        print(">>> error in stdout")
+        print(f">>> error in stdout for {format_type}")
         print(f"actual: <{actual}>\nexpected: <{expected}>")
         sys.exit(1)
 
