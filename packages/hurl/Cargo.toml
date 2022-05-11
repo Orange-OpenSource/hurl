@@ -21,7 +21,7 @@ atty = "0.2.14"
 base64 = "0.13.0"
 brotli = "3.3.4"
 chrono = "0.4.19"
-clap = { version = "3.1.17", features = ["cargo"] }
+clap = { version = "3.1.18", features = ["cargo"] }
 colored = "2.0.0"
 curl = "0.4.43"
 encoding = "0.2.33"
