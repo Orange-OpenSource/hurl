@@ -168,6 +168,7 @@ Table of Contents
          * [Testing REST Apis](#testing-rest-apis)
          * [Testing HTML Response](#testing-html-response)
          * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
+         * [Testing Bytes Content](#testing-bytes-content)
       * [Others](#others)
          * [Testing Endpoint Performance](#testing-endpoint-performance)
          * [Using SOAP Apis](#using-soap-apis)
@@ -496,6 +497,22 @@ cookie "JSESSIONID[SameSite]" == "Lax"
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#cookie-assert)
+
+### Testing Bytes Content
+
+
+Check the SHA-256 response body hash:
+
+```hurl
+GET http://example.org/data.tar.gz
+
+HTTP/* *
+[Asserts]
+sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#sha-256-assert)
+
 
 ## Others
 
