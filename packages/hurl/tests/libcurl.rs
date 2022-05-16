@@ -682,12 +682,15 @@ fn test_error_ssl() {
     let error = client.execute(&request_spec).err().unwrap();
     if let HttpError::Libcurl { code, description } = error {
         assert_eq!(code, 60);
-        let message = if cfg!(windows) {
-            "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.".to_string()
-        } else {
-            "SSL certificate problem: self signed certificate".to_string()
-        };
-        assert_eq!(description, message);
+        let descriptions = [
+            // Windows messages:
+            "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.".to_string(),
+            // Unix-like, before OpenSSL 3.0.0
+            "SSL certificate problem: self signed certificate".to_string(),
+            // Unix-like, after OpenSSL 3.0.0
+            "SSL certificate problem: self-signed certificate".to_string(),
+        ];
+        assert!(descriptions.contains(&description));
     }
 }
 
