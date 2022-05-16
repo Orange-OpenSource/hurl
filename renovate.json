@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "prHourlyLimit": 0
+}
