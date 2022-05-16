@@ -231,10 +231,13 @@ fn execute(
     }
 }
 
-pub fn unwrap_or_exit<T>(
-    log_error_message: &impl Fn(bool, &str),
-    result: Result<T, CliError>,
-) -> T {
+/// Unwrap a result or exit with message.
+///
+/// # Arguments
+///
+/// * result - Something to unwrap
+/// * log_error_message - A function to log error message if unwrap fail
+fn unwrap_or_exit<T>(result: Result<T, CliError>, log_error_message: &impl Fn(bool, &str)) -> T {
     match result {
         Ok(v) => v,
         Err(e) => {
@@ -258,7 +261,7 @@ fn main() {
     let log_verbose = cli::make_logger_verbose(verbose);
     let color = cli::output_color(matches.clone());
     let log_error_message = cli::make_logger_error_message(color);
-    let cli_options = unwrap_or_exit(&log_error_message, cli::parse_options(matches.clone()));
+    let cli_options = unwrap_or_exit(cli::parse_options(matches.clone()), &log_error_message);
 
     let mut filenames = vec![];
     if let Some(values) = matches.values_of("INPUT") {
@@ -289,8 +292,8 @@ fn main() {
         None => None,
         Some(filename) => {
             let filename = unwrap_or_exit(
-                &log_error_message,
                 cookies_output_file(filename, filenames.len()),
+                &log_error_message,
             );
             Some(filename)
         }
@@ -371,8 +374,8 @@ fn main() {
                     };
                     output.append(&mut body.clone());
                     unwrap_or_exit(
-                        &log_error_message,
                         write_output(output, cli_options.output.clone()),
+                        &log_error_message,
                     );
                 } else {
                     cli::log_info("no response has been received");
@@ -400,8 +403,8 @@ fn main() {
             let serialized = serde_json::to_string(&json_result).unwrap();
             let s = format!("{}\n", serialized);
             unwrap_or_exit(
-                &log_error_message,
                 write_output(s.into_bytes(), cli_options.output.clone()),
+                &log_error_message,
             );
         }
         if cli_options.junit_file.is_some() {
@@ -413,22 +416,22 @@ fn main() {
     if let Some(filename) = cli_options.junit_file.clone() {
         log_verbose(format!("Writing Junit report to {}", filename).as_str());
         unwrap_or_exit(
-            &log_error_message,
             report::create_junit_report(filename, testcases),
+            &log_error_message,
         );
     }
 
     if let Some(dir_path) = cli_options.html_dir {
         log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
         unwrap_or_exit(
-            &log_error_message,
             report::write_html_report(dir_path.clone(), hurl_results.clone()),
+            &log_error_message,
         );
 
         for filename in filenames {
             unwrap_or_exit(
-                &log_error_message,
                 format_html(filename.as_str(), dir_path.clone()),
+                &log_error_message,
             );
         }
     }
@@ -436,8 +439,8 @@ fn main() {
     if let Some(file_path) = cookies_output_file {
         log_verbose(format!("Writing cookies to {}", file_path.display()).as_str());
         unwrap_or_exit(
-            &log_error_message,
             write_cookies_file(file_path, hurl_results.clone()),
+            &log_error_message,
         );
     }
 
@@ -526,7 +529,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError
     }
 }
 
-pub fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CliError> {
+fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CliError> {
     if n > 1 {
         Err(CliError {
             message: "Only save cookies for a unique session".to_string(),
