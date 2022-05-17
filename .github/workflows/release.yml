@@ -33,7 +33,7 @@ jobs:
         ci/release.sh
         ci/create_tarball.sh linux
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -65,7 +65,7 @@ jobs:
         ci/release.sh
         ci/deb.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -94,7 +94,7 @@ jobs:
         ci/release.sh
         ci/create_tarball.sh macos
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -151,7 +151,7 @@ jobs:
         cd .\target\win-package
         makensis.exe /NOCD /V4 ..\..\ci\windows\hurl.nsi
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: release-windows-x64-artifacts
         path: |
