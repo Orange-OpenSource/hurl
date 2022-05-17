@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v3    
     - name: Run dependency_age
       run: |
         ./ci/dependency_age.sh
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check Shell Scripts
         run: |
           find -name *.sh | xargs shellcheck
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install
         run: |
           # Install libcurl dev so that hurl can be built dynamically with libcurl
@@ -102,7 +102,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install
       run: |
         sudo apt update
@@ -147,7 +147,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v3    
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
       with:
@@ -178,7 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v3    
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
       with:
@@ -207,7 +207,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v3    
     - name: Build, Test units and Integration tests
       uses: addnab/docker-run-action@v3
       with:
@@ -240,7 +240,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -283,7 +283,7 @@ jobs:
   test-emulated-raspios-arm-x64:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/cache@v3
       with:
         path: |
@@ -339,7 +339,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf       
     - name: Checkout repository
-      uses: actions/checkout@v2 
+      uses: actions/checkout@v3 
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
