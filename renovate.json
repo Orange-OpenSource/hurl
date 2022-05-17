@@ -5,12 +5,12 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
-      "automerge": true
+      "automerge": false
     }
   ],
   "vulnerabilityAlerts": {
     "labels": ["security"],
-    "automerge": true
+    "automerge": false
   },
   "lockFileMaintenance": {
     "enabled": true
