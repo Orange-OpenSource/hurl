@@ -20,9 +20,12 @@ def decode_string(encoded):
         return encoded.decode()
 
 
-# return linux, osx or windows
+# return linux-fedora, linux, osx or windows
+# can add more specific linux variant if needed
 def get_os():
     if platform.system() == "Linux":
+        if os.path.exists("/etc/fedora-release"):
+            return "linux-fedora"
         return "linux"
     elif platform.system() == "Darwin":
         return "osx"
