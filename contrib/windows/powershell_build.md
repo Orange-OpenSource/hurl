@@ -10,15 +10,13 @@ You just have to follow each chapter sequentially until you get a windows instal
 
 # Win64 workspace installation
 
-## Manual softwares installation :
-
-- install `builds tools c++` and `english language` by executing https://visualstudio.microsoft.com/fr/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16
-- install `choco` by executing https://docs.chocolatey.org/en-us/choco/setup#install-with-powershell.exe
-
-## Command line softwares installation
+## Build requirements
 
 ```powershell
 cd c:\
+Invoke-WebRequest -UseBasicParsing https://aka.ms/vs/17/release/vs_buildtools.exe  -Outfile vs_buildtools.exe
+Start-Process -Wait -PassThru -FilePath .\vs_buildtools.exe -ArgumentList "--addProductLang", "En-us", "--add", "Microsoft.VisualStudio.Workload.VCTools", "--includeRecommended", "--passive", "--norestart", "--nocache", "--wait"
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 choco install --confirm --no-progress git nsis python3 winlibs-llvm-free nsis
 Invoke-WebRequest -UseBasicParsing -OutFile "c:\rustup-init.exe" "https://static.rust-lang.org/rustup/dist/i686-pc-windows-gnu/rustup-init.exe"
 c:\rustup-init.exe -y  --default-toolchain stable-x86_64-pc-windows-msvc
@@ -39,6 +37,7 @@ $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYN
 ## Clone hurl project
 
 ```powershell
+cd c:\
 git.exe config --global core.autocrlf false
 git.exe clone https://github.com/Orange-OpenSource/hurl
 ```
@@ -79,7 +78,6 @@ Keep original powershell prompt on background, and open one more separate powers
 cd c:\hurl\integration
 python ssl/server.py
 ```
-
 
 Keep original powershell prompt on background, and open one more separate powershell prompt to launch the proxy
 
