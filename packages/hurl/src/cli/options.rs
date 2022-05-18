@@ -299,7 +299,7 @@ pub fn app(version: &str) -> Command {
         )
 }
 
-pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
+pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let cacert_file = match get_string(&matches, "cacert_file") {
         None => None,
         Some(filename) => {
