@@ -80,7 +80,7 @@ use super::entry;
 pub fn run(
     hurl_file: HurlFile,
     http_client: &mut http::Client,
-    filename: String,
+    filename: &str,
     options: &RunnerOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
@@ -143,6 +143,7 @@ pub fn run(
         .is_none();
 
     let cookies = http_client.get_cookie_storage();
+    let filename = filename.to_string();
     HurlResult {
         filename,
         entries,
