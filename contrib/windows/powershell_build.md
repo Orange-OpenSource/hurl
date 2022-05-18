@@ -20,6 +20,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco install --confirm --no-progress git nsis python3 winlibs-llvm-free nsis
 Invoke-WebRequest -UseBasicParsing -OutFile "c:\rustup-init.exe" "https://static.rust-lang.org/rustup/dist/i686-pc-windows-gnu/rustup-init.exe"
 c:\rustup-init.exe -y  --default-toolchain stable-x86_64-pc-windows-msvc
+rustup set default-host x86_64-pc-windows-gnu
 Set-ItemProperty -Path HKCU:\Environment -Name RUST_BACKTRACE -Value "full"
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
 git.exe clone https://github.com/microsoft/vcpkg
