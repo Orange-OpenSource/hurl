@@ -339,11 +339,13 @@ fn main() {
             && hurl_result.errors().is_empty()
             && !cli_options.interactive
         {
-            // default
-            // last entry + response + body
+            // By default, we output the body response bytes of the last entry
             if let Some(entry_result) = hurl_result.entries.last() {
                 if let Some(response) = entry_result.response.clone() {
                     let mut output = vec![];
+
+                    // If include options is set, we output the HTTP response headers
+                    // with status and version (to mimic curl outputs)
                     if cli_options.include {
                         let status_line =
                             format!("HTTP/{} {}\n", response.version, response.status);
