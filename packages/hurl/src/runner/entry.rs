@@ -139,7 +139,7 @@ pub fn run(
         let mut errors = vec![];
         let time_in_ms = http_response.duration.as_millis();
 
-        // Last call
+        // We runs capture and asserts on the last HTTP request/response chains.
         if i == calls.len() - 1 {
             captures = match entry.response.clone() {
                 None => vec![],
