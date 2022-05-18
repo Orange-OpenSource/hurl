@@ -116,6 +116,9 @@ Get-ChildItem -Path *.dll, *hurl.exe, *hurlfmt.exe, *.txt, ../../*.md  -Exclude 
 ## Create a real package installer for win64
 
 ```powershell
+cd c:\hurl
+Get-Command Expand-Archive
+Expand-Archive -Path '.\ci\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
 cd c:\hurl\target\win-package
 $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";C:\Program Files (x86)\NSIS\Bin"
