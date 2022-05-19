@@ -105,7 +105,12 @@ jobs:
       VCPKGRS_DYNAMIC: 1
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 
+      uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          C:\vcpkg\installed
+        key: ${{ runner.os }}-release-windows-x64      
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -121,9 +126,9 @@ jobs:
       run: |
         # vcpkg build prequisites
         (Get-Command vcpkg).Path
-        Expand-Archive -PassThru -Force -LiteralPath .\ci\windows\vcpkg_installed.zip -DestinationPath C:\vcpkg\
-        Get-ChildItem C:\vcpkg\installed
+        if (Test-Path C:\vcpkg\installed) {vcpkg update} else {vcpkg install libxml2:x64-windows}
         vcpkg integrate install
+        Get-ChildItem -Recurse -Path C:\vcpkg\installed
         refreshenv
         # fix known win build bugs
         (Get-Content .\packages\hurl\src\runner\hurl_file.rs).replace('```', '') | Set-Content .\packages\hurl\src\runner\hurl_file.rs

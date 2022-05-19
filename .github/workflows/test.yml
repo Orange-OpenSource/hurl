@@ -339,7 +339,12 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf       
     - name: Checkout repository
-      uses: actions/checkout@v3 
+      uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          C:\vcpkg\installed
+        key: ${{ runner.os }}-test-windows-x64
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -356,8 +361,7 @@ jobs:
       run: |
         # vcpkg build prequisites
         (Get-Command vcpkg).Path
-        Expand-Archive -PassThru -Force -LiteralPath .\ci\windows\vcpkg_installed.zip -DestinationPath C:\vcpkg\
-        Get-ChildItem C:\vcpkg\installed
+        if (Test-Path C:\vcpkg\installed) {vcpkg update} else {vcpkg install libxml2:x64-windows}
         vcpkg integrate install
         # install proxy and server
         pip3 install --requirement integration/requirements-frozen.txt
