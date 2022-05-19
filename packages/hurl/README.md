@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/logo-light.svg" alt="Hurl Logo" width="264px">
+<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg" alt="Hurl Logo" width="264px">
 
 <br/>
 
