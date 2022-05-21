@@ -342,7 +342,8 @@ jobs:
       with:
         path: |
           C:\vcpkg\installed
-        key: ${{ runner.os }}-test-windows-x64
+        key: ${{ runner.os }}-test-windows-x64-${{ github.sha }}
+        restore-keys: ${{ runner.os }}-test-windows-x64-
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
