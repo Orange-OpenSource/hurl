@@ -171,7 +171,7 @@ Follow redirect.  You can limit the amount of redirects to follow by using the [
 
 ### --glob <glob> {#glob}
 
-Specify input files that match the given blob pattern.
+Specify input files that match the given glob pattern.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
