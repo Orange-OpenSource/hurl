@@ -53,8 +53,8 @@ The Hurl file format is fully documented in \fIhttps://hurl.dev/docs/hurl-file.h
 
 It consists of one or several HTTP requests
 
-    GET http:/example.net/endpoint1
-    GET http:/example.net/endpoint2
+    GET http:/example.org/endpoint1
+    GET http:/example.org/endpoint2
 
 
 .IP "Capturing values"
@@ -63,14 +63,14 @@ A value from an HTTP response can be-reused for successive HTTP requests.
 
 A typical example occurs with csrf tokens.
 
-    GET https://example.net
+    GET https://example.org
     HTTP/1.1 200
     # Capture the CSRF token value from html body.
     [Captures]
     csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 
     # Do the login !
-    POST https://example.net/login?user=toto&password=1234
+    POST https://example.org/login?user=toto&password=1234
     X-CSRF-TOKEN: {{csrf_token}}
 
 .IP "Asserts"
