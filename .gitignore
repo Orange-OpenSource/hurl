@@ -1,11 +1,1 @@
-*.swp
-*.swo
-*.pyc
-
-target/
-.idea/
-.venv/
-build/
-node_modules/
-**/npm/bin/
-integration/*.log
+/target
