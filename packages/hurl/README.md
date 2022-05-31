@@ -11,45 +11,43 @@
 
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
-It can perform requests, capture values and evaluate queries on headers and body response. Hurl is very 
+It can perform requests, capture values and evaluate queries on headers and body response. Hurl is very
 versatile: it can be used for both <b>fetching data</b> and <b>testing HTTP</b> sessions.
-
 
 ```hurl
 # Get home:
-GET https://example.net
+GET https://example.org
 
 HTTP/1.1 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
 # Do login!
-POST https://example.net/login?user=toto&password=1234
+POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
 HTTP/1.1 302
 ```
 
-
 Chaining multiple requests is easy:
 
 ```hurl
-GET https://api.example.net/health
-GET https://api.example.net/step1
-GET https://api.example.net/step2
-GET https://api.example.net/step3
+GET https://example.org/api/health
+GET https://example.org/api/step1
+GET https://example.org/api/step2
+GET https://example.org/api/step3
 ```
 
 # Also an HTTP Test Tool
 
 Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
-Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response, 
+Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
 It is well adapted for <b>REST / JSON apis</b>
 
 ```hurl
-POST https://api.example.net/tests
+POST https://example.org/api/tests
 {
     "id": "4568",
     "evaluate": true
@@ -66,7 +64,7 @@ jsonpath "$.id" matches /\d{4}/     # Check the format of the id
 <b>HTML content</b>
 
 ```hurl
-GET https://example.net
+GET https://example.org
 
 HTTP/1.1 200
 [Asserts]
@@ -76,11 +74,11 @@ xpath "normalize-space(//head/title)" == "Hello world!"
 and even SOAP apis
 
 ```hurl
-POST https://example.net/InStock
+POST https://example.org/InStock
 Content-Type: application/soap+xml; charset=utf-8
 SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 <?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:m="http://www.example.org">
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:m="https://example.org">
   <soap:Header></soap:Header>
   <soap:Body>
     <m:GetStockPrice>
@@ -95,7 +93,7 @@ HTTP/1.1 200
 Hurl can also be used to test HTTP endpoints performances:
 
 ```hurl
-GET http://api.example.org/v1/pets
+GET https://example.org/api/v1/pets
 
 HTTP/1.0 200
 [Asserts]
@@ -105,7 +103,7 @@ duration < 1000  # Duration in ms
 And responses bytes content
 
 ```hurl
-GET http://example.org/data.tar.gz
+GET https://example.org/data.tar.gz
 
 HTTP/1.0 200
 [Asserts]
@@ -123,9 +121,9 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 # Powered by curl
 
-Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is 
-powered by [libcurl], one of the most powerful and reliable file transfer library. 
-With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests, 
+Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
+powered by [libcurl], one of the most powerful and reliable file transfer library.
+With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests,
 but it's still the [curl] that we love.
 
 # Feedbacks
@@ -201,11 +199,12 @@ Table of Contents
             * [Windows Package Manager](#windows-package-manager)
          * [Cargo](#cargo)
          * [Docker](#docker)
+         * [npm](#npm)
       * [Building From Sources](#building-from-sources)
          * [Build on Linux, macOS](#build-on-linux-macos)
             * [Debian based distributions](#debian-based-distributions)
             * [Red Hat based distributions](#red-hat-based-distributions)
-            * [Arch based distributions ](#arch-based-distributions)
+            * [Arch based distributions](#arch-based-distributions)
             * [macOS](#macos)
          * [Build on Windows](#build-on-windows)
 # Samples
@@ -215,19 +214,19 @@ To run a sample, edit a file with the sample content, and run Hurl:
 ```shell
 $ vi sample.hurl
 
-GET https://example.net
+GET https://example.org
 
 $ hurl sample.hurl
 ```
 
-You can check [Hurl tests suit] for more samples.
+You can check [Hurl tests suite] for more samples.
 
 ## Getting Data
 
 A simple GET:
 
 ```hurl
-GET https://example.net
+GET https://example.org
 ```
 
 [Doc](https://hurl.dev/docs/request.html#method)
@@ -237,7 +236,7 @@ GET https://example.net
 A simple GET with headers:
 
 ```hurl
-GET https://example.net/news
+GET https://example.org/news
 User-Agent: Mozilla/5.0 
 Accept: */*
 Accept-Language: en-US,en;q=0.5
@@ -250,7 +249,7 @@ Connection: keep-alive
 ### Query Params
 
 ```hurl
-GET https://example.net/news
+GET https://example.org/news
 [QueryStringParams]
 order: newest
 search: something to search
@@ -260,7 +259,7 @@ count: 100
 Or:
 
 ```hurl
-GET https://example.net/news?order=newest&search=something%20to%20search&count=100
+GET https://example.org/news?order=newest&search=something%20to%20search&count=100
 ```
 
 [Doc](https://hurl.dev/docs/request.html#query-parameters)
@@ -268,7 +267,7 @@ GET https://example.net/news?order=newest&search=something%20to%20search&count=1
 ### Basic Authentification
 
 ```hurl
-GET http://example.com/protected
+GET https://example.org/protected
 [BasicAuth]
 bob: secret
 ```
@@ -279,7 +278,7 @@ This is equivalent to construct the request with a [Authorization] header:
 
 ```hurl
 # Authorization header value can be computed with `echo -n 'bob:secret' | base64`
-GET http://example.com/protected
+GET https://example.org/protected
 Authorization: Basic Ym9iOnNlY3JldA== 
 ```
 
@@ -291,9 +290,8 @@ you could use [`-u/--user` option].
 
 ### Sending HTML Form Datas
 
-
 ```hurl
-POST https://example.net/contact
+POST https://example.org/contact
 [FormParams]
 default: false
 token: {{token}}
@@ -301,21 +299,18 @@ email: john.doe@rookie.org
 number: 33611223344
 ```
 
-
 [Doc](https://hurl.dev/docs/request.html#form-parameters)
 
 ### Sending Multipart Form Datas
 
-
 ```hurl
-POST https://example.net/upload
+POST https://example.org/upload
 [MultipartFormData]
 field1: value1
 field2: file,example.txt;
 # On can specify the file content type:
 field3: file,example.zip; application/zip
 ```
-
 
 [Doc](https://hurl.dev/docs/request.html#multipart-form-data)
 
@@ -324,7 +319,7 @@ field3: file,example.zip; application/zip
 With an inline JSON:
 
 ```hurl
-POST https://api.example.net/tests
+POST https://example.org/api/tests
 {
     "id": "456",
     "evaluate": true
@@ -336,7 +331,7 @@ POST https://api.example.net/tests
 With a local file:
 
 ```hurl
-POST https://api.example.net/tests
+POST https://example.org/api/tests
 Content-Type: application/json
 file,data.json;
 ```
@@ -345,12 +340,11 @@ file,data.json;
 
 ### Templating a JSON / XML Body
 
-Using templates with [JSON body] or [XML body] is not currently supported in Hurl. 
+Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
 Besides, you can use templates in [raw string body] with variables to send a JSON or XML body:
- 
 
 ~~~hurl
-PUT https://api.example.net/hits
+PUT https://example.org/api/hits
 Content-Type: application/json
 ```
 {
@@ -361,7 +355,6 @@ Content-Type: application/json
 }
 ```
 ~~~
-
 
 Variables can be initialized via command line:
 
@@ -393,7 +386,7 @@ Resulting in a PUT request with the following JSON body:
 Use implicit response asserts to test header values:
 
 ```hurl
-GET http://www.example.org/index.html
+GET https://example.org/index.html
 
 HTTP/1.0 200
 Set-Cookie: theme=light
@@ -406,7 +399,7 @@ Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 Or use explicit response asserts with [predicates]:
 
 ```hurl
-GET https://example.net
+GET https://example.org
 
 HTTP/1.1 302
 [Asserts]
@@ -465,7 +458,7 @@ status < 300
 ### Testing HTML Response
 
 ```hurl
-GET https://example.com
+GET https://example.org
 
 HTTP/1.1 200
 Content-Type: text/html; charset=UTF-8
@@ -504,7 +497,7 @@ cookie "JSESSIONID[SameSite]" == "Lax"
 Check the SHA-256 response body hash:
 
 ```hurl
-GET http://example.org/data.tar.gz
+GET https://example.org/data.tar.gz
 
 HTTP/* *
 [Asserts]
@@ -531,11 +524,11 @@ duration < 1000   # Check that response time is less than one second
 ### Using SOAP Apis
 
 ```hurl
-POST https://example.net/InStock
+POST https://example.org/InStock
 Content-Type: application/soap+xml; charset=utf-8
 SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 <?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:m="http://www.example.org">
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:m="https://example.org">
   <soap:Header></soap:Header>
   <soap:Body>
     <m:GetStockPrice>
@@ -551,27 +544,25 @@ HTTP/1.1 200
 
 ### Capturing and Using a CSRF Token
 
-
 ```hurl
-GET https://example.net
+GET https://example.org
 
 HTTP/* 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
-POST https://example.net/login?user=toto&password=1234
+POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
 HTTP/* 302
 ```
-
 
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
 
 ### Checking Byte Order Mark (BOM) in Response Body
 
 ```hurl
-GET https://example.net/data.bin
+GET https://example.org/data.bin
 
 HTTP/* 200
 [Asserts]
@@ -599,15 +590,11 @@ hurl - run and test HTTP requests.
 
 Hurl is very versatile, it enables to chain HTTP requests, capture values from HTTP responses and make asserts.
 
-
 ```
 $ hurl session.hurl
 ```
 
-
-
 If no input-files are specified, input is read from stdin.
-
 
 ```
 $ echo GET http://httpbin.org/get | hurl
@@ -627,16 +614,11 @@ $ echo GET http://httpbin.org/get | hurl
 ```
 
 
-
-
 Output goes to stdout by default. For output to a file, use the -o option:
-
 
 ```
 $ hurl -o output input.hurl
 ```
-
-
 
 
 
@@ -650,13 +632,10 @@ The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.htm
 
 It consists of one or several HTTP requests
 
-
 ```hurl
 GET http:/example.net/endpoint1
 GET http:/example.net/endpoint2
 ```
-
-
 
 
 ### Capturing values
@@ -664,7 +643,6 @@ GET http:/example.net/endpoint2
 A value from an HTTP response can be-reused for successive HTTP requests.
 
 A typical example occurs with csrf tokens.
-
 
 ```hurl
 GET https://example.net
@@ -678,24 +656,18 @@ POST https://example.net/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
 
-
-
 ### Asserts
 
 The HTTP response defined in the Hurl session are used to make asserts.
 
 At the minimum, the response includes the asserts on the HTTP version and status code.
 
-
 ```hurl
 GET http:/google.com
 HTTP/1.1 301
 ```
 
-
-
 It can also include asserts on the response headers
-
 
 ```hurl
 GET http:/google.com
@@ -703,10 +675,7 @@ HTTP/1.1 301
 Location: http://www.google.com
 ```
 
-
-
 You can also include explicit asserts combining query and predicate
-
 
 ```hurl
 GET http:/google.com
@@ -714,8 +683,6 @@ HTTP/1.1 301
 [Asserts]
 xpath "string(//title)" == "301 Moved"
 ```
-
-
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
@@ -879,6 +846,12 @@ $ cargo install hurl
 $ docker pull orangeopensource/hurl
 ```
 
+### npm
+
+```shell
+$ npm install --save-dev @orangeopensource/hurl
+```
+
 ## Building From Sources
 
 Hurl sources are available in [GitHub].
@@ -900,7 +873,7 @@ $ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libx
 $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 ```
 
-#### Arch based distributions 
+#### Arch based distributions
 
 ```shell
 $ pacman -Sy --noconfirm pkgconf gcc openssl libxml2
@@ -956,7 +929,7 @@ Please follow the [contrib on Windows section].
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[Hurl tests suit]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
+[Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`-u/--user` option]: https://hurl.dev/docs/man-page.html#user
 [GitHub]: https://github.com/Orange-OpenSource/hurl
