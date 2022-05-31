@@ -1,6 +1,7 @@
 *.swp
 *.swo
 *.pyc
+.mypy_cache/
 
 target/
 .idea/
