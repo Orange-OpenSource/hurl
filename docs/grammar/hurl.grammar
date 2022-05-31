@@ -1,0 +1,259 @@
+hurl-file = entry*
+            lt*
+
+entry = request
+        response?
+
+request = lt*
+          sp* method sp sp* url lt
+          header*
+          request-section*
+          body?
+
+response = lt*
+           sp* version sp sp* status lt
+           header*
+           response-section*
+           body?
+
+method = "GET"
+       | "HEAD"
+       | "POST"
+       | "PUT"
+       | "DELETE"
+       | "CONNECT"
+       | "OPTIONS"
+       | "TRACE"
+       | "PATCH"
+
+url = <(alphanum | ":" | "/" | "{" | "}" | "*" | "," | "@" | "]")+>
+
+version = "HTTP/1.0" | "HTTP/1.1" | "HTTP/2" | "HTTP/*"
+
+status = <[0-9]+>
+
+header = lt*
+         sp* key-value lt
+
+body = lt*
+       sp* bytes lt
+
+
+# Sections
+
+# a section can not be repeated
+
+request-section = query-string-params-section
+                | form-params-section
+                | multipart-form-data-section
+                | cookies-section
+
+# a section can not be duplicated
+
+response-section = captures-section | asserts-section
+
+query-string-params-section = lt*
+                       sp* "[QueryStringParams]" lt
+                       param*
+
+form-params-section = lt*
+                      sp* "[FormParams]" lt
+                      param*
+
+multipart-form-data-section = lt*
+                              sp* "[MultipartFormData]" lt
+                              multipart-form-data-param*
+
+cookies-section = lt*
+                  sp* "[Cookies]" lt
+                  cookie*
+
+captures-section = lt*
+                   sp* "[Captures]" lt
+                   capture*
+
+asserts-section = lt*
+                  sp* "[Asserts]" lt
+                  assert*
+
+param = lt*
+        sp* key-value lt
+
+multipart-form-data-param = file-param | param
+
+file-param = lt*
+             sp* key-string sp* ":" sp* file-value lt
+
+file-value  = "file," sp* filename  sp* ";" (sp* file-contenttype)?
+
+file-contenttype = <(alphanum | "/" | ";" | "=" | " ")+  without leading/trailing space>
+
+cookie = lt*
+         sp* key-string sp* ":" sp* cookie-value lt
+
+cookie-value =  <(alphanum | "!" | "#" | "$" | "%" | "&" | "'" | "(" | ")" | "*" | "+"
+                           | "-" | "." | "/" | ":" | "<" | "=" | ">" | "?" | "@" | "["
+                           | "]" | "^" | "_" | "`" | "~" )* >
+
+
+capture = lt*
+          sp* key-string sp* ":" sp* query lt
+
+query = main-query (sp sp* subquery)?
+
+main-query = status-query
+           | header-query
+           | cookie-query
+           | body-query
+           | xpath-query
+           | jsonpath-query
+           | regex-query
+           | variable-query
+           | duration-query
+           | bytes-query
+           | sha256-query
+
+status-query = "status"
+
+header-query = "header" sp sp* quoted-string
+
+cookie-query = "cookie" sp sp* quoted-string
+
+body-query = "body"
+
+xpath-query = "xpath" sp sp* quoted-string
+
+jsonpath-query = "jsonpath" sp sp* quoted-string
+
+regex-query = "regex" sp sp* quoted-string
+
+variable-query = "variable" sp sp* quoted-string
+
+duration = "duration"
+
+sha256-query = "sha256"
+
+bytes-query = "bytes"
+
+subquery = regex-subquery | count-subquery
+
+regex-subquery = "regex" sp sp* quoted-string
+
+count-subquery = "count"
+
+
+assert = lt*
+         sp* query sp sp* predicate lt
+
+
+predicate = ("not" sp sp*)? predicate-func
+
+predicate-func = equal-predicate
+               | not-equal-predicate
+               | greater-predicate
+               | greater-or-equal-predicate
+               | less-predicate
+               | less-or-equal-predicate
+               | start-with-predicate
+               | end-with-predicate
+               | contain-predicate
+               | match-predicate
+               | exist-predicate
+               | include-predicate
+               | integer-predicate
+               | float-predicate
+               | boolean-predicate
+               | string-predicate
+               | collection-predicate
+
+
+equal-predicate = ("equals" | "==") sp sp* (null | float | integer | boolean | quoted-string | raw-string | hex | base64 | expr)
+
+not-equal-predicate = ("notEquals" | "!=") sp sp* (null | float | integer | boolean | quoted-string | raw-string | hex | base64 | expr)
+
+greater-predicate = ("greaterThan" | ">") sp sp* (integer | float)
+
+greater-or-equal-predicate = ("greaterThanOrEquals" | ">=") sp sp* (integer | float)
+
+less-predicate = ("lessThan" | "<") sp sp* (integer | float)
+
+less-or-equal-predicate = ("lessThanOrEquals" | "<=") sp sp* (integer | float)
+
+start-with-predicate = "startsWith" sp sp* (quoted-string | hex | base64)
+
+end-with-predicate = "endsWith" sp sp* (quoted-string | hex | base64)
+
+contain-predicate = "contains" sp sp* quoted-string
+
+match-predicate = "matches" sp sp* quoted-string
+
+exist-predicate = "exists"
+
+include-predicate = "includes" sp sp* (null |float | integer | boolean | quoted-string | expr)
+
+integer-predicate = "isInteger"
+
+float-predicate = "isFloat"
+
+boolean-predicate = "isBoolean"
+
+string-predicate = "isString"
+
+collection-predicate = "isCollection"
+
+
+# Primitives
+
+key-value = key-string sp* ":" sp* value-string
+
+key-string = <(alphanum | "_" | "-" | "." | escape-char)+ >
+
+value-string = <(anychar except escaped char and #| escape-char)* without leading/trailing space>
+
+quoted-string = """ <(anychar except escaped char | escape-char)*> """
+
+expr = "{{" sp* variable-name sp* "}}"
+
+variable-name = <(alphanum | "_" )+>
+
+escaped-char = "\""
+             | "\\"
+             | "\b"
+             | "\f"
+             | "\n"
+             | "\r"
+             | "\t"
+             | "\u" unicode-char
+
+unicode-char = "{" hexdigit+ "}"
+
+
+bytes = json
+      | xml
+      | raw-string
+      | base64
+      | file
+      | hex
+
+raw-string = "```" (sp* newline)? (any characters) "```"
+
+base64 = "base64," <base64 encoding with optional whitesp/padding> ";"
+
+file = "file," sp* filename sp* ";"
+
+hex = "hex," sp* hexdigit* sp* ";"
+
+lt = sp* comment? (newline | eof)
+
+comment = "#" <any characters except newline - does not end with sp>
+
+newline = "\n" | "\r\n"
+
+sp = " " | "\t"
+
+filename = <(alphanum | ".")+>
+
+integer = <-?[1-9][0-9]*>
+
+
+
