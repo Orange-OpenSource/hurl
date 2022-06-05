@@ -6,38 +6,6 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  rustfmt:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-        components: rustfmt
-    - name: Check formatting
-      run: |
-        cargo fmt --all -- --check
-
-  clippy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-        components: clippy
-    - name: Run Clippy
-      run: |
-        cargo clippy -- -D warnings
-
   dependency-age:
     runs-on: ubuntu-latest
     steps:
@@ -46,21 +14,6 @@ jobs:
     - name: Run dependency_age
       run: |
         ./ci/dependency_age.sh
-
-  checks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Check Shell Scripts
-        run: |
-          find -name *.sh | xargs shellcheck
-      - name: Check Python Scripts
-        run: |
-          pip3 install black
-          black --check .
-
-
   benchsuite:
     runs-on: ubuntu-latest
     steps:
@@ -71,7 +24,7 @@ jobs:
           # Install libcurl dev so that hurl can be built dynamically with libcurl
           sudo apt update
           sudo apt install libcurl4-openssl-dev
-          ci/install_rust_latest.sh
+          bin/install_rust_latest.sh
       - name: Build
         run: |
           ci/release.sh
@@ -108,7 +61,7 @@ jobs:
         sudo apt update
         sudo apt install libcurl4-openssl-dev libxml2-utils
         python3 -m pip install --upgrade pip --quiet
-        ci/install_rust_latest.sh
+        bin/install_rust_latest.sh
     - name: Build
       run: |
         cargo build --release --verbose --locked
@@ -162,7 +115,7 @@ jobs:
           pacman -Sy --noconfirm curl icu base-devel libxml2 python3
           curl -O https://bootstrap.pypa.io/get-pip.py
           python3 get-pip.py
-          ci/install_rust_latest.sh
+          bin/install_rust_latest.sh
           ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -191,7 +144,7 @@ jobs:
           echo "----- install prerequisite packages -----"
           yum install -y procps gcc libxml2-devel openssl-devel libcurl-devel python3-devel python3-pip
           python3 -m pip install --upgrade pip --quiet
-          ci/install_rust_latest.sh
+          bin/install_rust_latest.sh
           ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -221,7 +174,7 @@ jobs:
           apk update --quiet
           apk add --quiet bash curl curl-dev build-base libffi-dev libxml2-dev libxml2-utils openssl-dev python3 python3-dev py3-pip
           python3 -m pip install --upgrade pip --quiet
-          ci/install_rust_latest.sh
+          bin/install_rust_latest.sh
           ci/build_and_test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -316,7 +269,7 @@ jobs:
           [ ! -d "/hurl/venv" ] && python3 -m venv /hurl/venv
           . /hurl/venv/bin/activate
           python3 -m pip install pip --upgrade
-          ./ci/install_rust_latest.sh
+          ./bin/install_rust_latest.sh
           echo "# Execute tests"
           ./ci/build_and_test.sh
           echo "# pre-write cache"
