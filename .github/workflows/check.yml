@@ -1,0 +1,48 @@
+name: check
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      run: bin/install_rust_latest.sh
+    - name: Check formatting
+      run: bin/rustfmt.sh
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      run: bin/install_rust_latest.sh
+    - name: Run Clippy
+      run: bin/clippy.sh
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Check Shell Scripts
+        run: bin/shellcheck.sh
+
+  black:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install black
+      run: pip3 install black
+    - name: Check Python Scripts
+      run: bin/black.sh
+          
+
+
