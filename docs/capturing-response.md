@@ -305,7 +305,6 @@ HTTP/1.0 200
 # Cat name are structured like this `meow + id`: for instance `meow123456` 
 [Captures]
 id: jsonpath "$.cats[0].name" regex "meow(\\d+)"
-id: jsonpath "$.cats[0].name" regex "meow(\\d+)"
 ```
 
 Pattern of the regex subquery must have at least one capture group, otherwise the
