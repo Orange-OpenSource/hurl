@@ -23,8 +23,7 @@
 use std::io::prelude::*;
 
 use crate::http;
-
-use crate::runner::RunnerError;
+use crate::http::HttpError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Encoding {
@@ -40,13 +39,13 @@ impl Encoding {
     /// # Arguments
     ///
     /// * `s` - A Content-Encoding header value
-    pub fn parse(s: &str) -> Result<Encoding, RunnerError> {
+    pub fn parse(s: &str) -> Result<Encoding, HttpError> {
         match s {
             "br" => Ok(Encoding::Brotli),
             "gzip" => Ok(Encoding::Gzip),
             "deflate" => Ok(Encoding::Deflate),
             "identity" => Ok(Encoding::Identity),
-            v => Err(RunnerError::UnsupportedContentEncoding(v.to_string())),
+            v => Err(HttpError::UnsupportedContentEncoding { description: v.to_string() }),
         }
     }
 
@@ -55,7 +54,7 @@ impl Encoding {
     /// # Arguments
     ///
     /// * `data` - A compressed bytes array
-    pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, RunnerError> {
+    pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, HttpError> {
         match self {
             Encoding::Identity => Ok(data.to_vec()),
             Encoding::Gzip => uncompress_gzip(data),
@@ -67,7 +66,7 @@ impl Encoding {
 
 impl http::Response {
     /// Returns list of encoding from HTTP response headers.
-    fn content_encoding(&self) -> Result<Vec<Encoding>, RunnerError> {
+    fn content_encoding(&self) -> Result<Vec<Encoding>, HttpError> {
         for header in &self.headers {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
                 let mut encodings = vec![];
@@ -82,7 +81,7 @@ impl http::Response {
     }
 
     /// Decompress HTTP body response.
-    pub fn uncompress_body(&self) -> Result<Vec<u8>, RunnerError> {
+    pub fn uncompress_body(&self) -> Result<Vec<u8>, HttpError> {
         let encodings = self.content_encoding()?;
         let mut data = self.body.clone();
         for encoding in encodings {
@@ -97,15 +96,13 @@ impl http::Response {
 /// # Arguments
 ///
 /// * data - Compressed bytes.
-fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
+fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let buffer_size = 4096;
     let mut reader = brotli::Decompressor::new(data, buffer_size);
     let mut buf = Vec::new();
     match reader.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(RunnerError::CouldNotUncompressResponse(
-            "brotli".to_string(),
-        )),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "brotli".to_string() }),
     }
 }
 
@@ -114,15 +111,15 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
 /// # Arguments
 ///
 /// * data - Compressed bytes.
-fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
+fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::gzip::Decoder::new(data) {
         Ok(v) => v,
-        Err(_) => return Err(RunnerError::CouldNotUncompressResponse("gzip".to_string())),
+        Err(_) => return Err(HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }),
     };
     let mut buf = Vec::new();
     match decoder.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(RunnerError::CouldNotUncompressResponse("gzip".to_string())),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }),
     }
 }
 
@@ -131,15 +128,15 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
 /// # Arguments
 ///
 /// * data - Compressed bytes.
-fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, RunnerError> {
+fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::zlib::Decoder::new(data) {
         Ok(v) => v,
-        Err(_) => return Err(RunnerError::CouldNotUncompressResponse("zlib".to_string())),
+        Err(_) => return Err(HttpError::CouldNotUncompressResponse { description: "zlib".to_string() }),
     };
     let mut buf = Vec::new();
     match decoder.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(RunnerError::CouldNotUncompressResponse("zlib".to_string())),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "zlib".to_string() }),
     }
 }
 
@@ -152,7 +149,7 @@ pub mod tests {
         assert_eq!(Encoding::parse("br").unwrap(), Encoding::Brotli);
         assert_eq!(
             Encoding::parse("xx").err().unwrap(),
-            RunnerError::UnsupportedContentEncoding("xx".to_string())
+            HttpError::UnsupportedContentEncoding { description: "xx".to_string() }
         );
     }
 
@@ -179,7 +176,7 @@ pub mod tests {
         };
         assert_eq!(
             response.content_encoding().err().unwrap(),
-            RunnerError::UnsupportedContentEncoding("xx".to_string())
+            HttpError::UnsupportedContentEncoding { description: "xx".to_string() }
         );
 
         let response = http::Response {
@@ -288,11 +285,11 @@ pub mod tests {
         let data = vec![0x21];
         assert_eq!(
             uncompress_brotli(&data[..]).err().unwrap(),
-            RunnerError::CouldNotUncompressResponse("brotli".to_string())
+            HttpError::CouldNotUncompressResponse { description: "brotli".to_string() }
         );
         assert_eq!(
             uncompress_gzip(&data[..]).err().unwrap(),
-            RunnerError::CouldNotUncompressResponse("gzip".to_string())
+            HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }
         );
     }
 }

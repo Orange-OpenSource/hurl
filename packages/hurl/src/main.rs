@@ -30,7 +30,7 @@ use hurl::http;
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
-use hurl::runner::{HurlResult, RunnerOptions};
+use hurl::runner::{HurlResult, RunnerError, RunnerOptions};
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
@@ -360,7 +360,7 @@ fn main() {
                                             start: Pos { line: 0, column: 0 },
                                             end: Pos { line: 0, column: 0 },
                                         },
-                                        inner: e,
+                                        inner: RunnerError::from(e),
                                         assert: false,
                                     }
                                     .fixme()

@@ -30,14 +30,7 @@ use super::request_spec::*;
 use super::response::*;
 use std::str::FromStr;
 use url::Url;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum HttpError {
-    StatuslineIsMissing,
-    CouldNotParseResponse,
-    TooManyRedirect,
-    Libcurl { code: i32, description: String },
-}
+use crate::http::HttpError;
 
 #[derive(Debug)]
 pub struct Client {
@@ -229,13 +222,13 @@ impl Client {
                     None => e.description().to_string(),
                     Some(s) => s.to_string(),
                 };
-                return Err(HttpError::Libcurl { code, description });
+                return Err(HttpError::Libcurl { code, description, url });
             }
         }
 
         let status = self.handle.response_code().unwrap();
         let version = match status_lines.last() {
-            None => return Err(HttpError::StatuslineIsMissing {}),
+            None => return Err(HttpError::StatuslineIsMissing { url }),
             Some(status_line) => self.parse_response_version(status_line.clone())?,
         };
         let headers = self.parse_response_headers(&headers);
