@@ -222,7 +222,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end.clone(),
                         end: spec_body.space0.source_info.end.clone(),
                     },
-                    inner: e,
+                    inner: RunnerError::from(e),
                     assert: true,
                 }),
             };
@@ -249,7 +249,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end.clone(),
                         end: spec_body.space0.source_info.end.clone(),
                     },
-                    inner: e,
+                    inner: RunnerError::from(e),
                     assert: true,
                 }),
             };
@@ -274,7 +274,7 @@ fn eval_implicit_body_asserts(
                         start: spec_body.space0.source_info.end.clone(),
                         end: spec_body.space0.source_info.end.clone(),
                     },
-                    inner: e,
+                    inner: RunnerError::from(e),
                     assert: true,
                 }),
             };

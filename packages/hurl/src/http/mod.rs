@@ -16,8 +16,9 @@
  *
  */
 
-pub use self::client::{Client, HttpError};
+pub use self::client::Client;
 pub use self::core::{Cookie, Header, Param, RequestCookie};
+pub use self::error::HttpError;
 pub use self::options::ClientOptions;
 pub use self::request::Request;
 #[cfg(test)]
@@ -31,6 +32,7 @@ pub use self::version::libcurl_version_info;
 mod client;
 mod content_decoding;
 mod core;
+mod error;
 mod options;
 mod request;
 mod request_spec;

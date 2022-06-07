@@ -2,12 +2,9 @@ use crate::runner;
 use crate::runner::RunnerError;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
+use crate::http::HttpError;
 
-///
 /// Textual Output for runner errors
-///
-///
-
 impl Error for runner::Error {
     fn source_info(&self) -> SourceInfo {
         self.clone().source_info
@@ -144,6 +141,37 @@ impl Error for runner::Error {
                     "Unauthorized access to file {}, check --file-root option",
                     path.to_str().unwrap()
                 )
+            }
+        }
+    }
+}
+
+
+impl From<HttpError> for RunnerError {
+    /// Converts a HttpError to a RunnerError.
+    fn from(item: HttpError) -> Self {
+        match item {
+            HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
+            HttpError::CouldNotUncompressResponse { description } => {
+                RunnerError::CouldNotUncompressResponse(description)
+            }
+            HttpError::InvalidCharset { charset } => RunnerError::InvalidCharset { charset },
+            HttpError::InvalidDecoding { charset } => RunnerError::InvalidDecoding { charset },
+            HttpError::Libcurl {
+                code,
+                description,
+                url,
+            } => RunnerError::HttpConnection {
+                message: format!("({}) {}", code, description),
+                url,
+            },
+            HttpError::StatuslineIsMissing { url } => RunnerError::HttpConnection {
+                message: "status line is missing".to_string(),
+                url,
+            },
+            HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
+            HttpError::UnsupportedContentEncoding { description } => {
+                RunnerError::UnsupportedContentEncoding(description)
             }
         }
     }

@@ -18,7 +18,6 @@
 use std::collections::HashMap;
 
 use crate::http;
-use crate::http::HttpError;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -114,18 +113,7 @@ pub fn run(
     let calls = match http_client.execute_with_redirect(&http_request) {
         Ok(calls) => calls,
         Err(http_error) => {
-            let runner_error = match http_error {
-                HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
-                HttpError::CouldNotParseResponse => RunnerError::CouldNotParseResponse,
-                HttpError::StatuslineIsMissing => RunnerError::HttpConnection {
-                    message: "status line is missing".to_string(),
-                    url: http_request.url.clone(),
-                },
-                HttpError::Libcurl { code, description } => RunnerError::HttpConnection {
-                    message: format!("({}) {}", code, description),
-                    url: http_request.url.clone(),
-                },
-            };
+            let runner_error = RunnerError::from(http_error);
             return vec![EntryResult {
                 request: None,
                 response: None,
