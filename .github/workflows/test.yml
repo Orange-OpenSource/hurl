@@ -6,14 +6,51 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  dependency-age:
+  rustfmt:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3    
-    - name: Run dependency_age
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: rustfmt
+    - name: Check formatting
       run: |
-        ./ci/dependency_age.sh
+        cargo fmt --all -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: clippy
+    - name: Run Clippy
+      run: |
+        cargo clippy -- -D warnings
+
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Check Shell Scripts
+        run: |
+          find -name *.sh | xargs shellcheck
+      - name: Check Python Scripts
+        run: |
+          pip3 install black
+          black --check .
+
   benchsuite:
     runs-on: ubuntu-latest
     steps:
@@ -352,3 +389,4 @@ jobs:
         path: |
           integration/server.log
           integration/server-ssl.log
+
