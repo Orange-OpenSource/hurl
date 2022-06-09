@@ -98,7 +98,7 @@ pub fn eval_query_value(
                 Ok(s) => Ok(Some(Value::String(s))),
                 Err(inner) => Err(Error {
                     source_info: query.source_info,
-                    inner,
+                    inner: RunnerError::from(inner),
                     assert: false,
                 }),
             }
@@ -109,7 +109,7 @@ pub fn eval_query_value(
             match http_response.text() {
                 Err(inner) => Err(Error {
                     source_info: query.source_info,
-                    inner,
+                    inner: RunnerError::from(inner),
                     assert: false,
                 }),
                 Ok(xml) => {
@@ -159,7 +159,7 @@ pub fn eval_query_value(
                 Err(inner) => {
                     return Err(Error {
                         source_info: query.source_info,
-                        inner,
+                        inner: RunnerError::from(inner),
                         assert: false,
                     });
                 }
@@ -192,7 +192,7 @@ pub fn eval_query_value(
                 Err(inner) => {
                     return Err(Error {
                         source_info: query.source_info,
-                        inner,
+                        inner: RunnerError::from(inner),
                         assert: false,
                     });
                 }

@@ -1,8 +1,8 @@
+use crate::http::HttpError;
 use crate::runner;
 use crate::runner::RunnerError;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
-use crate::http::HttpError;
 
 /// Textual Output for runner errors
 impl Error for runner::Error {
@@ -145,7 +145,6 @@ impl Error for runner::Error {
         }
     }
 }
-
 
 impl From<HttpError> for RunnerError {
     /// Converts a HttpError to a RunnerError.

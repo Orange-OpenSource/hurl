@@ -28,9 +28,9 @@ use super::options::ClientOptions;
 use super::request::*;
 use super::request_spec::*;
 use super::response::*;
+use crate::http::HttpError;
 use std::str::FromStr;
 use url::Url;
-use crate::http::HttpError;
 
 #[derive(Debug)]
 pub struct Client {
@@ -222,7 +222,11 @@ impl Client {
                     None => e.description().to_string(),
                     Some(s) => s.to_string(),
                 };
-                return Err(HttpError::Libcurl { code, description, url });
+                return Err(HttpError::Libcurl {
+                    code,
+                    description,
+                    url,
+                });
             }
         }
 
