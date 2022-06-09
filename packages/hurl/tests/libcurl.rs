@@ -626,7 +626,12 @@ fn test_error_could_not_resolve_host() {
     let request = default_get_request("http://unknown".to_string());
     let error = client.execute(&request).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 6);
         assert_eq!(description, "Could not resolve host: unknown");
         assert_eq!(url, "http://unknown");
@@ -639,7 +644,12 @@ fn test_error_fail_to_connect() {
     let request_spec = default_get_request("http://localhost:9999".to_string());
     let error = client.execute(&request_spec).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 7);
         assert!(description.starts_with("Failed to connect to localhost port 9999"));
         assert_eq!(url, "http://localhost:9999");
@@ -653,7 +663,12 @@ fn test_error_fail_to_connect() {
     let request = default_get_request("http://localhost:8000/hello".to_string());
     let error = client.execute(&request).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 7);
         eprintln!("description={}", description);
         assert!(description.starts_with("Failed to connect to localhost port 9999"));
@@ -671,7 +686,12 @@ fn test_error_could_not_resolve_proxy_name() {
     let request_spec = default_get_request("http://localhost:8000/hello".to_string());
     let error = client.execute(&request_spec).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 5);
         assert_eq!(description, "Could not resolve proxy: unknown");
         assert_eq!(url, "http://localhost:8000/hello");
@@ -684,7 +704,12 @@ fn test_error_ssl() {
     let mut client = Client::init(options);
     let request_spec = default_get_request("https://localhost:8001/hello".to_string());
     let error = client.execute(&request_spec).err().unwrap();
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 60);
         let descriptions = [
             // Windows messages:
@@ -709,7 +734,12 @@ fn test_timeout() {
     let request_spec = default_get_request("http://localhost:8000/timeout".to_string());
     let error = client.execute(&request_spec).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         assert_eq!(code, 28);
         assert!(description.starts_with("Operation timed out after "));
         assert_eq!(url, "http://localhost:8000/timeout");
@@ -761,7 +791,12 @@ fn test_connect_timeout() {
     );
     let error = client.execute(&request_spec).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
-    if let HttpError::Libcurl { code, description, url } = error {
+    if let HttpError::Libcurl {
+        code,
+        description,
+        url,
+    } = error
+    {
         eprintln!("description={}", description);
         // TODO: remove the 7 / "Couldn't connect to server" case
         // On Linux/Windows libcurl version, the correct error message

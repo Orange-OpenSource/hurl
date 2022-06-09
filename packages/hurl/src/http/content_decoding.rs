@@ -16,6 +16,7 @@
  *
  */
 
+use encoding::{DecoderTrap, EncodingRef};
 ///
 /// Uncompress body response
 /// using the Content-Encoding response header
@@ -45,7 +46,9 @@ impl Encoding {
             "gzip" => Ok(Encoding::Gzip),
             "deflate" => Ok(Encoding::Deflate),
             "identity" => Ok(Encoding::Identity),
-            v => Err(HttpError::UnsupportedContentEncoding { description: v.to_string() }),
+            v => Err(HttpError::UnsupportedContentEncoding {
+                description: v.to_string(),
+            }),
         }
     }
 
@@ -65,7 +68,45 @@ impl Encoding {
 }
 
 impl http::Response {
-    /// Returns list of encoding from HTTP response headers.
+    /// Returns character encoding of the HTTP response.
+    fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
+        match self.content_type() {
+            Some(content_type) => match mime_charset(content_type) {
+                Some(charset) => {
+                    match encoding::label::encoding_from_whatwg_label(charset.as_str()) {
+                        None => Err(HttpError::InvalidCharset { charset }),
+                        Some(enc) => Ok(enc),
+                    }
+                }
+                None => Ok(encoding::all::UTF_8),
+            },
+            None => Ok(encoding::all::UTF_8),
+        }
+    }
+
+    /// Returns response body as text
+    pub fn text(&self) -> Result<String, HttpError> {
+        let encoding = self.character_encoding()?;
+        let body = &self.uncompress_body()?;
+        match encoding.decode(body, DecoderTrap::Strict) {
+            Ok(s) => Ok(s),
+            Err(_) => Err(HttpError::InvalidDecoding {
+                charset: encoding.name().to_string(),
+            }),
+        }
+    }
+
+    /// Returns true if response is an HTML response
+    pub fn is_html(&self) -> bool {
+        match self.content_type() {
+            None => false,
+            Some(s) => s.starts_with("text/html"),
+        }
+    }
+
+    /// Returns list of content encoding from HTTP response headers.
+    ///
+    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
     fn content_encoding(&self) -> Result<Vec<Encoding>, HttpError> {
         for header in &self.headers {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
@@ -80,7 +121,7 @@ impl http::Response {
         Ok(vec![])
     }
 
-    /// Decompress HTTP body response.
+    /// Decompresses HTTP body response.
     pub fn uncompress_body(&self) -> Result<Vec<u8>, HttpError> {
         let encodings = self.content_encoding()?;
         let mut data = self.body.clone();
@@ -102,7 +143,9 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut buf = Vec::new();
     match reader.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "brotli".to_string() }),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse {
+            description: "brotli".to_string(),
+        }),
     }
 }
 
@@ -114,12 +157,18 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::gzip::Decoder::new(data) {
         Ok(v) => v,
-        Err(_) => return Err(HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }),
+        Err(_) => {
+            return Err(HttpError::CouldNotUncompressResponse {
+                description: "gzip".to_string(),
+            })
+        }
     };
     let mut buf = Vec::new();
     match decoder.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse {
+            description: "gzip".to_string(),
+        }),
     }
 }
 
@@ -131,32 +180,48 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::zlib::Decoder::new(data) {
         Ok(v) => v,
-        Err(_) => return Err(HttpError::CouldNotUncompressResponse { description: "zlib".to_string() }),
+        Err(_) => {
+            return Err(HttpError::CouldNotUncompressResponse {
+                description: "zlib".to_string(),
+            })
+        }
     };
     let mut buf = Vec::new();
     match decoder.read_to_end(&mut buf) {
         Ok(_) => Ok(buf),
-        Err(_) => Err(HttpError::CouldNotUncompressResponse { description: "zlib".to_string() }),
+        Err(_) => Err(HttpError::CouldNotUncompressResponse {
+            description: "zlib".to_string(),
+        }),
     }
+}
+
+/// Extracts charset from mime-type String
+fn mime_charset(mime_type: String) -> Option<String> {
+    mime_type
+        .find("charset=")
+        .map(|index| mime_type[(index + 8)..].to_string())
 }
 
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use crate::http::{Header, Response, Version};
 
     #[test]
     fn test_parse_encoding() {
         assert_eq!(Encoding::parse("br").unwrap(), Encoding::Brotli);
         assert_eq!(
             Encoding::parse("xx").err().unwrap(),
-            HttpError::UnsupportedContentEncoding { description: "xx".to_string() }
+            HttpError::UnsupportedContentEncoding {
+                description: "xx".to_string()
+            }
         );
     }
 
     #[test]
     fn test_content_encoding() {
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
             headers: vec![],
             body: vec![],
@@ -164,10 +229,10 @@ pub mod tests {
         };
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
-            headers: vec![http::Header {
+            headers: vec![Header {
                 name: "Content-Encoding".to_string(),
                 value: "xx".to_string(),
             }],
@@ -176,13 +241,15 @@ pub mod tests {
         };
         assert_eq!(
             response.content_encoding().err().unwrap(),
-            HttpError::UnsupportedContentEncoding { description: "xx".to_string() }
+            HttpError::UnsupportedContentEncoding {
+                description: "xx".to_string()
+            }
         );
 
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
-            headers: vec![http::Header {
+            headers: vec![Header {
                 name: "Content-Encoding".to_string(),
                 value: "br".to_string(),
             }],
@@ -194,10 +261,10 @@ pub mod tests {
 
     #[test]
     fn test_multiple_content_encoding() {
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
-            headers: vec![http::Header {
+            headers: vec![Header {
                 name: "Content-Encoding".to_string(),
                 value: "br, identity".to_string(),
             }],
@@ -212,10 +279,10 @@ pub mod tests {
 
     #[test]
     fn test_uncompress_body() {
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
-            headers: vec![http::Header {
+            headers: vec![Header {
                 name: "Content-Encoding".to_string(),
                 value: "br".to_string(),
             }],
@@ -227,10 +294,10 @@ pub mod tests {
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
-            headers: vec![http::Header {
+            headers: vec![Header {
                 name: "Content-Encoding".to_string(),
                 value: "br, identity".to_string(),
             }],
@@ -242,8 +309,8 @@ pub mod tests {
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
-        let response = http::Response {
-            version: http::Version::Http10,
+        let response = Response {
+            version: Version::Http10,
             status: 200,
             headers: vec![],
             body: b"Hello World!".to_vec(),
@@ -285,11 +352,166 @@ pub mod tests {
         let data = vec![0x21];
         assert_eq!(
             uncompress_brotli(&data[..]).err().unwrap(),
-            HttpError::CouldNotUncompressResponse { description: "brotli".to_string() }
+            HttpError::CouldNotUncompressResponse {
+                description: "brotli".to_string()
+            }
         );
         assert_eq!(
             uncompress_gzip(&data[..]).err().unwrap(),
-            HttpError::CouldNotUncompressResponse { description: "gzip".to_string() }
+            HttpError::CouldNotUncompressResponse {
+                description: "gzip".to_string()
+            }
+        );
+    }
+
+    #[test]
+    pub fn test_charset() {
+        assert_eq!(
+            mime_charset("text/plain; charset=utf-8".to_string()),
+            Some("utf-8".to_string())
+        );
+        assert_eq!(
+            mime_charset("text/plain; charset=ISO-8859-1".to_string()),
+            Some("ISO-8859-1".to_string())
+        );
+        assert_eq!(mime_charset("text/plain;".to_string()), None);
+    }
+
+    fn hello_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![],
+            body: b"Hello World!".to_vec(),
+            duration: Default::default(),
+        }
+    }
+
+    fn utf8_encoding_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![Header {
+                name: "Content-Type".to_string(),
+                value: "text/plain; charset=utf-8".to_string(),
+            }],
+            body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
+            duration: Default::default(),
+        }
+    }
+
+    fn latin1_encoding_response() -> Response {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![Header {
+                name: "Content-Type".to_string(),
+                value: "text/plain; charset=ISO-8859-1".to_string(),
+            }],
+            body: vec![0x63, 0x61, 0x66, 0xe9],
+            duration: Default::default(),
+        }
+    }
+
+    #[test]
+    pub fn test_content_type() {
+        assert_eq!(hello_response().content_type(), None);
+        assert_eq!(
+            utf8_encoding_response().content_type(),
+            Some("text/plain; charset=utf-8".to_string())
+        );
+        assert_eq!(
+            latin1_encoding_response().content_type(),
+            Some("text/plain; charset=ISO-8859-1".to_string())
+        );
+    }
+
+    #[test]
+    pub fn test_encoding() {
+        assert_eq!(
+            hello_response().character_encoding().unwrap().name(),
+            "utf-8"
+        );
+        assert_eq!(
+            utf8_encoding_response()
+                .character_encoding()
+                .unwrap()
+                .name(),
+            "utf-8"
+        );
+        assert_eq!(
+            latin1_encoding_response()
+                .character_encoding()
+                .unwrap()
+                .name(),
+            "windows-1252"
+        );
+    }
+
+    #[test]
+    pub fn test_text() {
+        assert_eq!(hello_response().text().unwrap(), "Hello World!".to_string());
+        assert_eq!(utf8_encoding_response().text().unwrap(), "café".to_string());
+        assert_eq!(
+            latin1_encoding_response().text().unwrap(),
+            "café".to_string()
+        );
+    }
+
+    #[test]
+    pub fn test_invalid_charset() {
+        assert_eq!(
+            Response {
+                version: Version::Http10,
+                status: 200,
+                headers: vec![Header {
+                    name: "Content-Type".to_string(),
+                    value: "test/plain; charset=xxx".to_string()
+                }],
+                body: b"Hello World!".to_vec(),
+                duration: Default::default()
+            }
+            .character_encoding()
+            .err()
+            .unwrap(),
+            HttpError::InvalidCharset {
+                charset: "xxx".to_string()
+            }
+        );
+    }
+
+    #[test]
+    pub fn test_invalid_decoding() {
+        assert_eq!(
+            Response {
+                version: Version::Http10,
+                status: 200,
+                headers: vec![],
+                body: vec![0x63, 0x61, 0x66, 0xe9],
+                duration: Default::default()
+            }
+            .text()
+            .err()
+            .unwrap(),
+            HttpError::InvalidDecoding {
+                charset: "utf-8".to_string()
+            }
+        );
+
+        assert_eq!(
+            Response {
+                version: Version::Http10,
+                status: 200,
+                headers: vec![Header {
+                    name: "Content-Type".to_string(),
+                    value: "text/plain; charset=ISO-8859-1".to_string()
+                }],
+                body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
+                duration: Default::default()
+            }
+            .text()
+            .unwrap(),
+            "cafÃ©".to_string()
         );
     }
 }
