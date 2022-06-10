@@ -1,5 +1,7 @@
 # Running Tests
 
+## Use --test Option
+
 Hurl is run by default as an HTTP client, returning the body of the last HTTP response.
 
 ```shell
@@ -17,9 +19,52 @@ Hello World![
 ]
 ```
 
+For testing, we are only interested in the asserts results, we don't need the HTTP body response. To use Hurl as a 
+test tool with an adapted output, you can use [`--test` option]:
 
-For testing, we are only interested in the asserts results, we don't need body response.
-Several options relating to testing can be used:
+```shell
+$ hurl --test hello.hurl assert_json.hurl
+hello.hurl: RUNNING [1/2]
+hello.hurl: SUCCESS
+assert_json.hurl: RUNNING [2/2]
+assert_json.hurl: SUCCESS
+--------------------------------------------------------------------------------
+Executed:  2
+Succeeded: 2 (100.0%)
+Failed:    0 (0.0%)
+Duration:  427ms
+```
+
+Or, in case of errors:
+
+```shell
+$ hurl --test hello.hurl error_assert_status.hurl 
+hello.hurl: RUNNING [1/2]
+hello.hurl: SUCCESS
+error_assert_status.hurl: RUNNING [2/2]
+error: Assert Status
+  --> error_assert_status.hurl:2:10
+   |
+ 2 | HTTP/1.0 200
+   |          ^^^ actual value is <404>
+   |
+
+error_assert_status.hurl: FAILURE
+-------------------------------------------------------------
+Executed:  2
+Succeeded: 1 (50.0%)
+Failed:    1 (50.0%)
+Duration:  52ms
+```
+
+You can use [`--glob` option] to test files that match a given patten:
+
+```shell
+$ hurl --test --glob "test/integration/**/*.hurl"
+```
+
+
+Finally, [`--test` option] is a shorthand over [`--output`], [`--progress`] and [`--summary`]:
 
 - do not output response body ([`--output /dev/null`])
 
@@ -56,32 +101,12 @@ Failed:    0 (0.0%)
 Duration:  134ms
     ```
 
-For convenience, all these options can also be set with the unique option [`--test`].
-
-```shell
-$ hurl --test hello.hurl error_assert_status.hurl 
-hello.hurl: RUNNING [1/2]
-hello.hurl: SUCCESS
-error_assert_status.hurl: RUNNING [2/2]
-error: Assert Status
-  --> error_assert_status.hurl:2:10
-   |
- 2 | HTTP/1.0 200
-   |          ^^^ actual value is <404>
-   |
-
-error_assert_status.hurl: FAILURE
--------------------------------------------------------------
-Executed:  2
-Succeeded: 1 (50.0%)
-Failed:    1 (50.0%)
-Duration:  52ms
-```
+These options can be combined or used independently depending on the use case.
 
 
-## Generating an HTML report
+## Generating an HTML Report
 
-Hurl can also generates an HTML by using the [`--report-html HTML_DIR`] option.
+Hurl can also generate an HTML report by using the [`--report-html HTML_DIR`] option.
 
 If the HTML report already exists, the test results will be appended to it.
 
@@ -92,8 +117,24 @@ The input Hurl files (HTML version) are also included and are easily accessed fr
 <img src="/docs/assets/img/hurl-html-file.png"  width="380" height="206" alt="Hurl HTML file">
 
 
+## Use Variables in Tests
+
+To use variables in your tests, you can:
+
+- use [`--variable` option]
+- use [`--variables-file` option]
+- define environment variables, for instance `HURL_foo=bar`
+
+You will find a detail description in the [Injecting Variables] section of the doc.
+
 [`--output /dev/null`]: /docs/man-page.md#output
 [`--progress`]: /docs/man-page.md#progress
 [`--summary`]: /docs/man-page.md#summary
 [`--test`]: /docs/man-page.md#test
 [`--report-html HTML_DIR`]: /docs/man-page.md#report-html
+[`--test` option]: /docs/man-page.md#test
+[`--glob` option]: /docs/man-page.md#glob
+[`--output`]: /docs/man-page.md#output
+[`--variable` option]: /docs/man-page.md#variable
+[`--variables-file` option]: /docs/man-page.md#variables-file
+[Injecting Variables]: /docs/templates.md#injecting-variables
