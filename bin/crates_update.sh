@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 # init exit workflow
 set -o errexit
 set -o pipefail
