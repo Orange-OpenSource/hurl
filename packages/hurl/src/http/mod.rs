@@ -17,6 +17,7 @@
  */
 
 pub use self::client::Client;
+pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::{Cookie, Header, Param, RequestCookie};
 pub use self::error::HttpError;
 pub use self::options::ClientOptions;
@@ -30,7 +31,7 @@ pub use self::response::{Response, Version};
 pub use self::version::libcurl_version_info;
 
 mod client;
-mod response_decoding;
+mod cookie;
 mod core;
 mod error;
 mod options;
@@ -38,4 +39,6 @@ mod request;
 mod request_spec;
 mod request_spec_curl_args;
 mod response;
+mod response_cookie;
+mod response_decoding;
 mod version;

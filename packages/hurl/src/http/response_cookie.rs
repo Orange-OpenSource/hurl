@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 use crate::http::Response;
-
-use super::cookie::ResponseCookie;
+use crate::http::ResponseCookie;
 
 impl Response {
     pub fn cookies(&self) -> Vec<ResponseCookie> {

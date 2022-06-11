@@ -16,8 +16,10 @@
  *
  */
 
-use crate::http::{Cookie, Header, Param, Request, RequestCookie, Response, Version};
-use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult, ResponseCookie};
+use crate::http::{
+    Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
+};
+use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
     pub fn to_json(&self, lines: &[String]) -> serde_json::Value {
