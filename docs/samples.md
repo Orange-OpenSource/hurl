@@ -10,6 +10,14 @@ GET https://example.org
 $ hurl sample.hurl
 ```
 
+By default, Hurl behaves like [curl] and outputs the last HTTP response's [entry]. To have a test
+oriented output, you can use [`--test` option]:
+
+```shell
+$ hurl --test sample.hurl
+```
+
+
 You can check [Hurl tests suite] for more samples.
 
 ## Getting Data
@@ -373,3 +381,6 @@ bytes startsWith hex,efbbbf;
 [Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`-u/--user` option]: /docs/man-page.md#user
+[curl]: https://curl.se
+[entry]: /docs/entry.md
+[`--test` option]: /docs/man-page.md#test
