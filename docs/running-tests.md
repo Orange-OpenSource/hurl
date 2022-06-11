@@ -63,47 +63,6 @@ You can use [`--glob` option] to test files that match a given patten:
 $ hurl --test --glob "test/integration/**/*.hurl"
 ```
 
-
-Finally, [`--test` option] is a shorthand over [`--output`], [`--progress`] and [`--summary`]:
-
-- do not output response body ([`--output /dev/null`])
-
-    ```shell
-$ hurl --output /dev/null hello.hurl assert_json.hurl
-    ```
-
-- show progress ([`--progress`])
-
-    ```shell
-$ hurl --progress /dev/null hello.hurl assert_json.hurl
-hello.hurl: RUNNING [1/2]
-hello.hurl: SUCCESS
-assert_json.hurl: RUNNING [2/2]
-assert_json.hurl: SUCCESS
-Hello World![
-{ "id": 1, "name": "Bob"},
-{ "id": 2, "name": "Bill"}
-]
-    ```
-
-- print summary ([`--summary`])
-
-    ```shell
-$ hurl --summary hello.hurl assert_json.hurl
-Hello World![
-{ "id": 1, "name": "Bob"},
-{ "id": 2, "name": "Bill"}
-]
---------------------------------------------------------------------------------
-Executed:  2
-Succeeded: 2 (100.0%)
-Failed:    0 (0.0%)
-Duration:  134ms
-    ```
-
-These options can be combined or used independently depending on the use case.
-
-
 ## Generating an HTML Report
 
 Hurl can also generate an HTML report by using the [`--report-html HTML_DIR`] option.
@@ -128,13 +87,10 @@ To use variables in your tests, you can:
 You will find a detail description in the [Injecting Variables] section of the doc.
 
 [`--output /dev/null`]: /docs/man-page.md#output
-[`--progress`]: /docs/man-page.md#progress
-[`--summary`]: /docs/man-page.md#summary
 [`--test`]: /docs/man-page.md#test
 [`--report-html HTML_DIR`]: /docs/man-page.md#report-html
 [`--test` option]: /docs/man-page.md#test
 [`--glob` option]: /docs/man-page.md#glob
-[`--output`]: /docs/man-page.md#output
 [`--variable` option]: /docs/man-page.md#variable
 [`--variables-file` option]: /docs/man-page.md#variables-file
 [Injecting Variables]: /docs/templates.md#injecting-variables

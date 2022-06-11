@@ -73,7 +73,7 @@ typing the url <http://localhost:8080>:
 
 Next, we’re going to write our first test.
 
-1. Open a text editor and create a file named `basic.hurl`. In this file, just type the following text and save:</li>
+1. Open a text editor and create a file named `basic.hurl`. In this file, just type the following text and save:
 
 ```hurl
 GET http://localhost:8080
@@ -85,7 +85,7 @@ This is your first Hurl file, and probably one of the simplest. It consists of o
 > `GET` HTTP request on the endpoint <http://localhost:8080>. A request can be optionally followed by a [response
 > description], to add asserts on the HTTP response. For the moment, we don't have any response description.
 
-2. In a shell, execute `hurl` with `basic.hurl` as argument:</li>
+2. In a shell, execute `hurl` with `basic.hurl` as argument:
 
 ```shell
 $ hurl basic.hurl
@@ -123,7 +123,7 @@ without checking the actual HTTP response.
 As this test is not sufficient to ensure that our server is alive and running, we're going to add some asserts on
 the response and, at least, check that the HTTP response status code is [`200 OK`].
 
-3.Open `basic.hurl` and modify it to test the status code response:</li>
+3. Open `basic.hurl` and modify it to test the status code response:
 
 ```hurl
 GET http://localhost:8080
@@ -147,20 +147,40 @@ $ hurl basic.hurl
 ```
 
 There is no modification to the output of Hurl, the content of the HTTP request is outputted to the terminal. But, now,
-we check that our server is responding with a `200 OK`.
+we check that our server is responding with a `200 OK`. 
 
-5. Modify `basic.hurl` to test a different HTTP response status code:
+By default, Hurl behaves like [curl] and outputs the HTTP response. This is useful when you want to get data from a 
+server, and you need to perform additional steps (like login, confirmation etc...) before being able to call your last
+request.
+
+In our case, we want to add tests to our project, so we can use [`--test`] command line option to have an adapted 
+test output:
+
+5. Execute `basic.hurl` in test mode:
+
+```shell
+$ hurl --test basic.hurl
+basic.hurl: RUNNING [1/1]
+basic.hurl: SUCCESS
+--------------------------------------------------------------------------------
+Executed:  1
+Succeeded: 1 (100.0%)
+Failed:    0 (0.0%)
+Duration:  14ms
+```
+
+6. Modify `basic.hurl` to test a different HTTP response status code:
 
 ```hurl
 GET http://localhost:8080
 HTTP/1.1 500
 ```
 
-6. Save and execute it:
+7. Save and execute it:
 
 
 ```shell
-$ hurl basic.hurl
+$ hurl --test basic.hurl
 error: Assert Status
   --> basic.hurl:2:10
    |
@@ -169,7 +189,7 @@ error: Assert Status
    |
 ```
 
-7. Revert your changes and finally add a comment at the beginning of the file:
+8. Revert your changes and finally add a comment at the beginning of the file:
 
 
 ```hurl
@@ -197,3 +217,5 @@ We're going to see in the next section how to improve our tests while keeping it
 [response description]: /docs/response.md
 [`500 Internal Server Error`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
 [`200 OK`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
+[`--test`]: /docs/man-page.md#test
+[curl]: https://curl.se

@@ -70,63 +70,6 @@ description.
 2. Run `basic.hurl`:
 
 ```shell
-$ hurl basic.hurl
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="/style.css">
-    <!--<script src="script.js"></script>-->
-</head>
-<body>
-<div>
-    <img class="logo" src="/quiz.svg" alt="Quiz logo">
-</div>
-<h1>Error 404, Page not Found!</h1>
-
-<a href="/">Quiz Home</a>
-
-
-</body>
-</html>
-```
-
-We can see that the test is still ok, but now, Hurl outputs the response of the last HTTP request (i.e.
-the content of our 404 page). This is useful when you want to get data from a server, and you need to
-perform additional steps (like login, confirmation etc...) before being able to call your last request.
-
-In our tutorial, we're simply interested to verify the success or failure of our integration tests.
-So, first, we'll remove the standard output (if a test is broken, we'll still have the error output).
-
-3. Run `basic.hurl` while redirecting the standard ouput to `/dev/null`:
-
-```shell
-$ hurl basic.hurl > /dev/null
-```
-
-Then, we can also use [`--progress`] and [`--summary`] option to give us some feedback on
-our tests progression and a simple summary:
-
-4. Run `basic.hurl` with `--progress` and `--summary` options:
-
-```shell
-$ hurl --progress --summary basic.hurl > /dev/null
-basic.hurl: RUNNING [1/1]
-basic.hurl: SUCCESS
---------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  40ms
-```
-
-Finally, we can use the [`--test`] option that is a shortcut for no output,
-using [`--progress`] and [`--summary`] options:
-
-5. Run `basic.hurl` with `--test` option:
-
-```shell
 $ hurl --test basic.hurl
 basic.hurl: RUNNING [1/1]
 basic.hurl: SUCCESS
@@ -137,7 +80,8 @@ Failed:    0 (0.0%)
 Duration:  40ms
 ```
 
-From now on, we will always use `--test` to run our tests files.
+We can see that the test is still ok, now two requests are ran in chain, and each response can be
+tested independently.
 
 ## Test REST Api
 
@@ -332,6 +276,4 @@ for your applications.
 [JsonPath assert]: /docs/asserting-response.md#jsonpath-assert
 [JsonPath query]: https://goessner.net/articles/JsonPath/
 [query parameter section]: /docs/request.md#query-parameters
-[`--progress`]: /docs/man-page.md#progress
-[`--summary`]: /docs/man-page.md#summary
 [`--test`]: /docs/man-page.md#test

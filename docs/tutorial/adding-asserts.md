@@ -56,20 +56,17 @@ xpath "string(//head/title)" == "Welcome to Quiz!"
 2. Run `basic.hurl`:
 
 ```shell
-$ hurl basic.hurl
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Welcome to Quiz!</title>
-<!--    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>-->
-</head>
-....
-</html>
+$ hurl --test basic.hurl
+basic.hurl: RUNNING [1/1]
+basic.hurl: SUCCESS
+--------------------------------------------------------------------------------
+Executed:  1
+Succeeded: 1 (100.0%)
+Failed:    0 (0.0%)
+Duration:  14ms
 ```
 
-We get the content of the page and there is no error so everything is good!
+There is no error so everything is good!
 
 3. Modify the predicate value to "Welcome to Quaz!"
 
@@ -86,7 +83,7 @@ xpath "string(//head/title)" == "Welcome to Quaz!"
 4. Run `basic.hurl`:
 
 ```shell
-$ hurl basic.hurl
+$ hurl --test basic.hurl
 error: Assert Failure
   --> integration/basic.hurl:6:0
    |
@@ -145,17 +142,14 @@ xpath "string((//button)[2])" contains "Create"
 3. Run `basic.hurl` and check that every assert has been successful:
 
 ```shell
-$ hurl basic.hurl
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Welcome to Quiz!</title>
-<!--    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>-->
-</head>
-....
-</html>
+$ hurl --test basic.hurl
+basic.hurl: RUNNING [1/1]
+basic.hurl: SUCCESS
+--------------------------------------------------------------------------------
+Executed:  1
+Succeeded: 1 (100.0%)
+Failed:    0 (0.0%)
+Duration:  14ms
 ```
 
 
@@ -264,17 +258,14 @@ cookie "JSESSIONID[HttpOnly]" exists
 5. Run `basic.hurl` and check that every assert has been successful:
 
 ```shell
-$ hurl basic.hurl
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Welcome to Quiz!</title>
-<!--    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>-->
-</head>
-....
-</html>
+$ hurl --test basic.hurl
+basic.hurl: RUNNING [1/1]
+basic.hurl: SUCCESS
+--------------------------------------------------------------------------------
+Executed:  1
+Succeeded: 1 (100.0%)
+Failed:    0 (0.0%)
+Duration:  16ms
 ```
 
 ## Performance Test
