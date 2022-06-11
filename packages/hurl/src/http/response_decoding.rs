@@ -18,9 +18,10 @@
 
 use encoding::{DecoderTrap, EncodingRef};
 ///
-/// Uncompress body response
+/// Decompresses body response
 /// using the Content-Encoding response header
 ///
+/// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 use std::io::prelude::*;
 
 use crate::http::{HttpError, Response};
@@ -51,7 +52,7 @@ impl ContentEncoding {
         }
     }
 
-    /// Decompress bytes.
+    /// Decompresses bytes.
     ///
     /// # Arguments
     ///
@@ -83,7 +84,7 @@ impl Response {
         }
     }
 
-    /// Returns response body as text
+    /// Returns response body as text.
     pub fn text(&self) -> Result<String, HttpError> {
         let encoding = self.character_encoding()?;
         let body = &self.uncompress_body()?;
@@ -95,7 +96,7 @@ impl Response {
         }
     }
 
-    /// Returns true if response is an HTML response
+    /// Returns true if response is an HTML response.
     pub fn is_html(&self) -> bool {
         match self.content_type() {
             None => false,
@@ -105,7 +106,7 @@ impl Response {
 
     /// Returns list of content encoding from HTTP response headers.
     ///
-    /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
+    /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
     fn content_encoding(&self) -> Result<Vec<ContentEncoding>, HttpError> {
         for header in &self.headers {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
@@ -131,7 +132,7 @@ impl Response {
     }
 }
 
-/// Decompress Brotli compressed data.
+/// Decompresses Brotli compressed data.
 ///
 /// # Arguments
 ///
@@ -148,7 +149,7 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     }
 }
 
-/// Decompress GZip compressed data.
+/// Decompresses GZip compressed data.
 ///
 /// # Arguments
 ///
@@ -171,7 +172,7 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     }
 }
 
-/// Decompress Zlib compressed data.
+/// Decompresses Zlib compressed data.
 ///
 /// # Arguments
 ///

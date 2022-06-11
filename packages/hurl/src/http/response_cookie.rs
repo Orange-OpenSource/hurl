@@ -27,9 +27,7 @@ impl Response {
             .collect()
     }
 
-    ///
-    /// Return option cookie from response
-    ///
+    /// Returns optional cookies from response.
     pub fn get_cookie(&self, name: String) -> Option<ResponseCookie> {
         for cookie in self.cookies() {
             if cookie.name == name {
