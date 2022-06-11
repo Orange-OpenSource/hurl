@@ -27,25 +27,25 @@ use crate::http;
 use crate::http::HttpError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Encoding {
+pub enum ContentEncoding {
     Brotli,
     Gzip,
     Deflate,
     Identity,
 }
 
-impl Encoding {
+impl ContentEncoding {
     /// Returns an encoding from an HTTP header value.
     ///
     /// # Arguments
     ///
     /// * `s` - A Content-Encoding header value
-    pub fn parse(s: &str) -> Result<Encoding, HttpError> {
+    pub fn parse(s: &str) -> Result<ContentEncoding, HttpError> {
         match s {
-            "br" => Ok(Encoding::Brotli),
-            "gzip" => Ok(Encoding::Gzip),
-            "deflate" => Ok(Encoding::Deflate),
-            "identity" => Ok(Encoding::Identity),
+            "br" => Ok(ContentEncoding::Brotli),
+            "gzip" => Ok(ContentEncoding::Gzip),
+            "deflate" => Ok(ContentEncoding::Deflate),
+            "identity" => Ok(ContentEncoding::Identity),
             v => Err(HttpError::UnsupportedContentEncoding {
                 description: v.to_string(),
             }),
@@ -59,10 +59,10 @@ impl Encoding {
     /// * `data` - A compressed bytes array
     pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, HttpError> {
         match self {
-            Encoding::Identity => Ok(data.to_vec()),
-            Encoding::Gzip => uncompress_gzip(data),
-            Encoding::Deflate => uncompress_zlib(data),
-            Encoding::Brotli => uncompress_brotli(data),
+            ContentEncoding::Identity => Ok(data.to_vec()),
+            ContentEncoding::Gzip => uncompress_gzip(data),
+            ContentEncoding::Deflate => uncompress_zlib(data),
+            ContentEncoding::Brotli => uncompress_brotli(data),
         }
     }
 }
@@ -107,12 +107,12 @@ impl http::Response {
     /// Returns list of content encoding from HTTP response headers.
     ///
     /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
-    fn content_encoding(&self) -> Result<Vec<Encoding>, HttpError> {
+    fn content_encoding(&self) -> Result<Vec<ContentEncoding>, HttpError> {
         for header in &self.headers {
             if header.name.as_str().to_ascii_lowercase() == "content-encoding" {
                 let mut encodings = vec![];
                 for value in header.value.as_str().split(',') {
-                    let encoding = Encoding::parse(value.trim())?;
+                    let encoding = ContentEncoding::parse(value.trim())?;
                     encodings.push(encoding);
                 }
                 return Ok(encodings);
@@ -208,10 +208,10 @@ pub mod tests {
     use crate::http::{Header, Response, Version};
 
     #[test]
-    fn test_parse_encoding() {
-        assert_eq!(Encoding::parse("br").unwrap(), Encoding::Brotli);
+    fn test_parse_content_encoding() {
+        assert_eq!(ContentEncoding::parse("br").unwrap(), ContentEncoding::Brotli);
         assert_eq!(
-            Encoding::parse("xx").err().unwrap(),
+            ContentEncoding::parse("xx").err().unwrap(),
             HttpError::UnsupportedContentEncoding {
                 description: "xx".to_string()
             }
@@ -256,7 +256,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
         };
-        assert_eq!(response.content_encoding().unwrap(), vec![Encoding::Brotli]);
+        assert_eq!(response.content_encoding().unwrap(), vec![ContentEncoding::Brotli]);
     }
 
     #[test]
@@ -273,7 +273,7 @@ pub mod tests {
         };
         assert_eq!(
             response.content_encoding().unwrap(),
-            vec![Encoding::Brotli, Encoding::Identity]
+            vec![ContentEncoding::Brotli, ContentEncoding::Identity]
         );
     }
 
@@ -427,7 +427,7 @@ pub mod tests {
     }
 
     #[test]
-    pub fn test_encoding() {
+    pub fn test_character_encoding() {
         assert_eq!(
             hello_response().character_encoding().unwrap().name(),
             "utf-8"
