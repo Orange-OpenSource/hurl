@@ -23,8 +23,7 @@ use encoding::{DecoderTrap, EncodingRef};
 ///
 use std::io::prelude::*;
 
-use crate::http;
-use crate::http::HttpError;
+use crate::http::{HttpError, Response};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ContentEncoding {
@@ -67,7 +66,7 @@ impl ContentEncoding {
     }
 }
 
-impl http::Response {
+impl Response {
     /// Returns character encoding of the HTTP response.
     fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
         match self.content_type() {
@@ -209,7 +208,10 @@ pub mod tests {
 
     #[test]
     fn test_parse_content_encoding() {
-        assert_eq!(ContentEncoding::parse("br").unwrap(), ContentEncoding::Brotli);
+        assert_eq!(
+            ContentEncoding::parse("br").unwrap(),
+            ContentEncoding::Brotli
+        );
         assert_eq!(
             ContentEncoding::parse("xx").err().unwrap(),
             HttpError::UnsupportedContentEncoding {
@@ -256,7 +258,10 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
         };
-        assert_eq!(response.content_encoding().unwrap(), vec![ContentEncoding::Brotli]);
+        assert_eq!(
+            response.content_encoding().unwrap(),
+            vec![ContentEncoding::Brotli]
+        );
     }
 
     #[test]

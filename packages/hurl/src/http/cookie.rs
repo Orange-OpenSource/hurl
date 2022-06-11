@@ -20,8 +20,6 @@
 /// This module defines a HTTP ResponseCookie,
 /// namely the cookie returned from the response Set-Cookie header
 ///
-/// They are exclusively used by the cookie query
-/// and not by the http client.
 ///
 
 ///
@@ -41,7 +39,6 @@ pub struct CookieAttribute {
     pub value: Option<String>,
 }
 
-#[allow(dead_code)]
 impl ResponseCookie {
     ///
     /// parse value from Set-Cookie Header into a Cookie

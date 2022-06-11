@@ -19,7 +19,6 @@
 use regex::Regex;
 use std::collections::HashMap;
 
-use super::cookie;
 use super::core::{Error, RunnerError};
 use super::template::eval_template;
 use super::value::Value;
@@ -268,7 +267,7 @@ pub fn eval_query_value(
 
 pub fn eval_cookie_attribute_name(
     cookie_attribute_name: CookieAttributeName,
-    cookie: cookie::ResponseCookie,
+    cookie: http::ResponseCookie,
 ) -> Option<Value> {
     match cookie_attribute_name {
         CookieAttributeName::Value(_) => Some(Value::String(cookie.value)),
@@ -775,23 +774,23 @@ pub mod tests {
 
     #[test]
     fn test_eval_cookie_attribute_name() {
-        let cookie = cookie::ResponseCookie {
+        let cookie = http::ResponseCookie {
             name: "LSID".to_string(),
             value: "DQAAAKEaem_vYg".to_string(),
             attributes: vec![
-                cookie::CookieAttribute {
+                http::CookieAttribute {
                     name: "Path".to_string(),
                     value: Some("/accounts".to_string()),
                 },
-                cookie::CookieAttribute {
+                http::CookieAttribute {
                     name: "Expires".to_string(),
                     value: Some("Wed, 13 Jan 2021 22:23:01 GMT".to_string()),
                 },
-                cookie::CookieAttribute {
+                http::CookieAttribute {
                     name: "Secure".to_string(),
                     value: None,
                 },
-                cookie::CookieAttribute {
+                http::CookieAttribute {
                     name: "HttpOnly".to_string(),
                     value: None,
                 },

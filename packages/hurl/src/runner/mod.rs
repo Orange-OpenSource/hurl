@@ -23,7 +23,6 @@
 //!
 //!
 
-pub use self::cookie::ResponseCookie;
 pub use self::core::{
     AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
 };
@@ -33,12 +32,10 @@ pub use self::value::Value;
 mod assert;
 mod body;
 mod capture;
-mod cookie;
 mod core;
 mod entry;
 mod error;
 mod expr;
-mod http_response;
 mod hurl_file;
 mod json;
 mod multipart;
