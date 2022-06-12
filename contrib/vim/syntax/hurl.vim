@@ -20,9 +20,10 @@ syntax match EscapeQuote  "\\\""
 syntax match Section "\[[A-Za-z]*\]"
 syntax match Number  "\s[0-9]*"
 
-syntax region String start='"' end='"'  contains=EscapeQuote
-syntax region String start='```' end='```'
-syntax region Json   start='{' end='}'
+syntax region String   start='"' end='"'  contains=EscapeQuote
+syntax region String   start='```' end='```'
+syntax region Json     start='{' end='}' contains=Template
+syntax region Template start='{{' end='}}'
 
 
 " colors
@@ -34,5 +35,6 @@ highlight Json                ctermfg=green
 highlight Number              ctermfg=lightblue
 highlight EscapeNumberSign    ctermfg=white
 highlight EscapeQuote         ctermfg=green
+highlight Template            ctermfg=red
 
 
