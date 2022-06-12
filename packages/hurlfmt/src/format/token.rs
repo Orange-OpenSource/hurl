@@ -390,12 +390,6 @@ impl Tokenizable for Cookie {
     }
 }
 
-impl Tokenizable for CookieValue {
-    fn tokenize(&self) -> Vec<Token> {
-        vec![Token::Value(self.clone().value)]
-    }
-}
-
 impl Tokenizable for Capture {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];

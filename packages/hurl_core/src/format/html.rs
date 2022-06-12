@@ -298,15 +298,6 @@ impl Htmlable for Cookie {
     }
 }
 
-impl Htmlable for CookieValue {
-    fn to_html(&self) -> String {
-        format!(
-            "<span class=\"cookie-value\">{}</span>",
-            self.value.as_str()
-        )
-    }
-}
-
 impl Htmlable for Capture {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");

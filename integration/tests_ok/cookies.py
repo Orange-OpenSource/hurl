@@ -13,7 +13,8 @@ def set_request_cookie1_value1():
 def set_multiple_request_cookies():
     assert request.cookies["user1"] == "Bob"
     assert request.cookies["user2"] == "Bill"
-    assert request.headers["Cookie"] == "user1=Bob; user2=Bill"
+    assert request.cookies["user3"] == "Bruce"
+    assert request.headers["Cookie"] == "user1=Bob; user2=Bill; user3=Bruce"
     return ""
 
 
