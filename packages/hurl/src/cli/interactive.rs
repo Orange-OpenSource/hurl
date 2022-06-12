@@ -109,7 +109,7 @@ fn log_request(request: Request) {
             }
             SectionValue::Cookies(cookies) => {
                 for cookie in cookies {
-                    eprintln!("\r{}: {}", cookie.name.value, cookie.value.value);
+                    eprintln!("\r{}: {}", cookie.name.value, cookie.value);
                 }
             }
             _ => {}

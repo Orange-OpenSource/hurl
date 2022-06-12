@@ -1,6 +1,6 @@
 curl 'http://localhost:8000/cookies/set-request-cookie1-valueA' --cookie 'cookie1=valueA'
 curl 'http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session'
-curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill'
+curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill; user3=Bruce'
 curl 'http://localhost:8000/cookies/set-session-cookie2-valueA'
 curl 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA' --cookie 'cookie2=valueA'
 curl 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA-and-valueB' --cookie 'cookie2=valueB; cookie2=valueA'

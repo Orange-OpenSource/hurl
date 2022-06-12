@@ -13,6 +13,7 @@ GET http://localhost:8000/cookies/set-multiple-request-cookies
 [Cookies]
 user1: Bob
 user2: Bill
+user3: {{name}}
 HTTP/1.0 200
 
 

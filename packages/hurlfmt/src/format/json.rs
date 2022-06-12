@@ -243,10 +243,7 @@ impl ToJson for Cookie {
     fn to_json(&self) -> JValue {
         let attributes = vec![
             ("name".to_string(), JValue::String(self.name.value.clone())),
-            (
-                "value".to_string(),
-                JValue::String(self.value.value.clone()),
-            ),
+            ("value".to_string(), JValue::String(self.value.to_string())),
         ];
         JValue::Object(attributes)
     }

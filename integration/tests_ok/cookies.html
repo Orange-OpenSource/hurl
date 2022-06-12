@@ -2,7 +2,7 @@
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/set-request-cookie1-valueA</span></span>
 <span class="line section-header">[Cookies]</span>
-<span class="line"><span class="name">cookie1</span><span>:</span> <span class="cookie-value">valueA</span></span>
+<span class="line"><span class="name">cookie1</span><span>:</span> valueA</span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># The cookie is not added in the cookie storage</span>
@@ -11,8 +11,9 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/set-multiple-request-cookies</span></span>
 <span class="line section-header">[Cookies]</span>
-<span class="line"><span class="name">user1</span><span>:</span> <span class="cookie-value">Bob</span></span>
-<span class="line"><span class="name">user2</span><span>:</span> <span class="cookie-value">Bill</span></span>
+<span class="line"><span class="name">user1</span><span>:</span> Bob</span>
+<span class="line"><span class="name">user2</span><span>:</span> Bill</span>
+<span class="line"><span class="name">user3</span><span>:</span> {{name}}</span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
@@ -28,7 +29,7 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/cookies/assert-that-cookie2-is-valueA-and-valueB</span></span>
 <span class="line section-header">[Cookies]</span>
-<span class="line"><span class="name">cookie2</span><span>:</span> <span class="cookie-value">valueB</span></span>
+<span class="line"><span class="name">cookie2</span><span>:</span> valueB</span>
 </span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>

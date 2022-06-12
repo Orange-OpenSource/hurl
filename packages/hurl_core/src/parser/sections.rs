@@ -158,7 +158,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
     let space1 = zero_or_more_spaces(reader)?;
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
-    let value = cookie_value(reader);
+    let value = unquoted_template(reader)?;
     let line_terminator0 = line_terminator(reader)?;
     Ok(Cookie {
         line_terminators,
@@ -169,23 +169,6 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
         value,
         line_terminator0,
     })
-}
-
-///
-/// The cookie-value must not be wrapped within double-quotes
-/// This is optional in the spec, if you really want to include these optional quotes, you must use directly the header Cookie
-///
-fn cookie_value(reader: &mut Reader) -> CookieValue {
-    //let start = reader.state.clone();
-    let value = reader.read_while(|c| {
-        c.is_ascii_alphanumeric()
-            || vec![
-                '!', '#', '$', '%', '&', '\'', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=',
-                '>', '?', '@', '[', ']', '^', '_', '`', '~', '|', '"', ';', ',',
-            ]
-            .contains(c)
-    });
-    CookieValue { value }
 }
 
 fn multipart_param(reader: &mut Reader) -> ParseResult<'static, MultipartParam> {
@@ -488,38 +471,35 @@ mod tests {
         let mut reader = Reader::init("Foo: Bar");
         let c = cookie(&mut reader).unwrap();
         assert_eq!(c.name.value, String::from("Foo"));
-        assert_eq!(c.value.value, String::from("Bar"));
+        assert_eq!(
+            c.value,
+            Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "Bar".to_string(),
+                    encoded: "Bar".to_string()
+                }],
+                source_info: SourceInfo::init(1, 6, 1, 9)
+            }
+        );
     }
 
     #[test]
     fn test_cookie_error() {
-        let mut reader = Reader::init("Foo: {Bar}");
+        let mut reader = Reader::init("Foo: {{Bar");
         let error = cookie(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 6 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 11
+            }
+        );
         assert!(!error.recoverable);
         assert_eq!(
             error.inner,
             ParseError::Expecting {
-                value: "line_terminator".to_string()
-            }
-        );
-    }
-
-    #[test]
-    fn test_cookie_value() {
-        let mut reader = Reader::init("Bar");
-        assert_eq!(
-            cookie_value(&mut reader),
-            CookieValue {
-                value: String::from("Bar")
-            }
-        );
-
-        let mut reader = Reader::init("\"Bar\"");
-        assert_eq!(
-            cookie_value(&mut reader),
-            CookieValue {
-                value: String::from("\"Bar\"")
+                value: "}}".to_string()
             }
         );
     }

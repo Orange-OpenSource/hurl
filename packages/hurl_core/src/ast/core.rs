@@ -230,13 +230,8 @@ pub struct Cookie {
     pub name: EncodedString,
     pub space1: Whitespace,
     pub space2: Whitespace,
-    pub value: CookieValue,
+    pub value: Template,
     pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CookieValue {
-    pub value: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

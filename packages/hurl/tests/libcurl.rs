@@ -884,19 +884,23 @@ fn test_multiple_request_cookies() {
                 name: "user2".to_string(),
                 value: "Bill".to_string(),
             },
+            RequestCookie {
+                name: "user3".to_string(),
+                value: "Bruce".to_string(),
+            },
         ],
         body: Body::Binary(vec![]),
         content_type: None,
     };
     assert_eq!(
         client.curl_command_line(&request_spec),
-        "curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill'".to_string()
+        "curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill; user3=Bruce'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
-        value: "user1=Bob; user2=Bill".to_string(),
+        value: "user1=Bob; user2=Bill; user3=Bruce".to_string(),
     }));
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());

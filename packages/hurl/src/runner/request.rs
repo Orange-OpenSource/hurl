@@ -79,9 +79,10 @@ pub fn eval_request(
 
     let mut cookies = vec![];
     for cookie in request.clone().cookies() {
+        let value = eval_template(&cookie.value, variables)?;
         let cookie = http::RequestCookie {
             name: cookie.clone().name.value,
-            value: cookie.clone().value.value,
+            value,
         };
         cookies.push(cookie);
     }
