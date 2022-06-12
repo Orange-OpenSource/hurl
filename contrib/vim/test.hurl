@@ -1,5 +1,5 @@
 # This is a comment
-GET http://example.com
+GET http://{{host}}
 Header1: Value1
 Header2: a\#    # value with \#
 Header3: GET   
@@ -15,7 +15,7 @@ body not contains "\"\#"
 
 POST http://example.com
 {
-  "id": 123,
+  "id": {{id}},
   "message": "Hello"
 }
 
