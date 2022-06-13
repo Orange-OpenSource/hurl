@@ -145,6 +145,8 @@ HTTP/1.1 200
 
 [Blog]
 
+[Tutorial]
+
 [Documentation]
 
 [GitHub]
@@ -218,6 +220,14 @@ GET https://example.org
 
 $ hurl sample.hurl
 ```
+
+By default, Hurl behaves like [curl] and outputs the last HTTP response's [entry]. To have a test
+oriented output, you can use [`--test` option]:
+
+```shell
+$ hurl --test sample.hurl
+```
+
 
 You can check [Hurl tests suite] for more samples.
 
@@ -633,8 +643,8 @@ The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.htm
 It consists of one or several HTTP requests
 
 ```hurl
-GET http:/example.net/endpoint1
-GET http:/example.net/endpoint2
+GET http:/example.org/endpoint1
+GET http:/example.org/endpoint2
 ```
 
 
@@ -645,14 +655,14 @@ A value from an HTTP response can be-reused for successive HTTP requests.
 A typical example occurs with csrf tokens.
 
 ```hurl
-GET https://example.net
+GET https://example.org
 HTTP/1.1 200
 # Capture the CSRF token value from html body.
 [Captures]
 csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 
 # Do the login !
-POST https://example.net/login?user=toto&password=1234
+POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
 
@@ -918,6 +928,7 @@ Please follow the [contrib on Windows section].
 [the installation section]: https://hurl.dev/docs/installation.html
 [Feedback, suggestion, bugs or improvements]: https://github.com/Orange-OpenSource/hurl/issues
 [License]: https://hurl.dev/docs/license.html
+[Tutorial]: https://hurl.dev/docs/tutorial/your-first-hurl-file.html
 [Documentation]: https://hurl.dev/docs/installation.html
 [Blog]: https://hurl.dev/blog/
 [GitHub]: https://github.com/Orange-OpenSource/hurl
@@ -932,6 +943,9 @@ Please follow the [contrib on Windows section].
 [Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`-u/--user` option]: https://hurl.dev/docs/man-page.html#user
+[curl]: https://curl.se
+[entry]: https://hurl.dev/docs/entry.html
+[`--test` option]: https://hurl.dev/docs/man-page.html#test
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.6.1-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64.zip
 [hurl-1.6.1-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64-installer.exe
