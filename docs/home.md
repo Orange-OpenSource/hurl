@@ -143,6 +143,8 @@ HTTP/1.1 200
 
 [Blog]
 
+[Tutorial]
+
 [Documentation]
 
 [GitHub]
@@ -154,6 +156,7 @@ HTTP/1.1 200
 [the installation section]: /docs/installation.md
 [Feedback, suggestion, bugs or improvements]: https://github.com/Orange-OpenSource/hurl/issues
 [License]: /docs/license.md
+[Tutorial]: /docs/tutorial/your-first-hurl-file.md
 [Documentation]: /docs/installation.md
 [Blog]: blog.md
 [GitHub]: https://github.com/Orange-OpenSource/hurl
