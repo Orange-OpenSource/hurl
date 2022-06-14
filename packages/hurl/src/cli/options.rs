@@ -23,7 +23,7 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use atty::Stream;
-use clap::{AppSettings, ArgMatches, Command};
+use clap::{AppSettings, ArgAction, ArgMatches, Command};
 
 use crate::cli;
 use crate::cli::CliError;
@@ -80,7 +80,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
-                .multiple_occurrences(true),
+                .action(ArgAction::Append),
         )
         .arg(
             clap::Arg::new("cacert_file")
@@ -123,7 +123,6 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("fail_at_end")
                 .long("fail-at-end")
                 .help("Fail at end")
-                .takes_value(false),
         )
         .arg(
             clap::Arg::new("file_root")
@@ -142,7 +141,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("glob")
                 .long("glob")
                 .value_name("GLOB")
-                .multiple_occurrences(true)
+                .action(ArgAction::Append)
                 .number_of_values(1)
                 .help("Specify input files that match the given blob. Multiple glob flags may be used."),
         )
@@ -280,7 +279,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("variable")
                 .long("variable")
                 .value_name("NAME=VALUE")
-                .multiple_occurrences(true)
+                .action(ArgAction::Append)
                 .number_of_values(1)
                 .help("Define a variable")
                 .takes_value(true),
@@ -301,20 +300,20 @@ pub fn app(version: &str) -> Command {
 }
 
 pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
-    let cacert_file = match matches.value_of("cacert_file") {
+    let cacert_file = match get_string(&matches, "cacert_file") {
         None => None,
         Some(filename) => {
-            if !Path::new(filename).is_file() {
+            if !Path::new(&filename).is_file() {
                 let message = format!("File {} does not exist", filename);
                 return Err(CliError { message });
             } else {
-                Some(filename.to_string())
+                Some(filename)
             }
         }
     };
     let color = output_color(matches.clone());
-    let compressed = matches.is_present("compressed");
-    let connect_timeout = match matches.value_of("connect_timeout") {
+    let compressed = has_flag(&matches, "compressed");
+    let connect_timeout = match get_string(&matches, "connect_timeout") {
         None => ClientOptions::default().connect_timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
@@ -325,19 +324,16 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
             }
         },
     };
-    let cookie_input_file = matches
-        .value_of("cookies_input_file")
-        .map(|x| x.to_string());
-    let cookie_output_file = matches
-        .value_of("cookies_output_file")
-        .map(|x| x.to_string());
-    let fail_fast = !matches.is_present("fail_at_end");
-    let file_root = matches.value_of("file_root").map(|value| value.to_string());
-    let follow_location = matches.is_present("follow_location");
+    let cookie_input_file = get_string(&matches, "cookies_input_file");
+    let cookie_output_file = get_string(&matches, "cookies_output_file");
+
+    let fail_fast = !has_flag(&matches, "fail_at_end");
+    let file_root = get_string(&matches, "file_root");
+    let follow_location = has_flag(&matches, "follow_location");
     let glob_files = match_glob_files(&matches)?;
-    let report_html = matches.value_of("report_html");
+    let report_html = get_string(&matches, "report_html");
     let html_dir = if let Some(dir) = report_html {
-        let path = Path::new(dir);
+        let path = Path::new(&dir);
         if !path.exists() {
             match std::fs::create_dir(path) {
                 Err(_) => {
@@ -357,14 +353,12 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         None
     };
-    let ignore_asserts = matches.is_present("ignore_asserts");
-    let include = matches.is_present("include");
-    let insecure = matches.is_present("insecure");
-    let interactive = matches.is_present("interactive");
-    let junit_file = matches
-        .value_of("junit")
-        .map(|filename| filename.to_string());
-    let max_redirect = match matches.value_of("max_redirects") {
+    let ignore_asserts = has_flag(&matches, "ignore_asserts");
+    let include = has_flag(&matches, "include");
+    let insecure = has_flag(&matches, "insecure");
+    let interactive = has_flag(&matches, "interactive");
+    let junit_file = get_string(&matches, "junit");
+    let max_redirect = match get_string(&matches, "max_redirects").as_deref() {
         None => Some(50),
         Some("-1") => None,
         Some(s) => match s.parse::<usize>() {
@@ -376,21 +370,20 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
             }
         },
     };
-    let no_proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let output = matches
-        .value_of("output")
-        .map(|filename| filename.to_string());
-    let output_type = if matches.is_present("json") {
+    let no_proxy = get_string(&matches, "proxy");
+    let output = get_string(&matches, "output");
+    let test = has_flag(&matches, "test");
+    let output_type = if has_flag(&matches, "json") {
         OutputType::Json
-    } else if matches.is_present("no_output") || matches.is_present("test") {
+    } else if has_flag(&matches, "no_output") || test {
         OutputType::NoOutput
     } else {
         OutputType::ResponseBody
     };
-    let progress = matches.is_present("progress") || matches.is_present("test");
-    let proxy = matches.value_of("proxy").map(|x| x.to_string());
-    let summary = matches.is_present("summary") || matches.is_present("test");
-    let timeout = match matches.value_of("max_time") {
+    let progress = has_flag(&matches, "progress") || test;
+    let proxy = get_string(&matches, "proxy");
+    let summary = has_flag(&matches, "summary") || test;
+    let timeout = match get_string(&matches, "max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
@@ -402,10 +395,10 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
         },
     };
     let to_entry = to_entry(matches.clone())?;
-    let user = matches.value_of("user").map(|x| x.to_string());
-    let user_agent = matches.value_of("user_agent").map(|x| x.to_string());
+    let user = get_string(&matches, "user");
+    let user_agent = get_string(&matches, "user_agent");
     let variables = variables(matches.clone())?;
-    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
+    let verbose = has_flag(&matches, "verbose") || has_flag(&matches, "interactive");
 
     Ok(CliOptions {
         cacert_file,
@@ -441,9 +434,9 @@ pub fn parse_options(matches: ArgMatches) -> Result<CliOptions, CliError> {
 }
 
 pub fn output_color(matches: ArgMatches) -> bool {
-    if matches.is_present("color") {
+    if has_flag(&matches, "color") {
         true
-    } else if matches.is_present("no_color") {
+    } else if has_flag(&matches, "no_color") {
         false
     } else {
         atty::is(Stream::Stdout)
@@ -451,7 +444,7 @@ pub fn output_color(matches: ArgMatches) -> bool {
 }
 
 fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
-    match matches.value_of("to_entry") {
+    match get_string(&matches, "to_entry") {
         Some(value) => match value.parse() {
             Ok(v) => Ok(Some(v)),
             Err(_) => Err(CliError {
@@ -474,8 +467,8 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
         }
     }
 
-    if let Some(filename) = matches.value_of("variables_file") {
-        let path = std::path::Path::new(filename);
+    if let Some(filename) = get_string(&matches, "variables_file") {
+        let path = Path::new(&filename);
         if !path.exists() {
             return Err(CliError {
                 message: format!("Properties file {} does not exist", path.display()),
@@ -502,10 +495,9 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
         }
     }
 
-    if matches.is_present("variable") {
-        let input: Vec<_> = matches.values_of("variable").unwrap().collect();
+    if let Some(input) = get_strings(&matches, "variable") {
         for s in input {
-            let (name, value) = cli::parse_variable(s)?;
+            let (name, value) = cli::parse_variable(&s)?;
             variables.insert(name.to_string(), value);
         }
     }
@@ -521,10 +513,9 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
 ///
 fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
     let mut filenames = vec![];
-    if matches.is_present("glob") {
-        let exprs: Vec<&str> = matches.values_of("glob").unwrap().collect();
+    if let Some(exprs) = get_strings(matches, "glob") {
         for expr in exprs {
-            let paths = match glob::glob(expr) {
+            let paths = match glob::glob(&expr) {
                 Ok(paths) => paths,
                 Err(_) => {
                     return Err(CliError {
@@ -552,4 +543,18 @@ fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
         }
     }
     Ok(filenames)
+}
+
+fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
+    matches.get_one::<String>(name).map(|x| x.to_string())
+}
+
+pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
+    matches
+        .get_many::<String>(name)
+        .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
+    matches.contains_id(name)
 }

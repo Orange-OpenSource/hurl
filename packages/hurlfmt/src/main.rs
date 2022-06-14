@@ -40,7 +40,6 @@ pub fn init_colored() {
 
 fn main() {
     let app = clap::Command::new("hurlfmt")
-        // .author(clap::crate_authors!())
         .version(clap::crate_version!())
         .disable_colored_help(true)
         .about("Format hurl FILE")
@@ -69,6 +68,7 @@ fn main() {
                 .long("format")
                 .conflicts_with("check")
                 .value_name("FORMAT")
+                .default_value("text")
                 .help("Specify output format: text (default), json or html"),
         )
         .arg(
@@ -106,14 +106,16 @@ fn main() {
     init_colored();
 
     // Additional checks
-    if matches.is_present("standalone") && matches.value_of("format") != Some("html") {
+    if cli::has_flag(&matches, "standalone")
+        && cli::get_string(&matches, "format") != Some("html".to_string())
+    {
         eprintln!("use --standalone option only with html output");
-        std::process::exit(1);
+        process::exit(1);
     }
 
-    let output_color = if matches.is_present("color") {
+    let output_color = if cli::has_flag(&matches, "color") {
         true
-    } else if matches.is_present("no_color") || matches.is_present("in_place") {
+    } else if cli::has_flag(&matches, "no_color") || cli::has_flag(&matches, "in_place") {
         false
     } else {
         atty::is(Stream::Stdout)
@@ -121,9 +123,8 @@ fn main() {
 
     let log_error_message = cli::make_logger_error_message(output_color);
 
-    let filename = match matches.value_of("INPUT") {
-        None => "-",
-        Some("-") => "-",
+    let filename = match cli::get_string(&matches, "INPUT") {
+        None => "-".to_string(),
         Some(v) => v,
     };
 
@@ -132,23 +133,23 @@ fn main() {
             panic!("panic during printing help");
         }
         println!();
-        std::process::exit(1);
-    } else if filename != "-" && !Path::new(filename).exists() {
+        process::exit(1);
+    } else if filename != "-" && !Path::new(&filename).exists() {
         eprintln!("Input file {} does not exit!", filename);
-        std::process::exit(1);
+        process::exit(1);
     };
 
-    if matches.is_present("in_place") {
+    if cli::has_flag(&matches, "in_place") {
         if filename == "-" {
             log_error_message(
                 true,
                 "You can not use --in-place with standard input stream!",
             );
-            std::process::exit(1);
+            process::exit(1);
         };
-        if matches.value_of("format").unwrap_or("text") != "text" {
+        if cli::get_string(&matches, "format") != Some("text".to_string()) {
             log_error_message(true, "You can use --in-place only text format!");
-            std::process::exit(1);
+            process::exit(1);
         };
     }
 
@@ -159,18 +160,18 @@ fn main() {
                 false,
                 format!("Input stream can not be read - {}", e).as_str(),
             );
-            std::process::exit(2);
+            process::exit(2);
         }
         contents
     } else {
-        match cli::read_to_string(filename) {
+        match cli::read_to_string(&filename) {
             Ok(s) => s,
             Err(e) => {
                 log_error_message(
                     false,
                     format!("Input stream can not be read - {}", e.message).as_str(),
                 );
-                std::process::exit(2);
+                process::exit(2);
             }
         }
     };
@@ -187,10 +188,10 @@ fn main() {
         Some(filename.to_string())
     };
 
-    let output_file = if matches.is_present("in_place") {
+    let output_file = if cli::has_flag(&matches, "in_place") {
         Some(filename)
     } else {
-        matches.value_of("output")
+        cli::get_string(&matches, "output")
     };
 
     let log_parser_error =
@@ -202,15 +203,15 @@ fn main() {
             process::exit(2);
         }
         Ok(hurl_file) => {
-            if matches.is_present("check") {
+            if cli::has_flag(&matches, "check") {
                 for e in hurl_file.errors() {
                     log_linter_error(&e, true);
                 }
-                std::process::exit(1);
+                process::exit(1);
             } else {
-                let output = match matches.value_of("format").unwrap_or("text") {
+                let output = match cli::get_string(&matches, "format").unwrap().as_str() {
                     "text" => {
-                        let hurl_file = if matches.is_present("no_format") {
+                        let hurl_file = if cli::has_flag(&matches, "no_format") {
                             hurl_file
                         } else {
                             hurl_file.lint()
@@ -219,16 +220,16 @@ fn main() {
                     }
                     "json" => format::format_json(hurl_file),
                     "html" => {
-                        let standalone = matches.is_present("standalone");
+                        let standalone = cli::has_flag(&matches, "standalone");
                         hurl_core::format::format_html(hurl_file, standalone)
                     }
                     "ast" => format!("{:#?}", hurl_file),
                     _ => {
                         eprintln!("Invalid output option - expecting text, html or json");
-                        std::process::exit(1);
+                        process::exit(1);
                     }
                 };
-                write_output(output.into_bytes(), output_file);
+                write_output(output.into_bytes(), output_file.as_deref());
             }
         }
     }

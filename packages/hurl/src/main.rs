@@ -257,14 +257,14 @@ fn main() {
     let matches = app.clone().get_matches();
     init_colored();
 
-    let verbose = matches.is_present("verbose") || matches.is_present("interactive");
+    let verbose = cli::has_flag(&matches, "verbose") || cli::has_flag(&matches, "interactive");
     let log_verbose = cli::make_logger_verbose(verbose);
     let color = cli::output_color(matches.clone());
     let log_error_message = cli::make_logger_error_message(color);
     let cli_options = unwrap_or_exit(cli::parse_options(matches.clone()), &log_error_message);
 
     let mut filenames = vec![];
-    if let Some(values) = matches.values_of("INPUT") {
+    if let Some(values) = cli::get_strings(&matches, "INPUT") {
         for value in values {
             filenames.push(value.to_string());
         }

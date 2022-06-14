@@ -35,6 +35,7 @@ pub mod interactive;
 mod logger;
 mod options;
 mod variables;
+pub use self::options::{get_strings, has_flag};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {
