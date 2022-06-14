@@ -16,18 +16,18 @@
  *
  */
 
-pub use self::fs::read_to_string;
-pub use self::logger::{
-    log_info, make_logger_error_message, make_logger_linter_error, make_logger_parser_error,
-    make_logger_verbose,
-};
+use clap::ArgMatches;
 
-mod fs;
-mod logger;
-mod options;
-pub use self::options::{get_string, get_strings, has_flag};
+pub fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
+    matches.get_one::<String>(name).map(|x| x.to_string())
+}
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CliError {
-    pub message: String,
+pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
+    matches
+        .get_many::<String>(name)
+        .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
+    matches.contains_id(name)
 }
