@@ -1,0 +1,397 @@
+# General
+
+hurl-file: entry*
+           lt*
+
+entry: request
+       response?
+
+request:
+  lt*
+  method sp value-string lt
+  header*
+  request-section*
+  body?
+
+response:
+  lt*
+  version sp status lt
+  header*
+  response-section*
+  body?
+
+method:
+    "GET"
+  | "HEAD"
+  | "POST"
+  | "PUT"
+  | "DELETE"
+  | "CONNECT"
+  | "OPTIONS"
+  | "TRACE"
+  | "PATCH"
+
+
+version:
+    "HTTP/1.0"
+  | "HTTP/1.1"
+  | "HTTP/2"
+  | "HTTP/*"
+
+status: [0-9]+
+
+header:
+  lt*
+  key-value lt
+
+body:
+  lt*
+  bytes lt
+
+
+# Sections
+
+request-section:
+    query-string-params-section
+  | form-params-section
+  | multipart-form-data-section
+  | cookies-section
+
+response-section:
+    captures-section
+  | asserts-section
+
+query-string-params-section:
+  lt*
+  "[QueryStringParams]" lt
+  key-value*
+
+form-params-section:
+  lt*
+  "[FormParams]" lt
+  key-value*
+
+multipart-form-data-section:
+  lt*
+  "[MultipartFormData]" lt
+  multipart-form-data-param*
+
+cookies-section:
+  lt*
+  "[Cookies]" lt
+  key-value*
+
+captures-section:
+  lt*
+  "[Captures]" lt
+  capture*
+
+asserts-section:
+  lt*
+  "[Asserts]" lt
+  assert*
+
+key-value: key-string ":" value-string
+
+multipart-form-data-param: file-param | key-value
+
+file-param :
+  lt*
+  key-string ":" file-value lt
+
+file-value: "file," filename ";" (file-contenttype)?
+
+file-contenttype: [a-zA-Z0-9/+-]+
+
+capture:
+  lt*
+  key-string ":" query lt
+
+assert:
+  lt*
+  query sp predicate lt
+
+
+# Query
+
+query: main-query (sp subquery)?
+
+main-query:
+    status-query
+  | header-query
+  | cookie-query
+  | body-query
+  | xpath-query
+  | jsonpath-query
+  | regex-query
+  | variable-query
+  | duration-query
+  | bytes-query
+  | sha256-query
+
+status-query: "status"
+
+header-query: "header" sp quoted-string
+
+cookie-query: "cookie" sp quoted-string
+
+body-query: "body"
+
+xpath-query: "xpath" sp quoted-string
+
+jsonpath-query: "jsonpath" sp quoted-string
+
+regex-query: "regex" sp (quoted-string | regex)
+
+variable-query: "variable" sp quoted-string
+
+duration-query: "duration"
+
+sha256-query: "sha256"
+
+bytes-query: "bytes"
+
+
+subquery: regex-subquery | count-subquery
+
+regex-subquery: "regex" sp quoted-string
+
+count-subquery: "count"
+
+
+
+# Predicates
+
+predicate: ("not" sp )? predicate-func
+
+predicate-func:
+    equal-predicate
+  | not-equal-predicate
+  | greater-predicate
+  | greater-or-equal-predicate
+  | less-predicate
+  | less-or-equal-predicate
+  | start-with-predicate
+  | end-with-predicate
+  | contain-predicate
+  | match-predicate
+  | exist-predicate
+  | include-predicate
+  | integer-predicate
+  | float-predicate
+  | boolean-predicate
+  | string-predicate
+  | collection-predicate
+
+equal-predicate: ("equals" | "==") sp predicate-value
+
+not-equal-predicate: ("notEquals" | "!=") sp predicate-value
+
+greater-predicate: ("greaterThan" | ">") sp (integer | float)
+
+greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (integer | float)
+
+less-predicate: ("lessThan" | "<") sp (integer | float)
+
+less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (integer | float)
+
+start-with-predicate: "startsWith" sp (quoted-string | oneline-hex | oneline-base64)
+
+end-with-predicate: "endsWith" sp (quoted-string | oneline-hex | oneline-base64)
+
+contain-predicate: "contains" sp quoted-string
+
+match-predicate: "matches" sp (quoted-string | regex)
+
+exist-predicate: "exists"
+
+include-predicate: "includes" sp predicate-value
+
+integer-predicate: "isInteger"
+
+float-predicate: "isFloat"
+
+boolean-predicate: "isBoolean"
+
+string-predicate: "isString"
+
+collection-predicate: "isCollection"
+
+predicate-value:
+    null
+  | boolean
+  | integer
+  | float
+  | quoted-string
+  | oneline-hex
+  | oneline-base64
+  | oneline-file
+  | multiline-string
+  | template
+
+
+# Bytes
+
+bytes:
+    json-value
+  | xml
+  | multiline-string
+  | oneline-string
+  | oneline-base64
+  | oneline-file
+  | oneline-hex
+
+xml: "<" "To Be Defined" ">"
+
+oneline-base64: "base64," [A-Z0-9+-= \n]+ ";"
+
+oneline-file: "file," filename ";"
+
+oneline-hex: "hex," hexdigit* ";"
+
+
+
+
+# Strings
+
+quoted-string: "\"" (quoted-string-content | template)* "\""
+
+quoted-string-content: (quoted-string-text | quoted-string-escaped-char)*
+
+quoted-string-text: ~["\\]+
+
+quoted-string-escaped-char: "\\" ("\"" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char)
+
+
+key-string: (key-string-content | template)+
+
+key-string-content: (key-string-text | key-string-escaped-char)*
+
+key-string-text: ~[#:\n\\]+
+
+key-string-escaped-char: "\\" ("#" | ":" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
+
+
+value-string: (value-string-content | template)*
+
+value-string-content: (value-string-text | value-string-escaped-char)*
+
+value-string-text: ~[#\n\\]+
+
+value-string-escaped-char: "\\" ("#" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
+
+
+oneline-string: "```" (oneline-string-content | template)* "```"
+
+oneline-string-content: (oneline-string-text | oneline-string-escaped-char)*
+
+oneline-string-text: ~[#\n\\] ~"```"
+
+oneline-string-escaped-char: "\\" ("#" | "\\" | "b" | "f" | "u" unicode-char )
+
+
+multiline-string:
+  "```" multiline-string-type? lt
+  (multiline-string-content | template)* lt
+  "```"
+
+multiline-string-type:
+    "base64"
+  | "hex"
+  | "json"
+  | "xml"
+  | "graphql"
+
+multiline-string-content: (multiline-string-text | multiline-string-escaped-char)*
+
+multiline-string-text:  ~[\\]+ ~"```"
+
+multiline-string-escaped-char: "\\" ( "\\" | "b" | "f" | "n" | "r" | "t" | "`" | "u" unicode-char)
+
+filename: (filename-content | template)*
+
+filename-content: (filename-text | filename-escaped-char)*
+
+filename-text: ~[#; \n\\]+
+
+filename-escaped-char: "\\" (";" | "#" | [ ])
+
+
+unicode-char: "{" hexdigit+ "}"
+
+
+
+# JSON
+
+json-value:
+    template
+  | json-object
+  | json-array
+  | json-string
+  | json-number
+  | boolean
+  | null
+
+json-object: "{" json-key-value ("," json-key-value)* "}"
+
+json-key-value: json-string ":" json-value
+
+json-array: "[" json-value ("," json-value)* "]"
+
+json-string: "\"" (json-string-content | template)* "\""
+
+json-string-content: json-string-text | json-string-escaped-char
+
+json-string-text: ~["\\]
+
+json-string-escaped-char:
+    "\\" ("\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "u" hexdigit hexdigit hexdigit hexdigit)
+
+json-number: integer fraction? exponent?
+
+
+
+# Template / Expression
+
+template: "{{" expr "}}"
+
+expr: variable-name
+
+variable-name: [A-Za-z] [A-Za-z_-0-9]*
+
+
+# Lexical Grammar
+
+
+
+boolean: "true" | "false"
+
+null: "null"
+
+integer: digit+
+
+float: integer fraction
+
+digit: [0-9]
+
+hexdigit: [0-9A-Fa-f]
+
+fraction: "." digit+
+
+exponent: ("e" | "E") ("+"|"-")? digit+
+
+sp: [ \t]
+
+lt: sp* comment? [\n]?
+
+comment: "#" ~[\n]*
+
+regex: "/" regex-content "/"
+
+regex-content: (regex-text|regex-escaped-char)*
+
+regex-text: ~[\n\/]+
+
+regex-escaped-char: "\\" ~[\n]
+
+
