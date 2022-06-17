@@ -20,7 +20,7 @@ pub use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::{Cookie, Header, Param, RequestCookie};
 pub use self::error::HttpError;
-pub use self::options::ClientOptions;
+pub use self::options::{ClientOptions, Verbosity};
 pub use self::request::Request;
 #[cfg(test)]
 pub use self::request_spec::tests::*;

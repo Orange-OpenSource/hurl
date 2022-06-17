@@ -87,7 +87,7 @@ pub fn run(
         } else {
             log_error_message(
                 true,
-                format!("cookie string can not be parsed: '{}'", s).as_str(),
+                format!("Cookie string can not be parsed: '{}'", s).as_str(),
             );
         }
     }
@@ -101,7 +101,7 @@ pub fn run(
         log_verbose(cookie.to_string().as_str());
     }
     log_verbose("");
-    log_request(log_verbose, &http_request);
+    log_request_spec(log_verbose, &http_request);
     log_verbose(
         format!(
             "Request can be run with the following curl command:\n* {}\n*",
@@ -157,7 +157,7 @@ pub fn run(
                     }
                 },
             };
-            // update variables now!
+            // Update variables now!
             for capture_result in captures.clone() {
                 variables.insert(capture_result.name, capture_result.value);
             }
@@ -189,7 +189,7 @@ pub fn run(
                 .collect();
 
             if !captures.is_empty() {
-                log_verbose("Captures");
+                log_verbose("Captures:");
                 for capture in captures.clone() {
                     log_verbose(format!("{}: {}", capture.name, capture.value).as_str());
                 }
@@ -211,37 +211,44 @@ pub fn run(
     entry_results
 }
 
-pub fn log_request(log_verbose: impl Fn(&str), request: &http::RequestSpec) {
+/// Log a HTTP request spec
+///
+/// # Arguments
+///
+/// * log_verbose - a log function
+/// * request - an HTTP request spec
+///
+fn log_request_spec(log_verbose: impl Fn(&str), request: &http::RequestSpec) {
     log_verbose("Request:");
     log_verbose(format!("{} {}", request.method, request.url).as_str());
-    for header in request.headers.clone() {
+    for header in &request.headers {
         log_verbose(header.to_string().as_str());
     }
     if !request.querystring.is_empty() {
         log_verbose("[QueryStringParams]");
-        for param in request.querystring.clone() {
+        for param in &request.querystring {
             log_verbose(param.to_string().as_str());
         }
     }
     if !request.form.is_empty() {
         log_verbose("[FormParams]");
-        for param in request.form.clone() {
+        for param in &request.form {
             log_verbose(param.to_string().as_str());
         }
     }
     if !request.multipart.is_empty() {
         log_verbose("[MultipartFormData]");
-        for param in request.multipart.clone() {
+        for param in &request.multipart {
             log_verbose(param.to_string().as_str());
         }
     }
     if !request.cookies.is_empty() {
         log_verbose("[Cookies]");
-        for cookie in request.cookies.clone() {
+        for cookie in &request.cookies {
             log_verbose(cookie.to_string().as_str());
         }
     }
-    if let Some(s) = request.content_type.clone() {
+    if let Some(s) = &request.content_type {
         log_verbose("");
         log_verbose(format!("Implicit content-type={}", s).as_str());
     }

@@ -30,6 +30,7 @@ pub struct RunnerOptions {
     pub to_entry: Option<usize>,
     pub context_dir: PathBuf,
     pub ignore_asserts: bool,
+    pub very_verbose: bool, // If true, log body response in verbose mode.
     pub pre_entry: fn(Entry) -> bool,
     pub post_entry: fn() -> bool,
 }

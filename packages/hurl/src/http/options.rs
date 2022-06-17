@@ -26,7 +26,7 @@ pub struct ClientOptions {
     pub cookie_input_file: Option<String>,
     pub proxy: Option<String>,
     pub no_proxy: Option<String>,
-    pub verbose: bool,
+    pub verbosity: Option<Verbosity>,
     pub insecure: bool,
     pub timeout: Duration,
     pub connect_timeout: Duration,
@@ -34,6 +34,12 @@ pub struct ClientOptions {
     pub user_agent: Option<String>,
     pub compressed: bool,
     pub context_dir: PathBuf,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Verbosity {
+    Verbose,
+    VeryVerbose,
 }
 
 impl Default for ClientOptions {
@@ -45,7 +51,7 @@ impl Default for ClientOptions {
             cookie_input_file: None,
             proxy: None,
             no_proxy: None,
-            verbose: false,
+            verbosity: None,
             insecure: false,
             timeout: Duration::from_secs(300),
             connect_timeout: Duration::from_secs(300),
@@ -130,7 +136,7 @@ mod tests {
                 cookie_input_file: Some("cookie_file".to_string()),
                 proxy: Some("localhost:3128".to_string()),
                 no_proxy: None,
-                verbose: true,
+                verbosity: None,
                 insecure: true,
                 timeout: Duration::from_secs(10),
                 connect_timeout: Duration::from_secs(20),

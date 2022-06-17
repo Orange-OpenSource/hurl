@@ -35,7 +35,7 @@ use super::entry;
 /// use hurl::runner;
 ///
 /// // Parse Hurl file
-/// let filename = "sample.hurl".to_string();
+/// let filename = "sample.hurl";
 /// let s = r#"
 /// GET http://localhost:8000/hello
 /// HTTP/1.0 200
@@ -59,6 +59,7 @@ use super::entry;
 ///        to_entry: None,
 ///        context_dir: PathBuf::new(),
 ///        ignore_asserts: false,
+///        very_verbose: false,
 ///        pre_entry: |_| true,
 ///        post_entry: || true,
 ///  };
