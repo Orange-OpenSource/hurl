@@ -28,7 +28,7 @@ use super::options::ClientOptions;
 use super::request::*;
 use super::request_spec::*;
 use super::response::*;
-use crate::http::HttpError;
+use crate::http::{HttpError, Verbosity};
 use std::str::FromStr;
 use url::Url;
 
@@ -70,8 +70,11 @@ impl Client {
         }
     }
 
+    /// Execute an HTTP request and returns a list
     ///
-    /// Execute an http request
+    /// # Arguments
+    ///
+    /// * request - A request specification
     ///
     pub fn execute_with_redirect(
         &mut self,
@@ -153,7 +156,7 @@ impl Client {
 
         self.set_headers(request);
 
-        let verbose = self.options.verbose;
+        let verbose = self.options.verbosity != None;
         let mut request_headers: Vec<Header> = vec![];
 
         let start = Instant::now();
@@ -493,7 +496,7 @@ impl Client {
     /// Add cookie to Cookiejar
     ///
     pub fn add_cookie(&mut self, cookie: Cookie) {
-        if self.options.verbose {
+        if self.options.verbosity != None {
             eprintln!("* add to cookie store: {}", cookie);
         }
         self.handle
@@ -505,7 +508,7 @@ impl Client {
     /// Clear cookie storage
     ///
     pub fn clear_cookie_storage(&mut self) {
-        if self.options.verbose {
+        if self.options.verbosity != None {
             eprintln!("* clear cookie storage");
         }
         self.handle.cookie_list("ALL").unwrap();

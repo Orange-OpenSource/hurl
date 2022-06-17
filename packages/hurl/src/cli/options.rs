@@ -61,6 +61,7 @@ pub struct CliOptions {
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
     pub verbose: bool,
+    pub very_verbose: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -297,10 +298,15 @@ pub fn app(version: &str) -> Command {
                 .long("verbose")
                 .help("Turn on verbose output"),
         )
+        .arg(
+            clap::Arg::new("very_verbose")
+                .long("very-verbose")
+                .help("Turn on verbose output, uncluding HTTP response"),
+        )
 }
 
 pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
-    let cacert_file = match get_string(&matches, "cacert_file") {
+    let cacert_file = match get_string(matches, "cacert_file") {
         None => None,
         Some(filename) => {
             if !Path::new(&filename).is_file() {
@@ -311,9 +317,9 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
             }
         }
     };
-    let color = output_color(matches.clone());
-    let compressed = has_flag(&matches, "compressed");
-    let connect_timeout = match get_string(&matches, "connect_timeout") {
+    let color = output_color(matches);
+    let compressed = has_flag(matches, "compressed");
+    let connect_timeout = match get_string(matches, "connect_timeout") {
         None => ClientOptions::default().connect_timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
@@ -324,14 +330,13 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
             }
         },
     };
-    let cookie_input_file = get_string(&matches, "cookies_input_file");
-    let cookie_output_file = get_string(&matches, "cookies_output_file");
-
-    let fail_fast = !has_flag(&matches, "fail_at_end");
-    let file_root = get_string(&matches, "file_root");
-    let follow_location = has_flag(&matches, "follow_location");
-    let glob_files = match_glob_files(&matches)?;
-    let report_html = get_string(&matches, "report_html");
+    let cookie_input_file = get_string(matches, "cookies_input_file");
+    let cookie_output_file = get_string(matches, "cookies_output_file");
+    let fail_fast = !has_flag(matches, "fail_at_end");
+    let file_root = get_string(matches, "file_root");
+    let follow_location = has_flag(matches, "follow_location");
+    let glob_files = match_glob_files(matches)?;
+    let report_html = get_string(matches, "report_html");
     let html_dir = if let Some(dir) = report_html {
         let path = Path::new(&dir);
         if !path.exists() {
@@ -353,12 +358,12 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         None
     };
-    let ignore_asserts = has_flag(&matches, "ignore_asserts");
-    let include = has_flag(&matches, "include");
-    let insecure = has_flag(&matches, "insecure");
-    let interactive = has_flag(&matches, "interactive");
-    let junit_file = get_string(&matches, "junit");
-    let max_redirect = match get_string(&matches, "max_redirects").as_deref() {
+    let ignore_asserts = has_flag(matches, "ignore_asserts");
+    let include = has_flag(matches, "include");
+    let insecure = has_flag(matches, "insecure");
+    let interactive = has_flag(matches, "interactive");
+    let junit_file = get_string(matches, "junit");
+    let max_redirect = match get_string(matches, "max_redirects").as_deref() {
         None => Some(50),
         Some("-1") => None,
         Some(s) => match s.parse::<usize>() {
@@ -370,20 +375,20 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
             }
         },
     };
-    let no_proxy = get_string(&matches, "proxy");
-    let output = get_string(&matches, "output");
-    let test = has_flag(&matches, "test");
-    let output_type = if has_flag(&matches, "json") {
+    let no_proxy = get_string(matches, "proxy");
+    let output = get_string(matches, "output");
+    let test = has_flag(matches, "test");
+    let output_type = if has_flag(matches, "json") {
         OutputType::Json
-    } else if has_flag(&matches, "no_output") || test {
+    } else if has_flag(matches, "no_output") || test {
         OutputType::NoOutput
     } else {
         OutputType::ResponseBody
     };
-    let progress = has_flag(&matches, "progress") || test;
-    let proxy = get_string(&matches, "proxy");
-    let summary = has_flag(&matches, "summary") || test;
-    let timeout = match get_string(&matches, "max_time") {
+    let progress = has_flag(matches, "progress") || test;
+    let proxy = get_string(matches, "proxy");
+    let summary = has_flag(matches, "summary") || test;
+    let timeout = match get_string(matches, "max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
             Ok(n) => Duration::from_secs(n),
@@ -394,11 +399,12 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
             }
         },
     };
-    let to_entry = to_entry(matches.clone())?;
-    let user = get_string(&matches, "user");
-    let user_agent = get_string(&matches, "user_agent");
+    let to_entry = to_entry(matches)?;
+    let user = get_string(matches, "user");
+    let user_agent = get_string(matches, "user_agent");
     let variables = variables(matches.clone())?;
-    let verbose = has_flag(&matches, "verbose") || has_flag(&matches, "interactive");
+    let very_verbose = has_flag(matches, "very_verbose");
+    let verbose = has_flag(matches, "verbose") || has_flag(matches, "interactive") || very_verbose;
 
     Ok(CliOptions {
         cacert_file,
@@ -430,21 +436,22 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         user_agent,
         variables,
         verbose,
+        very_verbose,
     })
 }
 
-pub fn output_color(matches: ArgMatches) -> bool {
-    if has_flag(&matches, "color") {
+pub fn output_color(matches: &ArgMatches) -> bool {
+    if has_flag(matches, "color") {
         true
-    } else if has_flag(&matches, "no_color") {
+    } else if has_flag(matches, "no_color") {
         false
     } else {
         atty::is(Stream::Stdout)
     }
 }
 
-fn to_entry(matches: ArgMatches) -> Result<Option<usize>, CliError> {
-    match get_string(&matches, "to_entry") {
+fn to_entry(matches: &ArgMatches) -> Result<Option<usize>, CliError> {
+    match get_string(matches, "to_entry") {
         Some(value) => match value.parse() {
             Ok(v) => Ok(Some(v)),
             Err(_) => Err(CliError {

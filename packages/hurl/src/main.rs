@@ -27,6 +27,7 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
+use hurl::http::Verbosity;
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
@@ -147,7 +148,11 @@ fn execute(
 
             let cacert_file = cli_options.cacert_file.clone();
             let follow_location = cli_options.follow_location;
-            let verbose = cli_options.verbose;
+            let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
+                (true, true) => Some(Verbosity::VeryVerbose),
+                (true, _) => Some(Verbosity::Verbose),
+                _ => None,
+            };
             let insecure = cli_options.insecure;
             let max_redirect = cli_options.max_redirect;
             let proxy = cli_options.proxy.clone();
@@ -177,7 +182,7 @@ fn execute(
                 cookie_input_file,
                 proxy,
                 no_proxy,
-                verbose,
+                verbosity,
                 insecure,
                 timeout,
                 connect_timeout,
@@ -204,12 +209,14 @@ fn execute(
             let to_entry = cli_options.to_entry;
             let context_dir = context_dir.to_path_buf();
             let ignore_asserts = cli_options.ignore_asserts;
+            let very_verbose = cli_options.very_verbose;
             let options = RunnerOptions {
                 fail_fast,
                 variables,
                 to_entry,
                 context_dir,
                 ignore_asserts,
+                very_verbose,
                 pre_entry,
                 post_entry,
             };
@@ -262,9 +269,11 @@ fn main() {
     let matches = app.clone().get_matches();
     init_colored();
 
-    let verbose = cli::has_flag(&matches, "verbose") || cli::has_flag(&matches, "interactive");
+    let verbose = cli::has_flag(&matches, "verbose")
+        || cli::has_flag(&matches, "very_verbose")
+        || cli::has_flag(&matches, "interactive");
     let log_verbose = cli::make_logger_verbose(verbose);
-    let color = cli::output_color(matches.clone());
+    let color = cli::output_color(&matches);
     let log_error_message = cli::make_logger_error_message(color);
     let cli_options = unwrap_or_exit(cli::parse_options(&matches), &log_error_message);
 

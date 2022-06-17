@@ -56,6 +56,7 @@ fn test_hurl_file() {
         to_entry: None,
         context_dir: PathBuf::new(),
         ignore_asserts: false,
+        very_verbose: false,
         pre_entry: |_| true,
         post_entry: || true,
     };
@@ -68,7 +69,7 @@ fn test_hurl_file() {
         hurl_file,
         &mut client,
         //&mut variables,
-        filename.to_string(),
+        filename,
         &options,
         &log_verbose,
         &log_error_message,
@@ -186,6 +187,7 @@ fn test_hello() {
         to_entry: None,
         context_dir: PathBuf::new(),
         ignore_asserts: false,
+        very_verbose: false,
         pre_entry: |_| true,
         post_entry: || true,
     };
@@ -195,7 +197,7 @@ fn test_hello() {
     let _hurl_log = runner::run_hurl_file(
         hurl_file,
         &mut client,
-        String::from("filename"),
+        "filename",
         &options,
         &log_verbose,
         &log_error_message,
