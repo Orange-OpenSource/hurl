@@ -1,0 +1,56 @@
+html {
+    font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+
+body {
+    font-size: 1.4rem;
+}
+
+a {
+    color: #20609f
+}
+
+a:visited {
+    color: #20609f
+}
+
+code {
+    white-space:normal;
+}
+.grammar-usedby {
+    color: #999;
+    font-size: 1.1rem;
+}
+
+.grammar-ruleset {
+    margin-bottom: 40px;
+
+}
+
+.grammar-rule {
+   margin-top: 10px;
+   margin-bottom: 20px;
+
+}
+.grammar-rule-id {
+    font-weight: bold;
+}
+
+.grammar-rule-expression {
+    margin-left: 20px;
+}
+.grammar-literal {
+    color: blueviolet;
+}
+
+.grammar-regex {
+    color: darkcyan
+}
+
+.grammar-nonterminal {
+
+}
+
+.grammar-symbol {
+
+}
