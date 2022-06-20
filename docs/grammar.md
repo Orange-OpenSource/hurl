@@ -10,330 +10,218 @@ Short description:
 
 ## Syntax Grammar
 
-<div class="grammar">
-<div class="rule">
-  <div class="non-terminal" id="hurl-file">hurl-file&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#entry">entry</a>*<br>&nbsp;
-<a href="#lt">lt</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="entry">entry&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#request">request</a><br>&nbsp;
-<a href="#response">response</a>?</div></div>
-<div class="rule">
-  <div class="non-terminal" id="request">request&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#method">method</a> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#url">url</a> <a href="#lt">lt</a><br>&nbsp;
-<a href="#header">header</a>*<br>&nbsp;
-<a href="#request-section">request-section</a>*<br>&nbsp;
-<a href="#body">body</a>?</div></div>
-<div class="rule">
-  <div class="non-terminal" id="response">response&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#version">version</a> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#status">status</a> <a href="#lt">lt</a><br>&nbsp;
-<a href="#header">header</a>*<br>&nbsp;
-<a href="#response-section">response-section</a>*<br>&nbsp;
-<a href="#body">body</a>?</div></div>
-<div class="rule">
-  <div class="non-terminal" id="method">method&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"GET"</span><br>
-| <span class="terminal">"HEAD"</span><br>
-| <span class="terminal">"POST"</span><br>
-| <span class="terminal">"PUT"</span><br>
-| <span class="terminal">"DELETE"</span><br>
-| <span class="terminal">"CONNECT"</span><br>
-| <span class="terminal">"OPTIONS"</span><br>
-| <span class="terminal">"TRACE"</span><br>
-| <span class="terminal">"PATCH"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="url">url&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | ":" | "/" | "{" | "}" | "*" | "," | "@" | "]")+&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="version">version&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"HTTP/1.0"</span> | <span class="terminal">"HTTP/1.1"</span> | <span class="terminal">"HTTP/2"</span> | <span class="terminal">"HTTP/*"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="status">status&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;[0-9]+&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="header">header&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#key-value">key-value</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="body">body&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#bytes">bytes</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="request-section">request-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#query-string-params-section">query-string-params-section</a><br>
-| <a href="#form-params-section">form-params-section</a><br>
-| <a href="#multipart-form-data-section">multipart-form-data-section</a><br>
-| <a href="#cookies-section">cookies-section</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="response-section">response-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#captures-section">captures-section</a> | <a href="#asserts-section">asserts-section</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="query-string-params-section">query-string-params-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[QueryStringParams]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#param">param</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="form-params-section">form-params-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[FormParams]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#param">param</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="multipart-form-data-section">multipart-form-data-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[MultipartFormData]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#multipart-form-data-param">multipart-form-data-param</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="cookies-section">cookies-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[Cookies]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#cookie">cookie</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="captures-section">captures-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[Captures]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#capture">capture</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="asserts-section">asserts-section&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <span class="terminal">"[Asserts]"</span> <a href="#lt">lt</a><br>&nbsp;
-<a href="#assert">assert</a>*</div></div>
-<div class="rule">
-  <div class="non-terminal" id="param">param&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#key-value">key-value</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="multipart-form-data-param">multipart-form-data-param&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#file-param">file-param</a> | <a href="#param">param</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="file-param">file-param&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#key-string">key-string</a> <a href="#sp">sp</a>* <span class="terminal">":"</span> <a href="#sp">sp</a>* <a href="#file-value">file-value</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="file-value">file-value&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"file,"</span> <a href="#sp">sp</a>* <a href="#filename">filename</a> <a href="#sp">sp</a>* <span class="terminal">";"</span> (<a href="#sp">sp</a>* <a href="#file-contenttype">file-contenttype</a>)?</div></div>
-<div class="rule">
-  <div class="non-terminal" id="file-contenttype">file-contenttype&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | "/" | ";" | "=" | " ")+  without leading/trailing space&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="cookie">cookie&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#key-string">key-string</a> <a href="#sp">sp</a>* <span class="terminal">":"</span> <a href="#sp">sp</a>* <a href="#cookie-value">cookie-value</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="cookie-value">cookie-value&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | "!" | "#" | "$" | "%" | "&" | "'" | "(" | ")" | "*" | "+"
-                           | "-" | "." | "/" | ":" | "<" | "=" | ">" | "?" | "@" | "["
-                           | "]" | "^" | "_" | "`" | "~" )* &gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="capture">capture&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#key-string">key-string</a> <a href="#sp">sp</a>* <span class="terminal">":"</span> <a href="#sp">sp</a>* <a href="#query">query</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="query">query&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#main-query">main-query</a> (<a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#subquery">subquery</a>)?</div></div>
-<div class="rule">
-  <div class="non-terminal" id="main-query">main-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#status-query">status-query</a><br>
-| <a href="#header-query">header-query</a><br>
-| <a href="#cookie-query">cookie-query</a><br>
-| <a href="#body-query">body-query</a><br>
-| <a href="#xpath-query">xpath-query</a><br>
-| <a href="#jsonpath-query">jsonpath-query</a><br>
-| <a href="#regex-query">regex-query</a><br>
-| <a href="#variable-query">variable-query</a><br>
-| <a href="#duration-query">duration-query</a><br>
-| <a href="#bytes-query">bytes-query</a><br>
-| <a href="#sha256-query">sha256-query</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="status-query">status-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"status"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="header-query">header-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"header"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="cookie-query">cookie-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"cookie"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="body-query">body-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"body"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="xpath-query">xpath-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"xpath"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="jsonpath-query">jsonpath-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"jsonpath"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="regex-query">regex-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"regex"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="variable-query">variable-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"variable"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="duration">duration&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"duration"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="sha256-query">sha256-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"sha256"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="bytes-query">bytes-query&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"bytes"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="subquery">subquery&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#regex-subquery">regex-subquery</a> | <a href="#count-subquery">count-subquery</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="regex-subquery">regex-subquery&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"regex"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="count-subquery">count-subquery&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"count"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="assert">assert&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#lt">lt</a>*<br>&nbsp;
-<a href="#sp">sp</a>* <a href="#query">query</a> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#predicate">predicate</a> <a href="#lt">lt</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="predicate">predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"not"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>*)? <a href="#predicate-func">predicate-func</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="predicate-func">predicate-func&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#equal-predicate">equal-predicate</a><br>
-| <a href="#not-equal-predicate">not-equal-predicate</a><br>
-| <a href="#greater-predicate">greater-predicate</a><br>
-| <a href="#greater-or-equal-predicate">greater-or-equal-predicate</a><br>
-| <a href="#less-predicate">less-predicate</a><br>
-| <a href="#less-or-equal-predicate">less-or-equal-predicate</a><br>
-| <a href="#start-with-predicate">start-with-predicate</a><br>
-| <a href="#end-with-predicate">end-with-predicate</a><br>
-| <a href="#contain-predicate">contain-predicate</a><br>
-| <a href="#match-predicate">match-predicate</a><br>
-| <a href="#exist-predicate">exist-predicate</a><br>
-| <a href="#include-predicate">include-predicate</a><br>
-| <a href="#integer-predicate">integer-predicate</a><br>
-| <a href="#float-predicate">float-predicate</a><br>
-| <a href="#boolean-predicate">boolean-predicate</a><br>
-| <a href="#string-predicate">string-predicate</a><br>
-| <a href="#collection-predicate">collection-predicate</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="equal-predicate">equal-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"equals"</span> | <span class="terminal">"=="</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#null">null</a> | <a href="#float">float</a> | <a href="#integer">integer</a> | <a href="#boolean">boolean</a> | <a href="#quoted-string">quoted-string</a> | <a href="#raw-string">raw-string</a> | <a href="#hex">hex</a> | <a href="#base64">base64</a> | <a href="#expr">expr</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="not-equal-predicate">not-equal-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"notEquals"</span> | <span class="terminal">"!="</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#null">null</a> | <a href="#float">float</a> | <a href="#integer">integer</a> | <a href="#boolean">boolean</a> | <a href="#quoted-string">quoted-string</a> | <a href="#raw-string">raw-string</a> | <a href="#hex">hex</a> | <a href="#base64">base64</a> | <a href="#expr">expr</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="greater-predicate">greater-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"greaterThan"</span> | <span class="terminal">">"</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#integer">integer</a> | <a href="#float">float</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="greater-or-equal-predicate">greater-or-equal-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"greaterThanOrEquals"</span> | <span class="terminal">">="</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#integer">integer</a> | <a href="#float">float</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="less-predicate">less-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"lessThan"</span> | <span class="terminal">"<"</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#integer">integer</a> | <a href="#float">float</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="less-or-equal-predicate">less-or-equal-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;(<span class="terminal">"lessThanOrEquals"</span> | <span class="terminal">"<="</span>) <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#integer">integer</a> | <a href="#float">float</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="start-with-predicate">start-with-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"startsWith"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#quoted-string">quoted-string</a> | <a href="#hex">hex</a> | <a href="#base64">base64</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="end-with-predicate">end-with-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"endsWith"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#quoted-string">quoted-string</a> | <a href="#hex">hex</a> | <a href="#base64">base64</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="contain-predicate">contain-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"contains"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="match-predicate">match-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"matches"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* <a href="#quoted-string">quoted-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="exist-predicate">exist-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"exists"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="include-predicate">include-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"includes"</span> <a href="#sp">sp</a> <a href="#sp">sp</a>* (<a href="#null">null</a> |<a href="#float">float</a> | <a href="#integer">integer</a> | <a href="#boolean">boolean</a> | <a href="#quoted-string">quoted-string</a> | <a href="#expr">expr</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="integer-predicate">integer-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"isInteger"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="float-predicate">float-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"isFloat"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="boolean-predicate">boolean-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"isBoolean"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="string-predicate">string-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"isString"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="collection-predicate">collection-predicate&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"isCollection"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="key-value">key-value&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#key-string">key-string</a> <a href="#sp">sp</a>* <span class="terminal">":"</span> <a href="#sp">sp</a>* <a href="#value-string">value-string</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="key-string">key-string&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | "_" | "-" | "." | escape-char)+ &gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="value-string">value-string&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(anychar except escaped char and #| escape-char)* without leading/trailing space&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="quoted-string">quoted-string&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"""</span> <span class="definition">&lt;(anychar except escaped char | escape-char)*&gt;</span> <span class="terminal">"""</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="expr">expr&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"{{"</span> <a href="#sp">sp</a>* <a href="#variable-name">variable-name</a> <a href="#sp">sp</a>* <span class="terminal">"}}"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="variable-name">variable-name&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | "_" )+&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="escaped-char">escaped-char&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"\""</span><br>
-| <span class="terminal">"\\"</span><br>
-| <span class="terminal">"\b"</span><br>
-| <span class="terminal">"\f"</span><br>
-| <span class="terminal">"\n"</span><br>
-| <span class="terminal">"\r"</span><br>
-| <span class="terminal">"\t"</span><br>
-| <span class="terminal">"\u"</span> <a href="#unicode-char">unicode-char</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="unicode-char">unicode-char&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"{"</span> <a href="#hexdigit">hexdigit</a>+ <span class="terminal">"}"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="bytes">bytes&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#json">json</a><br>
-| <a href="#xml">xml</a><br>
-| <a href="#raw-string">raw-string</a><br>
-| <a href="#base64">base64</a><br>
-| <a href="#file">file</a><br>
-| <a href="#hex">hex</a></div></div>
-<div class="rule">
-  <div class="non-terminal" id="raw-string">raw-string&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"```"</span> (<a href="#sp">sp</a>* <a href="#newline">newline</a>)? (<a href="#any">any</a> <a href="#characters">characters</a>) <span class="terminal">"```"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="base64">base64&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"base64,"</span> <span class="definition">&lt;base64 encoding with optional whitesp/padding&gt;</span> <span class="terminal">";"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="file">file&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"file,"</span> <a href="#sp">sp</a>* <a href="#filename">filename</a> <a href="#sp">sp</a>* <span class="terminal">";"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="hex">hex&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"hex,"</span> <a href="#sp">sp</a>* <a href="#hexdigit">hexdigit</a>* <a href="#sp">sp</a>* <span class="terminal">";"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="lt">lt&nbsp;</div>
-  <div class="tokens">=&nbsp;<a href="#sp">sp</a>* <a href="#comment">comment</a>? (<a href="#newline">newline</a> | <a href="#eof">eof</a>)</div></div>
-<div class="rule">
-  <div class="non-terminal" id="comment">comment&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"#"</span> <span class="definition">&lt;any characters except newline - does not end with sp&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="newline">newline&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">"\n"</span> | <span class="terminal">"\r\n"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="sp">sp&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="terminal">" "</span> | <span class="terminal">"\t"</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="filename">filename&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;(alphanum | ".")+&gt;</span></div></div>
-<div class="rule">
-  <div class="non-terminal" id="integer">integer&nbsp;</div>
-  <div class="tokens">=&nbsp;<span class="definition">&lt;-?[1-9][0-9]*&gt;</span></div></div>
-
+<div class="grammar-ruleset"><h3 id="general">General</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="hurl-file">hurl-file</span></div><div class="grammar-rule-expression"><a href="#entry">entry</a><span class="grammar-symbol">*</span><br>
+<a href="#lt">lt</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="entry">entry</span><span class="grammar-usedby">(used by <a href="#hurl-file">hurl-file</a>)</span></div><div class="grammar-rule-expression"><a href="#request">request</a><br>
+<a href="#response">response</a><span class="grammar-symbol">?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="request">request</span><span class="grammar-usedby">(used by <a href="#entry">entry</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#method">method</a>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a><br>
+<a href="#header">header</a><span class="grammar-symbol">*</span><br>
+<a href="#request-section">request-section</a><span class="grammar-symbol">*</span><br>
+<a href="#body">body</a><span class="grammar-symbol">?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="response">response</span><span class="grammar-usedby">(used by <a href="#entry">entry</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#version">version</a>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#status">status</a>&nbsp;<a href="#lt">lt</a><br>
+<a href="#header">header</a><span class="grammar-symbol">*</span><br>
+<a href="#response-section">response-section</a><span class="grammar-symbol">*</span><br>
+<a href="#body">body</a><span class="grammar-symbol">?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="method">method</span><span class="grammar-usedby">(used by <a href="#request">request</a>)</span></div><div class="grammar-rule-expression">&nbsp;<span class="grammar-literal">GET</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">HEAD</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">POST</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">PUT</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">DELETE</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">CONNECT</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">OPTIONS</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">TRACE</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">PATCH</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="version">version</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression">&nbsp;<span class="grammar-literal">HTTP/1.0</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/1.1</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/2</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="status">status</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[0-9]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="header">header</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#key-value">key-value</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="body">body</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#bytes">bytes</a>&nbsp;<a href="#lt">lt</a></div></div>
+</div><div class="grammar-ruleset"><h3 id="sections">Sections</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="request-section">request-section</span><span class="grammar-usedby">(used by <a href="#request">request</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#query-string-params-section">query-string-params-section</a><br>
+<span class="grammar-symbol">|</span><a href="#form-params-section">form-params-section</a><br>
+<span class="grammar-symbol">|</span><a href="#multipart-form-data-section">multipart-form-data-section</a><br>
+<span class="grammar-symbol">|</span><a href="#cookies-section">cookies-section</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="response-section">response-section</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#captures-section">captures-section</a><br>
+<span class="grammar-symbol">|</span><a href="#asserts-section">asserts-section</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="query-string-params-section">query-string-params-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[QueryStringParams]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#key-value">key-value</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="form-params-section">form-params-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[FormParams]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#key-value">key-value</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multipart-form-data-section">multipart-form-data-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[MultipartFormData]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#multipart-form-data-param">multipart-form-data-param</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="cookies-section">cookies-section</span><span class="grammar-usedby">(used by <a href="#request-section">request-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[Cookies]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#key-value">key-value</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="captures-section">captures-section</span><span class="grammar-usedby">(used by <a href="#response-section">response-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[Captures]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#capture">capture</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="asserts-section">asserts-section</span><span class="grammar-usedby">(used by <a href="#response-section">response-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<span class="grammar-literal">[Asserts]</span>&nbsp;<a href="#lt">lt</a><br>
+<a href="#assert">assert</a><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="key-value">key-value</span><span class="grammar-usedby">(used by <a href="#header">header</a>,&nbsp;<a href="#query-string-params-section">query-string-params-section</a>,&nbsp;<a href="#form-params-section">form-params-section</a>,&nbsp;<a href="#cookies-section">cookies-section</a>,&nbsp;<a href="#multipart-form-data-param">multipart-form-data-param</a>)</span></div><div class="grammar-rule-expression"><a href="#key-string">key-string</a>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multipart-form-data-param">multipart-form-data-param</span><span class="grammar-usedby">(used by <a href="#multipart-form-data-section">multipart-form-data-section</a>)</span></div><div class="grammar-rule-expression"><a href="#file-param">file-param</a><span class="grammar-symbol">|</span><a href="#key-value">key-value</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="file-param">file-param</span><span class="grammar-usedby">(used by <a href="#multipart-form-data-param">multipart-form-data-param</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#key-string">key-string</a>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#file-value">file-value</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="file-value">file-value</span><span class="grammar-usedby">(used by <a href="#file-param">file-param</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">file,</span>&nbsp;<a href="#filename">filename</a>&nbsp;<span class="grammar-literal">;</span>&nbsp;<span class="grammar-symbol">(</span><a href="#file-contenttype">file-contenttype</a><span class="grammar-symbol">)</span><span class="grammar-symbol">?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="file-contenttype">file-contenttype</span><span class="grammar-usedby">(used by <a href="#file-value">file-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[a-zA-Z0-9/+-]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="capture">capture</span><span class="grammar-usedby">(used by <a href="#captures-section">captures-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#key-string">key-string</a>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#query">query</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="assert">assert</span><span class="grammar-usedby">(used by <a href="#asserts-section">asserts-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
+<a href="#query">query</a>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate">predicate</a>&nbsp;<a href="#lt">lt</a></div></div>
+</div><div class="grammar-ruleset"><h3 id="query">Query</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="query">query</span><span class="grammar-usedby">(used by <a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>)</span></div><div class="grammar-rule-expression"><a href="#main-query">main-query</a>&nbsp;<span class="grammar-symbol">(</span><a href="#sp">sp</a>&nbsp;<a href="#subquery">subquery</a><span class="grammar-symbol">)</span><span class="grammar-symbol">?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="main-query">main-query</span><span class="grammar-usedby">(used by <a href="#query">query</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#status-query">status-query</a><br>
+<span class="grammar-symbol">|</span><a href="#header-query">header-query</a><br>
+<span class="grammar-symbol">|</span><a href="#cookie-query">cookie-query</a><br>
+<span class="grammar-symbol">|</span><a href="#body-query">body-query</a><br>
+<span class="grammar-symbol">|</span><a href="#xpath-query">xpath-query</a><br>
+<span class="grammar-symbol">|</span><a href="#jsonpath-query">jsonpath-query</a><br>
+<span class="grammar-symbol">|</span><a href="#regex-query">regex-query</a><br>
+<span class="grammar-symbol">|</span><a href="#variable-query">variable-query</a><br>
+<span class="grammar-symbol">|</span><a href="#duration-query">duration-query</a><br>
+<span class="grammar-symbol">|</span><a href="#bytes-query">bytes-query</a><br>
+<span class="grammar-symbol">|</span><a href="#sha256-query">sha256-query</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="status-query">status-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">status</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="header-query">header-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">header</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="cookie-query">cookie-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">cookie</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="body-query">body-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">body</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="xpath-query">xpath-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">xpath</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="jsonpath-query">jsonpath-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">jsonpath</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-query">regex-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">regex</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#regex">regex</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="variable-query">variable-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">variable</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="duration-query">duration-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">duration</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="sha256-query">sha256-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">sha256</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="bytes-query">bytes-query</span><span class="grammar-usedby">(used by <a href="#main-query">main-query</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">bytes</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="subquery">subquery</span><span class="grammar-usedby">(used by <a href="#query">query</a>)</span></div><div class="grammar-rule-expression"><a href="#regex-subquery">regex-subquery</a><span class="grammar-symbol">|</span><a href="#count-subquery">count-subquery</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-subquery">regex-subquery</span><span class="grammar-usedby">(used by <a href="#subquery">subquery</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">regex</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="count-subquery">count-subquery</span><span class="grammar-usedby">(used by <a href="#subquery">subquery</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">count</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="predicates">Predicates</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="predicate">predicate</span><span class="grammar-usedby">(used by <a href="#assert">assert</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">not</span>&nbsp;<a href="#sp">sp</a><span class="grammar-symbol">)</span><span class="grammar-symbol">?</span>&nbsp;<a href="#predicate-func">predicate-func</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="predicate-func">predicate-func</span><span class="grammar-usedby">(used by <a href="#predicate">predicate</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#equal-predicate">equal-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#not-equal-predicate">not-equal-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#greater-predicate">greater-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#greater-or-equal-predicate">greater-or-equal-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#less-predicate">less-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#less-or-equal-predicate">less-or-equal-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#start-with-predicate">start-with-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#end-with-predicate">end-with-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#contain-predicate">contain-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#match-predicate">match-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#exist-predicate">exist-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#include-predicate">include-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#integer-predicate">integer-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#float-predicate">float-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#boolean-predicate">boolean-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#string-predicate">string-predicate</a><br>
+<span class="grammar-symbol">|</span><a href="#collection-predicate">collection-predicate</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="equal-predicate">equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">equals</span><span class="grammar-symbol">|</span><span class="grammar-literal">==</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate-value">predicate-value</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="not-equal-predicate">not-equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">notEquals</span><span class="grammar-symbol">|</span><span class="grammar-literal">!=</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate-value">predicate-value</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="greater-predicate">greater-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">greaterThan</span><span class="grammar-symbol">|</span><span class="grammar-literal">&gt;</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#integer">integer</a><span class="grammar-symbol">|</span><a href="#float">float</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="greater-or-equal-predicate">greater-or-equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">greaterThanOrEquals</span><span class="grammar-symbol">|</span><span class="grammar-literal">&gt;=</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#sp">sp</a><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-symbol">(</span><a href="#integer">integer</a><span class="grammar-symbol">|</span><a href="#float">float</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="less-predicate">less-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">lessThan</span><span class="grammar-symbol">|</span><span class="grammar-literal">&lt;</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#integer">integer</a><span class="grammar-symbol">|</span><a href="#float">float</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="less-or-equal-predicate">less-or-equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">lessThanOrEquals</span><span class="grammar-symbol">|</span><span class="grammar-literal">&lt;=</span><span class="grammar-symbol">)</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#integer">integer</a><span class="grammar-symbol">|</span><a href="#float">float</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="start-with-predicate">start-with-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">startsWith</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#oneline-hex">oneline-hex</a><span class="grammar-symbol">|</span><a href="#oneline-base64">oneline-base64</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="end-with-predicate">end-with-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">endsWith</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#oneline-hex">oneline-hex</a><span class="grammar-symbol">|</span><a href="#oneline-base64">oneline-base64</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="contain-predicate">contain-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">contains</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="match-predicate">match-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">matches</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#regex">regex</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="exist-predicate">exist-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">exists</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="include-predicate">include-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">includes</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate-value">predicate-value</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="integer-predicate">integer-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isInteger</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="float-predicate">float-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isFloat</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="boolean-predicate">boolean-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isBoolean</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="string-predicate">string-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isString</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="collection-predicate">collection-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isCollection</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="predicate-value">predicate-value</span><span class="grammar-usedby">(used by <a href="#equal-predicate">equal-predicate</a>,&nbsp;<a href="#not-equal-predicate">not-equal-predicate</a>,&nbsp;<a href="#include-predicate">include-predicate</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#null">null</a><br>
+<span class="grammar-symbol">|</span><a href="#boolean">boolean</a><br>
+<span class="grammar-symbol">|</span><a href="#integer">integer</a><br>
+<span class="grammar-symbol">|</span><a href="#float">float</a><br>
+<span class="grammar-symbol">|</span><a href="#quoted-string">quoted-string</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-hex">oneline-hex</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-base64">oneline-base64</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-file">oneline-file</a><br>
+<span class="grammar-symbol">|</span><a href="#multiline-string">multiline-string</a><br>
+<span class="grammar-symbol">|</span><a href="#template">template</a></div></div>
+</div><div class="grammar-ruleset"><h3 id="bytes">Bytes</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="bytes">bytes</span><span class="grammar-usedby">(used by <a href="#body">body</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#json-value">json-value</a><br>
+<span class="grammar-symbol">|</span><a href="#xml">xml</a><br>
+<span class="grammar-symbol">|</span><a href="#multiline-string">multiline-string</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-string">oneline-string</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-base64">oneline-base64</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-file">oneline-file</a><br>
+<span class="grammar-symbol">|</span><a href="#oneline-hex">oneline-hex</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="xml">xml</span><span class="grammar-usedby">(used by <a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">&lt;</span>&nbsp;<span class="grammar-literal">To Be Defined</span>&nbsp;<span class="grammar-literal">&gt;</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-base64">oneline-base64</span><span class="grammar-usedby">(used by <a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">base64,</span>&nbsp;<span class="grammar-regex">[A-Z0-9+-= \n]+</span>&nbsp;<span class="grammar-literal">;</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-file">oneline-file</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">file,</span>&nbsp;<a href="#filename">filename</a>&nbsp;<span class="grammar-literal">;</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-hex">oneline-hex</span><span class="grammar-usedby">(used by <a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">hex,</span>&nbsp;<a href="#hexdigit">hexdigit</a><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">;</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="strings">Strings</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string">quoted-string</span><span class="grammar-usedby">(used by <a href="#header-query">header-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#regex-subquery">regex-subquery</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">"</span>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string-content">quoted-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">"</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-content">quoted-string-content</span><span class="grammar-usedby">(used by <a href="#quoted-string">quoted-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#quoted-string-text">quoted-string-text</a><span class="grammar-symbol">|</span><a href="#quoted-string-escaped-char">quoted-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-text">quoted-string-text</span><span class="grammar-usedby">(used by <a href="#quoted-string-content">quoted-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~["\\]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-escaped-char">quoted-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#quoted-string-content">quoted-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">"</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">\b</span><span class="grammar-symbol">|</span><span class="grammar-literal">\f</span><span class="grammar-symbol">|</span><span class="grammar-literal">\n</span><span class="grammar-symbol">|</span><span class="grammar-literal">\r</span><span class="grammar-symbol">|</span><span class="grammar-literal">\t</span><span class="grammar-symbol">|</span><span class="grammar-literal">\u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="key-string">key-string</span><span class="grammar-usedby">(used by <a href="#key-value">key-value</a>,&nbsp;<a href="#file-param">file-param</a>,&nbsp;<a href="#capture">capture</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#key-string-content">key-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="key-string-content">key-string-content</span><span class="grammar-usedby">(used by <a href="#key-string">key-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#key-string-text">key-string-text</a><span class="grammar-symbol">|</span><a href="#key-string-escaped-char">key-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="key-string-text">key-string-text</span><span class="grammar-usedby">(used by <a href="#key-string-content">key-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[#:\n\\]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="key-string-escaped-char">key-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#key-string-content">key-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">#</span><span class="grammar-symbol">|</span><span class="grammar-literal">:</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">\b</span><span class="grammar-symbol">|</span><span class="grammar-literal">\f</span><span class="grammar-symbol">|</span><span class="grammar-literal">\n</span><span class="grammar-symbol">|</span><span class="grammar-literal">\r</span><span class="grammar-symbol">|</span><span class="grammar-literal">\t</span><span class="grammar-symbol">|</span><span class="grammar-literal">\u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="value-string">value-string</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#key-value">key-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#value-string-content">value-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="value-string-content">value-string-content</span><span class="grammar-usedby">(used by <a href="#value-string">value-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#value-string-text">value-string-text</a><span class="grammar-symbol">|</span><a href="#value-string-escaped-char">value-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="value-string-text">value-string-text</span><span class="grammar-usedby">(used by <a href="#value-string-content">value-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[#\n\\]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="value-string-escaped-char">value-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#value-string-content">value-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">#</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">\b</span><span class="grammar-symbol">|</span><span class="grammar-literal">\f</span><span class="grammar-symbol">|</span><span class="grammar-literal">\n</span><span class="grammar-symbol">|</span><span class="grammar-literal">\r</span><span class="grammar-symbol">|</span><span class="grammar-literal">\t</span><span class="grammar-symbol">|</span><span class="grammar-literal">\u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-string">oneline-string</span><span class="grammar-usedby">(used by <a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">```</span>&nbsp;<span class="grammar-symbol">(</span><a href="#oneline-string-content">oneline-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">```</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-string-content">oneline-string-content</span><span class="grammar-usedby">(used by <a href="#oneline-string">oneline-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#oneline-string-text">oneline-string-text</a><span class="grammar-symbol">|</span><a href="#oneline-string-escaped-char">oneline-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-string-text">oneline-string-text</span><span class="grammar-usedby">(used by <a href="#oneline-string-content">oneline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[#\n\\]</span>&nbsp;<span class="grammar-symbol">~</span><span class="grammar-literal">```</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-string-escaped-char">oneline-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#oneline-string-content">oneline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">#</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">b</span><span class="grammar-symbol">|</span><span class="grammar-literal">f</span><span class="grammar-symbol">|</span><span class="grammar-literal">u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string">multiline-string</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">```</span>&nbsp;<a href="#multiline-string-type">multiline-string-type</a><span class="grammar-symbol">?</span>&nbsp;<a href="#lt">lt</a><br>
+<span class="grammar-symbol">(</span><a href="#multiline-string-content">multiline-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<a href="#lt">lt</a><br>
+<span class="grammar-literal">```</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-type">multiline-string-type</span><span class="grammar-usedby">(used by <a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression">&nbsp;<span class="grammar-literal">base64</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">hex</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">json</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">xml</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">graphql</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-content">multiline-string-content</span><span class="grammar-usedby">(used by <a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#multiline-string-text">multiline-string-text</a><span class="grammar-symbol">|</span><a href="#multiline-string-escaped-char">multiline-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-text">multiline-string-text</span><span class="grammar-usedby">(used by <a href="#multiline-string-content">multiline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[\\]+</span>&nbsp;<span class="grammar-symbol">~</span><span class="grammar-literal">```</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-escaped-char">multiline-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#multiline-string-content">multiline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">b</span><span class="grammar-symbol">|</span><span class="grammar-literal">f</span><span class="grammar-symbol">|</span><span class="grammar-literal">n</span><span class="grammar-symbol">|</span><span class="grammar-literal">r</span><span class="grammar-symbol">|</span><span class="grammar-literal">t</span><span class="grammar-symbol">|</span><span class="grammar-literal">`</span><span class="grammar-symbol">|</span><span class="grammar-literal">u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename">filename</span><span class="grammar-usedby">(used by <a href="#file-value">file-value</a>,&nbsp;<a href="#oneline-file">oneline-file</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#filename-content">filename-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-content">filename-content</span><span class="grammar-usedby">(used by <a href="#filename">filename</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#filename-text">filename-text</a><span class="grammar-symbol">|</span><a href="#filename-escaped-char">filename-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-text">filename-text</span><span class="grammar-usedby">(used by <a href="#filename-content">filename-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[#; \n\\]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-escaped-char">filename-escaped-char</span><span class="grammar-usedby">(used by <a href="#filename-content">filename-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">;</span><span class="grammar-symbol">|</span><span class="grammar-literal">#</span><span class="grammar-symbol">|</span><span class="grammar-regex">[ ]</span><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="unicode-char">unicode-char</span><span class="grammar-usedby">(used by <a href="#quoted-string-escaped-char">quoted-string-escaped-char</a>,&nbsp;<a href="#key-string-escaped-char">key-string-escaped-char</a>,&nbsp;<a href="#value-string-escaped-char">value-string-escaped-char</a>,&nbsp;<a href="#oneline-string-escaped-char">oneline-string-escaped-char</a>,&nbsp;<a href="#multiline-string-escaped-char">multiline-string-escaped-char</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">{</span>&nbsp;<a href="#hexdigit">hexdigit</a><span class="grammar-symbol">+</span>&nbsp;<span class="grammar-literal">}</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="json">JSON</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-value">json-value</span><span class="grammar-usedby">(used by <a href="#bytes">bytes</a>,&nbsp;<a href="#json-key-value">json-key-value</a>,&nbsp;<a href="#json-array">json-array</a>)</span></div><div class="grammar-rule-expression">&nbsp;<a href="#template">template</a><br>
+<span class="grammar-symbol">|</span><a href="#json-object">json-object</a><br>
+<span class="grammar-symbol">|</span><a href="#json-array">json-array</a><br>
+<span class="grammar-symbol">|</span><a href="#json-string">json-string</a><br>
+<span class="grammar-symbol">|</span><a href="#json-number">json-number</a><br>
+<span class="grammar-symbol">|</span><a href="#boolean">boolean</a><br>
+<span class="grammar-symbol">|</span><a href="#null">null</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-object">json-object</span><span class="grammar-usedby">(used by <a href="#json-value">json-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">{</span>&nbsp;<a href="#json-key-value">json-key-value</a>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">,</span>&nbsp;<a href="#json-key-value">json-key-value</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">}</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-key-value">json-key-value</span><span class="grammar-usedby">(used by <a href="#json-object">json-object</a>)</span></div><div class="grammar-rule-expression"><a href="#json-string">json-string</a>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#json-value">json-value</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-array">json-array</span><span class="grammar-usedby">(used by <a href="#json-value">json-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">[</span>&nbsp;<a href="#json-value">json-value</a>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">,</span>&nbsp;<a href="#json-value">json-value</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-string">json-string</span><span class="grammar-usedby">(used by <a href="#json-value">json-value</a>,&nbsp;<a href="#json-key-value">json-key-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">"</span>&nbsp;<span class="grammar-symbol">(</span><a href="#json-string-content">json-string-content</a><span class="grammar-symbol">|</span><a href="#template">template</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">"</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-string-content">json-string-content</span><span class="grammar-usedby">(used by <a href="#json-string">json-string</a>)</span></div><div class="grammar-rule-expression"><a href="#json-string-text">json-string-text</a><span class="grammar-symbol">|</span><a href="#json-string-escaped-char">json-string-escaped-char</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-string-text">json-string-text</span><span class="grammar-usedby">(used by <a href="#json-string-content">json-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~["\\]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-string-escaped-char">json-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#json-string-content">json-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">"</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">b</span><span class="grammar-symbol">|</span><span class="grammar-literal">f</span><span class="grammar-symbol">|</span><span class="grammar-literal">n</span><span class="grammar-symbol">|</span><span class="grammar-literal">r</span><span class="grammar-symbol">|</span><span class="grammar-literal">t</span><span class="grammar-symbol">|</span><span class="grammar-literal">u</span>&nbsp;<a href="#hexdigit">hexdigit</a>&nbsp;<a href="#hexdigit">hexdigit</a>&nbsp;<a href="#hexdigit">hexdigit</a>&nbsp;<a href="#hexdigit">hexdigit</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="json-number">json-number</span><span class="grammar-usedby">(used by <a href="#json-value">json-value</a>)</span></div><div class="grammar-rule-expression"><a href="#integer">integer</a>&nbsp;<a href="#fraction">fraction</a><span class="grammar-symbol">?</span>&nbsp;<a href="#exponent">exponent</a><span class="grammar-symbol">?</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="template-expression">Template / Expression</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="template">template</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#quoted-string">quoted-string</a>,&nbsp;<a href="#key-string">key-string</a>,&nbsp;<a href="#value-string">value-string</a>,&nbsp;<a href="#oneline-string">oneline-string</a>,&nbsp;<a href="#multiline-string">multiline-string</a>,&nbsp;<a href="#filename">filename</a>,&nbsp;<a href="#json-value">json-value</a>,&nbsp;<a href="#json-string">json-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">{{</span>&nbsp;<a href="#expr">expr</a>&nbsp;<span class="grammar-literal">}}</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="expr">expr</span><span class="grammar-usedby">(used by <a href="#template">template</a>)</span></div><div class="grammar-rule-expression"><a href="#variable-name">variable-name</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="variable-name">variable-name</span><span class="grammar-usedby">(used by <a href="#expr">expr</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[A-Za-z]</span>&nbsp;<span class="grammar-regex">[A-Za-z_-0-9]*</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="lexical-grammar">Lexical Grammar</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="boolean">boolean</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#json-value">json-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">true</span><span class="grammar-symbol">|</span><span class="grammar-literal">false</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="null">null</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#json-value">json-value</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">null</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="integer">integer</span><span class="grammar-usedby">(used by <a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#json-number">json-number</a>,&nbsp;<a href="#float">float</a>)</span></div><div class="grammar-rule-expression"><a href="#digit">digit</a><span class="grammar-symbol">+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="float">float</span><span class="grammar-usedby">(used by <a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>)</span></div><div class="grammar-rule-expression"><a href="#integer">integer</a>&nbsp;<a href="#fraction">fraction</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="digit">digit</span><span class="grammar-usedby">(used by <a href="#integer">integer</a>,&nbsp;<a href="#fraction">fraction</a>,&nbsp;<a href="#exponent">exponent</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[0-9]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="hexdigit">hexdigit</span><span class="grammar-usedby">(used by <a href="#oneline-hex">oneline-hex</a>,&nbsp;<a href="#unicode-char">unicode-char</a>,&nbsp;<a href="#json-string-escaped-char">json-string-escaped-char</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[0-9A-Fa-f]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="fraction">fraction</span><span class="grammar-usedby">(used by <a href="#json-number">json-number</a>,&nbsp;<a href="#float">float</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">.</span>&nbsp;<a href="#digit">digit</a><span class="grammar-symbol">+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="exponent">exponent</span><span class="grammar-usedby">(used by <a href="#json-number">json-number</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">e</span><span class="grammar-symbol">|</span><span class="grammar-literal">E</span><span class="grammar-symbol">)</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">+</span><span class="grammar-symbol">|</span><span class="grammar-literal">-</span><span class="grammar-symbol">)</span><span class="grammar-symbol">?</span>&nbsp;<a href="#digit">digit</a><span class="grammar-symbol">+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="sp">sp</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#query">query</a>,&nbsp;<a href="#header-query">header-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#regex-subquery">regex-subquery</a>,&nbsp;<a href="#predicate">predicate</a>,&nbsp;<a href="#equal-predicate">equal-predicate</a>,&nbsp;<a href="#not-equal-predicate">not-equal-predicate</a>,&nbsp;<a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#include-predicate">include-predicate</a>,&nbsp;<a href="#lt">lt</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[ \t]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="lt">lt</span><span class="grammar-usedby">(used by <a href="#hurl-file">hurl-file</a>,&nbsp;<a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#header">header</a>,&nbsp;<a href="#body">body</a>,&nbsp;<a href="#query-string-params-section">query-string-params-section</a>,&nbsp;<a href="#form-params-section">form-params-section</a>,&nbsp;<a href="#multipart-form-data-section">multipart-form-data-section</a>,&nbsp;<a href="#cookies-section">cookies-section</a>,&nbsp;<a href="#captures-section">captures-section</a>,&nbsp;<a href="#asserts-section">asserts-section</a>,&nbsp;<a href="#file-param">file-param</a>,&nbsp;<a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression"><a href="#sp">sp</a><span class="grammar-symbol">*</span>&nbsp;<a href="#comment">comment</a><span class="grammar-symbol">?</span>&nbsp;<span class="grammar-regex">[\n]?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="comment">comment</span><span class="grammar-usedby">(used by <a href="#lt">lt</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">#</span>&nbsp;<span class="grammar-regex">~[\n]*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex">regex</span><span class="grammar-usedby">(used by <a href="#regex-query">regex-query</a>,&nbsp;<a href="#match-predicate">match-predicate</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">/</span>&nbsp;<a href="#regex-content">regex-content</a>&nbsp;<span class="grammar-literal">/</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-content">regex-content</span><span class="grammar-usedby">(used by <a href="#regex">regex</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#regex-text">regex-text</a><span class="grammar-symbol">|</span><a href="#regex-escaped-char">regex-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-text">regex-text</span><span class="grammar-usedby">(used by <a href="#regex-content">regex-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[\n\/]+</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-escaped-char">regex-escaped-char</span><span class="grammar-usedby">(used by <a href="#regex-content">regex-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-regex">~[\n]</span></div></div>
 </div>
 
