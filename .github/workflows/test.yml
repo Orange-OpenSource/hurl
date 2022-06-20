@@ -241,7 +241,7 @@ jobs:
       with:
         cpu: cortex-a53
         cpu_info: cpuinfo/raspberrypi_4b
-        image_additional_mb: 8192
+        image_additional_mb: 12288
         copy_artifact_path: target;venv;root
         base_image: raspios_lite_arm64:latest
         commands: |
