@@ -7,7 +7,8 @@ POST http://localhost:8000/post-json
     "strict": true,
     "spacing": "\n",
     "g_clef": "\uD834\uDD1E",
-    "items": [true, "true", 1]
+    "items": [true, "true", 1],
+    "variable": "{{string_variable}}"
 }
 
 HTTP/1.0 200
