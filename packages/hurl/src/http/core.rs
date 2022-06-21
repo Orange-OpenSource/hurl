@@ -20,12 +20,6 @@ use core::fmt;
 use std::str::FromStr;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Header {
-    pub name: String,
-    pub value: String,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cookie {
     pub domain: String,
     pub include_subdomain: String,
@@ -47,12 +41,6 @@ pub struct RequestCookie {
 pub struct Param {
     pub name: String,
     pub value: String,
-}
-
-impl fmt::Display for Header {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}: {}", self.name, self.value)
-    }
 }
 
 impl fmt::Display for Cookie {
@@ -142,22 +130,6 @@ impl FromStr for Cookie {
             http_only,
         })
     }
-}
-
-///
-/// Return a list of headers values for the given header name.
-///
-pub fn get_header_values(headers: &[Header], expected_name: &str) -> Vec<String> {
-    headers
-        .iter()
-        .filter_map(|Header { name, value }| {
-            if name.to_lowercase() == expected_name.to_lowercase() {
-                Some(value.to_string())
-            } else {
-                None
-            }
-        })
-        .collect()
 }
 
 #[cfg(test)]

@@ -18,8 +18,9 @@
 
 pub use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
-pub use self::core::{Cookie, Header, Param, RequestCookie};
+pub use self::core::{Cookie, Param, RequestCookie};
 pub use self::error::HttpError;
+pub use self::header::Header;
 pub use self::options::{ClientOptions, Verbosity};
 pub use self::request::Request;
 #[cfg(test)]
@@ -34,6 +35,7 @@ mod client;
 mod cookie;
 mod core;
 mod error;
+mod header;
 mod options;
 mod request;
 mod request_spec;

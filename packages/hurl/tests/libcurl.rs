@@ -67,7 +67,7 @@ fn test_hello() {
         name: "Content-Type".to_string(),
         value: "text/html; charset=utf-8".to_string(),
     }));
-    assert_eq!(response.get_header_values("Date".to_string()).len(), 1);
+    assert_eq!(response.get_header_values("Date").len(), 1);
 }
 
 // endregion
@@ -337,10 +337,7 @@ fn test_redirect() {
 
     assert_eq!(response.status, 302);
     assert_eq!(
-        response
-            .get_header_values("Location".to_string())
-            .get(0)
-            .unwrap(),
+        response.get_header_values("Location").get(0).unwrap(),
         "http://localhost:8000/redirected"
     );
     assert_eq!(client.redirect_count, 0);
