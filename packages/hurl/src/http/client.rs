@@ -28,7 +28,7 @@ use super::options::ClientOptions;
 use super::request::*;
 use super::request_spec::*;
 use super::response::*;
-use crate::http::{HttpError, Verbosity};
+use super::{Header, HttpError, Verbosity};
 use std::str::FromStr;
 use url::Url;
 
@@ -310,7 +310,7 @@ impl Client {
                 .unwrap();
         }
 
-        if get_header_values(&request.headers, "Content-Type").is_empty() {
+        if request.get_header_values("Content-Type").is_empty() {
             if let Some(ref s) = request.content_type {
                 list.append(format!("Content-Type: {}", s).as_str())
                     .unwrap();
@@ -319,11 +319,11 @@ impl Client {
             }
         }
 
-        if get_header_values(&request.headers, "Expect").is_empty() {
+        if request.get_header_values("Expect").is_empty() {
             list.append("Expect:").unwrap(); // remove header Expect
         }
 
-        if get_header_values(&request.headers, "User-Agent").is_empty() {
+        if request.get_header_values("User-Agent").is_empty() {
             let user_agent = match self.options.user_agent {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
@@ -334,14 +334,12 @@ impl Client {
 
         if let Some(ref user) = self.options.user {
             let authorization = base64::encode(user.as_bytes());
-            if get_header_values(&request.headers, "Authorization").is_empty() {
+            if request.get_header_values("Authorization").is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
                     .unwrap();
             }
         }
-        if self.options.compressed
-            && get_header_values(&request.headers, "Accept-Encoding").is_empty()
-        {
+        if self.options.compressed && request.get_header_values("Accept-Encoding").is_empty() {
             list.append("Accept-Encoding: gzip, deflate, br").unwrap();
         }
 
@@ -468,7 +466,7 @@ impl Client {
         if !(300..400).contains(&response_code) {
             return None;
         }
-        let location = match get_header_values(&response.headers, "Location").get(0) {
+        let location = match response.get_header_values("Location").get(0) {
             None => return None,
             Some(value) => value.clone(),
         };

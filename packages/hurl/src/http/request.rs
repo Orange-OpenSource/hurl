@@ -17,6 +17,7 @@
  */
 
 use super::core::*;
+use super::Header;
 use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

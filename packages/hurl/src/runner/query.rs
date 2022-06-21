@@ -60,7 +60,7 @@ pub fn eval_query_value(
         QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
         QueryValue::Header { name, .. } => {
             let header_name = eval_template(&name, variables)?;
-            let values = http_response.get_header(header_name);
+            let values = http_response.get_header_values(&header_name);
             if values.is_empty() {
                 Ok(None)
             } else if values.len() == 1 {

@@ -72,7 +72,7 @@ pub fn eval_asserts(
             }
             Ok(expected) => {
                 let header_name = header.key.value.clone();
-                let actuals = http_response.get_header(header_name);
+                let actuals = http_response.get_header_values(&header_name);
                 if actuals.is_empty() {
                     asserts.push(AssertResult::Header {
                         actual: Err(Error {

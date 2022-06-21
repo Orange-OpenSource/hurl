@@ -16,6 +16,7 @@
  *
  */
 
+use super::{header, Header};
 use core::fmt;
 
 use super::core::*;
@@ -74,6 +75,13 @@ impl Body {
             Body::Binary(bs) => bs.clone(),
             Body::File(bs, _) => bs.clone(),
         }
+    }
+}
+
+impl RequestSpec {
+    /// Returns all header values.
+    pub fn get_header_values(&self, name: &str) -> Vec<String> {
+        header::get_values(&self.headers, name)
     }
 }
 

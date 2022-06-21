@@ -16,10 +16,9 @@
  *
  */
 
+use super::{header, Header};
 use core::fmt;
 use std::time::Duration;
-
-use super::core::*;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
@@ -49,34 +48,16 @@ impl fmt::Display for Version {
 }
 
 impl Response {
-    ///
-    /// return a list of headers values for the given header name
-    ///
-    pub fn get_header_values(&self, expected_name: String) -> Vec<String> {
-        get_header_values(&self.headers, &expected_name)
+    /// Returns all header values.
+    pub fn get_header_values(&self, name: &str) -> Vec<String> {
+        header::get_values(&self.headers, name)
     }
 
-    ///
-    ///
-    ///
-    pub fn get_header(&self, name: String) -> Vec<String> {
-        self.headers
-            .iter()
-            .filter(|&h| h.name.to_lowercase() == name.to_lowercase())
-            .map(|h| h.value.clone())
-            .collect()
-    }
-
-    ///
-    /// Return optional Content-type header value
-    ///
+    /// Returns optional Content-type header value.
     pub fn content_type(&self) -> Option<String> {
-        for header in self.headers.clone() {
-            if header.name.to_lowercase().as_str() == "content-type" {
-                return Some(header.value);
-            }
-        }
-        None
+        header::get_values(&self.headers, "Content-Type")
+            .get(0)
+            .cloned()
     }
 }
 
@@ -253,9 +234,9 @@ xxx
             duration: Default::default(),
         };
         assert_eq!(
-            response.get_header_values("Content-Length".to_string()),
+            response.get_header_values("Content-Length"),
             vec!["12".to_string()]
         );
-        assert!(response.get_header_values("Unknown".to_string()).is_empty());
+        assert!(response.get_header_values("Unknown").is_empty());
     }
 }
