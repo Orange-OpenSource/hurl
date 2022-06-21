@@ -2,3 +2,5 @@
 age=30
 --variable
 strict=true
+--variable
+string_variable=\

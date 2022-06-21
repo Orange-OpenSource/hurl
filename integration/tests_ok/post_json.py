@@ -16,7 +16,8 @@ def post_json():
     "strict": true,
     "spacing": "\\n",
     "g_clef": "\\uD834\\uDD1E",
-    "items": [true, \"true\", 1]
+    "items": [true, \"true\", 1],
+    "variable": "\\\\"
 }"""
     )
     return ""

@@ -98,8 +98,19 @@ pub fn eval_json_object_element(
     ))
 }
 
-// do not decode
-// keep original encoding
+/// Eval a JSON template to a valid JSON string
+/// The variable are replaced by their value and encoded into JSON
+///
+/// # Arguments
+///
+/// * `template` - An Hurl Template
+/// * `variables` - A map of input variables
+///
+/// # Example
+///
+/// The template "Hello {{quote}}" with variable quote="
+/// will be evaluated to the JSON String "Hello \""
+///
 pub fn eval_json_template(
     template: Template,
     variables: &HashMap<String, Value>,
@@ -123,7 +134,25 @@ fn eval_json_template_element(
 ) -> Result<String, Error> {
     match template_element {
         TemplateElement::String { encoded, .. } => Ok(encoded),
-        TemplateElement::Expression(expr) => eval_expression(expr, variables),
+        TemplateElement::Expression(expr) => {
+            let s = eval_expression(expr, variables)?;
+            Ok(encode_json_string(&s))
+        }
+    }
+}
+
+fn encode_json_string(s: &str) -> String {
+    s.chars().map(encode_json_char).collect()
+}
+
+fn encode_json_char(c: char) -> String {
+    match c {
+        '"' => "\\\"".to_string(),
+        '\\' => "\\\\".to_string(),
+        '\n' => "\\n".to_string(),
+        '\r' => "\\r".to_string(),
+        '\t' => "\\t".to_string(),
+        c => c.to_string(),
     }
 }
 
@@ -240,7 +269,7 @@ mod tests {
                     space0: "".to_string(),
                     elements: vec![],
                 },
-                &variables
+                &variables,
             )
             .unwrap(),
             "[]".to_string()
@@ -254,21 +283,21 @@ mod tests {
                         JsonListElement {
                             space0: "".to_string(),
                             value: JsonValue::Number("1".to_string()),
-                            space1: "".to_string()
+                            space1: "".to_string(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: JsonValue::Number("-2".to_string()),
-                            space1: "".to_string()
+                            space1: "".to_string(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: JsonValue::Number("3.0".to_string()),
-                            space1: "".to_string()
+                            space1: "".to_string(),
                         },
                     ],
                 },
-                &variables
+                &variables,
             )
             .unwrap(),
             "[1, -2, 3.0]".to_string()
@@ -290,16 +319,16 @@ mod tests {
                         JsonListElement {
                             space0: "".to_string(),
                             value: JsonValue::String(template),
-                            space1: "".to_string()
+                            space1: "".to_string(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: json_hello_world_value(),
-                            space1: "".to_string()
+                            space1: "".to_string(),
                         },
                     ],
                 },
-                &variables
+                &variables,
             )
             .unwrap(),
             "[\"Hi\", \"Hello\\u0020Bob!\"]".to_string()
@@ -313,9 +342,9 @@ mod tests {
             eval_json_value(
                 JsonValue::Object {
                     space0: "".to_string(),
-                    elements: vec![]
+                    elements: vec![],
                 },
-                &variables
+                &variables,
             )
             .unwrap(),
             "{}".to_string()
@@ -342,7 +371,7 @@ mod tests {
                     }],
                     source_info: SourceInfo::init(1, 1, 1, 1),
                 }),
-                &variables
+                &variables,
             )
             .unwrap(),
             "\"\\n\"".to_string()
@@ -362,10 +391,52 @@ mod tests {
                     }],
                     source_info: SourceInfo::init(1, 1, 1, 1),
                 },
-                &variables
+                &variables,
             )
             .unwrap(),
             "\\n".to_string()
         );
+
+        let mut variables = HashMap::new();
+        variables.insert("quote".to_string(), Value::String("\"".to_string()));
+        assert_eq!(
+            eval_json_template(
+                Template {
+                    quotes: true,
+                    elements: vec![
+                        TemplateElement::String {
+                            value: "Hello ".to_string(),
+                            encoded: "Hello ".to_string(),
+                        },
+                        TemplateElement::Expression(Expr {
+                            space0: whitespace(),
+                            variable: Variable {
+                                name: "quote".to_string(),
+                                source_info: SourceInfo::init(0, 0, 0, 0),
+                            },
+                            space1: whitespace(),
+                        }),
+                    ],
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                &variables,
+            )
+            .unwrap(),
+            "Hello \\\"".to_string()
+        );
+    }
+
+    fn whitespace() -> Whitespace {
+        Whitespace {
+            value: "".to_string(),
+            source_info: SourceInfo::init(0, 0, 0, 0),
+        }
+    }
+
+    #[test]
+    fn test_encode_json_string() {
+        assert_eq!(encode_json_string("a"), "a");
+        assert_eq!(encode_json_string("\""), "\\\"");
+        assert_eq!(encode_json_string("\\"), "\\\\");
     }
 }
