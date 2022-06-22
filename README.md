@@ -9,6 +9,8 @@
 
 # What's Hurl?
 
+commit gpg sign from filipe pinto
+
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
 It can perform requests, capture values and evaluate queries on headers and body response. Hurl is very
