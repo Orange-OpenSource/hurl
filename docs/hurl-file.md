@@ -51,7 +51,7 @@ In the following example:
 
 ```hurl
 GET https://example.org/api
-x-token: BEEF \#STEACK # Some somment
+x-token: BEEF \#STEACK # Some comment
 HTTP/1.1 200
 ```
 
