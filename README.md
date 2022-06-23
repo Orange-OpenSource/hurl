@@ -630,15 +630,18 @@ Output goes to stdout by default. For output to a file, use the -o option:
 $ hurl -o output input.hurl
 ```
 
-
-
 By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
+To have a test oriented output, you can use --test option:
+
+```
+$ hurl --test *.hurl
+```
 
 
 ## Hurl File Format
 
-The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.html](https://hurl.dev/docs/hurl-file.html)
+The Hurl file format is fully documented in <https://hurl.dev/docs/hurl-file.html>
 
 It consists of one or several HTTP requests
 
@@ -665,6 +668,8 @@ csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
+
+More information on captures here <https://hurl.dev/docs/capturing-response.html>
 
 ### Asserts
 
@@ -696,8 +701,7 @@ xpath "string(//title)" == "301 Moved"
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
-
-
+More information on asserts here <https://hurl.dev/docs/asserting-response.html>
 
 ## Options
 
