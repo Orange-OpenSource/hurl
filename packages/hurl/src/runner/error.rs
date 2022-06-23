@@ -98,8 +98,8 @@ impl Error for runner::Error {
             RunnerError::PredicateType { .. } => {
                 "predicate type inconsistent with value return by query".to_string()
             }
-            RunnerError::SubqueryInvalidInput => {
-                "Type from query result and subquery do not match".to_string()
+            RunnerError::SubqueryInvalidInput(t) => {
+                format!("Type <{}> from query result and subquery do not match", t)
             }
             RunnerError::InvalidDecoding { charset } => {
                 format!("The body can not be decoded with charset '{}'", charset)

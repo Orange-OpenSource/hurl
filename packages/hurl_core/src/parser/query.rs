@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::*;
+use crate::parser::{Error, ParseError};
 
 use super::combinators::*;
 use super::cookiepath::cookiepath;
@@ -141,8 +142,31 @@ fn jsonpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn regex_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
-    Ok(QueryValue::Regex { space0, expr })
+    let value = regex_value(reader)?;
+    Ok(QueryValue::Regex { space0, value })
+}
+
+pub fn regex_value(reader: &mut Reader) -> ParseResult<'static, RegexValue> {
+    choice(
+        vec![
+            |p1| match quoted_template(p1) {
+                Ok(value) => Ok(RegexValue::Template(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match regex(p1) {
+                Ok(value) => Ok(RegexValue::Regex(value)),
+                Err(e) => Err(e),
+            },
+        ],
+        reader,
+    )
+    .map_err(|e| Error {
+        pos: e.pos,
+        recoverable: false,
+        inner: ParseError::Expecting {
+            value: "\" or /".to_string(),
+        },
+    })
 }
 
 fn variable_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
@@ -184,7 +208,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::init(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                subquery: None
+                subquery: None,
             }
         );
     }
@@ -197,7 +221,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::init(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                subquery: None
+                subquery: None,
             }
         );
     }

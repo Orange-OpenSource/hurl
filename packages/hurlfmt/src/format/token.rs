@@ -471,10 +471,10 @@ impl Tokenizable for QueryValue {
                 add_tokens(&mut tokens, space0.tokenize());
                 add_tokens(&mut tokens, expr.tokenize());
             }
-            QueryValue::Regex { space0, expr } => {
+            QueryValue::Regex { space0, value } => {
                 tokens.push(Token::QueryType(String::from("regex")));
                 add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, expr.tokenize());
+                add_tokens(&mut tokens, value.tokenize());
             }
             QueryValue::Variable { space0, name } => {
                 tokens.push(Token::QueryType(String::from("variable")));
@@ -487,6 +487,15 @@ impl Tokenizable for QueryValue {
             QueryValue::Md5 {} => tokens.push(Token::QueryType(String::from("md5"))),
         }
         tokens
+    }
+}
+
+impl Tokenizable for RegexValue {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            RegexValue::Template(template) => template.tokenize(),
+            RegexValue::Regex(regex) => regex.tokenize(),
+        }
     }
 }
 
@@ -516,10 +525,10 @@ impl Tokenizable for Subquery {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         match self.value.clone() {
-            SubqueryValue::Regex { space0, expr } => {
+            SubqueryValue::Regex { space0, value } => {
                 tokens.push(Token::QueryType(String::from("regex")));
                 add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, expr.tokenize());
+                add_tokens(&mut tokens, value.tokenize());
             }
             SubqueryValue::Count { .. } => {
                 tokens.push(Token::QueryType(String::from("count")));

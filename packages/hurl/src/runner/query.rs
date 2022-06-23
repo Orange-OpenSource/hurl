@@ -43,7 +43,7 @@ pub fn eval_query(
         } else {
             Err(Error {
                 source_info: subquery.source_info,
-                inner: RunnerError::SubqueryInvalidInput,
+                inner: RunnerError::SubqueryInvalidInput("none".to_string()),
                 assert: false,
             })
         }
@@ -184,9 +184,7 @@ pub fn eval_query_value(
                 Ok(Some(Value::from_json(&serde_json::Value::Array(results))))
             }
         }
-        QueryValue::Regex { expr, .. } => {
-            let value = eval_template(&expr, variables)?;
-            let source_info = expr.source_info;
+        QueryValue::Regex { value, .. } => {
             let s = match http_response.text() {
                 Err(inner) => {
                     return Err(Error {
@@ -197,19 +195,29 @@ pub fn eval_query_value(
                 }
                 Ok(v) => v,
             };
-            match Regex::new(value.as_str()) {
-                Ok(re) => match re.captures(s.as_str()) {
-                    Some(captures) => match captures.get(1) {
-                        Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                        None => Ok(None),
-                    },
+            let re = match value {
+                RegexValue::Template(t) => {
+                    let value = eval_template(&t, variables)?;
+                    match Regex::new(value.as_str()) {
+                        Ok(re) => re,
+                        Err(_) => {
+                            let source_info = t.source_info;
+                            return Err(Error {
+                                source_info,
+                                inner: RunnerError::InvalidRegex(),
+                                assert: false,
+                            });
+                        }
+                    }
+                }
+                RegexValue::Regex(re) => re.inner,
+            };
+            match re.captures(s.as_str()) {
+                Some(captures) => match captures.get(1) {
+                    Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
                     None => Ok(None),
                 },
-                Err(_) => Err(Error {
-                    source_info,
-                    inner: RunnerError::InvalidRegex(),
-                    assert: false,
-                }),
+                None => Ok(None),
             }
         }
         QueryValue::Variable { name, .. } => {
@@ -525,14 +533,14 @@ pub mod tests {
                     value: String::from(""),
                     source_info: SourceInfo::init(1, 6, 1, 7),
                 },
-                expr: Template {
+                value: RegexValue::Template(Template {
                     quotes: true,
                     elements: vec![TemplateElement::String {
                         value: "Hello ([a-zA-Z]+)!".to_string(),
                         encoded: "Hello ([a-zA-Z]+)!".to_string(),
                     }],
                     source_info: SourceInfo::init(1, 7, 1, 26),
-                },
+                }),
             },
             subquery: None,
         }
@@ -547,14 +555,14 @@ pub mod tests {
                     value: String::from(""),
                     source_info: SourceInfo::init(1, 6, 1, 7),
                 },
-                expr: Template {
+                value: RegexValue::Template(Template {
                     quotes: true,
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
                     source_info: SourceInfo::init(1, 7, 1, 10),
-                },
+                }),
             },
             subquery: None,
         }

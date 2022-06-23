@@ -4,9 +4,12 @@ HTTP/1.0 200
 [Captures]
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
+param3: header "header2" regex /Hello (.*)!/
+
 [Asserts]
 variable "param1" == "value1"
 variable "param2" == "Bob"
+variable "param3" == "Bob"
 
 GET http://localhost:8000/captures-check
 [QueryStringParams]

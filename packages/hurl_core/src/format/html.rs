@@ -365,12 +365,10 @@ impl Htmlable for QueryValue {
                     format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
                 );
             }
-            QueryValue::Regex { space0, expr } => {
+            QueryValue::Regex { space0, value } => {
                 buffer.push_str("<span class=\"query-type\">regex</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
-                );
+                buffer.push_str(value.to_html().as_str());
             }
             QueryValue::Variable { space0, name } => {
                 buffer.push_str("<span class=\"query-type\">variable</span>");
@@ -395,17 +393,28 @@ impl Htmlable for QueryValue {
         buffer
     }
 }
+impl Htmlable for RegexValue {
+    fn to_html(&self) -> String {
+        match self {
+            RegexValue::Template(template) => {
+                format!("<span class=\"string\">\"{}\"</span>", template.to_html())
+            }
+            RegexValue::Regex(regex) => regex.to_html(),
+        }
+    }
+}
 
 impl Htmlable for Subquery {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         match self.value.clone() {
-            SubqueryValue::Regex { expr, space0 } => {
+            SubqueryValue::Regex { value, space0 } => {
                 buffer.push_str("<span class=\"subquery-type\">regex</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
-                );
+                // buffer.push_str(
+                //     format!("<span class=\"string\">\"{}\"</span>", value.to_html()).as_str(),
+                // );
+                buffer.push_str(value.to_html().as_str());
             }
             SubqueryValue::Count {} => {
                 buffer.push_str("<span class=\"subquery-type\">count</span>")

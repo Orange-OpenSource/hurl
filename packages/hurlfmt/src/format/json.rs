@@ -304,9 +304,9 @@ fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
             attributes.push(("type".to_string(), JValue::String("xpath".to_string())));
             attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
         }
-        QueryValue::Regex { expr, .. } => {
+        QueryValue::Regex { value, .. } => {
             attributes.push(("type".to_string(), JValue::String("regex".to_string())));
-            attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+            attributes.push(("expr".to_string(), value.to_json()));
         }
         QueryValue::Variable { name, .. } => {
             attributes.push(("type".to_string(), JValue::String("variable".to_string())));
@@ -338,14 +338,33 @@ impl ToJson for SubqueryValue {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
         match self {
-            SubqueryValue::Regex { expr, .. } => {
+            SubqueryValue::Regex { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("regex".to_string())));
-                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+                attributes.push(("expr".to_string(), value.to_json()));
             }
             SubqueryValue::Count { .. } => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
         }
+        JValue::Object(attributes)
+    }
+}
+
+impl ToJson for RegexValue {
+    fn to_json(&self) -> JValue {
+        match self {
+            RegexValue::Template(template) => JValue::String(template.to_string()),
+            RegexValue::Regex(regex) => regex.to_json(),
+        }
+    }
+}
+
+impl ToJson for Regex {
+    fn to_json(&self) -> JValue {
+        let attributes = vec![
+            ("type".to_string(), JValue::String("regex".to_string())),
+            ("value".to_string(), JValue::String(self.to_string())),
+        ];
         JValue::Object(attributes)
     }
 }

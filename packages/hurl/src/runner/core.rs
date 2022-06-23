@@ -162,7 +162,7 @@ pub enum RunnerError {
     QueryInvalidJson,
     NoQueryResult,
 
-    SubqueryInvalidInput,
+    SubqueryInvalidInput(String),
 
     // Predicate
     PredicateType,

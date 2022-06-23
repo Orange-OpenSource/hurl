@@ -322,7 +322,7 @@ pub enum QueryValue {
     },
     Regex {
         space0: Whitespace,
-        expr: Template,
+        value: RegexValue,
     },
     Variable {
         space0: Whitespace,
@@ -332,6 +332,12 @@ pub enum QueryValue {
     Bytes {},
     Sha256 {},
     Md5 {},
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum RegexValue {
+    Template(Template),
+    Regex(Regex),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -382,7 +388,10 @@ pub struct Subquery {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SubqueryValue {
-    Regex { space0: Whitespace, expr: Template },
+    Regex {
+        space0: Whitespace,
+        value: RegexValue,
+    },
     Count {},
 }
 

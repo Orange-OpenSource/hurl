@@ -74,7 +74,7 @@ error: Subquery error
   --> tests_failed/predicate.hurl:14:22
    |
 14 | jsonpath "$.message" count == 1
-   |                      ^^^^^ Type from query result and subquery do not match
+   |                      ^^^^^ Type <string> from query result and subquery do not match
    |
 
 error: Assert Failure
