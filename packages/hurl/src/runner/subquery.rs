@@ -29,38 +29,47 @@ pub fn eval_subquery(
     variables: &HashMap<String, Value>,
 ) -> Result<Option<Value>, Error> {
     match subquery.value {
-        SubqueryValue::Regex { expr, .. } => {
-            eval_regex(value, expr, variables, subquery.source_info)
-        }
+        SubqueryValue::Regex {
+            value: regex_value, ..
+        } => eval_regex(value, regex_value, variables, subquery.source_info),
         SubqueryValue::Count {} => eval_count(value, subquery.source_info),
     }
 }
 
 fn eval_regex(
     value: Value,
-    expr: Template,
+    regex_value: RegexValue,
     variables: &HashMap<String, Value>,
     source_info: SourceInfo,
 ) -> Result<Option<Value>, Error> {
-    let templ = eval_template(&expr, variables)?;
+    let re = match regex_value {
+        RegexValue::Template(t) => {
+            let value = eval_template(&t, variables)?;
+            match Regex::new(value.as_str()) {
+                Ok(re) => re,
+                Err(_) => {
+                    return Err(Error {
+                        source_info: t.source_info,
+                        inner: RunnerError::InvalidRegex(),
+                        assert: false,
+                    })
+                }
+            }
+        }
+        RegexValue::Regex(re) => re.inner,
+    };
+
     match value {
-        Value::String(s) => match Regex::new(templ.as_str()) {
-            Ok(re) => match re.captures(s.as_str()) {
-                Some(captures) => match captures.get(1) {
-                    Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                    None => Ok(None),
-                },
+        Value::String(s) => match re.captures(s.as_str()) {
+            Some(captures) => match captures.get(1) {
+                Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
                 None => Ok(None),
             },
-            Err(_) => Err(Error {
-                source_info: expr.source_info,
-                inner: RunnerError::InvalidRegex(),
-                assert: false,
-            }),
+            None => Ok(None),
         },
-        _ => Err(Error {
+        v => Err(Error {
             source_info,
-            inner: RunnerError::SubqueryInvalidInput,
+            inner: RunnerError::SubqueryInvalidInput(v._type()),
             assert: false,
         }),
     }
@@ -71,9 +80,9 @@ fn eval_count(value: Value, source_info: SourceInfo) -> Result<Option<Value>, Er
         Value::List(values) => Ok(Some(Value::Integer(values.len() as i64))),
         Value::Bytes(values) => Ok(Some(Value::Integer(values.len() as i64))),
         Value::Nodeset(size) => Ok(Some(Value::Integer(size as i64))),
-        _ => Err(Error {
+        v => Err(Error {
             source_info,
-            inner: RunnerError::SubqueryInvalidInput,
+            inner: RunnerError::SubqueryInvalidInput(v._type()),
             assert: false,
         }),
     }
@@ -96,21 +105,21 @@ pub mod tests {
             source_info: SourceInfo::init(1, 1, 1, 20),
             value: SubqueryValue::Regex {
                 space0: whitespace,
-                expr: Template {
+                value: RegexValue::Template(Template {
                     quotes: false,
                     elements: vec![TemplateElement::String {
                         value: "Hello (.*)!".to_string(),
                         encoded: "Hello (.*)!".to_string(),
                     }],
                     source_info: SourceInfo::init(1, 7, 1, 20),
-                },
+                }),
             },
         };
         assert_eq!(
             eval_subquery(
                 subquery.clone(),
                 Value::String("Hello Bob!".to_string()),
-                &variables
+                &variables,
             )
             .unwrap()
             .unwrap(),
@@ -121,7 +130,10 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
-        assert_eq!(error.inner, RunnerError::SubqueryInvalidInput);
+        assert_eq!(
+            error.inner,
+            RunnerError::SubqueryInvalidInput("boolean".to_string())
+        );
     }
 
     #[test]
@@ -135,14 +147,14 @@ pub mod tests {
             source_info: SourceInfo::init(1, 1, 1, 20),
             value: SubqueryValue::Regex {
                 space0: whitespace,
-                expr: Template {
+                value: RegexValue::Template(Template {
                     quotes: false,
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
                     source_info: SourceInfo::init(1, 7, 1, 20),
-                },
+                }),
             },
         };
         let error = eval_subquery(
@@ -169,9 +181,9 @@ pub mod tests {
                 Value::List(vec![
                     Value::Integer(1),
                     Value::Integer(2),
-                    Value::Integer(3)
+                    Value::Integer(3),
                 ]),
-                &variables
+                &variables,
             )
             .unwrap()
             .unwrap(),
@@ -182,6 +194,9 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
-        assert_eq!(error.inner, RunnerError::SubqueryInvalidInput);
+        assert_eq!(
+            error.inner,
+            RunnerError::SubqueryInvalidInput("boolean".to_string())
+        );
     }
 }

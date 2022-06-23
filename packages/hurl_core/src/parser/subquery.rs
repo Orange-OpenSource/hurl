@@ -20,8 +20,8 @@ use crate::ast::*;
 use super::combinators::*;
 use super::primitives::*;
 use super::reader::Reader;
-use super::string::*;
 use super::ParseResult;
+use crate::parser::query::regex_value;
 use crate::parser::{Error, ParseError};
 
 pub fn subquery(reader: &mut Reader) -> ParseResult<'static, Subquery> {
@@ -41,8 +41,8 @@ fn subquery_value(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
 fn regex_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
-    Ok(SubqueryValue::Regex { space0, expr })
+    let value = regex_value(reader)?;
+    Ok(SubqueryValue::Regex { space0, value })
 }
 
 fn count_subquery(reader: &mut Reader) -> ParseResult<'static, SubqueryValue> {
@@ -77,14 +77,14 @@ mod tests {
                         value: " ".to_string(),
                         source_info: SourceInfo::init(1, 6, 1, 7)
                     },
-                    expr: Template {
+                    value: RegexValue::Template(Template {
                         quotes: true,
                         elements: vec![TemplateElement::String {
                             value: "Hello (.*)!".to_string(),
                             encoded: "Hello (.*)!".to_string()
                         }],
                         source_info: SourceInfo::init(1, 7, 1, 20)
-                    }
+                    })
                 }
             }
         );

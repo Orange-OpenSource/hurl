@@ -4,9 +4,12 @@
 <span class="line section-header">[Captures]</span>
 <span class="line"><span class="name">param1</span><span>:</span> <span class="query-type">header</span> <span class="string">"header1"</span></span>
 <span class="line"><span class="name">param2</span><span>:</span> <span class="query-type">header</span> <span class="string">"header2"</span> <span class="subquery-type">regex</span> <span class="string">"Hello (.*)!"</span></span>
+<span class="line"><span class="name">param3</span><span>:</span> <span class="query-type">header</span> <span class="string">"header2"</span> <span class="subquery-type">regex</span> <span class="regex">/Hello (.*)!/</span></span>
+<span class="line"></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"param1"</span> <span class="predicate-type">==</span> <span class="string">"value1"</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"param2"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"param3"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/captures-check</span></span>
 <span class="line section-header">[QueryStringParams]</span>

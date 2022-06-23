@@ -291,8 +291,8 @@ impl Lintable<QueryValue> for QueryValue {
                 expr: expr.clone(),
                 space0: one_whitespace(),
             },
-            QueryValue::Regex { expr, .. } => QueryValue::Regex {
-                expr: expr.clone(),
+            QueryValue::Regex { value, .. } => QueryValue::Regex {
+                value: value.lint(),
                 space0: one_whitespace(),
             },
             QueryValue::Variable { name, .. } => QueryValue::Variable {
@@ -320,6 +320,19 @@ impl Lintable<Subquery> for Subquery {
     }
 }
 
+impl Lintable<RegexValue> for RegexValue {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> RegexValue {
+        match self {
+            RegexValue::Template(template) => RegexValue::Template(template.lint()),
+            RegexValue::Regex(regex) => RegexValue::Regex(regex.clone()),
+        }
+    }
+}
 impl Lintable<SubqueryValue> for SubqueryValue {
     fn errors(&self) -> Vec<Error> {
         let errors = vec![];
@@ -328,9 +341,9 @@ impl Lintable<SubqueryValue> for SubqueryValue {
 
     fn lint(&self) -> SubqueryValue {
         match self {
-            SubqueryValue::Regex { expr, .. } => SubqueryValue::Regex {
+            SubqueryValue::Regex { value, .. } => SubqueryValue::Regex {
                 space0: one_whitespace(),
-                expr: expr.clone(),
+                value: value.lint(),
             },
             SubqueryValue::Count {} => SubqueryValue::Count {},
         }

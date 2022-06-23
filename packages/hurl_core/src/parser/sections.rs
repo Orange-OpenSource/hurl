@@ -651,14 +651,14 @@ mod tests {
                                 value: " ".to_string(),
                                 source_info: SourceInfo::init(1, 31, 1, 32),
                             },
-                            expr: Template {
+                            value: RegexValue::Template(Template {
                                 quotes: true,
                                 elements: vec![TemplateElement::String {
                                     value: "token=(.*)".to_string(),
                                     encoded: "token=(.*)".to_string(),
                                 }],
                                 source_info: SourceInfo::init(1, 32, 1, 44),
-                            },
+                            }),
                         },
                     }
                 )),
@@ -681,7 +681,7 @@ mod tests {
         assert_eq!(
             error.inner,
             ParseError::Expecting {
-                value: "\"".to_string()
+                value: "\" or /".to_string()
             }
         );
         assert!(!error.recoverable);

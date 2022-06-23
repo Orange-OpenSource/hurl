@@ -154,10 +154,9 @@ bytes-query: "bytes"
 
 subquery: regex-subquery | count-subquery
 
-regex-subquery: "regex" sp quoted-string
+regex-subquery: "regex" sp (quoted-string | regex)
 
 count-subquery: "count"
-
 
 
 # Predicates
