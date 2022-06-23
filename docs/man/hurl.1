@@ -1,4 +1,4 @@
-.TH hurl 1 "16 May 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
+.TH hurl 1 "23 Jun 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -41,15 +41,16 @@ Output goes to stdout by default. For output to a file, use the -o option:
 
     $ hurl -o output input.hurl
 
-
-
 By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
+To have a test oriented output, you can use --test option:
+
+    $ hurl --test *.hurl
 
 
 .SH HURL FILE FORMAT
 
-The Hurl file format is fully documented in \fIhttps://hurl.dev/docs/hurl-file.html\fP
+The Hurl file format is fully documented in <https://hurl.dev/docs/hurl-file.html>
 
 It consists of one or several HTTP requests
 
@@ -72,6 +73,8 @@ A typical example occurs with csrf tokens.
     # Do the login !
     POST https://example.org/login?user=toto&password=1234
     X-CSRF-TOKEN: {{csrf_token}}
+
+More information on captures here <https://hurl.dev/docs/capturing-response.html>
 
 .IP "Asserts"
 
@@ -97,8 +100,7 @@ You can also include explicit asserts combining query and predicate
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
-
-
+More information on asserts here <https://hurl.dev/docs/asserting-response.html>
 
 .SH OPTIONS
 
