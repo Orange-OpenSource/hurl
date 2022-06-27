@@ -1,0 +1,74 @@
+name: crates-update
+
+on: [push]
+
+jobs:
+  crates-update:
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}    
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ github.event.repository.name }}
+    name: crates-update
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/accept'}}
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BASE_REF }}
+          fetch-depth: 0
+
+      - name: Init all internal env vars       
+        run: |
+            pr_detail_file="pr_detail.json"
+            gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
+            jq . "${pr_detail_file}"
+            HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
+            BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
+            if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
+                HEAD_TYPE=origin
+            else
+                HEAD_TYPE=fork
+            fi        
+            echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
+            echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
+            echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
+            echo "HEAD_REF=$(jq -rc .head.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+            echo "BASE_REF=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+            echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+            echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+            echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+            echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
+            echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
+
+      - name: Get crates-update pull request id 
+        run: |
+            PR_NUMBER=$(echo toto)
+
+      - name: Crates update
+        run: |
+            bin/crates_update.sh | tee crates-update.result && exit_code=0 || exit_code=$?
+            diff_result=$(git diff)
+            if [ ${exit_code} -eq 0 ] && [ "${diff_result}" = "non" ] ; then
+                echo "  - ✅ No crates updates."
+                if [ -n "${PR_NUMBER}" ] ; then
+                    comment="✅ Pull request ${PR_NUMBER} closed because there are no more crates to update on master branch"
+                    echo "  - ${comment}"
+                    gh pr comment "${PR_NUMBER}" --body "${comment}"
+                fi
+            elif [ ${exit_code} -gt 0 ] && [ "${diff_result}" = "oui" ]
+                comment="✅ Some crates have been updated."
+                echo "  - ${comment}"
+                if [ -z "${PR_NUMBER}" ] ; then
+                    echo "git create branch crates-update-pr"
+                    echo "git create pull request"
+                fi
+                echo "git checkout -b crates-update-pr"
+                echo "git set stream origin/crates-update-pr"
+                echo "git commit blablablabla"
+                echo "git push"
+                echo "pr comment $(cat crates-update.result)"
+                echo "pr merge /accept"
+            fi
