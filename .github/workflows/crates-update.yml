@@ -19,29 +19,6 @@ jobs:
           ref: ${{ env.BASE_REF }}
           fetch-depth: 0
 
-      - name: Init all internal env vars       
-        run: |
-            pr_detail_file="pr_detail.json"
-            gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
-            jq . "${pr_detail_file}"
-            HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
-            BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
-            if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
-                HEAD_TYPE=origin
-            else
-                HEAD_TYPE=fork
-            fi        
-            echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
-            echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
-            echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
-            echo "HEAD_REF=$(jq -rc .head.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "BASE_REF=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
-            echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
-
       - name: Get crates-update pull request id 
         run: |
             PR_NUMBER=$(echo toto)
