@@ -15,4 +15,3 @@ and finally push package to official chocolatey repository
 choco apikey -k [API_KEY_HERE] -source https://push.chocolatey.org/
 choco push
 ```
-
