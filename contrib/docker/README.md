@@ -24,4 +24,3 @@ echo -e "GET https://hurl.dev\n\nHTTP/1.1 200" | docker run --rm -i hurl:latest 
 echo -e "GET https://hurl.dev\n\nHTTP/1.1 200" > /tmp/test.hurl
 docker run --rm -v /tmp/test.hurl:/tmp/test.hurl hurl:latest --test --color /tmp/test.hurl
 ```
-
