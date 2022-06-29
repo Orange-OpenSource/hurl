@@ -1,7 +1,7 @@
 HTTP/1.0 200
-Date: DATE
 Content-Type: text/html; charset=utf-8
 Content-Length: 5
 Server: Flask Server
+Date: ~~~
 
 Hello

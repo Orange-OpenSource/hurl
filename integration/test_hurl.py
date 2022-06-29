@@ -7,7 +7,7 @@ import subprocess
 import os
 import platform
 import check_json_output
-import tempfile
+import re
 
 
 def decode_string(encoded):
@@ -93,10 +93,34 @@ def test(hurl_file):
     if os.path.exists(f):
         expected = open(f, "rb").read()
         actual = result.stdout
-        if expected != actual:
+        if actual != expected:
             print(">>> error in stdout")
             print(f"actual: <{actual}>\nexpected: <{expected}>")
             sys.exit(1)
+
+    # stdout with textual pattern / line per line
+    f = hurl_file.replace(".hurl", ".out.pattern")
+    if os.path.exists(f):
+        expected = open(f, "r").read()
+        actual = decode_string(result.stdout)
+        expected_lines = expected.split("\n")
+        expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
+        actual_lines = actual.split("\n")
+        if len(actual_lines) != len(expected_pattern_lines):
+            print(">>> error in stderr / mismatch in number of lines")
+            print(
+                "actual: %d lines\nexpected: %d lines"
+                % (len(actual_lines), len(expected_lines))
+            )
+            sys.exit(1)
+        for i in range(len(expected_pattern_lines)):
+            if not re.match(expected_pattern_lines[i], actual_lines[i]):
+                print(f">>> error in stdout in line {i+1}")
+                print(f"actual: <{actual_lines[i]}>")
+                print(
+                    f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
+                )
+                sys.exit(1)
 
     # stdout (json)
     if os.path.exists(json_output_file):
@@ -109,7 +133,7 @@ def test(hurl_file):
     if os.path.exists(f):
         expected = open(f).read().strip()
         actual = decode_string(result.stderr).strip()
-        if expected != actual:
+        if actual != expected:
             print(">>> error in stderr")
             print(f"actual: <{actual}>\nexpected: <{expected}>")
             sys.exit(1)
@@ -121,6 +145,30 @@ def test(hurl_file):
             if expected != actual:
                 print(">>> error in stderr")
                 print(f"actual: <{actual}>\nexpected: <{expected}>")
+                sys.exit(1)
+
+    # stderr with textual pattern / line per line
+    f = hurl_file.replace(".hurl", ".err.pattern")
+    if os.path.exists(f):
+        expected = open(f, "r").read()
+        actual = decode_string(result.stderr)
+        expected_lines = expected.split("\n")
+        expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
+        actual_lines = re.split(r"\r?\n", actual)
+        if len(actual_lines) != len(expected_pattern_lines):
+            print(">>> error in stderr / mismatch in number of lines")
+            print(
+                "actual: %d lines\nexpected: %d lines"
+                % (len(actual_lines), len(expected_lines))
+            )
+            sys.exit(1)
+        for i in range(len(expected_pattern_lines)):
+            if not re.match(expected_pattern_lines[i], actual_lines[i]):
+                print(f">>> error in stderr in line {i+1}")
+                print(f"actual: <{actual_lines[i]}>")
+                print(
+                    f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
+                )
                 sys.exit(1)
 
     # curl output
@@ -149,6 +197,16 @@ def test(hurl_file):
                 print("expected: %s" % expected_commands[i])
                 print("actual:   %s" % actual_commands[i])
                 sys.exit(1)
+
+
+def parse_pattern(s):
+    # Escape regex metacharacters
+    for c in [".", "(", ")", "[", "]", "^", "$", "*", "+", "?"]:
+        s = s.replace(c, "\\" + c)
+
+    s = re.sub("~+", ".*", s)
+    s = "^" + s + "$"
+    return s
 
 
 def main():
