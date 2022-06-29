@@ -66,7 +66,11 @@ fn log_error_message(color: bool, warning: bool, message: &str) {
 
 fn log_verbose(verbose: bool, message: &str) {
     if verbose {
-        eprintln!("* {}", message);
+        if message.is_empty() {
+            eprintln!("*");
+        } else {
+            eprintln!("* {}", message);
+        }
     }
 }
 

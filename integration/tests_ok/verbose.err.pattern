@@ -1,0 +1,28 @@
+* Options:
+*     fail fast: true
+*     insecure: false
+*     follow redirect: false
+*     max redirect: 50
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/verbose
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/verbose'
+*
+> GET /verbose HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Date: ~~~
+<
+*

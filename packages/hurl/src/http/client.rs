@@ -177,7 +177,12 @@ impl Client {
                         let mut lines = split_lines(data);
                         if verbose {
                             for line in lines.clone() {
-                                eprintln!("> {}", line);
+                                let s = line.trim_end();
+                                if s.is_empty() {
+                                    eprintln!(">");
+                                } else {
+                                    eprintln!("> {}", s);
+                                }
                             }
                         }
 
@@ -192,7 +197,12 @@ impl Client {
                     easy::InfoType::HeaderIn => {
                         if let Some(s) = decode_header(data) {
                             if verbose {
-                                eprint!("< {}", s);
+                                let s = s.trim_end();
+                                if s.is_empty() {
+                                    eprintln!("<")
+                                } else {
+                                    eprintln!("< {}", s);
+                                }
                             }
                         }
                     }

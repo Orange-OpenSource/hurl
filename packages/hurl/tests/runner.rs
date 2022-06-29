@@ -24,12 +24,18 @@ use hurl_core::parser;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-pub fn log_verbose(message: &str) {
-    eprintln!("* {}", message);
+fn log_verbose(message: &str) {
+    if message.is_empty() {
+        eprintln!("*");
+    } else {
+        eprintln!("* {}", message);
+    }
 }
+
 pub fn log_error_message(_warning: bool, message: &str) {
     eprintln!("{}", message);
 }
+
 pub fn log_runner_error(error: &runner::Error, _warning: bool) {
     eprintln!("* {:#?}", error);
 }
