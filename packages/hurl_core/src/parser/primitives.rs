@@ -431,7 +431,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
         });
     }
     let first_digit = reader.read().unwrap();
-    if !first_digit.is_digit(10) {
+    if !first_digit.is_ascii_digit() {
         return Err(Error {
             pos: start.pos,
             recoverable: true,
@@ -442,7 +442,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
     }
 
     let save = reader.state.clone();
-    let s = reader.read_while(|c| c.is_digit(10));
+    let s = reader.read_while(|c| c.is_ascii_digit());
 
     // if the first digit is zero, you should not have any more digits
     if first_digit == '0' && !s.is_empty() {
@@ -487,7 +487,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
         });
     }
 
-    let s = reader.read_while(|c| c.is_digit(10));
+    let s = reader.read_while(|c| c.is_ascii_digit());
     if s.is_empty() {
         return Err(Error {
             pos: reader.clone().state.pos,
