@@ -246,6 +246,7 @@ impl Client {
             url,
             method: (&request.method).to_string(),
             headers: request_headers,
+            body: vec![], // TODO: we don't record the request body for the moment.
         };
         let response = Response {
             version,
@@ -635,47 +636,6 @@ pub fn decode_header(data: &[u8]) -> Option<String> {
                 None
             }
         },
-    }
-}
-
-impl Response {
-    ///
-    /// Log a response body as text if possible, or a slice of body bytes.
-    ///
-    /// # Arguments
-    ///
-    /// * `response` - The HTTP response
-    fn log_body(&self) {
-        eprintln!("* Response:");
-
-        // We try to decode the HTTP body as text if the response has a text kind content type.
-        // If it ok, we print each line of the body in debug format. Otherwise, we
-        // print the body first 64 bytes.
-        if let Some(content_type) = self.content_type() {
-            if !content_type.contains("text") {
-                self.log_bytes(64);
-                return;
-            }
-        }
-        match self.text() {
-            Ok(text) => text.split('\n').for_each(|l| eprintln!("* {}", l)),
-            Err(_) => self.log_bytes(64),
-        }
-    }
-
-    ///
-    /// Log a response bytes with a maximum size.
-    ///
-    /// # Arguments
-    ///
-    /// * `max` - The maximum number if bytes to log
-    fn log_bytes(&self, max: usize) {
-        let bytes = if self.body.len() > max {
-            &self.body[..max]
-        } else {
-            &self.body
-        };
-        eprintln!("* Bytes <{}...>", hex::encode(bytes))
     }
 }
 

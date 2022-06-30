@@ -18,6 +18,7 @@
 
 use super::core::*;
 use super::Header;
+use crate::http::header;
 use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -25,10 +26,12 @@ pub struct Request {
     pub url: String,
     pub method: String,
     pub headers: Vec<Header>,
+    pub body: Vec<u8>,
 }
 
 impl Request {
-    pub fn query_string_params(self) -> Vec<Param> {
+    /// Extracts query string params from the url of the request.
+    pub fn query_string_params(&self) -> Vec<Param> {
         let u = Url::parse(self.url.as_str()).expect("valid url");
         let mut params = vec![];
         for (name, value) in u.query_pairs() {
@@ -41,12 +44,22 @@ impl Request {
         params
     }
 
-    pub fn cookies(self) -> Vec<RequestCookie> {
+    /// Returns a list of request headers cookie.
+    ///
+    /// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie
+    pub fn cookies(&self) -> Vec<RequestCookie> {
         self.headers
             .iter()
             .filter(|h| h.name.as_str() == "Cookie")
             .flat_map(|h| parse_cookies(h.value.as_str().trim()))
             .collect()
+    }
+
+    /// Returns optional Content-type header value.
+    pub fn content_type(&self) -> Option<String> {
+        header::get_values(&self.headers, "Content-Type")
+            .get(0)
+            .cloned()
     }
 }
 
@@ -90,6 +103,7 @@ pub mod tests {
                     value: "hurl/1.0".to_string(),
                 },
             ],
+            body: vec![],
         }
     }
 
@@ -98,6 +112,7 @@ pub mod tests {
             method: "GET".to_string(),
             url: "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".to_string(),
             headers: vec![],
+            body: vec![],
         }
     }
 
@@ -109,6 +124,7 @@ pub mod tests {
                 name: "Cookie".to_string(),
                 value: "cookie1=value1; cookie2=value2".to_string(),
             }],
+            body: vec![],
         }
     }
 

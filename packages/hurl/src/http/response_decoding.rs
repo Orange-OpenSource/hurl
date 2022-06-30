@@ -24,7 +24,7 @@ use encoding::{DecoderTrap, EncodingRef};
 /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 use std::io::prelude::*;
 
-use crate::http::{HttpError, Response};
+use crate::http::{mimetype, HttpError, Response};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ContentEncoding {
@@ -71,7 +71,7 @@ impl Response {
     /// Returns character encoding of the HTTP response.
     fn character_encoding(&self) -> Result<EncodingRef, HttpError> {
         match self.content_type() {
-            Some(content_type) => match mime_charset(content_type) {
+            Some(content_type) => match mimetype::charset(&content_type) {
                 Some(charset) => {
                     match encoding::label::encoding_from_whatwg_label(charset.as_str()) {
                         None => Err(HttpError::InvalidCharset { charset }),
@@ -100,7 +100,7 @@ impl Response {
     pub fn is_html(&self) -> bool {
         match self.content_type() {
             None => false,
-            Some(s) => s.starts_with("text/html"),
+            Some(s) => mimetype::is_html(&s),
         }
     }
 
@@ -193,13 +193,6 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
             description: "zlib".to_string(),
         }),
     }
-}
-
-/// Extracts charset from mime-type String
-fn mime_charset(mime_type: String) -> Option<String> {
-    mime_type
-        .find("charset=")
-        .map(|index| mime_type[(index + 8)..].to_string())
 }
 
 #[cfg(test)]
@@ -368,19 +361,6 @@ pub mod tests {
                 description: "gzip".to_string()
             }
         );
-    }
-
-    #[test]
-    pub fn test_charset() {
-        assert_eq!(
-            mime_charset("text/plain; charset=utf-8".to_string()),
-            Some("utf-8".to_string())
-        );
-        assert_eq!(
-            mime_charset("text/plain; charset=ISO-8859-1".to_string()),
-            Some("ISO-8859-1".to_string())
-        );
-        assert_eq!(mime_charset("text/plain;".to_string()), None);
     }
 
     fn hello_response() -> Response {
