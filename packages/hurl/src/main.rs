@@ -317,6 +317,14 @@ fn main() {
     let mut testcases = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
+        if !Path::new(filename).exists() {
+            let message = format!(
+                "hurl: cannot access '{}': No such file or directory",
+                filename
+            );
+            log_error_message(false, &message);
+            std::process::exit(EXIT_ERROR_PARSING);
+        }
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
             Err(e) => {
