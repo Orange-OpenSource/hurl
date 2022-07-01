@@ -1,0 +1,17 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/very-verbose/redirect</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/very-verbose/encoding/latin1</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/very-verbose/compressed/brotli</span></span>
+<span class="line"><span class="string">Accept-Encoding</span><span>:</span> <span class="string">brotli</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/very-verbose/cat</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/very-verbose/done</span></span>
+<span class="line"><span class="string">x-foo</span><span>:</span> <span class="string">bar</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span></code></pre>

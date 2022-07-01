@@ -1,0 +1,158 @@
+* Options:
+*     fail fast: true
+*     insecure: false
+*     follow redirect: true
+*     max redirect: 50
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/very-verbose/redirect
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/very-verbose/redirect' -L
+*
+> GET /very-verbose/redirect HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~-snapshot
+>
+< HTTP/1.0 301 MOVED PERMANENTLY
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 205
+< Location: http://localhost:8000/very-verbose/redirected
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* <html>
+* <head>
+*     <meta content="text/html;charset=utf-8">
+*     <title>301 Moved</title>
+* </head>
+* <body>
+* <h1>301 Moved</h1>
+* The document has moved
+* <a href="/very-verbose/redirected">here</a>.
+* </body>
+* </html>
+> GET /very-verbose/redirected HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~-snapshot
+>
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 11
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* Redirected.
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/very-verbose/encoding/latin1
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/very-verbose/encoding/latin1' -L
+*
+> GET /very-verbose/encoding/latin1 HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~-snapshot
+>
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=ISO-8859-1
+< Content-Length: 4
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* café
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/very-verbose/compressed/brotli
+* Accept-Encoding: brotli
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/very-verbose/compressed/brotli' -X POST -H 'Accept-Encoding: brotli' -L
+*
+> POST /very-verbose/compressed/brotli HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> Accept-Encoding: brotli
+> User-Agent: hurl/1.7.0-snapshot
+>
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 17
+< Content-Encoding: br
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* Hello World!
+*
+* ------------------------------------------------------------------------------
+* Executing entry 4
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/very-verbose/cat
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/very-verbose/cat' -L
+*
+> GET /very-verbose/cat HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~-snapshot
+>
+< HTTP/1.0 200 OK
+< Content-Type: image/jpeg
+< Content-Length: 25992
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
+*
+* ------------------------------------------------------------------------------
+* Executing entry 5
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/very-verbose/done
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/very-verbose/done' -L
+*
+> GET /very-verbose/done HTTP/1.1
+> Host: localhost:8000
+> x-foo: bar
+> Accept: */*
+> User-Agent: hurl/~~~-snapshot
+>
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 4
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response:
+* Done
+*

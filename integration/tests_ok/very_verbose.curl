@@ -1,0 +1,5 @@
+curl 'http://localhost:8000/very-verbose/redirect' -L
+curl 'http://localhost:8000/very-verbose/encoding/latin1' -L
+curl 'http://localhost:8000/very-verbose/compressed/brotli' -X POST -H 'Accept-Encoding: brotli' -L
+curl 'http://localhost:8000/very-verbose/cat' -L
+curl 'http://localhost:8000/very-verbose/done' -L
