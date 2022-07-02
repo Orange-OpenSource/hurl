@@ -76,6 +76,7 @@ jobs:
          ./test_curl_commands.sh $(find ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
          ./test_html_output.py tests_failed/*.html
          xmllint --noout tests_failed/*.html
+         ./ad_hoc.sh
          ./report.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
