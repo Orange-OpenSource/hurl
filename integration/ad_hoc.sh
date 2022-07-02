@@ -12,4 +12,12 @@ if [ "$actual" != "$expected" ]; then
     exit 1
 fi
 
-
+echo "Check multiple Hurl files"
+actual=$(hurl tests_ok/hello.hurl tests_ok/hello.hurl)
+expected="Hello World!Hello World!"
+if [ "$actual" != "$expected" ]; then
+    echo "Error differs:"
+    echo "actual: $actual"
+    echo "expected: $expected"
+    exit 1
+fi
