@@ -81,7 +81,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
-                .action(ArgAction::Append),
+                .multiple_values(true),
         )
         .arg(
             clap::Arg::new("cacert_file")
