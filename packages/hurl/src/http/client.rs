@@ -113,10 +113,8 @@ impl Client {
         Ok(calls)
     }
 
-    ///
     /// Execute an http request
-    ///
-    pub fn execute(&mut self, request: &RequestSpec) -> Result<(Request, Response), HttpError> {
+    pub fn execute(&mut self, request_spec: &RequestSpec) -> Result<(Request, Response), HttpError> {
         // set handle attributes
         // that have not been set or reset
 
@@ -142,32 +140,28 @@ impl Client {
             .connect_timeout(self.options.connect_timeout)
             .unwrap();
 
-        let url = self.generate_url(&request.url, &request.querystring);
+        let url = self.generate_url(&request_spec.url, &request_spec.querystring);
         self.handle.url(url.as_str()).unwrap();
-        self.set_method(&request.method);
-
-        self.set_cookies(&request.cookies);
-        self.set_form(&request.form);
-        self.set_multipart(&request.multipart);
-
-        let bytes = request.body.bytes();
-        let mut data: &[u8] = bytes.as_ref();
-        self.set_body(data);
-
-        self.set_headers(request);
-
-        let verbose = self.options.verbosity != None;
-        let mut request_headers: Vec<Header> = vec![];
+        self.set_method(&request_spec.method);
+        self.set_cookies(&request_spec.cookies);
+        self.set_form(&request_spec.form);
+        self.set_multipart(&request_spec.multipart);
+        let mut request_body: &[u8] = &request_spec.body.bytes();
+        self.set_body(request_body);
+        self.set_headers(request_spec);
 
         let start = Instant::now();
+        let verbose = self.options.verbosity != None;
+        let very_verbose = self.options.verbosity == Some(Verbosity::VeryVerbose);
+        let mut request_headers: Vec<Header> = vec![];
         let mut status_lines = vec![];
-        let mut headers = vec![];
-        let mut body = Vec::<u8>::new();
+        let mut response_headers = vec![];
+        let mut response_body = Vec::<u8>::new();
         {
             let mut transfer = self.handle.transfer();
-            if !data.is_empty() {
+            if !request_body.is_empty() {
                 transfer
-                    .read_function(|buf| Ok(data.read(buf).unwrap_or(0)))
+                    .read_function(|buf| Ok(request_body.read(buf).unwrap_or(0)))
                     .unwrap();
             }
             transfer
@@ -215,7 +209,7 @@ impl Client {
                         if s.starts_with("HTTP/") {
                             status_lines.push(s);
                         } else {
-                            headers.push(s)
+                            response_headers.push(s)
                         }
                     }
                     true
@@ -224,7 +218,7 @@ impl Client {
 
             transfer
                 .write_function(|data| {
-                    body.extend(data);
+                    response_body.extend(data);
                     Ok(data.len())
                 })
                 .unwrap();
@@ -248,13 +242,13 @@ impl Client {
             None => return Err(HttpError::StatuslineIsMissing { url }),
             Some(status_line) => self.parse_response_version(status_line.clone())?,
         };
-        let headers = self.parse_response_headers(&headers);
+        let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
         self.handle.reset();
 
         let request = Request {
             url,
-            method: (&request.method).to_string(),
+            method: (&request_spec.method).to_string(),
             headers: request_headers,
             body: vec![], // TODO: we don't record the request body for the moment.
         };
@@ -262,11 +256,11 @@ impl Client {
             version,
             status,
             headers,
-            body,
+            body: response_body,
             duration,
         };
 
-        if self.options.verbosity == Some(Verbosity::VeryVerbose) {
+        if very_verbose {
             response.log_body();
         }
 
