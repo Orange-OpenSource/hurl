@@ -55,12 +55,20 @@ def very_verbose_compressed_brotli():
 
 
 @app.route("/very-verbose/cat")
-def very_verbose_image():
+def very_verbose_cat():
     with open("tests_ok/cat.jpg.br", "rb") as f:
         data = f.read()
     resp = make_response(data)
     resp.headers["Content-Type"] = "image/jpeg"
     return resp
+
+
+@app.route("/very-verbose/update-cat", methods=["POST"])
+def very_verbose_update_cat():
+    upload = request.files["cat"]
+    assert upload.filename == "cat.jpg"
+    assert upload.content_type == "image/jpeg"
+    return ""
 
 
 @app.route("/very-verbose/done")
