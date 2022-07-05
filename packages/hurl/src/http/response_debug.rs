@@ -30,7 +30,7 @@ impl Response {
     ///
     /// * `response` - The HTTP response
     pub fn log_body(&self) {
-        debug::log_text("Response:");
+        debug::log_text("Response body:");
 
         // We try to decode the HTTP body as text if the request has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we

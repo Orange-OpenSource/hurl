@@ -22,6 +22,7 @@ pub fn log_headers_out(headers: &[Header]) {
     for header in headers {
         eprintln!("> {}", header);
     }
+    eprintln!(">")
 }
 
 /// Debug log HTTP response headers.
@@ -29,11 +30,16 @@ pub fn log_headers_in(headers: &[Header]) {
     for header in headers {
         eprintln!("< {}", header);
     }
+    eprintln!("<")
 }
 
 /// Debug log text.
 pub fn log_text(text: &str) {
-    text.split('\n').for_each(|l| eprintln!("* {}", l))
+    if text.is_empty() {
+        eprintln!("*");
+    } else {
+        text.split('\n').for_each(|l| eprintln!("* {}", l))
+    }
 }
 
 /// Debug log bytes with a maximum size.
@@ -48,5 +54,9 @@ pub fn log_bytes(bytes: &[u8], max: usize) {
     } else {
         bytes
     };
-    eprintln!("* Bytes <{}...>", hex::encode(bytes))
+    if bytes.is_empty() {
+        eprintln!("*");
+    } else {
+        eprintln!("* Bytes <{}...>", hex::encode(bytes));
+    }
 }

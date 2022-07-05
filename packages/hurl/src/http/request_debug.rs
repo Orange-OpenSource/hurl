@@ -26,7 +26,7 @@ impl Request {
 
     /// Log request body.
     pub fn log_body(&self) {
-        debug::log_text("Request:");
+        debug::log_text("Request body:");
 
         // We try to decode the HTTP body as text if the response has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we

@@ -114,9 +114,11 @@ impl Client {
     }
 
     /// Execute an http request
-    pub fn execute(&mut self, request_spec: &RequestSpec) -> Result<(Request, Response), HttpError> {
-        // set handle attributes
-        // that have not been set or reset
+    pub fn execute(
+        &mut self,
+        request_spec: &RequestSpec,
+    ) -> Result<(Request, Response), HttpError> {
+        // Set handle attributes that have not been set or reset.
 
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
@@ -142,12 +144,13 @@ impl Client {
 
         let url = self.generate_url(&request_spec.url, &request_spec.querystring);
         self.handle.url(url.as_str()).unwrap();
-        self.set_method(&request_spec.method);
+        let method = &request_spec.method;
+        self.set_method(method);
         self.set_cookies(&request_spec.cookies);
         self.set_form(&request_spec.form);
         self.set_multipart(&request_spec.multipart);
-        let mut request_body: &[u8] = &request_spec.body.bytes();
-        self.set_body(request_body);
+        let mut request_spec_body: &[u8] = &request_spec.body.bytes();
+        self.set_body(request_spec_body);
         self.set_headers(request_spec);
 
         let start = Instant::now();
@@ -156,47 +159,72 @@ impl Client {
         let mut request_headers: Vec<Header> = vec![];
         let mut status_lines = vec![];
         let mut response_headers = vec![];
+        let has_body_data = !request_spec_body.is_empty()
+            || !request_spec.form.is_empty()
+            || !request_spec.multipart.is_empty();
+
+        // `request_body` are request body bytes computed by libcurl (the real bytes sent over the wire)
+        // whereas`request_spec_body` are request body bytes provided by Hurl user. For instance, if user uses
+        // a [FormParam] section, `request_body` is empty whereas libcurl sent a url-form encoded list
+        // of key-value.
+        let mut request_body = Vec::<u8>::new();
         let mut response_body = Vec::<u8>::new();
         {
             let mut transfer = self.handle.transfer();
-            if !request_body.is_empty() {
+            if !request_spec_body.is_empty() {
                 transfer
-                    .read_function(|buf| Ok(request_body.read(buf).unwrap_or(0)))
+                    .read_function(|buf| Ok(request_spec_body.read(buf).unwrap_or(0)))
                     .unwrap();
             }
             transfer
                 .debug_function(|info_type, data| match info_type {
-                    // return all request headers (not one by one)
+                    // Return all request headers (not one by one)
                     easy::InfoType::HeaderOut => {
                         let mut lines = split_lines(data);
                         if verbose {
-                            for line in lines.clone() {
-                                let s = line.trim_end();
-                                if s.is_empty() {
-                                    eprintln!(">");
-                                } else {
-                                    eprintln!("> {}", s);
-                                }
-                            }
+                            eprintln!("> {}", lines[0]);
                         }
 
-                        lines.pop().unwrap();
-                        lines.remove(0); //  method/url
+                        // Extracts request headers from libcurl debug info.
+                        lines.pop().unwrap(); // Remove last empty line.
+                        lines.remove(0); // Remove method/url line.
                         for line in lines {
                             if let Some(header) = Header::parse(line) {
                                 request_headers.push(header);
                             }
                         }
+
+                        // If we don't send any data, we log headers and empty body here
+                        // instead of relying on libcurl computing body in easy::InfoType::DataOut.
+                        // because libcurl dont call easy::InfoType::DataOut if there is no data
+                        // to send.
+                        if !has_body_data && verbose {
+                            let debug_request = Request {
+                                url: url.to_string(),
+                                method: method.to_string(),
+                                headers: request_headers.clone(),
+                                body: Vec::new(),
+                            };
+                            debug_request.log_headers();
+                            if very_verbose {
+                                debug_request.log_body();
+                            }
+                        }
                     }
-                    easy::InfoType::HeaderIn => {
-                        if let Some(s) = decode_header(data) {
-                            if verbose {
-                                let s = s.trim_end();
-                                if s.is_empty() {
-                                    eprintln!("<")
-                                } else {
-                                    eprintln!("< {}", s);
-                                }
+                    // We use this callback to get the real body bytes sent by libcurl.
+                    easy::InfoType::DataOut => {
+                        // Extracts request body from libcurl debug info.
+                        request_body.extend(data);
+                        if verbose {
+                            let debug_request = Request {
+                                url: url.to_string(),
+                                method: method.to_string(),
+                                headers: request_headers.clone(),
+                                body: Vec::from(data),
+                            };
+                            debug_request.log_headers();
+                            if very_verbose {
+                                debug_request.log_body();
                             }
                         }
                     }
@@ -207,6 +235,10 @@ impl Client {
                 .header_function(|h| {
                     if let Some(s) = decode_header(h) {
                         if s.starts_with("HTTP/") {
+                            // Log version, status code response.
+                            if verbose {
+                                eprintln!("< {}", s.trim());
+                            }
                             status_lines.push(s);
                         } else {
                             response_headers.push(s)
@@ -232,25 +264,26 @@ impl Client {
                 return Err(HttpError::Libcurl {
                     code,
                     description,
-                    url,
+                    url: url.to_string(),
                 });
             }
         }
 
         let status = self.handle.response_code().unwrap();
+        // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {
             None => return Err(HttpError::StatuslineIsMissing { url }),
-            Some(status_line) => self.parse_response_version(status_line.clone())?,
+            Some(status_line) => self.parse_response_version(status_line.to_string())?,
         };
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
         self.handle.reset();
 
         let request = Request {
-            url,
-            method: (&request_spec.method).to_string(),
+            url: url.to_string(),
+            method: method.to_string(),
             headers: request_headers,
-            body: vec![], // TODO: we don't record the request body for the moment.
+            body: request_body,
         };
         let response = Response {
             version,
@@ -260,8 +293,11 @@ impl Client {
             duration,
         };
 
-        if very_verbose {
-            response.log_body();
+        if verbose {
+            response.log_headers();
+            if very_verbose {
+                response.log_body();
+            }
         }
 
         Ok((request, response))
