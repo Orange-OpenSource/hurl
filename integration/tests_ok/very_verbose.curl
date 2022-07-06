@@ -2,5 +2,5 @@ curl 'http://localhost:8000/very-verbose/redirect' -L
 curl 'http://localhost:8000/very-verbose/encoding/latin1' -L
 curl 'http://localhost:8000/very-verbose/compressed/brotli' -H 'Accept-Encoding: brotli' -H 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' -L
 curl 'http://localhost:8000/very-verbose/cat' -L
-curl 'http://localhost:8000/very-verbose/update-cat' -F 'cat=@integration/tests_ok/cat.jpg;type=image/jpeg' -L
+curl 'http://localhost:8000/very-verbose/update-cat' -F 'cat=@tests_ok/cat.jpg;type=image/jpeg' -L
 curl 'http://localhost:8000/very-verbose/done' -H 'x-foo: bar' -L
