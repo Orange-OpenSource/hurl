@@ -181,6 +181,7 @@ fn execute(
                 }
                 Some(ref filename) => Path::new(filename),
             };
+            let head = cli_options.head;
             let options = http::ClientOptions {
                 cacert_file,
                 follow_location,
@@ -196,6 +197,7 @@ fn execute(
                 user_agent,
                 compressed,
                 context_dir: context_dir.to_path_buf(),
+                head,
             };
 
             let mut client = http::Client::init(options);

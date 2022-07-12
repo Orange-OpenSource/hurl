@@ -34,6 +34,7 @@ pub struct ClientOptions {
     pub user_agent: Option<String>,
     pub compressed: bool,
     pub context_dir: PathBuf,
+    pub head: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -59,6 +60,7 @@ impl Default for ClientOptions {
             user_agent: None,
             compressed: false,
             context_dir: PathBuf::new(),
+            head: false,
         }
     }
 }
@@ -116,6 +118,11 @@ impl ClientOptions {
             arguments.push("--user-agent".to_string());
             arguments.push(format!("'{}'", user_agent));
         }
+
+        if self.head {
+            arguments.push("--head".to_string())
+        }
+
         arguments
     }
 }
@@ -143,7 +150,8 @@ mod tests {
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
                 compressed: true,
-                context_dir: PathBuf::new()
+                context_dir: PathBuf::new(),
+                head: true
             }
             .curl_args(),
             [
@@ -164,6 +172,7 @@ mod tests {
                 "'user:password'".to_string(),
                 "--user-agent".to_string(),
                 "'my-useragent'".to_string(),
+                "--head".to_string()
             ]
         );
     }

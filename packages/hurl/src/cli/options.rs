@@ -43,6 +43,7 @@ pub struct CliOptions {
     pub follow_location: bool,
     pub glob_files: Vec<String>,
     pub html_dir: Option<PathBuf>,
+    pub head: bool,
     pub ignore_asserts: bool,
     pub include: bool,
     pub insecure: bool,
@@ -145,6 +146,12 @@ pub fn app(version: &str) -> Command {
                 .action(ArgAction::Append)
                 .number_of_values(1)
                 .help("Specify input files that match the given blob. Multiple glob flags may be used."),
+        )
+        .arg(
+            clap::Arg::new("head")
+                .short('I')
+                .long("head")
+                .help("Show document info only"),
         )
         .arg(
             clap::Arg::new("include")
@@ -335,6 +342,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let fail_fast = !has_flag(matches, "fail_at_end");
     let file_root = get_string(matches, "file_root");
     let follow_location = has_flag(matches, "follow_location");
+    let head = has_flag(matches, "head");
     let glob_files = match_glob_files(matches)?;
     let report_html = get_string(matches, "report_html");
     let html_dir = if let Some(dir) = report_html {
@@ -416,6 +424,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         fail_fast,
         file_root,
         follow_location,
+        head,
         glob_files,
         html_dir,
         ignore_asserts,

@@ -297,6 +297,12 @@ impl Client {
     /// set method
     ///
     fn set_method(&mut self, method: &Method) {
+        if self.options.head {
+            self.handle.nobody(true).unwrap();
+            self.handle.custom_request("HEAD").unwrap();
+            return;
+        }
+
         match method {
             Method::Get => self.handle.custom_request("GET").unwrap(),
             Method::Post => self.handle.custom_request("POST").unwrap(),
