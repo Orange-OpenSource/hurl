@@ -21,7 +21,7 @@ atty = "0.2.14"
 base64 = "0.13.0"
 brotli = "3.3.4"
 chrono = { version = "0.4.19", default-features = false, features = ["clock"] }
-clap = { version = "3.2.8", features = ["cargo"] }
+clap = { version = "3.2.12", features = ["cargo"] }
 colored = "2.0.0"
 curl = "0.4.43"
 encoding = "0.2.33"
@@ -36,7 +36,7 @@ libxml = "0.3.1"
 md5 = "0.7.0"
 percent-encoding = "2.1.0"
 regex = "1.6.0"
-serde = "1.0.138"
+serde = "1.0.139"
 serde_json = "1.0.82"
 sha2 = "0.10.2"
 url = "2.2.2"
