@@ -63,6 +63,7 @@ jobs:
 
       - name: Push updates to branch
         run: |
+            rm -fr "${update_crates_output}"
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
