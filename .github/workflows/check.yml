@@ -44,11 +44,11 @@ jobs:
     - name: Check Python Scripts
       run: bin/black.sh
 
-  crates-updates:
+  update_crates:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3    
     - name: Run crates update
-      run: bin/crates_update.sh --check
+      run: bin/update_crates.sh --check
 
