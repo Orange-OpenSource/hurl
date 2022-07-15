@@ -32,6 +32,7 @@ jobs:
                 echo "  - ❌ A problem occurs updating crates. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
                 exit 1
             fi
+
       - name: Get actual pull request id
         run: |
             ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
@@ -80,8 +81,18 @@ jobs:
                 echo "  - ❌ Git push command succeeds but origin/${BOT_UPDATE_BRANCHE_NAME} still does not exist on remote."
                 exit 1
             fi
+
       - name: Create new pull request
         run: |
+            GITHUB_TOKEN=${{ secrets.LEPAPAREIL_CI_TOKEN }}
+            gh pr create --fill --base master --head "${BOT_UPDATE_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then
+                NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+                echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
+            else
+                echo "  - ❌ A problem occurs when attempting to create new pull request."
+                exit 1
+            fi
             pr_comment_file="comment_file.md"
             (grep -vE "newest|crates.io index" "${update_crates_output}" || true) | \
                 tr -s ' ' | \
@@ -90,12 +101,12 @@ jobs:
                             sed "s/: updated to / -> /g" | \
                                 sed "s/^=>/###/g" | \
                                     sed "s/^ /- /g" > "${pr_comment_file}"                
-            pr_comment="$(cat "${pr_comment_file}")"
-            gh pr create --title "ˉᵇᵒᵗˉUpdate crates" --base master --head "${BOT_UPDATE_BRANCHE_NAME}" --body "${pr_comment}" && gh_exit_code=0 || gh_exit_code=$?
+            pr_comment="$(cat "${pr_comment_file}")"            
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            gh pr comment "${NEW_PR_NUMBER}" --body "${pr_comment}" && gh_exit_code=0 || gh_exit_code=$?
             if [ ${gh_exit_code} -eq 0 ] ; then
-                NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
-                echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
+                echo "  - ✅ Comment updates list to pull request succeeds."
             else
-                echo "  - ❌ A problem occurs when attempting to create new PR."
-                exit 1                
+                echo "  - ❌ A problem occurs when attempting to create updates list comment in new pull request n°${NEW_PR_NUMBER}."
+                exit 1
             fi
