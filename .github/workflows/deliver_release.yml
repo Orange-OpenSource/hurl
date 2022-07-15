@@ -1,1 +1,33 @@
+name: deliver-release
 
+on:
+  workflow_dispatch:
+
+jobs:
+  chocolatey:
+    name: chocolatey
+    runs-on: windows-latest
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          C:\vcpkg\installed
+        key: ${{ runner.os }}-release-windows-x64-${{ github.sha }}
+        restore-keys: ${{ runner.os }}-release-windows-x64-
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Environment
+      run: |
+        $Properties = 'Caption', 'CSName', 'Version', 'BuildType', 'OSArchitecture'
+        Get-CimInstance Win32_OperatingSystem | Select-Object $Properties | Format-Table -AutoSize
+        cargo --version       
