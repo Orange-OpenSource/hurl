@@ -4,6 +4,7 @@
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/CI/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![CircleCI](https://circleci.com/gh/lepapareil/hurl/tree/master.svg?style=shield)](https://circleci.com/gh/lepapareil/hurl/tree/master)
+[![update-crates](https://github.com/Orange-OpenSource/hurl/actions/workflows/update-crates.yml/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions/workflows/update-crates.yml)
 [![Crates.io](https://img.shields.io/crates/v/hurl.svg)](https://crates.io/crates/hurl)
 [![documentation](https://img.shields.io/badge/-documentation-informational)](https://hurl.dev)
 
