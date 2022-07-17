@@ -23,8 +23,7 @@ jobs:
 
       - name: Crates update
         run: |
-            UPDATE_CRATES_OUTPUT="update.output"
-            echo "${UPDATE_CRATES_OUTPUT}" >> .gitignore
+            UPDATE_CRATES_OUTPUT="/tmp/update.output"
             echo "UPDATE_CRATES_OUTPUT=${UPDATE_CRATES_OUTPUT}" | tee -a "${GITHUB_ENV}"
             bin/update_crates.sh 2>&1 | tee "${UPDATE_CRATES_OUTPUT}" && crates_update_exit_code=0 || crates_update_exit_code=$?
             if [ ${crates_update_exit_code} -eq 0 ] ; then
@@ -35,6 +34,7 @@ jobs:
                 echo "  - ❌ A problem occurs updating crates. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
                 exit 1
             fi
+
       - name: Get actual pull request id
         run: |
             ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
@@ -45,6 +45,7 @@ jobs:
             else
                 echo "  - ✅ Actual pull request number is ${ACTUAL_PR_NUMBER}."
             fi
+
       - name: Close actual pull request
         if: env.ACTUAL_PR_NUMBER != 0
         run: |
@@ -62,11 +63,10 @@ jobs:
                 echo "  - ${comment}"
                 exit 1
             fi
+
       - name: Push updates to branch
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-            echo "UPDATE_CRATES_OUTPUT=${UPDATE_CRATES_OUTPUT}"
-            ls -l "${UPDATE_CRATES_OUTPUT}"
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
@@ -85,6 +85,7 @@ jobs:
                 echo "  - ❌ Git push command succeeds but origin/${BOT_UPDATE_BRANCHE_NAME} still does not exist on remote."
                 exit 1
             fi
+
       - name: Create new pull request
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
