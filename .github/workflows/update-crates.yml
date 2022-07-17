@@ -26,7 +26,7 @@ jobs:
             echo "UPDATE_CRATES_OUTPUT=${UPDATE_CRATES_OUTPUT}" | tee -a "${GITHUB_ENV}"
             bin/update_crates.sh 2>&1 | tee "${UPDATE_CRATES_OUTPUT}" && crates_update_exit_code=0 || crates_update_exit_code=$?          
             if [ ${crates_update_exit_code} -eq 0 ] ; then
-                UPDATED_CRATES_COUNT=$(grep -v "crates.io index" "${UPDATE_CRATES_OUTPUT}" | (grep -cE "updated to |.*Updating.*->.*" || true) )
+                UPDATED_CRATES_COUNT=$(grep -v "crates.io index" "${UPDATE_CRATES_OUTPUT}" | (grep -cE ".*Updating.*->.*" || true) )
                 echo "UPDATED_CRATES_COUNT=${UPDATED_CRATES_COUNT}" | tee -a "${GITHUB_ENV}"
                 echo "  - ✅ Update crates succeeds with ${UPDATED_CRATES_COUNT} crates updated."                
             else
