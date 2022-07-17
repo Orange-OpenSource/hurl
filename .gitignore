@@ -10,4 +10,3 @@ build/
 node_modules/
 **/npm/bin/
 integration/*.log
-update.output
