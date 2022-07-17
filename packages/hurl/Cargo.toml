@@ -17,7 +17,7 @@ name = "hurl"
 strict = []
 
 [dependencies]
-atty = "0.2.14"
+atty = "0.2.13"
 base64 = "0.13.0"
 brotli = "3.3.4"
 chrono = { version = "0.4.19", default-features = false, features = ["clock"] }
