@@ -22,8 +22,9 @@ jobs:
       - name: Crates update
         run: |
             UPDATE_CRATES_OUTPUT="update.output"
+            echo "${UPDATE_CRATES_OUTPUT}" >> .gitignore            
             echo "UPDATE_CRATES_OUTPUT=${UPDATE_CRATES_OUTPUT}" | tee -a "${GITHUB_ENV}"
-            bin/update_crates.sh 2>&1 | tee "${UPDATE_CRATES_OUTPUT}" && crates_update_exit_code=0 || crates_update_exit_code=$?
+            bin/update_crates.sh 2>&1 | tee "${UPDATE_CRATES_OUTPUT}" && crates_update_exit_code=0 || crates_update_exit_code=$?          
             if [ ${crates_update_exit_code} -eq 0 ] ; then
                 UPDATED_CRATES_COUNT=$(grep -v "crates.io index" "${UPDATE_CRATES_OUTPUT}" | (grep -cE "updated to |Updating " || true) )
                 echo "UPDATED_CRATES_COUNT=${UPDATED_CRATES_COUNT}" | tee -a "${GITHUB_ENV}"
@@ -70,7 +71,6 @@ jobs:
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
-            git rm --cached "${UPDATE_CRATES_OUTPUT}"
             git commit -am "ˉᵇᵒᵗˉUpdate crates on $(date "+%y/%m/%d %H:%M")"
             git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
             if [ ${git_exit_code} -eq 0 ] ; then
