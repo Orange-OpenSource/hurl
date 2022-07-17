@@ -39,7 +39,7 @@ jobs:
             echo "toto=toto" | tee -a "${GITHUB_ENV}"
 
       - name: test
-        if: env.toto =  "toto"
+        if: env.toto == "toto"
         run: |
             echo "c'est bon ça"
 
