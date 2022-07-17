@@ -1,0 +1,120 @@
+name: update-crates
+
+on:
+  schedule:
+    - cron: "0 8,12,16,20 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-crates:
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      BOT_UPDATE_BRANCHE_NAME: "bot/update-crates"
+    name: update-crates
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - name: Crates update
+        run: |
+            update_crates_output="update.output"
+            echo "update_crates_output=${update_crates_output}" | tee -a "${GITHUB_ENV}"
+            bin/update_crates.sh 2>&1 | tee "${update_crates_output}" && crates_update_exit_code=0 || crates_update_exit_code=$?
+            if [ ${crates_update_exit_code} -eq 0 ] ; then
+                echo "  - ✅ Update crates succeeds."
+            else
+                echo "  - ❌ A problem occurs updating crates. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+                exit 1
+            fi
+
+      - name: Get actual pull request id
+        run: |
+            ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+            ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER:-0}
+            echo "ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER}" | tee -a "${GITHUB_ENV}"
+
+      - name: Close actual pull request
+        run: |
+            if [ ${ACTUAL_PR_NUMBER} -eq 0 ] ; then
+                echo "  - ✅ There is no pull request to close."            
+            else
+                updated_crates_count=$(grep -v "crates.io index" "${update_crates_output}" | grep -cE "updated to |Updating " || true)
+                if [ ${updated_crates_count} -eq 0 ] ; then
+                    comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed because crates are up to date on master branch."
+                else
+                    comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed before opening new one with new updated crates list."
+                fi
+                gh pr close "${ACTUAL_PR_NUMBER}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
+                if [ ${gh_exit_code} -eq 0 ] ; then                     
+                    echo "  - ${comment}"
+                else
+                    comment="❌ A problem occurs when bot attempts to close PR n°${ACTUAL_PR_NUMBER}."
+                    gh pr comment "${ACTUAL_PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+                    echo "  - ${comment}"
+                    exit 1
+                fi
+            fi
+
+      - name: Push updates to branch
+        run: |
+            rm -fr "${update_crates_output}"
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
+            git commit -am "ˉᵇᵒᵗˉUpdate crates on $(date "+%y/%m/%d %H:%M")"
+            git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
+            if [ ${git_exit_code} -eq 0 ] ; then
+                echo "  - ✅ push crates update to ${BOT_UPDATE_BRANCHE_NAME} succeeds."
+            else
+                echo "  - ❌ A problem occurs when attempting to push crates update to origin/${BOT_UPDATE_BRANCHE_NAME}."
+                exit 1
+            fi
+            branch_exists=$(git ls-remote | (grep -c "${BOT_UPDATE_BRANCHE_NAME}" || true))
+            if [ ${branch_exists} -eq 1 ] ; then
+                echo "  - ✅ The origin/${BOT_UPDATE_BRANCHE_NAME} now branch exists on remote."
+            else
+                echo "  - ❌ Git push command succeeds but origin/${BOT_UPDATE_BRANCHE_NAME} still does not exist on remote."
+                exit 1
+            fi
+
+      - name: Create new pull request
+        run: |
+            GITHUB_TOKEN=${{ secrets.LEPAPAREIL_CI_TOKEN }}
+            gh pr create --fill --base master --head "${BOT_UPDATE_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then
+                NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
+                echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
+            else
+                echo "  - ❌ A problem occurs when attempting to create new pull request."
+                exit 1
+            fi
+            pr_comment_file="comment_file.md"
+            (grep -vE "newest|crates.io index" "${update_crates_output}" || true) | \
+                tr -s ' ' | \
+                    sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" | \
+                        sed "s/Updating //g" | \
+                            sed "s/: updated to / -> /g" | \
+                                sed "s/^=>/###/g" | \
+                                    sed "s/^ /- /g" > "${pr_comment_file}"
+            pr_comment="$(cat "${pr_comment_file}")"            
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            gh pr comment "${NEW_PR_NUMBER}" --body "${pr_comment}" && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then
+                echo "  - ✅ Comment updates list to pull request n° ${NEW_PR_NUMBER} succeeds."
+            else
+                echo "  - ❌ A problem occurs when attempting to create updates list comment into new pull request n°${NEW_PR_NUMBER}."
+                exit 1
+            fi
+            gh pr edit "${NEW_PR_NUMBER}" --add-label "bot,dependencies"  && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then
+                echo "  - ✅ Adding Label to pull request n° ${NEW_PR_NUMBER} succeeds."
+            else
+                echo "  - ❌ A problem occurs when attempting to add labels into new pull request n°${NEW_PR_NUMBER}."
+                exit 1
+            fi
