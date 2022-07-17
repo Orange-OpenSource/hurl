@@ -36,27 +36,30 @@ jobs:
             ACTUAL_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
             ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER:-0}
             echo "ACTUAL_PR_NUMBER=${ACTUAL_PR_NUMBER}" | tee -a "${GITHUB_ENV}"
+            echo "toto=toto" | tee -a "${GITHUB_ENV}"
+
+      - name: test
+        if: env.toto =  "toto"
+        run: |
+            echo "c'est bon ça"
 
       - name: Close actual pull request
+        if: env.ACTUAL_PR_NUMBER != 0
         run: |
-            if [ ${ACTUAL_PR_NUMBER} -eq 0 ] ; then
-                echo "  - ✅ There is no pull request to close."            
+            updated_crates_count=$(grep -v "crates.io index" "${update_crates_output}" | grep -cE "updated to |Updating " || true)
+            if [ ${updated_crates_count} -eq 0 ] ; then
+                comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed because crates are up to date on master branch."
             else
-                updated_crates_count=$(grep -v "crates.io index" "${update_crates_output}" | grep -cE "updated to |Updating " || true)
-                if [ ${updated_crates_count} -eq 0 ] ; then
-                    comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed because crates are up to date on master branch."
-                else
-                    comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed before opening new one with new updated crates list."
-                fi
-                gh pr close "${ACTUAL_PR_NUMBER}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
-                if [ ${gh_exit_code} -eq 0 ] ; then                     
-                    echo "  - ${comment}"
-                else
-                    comment="❌ A problem occurs when bot attempts to close PR n°${ACTUAL_PR_NUMBER}."
-                    gh pr comment "${ACTUAL_PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-                    echo "  - ${comment}"
-                    exit 1
-                fi
+                comment="✅ Pull request n°${ACTUAL_PR_NUMBER} closed before opening new one with new updated crates list."
+            fi
+            gh pr close "${ACTUAL_PR_NUMBER}" --comment "${comment}" --delete-branch && gh_exit_code=0 || gh_exit_code=$?
+            if [ ${gh_exit_code} -eq 0 ] ; then                     
+                echo "  - ${comment}"
+            else
+                comment="❌ A problem occurs when bot attempts to close PR n°${ACTUAL_PR_NUMBER}."
+                gh pr comment "${ACTUAL_PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+                echo "  - ${comment}"
+                exit 1
             fi
 
       - name: Push updates to branch
