@@ -1,8 +1,6 @@
 name: update-crates
 
 on:
-  schedule:
-    - cron: "0 8,12,16,20 * * *"
   workflow_dispatch:
 
 jobs:
