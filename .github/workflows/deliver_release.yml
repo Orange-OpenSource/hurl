@@ -5,7 +5,7 @@ on:
 
 jobs:
   chocolatey:
-    if: github.ref =~ 'refs/heads/release/'
+    if: github.ref ~= 'refs/heads/release/'
     name: chocolatey
     runs-on: windows-latest
     env:
