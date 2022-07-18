@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  if: github.ref =~ 'refs/heads/release/'
   chocolatey:
+    if: github.ref =~ 'refs/heads/release/'
     name: chocolatey
     runs-on: windows-latest
     env:
