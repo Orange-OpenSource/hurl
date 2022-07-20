@@ -317,7 +317,7 @@ fn main() {
     let mut testcases = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
-        if !Path::new(filename).exists() {
+        if filename != "-" && !Path::new(filename).exists() {
             let message = format!(
                 "hurl: cannot access '{}': No such file or directory",
                 filename
