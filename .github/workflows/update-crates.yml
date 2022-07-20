@@ -70,7 +70,7 @@ jobs:
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
-            git commit -am "ˉᵇᵒᵗˉUpdate crates on $(date "+%y/%m/%d %H:%M")"
+            git commit -am "Update crates on $(date "+%y/%m/%d %H:%M")"
             git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
             if [ ${git_exit_code} -eq 0 ] ; then
                 echo "  - ✅ push crates update to ${BOT_UPDATE_BRANCHE_NAME} succeeds."
