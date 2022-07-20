@@ -119,7 +119,7 @@ def test(hurl_file: str) -> int:
                 "actual: %d lines\nexpected: %d lines"
                 % (len(actual_lines), len(expected_lines))
             )
-            sys.exit(1)
+            return 1
         for i in range(len(expected_pattern_lines)):
             if not re.match(expected_pattern_lines[i], actual_lines[i]):
                 print(f">>> error in stdout in line {i+1}")
