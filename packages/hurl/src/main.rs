@@ -171,16 +171,22 @@ fn execute(
             let user_agent = cli_options.user_agent.clone();
             let compressed = cli_options.compressed;
             let context_dir = match cli_options.file_root {
+                Some(ref filename) => Path::new(filename),
                 None => {
+                    // If stdin is used, the context directory is the current directory.
+                    // Otherwise, the context directory is the Hurl file parent directory.
                     if filename == "-" {
-                        current_dir
+                        Path::new("")
                     } else {
                         let path = Path::new(filename);
                         path.parent().unwrap()
                     }
                 }
-                Some(ref filename) => Path::new(filename),
             };
+            // By joining the `context_dir` to the current directory, we insure
+            // that `context_dir` is an absolute path.
+            let context_dir = current_dir.join(context_dir);
+
             let options = http::ClientOptions {
                 cacert_file,
                 follow_location,
@@ -195,7 +201,7 @@ fn execute(
                 user,
                 user_agent,
                 compressed,
-                context_dir: context_dir.to_path_buf(),
+                context_dir: context_dir.clone(),
             };
 
             let mut client = http::Client::init(options);
@@ -213,7 +219,6 @@ fn execute(
             let fail_fast = cli_options.fail_fast;
             let variables = cli_options.variables.clone();
             let to_entry = cli_options.to_entry;
-            let context_dir = context_dir.to_path_buf();
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
             let options = RunnerOptions {
