@@ -83,18 +83,28 @@ struct Progress {
     pub total: usize,
 }
 
+/// Runs a Hurl file and returns a result.
+///
+/// # Arguments
+///
+/// * filename - Filename of the Hurl file, "-" is used for stdin
+/// * contents - Content of the Hurl file
+/// * current_dir - The current directory of execution (absolute)
+/// * cli_options - Options for this run
+/// * log_verbose - A log function for debug message
+/// * log_error_message - A log function for error message
 fn execute(
     filename: &str,
-    contents: String,
+    contents: &str,
     current_dir: &Path,
     cli_options: &CliOptions,
     log_verbose: &impl Fn(&str),
     log_error_message: &impl Fn(bool, &str),
-    progress: Option<Progress>,
+    progress: &Option<Progress>,
 ) -> HurlResult {
     let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
-        .split(&contents)
+        .split(contents)
         .map(|l| l.to_string())
         .collect();
     let optional_filename = if filename.is_empty() {
@@ -111,7 +121,7 @@ fn execute(
     let log_runner_error =
         cli::make_logger_runner_error(lines, cli_options.color, optional_filename);
 
-    match parser::parse_hurl_file(contents.as_str()) {
+    match parser::parse_hurl_file(contents) {
         Err(e) => {
             log_parser_error(&e, false);
             std::process::exit(EXIT_ERROR_PARSING);
@@ -127,14 +137,12 @@ fn execute(
             if let Some(proxy) = &cli_options.proxy {
                 log_verbose(format!("    proxy: {}", proxy).as_str());
             }
-
             if !cli_options.variables.is_empty() {
                 log_verbose("Variables:");
                 for (name, value) in cli_options.variables.clone() {
                     log_verbose(format!("    {}={}", name, value).as_str());
                 }
             }
-
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
                     log_verbose(
@@ -145,7 +153,6 @@ fn execute(
                     log_verbose("Executing all entries");
                 }
             }
-
             let cacert_file = cli_options.cacert_file.clone();
             let follow_location = cli_options.follow_location;
             let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
@@ -158,7 +165,6 @@ fn execute(
             let proxy = cli_options.proxy.clone();
             let no_proxy = cli_options.no_proxy.clone();
             let cookie_input_file = cli_options.cookie_input_file.clone();
-
             let timeout = cli_options.timeout;
             let connect_timeout = cli_options.connect_timeout;
             let user = cli_options.user.clone();
@@ -243,7 +249,7 @@ fn execute(
     }
 }
 
-/// Unwrap a result or exit with message.
+/// Unwraps a result or exit with message.
 ///
 /// # Arguments
 ///
@@ -343,12 +349,12 @@ fn main() {
         };
         let hurl_result = execute(
             filename,
-            contents.clone(),
+            &contents,
             current_dir,
             &cli_options,
             &log_verbose,
             &log_error_message,
-            progress,
+            &progress,
         );
         hurl_results.push(hurl_result.clone());
 
