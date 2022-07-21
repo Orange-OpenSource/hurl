@@ -204,9 +204,10 @@ def test(hurl_file: str):
                 sys.exit(1)
 
 
-def parse_pattern(s):
+def parse_pattern(s: str) -> str:
+    """Transform a stderr pattern to a regex"""
     # Escape regex metacharacters
-    for c in [".", "(", ")", "[", "]", "^", "$", "*", "+", "?"]:
+    for c in ["\\", ".", "(", ")", "[", "]", "^", "$", "*", "+", "?"]:
         s = s.replace(c, "\\" + c)
 
     s = re.sub("~+", ".*", s)
