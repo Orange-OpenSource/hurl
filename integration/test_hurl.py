@@ -19,7 +19,8 @@ def decode_string(encoded: bytes) -> str:
         encoded = encoded[len(codecs.BOM_UTF16) :]
         return encoded.decode("utf-16")
     else:
-        return encoded.decode()
+        # No BOM to determine encoding, try utf-8
+        return encoded.decode("utf-8")
 
 
 def get_os() -> str:
@@ -38,12 +39,11 @@ def get_os() -> str:
         raise Error("Invalid Platform " + platform.system())
 
 
-def test(hurl_file: str) -> int:
-    """Runs a Hurl file and returns the exit code.
+def test(hurl_file: str):
+    """Runs a Hurl file, exit the process if there is an error.
 
     Arguments:
     hurl_file -- the Hurl file to run
-    use_cargo -- true to run hurl with 'cargo run', else just run 'hurl"
     """
     options_file = hurl_file.replace(".hurl", ".options")
 
@@ -60,7 +60,7 @@ def test(hurl_file: str) -> int:
 
     options = []
     if os.path.exists(options_file):
-        options = open(options_file).read().strip().split("\n")
+        options = open(options_file, encoding="utf-8").read().strip().split("\n")
     if os.path.exists(curl_file):
         options.append("--verbose")
 
@@ -69,7 +69,7 @@ def test(hurl_file: str) -> int:
 
     env = os.environ.copy()
     if os.path.exists(profile_file):
-        for line in open(profile_file).readlines():
+        for line in open(profile_file, encoding="utf-8").readlines():
             line = line.strip()
             if line == "":
                 continue
@@ -86,14 +86,14 @@ def test(hurl_file: str) -> int:
 
     # exit code
     f = hurl_file.replace(".hurl", ".exit")
-    expected = int(open(f).read().strip())
+    expected = int(open(f, encoding="utf-8").read().strip())
     if result.returncode != expected:
         print(">>> error in return code")
         print(f"expected: {expected}  actual:{result.returncode}")
         stderr = decode_string(result.stderr).strip()
         if stderr != "":
             print(stderr)
-        return 1
+        sys.exit(1)
 
     # stdout
     f = hurl_file.replace(".hurl", ".out")
@@ -103,12 +103,12 @@ def test(hurl_file: str) -> int:
         if actual != expected:
             print(">>> error in stdout")
             print(f"actual: <{actual}>\nexpected: <{expected}>")
-            return 1
+            sys.exit(1)
 
     # stdout with textual pattern / line per line
     f = hurl_file.replace(".hurl", ".out.pattern")
     if os.path.exists(f):
-        expected = open(f, "r").read()
+        expected = open(f, encoding="utf-8").read()
         actual = decode_string(result.stdout)
         expected_lines = expected.split("\n")
         expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
@@ -116,8 +116,7 @@ def test(hurl_file: str) -> int:
         if len(actual_lines) != len(expected_pattern_lines):
             print(">>> error in stderr / mismatch in number of lines")
             print(
-                "actual: %d lines\nexpected: %d lines"
-                % (len(actual_lines), len(expected_lines))
+                f"actual: {len(actual_lines)} lines\nexpected: {len(expected_lines)} lines"
             )
             sys.exit(1)
         for i in range(len(expected_pattern_lines)):
@@ -127,18 +126,18 @@ def test(hurl_file: str) -> int:
                 print(
                     f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
                 )
-                return 1
+                sys.exit(1)
 
     # stdout (json)
     if os.path.exists(json_output_file):
-        expected = open(json_output_file).read()
+        expected = open(json_output_file, encoding="utf-8").read()
         actual = result.stdout
         check_json_output.check(expected, actual)
 
     # stderr
     f = hurl_file.replace(".hurl", "." + get_os() + ".err")
     if os.path.exists(f):
-        expected = open(f).read().strip()
+        expected = open(f, encoding="utf-8").read().strip()
         actual = decode_string(result.stderr).strip()
         if actual != expected:
             print(">>> error in stderr")
@@ -147,17 +146,17 @@ def test(hurl_file: str) -> int:
     else:
         f = hurl_file.replace(".hurl", ".err")
         if os.path.exists(f):
-            expected = open(f).read().strip()
+            expected = open(f, encoding="utf-8").read().strip()
             actual = decode_string(result.stderr).strip()
             if expected != actual:
                 print(">>> error in stderr")
                 print(f"actual: <{actual}>\nexpected: <{expected}>")
-                return 1
+                sys.exit(1)
 
     # stderr with textual pattern / line per line
     f = hurl_file.replace(".hurl", ".err.pattern")
     if os.path.exists(f):
-        expected = open(f, "r").read()
+        expected = open(f, encoding="utf-8").read()
         actual = decode_string(result.stderr)
         expected_lines = expected.split("\n")
         expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
@@ -165,10 +164,9 @@ def test(hurl_file: str) -> int:
         if len(actual_lines) != len(expected_pattern_lines):
             print(">>> error in stderr / mismatch in number of lines")
             print(
-                "actual: %d lines\nexpected: %d lines"
-                % (len(actual_lines), len(expected_lines))
+                f"actual: {len(actual_lines)} lines\nexpected: {len(expected_lines)} lines"
             )
-            return 1
+            sys.exit(1)
         for i in range(len(expected_pattern_lines)):
             if not re.match(expected_pattern_lines[i], actual_lines[i]):
                 print(f">>> error in stderr in line {i+1}")
@@ -176,12 +174,12 @@ def test(hurl_file: str) -> int:
                 print(
                     f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"
                 )
-                return 1
+                sys.exit(1)
 
     # curl output
     if os.path.exists(curl_file):
         expected_commands = []
-        for line in open(curl_file, "r").readlines():
+        for line in open(curl_file, encoding="utf-8").readlines():
             line = line.strip()
             if line == "" or line.startswith("#"):
                 continue
@@ -193,17 +191,17 @@ def test(hurl_file: str) -> int:
         ]
 
         if len(actual_commands) != len(expected_commands):
-            print("curl commands error at %s" % (curl_file))
-            print("expected: %d commands" % len(expected_commands))
-            print("actual:   %d commands" % len(actual_commands))
-            return 1
+            print(f"curl commands error at {curl_file}")
+            print(f"expected: {len(expected_commands)} commands")
+            print(f"actual:   {len(actual_commands)} commands")
+            sys.exit(1)
 
         for i in range(len(expected_commands)):
             if actual_commands[i] != expected_commands[i]:
-                print("curl command error at %s:%i" % (curl_file, i + 1))
-                print("expected: %s" % expected_commands[i])
-                print("actual:   %s" % actual_commands[i])
-                return 1
+                print(f"curl command error at {curl_file}: {i + 1}")
+                print(f"expected: {expected_commands[i]}")
+                print(f"actual:   {actual_commands[i]}")
+                sys.exit(1)
 
 
 def parse_pattern(s):
@@ -221,9 +219,7 @@ def main():
     parser.add_argument("file", type=str, nargs="+", metavar="FILE")
     args = parser.parse_args()
     for hurl_file in args.file:
-        ret = test(hurl_file=hurl_file)
-        if ret != 0:
-            sys.exit(ret)
+        test(hurl_file=hurl_file)
 
 
 if __name__ == "__main__":

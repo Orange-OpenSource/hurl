@@ -137,14 +137,15 @@
 *
 * Request:
 * GET http://localhost:8000/very-verbose/done
+* x-foo: bar
 *
 * Request can be run with the following curl command:
-* curl 'http://localhost:8000/very-verbose/done' -L
+* curl 'http://localhost:8000/very-verbose/done' -H 'x-foo: bar' -L
 *
 > GET /very-verbose/done HTTP/1.1
 > Host: localhost:8000
-> x-foo: bar
 > Accept: */*
+> x-foo: bar
 > User-Agent: hurl/~~~-snapshot
 >
 < HTTP/1.0 200 OK

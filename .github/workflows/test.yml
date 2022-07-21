@@ -335,7 +335,6 @@ jobs:
         Get-Job -Name server
         Get-Job -Name mitmdump
         Start-Sleep 5
-        hurlfmt --no-format tests\assert_base64.hurl
         python integration.py
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
