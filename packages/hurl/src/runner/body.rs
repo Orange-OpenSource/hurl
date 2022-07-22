@@ -17,7 +17,7 @@
  */
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::PathBuf;
 
 use hurl_core::ast::*;
 
@@ -26,12 +26,12 @@ use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
 use crate::http;
-use crate::runner::path;
+use crate::http::ContextDir;
 
 pub fn eval_body(
     body: Body,
     variables: &HashMap<String, Value>,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
     eval_bytes(body.value, variables, context_dir)
 }
@@ -39,7 +39,7 @@ pub fn eval_body(
 pub fn eval_bytes(
     bytes: Bytes,
     variables: &HashMap<String, Value>,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
     match bytes {
         // Body::Text
@@ -52,41 +52,43 @@ pub fn eval_bytes(
             let value = eval_json_value(value, variables)?;
             Ok(http::Body::Text(value))
         }
-
         Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value)),
         Bytes::Hex(Hex { value, .. }) => Ok(http::Body::Binary(value)),
         Bytes::File(File { filename, .. }) => {
-            let f = filename.value.as_str();
-            let path = Path::new(f);
-            let absolute_path = context_dir.join(path);
-            // In order not to leak any private date, we check that the user provided file
-            // is a child of the context directory.
-            if !path::is_descendant(&absolute_path, context_dir) {
-                return Err(Error {
-                    source_info: filename.source_info,
-                    inner: RunnerError::UnauthorizedFileAccess {
-                        path: absolute_path,
-                    },
-                    assert: false,
-                });
-            }
-            match std::fs::read(&absolute_path) {
-                Ok(value) => Ok(http::Body::File(value, f.to_string())),
-                Err(_) => Err(Error {
-                    source_info: filename.source_info,
-                    inner: RunnerError::FileReadAccess {
-                        value: absolute_path.to_str().unwrap().to_string(),
-                    },
-                    assert: false,
-                }),
-            }
+            let value = eval_file(&filename, context_dir)?;
+            Ok(http::Body::File(value, filename.value))
         }
+    }
+}
+
+pub fn eval_file(filename: &Filename, context_dir: &ContextDir) -> Result<Vec<u8>, Error> {
+    // In order not to leak any private date, we check that the user provided file
+    // is a child of the context directory.
+    let file = filename.value.clone();
+    if !context_dir.is_access_allowed(&file) {
+        return Err(Error {
+            source_info: filename.source_info.clone(),
+            inner: RunnerError::UnauthorizedFileAccess {
+                path: PathBuf::from(file),
+            },
+            assert: false,
+        });
+    }
+    let resolved_file = context_dir.get_path(&file);
+    match std::fs::read(&resolved_file) {
+        Ok(value) => Ok(value),
+        Err(_) => Err(Error {
+            source_info: filename.source_info.clone(),
+            inner: RunnerError::FileReadAccess { value: file },
+            assert: false,
+        }),
     }
 }
 
 #[cfg(test)]
 mod tests {
     use hurl_core::ast::SourceInfo;
+    use std::path::Path;
 
     use super::*;
 
@@ -108,8 +110,11 @@ mod tests {
         });
 
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         assert_eq!(
-            eval_bytes(bytes, &variables, Path::new("")).unwrap(),
+            eval_bytes(bytes, &variables, &context_dir).unwrap(),
             http::Body::File(b"Hello World!".to_vec(), "tests/data.bin".to_string())
         );
     }
@@ -133,14 +138,14 @@ mod tests {
 
         let variables = HashMap::new();
 
-        let separator = if cfg!(windows) { "\\" } else { "/" };
-        let error = eval_bytes(bytes, &variables, Path::new("current_dir"))
-            .err()
-            .unwrap();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let error = eval_bytes(bytes, &variables, &context_dir).err().unwrap();
         assert_eq!(
             error.inner,
             RunnerError::FileReadAccess {
-                value: format!("current_dir{}data.bin", separator)
+                value: "data.bin".to_string()
             }
         );
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));

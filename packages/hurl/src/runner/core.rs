@@ -19,6 +19,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 use crate::http;
+use crate::http::ContextDir;
 use hurl_core::ast::{Entry, SourceInfo};
 
 use super::value::Value;
@@ -28,7 +29,7 @@ pub struct RunnerOptions {
     pub fail_fast: bool,
     pub variables: HashMap<String, Value>,
     pub to_entry: Option<usize>,
-    pub context_dir: PathBuf,
+    pub context_dir: ContextDir,
     pub ignore_asserts: bool,
     pub very_verbose: bool, // If true, log body response in verbose mode.
     pub pre_entry: fn(Entry) -> bool,

@@ -17,23 +17,23 @@
  */
 use std::collections::HashMap;
 use std::ffi::OsStr;
-use std::fs::File;
 #[allow(unused)]
 use std::io::prelude::*;
-use std::io::Read;
 use std::path::Path;
 
 use crate::http;
+use crate::http::ContextDir;
+use crate::runner::body::eval_file;
 use hurl_core::ast::*;
 
-use super::core::{Error, RunnerError};
+use super::core::Error;
 use super::template::eval_template;
 use super::value::Value;
 
 pub fn eval_multipart_param(
     multipart_param: MultipartParam,
     variables: &HashMap<String, Value>,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Result<http::MultipartParam, Error> {
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
@@ -50,60 +50,12 @@ pub fn eval_multipart_param(
 
 pub fn eval_file_param(
     file_param: FileParam,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Result<http::FileParam, Error> {
     let name = file_param.key.value;
-
     let filename = file_param.value.filename.clone();
-    let path = Path::new(filename.value.as_str());
-    let absolute_filename = if path.is_absolute() {
-        filename.value.clone()
-    } else {
-        context_dir
-            .join(filename.value.clone())
-            .to_str()
-            .unwrap()
-            .to_string()
-    };
-
-    let data = match File::open(absolute_filename.clone()) {
-        Ok(mut f) => {
-            let mut bytes = Vec::new();
-            match f.read_to_end(&mut bytes) {
-                Ok(_) => bytes,
-                Err(_) => {
-                    return Err(Error {
-                        source_info: filename.source_info,
-                        inner: RunnerError::FileReadAccess {
-                            value: absolute_filename,
-                        },
-                        assert: false,
-                    });
-                }
-            }
-        }
-        Err(_) => {
-            return Err(Error {
-                source_info: filename.source_info,
-                inner: RunnerError::FileReadAccess {
-                    value: absolute_filename,
-                },
-                assert: false,
-            });
-        }
-    };
-
-    if !Path::new(&absolute_filename).exists() {
-        return Err(Error {
-            source_info: filename.source_info,
-            inner: RunnerError::FileReadAccess {
-                value: filename.value.clone(),
-            },
-            assert: false,
-        });
-    }
-
-    let content_type = file_value_content_type(file_param.value);
+    let data = eval_file(&filename, context_dir)?;
+    let content_type = file_value_content_type(&file_param.value);
     Ok(http::FileParam {
         name,
         filename: filename.value,
@@ -112,7 +64,7 @@ pub fn eval_file_param(
     })
 }
 
-pub fn file_value_content_type(file_value: FileValue) -> String {
+pub fn file_value_content_type(file_value: &FileValue) -> String {
     match file_value.content_type.clone() {
         None => match Path::new(file_value.filename.value.as_str())
             .extension()
@@ -154,34 +106,38 @@ mod tests {
             comment: None,
             newline: whitespace(),
         };
-        assert_eq!(
-            eval_file_param(
-                FileParam {
-                    line_terminators: vec![],
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("tests");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let param = eval_file_param(
+            FileParam {
+                line_terminators: vec![],
+                space0: whitespace(),
+                key: EncodedString {
+                    value: "upload1".to_string(),
+                    encoded: "upload1".to_string(),
+                    quotes: false,
+                    source_info: SourceInfo::init(0, 0, 0, 0),
+                },
+                space1: whitespace(),
+                space2: whitespace(),
+                value: FileValue {
                     space0: whitespace(),
-                    key: EncodedString {
-                        value: "upload1".to_string(),
-                        encoded: "upload1".to_string(),
-                        quotes: false,
+                    filename: Filename {
+                        value: "hello.txt".to_string(),
                         source_info: SourceInfo::init(0, 0, 0, 0),
                     },
                     space1: whitespace(),
                     space2: whitespace(),
-                    value: FileValue {
-                        space0: whitespace(),
-                        filename: Filename {
-                            value: "hello.txt".to_string(),
-                            source_info: SourceInfo::init(0, 0, 0, 0),
-                        },
-                        space1: whitespace(),
-                        space2: whitespace(),
-                        content_type: None,
-                    },
-                    line_terminator0: line_terminator,
+                    content_type: None,
                 },
-                Path::new("tests")
-            )
-            .unwrap(),
+                line_terminator0: line_terminator,
+            },
+            &context_dir,
+        )
+        .unwrap();
+        assert_eq!(
+            param,
             http::FileParam {
                 name: "upload1".to_string(),
                 filename: "hello.txt".to_string(),
@@ -194,7 +150,7 @@ mod tests {
     #[test]
     pub fn test_file_value_content_type() {
         assert_eq!(
-            file_value_content_type(FileValue {
+            file_value_content_type(&FileValue {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.txt".to_string(),
@@ -208,7 +164,7 @@ mod tests {
         );
 
         assert_eq!(
-            file_value_content_type(FileValue {
+            file_value_content_type(&FileValue {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.html".to_string(),
@@ -222,7 +178,7 @@ mod tests {
         );
 
         assert_eq!(
-            file_value_content_type(FileValue {
+            file_value_content_type(&FileValue {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.txt".to_string(),
@@ -236,7 +192,7 @@ mod tests {
         );
 
         assert_eq!(
-            file_value_content_type(FileValue {
+            file_value_content_type(&FileValue {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello".to_string(),

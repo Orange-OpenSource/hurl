@@ -27,7 +27,7 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
-use hurl::http::Verbosity;
+use hurl::http::{ContextDir, Verbosity};
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
@@ -170,7 +170,8 @@ fn execute(
             let user = cli_options.user.clone();
             let user_agent = cli_options.user_agent.clone();
             let compressed = cli_options.compressed;
-            let context_dir = match cli_options.file_root {
+            let file_root = match cli_options.file_root {
+                Some(ref filename) => Path::new(filename),
                 None => {
                     if filename == "-" {
                         current_dir
@@ -179,8 +180,9 @@ fn execute(
                         path.parent().unwrap()
                     }
                 }
-                Some(ref filename) => Path::new(filename),
             };
+            let context_dir = ContextDir::new(current_dir, file_root);
+
             let options = http::ClientOptions {
                 cacert_file,
                 follow_location,
@@ -195,7 +197,7 @@ fn execute(
                 user,
                 user_agent,
                 compressed,
-                context_dir: context_dir.to_path_buf(),
+                context_dir: context_dir.clone(),
             };
 
             let mut client = http::Client::init(options);
@@ -213,7 +215,6 @@ fn execute(
             let fail_fast = cli_options.fail_fast;
             let variables = cli_options.variables.clone();
             let to_entry = cli_options.to_entry;
-            let context_dir = context_dir.to_path_buf();
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
             let options = RunnerOptions {
@@ -226,7 +227,7 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            let result = runner::run_hurl_file(
+            let result = runner::run(
                 hurl_file,
                 &mut client,
                 filename,

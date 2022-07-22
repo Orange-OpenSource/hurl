@@ -19,9 +19,9 @@
 use std::collections::HashMap;
 #[allow(unused)]
 use std::io::prelude::*;
-use std::path::Path;
 
 use crate::http;
+use crate::http::ContextDir;
 use hurl_core::ast::*;
 
 use super::body::eval_body;
@@ -33,7 +33,7 @@ use crate::runner::multipart::eval_multipart_param;
 pub fn eval_request(
     request: Request,
     variables: &HashMap<String, Value>,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Result<http::RequestSpec, Error> {
     let method = eval_method(request.method.clone());
 
@@ -339,7 +339,7 @@ mod tests {
     #[test]
     pub fn test_error_variable() {
         let variables = HashMap::new();
-        let error = eval_request(hello_request(), &variables, Path::new(""))
+        let error = eval_request(hello_request(), &variables, &ContextDir::default())
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
@@ -358,7 +358,8 @@ mod tests {
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let http_request = eval_request(hello_request(), &variables, Path::new("")).unwrap();
+        let http_request =
+            eval_request(hello_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::hello_http_request());
     }
 
@@ -369,7 +370,8 @@ mod tests {
             String::from("param1"),
             Value::String(String::from("value1")),
         );
-        let http_request = eval_request(query_request(), &variables, Path::new("")).unwrap();
+        let http_request =
+            eval_request(query_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::query_http_request());
     }
 

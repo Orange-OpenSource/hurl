@@ -23,3 +23,4 @@ pub mod json;
 pub mod jsonpath;
 pub mod report;
 pub mod runner;
+pub mod util;

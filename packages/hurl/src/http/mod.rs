@@ -17,6 +17,7 @@
  */
 
 pub use self::client::Client;
+pub use self::context_dir::ContextDir;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::{Cookie, Param, RequestCookie};
 pub use self::error::HttpError;
@@ -32,6 +33,7 @@ pub use self::response::{Response, Version};
 pub use self::version::libcurl_version_info;
 
 mod client;
+mod context_dir;
 mod cookie;
 mod core;
 mod debug;

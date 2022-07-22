@@ -16,9 +16,9 @@
  *
  */
 use std::collections::HashMap;
-use std::path::Path;
 
 use crate::http;
+use crate::http::ContextDir;
 use hurl_core::ast::*;
 
 use super::assert::eval_assert;
@@ -41,7 +41,7 @@ pub fn eval_asserts(
     response: Response,
     variables: &HashMap<String, Value>,
     http_response: http::Response,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
 
@@ -142,7 +142,7 @@ fn eval_implicit_body_asserts(
     spec_body: &Body,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
-    context_dir: &Path,
+    context_dir: &ContextDir,
 ) -> AssertResult {
     match &spec_body.value {
         Bytes::Json { value } => {
@@ -356,13 +356,13 @@ mod tests {
     #[test]
     pub fn test_eval_asserts() {
         let variables = HashMap::new();
-        let context_dir = Path::new("");
+        let context_dir = ContextDir::default();
         assert_eq!(
             eval_asserts(
                 user_response(),
                 &variables,
                 http::xml_two_users_http_response(),
-                context_dir,
+                &context_dir,
             ),
             vec![
                 AssertResult::Version {

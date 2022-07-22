@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
+
 use hurl::cli;
 use hurl::http;
+use hurl::http::ContextDir;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
 use hurl_core::ast::*;
 use hurl_core::parser;
 use std::collections::HashMap;
-use std::path::PathBuf;
 
 fn log_verbose(message: &str) {
     if message.is_empty() {
@@ -60,7 +61,7 @@ fn test_hurl_file() {
         fail_fast: false,
         variables,
         to_entry: None,
-        context_dir: PathBuf::new(),
+        context_dir: ContextDir::default(),
         ignore_asserts: false,
         very_verbose: false,
         pre_entry: |_| true,
@@ -71,7 +72,7 @@ fn test_hurl_file() {
     let log_error_message: fn(bool, &str) = log_error_message;
     let log_runner_error: fn(&runner::Error, bool) = log_runner_error;
 
-    let _hurl_log = runner::run_hurl_file(
+    let _hurl_log = runner::run(
         hurl_file,
         &mut client,
         //&mut variables,
@@ -191,7 +192,7 @@ fn test_hello() {
         fail_fast: true,
         variables,
         to_entry: None,
-        context_dir: PathBuf::new(),
+        context_dir: ContextDir::default(),
         ignore_asserts: false,
         very_verbose: false,
         pre_entry: |_| true,
@@ -200,7 +201,7 @@ fn test_hello() {
     let log_verbose: fn(&str) = log_verbose;
     let log_error_message: fn(bool, &str) = log_error_message;
     let log_runner_error: fn(&runner::Error, bool) = log_runner_error;
-    let _hurl_log = runner::run_hurl_file(
+    let _hurl_log = runner::run(
         hurl_file,
         &mut client,
         "filename",
@@ -209,15 +210,4 @@ fn test_hello() {
         &log_error_message,
         &log_runner_error,
     );
-    //assert_eq!(hurl_log.entries.len(), 1);
-    //assert_eq!(hurl_log.entries.get(0).unwrap().response.status, 200);
-    //    assert!(hurl_log
-    //        .entries
-    //        .get(0)
-    //        .unwrap()
-    //        .asserts
-    //        .get(0)
-    //        .unwrap()
-    //        .clone()
-    //        .success());
 }

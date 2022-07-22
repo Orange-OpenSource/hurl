@@ -55,11 +55,7 @@ pub fn run(
     log_error_message: &impl Fn(bool, &str),
     options: &RunnerOptions,
 ) -> Vec<EntryResult> {
-    let http_request = match eval_request(
-        entry.request.clone(),
-        variables,
-        options.context_dir.as_path(),
-    ) {
+    let http_request = match eval_request(entry.request.clone(), variables, &options.context_dir) {
         Ok(r) => r,
         Err(error) => {
             return vec![EntryResult {
@@ -170,7 +166,7 @@ pub fn run(
                         response,
                         variables,
                         http_response.clone(),
-                        options.context_dir.as_path(),
+                        &options.context_dir,
                     ),
                 }
             };

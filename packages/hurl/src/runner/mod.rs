@@ -26,7 +26,7 @@
 pub use self::core::{
     AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
 };
-pub use self::hurl_file::run as run_hurl_file;
+pub use self::hurl_file::run;
 pub use self::value::Value;
 
 mod assert;
@@ -39,7 +39,6 @@ mod expr;
 mod hurl_file;
 mod json;
 mod multipart;
-mod path;
 mod predicate;
 mod predicate_value;
 mod query;

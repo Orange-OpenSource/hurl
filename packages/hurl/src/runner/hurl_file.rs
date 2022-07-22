@@ -32,6 +32,7 @@ use super::entry;
 /// use std::path::PathBuf;
 /// use hurl_core::parser;
 /// use hurl::http;
+/// use hurl::http::ContextDir;
 /// use hurl::runner;
 ///
 /// // Parse Hurl file
@@ -57,7 +58,7 @@ use super::entry;
 ///        fail_fast: false,
 ///        variables,
 ///        to_entry: None,
-///        context_dir: PathBuf::new(),
+///        context_dir: ContextDir::default(),
 ///        ignore_asserts: false,
 ///        very_verbose: false,
 ///        pre_entry: |_| true,
@@ -65,7 +66,7 @@ use super::entry;
 ///  };
 ///
 /// // Run the hurl file
-/// let hurl_results = runner::run_hurl_file(
+/// let hurl_results = runner::run(
 ///     hurl_file,
 ///     &mut client,
 ///     filename,

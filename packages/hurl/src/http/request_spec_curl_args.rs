@@ -16,8 +16,6 @@
  *
  */
 
-use std::path::Path;
-
 use super::core::*;
 use super::RequestSpec;
 use crate::http::*;
@@ -28,7 +26,7 @@ impl RequestSpec {
     /// return request as curl arguments
     /// It does not contain the requests cookies (they will be accessed from the client)
     ///
-    pub fn curl_args(&self, context_dir: &Path) -> Vec<String> {
+    pub fn curl_args(&self, context_dir: &ContextDir) -> Vec<String> {
         let querystring = if self.querystring.is_empty() {
             "".to_string()
         } else {
@@ -166,7 +164,7 @@ impl Param {
 }
 
 impl MultipartParam {
-    pub fn curl_arg(&self, context_dir: &Path) -> String {
+    pub fn curl_arg(&self, context_dir: &ContextDir) -> String {
         match self {
             MultipartParam::Param(param) => param.curl_arg(),
             MultipartParam::FileParam(FileParam {
@@ -175,8 +173,7 @@ impl MultipartParam {
                 content_type,
                 ..
             }) => {
-                let path = Path::new(&filename);
-                let path = context_dir.join(path);
+                let path = context_dir.get_path(filename);
                 let value = format!("@{};type={}", path.to_str().unwrap(), content_type);
                 format!("{}={}", name, value)
             }
@@ -185,13 +182,12 @@ impl MultipartParam {
 }
 
 impl Body {
-    pub fn curl_arg(&self, context_dir: &Path) -> String {
+    pub fn curl_arg(&self, context_dir: &ContextDir) -> String {
         match self.clone() {
             Body::Text(s) => encode_shell_string(&s),
             Body::Binary(bytes) => format!("$'{}'", encode_bytes(bytes)),
             Body::File(_, filename) => {
-                let path = Path::new(&filename);
-                let path = context_dir.join(path);
+                let path = context_dir.get_path(&filename);
                 format!("'@{}'", path.to_str().unwrap())
             }
         }
@@ -243,6 +239,7 @@ fn escape_string(s: &str) -> String {
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use std::path::Path;
 
     #[test]
     fn test_encode_byte() {
@@ -332,12 +329,13 @@ pub mod tests {
 
     #[test]
     fn requests_curl_args() {
+        let context_dir = &ContextDir::default();
         assert_eq!(
-            hello_http_request().curl_args(Path::new("")),
+            hello_http_request().curl_args(context_dir),
             vec!["'http://localhost:8000/hello'".to_string()]
         );
         assert_eq!(
-            custom_http_request().curl_args(Path::new("")),
+            custom_http_request().curl_args(context_dir),
             vec![
                 "'http://localhost/custom'".to_string(),
                 "-H".to_string(),
@@ -347,13 +345,13 @@ pub mod tests {
             ]
         );
         assert_eq!(
-            query_http_request().curl_args(Path::new("")),
+            query_http_request().curl_args(context_dir),
             vec![
                 "'http://localhost:8000/querystring-params?param1=value1&param2=a%20b'".to_string()
             ]
         );
         assert_eq!(
-            form_http_request().curl_args(Path::new("")),
+            form_http_request().curl_args(context_dir),
             vec![
                 "'http://localhost/form-params'".to_string(),
                 "-H".to_string(),
@@ -368,21 +366,23 @@ pub mod tests {
 
     #[test]
     fn test_encode_body() {
-        let context_dir = Path::new("/tmp");
+        let current_dir = Path::new("/tmp");
+        let file_root = Path::new("/tmp");
+        let context_dir = ContextDir::new(current_dir, file_root);
         assert_eq!(
-            Body::Text("hello".to_string()).curl_arg(context_dir),
+            Body::Text("hello".to_string()).curl_arg(&context_dir),
             "'hello'".to_string()
         );
 
         if cfg!(unix) {
             assert_eq!(
-                Body::File(vec![], "filename".to_string()).curl_arg(context_dir),
+                Body::File(vec![], "filename".to_string()).curl_arg(&context_dir),
                 "'@/tmp/filename'".to_string()
             );
         }
 
         assert_eq!(
-            Body::Binary(vec![1, 2, 3]).curl_arg(context_dir),
+            Body::Binary(vec![1, 2, 3]).curl_arg(&context_dir),
             "$'\\x01\\x02\\x03'".to_string()
         );
     }

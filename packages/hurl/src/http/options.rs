@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use std::path::PathBuf;
+use crate::http::ContextDir;
 use std::time::Duration;
 
 #[derive(Debug, Clone)]
@@ -33,7 +33,7 @@ pub struct ClientOptions {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub compressed: bool,
-    pub context_dir: PathBuf,
+    pub context_dir: ContextDir,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -58,7 +58,7 @@ impl Default for ClientOptions {
             user: None,
             user_agent: None,
             compressed: false,
-            context_dir: PathBuf::new(),
+            context_dir: ContextDir::default(),
         }
     }
 }
@@ -143,7 +143,7 @@ mod tests {
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
                 compressed: true,
-                context_dir: PathBuf::new()
+                context_dir: ContextDir::default()
             }
             .curl_args(),
             [
