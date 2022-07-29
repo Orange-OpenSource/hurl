@@ -17,6 +17,7 @@
  */
 
 use hurl::cli;
+use hurl::cli::Logger;
 use hurl::http;
 use hurl::http::ContextDir;
 use hurl::runner;
@@ -25,23 +26,7 @@ use hurl_core::ast::*;
 use hurl_core::parser;
 use std::collections::HashMap;
 
-fn log_verbose(message: &str) {
-    if message.is_empty() {
-        eprintln!("*");
-    } else {
-        eprintln!("* {}", message);
-    }
-}
-
-pub fn log_error_message(_warning: bool, message: &str) {
-    eprintln!("{}", message);
-}
-
-pub fn log_runner_error(error: &runner::Error, _warning: bool) {
-    eprintln!("* {:#?}", error);
-}
-
-// can be used for debugging
+// Can be used for debugging
 #[test]
 fn test_hurl_file() {
     let filename = "../../integration/tests_ok/bom.hurl";
@@ -50,6 +35,7 @@ fn test_hurl_file() {
     let variables = HashMap::new();
     let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
+    let logger = Logger::default();
     let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(&content)
@@ -68,21 +54,7 @@ fn test_hurl_file() {
         post_entry: || true,
     };
 
-    let log_verbose: fn(&str) = log_verbose;
-    let log_error_message: fn(bool, &str) = log_error_message;
-    let log_runner_error: fn(&runner::Error, bool) = log_runner_error;
-
-    let _hurl_log = runner::run(
-        hurl_file,
-        &mut client,
-        //&mut variables,
-        filename,
-        &options,
-        &log_verbose,
-        &log_error_message,
-        &log_runner_error,
-    );
-    //   assert_eq!(1,2)
+    let _hurl_log = runner::run(hurl_file, &lines, filename, &mut client, &options, &logger);
 }
 
 #[cfg(test)]
@@ -150,6 +122,7 @@ fn hello_request() -> Request {
 fn test_hello() {
     let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
+    let logger = Logger::default();
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
         end: Pos { line: 1, column: 1 },
@@ -198,16 +171,14 @@ fn test_hello() {
         pre_entry: |_| true,
         post_entry: || true,
     };
-    let log_verbose: fn(&str) = log_verbose;
-    let log_error_message: fn(bool, &str) = log_error_message;
-    let log_runner_error: fn(&runner::Error, bool) = log_runner_error;
-    let _hurl_log = runner::run(
+
+    // FIXME => compute lines
+    runner::run(
         hurl_file,
-        &mut client,
+        &vec![],
         "filename",
+        &mut client,
         &options,
-        &log_verbose,
-        &log_error_message,
-        &log_runner_error,
+        &logger,
     );
 }

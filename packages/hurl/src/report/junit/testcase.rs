@@ -33,14 +33,14 @@ impl Testcase {
     ///
     /// create an XML Junit <testcase> from an Hurl result
     ///
-    pub fn from_hurl_result(hurl_result: &HurlResult, lines: &[String]) -> Testcase {
+    pub fn from_hurl_result(hurl_result: &HurlResult, lines: &Vec<&str>) -> Testcase {
         let id = hurl_result.filename.clone();
         let time_in_ms = hurl_result.time_in_ms;
         let mut failures = vec![];
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = cli::error_string(lines, hurl_result.filename.clone(), &error);
+            let message = cli::error_string(lines, &hurl_result.filename, &error);
             if error.assert {
                 failures.push(message);
             } else {
@@ -127,10 +127,7 @@ mod test {
 
     #[test]
     fn test_create_testcase_failure() {
-        let lines = vec![
-            "GET http://localhost:8000/not_found".to_string(),
-            "HTTP/1.0 200".to_string(),
-        ];
+        let lines = vec!["GET http://localhost:8000/not_found", "HTTP/1.0 200"];
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
@@ -169,7 +166,7 @@ mod test {
 
     #[test]
     fn test_create_testcase_error() {
-        let lines = vec!["GET http://unknown".to_string()];
+        let lines = vec!["GET http://unknown"];
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {

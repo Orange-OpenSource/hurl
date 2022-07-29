@@ -15,30 +15,31 @@
  * limitations under the License.
  *
  */
+use crate::cli::Logger;
 use crate::http::Header;
 
 /// Debug log HTTP request headers.
-pub fn log_headers_out(headers: &[Header]) {
+pub fn log_headers_out(headers: &[Header], logger: &Logger) {
     for header in headers {
-        eprintln!("> {}", header);
+        logger.info(format!("> {}", header).as_str());
     }
-    eprintln!(">")
+    logger.info(">")
 }
 
 /// Debug log HTTP response headers.
-pub fn log_headers_in(headers: &[Header]) {
+pub fn log_headers_in(headers: &[Header], logger: &Logger) {
     for header in headers {
-        eprintln!("< {}", header);
+        logger.info(format!("< {}", header).as_str());
     }
-    eprintln!("<")
+    logger.info("<")
 }
 
 /// Debug log text.
-pub fn log_text(text: &str) {
+pub fn log_text(text: &str, logger: &Logger) {
     if text.is_empty() {
-        eprintln!("*");
+        logger.debug("");
     } else {
-        text.split('\n').for_each(|l| eprintln!("* {}", l))
+        text.split('\n').for_each(|l| logger.debug(l))
     }
 }
 
@@ -48,15 +49,16 @@ pub fn log_text(text: &str) {
 ///
 /// * `bytes`- the bytes to log
 /// * `max` - The maximum number if bytes to log
-pub fn log_bytes(bytes: &[u8], max: usize) {
+pub fn log_bytes(bytes: &[u8], max: usize, logger: &Logger) {
     let bytes = if bytes.len() > max {
         &bytes[..max]
     } else {
         bytes
     };
+
     if bytes.is_empty() {
-        eprintln!("*");
+        logger.debug("");
     } else {
-        eprintln!("* Bytes <{}...>", hex::encode(bytes));
+        logger.debug(format!("Bytes <{}...>", hex::encode(bytes)).as_str());
     }
 }

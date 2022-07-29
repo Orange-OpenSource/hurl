@@ -18,7 +18,8 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-use crate::http;
+use crate::cli::Logger;
+use crate::{cli, http};
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -30,6 +31,7 @@ use super::entry;
 ///
 /// ```
 /// use std::path::PathBuf;
+/// use hurl::cli::Logger;
 /// use hurl_core::parser;
 /// use hurl::http;
 /// use hurl::http::ContextDir;
@@ -43,14 +45,11 @@ use super::entry;
 /// "#;
 /// let hurl_file = parser::parse_hurl_file(s).unwrap();
 ///
-/// // create loggers (function pointer or closure)
-/// fn log_verbose(message: &str) { eprintln!("* {}", message); }
-/// fn log_error_message(_warning:bool, message: &str) { eprintln!("{}", message); }
-/// fn log_error(error: &runner::Error, _warning: bool) { eprintln!("* {:#?}", error); }
-///
-/// // Create an http client
+/// // Create an HTTP client
 /// let options = http::ClientOptions::default();
 /// let mut client = http::Client::init(options);
+///
+/// let logger = Logger::default();
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
@@ -65,15 +64,16 @@ use super::entry;
 ///        post_entry: || true,
 ///  };
 ///
+/// // FIXME: put lines in hurl_file?
+///
 /// // Run the hurl file
 /// let hurl_results = runner::run(
 ///     hurl_file,
-///     &mut client,
+///     &vec!(),
 ///     filename,
+///     &mut client,
 ///     &options,
-///     &log_verbose,
-///     &log_error_message,
-///     &log_error,
+///     &logger,
 /// );
 /// assert!(hurl_results.success);
 ///
@@ -81,12 +81,11 @@ use super::entry;
 ///
 pub fn run(
     hurl_file: HurlFile,
-    http_client: &mut http::Client,
+    lines: &Vec<&str>,
     filename: &str,
+    http_client: &mut http::Client,
     options: &RunnerOptions,
-    log_verbose: &impl Fn(&str),
-    log_error_message: &impl Fn(bool, &str),
-    log_error: &impl Fn(&Error, bool),
+    logger: &Logger,
 ) -> HurlResult {
     let mut entries = vec![];
     let mut variables = HashMap::default();
@@ -120,14 +119,14 @@ pub fn run(
             http_client,
             entry_index,
             &mut variables,
-            &log_verbose,
-            &log_error_message,
             options,
+            logger,
         );
 
         for entry_result in entry_results.clone() {
             for e in entry_result.errors.clone() {
-                log_error(&e, false);
+                let error_message = cli::error_string(lines, filename, &e);
+                logger.error(format!("{}\n", &error_message).as_str());
             }
             entries.push(entry_result.clone());
         }

@@ -22,7 +22,7 @@ use crate::http::{
 use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
-    pub fn to_json(&self, lines: &[String]) -> serde_json::Value {
+    pub fn to_json(&self, lines: &Vec<&str>) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
             "filename".to_string(),
@@ -31,7 +31,7 @@ impl HurlResult {
         let entries = self
             .entries
             .iter()
-            .map(|e| e.clone().to_json(lines, self.filename.clone()))
+            .map(|e| e.clone().to_json(lines, &self.filename))
             .collect();
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
         map.insert(
@@ -49,7 +49,7 @@ impl HurlResult {
 }
 
 impl EntryResult {
-    fn to_json(&self, lines: &[String], filename: String) -> serde_json::Value {
+    fn to_json(&self, lines: &Vec<&str>, filename: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         if let Some(request) = &self.request {
             map.insert("request".to_string(), request.to_json());
@@ -62,7 +62,7 @@ impl EntryResult {
         let asserts = self
             .asserts
             .iter()
-            .map(|a| a.clone().to_json(lines, filename.clone()))
+            .map(|a| a.clone().to_json(lines, filename))
             .collect();
         map.insert("asserts".to_string(), asserts);
         map.insert(
@@ -249,7 +249,7 @@ impl CaptureResult {
 }
 
 impl AssertResult {
-    fn to_json(&self, lines: &[String], filename: String) -> serde_json::Value {
+    fn to_json(&self, lines: &Vec<&str>, filename: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
         let success = self.clone().error().is_none();

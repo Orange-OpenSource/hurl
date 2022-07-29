@@ -17,4 +17,5 @@
  */
 pub use self::path::is_descendant;
 
+pub mod logger;
 mod path;

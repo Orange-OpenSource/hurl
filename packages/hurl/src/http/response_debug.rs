@@ -16,34 +16,31 @@
  *
  */
 
+use crate::cli::Logger;
 use crate::http::{debug, mimetype, Response};
 
 impl Response {
     /// Log response headers.
-    pub fn log_headers(&self) {
-        debug::log_headers_in(&self.headers)
+    pub fn log_headers(&self, logger: &Logger) {
+        debug::log_headers_in(&self.headers, logger)
     }
 
     /// Log a response body as text if possible, or a slice of body bytes.
-    ///
-    /// # Arguments
-    ///
-    /// * `response` - The HTTP response
-    pub fn log_body(&self) {
-        debug::log_text("Response body:");
+    pub fn log_body(&self, logger: &Logger) {
+        logger.debug("Response body:");
 
         // We try to decode the HTTP body as text if the request has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we
         // print the body first 64 bytes.
         if let Some(content_type) = self.content_type() {
             if !mimetype::is_kind_of_text(&content_type) {
-                debug::log_bytes(&self.body, 64);
+                debug::log_bytes(&self.body, 64, logger);
                 return;
             }
         }
         match self.text() {
-            Ok(text) => debug::log_text(&text),
-            Err(_) => debug::log_bytes(&self.body, 64),
+            Ok(text) => debug::log_text(&text, logger),
+            Err(_) => debug::log_bytes(&self.body, 64, logger),
         }
     }
 }

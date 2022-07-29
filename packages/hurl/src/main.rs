@@ -25,7 +25,7 @@ use atty::Stream;
 use colored::*;
 
 use hurl::cli;
-use hurl::cli::{CliError, CliOptions, OutputType};
+use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
 use hurl::http::{ContextDir, Verbosity};
 use hurl::report;
@@ -38,7 +38,7 @@ use hurl_core::parser;
 
 #[cfg(target_family = "unix")]
 pub fn init_colored() {
-    colored::control::set_override(true);
+    control::set_override(true);
 }
 
 const EXIT_OK: i32 = 0;
@@ -87,70 +87,59 @@ struct Progress {
 ///
 /// # Arguments
 ///
-/// * filename - Filename of the Hurl file, "-" is used for stdin
-/// * contents - Content of the Hurl file
-/// * current_dir - The current directory of execution (absolute)
-/// * cli_options - Options for this run
-/// * log_verbose - A log function for debug message
-/// * log_error_message - A log function for error message
+/// * `filename` - Filename of the Hurl file, "-" is used for stdin
+/// * `contents` - Content of the Hurl file
+/// * `current_dir` - The current directory of execution (absolute)
+/// * `cli_options` - Options for this run
+/// * `logger` - The logger
 fn execute(
     filename: &str,
     contents: &str,
     current_dir: &Path,
     cli_options: &CliOptions,
-    log_verbose: &impl Fn(&str),
-    log_error_message: &impl Fn(bool, &str),
     progress: &Option<Progress>,
+    logger: &Logger,
 ) -> HurlResult {
-    let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(contents)
-        .map(|l| l.to_string())
         .collect();
-    let optional_filename = if filename.is_empty() {
-        None
-    } else {
-        Some(filename.to_string())
-    };
 
     if let Some(Progress { current, total }) = progress {
         eprintln!("{}: RUNNING [{}/{}]", filename, current + 1, total);
     }
-    let log_parser_error =
-        cli::make_logger_parser_error(lines.clone(), cli_options.color, optional_filename.clone());
-    let log_runner_error =
-        cli::make_logger_runner_error(lines, cli_options.color, optional_filename);
 
     match parser::parse_hurl_file(contents) {
         Err(e) => {
-            log_parser_error(&e, false);
+            let error_message = cli::error_string(&lines, filename, &e);
+            logger.error(format!("{}\n", &error_message).as_str());
             std::process::exit(EXIT_ERROR_PARSING);
         }
         Ok(hurl_file) => {
-            log_verbose("Options:");
-            log_verbose(format!("    fail fast: {}", cli_options.fail_fast).as_str());
-            log_verbose(format!("    insecure: {}", cli_options.insecure).as_str());
-            log_verbose(format!("    follow redirect: {}", cli_options.follow_location).as_str());
+            logger.debug("Options:");
+            logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
+            logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
+            logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
             if let Some(n) = cli_options.max_redirect {
-                log_verbose(format!("    max redirect: {}", n).as_str());
+                logger.debug(format!("    max redirect: {}", n).as_str());
             }
             if let Some(proxy) = &cli_options.proxy {
-                log_verbose(format!("    proxy: {}", proxy).as_str());
+                logger.debug(format!("    proxy: {}", proxy).as_str());
             }
             if !cli_options.variables.is_empty() {
-                log_verbose("Variables:");
+                logger.debug("Variables:");
                 for (name, value) in cli_options.variables.clone() {
-                    log_verbose(format!("    {}={}", name, value).as_str());
+                    logger.debug(format!("    {}={}", name, value).as_str());
                 }
             }
             if let Some(to_entry) = cli_options.to_entry {
                 if to_entry < hurl_file.entries.len() {
-                    log_verbose(
+                    logger.debug(
                         format!("Executing {}/{} entries", to_entry, hurl_file.entries.len())
                             .as_str(),
                     );
                 } else {
-                    log_verbose("Executing all entries");
+                    logger.debug("Executing all entries");
                 }
             }
             let cacert_file = cli_options.cacert_file.clone();
@@ -227,15 +216,7 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            let result = runner::run(
-                hurl_file,
-                &mut client,
-                filename,
-                &options,
-                &log_verbose,
-                &log_error_message,
-                &log_runner_error,
-            );
+            let result = runner::run(hurl_file, &lines, filename, &mut client, &options, logger);
             if cli_options.progress {
                 let status = match (result.success, cli_options.color) {
                     (true, true) => "SUCCESS".green().to_string(),
@@ -256,11 +237,11 @@ fn execute(
 ///
 /// * result - Something to unwrap
 /// * log_error_message - A function to log error message if unwrap fail
-fn unwrap_or_exit<T>(result: Result<T, CliError>, log_error_message: &impl Fn(bool, &str)) -> T {
+fn unwrap_or_exit<T>(result: Result<T, CliError>, logger: &Logger) -> T {
     match result {
         Ok(v) => v,
         Err(e) => {
-            log_error_message(false, e.message.as_str());
+            logger.error(e.message.as_str());
             std::process::exit(EXIT_ERROR_UNDEFINED);
         }
     }
@@ -279,10 +260,9 @@ fn main() {
     let verbose = cli::has_flag(&matches, "verbose")
         || cli::has_flag(&matches, "very_verbose")
         || cli::has_flag(&matches, "interactive");
-    let log_verbose = cli::make_logger_verbose(verbose);
     let color = cli::output_color(&matches);
-    let log_error_message = cli::make_logger_error_message(color);
-    let cli_options = unwrap_or_exit(cli::parse_options(&matches), &log_error_message);
+    let logger = Logger::new(color, verbose);
+    let cli_options = unwrap_or_exit(cli::parse_options(&matches), &logger);
 
     let mut filenames = vec![];
     if let Some(values) = cli::get_strings(&matches, "INPUT") {
@@ -312,10 +292,7 @@ fn main() {
     let cookies_output_file = match cli_options.cookie_output_file.clone() {
         None => None,
         Some(filename) => {
-            let filename = unwrap_or_exit(
-                cookies_output_file(filename, filenames.len()),
-                &log_error_message,
-            );
+            let filename = unwrap_or_exit(cookies_output_file(filename, filenames.len()), &logger);
             Some(filename)
         }
     };
@@ -329,13 +306,13 @@ fn main() {
                 "hurl: cannot access '{}': No such file or directory",
                 filename
             );
-            log_error_message(false, &message);
+            logger.error(&message);
             std::process::exit(EXIT_ERROR_PARSING);
         }
         let contents = match cli::read_to_string(filename) {
             Ok(v) => v,
             Err(e) => {
-                log_error_message(false, e.message.as_str());
+                logger.error(e.message.as_str());
                 std::process::exit(EXIT_ERROR_PARSING);
             }
         };
@@ -353,9 +330,8 @@ fn main() {
             &contents,
             current_dir,
             &cli_options,
-            &log_verbose,
-            &log_error_message,
             &progress,
+            &logger,
         );
         hurl_results.push(hurl_result.clone());
 
@@ -384,8 +360,7 @@ fn main() {
                         match response.uncompress_body() {
                             Ok(bytes) => bytes,
                             Err(e) => {
-                                log_error_message(
-                                    false,
+                                logger.error(
                                     runner::Error {
                                         source_info: SourceInfo {
                                             start: Pos { line: 0, column: 0 },
@@ -404,12 +379,9 @@ fn main() {
                         response.body
                     };
                     output.append(&mut body.clone());
-                    unwrap_or_exit(
-                        write_output(output, cli_options.output.clone()),
-                        &log_error_message,
-                    );
+                    unwrap_or_exit(write_output(output, cli_options.output.clone()), &logger);
                 } else {
-                    cli::log_info("no response has been received");
+                    logger.info("no response has been received");
                 }
             } else {
                 let source = if filename.as_str() == "-" {
@@ -417,17 +389,13 @@ fn main() {
                 } else {
                     format!("for file {}", filename).to_string()
                 };
-                log_error_message(
-                    true,
-                    format!("no entry have been executed {}", source).as_str(),
-                );
+                logger.warning(format!("no entry have been executed {}", source).as_str());
             };
         }
 
-        let lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
+        let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
             .unwrap()
             .split(&contents)
-            .map(|l| l.to_string())
             .collect();
         if matches!(cli_options.output_type, OutputType::Json) {
             let json_result = hurl_result.to_json(&lines);
@@ -435,7 +403,7 @@ fn main() {
             let s = format!("{}\n", serialized);
             unwrap_or_exit(
                 write_output(s.into_bytes(), cli_options.output.clone()),
-                &log_error_message,
+                &logger,
             );
         }
         if cli_options.junit_file.is_some() {
@@ -445,34 +413,25 @@ fn main() {
     }
 
     if let Some(filename) = cli_options.junit_file.clone() {
-        log_verbose(format!("Writing Junit report to {}", filename).as_str());
-        unwrap_or_exit(
-            report::create_junit_report(filename, testcases),
-            &log_error_message,
-        );
+        logger.debug(format!("Writing Junit report to {}", filename).as_str());
+        unwrap_or_exit(report::create_junit_report(filename, testcases), &logger);
     }
 
     if let Some(dir_path) = cli_options.html_dir {
-        log_verbose(format!("Writing html report to {}", dir_path.display()).as_str());
+        logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
         unwrap_or_exit(
             report::write_html_report(dir_path.clone(), hurl_results.clone()),
-            &log_error_message,
+            &logger,
         );
 
         for filename in filenames {
-            unwrap_or_exit(
-                format_html(filename.as_str(), dir_path.clone()),
-                &log_error_message,
-            );
+            unwrap_or_exit(format_html(filename.as_str(), dir_path.clone()), &logger);
         }
     }
 
     if let Some(file_path) = cookies_output_file {
-        log_verbose(format!("Writing cookies to {}", file_path.display()).as_str());
-        unwrap_or_exit(
-            write_cookies_file(file_path, hurl_results.clone()),
-            &log_error_message,
-        );
+        logger.debug(format!("Writing cookies to {}", file_path.display()).as_str());
+        unwrap_or_exit(write_cookies_file(file_path, hurl_results.clone()), &logger);
     }
 
     if cli_options.summary {
@@ -560,13 +519,13 @@ fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError
     }
 }
 
-fn cookies_output_file(filename: String, n: usize) -> Result<std::path::PathBuf, CliError> {
+fn cookies_output_file(filename: String, n: usize) -> Result<PathBuf, CliError> {
     if n > 1 {
         Err(CliError {
             message: "Only save cookies for a unique session".to_string(),
         })
     } else {
-        let path = std::path::Path::new(&filename);
+        let path = Path::new(&filename);
         Ok(path.to_path_buf())
     }
 }

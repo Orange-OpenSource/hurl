@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-//use hurlfmt::format::text::format_token;
-//use hurlfmt::format::token::Tokenizable;
 use crate::ast::*;
 
 pub trait Htmlable {

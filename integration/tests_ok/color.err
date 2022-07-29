@@ -1,6 +1,6 @@
-* Options:
-*     fail fast: true
-*     insecure: false
-*     follow redirect: false
-*     max redirect: 50
+[1;34m*[0m Options:
+[1;34m*[0m     fail fast: true
+[1;34m*[0m     insecure: false
+[1;34m*[0m     follow redirect: false
+[1;34m*[0m     max redirect: 50
 [1;33mwarning[0m: no entry have been executed for file tests_ok/color.hurl

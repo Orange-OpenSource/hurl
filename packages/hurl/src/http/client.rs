@@ -29,6 +29,7 @@ use super::request::*;
 use super::request_spec::*;
 use super::response::*;
 use super::{Header, HttpError, Verbosity};
+use crate::cli::Logger;
 use std::str::FromStr;
 use url::Url;
 
@@ -70,22 +71,23 @@ impl Client {
         }
     }
 
-    /// Execute an HTTP request and returns a list
+    /// Executes an HTTP request and returns a list
     ///
     /// # Arguments
     ///
-    /// * request - A request specification
-    ///
+    /// * `request` - A request specification
+    /// * `logger`- A logger
     pub fn execute_with_redirect(
         &mut self,
         request: &RequestSpec,
+        logger: &Logger,
     ) -> Result<Vec<(Request, Response)>, HttpError> {
         let mut calls = vec![];
 
         let mut request_spec = request.clone();
         self.redirect_count = 0;
         loop {
-            let (request, response) = self.execute(&request_spec)?;
+            let (request, response) = self.execute(&request_spec, logger)?;
             calls.push((request, response.clone()));
             if let Some(url) = self.get_follow_location(response.clone()) {
                 request_spec = RequestSpec {
@@ -117,6 +119,7 @@ impl Client {
     pub fn execute(
         &mut self,
         request_spec: &RequestSpec,
+        logger: &Logger,
     ) -> Result<(Request, Response), HttpError> {
         // Set handle attributes that have not been set or reset.
 
@@ -205,9 +208,9 @@ impl Client {
                                 headers: request_headers.clone(),
                                 body: Vec::new(),
                             };
-                            debug_request.log_headers();
+                            debug_request.log_headers(logger);
                             if very_verbose {
-                                debug_request.log_body();
+                                debug_request.log_body(logger);
                             }
                         }
                     }
@@ -222,9 +225,9 @@ impl Client {
                                 headers: request_headers.clone(),
                                 body: Vec::from(data),
                             };
-                            debug_request.log_headers();
+                            debug_request.log_headers(logger);
                             if very_verbose {
-                                debug_request.log_body();
+                                debug_request.log_body(logger);
                             }
                         }
                     }
@@ -294,9 +297,9 @@ impl Client {
         };
 
         if verbose {
-            response.log_headers();
+            response.log_headers(logger);
             if very_verbose {
-                response.log_body();
+                response.log_body(logger);
             }
         }
 

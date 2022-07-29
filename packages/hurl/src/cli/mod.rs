@@ -19,20 +19,16 @@
 use std::error::Error;
 
 pub use self::fs::read_to_string;
-pub use self::logger::{
-    error_string, log_info, make_logger_error_message, make_logger_parser_error,
-    make_logger_runner_error, make_logger_verbose,
-};
 pub use self::options::app;
 pub use self::options::output_color;
 pub use self::options::parse_options;
 pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
 pub use self::variables::parse_value as parse_variable_value;
+pub use crate::util::logger::{error_string, Logger};
 
 mod fs;
 pub mod interactive;
-mod logger;
 mod options;
 mod variables;
 pub use self::options::{get_strings, has_flag};

@@ -18,92 +18,110 @@
 
 use colored::*;
 use hurl_core::error::Error;
-use hurl_core::parser;
 
-use crate::runner;
-
-pub fn make_logger_verbose(verbose: bool) -> impl Fn(&str) {
-    move |message| log_verbose(verbose, message)
+/// A logger holds logger functions. A logger function is just a function that takes a string
+/// slice parameter.
+pub struct Logger {
+    info: fn(&str),
+    debug: fn(&str),
+    warning: fn(&str),
+    error: fn(&str),
 }
 
-pub fn make_logger_error_message(color: bool) -> impl Fn(bool, &str) {
-    move |warning, message| log_error_message(color, warning, message)
-}
+impl Logger {
+    /// Creates a new logger.
+    pub fn new(color: bool, verbose: bool) -> Logger {
+        match (color, verbose) {
+            (true, true) => Logger {
+                info: log_info,
+                debug: log_debug,
+                warning: log_warning,
+                error: log_error,
+            },
+            (false, true) => Logger {
+                info: log_info,
+                debug: log_debug_no_color,
+                warning: log_warning_no_color,
+                error: log_error_no_color,
+            },
+            (true, false) => Logger {
+                info: log_info,
+                debug: nop,
+                warning: log_warning,
+                error: log_error,
+            },
+            (false, false) => Logger {
+                info: log_info,
+                debug: nop,
+                warning: log_warning_no_color,
+                error: log_error_no_color,
+            },
+        }
+    }
 
-pub fn make_logger_parser_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<String>,
-) -> impl Fn(&parser::Error, bool) {
-    move |error: &parser::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning)
+    pub fn info(&self, message: &str) {
+        (self.info)(message)
+    }
+
+    pub fn debug(&self, message: &str) {
+        (self.debug)(message)
+    }
+
+    pub fn warning(&self, message: &str) {
+        (self.warning)(message)
+    }
+
+    pub fn error(&self, message: &str) {
+        (self.error)(message)
     }
 }
 
-pub fn make_logger_runner_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<String>,
-) -> impl Fn(&runner::Error, bool) {
-    move |error: &runner::Error, warning: bool| {
-        log_error(lines.clone(), color, filename.clone(), error, warning)
+impl Default for Logger {
+    fn default() -> Self {
+        Logger::new(true, false)
     }
 }
 
-pub fn log_info(message: &str) {
+fn nop(_message: &str) {}
+
+fn log_info(message: &str) {
     eprintln!("{}", message);
 }
 
-fn log_error_message(color: bool, warning: bool, message: &str) {
-    let log_type = match (color, warning) {
-        (false, true) => "warning".to_string(),
-        (false, false) => "error".to_string(),
-        (true, true) => "warning".yellow().bold().to_string(),
-        (true, false) => "error".red().bold().to_string(),
-    };
-    eprintln!("{}: {}", log_type, message);
-}
-
-fn log_verbose(verbose: bool, message: &str) {
-    if verbose {
-        if message.is_empty() {
-            eprintln!("*");
-        } else {
-            eprintln!("* {}", message);
-        }
+fn log_debug(message: &str) {
+    if message.is_empty() {
+        eprintln!("{}", "*".blue().bold());
+    } else {
+        eprintln!("{} {}", "*".blue().bold(), message);
     }
 }
 
-fn log_error(
-    lines: Vec<String>,
-    color: bool,
-    filename: Option<String>,
-    error: &dyn Error,
-    warning: bool,
-) {
-    let error_type = if warning {
-        String::from("warning")
+fn log_debug_no_color(message: &str) {
+    if message.is_empty() {
+        eprintln!("*");
     } else {
-        String::from("error")
-    };
-    let error_type = if !color {
-        error_type
-    } else if warning {
-        error_type.yellow().to_string()
-    } else {
-        error_type.red().to_string()
-    };
-
-    let filename = if let Some(filename) = filename {
-        filename
-    } else {
-        "".to_string()
-    };
-    let error_message = error_string(&lines, filename, error);
-    eprintln!("{}: {}\n", error_type, error_message);
+        eprintln!("* {}", message);
+    }
 }
 
-pub fn error_string(lines: &[String], filename: String, error: &dyn Error) -> String {
+fn log_warning(message: &str) {
+    eprintln!("{}: {}", "warning".yellow().bold(), message);
+}
+
+fn log_warning_no_color(message: &str) {
+    eprintln!("warning: {}", message);
+}
+
+fn log_error(message: &str) {
+    eprintln!("{}: {}", "error".red().bold(), message);
+}
+
+fn log_error_no_color(message: &str) {
+    eprintln!("error: {}", message);
+}
+
+/// Returns an `error` as a string, given `lines` of content and a `filename`.
+pub fn error_string(lines: &Vec<&str>, filename: &str, error: &dyn Error) -> String {
     let line_number_size = if lines.len() < 100 {
         2
     } else if lines.len() < 1000 {
@@ -176,7 +194,7 @@ pub fn error_string(lines: &[String], filename: String, error: &dyn Error) -> St
     )
 }
 
-pub fn add_line_prefix(s: &str, prefix: String) -> String {
+fn add_line_prefix(s: &str, prefix: String) -> String {
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n").unwrap().split(s).collect();
     lines
         .iter()
@@ -201,12 +219,8 @@ pub mod tests {
 
     #[test]
     fn test_assert_error_status() {
-        let lines = vec![
-            "GET http://unknown".to_string(),
-            "HTTP/1.0 200".to_string(),
-            "".to_string(),
-        ];
-        let filename = "test.hurl".to_string();
+        let lines = vec!["GET http://unknown", "HTTP/1.0 200", ""];
+        let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(2, 10, 2, 13),
             inner: runner::RunnerError::AssertStatus {
@@ -228,12 +242,12 @@ pub mod tests {
     #[test]
     fn test_invalid_xpath_expression() {
         let lines = vec![
-            "GET http://example.com".to_string(),
-            "HTTP/1.0 200".to_string(),
-            "[Asserts]".to_string(),
-            r#"xpath "strong(//head/title)" equals "Hello""#.to_string(),
+            "GET http://example.com",
+            "HTTP/1.0 200",
+            "[Asserts]",
+            r#"xpath "strong(//head/title)" equals "Hello""#,
         ];
-        let filename = "test.hurl".to_string();
+        let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(4, 7, 4, 29),
             inner: runner::RunnerError::QueryInvalidXpathEval {},
@@ -253,12 +267,12 @@ pub mod tests {
     #[test]
     fn test_assert_error_jsonpath() {
         let lines = vec![
-            "GET http://api".to_string(),
-            "HTTP/1.0 200".to_string(),
-            "[Asserts]".to_string(),
-            r#"jsonpath "$.count" >= 5"#.to_string(),
+            "GET http://api",
+            "HTTP/1.0 200",
+            "[Asserts]",
+            r#"jsonpath "$.count" >= 5"#,
         ];
-        let filename = "test.hurl".to_string();
+        let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(4, 0, 4, 0),
             inner: runner::RunnerError::AssertFailure {
@@ -283,12 +297,12 @@ pub mod tests {
     #[test]
     fn test_assert_error_newline() {
         let lines = vec![
-            "GET http://localhost".to_string(),
-            "HTTP/1.0 200".to_string(),
-            "```<p>Hello</p>".to_string(),
-            "```".to_string(),
+            "GET http://localhost",
+            "HTTP/1.0 200",
+            "```<p>Hello</p>",
+            "```",
         ];
-        let filename = "test.hurl".to_string();
+        let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(3, 4, 4, 1),
             inner: runner::RunnerError::AssertBodyValueError {
