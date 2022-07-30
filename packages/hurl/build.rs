@@ -25,7 +25,7 @@ use winres::WindowsResource;
 #[cfg(windows)]
 fn set_icon() {
     let mut res = WindowsResource::new();
-    res.set_icon("../../ci/windows/logo.ico");
+    res.set_icon("../../bin/windows/logo.ico");
     res.compile().unwrap();
 }
 

@@ -39,19 +39,20 @@ done
 set -e
 
 total=$(find tests_{ok,failed} -name '*.hurl' | wc -l)
-total_in_json=$( wc -l < build/tests.json)
-total_in_xml=$(xmllint --xpath '//testcase' - < build/tests.xml| grep -c 'testcase id')
-
 echo "Total Number of tests: $total"
 
+total_in_json=$( wc -l < build/tests.json)
 if [[ "$total_in_json" -ne "$total" ]] ; then
-  echo "Number of tests in JSON do not match!"
+  echo "Number of tests in JSON: $total_in_json => does not match!"
   exit 1
 fi
-if [[ "$total_in_xml" -ne "$total" ]] ; then
-  echo "Number of tests in XML do not match!"
-  exit 1
-fi
+
+# TODO: to be fixed for macos
+#total_in_xml=$(xmllint --xpath '//testcase' - < build/tests.xml| grep -c 'testcase id')
+#if [[ "$total_in_xml" -ne "$total" ]] ; then
+#  echo "Number of tests in XML: $total_in_xml => does not match!"
+#  exit 1
+#fi
 
 
 

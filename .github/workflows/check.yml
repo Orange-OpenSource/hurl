@@ -14,7 +14,7 @@ jobs:
     - name: Install Rust
       run: bin/install_rust_latest.sh
     - name: Check formatting
-      run: bin/rustfmt.sh
+      run: bin/check/rustfmt.sh
 
   clippy:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
     - name: Install Rust
       run: bin/install_rust_latest.sh
     - name: Run Clippy
-      run: bin/clippy.sh
+      run: bin/check/clippy.sh
 
   shellcheck:
     runs-on: ubuntu-latest
@@ -32,7 +32,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Check Shell Scripts
-      run: bin/shellcheck.sh
+      run: bin/check/shellcheck.sh
 
   black:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
     - name: Install black
       run: pip3 install black
     - name: Check Python Scripts
-      run: bin/black.sh
+      run: bin/check/black.sh
 
   xmllint:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
       - name: Install xmllint
         run: sudo apt install -y libxml2-utils
       - name: Check XML/HTML files
-        run: bin/xmllint.sh
+        run: bin/check/xmllint.sh
 
   update_crates:
     runs-on: ubuntu-latest
@@ -60,5 +60,5 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3    
     - name: Run crates update
-      run: bin/update_crates.sh --check
+      run: bin/check/update_crates.sh --check
 

@@ -11,63 +11,23 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-    - name: Environment
+    - name: Install
       run: |
-        uname -a
-        cargo --version
+        bin/install_prerequisites_ubuntu.sh
+        bin/install_rust_latest.sh
     - name: set Version
-      run: |
-        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
+      run: bin/release/version.sh
     - name: Build
       run: |
-        ci/man.sh
-        # Install libcurl dev so that hurl can be built dynamically with libcurl
-        sudo apt update
-        sudo apt install libcurl4-openssl-dev        
-        ci/release.sh
-        ci/create_tarball.sh linux
-    - name: Archive production artifacts
+        bin/release/man.sh       
+        bin/release/release.sh
+        bin/release/create_tarball.sh linux
+    - name: Create deb
+      run: bin/release/deb.sh
+    - name: Archive production artifacts (tarball)
       uses: actions/upload-artifact@v3
       with:
-        name: release-generic-linux-x64-artifacts
-        path: target/upload/*
- 
-  release-deb-x64:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-    - name: Environment
-      run: |
-        uname -a
-        cargo --version
-    - name: set Version
-      run: |
-        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
-    - name: Build
-      run: |
-        ci/man.sh
-        # Install libcurl dev so that hurl can be built dynamically with libcurl
-        sudo apt update
-        sudo apt install libcurl4-openssl-dev        
-        ci/release.sh
-        ci/deb.sh
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: release-deb-x64-artifacts
+        name: release-linux-x64-artifacts
         path: target/upload/*
 
   release-macos-x64:
@@ -76,23 +36,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-    - name: Environment
       run: |
-        uname -a
-        cargo --version          
+          bin/install_rust_latest.sh
     - name: set Version
-      run: |
-        echo VERSION=$(grep '^version' packages/hurl/Cargo.toml | cut -f2 -d'"') >> $GITHUB_ENV
+      run: bin/release/version.sh
     - name: Build
       run: |
-        ci/man.sh
-        ci/release.sh
-        ci/create_tarball.sh macos
+        bin/release/man.sh
+        bin/release/release.sh
+        bin/release/create_tarball.sh macos
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -152,9 +104,9 @@ jobs:
         choco install --confirm --no-progress nsis   
         refreshenv
         Get-Command Expand-Archive
-        Expand-Archive -Path '.\ci\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
+        Expand-Archive -Path '.\bin\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
         cd .\target\win-package
-        makensis.exe /NOCD /V4 ..\..\ci\windows\hurl.nsi
+        makensis.exe /NOCD /V4 ..\..\bin\windows\hurl.nsi
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:

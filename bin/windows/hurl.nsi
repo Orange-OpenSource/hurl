@@ -3,9 +3,9 @@
 !include "FileFunc.nsh"
 
 ; define icons
-!define MUI_ICON "..\..\ci\windows\logo.ico"
+!define MUI_ICON "..\..\bin\windows\logo.ico"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "..\..\ci\windows\logo.bmp"
+!define MUI_HEADERIMAGE_BITMAP "..\..\bin\windows\logo.bmp"
 !define MUI_HEADERIMAGE_RIGHT
 
 ; define version

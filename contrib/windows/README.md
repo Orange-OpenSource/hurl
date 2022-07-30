@@ -116,12 +116,12 @@ Get-ChildItem -Path *.dll, *hurl.exe, *hurlfmt.exe, *.txt, ../../*.md  -Exclude 
 ```powershell
 cd c:\hurl
 Get-Command Expand-Archive
-Expand-Archive -Path '.\ci\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
+Expand-Archive -Path '.\bin\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
 cd c:\hurl\target\win-package
 $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";C:\Program Files (x86)\NSIS\Bin"
 Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-makensis.exe /NOCD /V4 ..\..\ci\windows\hurl.nsi
+makensis.exe /NOCD /V4 ..\..\bin\windows\hurl.nsi
 ```
 
