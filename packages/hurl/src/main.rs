@@ -88,30 +88,26 @@ struct Progress {
 /// # Arguments
 ///
 /// * `filename` - Filename of the Hurl file, "-" is used for stdin
-/// * `contents` - Content of the Hurl file
+/// * `content` - Content of the Hurl file
 /// * `current_dir` - The current directory of execution (absolute)
 /// * `cli_options` - Options for this run
+/// * `progress` - The progression of this execution
 /// * `logger` - The logger
 fn execute(
     filename: &str,
-    contents: &str,
+    content: &str,
     current_dir: &Path,
     cli_options: &CliOptions,
     progress: &Option<Progress>,
     logger: &Logger,
 ) -> HurlResult {
-    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-        .unwrap()
-        .split(contents)
-        .collect();
-
     if let Some(Progress { current, total }) = progress {
         eprintln!("{}: RUNNING [{}/{}]", filename, current + 1, total);
     }
 
-    match parser::parse_hurl_file(contents) {
+    match parser::parse_hurl_file(content) {
         Err(e) => {
-            let error_message = cli::error_string(&lines, filename, &e);
+            let error_message = cli::error_string(filename, content, &e);
             logger.error(format!("{}\n", &error_message).as_str());
             std::process::exit(EXIT_ERROR_PARSING);
         }
@@ -216,7 +212,7 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            let result = runner::run(hurl_file, &lines, filename, &mut client, &options, logger);
+            let result = runner::run(&hurl_file, filename, content, &mut client, &options, logger);
             if cli_options.progress {
                 let status = match (result.success, cli_options.color) {
                     (true, true) => "SUCCESS".green().to_string(),
@@ -309,7 +305,7 @@ fn main() {
             logger.error(&message);
             std::process::exit(EXIT_ERROR_PARSING);
         }
-        let contents = match cli::read_to_string(filename) {
+        let content = match cli::read_to_string(filename) {
             Ok(v) => v,
             Err(e) => {
                 logger.error(e.message.as_str());
@@ -327,7 +323,7 @@ fn main() {
         };
         let hurl_result = execute(
             filename,
-            &contents,
+            &content,
             current_dir,
             &cli_options,
             &progress,
@@ -393,12 +389,8 @@ fn main() {
             };
         }
 
-        let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(&contents)
-            .collect();
         if matches!(cli_options.output_type, OutputType::Json) {
-            let json_result = hurl_result.to_json(&lines);
+            let json_result = hurl_result.to_json(&content);
             let serialized = serde_json::to_string(&json_result).unwrap();
             let s = format!("{}\n", serialized);
             unwrap_or_exit(
@@ -407,7 +399,7 @@ fn main() {
             );
         }
         if cli_options.junit_file.is_some() {
-            let testcase = report::Testcase::from_hurl_result(&hurl_result, &lines);
+            let testcase = report::Testcase::from_hurl_result(&hurl_result, &content);
             testcases.push(testcase);
         }
     }

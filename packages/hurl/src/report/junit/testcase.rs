@@ -33,14 +33,14 @@ impl Testcase {
     ///
     /// create an XML Junit <testcase> from an Hurl result
     ///
-    pub fn from_hurl_result(hurl_result: &HurlResult, lines: &Vec<&str>) -> Testcase {
+    pub fn from_hurl_result(hurl_result: &HurlResult, content: &str) -> Testcase {
         let id = hurl_result.filename.clone();
         let time_in_ms = hurl_result.time_in_ms;
         let mut failures = vec![];
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = cli::error_string(lines, &hurl_result.filename, &error);
+            let message = cli::error_string(&hurl_result.filename, content, &error);
             if error.assert {
                 failures.push(message);
             } else {
@@ -105,7 +105,6 @@ mod test {
 
     #[test]
     fn test_create_testcase_success() {
-        let lines = vec![];
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![],
@@ -115,7 +114,8 @@ mod test {
         };
 
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, &lines)
+        let content = "";
+        Testcase::from_hurl_result(&hurl_result, &content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -127,7 +127,9 @@ mod test {
 
     #[test]
     fn test_create_testcase_failure() {
-        let lines = vec!["GET http://localhost:8000/not_found", "HTTP/1.0 200"];
+        let content = r#"GET http://localhost:8000/not_found
+HTTP/1.0 200
+"#;
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
@@ -149,7 +151,7 @@ mod test {
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, &lines)
+        Testcase::from_hurl_result(&hurl_result, &content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -166,7 +168,7 @@ mod test {
 
     #[test]
     fn test_create_testcase_error() {
-        let lines = vec!["GET http://unknown"];
+        let content = "GET http://unknown";
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
@@ -189,7 +191,7 @@ mod test {
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, &lines)
+        Testcase::from_hurl_result(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();

@@ -22,7 +22,7 @@ use crate::http::{
 use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
-    pub fn to_json(&self, lines: &Vec<&str>) -> serde_json::Value {
+    pub fn to_json(&self, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
             "filename".to_string(),
@@ -31,7 +31,7 @@ impl HurlResult {
         let entries = self
             .entries
             .iter()
-            .map(|e| e.clone().to_json(lines, &self.filename))
+            .map(|e| e.clone().to_json(&self.filename, content))
             .collect();
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
         map.insert(
@@ -49,7 +49,7 @@ impl HurlResult {
 }
 
 impl EntryResult {
-    fn to_json(&self, lines: &Vec<&str>, filename: &str) -> serde_json::Value {
+    fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         if let Some(request) = &self.request {
             map.insert("request".to_string(), request.to_json());
@@ -62,7 +62,7 @@ impl EntryResult {
         let asserts = self
             .asserts
             .iter()
-            .map(|a| a.clone().to_json(lines, filename))
+            .map(|a| a.clone().to_json(filename, content))
             .collect();
         map.insert("asserts".to_string(), asserts);
         map.insert(
@@ -249,14 +249,14 @@ impl CaptureResult {
 }
 
 impl AssertResult {
-    fn to_json(&self, lines: &Vec<&str>, filename: &str) -> serde_json::Value {
+    fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
         let success = self.clone().error().is_none();
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.clone().error() {
-            let message = crate::cli::error_string(lines, filename, &err);
+            let message = crate::cli::error_string(filename, content, &err);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(

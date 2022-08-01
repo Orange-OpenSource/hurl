@@ -25,7 +25,16 @@ use hurl_core::ast::*;
 use super::core::*;
 use super::entry;
 
-/// Run a Hurl file with the hurl http client
+/// Runs a Hurl file with the Hurl HTTP client.
+///
+/// # Arguments
+///
+/// * `hurl_file` - The Hurl file ast
+/// * `filename` - Filename of the Hurl file, "-" is used for stdin
+/// * `content` - Content of the Hurl file
+/// * `http_client` - The HTTP client used to run this Hurl file
+/// * `options` - Options for this run
+/// * `logger` - The logger
 ///
 /// # Example
 ///
@@ -48,7 +57,6 @@ use super::entry;
 /// // Create an HTTP client
 /// let options = http::ClientOptions::default();
 /// let mut client = http::Client::init(options);
-///
 /// let logger = Logger::default();
 ///
 /// // Define runner options
@@ -64,13 +72,11 @@ use super::entry;
 ///        post_entry: || true,
 ///  };
 ///
-/// // FIXME: put lines in hurl_file?
-///
 /// // Run the hurl file
 /// let hurl_results = runner::run(
-///     hurl_file,
-///     &vec!(),
+///     &hurl_file,
 ///     filename,
+///     s,
 ///     &mut client,
 ///     &options,
 ///     &logger,
@@ -80,9 +86,9 @@ use super::entry;
 /// ```
 ///
 pub fn run(
-    hurl_file: HurlFile,
-    lines: &Vec<&str>,
+    hurl_file: &HurlFile,
     filename: &str,
+    content: &str,
     http_client: &mut http::Client,
     options: &RunnerOptions,
     logger: &Logger,
@@ -125,7 +131,7 @@ pub fn run(
 
         for entry_result in entry_results.clone() {
             for e in entry_result.errors.clone() {
-                let error_message = cli::error_string(lines, filename, &e);
+                let error_message = cli::error_string(filename, content, &e);
                 logger.error(format!("{}\n", &error_message).as_str());
             }
             entries.push(entry_result.clone());

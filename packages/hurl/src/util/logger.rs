@@ -121,7 +121,12 @@ fn log_error_no_color(message: &str) {
 }
 
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
-pub fn error_string(lines: &Vec<&str>, filename: &str, error: &dyn Error) -> String {
+pub fn error_string(filename: &str, content: &str, error: &dyn Error) -> String {
+    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
+        .unwrap()
+        .split(content)
+        .collect();
+
     let line_number_size = if lines.len() < 100 {
         2
     } else if lines.len() < 1000 {
@@ -219,7 +224,9 @@ pub mod tests {
 
     #[test]
     fn test_assert_error_status() {
-        let lines = vec!["GET http://unknown", "HTTP/1.0 200", ""];
+        let content = r#"GET http://unknown
+HTTP/1.0 200
+"#;
         let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(2, 10, 2, 13),
@@ -229,7 +236,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(&lines, filename, &error),
+            error_string(filename, content, &error),
             r#"Assert Status
   --> test.hurl:2:10
    |
@@ -241,12 +248,11 @@ pub mod tests {
 
     #[test]
     fn test_invalid_xpath_expression() {
-        let lines = vec![
-            "GET http://example.com",
-            "HTTP/1.0 200",
-            "[Asserts]",
-            r#"xpath "strong(//head/title)" equals "Hello""#,
-        ];
+        let content = r#"GET http://example.com
+HTTP/1.0 200
+[Asserts]
+xpath "strong(//head/title)" equals "Hello"
+"#;
         let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(4, 7, 4, 29),
@@ -254,7 +260,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(&lines, filename, &error),
+            error_string(filename, content, &error),
             r#"Invalid xpath expression
   --> test.hurl:4:7
    |
@@ -266,12 +272,11 @@ pub mod tests {
 
     #[test]
     fn test_assert_error_jsonpath() {
-        let lines = vec![
-            "GET http://api",
-            "HTTP/1.0 200",
-            "[Asserts]",
-            r#"jsonpath "$.count" >= 5"#,
-        ];
+        let content = r#"GET http://api
+HTTP/1.0 200
+[Asserts]
+jsonpath "$.count" >= 5
+"#;
         let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(4, 0, 4, 0),
@@ -283,7 +288,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(&lines, filename, &error),
+            error_string(filename, content, &error),
             r#"Assert Failure
   --> test.hurl:4:0
    |
@@ -296,12 +301,11 @@ pub mod tests {
 
     #[test]
     fn test_assert_error_newline() {
-        let lines = vec![
-            "GET http://localhost",
-            "HTTP/1.0 200",
-            "```<p>Hello</p>",
-            "```",
-        ];
+        let content = r#"GET http://localhost
+HTTP/1.0 200
+```<p>Hello</p>
+```
+"#;
         let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::init(3, 4, 4, 1),
@@ -312,7 +316,7 @@ pub mod tests {
             assert: true,
         };
         assert_eq!(
-            error_string(&lines, filename, &error),
+            error_string(filename, content, &error),
             r#"Assert Body Value
   --> test.hurl:3:4
    |

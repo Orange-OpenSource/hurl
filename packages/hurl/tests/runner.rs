@@ -36,12 +36,6 @@ fn test_hurl_file() {
     let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
     let logger = Logger::default();
-    let mut lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-        .unwrap()
-        .split(&content)
-        .collect();
-    // edd an empty line at the end?
-    lines.push("");
 
     let options = RunnerOptions {
         fail_fast: false,
@@ -54,7 +48,14 @@ fn test_hurl_file() {
         post_entry: || true,
     };
 
-    let _hurl_log = runner::run(hurl_file, &lines, filename, &mut client, &options, &logger);
+    let _hurl_log = runner::run(
+        &hurl_file,
+        filename,
+        &content,
+        &mut client,
+        &options,
+        &logger,
+    );
 }
 
 #[cfg(test)]
@@ -123,6 +124,11 @@ fn test_hello() {
     let options = http::ClientOptions::default();
     let mut client = http::Client::init(options);
     let logger = Logger::default();
+
+    // We construct a Hurl file ast "by hand", with fake source info.
+    // In this particular case, the raw content is empty as the Hurl file hasn't
+    // been built from a text content.
+    let content = "";
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
         end: Pos { line: 1, column: 1 },
@@ -172,11 +178,10 @@ fn test_hello() {
         post_entry: || true,
     };
 
-    // FIXME => compute lines
     runner::run(
-        hurl_file,
-        &vec![],
+        &hurl_file,
         "filename",
+        content,
         &mut client,
         &options,
         &logger,
