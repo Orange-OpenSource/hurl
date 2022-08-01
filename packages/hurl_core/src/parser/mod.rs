@@ -17,11 +17,11 @@
  */
 use crate::ast::HurlFile;
 
-pub type ParseResult<'a, T> = std::result::Result<T, Error>;
-pub type ParseFunc<'a, T> = fn(&mut reader::Reader) -> ParseResult<'a, T>;
+pub type ParseResult<'a, T> = Result<T, Error>;
+pub type ParseFunc<'a, T> = fn(&mut Reader) -> ParseResult<'a, T>;
 
 pub fn parse_hurl_file(s: &str) -> ParseResult<'static, HurlFile> {
-    let mut reader = reader::Reader::init(s);
+    let mut reader = Reader::init(s);
     parsers::hurl_file(&mut reader)
 }
 
