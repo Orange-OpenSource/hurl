@@ -19,7 +19,7 @@ use std::collections::HashMap;
 use std::time::Instant;
 
 use crate::cli::Logger;
-use crate::{cli, http};
+use crate::http;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -57,7 +57,7 @@ use super::entry;
 /// // Create an HTTP client
 /// let options = http::ClientOptions::default();
 /// let mut client = http::Client::init(options);
-/// let logger = Logger::default();
+/// let logger = Logger::new(false, false, filename, s);
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
@@ -76,7 +76,6 @@ use super::entry;
 /// let hurl_results = runner::run(
 ///     &hurl_file,
 ///     filename,
-///     s,
 ///     &mut client,
 ///     &options,
 ///     &logger,
@@ -88,7 +87,6 @@ use super::entry;
 pub fn run(
     hurl_file: &HurlFile,
     filename: &str,
-    content: &str,
     http_client: &mut http::Client,
     options: &RunnerOptions,
     logger: &Logger,
@@ -131,8 +129,7 @@ pub fn run(
 
         for entry_result in entry_results.clone() {
             for e in entry_result.errors.clone() {
-                let error_message = cli::error_string(filename, content, &e);
-                logger.error(format!("{}\n", &error_message).as_str());
+                logger.error_rich(&e);
             }
             entries.push(entry_result.clone());
         }

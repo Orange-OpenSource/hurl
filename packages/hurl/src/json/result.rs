@@ -16,6 +16,7 @@
  *
  */
 
+use crate::cli;
 use crate::http::{
     Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
 };
@@ -256,7 +257,7 @@ impl AssertResult {
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.clone().error() {
-            let message = crate::cli::error_string(filename, content, &err);
+            let message = cli::error_string_no_color(filename, content, &err);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(

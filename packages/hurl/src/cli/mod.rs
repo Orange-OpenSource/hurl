@@ -25,7 +25,7 @@ pub use self::options::parse_options;
 pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
 pub use self::variables::parse_value as parse_variable_value;
-pub use crate::util::logger::{error_string, Logger};
+pub use crate::util::logger::{error_string, error_string_no_color, Logger};
 
 mod fs;
 pub mod interactive;

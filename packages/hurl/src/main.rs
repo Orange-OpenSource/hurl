@@ -32,6 +32,7 @@ use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerError, RunnerOptions};
+use hurl::util::logger::BaseLogger;
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
@@ -102,13 +103,12 @@ fn execute(
     logger: &Logger,
 ) -> HurlResult {
     if let Some(Progress { current, total }) = progress {
-        eprintln!("{}: RUNNING [{}/{}]", filename, current + 1, total);
+        logger.info(format!("{}: RUNNING [{}/{}]", filename, current + 1, total).as_str());
     }
 
     match parser::parse_hurl_file(content) {
         Err(e) => {
-            let error_message = cli::error_string(filename, content, &e);
-            logger.error(format!("{}\n", &error_message).as_str());
+            logger.error_rich(&e);
             std::process::exit(EXIT_ERROR_PARSING);
         }
         Ok(hurl_file) => {
@@ -212,7 +212,7 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            let result = runner::run(&hurl_file, filename, content, &mut client, &options, logger);
+            let result = runner::run(&hurl_file, filename, &mut client, &options, logger);
             if cli_options.progress {
                 let status = match (result.success, cli_options.color) {
                     (true, true) => "SUCCESS".green().to_string(),
@@ -220,7 +220,7 @@ fn execute(
                     (false, true) => "FAILURE".red().to_string(),
                     (false, false) => "FAILURE".to_string(),
                 };
-                eprintln!("{}: {}", filename, status);
+                logger.info(format!("{}: {}", filename, status).as_str());
             }
             result
         }
@@ -232,15 +232,18 @@ fn execute(
 /// # Arguments
 ///
 /// * result - Something to unwrap
-/// * log_error_message - A function to log error message if unwrap fail
-fn unwrap_or_exit<T>(result: Result<T, CliError>, logger: &Logger) -> T {
+/// * logger - A logger to log the error
+fn unwrap_or_exit<T>(result: Result<T, CliError>, code: i32, logger: &BaseLogger) -> T {
     match result {
         Ok(v) => v,
-        Err(e) => {
-            logger.error(e.message.as_str());
-            std::process::exit(EXIT_ERROR_UNDEFINED);
-        }
+        Err(e) => exit(&e.message, code, logger),
     }
+}
+
+/// Prints an error message and exits the current process with an exit code.
+fn exit(message: &str, code: i32, logger: &BaseLogger) -> ! {
+    logger.error(message);
+    std::process::exit(code);
 }
 
 /// Executes Hurl entry point.
@@ -258,8 +261,9 @@ fn main() {
         || cli::has_flag(&matches, "very_verbose")
         || cli::has_flag(&matches, "interactive");
     let color = cli::output_color(&matches);
-    let logger = Logger::new(color, verbose);
-    let cli_options = unwrap_or_exit(cli::parse_options(&matches), &logger);
+    let base_logger = BaseLogger::new(color, verbose);
+    let cli_options = cli::parse_options(&matches);
+    let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
 
     let mut filenames = vec![];
     if let Some(values) = cli::get_strings(&matches, "INPUT") {
@@ -272,11 +276,12 @@ fn main() {
     }
 
     if filenames.is_empty() && atty::is(Stream::Stdin) {
-        if app.clone().print_help().is_err() {
-            panic!("panic during printing help");
-        }
-        println!();
-        std::process::exit(EXIT_ERROR_COMMANDLINE);
+        let error = if app.clone().print_help().is_err() {
+            "Panic during printing help"
+        } else {
+            ""
+        };
+        exit(error, EXIT_ERROR_COMMANDLINE, &base_logger);
     } else if filenames.is_empty() {
         filenames.push("-".to_string());
     }
@@ -284,8 +289,11 @@ fn main() {
     let current_dir = match std::env::current_dir() {
         Ok(c) => c,
         Err(error) => {
-            logger.error(error.to_string().as_str());
-            std::process::exit(EXIT_ERROR_PARSING);
+            exit(
+                error.to_string().as_str(),
+                EXIT_ERROR_UNDEFINED,
+                &base_logger,
+            );
         }
     };
     let current_dir = current_dir.as_path();
@@ -293,7 +301,7 @@ fn main() {
         None => None,
         Some(filename) => {
             let result = cookies_output_file(&filename, filenames.len());
-            let filename = unwrap_or_exit(result, &logger);
+            let filename = unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
             Some(filename)
         }
     };
@@ -308,16 +316,10 @@ fn main() {
                 "hurl: cannot access '{}': No such file or directory",
                 filename
             );
-            logger.error(&message);
-            std::process::exit(EXIT_ERROR_PARSING);
+            exit(&message, EXIT_ERROR_PARSING, &base_logger);
         }
-        let content = match cli::read_to_string(filename) {
-            Ok(v) => v,
-            Err(e) => {
-                logger.error(e.message.as_str());
-                std::process::exit(EXIT_ERROR_PARSING);
-            }
-        };
+        let content = cli::read_to_string(filename);
+        let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
         let progress = if cli_options.progress {
             Some(Progress {
@@ -327,6 +329,8 @@ fn main() {
         } else {
             None
         };
+        let logger = Logger::new(color, verbose, filename, &content);
+
         let hurl_result = execute(
             filename,
             &content,
@@ -362,19 +366,19 @@ fn main() {
                         match response.uncompress_body() {
                             Ok(bytes) => bytes,
                             Err(e) => {
-                                logger.error(
-                                    runner::Error {
-                                        source_info: SourceInfo {
-                                            start: Pos { line: 0, column: 0 },
-                                            end: Pos { line: 0, column: 0 },
-                                        },
-                                        inner: RunnerError::from(e),
-                                        assert: false,
-                                    }
-                                    .fixme()
-                                    .as_str(),
-                                );
-                                std::process::exit(EXIT_ERROR_RUNTIME);
+                                // FIXME: we convert to a runner::Error to be able to use fixme
+                                // method. Can we do otherwise (without creating an artificial
+                                // error a first character).
+                                let error = runner::Error {
+                                    source_info: SourceInfo {
+                                        start: Pos { line: 0, column: 0 },
+                                        end: Pos { line: 0, column: 0 },
+                                    },
+                                    inner: RunnerError::from(e),
+                                    assert: false,
+                                };
+                                let message = error.fixme();
+                                exit(&message, EXIT_ERROR_RUNTIME, &base_logger);
                             }
                         }
                     } else {
@@ -382,7 +386,7 @@ fn main() {
                     };
                     output.append(&mut body.clone());
                     let result = write_output(&output, &cli_options.output);
-                    unwrap_or_exit(result, &logger);
+                    unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
                 } else {
                     logger.info("No response has been received");
                 }
@@ -401,7 +405,7 @@ fn main() {
             let serialized = serde_json::to_string(&json_result).unwrap();
             let s = format!("{}\n", serialized);
             let result = write_output(&s.into_bytes(), &cli_options.output);
-            unwrap_or_exit(result, &logger);
+            unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
         }
         if cli_options.junit_file.is_some() {
             let testcase = report::Testcase::from_hurl_result(&hurl_result, &content);
@@ -410,32 +414,32 @@ fn main() {
     }
 
     if let Some(filename) = cli_options.junit_file.clone() {
-        logger.debug(format!("Writing Junit report to {}", filename).as_str());
+        base_logger.debug(format!("Writing Junit report to {}", filename).as_str());
         let result = report::create_junit_report(filename, testcases);
-        unwrap_or_exit(result, &logger);
+        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if let Some(dir_path) = cli_options.html_dir {
-        logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
+        base_logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
         let result = report::write_html_report(dir_path.clone(), hurl_results.clone());
-        unwrap_or_exit(result, &logger);
+        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
 
         for filename in filenames {
             let result = format_html(filename.as_str(), &dir_path);
-            unwrap_or_exit(result, &logger);
+            unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
         }
     }
 
     if let Some(file_path) = cookies_output_file {
-        logger.debug(format!("Writing cookies to {}", file_path.display()).as_str());
+        base_logger.debug(format!("Writing cookies to {}", file_path.display()).as_str());
         let result = write_cookies_file(&file_path, &hurl_results);
-        unwrap_or_exit(result, &logger);
+        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if cli_options.summary {
         let duration = start.elapsed().as_millis();
         let summary = get_summary(duration, &hurl_results);
-        eprintln!("{}", summary.as_str());
+        base_logger.info(summary.as_str());
     }
 
     std::process::exit(exit_code(&hurl_results));

@@ -19,42 +19,105 @@
 use colored::*;
 use hurl_core::error::Error;
 
-/// A logger holds logger functions. A logger function is just a function that takes a string
-/// slice parameter.
-pub struct Logger {
-    info: fn(&str),
-    debug: fn(&str),
-    warning: fn(&str),
-    error: fn(&str),
+/// A simple logger to log app related event (start, high levels error, etc...).
+/// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
+pub struct BaseLogger {
+    pub info: fn(&str),
+    pub debug: fn(&str),
+    pub error: fn(&str),
 }
 
-impl Logger {
+impl BaseLogger {
+    pub fn new(color: bool, verbose: bool) -> BaseLogger {
+        match (color, verbose) {
+            (true, true) => BaseLogger {
+                info: log_info,
+                debug: log_debug,
+                error: log_error,
+            },
+            (false, true) => BaseLogger {
+                info: log_info,
+                debug: log_debug_no_color,
+                error: log_error_no_color,
+            },
+            (true, false) => BaseLogger {
+                info: log_info,
+                debug: nop,
+                error: log_error,
+            },
+            (false, false) => BaseLogger {
+                info: log_info,
+                debug: nop,
+                error: log_error_no_color,
+            },
+        }
+    }
+
+    pub fn info(&self, message: &str) {
+        (self.info)(message)
+    }
+
+    pub fn debug(&self, message: &str) {
+        (self.debug)(message)
+    }
+
+    pub fn error(&self, message: &str) {
+        (self.error)(message)
+    }
+}
+
+/// A Hurl dedicated logger for an Hurl file. Contrary to [`BaseLogger`], this logger can display
+/// rich error for parsing and runtime errors. As the rich errors can display user content,
+/// this logger should have access to the content of the file being run.
+pub struct Logger<'a> {
+    pub info: fn(&str),
+    pub debug: fn(&str),
+    pub warning: fn(&str),
+    pub error: fn(&str),
+    pub error_rich: fn(&str, &str, &dyn Error),
+    pub content: &'a str,
+    pub filename: &'a str,
+}
+
+impl<'a> Logger<'a> {
     /// Creates a new logger.
-    pub fn new(color: bool, verbose: bool) -> Logger {
+    pub fn new(color: bool, verbose: bool, filename: &'a str, content: &'a str) -> Logger<'a> {
         match (color, verbose) {
             (true, true) => Logger {
                 info: log_info,
                 debug: log_debug,
                 warning: log_warning,
                 error: log_error,
+                error_rich: log_error_rich,
+                content,
+                filename,
             },
             (false, true) => Logger {
                 info: log_info,
                 debug: log_debug_no_color,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
+                error_rich: log_error_rich_no_color,
+                content,
+                filename,
             },
             (true, false) => Logger {
                 info: log_info,
                 debug: nop,
                 warning: log_warning,
                 error: log_error,
+                error_rich: log_error_rich,
+                content,
+                filename,
             },
             (false, false) => Logger {
                 info: log_info,
                 debug: nop,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
+                error_rich: log_error_rich_no_color,
+                content,
+                filename,
             },
         }
     }
@@ -74,11 +137,9 @@ impl Logger {
     pub fn error(&self, message: &str) {
         (self.error)(message)
     }
-}
 
-impl Default for Logger {
-    fn default() -> Self {
-        Logger::new(true, false)
+    pub fn error_rich(&self, error: &dyn Error) {
+        (self.error_rich)(self.filename, self.content, error)
     }
 }
 
@@ -118,6 +179,16 @@ fn log_error(message: &str) {
 
 fn log_error_no_color(message: &str) {
     eprintln!("error: {}", message);
+}
+
+fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
+    let message = error_string(filename, content, error);
+    log_error(format!("{}\n", &message).as_str())
+}
+
+fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
+    let message = error_string_no_color(filename, content, error);
+    log_error_no_color(format!("{}\n", &message).as_str())
 }
 
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
@@ -197,6 +268,10 @@ pub fn error_string(filename: &str, content: &str, error: &dyn Error) -> String 
         message = message,
         line_number_space = " ".repeat(line_number_size)
     )
+}
+
+pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {
+    error_string(filename, content, error)
 }
 
 fn add_line_prefix(s: &str, prefix: String) -> String {
