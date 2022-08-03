@@ -243,6 +243,7 @@ fn unwrap_or_exit<T>(result: Result<T, CliError>, logger: &Logger) -> T {
     }
 }
 
+/// Executes Hurl entry point.
 fn main() {
     let version_info = format!(
         "{} {}",
@@ -280,20 +281,25 @@ fn main() {
         filenames.push("-".to_string());
     }
 
-    let current_dir_buf = std::env::current_dir().unwrap();
-    let current_dir = current_dir_buf.as_path();
-
-    let mut hurl_results = vec![];
-
+    let current_dir = match std::env::current_dir() {
+        Ok(c) => c,
+        Err(error) => {
+            logger.error(error.to_string().as_str());
+            std::process::exit(EXIT_ERROR_PARSING);
+        }
+    };
+    let current_dir = current_dir.as_path();
     let cookies_output_file = match cli_options.cookie_output_file.clone() {
         None => None,
         Some(filename) => {
-            let filename = unwrap_or_exit(cookies_output_file(filename, filenames.len()), &logger);
+            let result = cookies_output_file(&filename, filenames.len());
+            let filename = unwrap_or_exit(result, &logger);
             Some(filename)
         }
     };
 
     let start = Instant::now();
+    let mut hurl_results = vec![];
     let mut testcases = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
@@ -375,9 +381,10 @@ fn main() {
                         response.body
                     };
                     output.append(&mut body.clone());
-                    unwrap_or_exit(write_output(output, cli_options.output.clone()), &logger);
+                    let result = write_output(&output, &cli_options.output);
+                    unwrap_or_exit(result, &logger);
                 } else {
-                    logger.info("no response has been received");
+                    logger.info("No response has been received");
                 }
             } else {
                 let source = if filename.as_str() == "-" {
@@ -385,7 +392,7 @@ fn main() {
                 } else {
                     format!("for file {}", filename).to_string()
                 };
-                logger.warning(format!("no entry have been executed {}", source).as_str());
+                logger.warning(format!("No entry have been executed {}", source).as_str());
             };
         }
 
@@ -393,10 +400,8 @@ fn main() {
             let json_result = hurl_result.to_json(&content);
             let serialized = serde_json::to_string(&json_result).unwrap();
             let s = format!("{}\n", serialized);
-            unwrap_or_exit(
-                write_output(s.into_bytes(), cli_options.output.clone()),
-                &logger,
-            );
+            let result = write_output(&s.into_bytes(), &cli_options.output);
+            unwrap_or_exit(result, &logger);
         }
         if cli_options.junit_file.is_some() {
             let testcase = report::Testcase::from_hurl_result(&hurl_result, &content);
@@ -406,36 +411,38 @@ fn main() {
 
     if let Some(filename) = cli_options.junit_file.clone() {
         logger.debug(format!("Writing Junit report to {}", filename).as_str());
-        unwrap_or_exit(report::create_junit_report(filename, testcases), &logger);
+        let result = report::create_junit_report(filename, testcases);
+        unwrap_or_exit(result, &logger);
     }
 
     if let Some(dir_path) = cli_options.html_dir {
         logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
-        unwrap_or_exit(
-            report::write_html_report(dir_path.clone(), hurl_results.clone()),
-            &logger,
-        );
+        let result = report::write_html_report(dir_path.clone(), hurl_results.clone());
+        unwrap_or_exit(result, &logger);
 
         for filename in filenames {
-            unwrap_or_exit(format_html(filename.as_str(), dir_path.clone()), &logger);
+            let result = format_html(filename.as_str(), &dir_path);
+            unwrap_or_exit(result, &logger);
         }
     }
 
     if let Some(file_path) = cookies_output_file {
         logger.debug(format!("Writing cookies to {}", file_path.display()).as_str());
-        unwrap_or_exit(write_cookies_file(file_path, hurl_results.clone()), &logger);
+        let result = write_cookies_file(&file_path, &hurl_results);
+        unwrap_or_exit(result, &logger);
     }
 
     if cli_options.summary {
         let duration = start.elapsed().as_millis();
-        let summary = get_summary(duration, hurl_results.clone());
+        let summary = get_summary(duration, &hurl_results);
         eprintln!("{}", summary.as_str());
     }
 
-    std::process::exit(exit_code(hurl_results));
+    std::process::exit(exit_code(&hurl_results));
 }
 
-fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
+/// Returns an exit code for a list of HurlResult.
+fn exit_code(hurl_results: &[HurlResult]) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for hurl_result in hurl_results {
@@ -456,7 +463,7 @@ fn exit_code(hurl_results: Vec<HurlResult>) -> i32 {
     }
 }
 
-fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
+fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
     let relative_input_file = canonicalize_filename(input_file);
     let absolute_input_file = dir_path.join(format!("{}.html", relative_input_file));
 
@@ -491,7 +498,7 @@ fn format_html(input_file: &str, dir_path: PathBuf) -> Result<(), CliError> {
     Ok(())
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError> {
+fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), CliError> {
     match filename {
         None => write_bytes(bytes.as_slice()),
         Some(filename) => {
@@ -511,7 +518,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<String>) -> Result<(), CliError
     }
 }
 
-fn cookies_output_file(filename: String, n: usize) -> Result<PathBuf, CliError> {
+fn cookies_output_file(filename: &str, n: usize) -> Result<PathBuf, CliError> {
     if n > 1 {
         Err(CliError {
             message: "Only save cookies for a unique session".to_string(),
@@ -522,7 +529,7 @@ fn cookies_output_file(filename: String, n: usize) -> Result<PathBuf, CliError> 
     }
 }
 
-fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
+fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
             return Err(CliError {
@@ -558,7 +565,7 @@ fn write_cookies_file(file_path: PathBuf, hurl_results: Vec<HurlResult>) -> Resu
     Ok(())
 }
 
-fn get_summary(duration: u128, hurl_results: Vec<HurlResult>) -> String {
+fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     let total = hurl_results.len();
     let success = hurl_results.iter().filter(|r| r.success).count();
     let failed = total - success;
