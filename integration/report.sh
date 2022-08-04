@@ -1,7 +1,7 @@
 #!/bin/bash
 # Generate a unique html report
 # Each hurl file will be run successively, result is appended to the same json file
-set +e
+set -e
 rm -rf build
 mkdir build
 export HURL_name=Bob
@@ -23,20 +23,29 @@ function read_options() {
 
 }
 
-find tests_{ok,failed} -name "*.hurl" | sort | while read -r hurl_file; do
+find tests_ok -name "*.hurl" | sort | while read -r hurl_file; do
     options_file="${hurl_file%.*}.options"
     options="--report-html build/html --report-junit build/tests.xml --json $(read_options "$options_file")"
     cmd="hurl $hurl_file $options"
     echo "$cmd"
-    echo "$cmd" | sh >> "build/tests.json"
-    exit_code=$?
+    eval "$cmd" >> "build/tests.json" && exit_code=0 || exit_code=$?
+    if [[ "$exit_code" != 0 ]]; then
+        echo "unexpected exit code $exit_code"
+        exit 1
+    fi
+done
+find tests_failed -name "*.hurl" | sort | while read -r hurl_file; do
+    options_file="${hurl_file%.*}.options"
+    options="--report-html build/html --report-junit build/tests.xml --json $(read_options "$options_file")"
+    cmd="hurl $hurl_file $options"
+    echo "$cmd"
+    eval "$cmd" >> "build/tests.json" && exit_code=0 || exit_code=$?
     if [[ "$exit_code" != 0 && "$exit_code" != 3 && "$exit_code" != 4 ]]; then
-	     echo "unexpected exit code $exit_code"
-	     exit 1
+        echo "unexpected exit code $exit_code"
+        exit 1
     fi
 done
 
-set -e
 
 total=$(find tests_{ok,failed} -name '*.hurl' | wc -l)
 echo "Total Number of tests: $total"
