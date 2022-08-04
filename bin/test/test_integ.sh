@@ -8,4 +8,4 @@ cd integration || exit
 ./test_curl_commands.sh "$(find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')"
 ./test_html_output.py tests_ok/*.html tests_failed/*.html
 ./ad_hoc.sh
-./report.sh
+./report.py
