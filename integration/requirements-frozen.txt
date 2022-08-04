@@ -1,6 +1,8 @@
 asgiref==3.5.0
+beautifulsoup4==4.11.1
 blinker==1.4
 Brotli==1.0.9
+bs4==0.0.1
 certifi==2021.10.8
 cffi==1.15.0
 click==8.1.2
@@ -14,6 +16,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.1
 kaitaistruct==0.9
 ldap3==2.9.1
+lxml==4.9.1
 MarkupSafe==2.1.1
 mitmproxy==8.0.0
 msgpack==1.0.3
@@ -28,6 +31,7 @@ pyperclip==1.8.2
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 sortedcontainers==2.4.0
+soupsieve==2.3.2.post1
 tornado==6.1
 urwid==2.1.2
 Werkzeug==2.0.3

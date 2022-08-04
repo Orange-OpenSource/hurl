@@ -1,2 +1,4 @@
 Flask==2.0.3
 Werkzeug==2.0.3
+bs4==0.0.1
+lxml==4.9.1
