@@ -174,7 +174,7 @@ fn log_warning_no_color(message: &str) {
 }
 
 fn log_error(message: &str) {
-    eprintln!("{}: {}", "error".red().bold(), message);
+    eprintln!("{}: {}", "error".red().bold(), message.bold());
 }
 
 fn log_error_no_color(message: &str) {
@@ -182,17 +182,21 @@ fn log_error_no_color(message: &str) {
 }
 
 fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
-    let message = error_string(filename, content, error);
-    log_error(format!("{}\n", &message).as_str())
+    let message = error_string(filename, content, error, true);
+    eprintln!("{}: {}\n", "error".red().bold(), &message)
 }
 
 fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
-    let message = error_string_no_color(filename, content, error);
-    log_error_no_color(format!("{}\n", &message).as_str())
+    let message = error_string(filename, content, error, false);
+    eprintln!("error: {}\n", &message)
+}
+
+pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {
+    error_string(filename, content, error, false)
 }
 
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
-pub fn error_string(filename: &str, content: &str, error: &dyn Error) -> String {
+fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool) -> String {
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(content)
@@ -206,34 +210,46 @@ pub fn error_string(filename: &str, content: &str, error: &dyn Error) -> String 
         4
     };
 
+    let mut arrow = "-->".to_string();
+    if colored {
+        arrow = arrow.blue().bold().to_string()
+    }
+    let line_number = error.source_info().start.line;
+    let column_number = error.source_info().start.column;
+
     let file_info = format!(
-        "{}--> {}:{}:{}",
+        "{}{} {}:{}:{}",
         " ".repeat(line_number_size).as_str(),
+        arrow,
         filename,
-        error.source_info().start.line,
-        error.source_info().start.column,
+        line_number,
+        column_number,
     );
 
-    let line = lines.get(error.source_info().start.line - 1).unwrap();
+    let line = lines.get(line_number - 1).unwrap();
     let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
+    let mut separator = "|".to_string();
+    if colored {
+        separator = separator.blue().bold().to_string()
+    }
 
     // TODO: to clean/Refacto
     // specific case for assert errors
-    let message = if error.source_info().start.column == 0 {
-        let prefix = format!("{} |   ", " ".repeat(line_number_size).as_str());
+    let message = if column_number == 0 {
+        let prefix = format!("{} {}   ", " ".repeat(line_number_size).as_str(), separator);
         let fix_me = &error.fixme();
         add_line_prefix(fix_me, prefix)
     } else {
-        let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let width = if error.source_info().end.column > error.source_info().start.column {
-            (error.source_info().end.column - error.source_info().start.column) as usize
+        let line = lines.get(line_number - 1).unwrap();
+        let width = if error.source_info().end.column > column_number {
+            (error.source_info().end.column - column_number) as usize
         } else {
             0
         };
 
         let mut tab_shift = 0;
         for (i, c) in line.chars().enumerate() {
-            if i >= error.source_info().start.column - 1 {
+            if i >= column_number - 1 {
                 break;
             };
             if c == '\t' {
@@ -241,37 +257,56 @@ pub fn error_string(filename: &str, content: &str, error: &dyn Error) -> String 
             }
         }
         format!(
-            "{} | {}{} {fixme}",
+            "{} {} {}{} {fixme}",
             " ".repeat(line_number_size).as_str(),
-            " ".repeat(error.source_info().start.column - 1 + tab_shift * 3),
+            separator,
+            " ".repeat(column_number - 1 + tab_shift * 3),
             "^".repeat(if width > 1 { width } else { 1 }),
             fixme = error.fixme().as_str(),
         )
     };
 
+    let description = if colored {
+        error.description().bold().to_string()
+    } else {
+        error.description()
+    };
+
+    let width = line_number_size;
+    let mut line_number = format!(
+        "{line_number:>width$}",
+        line_number = line_number,
+        width = width
+    );
+    if colored {
+        line_number = line_number.blue().bold().to_string();
+    }
+    let line = if line.is_empty() {
+        line
+    } else {
+        format!(" {}", line)
+    };
+    let message = if colored {
+        message.red().bold().to_string()
+    } else {
+        message
+    };
+
     format!(
         r#"{description}
 {file_info}
-{line_number_space} |
-{line_number:>width$} |{line}
+{line_number_space} {separator}
+{line_number} {separator}{line}
 {message}
-{line_number_space} |"#,
-        description = error.description(),
+{line_number_space} {separator}"#,
+        description = description,
         file_info = file_info,
-        line_number = error.source_info().start.line,
-        width = line_number_size,
-        line = if line.is_empty() {
-            line
-        } else {
-            format!(" {}", line)
-        },
+        line_number = line_number,
+        line = line,
         message = message,
-        line_number_space = " ".repeat(line_number_size)
+        line_number_space = " ".repeat(line_number_size),
+        separator = separator
     )
-}
-
-pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {
-    error_string(filename, content, error)
 }
 
 fn add_line_prefix(s: &str, prefix: String) -> String {
@@ -311,7 +346,7 @@ HTTP/1.0 200
             assert: true,
         };
         assert_eq!(
-            error_string(filename, content, &error),
+            error_string(filename, content, &error, false),
             r#"Assert Status
   --> test.hurl:2:10
    |
@@ -335,7 +370,7 @@ xpath "strong(//head/title)" equals "Hello"
             assert: true,
         };
         assert_eq!(
-            error_string(filename, content, &error),
+            error_string(filename, content, &error, false),
             r#"Invalid xpath expression
   --> test.hurl:4:7
    |
@@ -363,7 +398,7 @@ jsonpath "$.count" >= 5
             assert: true,
         };
         assert_eq!(
-            error_string(filename, content, &error),
+            error_string(filename, content, &error, false),
             r#"Assert Failure
   --> test.hurl:4:0
    |
@@ -391,7 +426,7 @@ HTTP/1.0 200
             assert: true,
         };
         assert_eq!(
-            error_string(filename, content, &error),
+            error_string(filename, content, &error, false),
             r#"Assert Body Value
   --> test.hurl:3:4
    |
