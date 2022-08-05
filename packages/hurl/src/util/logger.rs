@@ -80,6 +80,8 @@ pub struct Logger<'a> {
     pub status_version_in: fn(&str),
     pub header_in: fn(&str, &str),
     pub header_out: fn(&str, &str),
+    pub test_running: fn(&str, usize, usize),
+    pub test_completed: fn(&str, bool),
     pub content: &'a str,
     pub filename: &'a str,
 }
@@ -99,6 +101,8 @@ impl<'a> Logger<'a> {
                 status_version_in: log_status_version_in,
                 header_in: log_header_in,
                 header_out: log_header_out,
+                test_running: log_test_running,
+                test_completed: log_test_completed,
                 content,
                 filename,
             },
@@ -113,6 +117,8 @@ impl<'a> Logger<'a> {
                 status_version_in: log_status_version_in_no_color,
                 header_in: log_header_in_no_color,
                 header_out: log_header_out_no_color,
+                test_running: log_test_running_no_color,
+                test_completed: log_test_completed_no_color,
                 content,
                 filename,
             },
@@ -127,6 +133,8 @@ impl<'a> Logger<'a> {
                 status_version_in: nop1,
                 header_in: nop2,
                 header_out: nop2,
+                test_running: log_test_running,
+                test_completed: log_test_completed,
                 content,
                 filename,
             },
@@ -141,6 +149,8 @@ impl<'a> Logger<'a> {
                 status_version_in: nop1,
                 header_in: nop2,
                 header_out: nop2,
+                test_running: log_test_running_no_color,
+                test_completed: log_test_completed_no_color,
                 content,
                 filename,
             },
@@ -185,6 +195,14 @@ impl<'a> Logger<'a> {
 
     pub fn header_out(&self, name: &str, value: &str) {
         (self.header_out)(name, value)
+    }
+
+    pub fn test_running(&self, current: usize, total: usize) {
+        (self.test_running)(self.filename, current, total)
+    }
+
+    pub fn test_completed(&self, success: bool) {
+        (self.test_completed)(self.filename, success)
     }
 }
 
@@ -276,6 +294,34 @@ fn log_header_out(name: &str, value: &str) {
 
 fn log_header_out_no_color(name: &str, value: &str) {
     eprintln!("> {}: {}", name, value)
+}
+
+fn log_test_running(filename: &str, current: usize, total: usize) {
+    eprintln!(
+        "{}: {} [{}/{}]",
+        filename.bold(),
+        "Running".cyan().bold(),
+        current,
+        total
+    )
+}
+
+fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
+    eprintln!("{}: Running [{}/{}]", filename, current, total)
+}
+
+fn log_test_completed(filename: &str, success: bool) {
+    let state = if success {
+        "Success".green().bold()
+    } else {
+        "Failure".red().bold()
+    };
+    eprintln!("{}: {}", filename.bold(), state)
+}
+
+fn log_test_completed_no_color(filename: &str, success: bool) {
+    let state = if success { "Success" } else { "Failure" };
+    eprintln!("{}: {}", filename, state)
 }
 
 pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {

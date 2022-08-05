@@ -103,7 +103,7 @@ fn execute(
     logger: &Logger,
 ) -> HurlResult {
     if let Some(Progress { current, total }) = progress {
-        logger.info(format!("{}: RUNNING [{}/{}]", filename, current + 1, total).as_str());
+        logger.test_running(current + 1, *total);
     }
 
     match parser::parse_hurl_file(content) {
@@ -214,13 +214,7 @@ fn execute(
             };
             let result = runner::run(&hurl_file, filename, &mut client, &options, logger);
             if cli_options.progress {
-                let status = match (result.success, cli_options.color) {
-                    (true, true) => "SUCCESS".green().to_string(),
-                    (true, false) => "SUCCESS".to_string(),
-                    (false, true) => "FAILURE".red().to_string(),
-                    (false, false) => "FAILURE".to_string(),
-                };
-                logger.info(format!("{}: {}", filename, status).as_str());
+                logger.test_completed(result.success);
             }
             result
         }
