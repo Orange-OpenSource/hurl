@@ -20,14 +20,9 @@ use crate::cli::Logger;
 use crate::http::{debug, mimetype, Request};
 
 impl Request {
-    /// Log request headers.
-    pub fn log_headers(&self, logger: &Logger) {
-        debug::log_headers_out(&self.headers, logger)
-    }
-
     /// Log request body.
     pub fn log_body(&self, logger: &Logger) {
-        logger.debug("Request body:");
+        logger.debug_important("Request body:");
 
         // We try to decode the HTTP body as text if the response has a text kind content type.
         // If it ok, we print each line of the body in debug format. Otherwise, we

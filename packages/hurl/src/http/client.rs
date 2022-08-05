@@ -185,12 +185,12 @@ impl Client {
                     easy::InfoType::HeaderOut => {
                         let mut lines = split_lines(data);
                         if verbose {
-                            eprintln!("> {}", lines[0]);
+                            logger.method_version_out(&lines[0]);
                         }
 
                         // Extracts request headers from libcurl debug info.
                         lines.pop().unwrap(); // Remove last empty line.
-                        lines.remove(0); // Remove method/url line.
+                        lines.remove(0); // Remove method/path/version line.
                         for line in lines {
                             if let Some(header) = Header::parse(line) {
                                 request_headers.push(header);
@@ -208,7 +208,11 @@ impl Client {
                                 headers: request_headers.clone(),
                                 body: Vec::new(),
                             };
-                            debug_request.log_headers(logger);
+                            for header in &debug_request.headers {
+                                logger.header_out(&header.name, &header.value);
+                            }
+                            logger.info(">");
+
                             if very_verbose {
                                 debug_request.log_body(logger);
                             }
@@ -225,7 +229,11 @@ impl Client {
                                 headers: request_headers.clone(),
                                 body: Vec::from(data),
                             };
-                            debug_request.log_headers(logger);
+                            for header in &debug_request.headers {
+                                logger.header_out(&header.name, &header.value);
+                            }
+                            logger.info(">");
+
                             if very_verbose {
                                 debug_request.log_body(logger);
                             }
@@ -238,9 +246,10 @@ impl Client {
                 .header_function(|h| {
                     if let Some(s) = decode_header(h) {
                         if s.starts_with("HTTP/") {
-                            // Log version, status code response.
                             if verbose {
-                                eprintln!("< {}", s.trim());
+                                logger.debug_important("Response:");
+                                logger.debug("");
+                                logger.status_version_in(s.trim());
                             }
                             status_lines.push(s);
                         } else {
@@ -297,7 +306,10 @@ impl Client {
         };
 
         if verbose {
-            response.log_headers(logger);
+            for header in &response.headers {
+                logger.header_in(&header.name, &header.value);
+            }
+            logger.info("<");
             if very_verbose {
                 response.log_body(logger);
             }

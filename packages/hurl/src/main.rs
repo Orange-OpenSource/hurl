@@ -112,7 +112,7 @@ fn execute(
             std::process::exit(EXIT_ERROR_PARSING);
         }
         Ok(hurl_file) => {
-            logger.debug("Options:");
+            logger.debug_important("Options:");
             logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
             logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
             logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
@@ -123,9 +123,9 @@ fn execute(
                 logger.debug(format!("    proxy: {}", proxy).as_str());
             }
             if !cli_options.variables.is_empty() {
-                logger.debug("Variables:");
+                logger.debug_important("Variables:");
                 for (name, value) in cli_options.variables.clone() {
-                    logger.debug(format!("    {}={}", name, value).as_str());
+                    logger.debug(format!("    {}: {}", name, value).as_str());
                 }
             }
             if let Some(to_entry) = cli_options.to_entry {

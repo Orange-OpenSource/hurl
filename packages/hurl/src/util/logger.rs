@@ -42,12 +42,12 @@ impl BaseLogger {
             },
             (true, false) => BaseLogger {
                 info: log_info,
-                debug: nop,
+                debug: nop1,
                 error: log_error,
             },
             (false, false) => BaseLogger {
                 info: log_info,
-                debug: nop,
+                debug: nop1,
                 error: log_error_no_color,
             },
         }
@@ -72,9 +72,14 @@ impl BaseLogger {
 pub struct Logger<'a> {
     pub info: fn(&str),
     pub debug: fn(&str),
+    pub debug_important: fn(&str),
     pub warning: fn(&str),
     pub error: fn(&str),
     pub error_rich: fn(&str, &str, &dyn Error),
+    pub method_version_out: fn(&str),
+    pub status_version_in: fn(&str),
+    pub header_in: fn(&str, &str),
+    pub header_out: fn(&str, &str),
     pub content: &'a str,
     pub filename: &'a str,
 }
@@ -86,36 +91,56 @@ impl<'a> Logger<'a> {
             (true, true) => Logger {
                 info: log_info,
                 debug: log_debug,
+                debug_important: log_debug_important,
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
+                method_version_out: log_method_version_out,
+                status_version_in: log_status_version_in,
+                header_in: log_header_in,
+                header_out: log_header_out,
                 content,
                 filename,
             },
             (false, true) => Logger {
                 info: log_info,
                 debug: log_debug_no_color,
+                debug_important: log_debug_no_color,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
+                method_version_out: log_method_version_out_no_color,
+                status_version_in: log_status_version_in_no_color,
+                header_in: log_header_in_no_color,
+                header_out: log_header_out_no_color,
                 content,
                 filename,
             },
             (true, false) => Logger {
                 info: log_info,
-                debug: nop,
+                debug: nop1,
+                debug_important: nop1,
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
+                method_version_out: nop1,
+                status_version_in: nop1,
+                header_in: nop2,
+                header_out: nop2,
                 content,
                 filename,
             },
             (false, false) => Logger {
                 info: log_info,
-                debug: nop,
+                debug: nop1,
+                debug_important: nop1,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
+                method_version_out: nop1,
+                status_version_in: nop1,
+                header_in: nop2,
+                header_out: nop2,
                 content,
                 filename,
             },
@@ -130,6 +155,10 @@ impl<'a> Logger<'a> {
         (self.debug)(message)
     }
 
+    pub fn debug_important(&self, message: &str) {
+        (self.debug_important)(message)
+    }
+
     pub fn warning(&self, message: &str) {
         (self.warning)(message)
     }
@@ -141,9 +170,27 @@ impl<'a> Logger<'a> {
     pub fn error_rich(&self, error: &dyn Error) {
         (self.error_rich)(self.filename, self.content, error)
     }
+
+    pub fn method_version_out(&self, line: &str) {
+        (self.method_version_out)(line)
+    }
+
+    pub fn status_version_in(&self, line: &str) {
+        (self.status_version_in)(line)
+    }
+
+    pub fn header_in(&self, name: &str, value: &str) {
+        (self.header_in)(name, value)
+    }
+
+    pub fn header_out(&self, name: &str, value: &str) {
+        (self.header_out)(name, value)
+    }
 }
 
-fn nop(_message: &str) {}
+fn nop1(_one: &str) {}
+
+fn nop2(_one: &str, _two: &str) {}
 
 fn log_info(message: &str) {
     eprintln!("{}", message);
@@ -162,6 +209,14 @@ fn log_debug_no_color(message: &str) {
         eprintln!("*");
     } else {
         eprintln!("* {}", message);
+    }
+}
+
+fn log_debug_important(message: &str) {
+    if message.is_empty() {
+        eprintln!("{}", "*".blue().bold());
+    } else {
+        eprintln!("{} {}", "*".blue().bold(), message.bold());
     }
 }
 
@@ -189,6 +244,38 @@ fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
 fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
     let message = error_string(filename, content, error, false);
     eprintln!("error: {}\n", &message)
+}
+
+fn log_method_version_out(line: &str) {
+    eprintln!("> {}", line.green().bold())
+}
+
+fn log_method_version_out_no_color(line: &str) {
+    eprintln!("> {}", line)
+}
+
+fn log_status_version_in(line: &str) {
+    eprintln!("< {}", line.green().bold())
+}
+
+fn log_status_version_in_no_color(line: &str) {
+    eprintln!("< {}", line)
+}
+
+fn log_header_in(name: &str, value: &str) {
+    eprintln!("< {}: {}", name.cyan().bold(), value)
+}
+
+fn log_header_in_no_color(name: &str, value: &str) {
+    eprintln!("< {}: {}", name, value)
+}
+
+fn log_header_out(name: &str, value: &str) {
+    eprintln!("> {}: {}", name.cyan().bold(), value)
+}
+
+fn log_header_out_no_color(name: &str, value: &str) {
+    eprintln!("> {}: {}", name, value)
 }
 
 pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {

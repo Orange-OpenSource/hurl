@@ -69,8 +69,10 @@ pub fn run(
         }
     };
 
-    logger.debug("------------------------------------------------------------------------------");
-    logger.debug(format!("Executing entry {}", entry_index + 1).as_str());
+    logger.debug_important(
+        "------------------------------------------------------------------------------",
+    );
+    logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
 
     //
     // Experimental features
@@ -89,7 +91,7 @@ pub fn run(
     }
 
     logger.debug("");
-    logger.debug("Cookie store:");
+    logger.debug_important("Cookie store:");
     for cookie in http_client.get_cookie_storage() {
         logger.debug(cookie.to_string().as_str());
     }
@@ -178,7 +180,7 @@ pub fn run(
                 .collect();
 
             if !captures.is_empty() {
-                logger.debug("Captures:");
+                logger.debug_important("Captures:");
                 for capture in captures.clone() {
                     logger.debug(format!("{}: {}", capture.name, capture.value).as_str());
                 }
@@ -208,7 +210,7 @@ pub fn run(
 /// * `logger` - A logger
 ///
 fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
-    logger.debug("Request:");
+    logger.debug_important("Request:");
     logger.debug(format!("{} {}", request.method, request.url).as_str());
     for header in &request.headers {
         logger.debug(header.to_string().as_str());

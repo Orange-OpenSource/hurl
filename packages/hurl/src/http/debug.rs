@@ -16,23 +16,6 @@
  *
  */
 use crate::cli::Logger;
-use crate::http::Header;
-
-/// Debug log HTTP request headers.
-pub fn log_headers_out(headers: &[Header], logger: &Logger) {
-    for header in headers {
-        logger.info(format!("> {}", header).as_str());
-    }
-    logger.info(">")
-}
-
-/// Debug log HTTP response headers.
-pub fn log_headers_in(headers: &[Header], logger: &Logger) {
-    for header in headers {
-        logger.info(format!("< {}", header).as_str());
-    }
-    logger.info("<")
-}
 
 /// Debug log text.
 pub fn log_text(text: &str, logger: &Logger) {

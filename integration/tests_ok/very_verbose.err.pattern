@@ -21,6 +21,8 @@
 >
 * Request body:
 *
+* Response:
+*
 < HTTP/1.0 301 MOVED PERMANENTLY
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 205
@@ -46,6 +48,8 @@
 > User-Agent: hurl/~~~-snapshot
 >
 * Request body:
+*
+* Response:
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
@@ -73,6 +77,8 @@
 > User-Agent: hurl/~~~-snapshot
 >
 * Request body:
+*
+* Response:
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=ISO-8859-1
@@ -110,6 +116,8 @@
 *     "foo": "bar",
 *     "baz": true
 * }
+* Response:
+*
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 17
@@ -137,6 +145,8 @@
 > User-Agent: hurl/~~~-snapshot
 >
 * Request body:
+*
+* Response:
 *
 < HTTP/1.0 200 OK
 < Content-Type: image/jpeg
@@ -171,6 +181,8 @@
 >
 * Request body:
 * Bytes <~~~~~...>
+* Response:
+*
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
@@ -199,6 +211,8 @@
 > User-Agent: hurl/~~~-snapshot
 >
 * Request body:
+*
+* Response:
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
