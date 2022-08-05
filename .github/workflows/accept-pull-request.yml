@@ -98,7 +98,7 @@ jobs:
         run: |
             gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
             echo "exit_code=${exit_code}"
-            if [ "${exit_code}" -eq 1 ] ; then
+            if [ "${exit_code}" -eq 0 ] ; then
                 echo "  - ✅ Pull request checks are successful."
             else
                 comment="❌ Some checks are still failing, please fix them before trying to /accept this pull request."
