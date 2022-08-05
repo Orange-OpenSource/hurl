@@ -16,7 +16,7 @@ jobs:
       COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
     name: accept-pull-request
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept ') }}
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept') }}
     steps:
 
       - name: Init all internal env vars       
