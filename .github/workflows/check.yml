@@ -6,6 +6,12 @@ env:
 
 jobs:
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: test
+      run: sleep 600
+  
   update_crates:
     runs-on: ubuntu-latest
     steps:
