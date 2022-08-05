@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: test
-      run: sleep 600
+      run: sleep 120
   
   update_crates:
     runs-on: ubuntu-latest
