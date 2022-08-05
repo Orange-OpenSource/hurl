@@ -94,7 +94,7 @@ jobs:
             fi
 
       - name: Check if pull request checks are successful
-        if: !contains(github.event.comment.body, '--force')
+        if: ${{ !contains(github.event.comment.body, '--force') }}
         run: |
             gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
             echo "exit_code=${exit_code}"
