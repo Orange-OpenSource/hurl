@@ -86,7 +86,10 @@ def test(hurl_file: str):
 
     # exit code
     f = hurl_file.replace(".hurl", ".exit")
-    expected = int(open(f, encoding="utf-8").read().strip())
+    if os.path.exists(f):
+        expected = int(open(f, encoding="utf-8").read().strip())
+    else:
+        expected = 0
     if result.returncode != expected:
         print(">>> error in return code")
         print(f"expected: {expected}  actual:{result.returncode}")
