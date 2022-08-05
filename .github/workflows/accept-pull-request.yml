@@ -16,7 +16,7 @@ jobs:
       COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
     name: accept-pull-request
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/accept'}}
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept') }}
     steps:
 
       - name: Init all internal env vars       
@@ -93,6 +93,19 @@ jobs:
                 exit 1         
             fi
 
+      - name: Check if pull request checks are successful
+        if: ${{ !contains(github.event.comment.body, '--force') }}
+        run: |
+            gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
+            if [ "${exit_code}" -eq 0 ] ; then
+                echo "  - ✅ Pull request checks are successful."
+            else
+                comment="❌ Some checks are still failing, please fix them before trying to /accept this pull request."
+                echo "  - ${comment}"
+                gh pr comment "${PR_NUMBER}" --body "${comment}"
+                exit 1
+            fi            
+
       - name: Add remote source branch
         run: |
             if [ "${{ env.HEAD_TYPE }}" = "fork" ] ; then
@@ -150,7 +163,11 @@ jobs:
 
       - name: Close pull request
         run: |
-            comment="✅ Pull request accepted and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
+            if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
+                comment="✅ Pull request accepted without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."          
+            else
+                comment="✅ Pull request accepted and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
+            fi
             gh pr close "${PR_NUMBER}" --delete-branch --comment "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.NEW_COMMITS_FILE }})" && exit_code=0 || exit_code=1
             if [ ${exit_code} -eq 0 ] ; then
                 echo "  - ${comment}"     
