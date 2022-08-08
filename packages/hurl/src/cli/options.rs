@@ -17,6 +17,7 @@
  */
 
 use std::collections::HashMap;
+use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
@@ -440,14 +441,20 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     })
 }
 
+/// Returns true if Hurl output uses ANSI code and false otherwise.
 pub fn output_color(matches: &ArgMatches) -> bool {
     if has_flag(matches, "color") {
-        true
-    } else if has_flag(matches, "no_color") {
-        false
-    } else {
-        atty::is(Stream::Stdout)
+        return true;
     }
+    if has_flag(matches, "no_color") {
+        return false;
+    }
+    if let Ok(v) = env::var("NO_COLOR") {
+        if !v.is_empty() {
+            return false;
+        }
+    }
+    atty::is(Stream::Stdout)
 }
 
 fn to_entry(matches: &ArgMatches) -> Result<Option<usize>, CliError> {
