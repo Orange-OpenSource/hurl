@@ -50,7 +50,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Install xmllint
-        run: sudo apt install -y libxml2-utils
+        run: sudo apt update && sudo apt install -y libxml2-utils
       - name: Check XML/HTML files
         run: bin/check/xmllint.sh
 
