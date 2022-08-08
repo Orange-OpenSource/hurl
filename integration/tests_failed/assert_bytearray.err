@@ -1,4 +1,4 @@
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_bytearray.hurl:4:0
    |
  4 | bytes equals hex,00;
@@ -6,7 +6,7 @@ error: Assert Failure
    |   expected: byte array <00>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_bytearray.hurl:5:0
    |
  5 | sha256 equals hex,a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb88;

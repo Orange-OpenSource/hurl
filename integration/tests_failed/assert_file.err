@@ -1,4 +1,4 @@
-error: Assert Body Value
+error: Assert body value
   --> tests_failed/assert_file.hurl:8:1
    |
  8 | file,data.txt;

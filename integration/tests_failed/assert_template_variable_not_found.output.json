@@ -21,7 +21,7 @@
         },
         {
           "success": false,
-          "message": "Undefined Variable\n  --> tests_failed/assert_template_variable_not_found.hurl:4:33\n   |\n 4 | header \"content-type\" equals \"{{content_type}}\"\n   |                                 ^^^^^^^^^^^^ You must set the variable content_type\n   |",
+          "message": "Undefined variable\n  --> tests_failed/assert_template_variable_not_found.hurl:4:33\n   |\n 4 | header \"content-type\" equals \"{{content_type}}\"\n   |                                 ^^^^^^^^^^^^ you must set the variable content_type\n   |",
           "line": 4
         }
       ]

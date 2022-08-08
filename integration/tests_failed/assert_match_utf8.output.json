@@ -21,7 +21,7 @@
         },
         {
           "success": false,
-          "message": "Invalid Decoding\n  --> tests_failed/assert_match_utf8.hurl:4:1\n   |\n 4 | body matches \".*\"\n   | ^^^^ The body can not be decoded with charset 'utf-8'\n   |",
+          "message": "Invalid decoding\n  --> tests_failed/assert_match_utf8.hurl:4:1\n   |\n 4 | body matches \".*\"\n   | ^^^^ the body can not be decoded with charset 'utf-8'\n   |",
           "line": 4
         }
       ]

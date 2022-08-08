@@ -17,7 +17,7 @@
         },
         {
           "success": false,
-          "message": "Assert Status\n  --> tests_failed/assert_status.hurl:2:10\n   |\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |",
+          "message": "Assert status code\n  --> tests_failed/assert_status.hurl:2:10\n   |\n 2 | HTTP/1.0 200\n   |          ^^^ actual value is <404>\n   |",
           "line": 2
         }
       ]

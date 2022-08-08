@@ -1,4 +1,4 @@
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:7:0
    |
  7 | cookie "cookie1[Secure]" equals false      # This is not valid, Secure attribute exists or not but does have a value
@@ -6,7 +6,7 @@ error: Assert Failure
    |   expected: bool <false>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:11:0
    |
 11 | cookie "cookie2[Secure]" equals true       # This is not valid, Secure attribute exists or not but does have a value
@@ -15,7 +15,7 @@ error: Assert Failure
    |   >>> types between actual and expected are not consistent
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_query_cookie.hurl:12:0
    |
 12 | cookie "cookie2[Secure]" not equals true   # This is not valid, Secure attribute exists or not but does have a value

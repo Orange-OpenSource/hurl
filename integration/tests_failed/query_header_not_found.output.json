@@ -21,7 +21,7 @@
         },
         {
           "success": false,
-          "message": "Header not Found\n  --> tests_failed/query_header_not_found.hurl:3:1\n   |\n 3 | Custom: XXX\n   | ^^^^^^ This header has not been found in the response\n   |",
+          "message": "Header not found\n  --> tests_failed/query_header_not_found.hurl:3:1\n   |\n 3 | Custom: XXX\n   | ^^^^^^ this header has not been found in the response\n   |",
           "line": 3
         }
       ]

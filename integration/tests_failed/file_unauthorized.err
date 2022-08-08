@@ -2,26 +2,26 @@ error: Unauthorized file access
   --> tests_failed/file_unauthorized.hurl:2:6
    |
  2 | file,/secret.txt;
-   |      ^^^^^^^^^^^ Unauthorized access to file /secret.txt, check --file-root option
+   |      ^^^^^^^^^^^ unauthorized access to file /secret.txt, check --file-root option
    |
 
 error: Unauthorized file access
   --> tests_failed/file_unauthorized.hurl:7:6
    |
  7 | file,../secret.txt;
-   |      ^^^^^^^^^^^^^ Unauthorized access to file ../secret.txt, check --file-root option
+   |      ^^^^^^^^^^^^^ unauthorized access to file ../secret.txt, check --file-root option
    |
 
 error: Unauthorized file access
   --> tests_failed/file_unauthorized.hurl:13:13
    |
 13 | file1: file,/secret.txt;
-   |             ^^^^^^^^^^^ Unauthorized access to file /secret.txt, check --file-root option
+   |             ^^^^^^^^^^^ unauthorized access to file /secret.txt, check --file-root option
    |
 
 error: Unauthorized file access
   --> tests_failed/file_unauthorized.hurl:19:13
    |
 19 | file1: file,../secret.txt;
-   |             ^^^^^^^^^^^^^ Unauthorized access to file ../secret.txt, check --file-root option
+   |             ^^^^^^^^^^^^^ unauthorized access to file ../secret.txt, check --file-root option
    |

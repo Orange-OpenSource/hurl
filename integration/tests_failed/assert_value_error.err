@@ -1,4 +1,4 @@
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:4:0
    |
  4 | header "content-type" equals "XXX"
@@ -6,7 +6,7 @@ error: Assert Failure
    |   expected: string <XXX>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:5:0
    |
  5 | header "content-type" notEquals "text/html; charset=utf-8"
@@ -14,7 +14,7 @@ error: Assert Failure
    |   expected: string <text/html; charset=utf-8>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:6:0
    |
  6 | jsonpath "$.id" equals "000001"
@@ -22,7 +22,7 @@ error: Assert Failure
    |   expected: string <000001>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:7:0
    |
  7 | jsonpath "$.values" includes 100
@@ -30,7 +30,7 @@ error: Assert Failure
    |   expected: includes int <100>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:8:0
    |
  8 | jsonpath "$.values" not contains "Hello"
@@ -39,7 +39,7 @@ error: Assert Failure
    |   >>> types between actual and expected are not consistent
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:9:0
    |
  9 | jsonpath "$.count" greaterThan 5
@@ -47,7 +47,7 @@ error: Assert Failure
    |   expected: greater than int <5>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:10:0
    |
 10 | jsonpath "$.count" isFloat
@@ -55,7 +55,7 @@ error: Assert Failure
    |   expected: float
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_value_error.hurl:11:0
    |
 11 | bytes contains hex,00;

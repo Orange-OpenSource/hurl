@@ -480,7 +480,7 @@ HTTP/1.0 200
         };
         assert_eq!(
             error_string(filename, content, &error, false),
-            r#"Assert Status
+            r#"Assert status code
   --> test.hurl:2:10
    |
  2 | HTTP/1.0 200
@@ -504,11 +504,11 @@ xpath "strong(//head/title)" equals "Hello"
         };
         assert_eq!(
             error_string(filename, content, &error, false),
-            r#"Invalid xpath expression
+            r#"Invalid XPath expression
   --> test.hurl:4:7
    |
  4 | xpath "strong(//head/title)" equals "Hello"
-   |       ^^^^^^^^^^^^^^^^^^^^^^ The xpath expression is not valid
+   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
    |"#
         )
     }
@@ -532,7 +532,7 @@ jsonpath "$.count" >= 5
         };
         assert_eq!(
             error_string(filename, content, &error, false),
-            r#"Assert Failure
+            r#"Assert failure
   --> test.hurl:4:0
    |
  4 | jsonpath "$.count" >= 5
@@ -560,7 +560,7 @@ HTTP/1.0 200
         };
         assert_eq!(
             error_string(filename, content, &error, false),
-            r#"Assert Body Value
+            r#"Assert body value
   --> test.hurl:3:4
    |
  3 | ```<p>Hello</p>

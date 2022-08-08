@@ -12,76 +12,76 @@ impl Error for runner::Error {
 
     fn description(&self) -> String {
         match &self.inner {
-            RunnerError::InvalidUrl(..) => "Invalid url".to_string(),
-            RunnerError::TemplateVariableNotDefined { .. } => "Undefined Variable".to_string(),
-            RunnerError::VariableNotDefined { .. } => "Undefined Variable".to_string(),
-            RunnerError::HttpConnection { .. } => "Http Connection".to_string(),
-            RunnerError::CouldNotResolveProxyName => "Http Connection".to_string(),
-            RunnerError::CouldNotResolveHost(_) => "Http Connection".to_string(),
-            RunnerError::FailToConnect => "Http Connection".to_string(),
-            RunnerError::Timeout => "Http Connection".to_string(),
-            RunnerError::TooManyRedirect => "Http Connection".to_string(),
-            RunnerError::CouldNotParseResponse => "Http Connection".to_string(),
-            RunnerError::SslCertificate { .. } => "SSL Certificate".to_string(),
-            RunnerError::PredicateValue { .. } => "Assert - Predicate Value Failed".to_string(),
+            RunnerError::InvalidUrl(..) => "Invalid URL".to_string(),
+            RunnerError::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
+            RunnerError::VariableNotDefined { .. } => "Undefined variable".to_string(),
+            RunnerError::HttpConnection { .. } => "HTTP connection".to_string(),
+            RunnerError::CouldNotResolveProxyName => "HTTP connection".to_string(),
+            RunnerError::CouldNotResolveHost(_) => "HTTP connection".to_string(),
+            RunnerError::FailToConnect => "HTTP connection".to_string(),
+            RunnerError::Timeout => "HTTP connection".to_string(),
+            RunnerError::TooManyRedirect => "HTTP connection".to_string(),
+            RunnerError::CouldNotParseResponse => "HTTP connection".to_string(),
+            RunnerError::SslCertificate { .. } => "SSL certificate".to_string(),
+            RunnerError::PredicateValue { .. } => "Assert - predicate value failed".to_string(),
             RunnerError::InvalidRegex {} => "Invalid regex".to_string(),
-            RunnerError::FileReadAccess { .. } => "File ReadAccess".to_string(),
+            RunnerError::FileReadAccess { .. } => "File read access".to_string(),
             RunnerError::QueryInvalidXml { .. } => "Invalid XML".to_string(),
-            RunnerError::QueryInvalidXpathEval {} => "Invalid xpath expression".to_string(),
-            RunnerError::QueryHeaderNotFound {} => "Header not Found".to_string(),
-            RunnerError::QueryCookieNotFound {} => "Cookie not Found".to_string(),
-            RunnerError::AssertHeaderValueError { .. } => "Assert Header Value".to_string(),
-            RunnerError::AssertBodyValueError { .. } => "Assert Body Value".to_string(),
-            RunnerError::AssertVersion { .. } => "Assert Http Version".to_string(),
-            RunnerError::AssertStatus { .. } => "Assert Status".to_string(),
-            RunnerError::QueryInvalidJson { .. } => "Invalid Json".to_string(),
-            RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid jsonpath".to_string(),
-            RunnerError::PredicateType { .. } => "Assert - Inconsistent predicate type".to_string(),
+            RunnerError::QueryInvalidXpathEval {} => "Invalid XPath expression".to_string(),
+            RunnerError::QueryHeaderNotFound {} => "Header not found".to_string(),
+            RunnerError::QueryCookieNotFound {} => "Cookie not found".to_string(),
+            RunnerError::AssertHeaderValueError { .. } => "Assert header value".to_string(),
+            RunnerError::AssertBodyValueError { .. } => "Assert body value".to_string(),
+            RunnerError::AssertVersion { .. } => "Assert HTTP version".to_string(),
+            RunnerError::AssertStatus { .. } => "Assert status code".to_string(),
+            RunnerError::QueryInvalidJson { .. } => "Invalid JSON".to_string(),
+            RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid JSONPath".to_string(),
+            RunnerError::PredicateType { .. } => "Assert - inconsistent predicate type".to_string(),
             RunnerError::SubqueryInvalidInput { .. } => "Subquery error".to_string(),
-            RunnerError::InvalidDecoding { .. } => "Invalid Decoding".to_string(),
-            RunnerError::InvalidCharset { .. } => "Invalid Charset".to_string(),
-            RunnerError::AssertFailure { .. } => "Assert Failure".to_string(),
-            RunnerError::UnrenderableVariable { .. } => "Unrenderable Variable".to_string(),
+            RunnerError::InvalidDecoding { .. } => "Invalid decoding".to_string(),
+            RunnerError::InvalidCharset { .. } => "Invalid charset".to_string(),
+            RunnerError::AssertFailure { .. } => "Assert failure".to_string(),
+            RunnerError::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
             RunnerError::NoQueryResult { .. } => "No query result".to_string(),
-            RunnerError::UnsupportedContentEncoding(..) => "Decompression Error".to_string(),
-            RunnerError::CouldNotUncompressResponse(..) => "Decompression Error".to_string(),
-            RunnerError::InvalidJson { .. } => "Invalid Json".to_string(),
+            RunnerError::UnsupportedContentEncoding(..) => "Decompression error".to_string(),
+            RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
+            RunnerError::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
         }
     }
 
     fn fixme(&self) -> String {
         match &self.inner {
-            RunnerError::InvalidUrl(url) => format!("Invalid url <{}>", url),
+            RunnerError::InvalidUrl(url) => format!("invalid URL <{}>", url),
             RunnerError::TemplateVariableNotDefined { name } => {
-                format!("You must set the variable {}", name)
+                format!("you must set the variable {}", name)
             }
             RunnerError::HttpConnection { message, .. } => message.to_string(),
-            RunnerError::CouldNotResolveProxyName => "Could not resolve proxy name".to_string(),
-            RunnerError::CouldNotResolveHost(host) => format!("Could not resolve host <{}>", host),
-            RunnerError::FailToConnect => "Fail to connect".to_string(),
-            RunnerError::Timeout => "Timeout has been reached".to_string(),
-            RunnerError::TooManyRedirect => "Too many redirect".to_string(),
-            RunnerError::CouldNotParseResponse => "Could not parse response".to_string(),
+            RunnerError::CouldNotResolveProxyName => "could not resolve proxy name".to_string(),
+            RunnerError::CouldNotResolveHost(host) => format!("could not resolve host <{}>", host),
+            RunnerError::FailToConnect => "fail to connect".to_string(),
+            RunnerError::Timeout => "timeout has been reached".to_string(),
+            RunnerError::TooManyRedirect => "too many redirect".to_string(),
+            RunnerError::CouldNotParseResponse => "could not parse response".to_string(),
             RunnerError::SslCertificate(description) => description.clone(),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
             RunnerError::PredicateValue(value) => {
                 format!("actual value is <{}>", value)
             }
-            RunnerError::InvalidRegex {} => "Regex expression is not valid".to_string(),
-            RunnerError::FileReadAccess { value } => format!("File {} can not be read", value),
+            RunnerError::InvalidRegex {} => "regex expression is not valid".to_string(),
+            RunnerError::FileReadAccess { value } => format!("file {} can not be read", value),
             RunnerError::QueryInvalidXml { .. } => {
-                "The Http response is not a valid XML".to_string()
+                "the HTTP response is not a valid XML".to_string()
             }
             RunnerError::QueryHeaderNotFound {} => {
-                "This header has not been found in the response".to_string()
+                "this header has not been found in the response".to_string()
             }
             RunnerError::QueryCookieNotFound {} => {
-                "This cookie has not been found in the response".to_string()
+                "this cookie has not been found in the response".to_string()
             }
             RunnerError::QueryInvalidXpathEval {} => {
-                "The xpath expression is not valid".to_string()
+                "the XPath expression is not valid".to_string()
             }
             RunnerError::AssertHeaderValueError { actual } => {
                 format!("actual value is <{}>", actual)
@@ -90,22 +90,22 @@ impl Error for runner::Error {
                 format!("actual value is <{}>", actual)
             }
             RunnerError::QueryInvalidJson { .. } => {
-                "The http response is not a valid json".to_string()
+                "the HTTP response is not a valid JSON".to_string()
             }
             RunnerError::QueryInvalidJsonpathExpression { value } => {
-                format!("the jsonpath expression '{}' is not valid", value)
+                format!("the JSONPath expression '{}' is not valid", value)
             }
             RunnerError::PredicateType { .. } => {
                 "predicate type inconsistent with value return by query".to_string()
             }
             RunnerError::SubqueryInvalidInput(t) => {
-                format!("Type <{}> from query result and subquery do not match", t)
+                format!("type <{}> from query result and subquery do not match", t)
             }
             RunnerError::InvalidDecoding { charset } => {
-                format!("The body can not be decoded with charset '{}'", charset)
+                format!("the body can not be decoded with charset '{}'", charset)
             }
             RunnerError::InvalidCharset { charset } => {
-                format!("The charset '{}' is not valid", charset)
+                format!("the charset '{}' is not valid", charset)
             }
             RunnerError::AssertFailure {
                 actual,
@@ -128,17 +128,17 @@ impl Error for runner::Error {
             }
             RunnerError::NoQueryResult { .. } => "The query didn't return any result".to_string(),
             RunnerError::UnsupportedContentEncoding(algorithm) => {
-                format!("Compression {} is not supported", algorithm)
+                format!("compression {} is not supported", algorithm)
             }
             RunnerError::CouldNotUncompressResponse(algorithm) => {
-                format!("Could not uncompress response with {}", algorithm)
+                format!("could not uncompress response with {}", algorithm)
             }
             RunnerError::InvalidJson { value } => {
                 format!("actual value is <{}>", value)
             }
             RunnerError::UnauthorizedFileAccess { path } => {
                 format!(
-                    "Unauthorized access to file {}, check --file-root option",
+                    "unauthorized access to file {}, check --file-root option",
                     path.to_str().unwrap()
                 )
             }

@@ -2,6 +2,6 @@ error: Parsing section
   --> tests_error_parser/duplicate_section.hurl:4:1
    |
  4 | [QueryStringParams]
-   | ^ The section is already defined
+   | ^ the section is already defined
    |
 

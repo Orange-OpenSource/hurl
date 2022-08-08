@@ -1,4 +1,4 @@
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:4:0
    |
  4 | jsonpath "$.status" equals "true"
@@ -6,7 +6,7 @@ error: Assert Failure
    |   expected: string <true>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:6:0
    |
  6 | jsonpath "$.count" equals 0
@@ -14,7 +14,7 @@ error: Assert Failure
    |   expected: int <0>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:7:0
    |
  7 | jsonpath "$.message" equals 0
@@ -22,7 +22,7 @@ error: Assert Failure
    |   expected: int <0>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:8:0
    |
  8 | jsonpath "$.empty" equals 0
@@ -30,7 +30,7 @@ error: Assert Failure
    |   expected: int <0>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:9:0
    |
  9 | jsonpath "$.number" equals 1.1
@@ -38,7 +38,7 @@ error: Assert Failure
    |   expected: float <1.1>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:10:0
    |
 10 | jsonpath "$.message" startsWith "hi"
@@ -46,7 +46,7 @@ error: Assert Failure
    |   expected: starts with string <hi>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:11:0
    |
 11 | jsonpath "$.message" endsWith "hi"
@@ -54,7 +54,7 @@ error: Assert Failure
    |   expected: ends with string <hi>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:12:0
    |
 12 | jsonpath "$.message" contains "hi"
@@ -62,7 +62,7 @@ error: Assert Failure
    |   expected: contains string <hi>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:13:0
    |
 13 | jsonpath "$.message" matches "hi"
@@ -74,10 +74,10 @@ error: Subquery error
   --> tests_failed/predicate.hurl:14:22
    |
 14 | jsonpath "$.message" count == 1
-   |                      ^^^^^ Type <string> from query result and subquery do not match
+   |                      ^^^^^ type <string> from query result and subquery do not match
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:15:0
    |
 15 | jsonpath "$.toto" exists
@@ -85,7 +85,7 @@ error: Assert Failure
    |   expected: something
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:16:0
    |
 16 | jsonpath "$.message" not exists
@@ -93,7 +93,7 @@ error: Assert Failure
    |   expected: not something
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/predicate.hurl:17:0
    |
 17 | jsonpath "$.list" count == 2

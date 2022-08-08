@@ -1,4 +1,4 @@
-error: Invalid Json
+error: Invalid JSON
   --> tests_failed/body_json.hurl:3:18
    |
  3 |     "success": {{success}}

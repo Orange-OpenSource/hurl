@@ -1,4 +1,4 @@
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_variable.hurl:8:0
    |
  8 | variable "toto" equals "tata"
@@ -6,14 +6,14 @@ error: Assert Failure
    |   expected: string <tata>
    |
 
-error: Undefined Variable
+error: Undefined variable
   --> tests_failed/assert_variable.hurl:9:28
    |
  9 | variable "status" equals {{unknown}}
-   |                            ^^^^^^^ You must set the variable unknown
+   |                            ^^^^^^^ you must set the variable unknown
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_variable.hurl:10:0
    |
 10 | variable "status" equals {{type}}
@@ -21,7 +21,7 @@ error: Assert Failure
    |   expected: string <text/html; charset=utf-8>
    |
 
-error: Assert Failure
+error: Assert failure
   --> tests_failed/assert_variable.hurl:11:0
    |
 11 | variable "status" equals {{length}}

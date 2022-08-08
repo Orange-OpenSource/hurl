@@ -1,7 +1,7 @@
-error: Undefined Variable
+error: Undefined variable
   --> tests_failed/assert_template_variable_not_found.hurl:4:33
    |
  4 | header "content-type" equals "{{content_type}}"
-   |                                 ^^^^^^^^^^^^ You must set the variable content_type
+   |                                 ^^^^^^^^^^^^ you must set the variable content_type
    |
 

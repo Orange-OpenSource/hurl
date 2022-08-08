@@ -1,7 +1,7 @@
-error: Decompression Error
+error: Decompression error
   --> tests_failed/assert_content_encoding.hurl:4:1
    |
  4 | ```Hello World!```
-   | ^ Compression unknown is not supported
+   | ^ compression unknown is not supported
    |
 

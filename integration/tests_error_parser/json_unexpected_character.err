@@ -1,7 +1,7 @@
-error: Parsing json
+error: Parsing JSON
   --> tests_error_parser/json_unexpected_character.hurl:2:10
    |
  2 | { "name": x
-   |          ^ json error
+   |          ^ JSON error
    |
 

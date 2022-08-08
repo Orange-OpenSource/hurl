@@ -2,6 +2,6 @@ error: Invalid regex
   --> tests_failed/assert_query_invalid_regex.hurl:4:7
    |
  4 | regex "[x" exists
-   |       ^^^^ Regex expression is not valid
+   |       ^^^^ regex expression is not valid
    |
 

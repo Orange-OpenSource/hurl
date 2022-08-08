@@ -157,7 +157,7 @@ HTTP/1.0 200
             .unwrap();
         assert_eq!(
             std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><failure>Assert Status
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><failure>Assert status code
   --> test.hurl:2:10
    |
  2 | HTTP/1.0 200
@@ -197,7 +197,7 @@ HTTP/1.0 200
             .unwrap();
         assert_eq!(
             std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><error>Http Connection
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><error>HTTP connection
   --> test.hurl:1:5
    |
  1 | GET http://unknown

@@ -36,18 +36,18 @@ impl Error for parser::Error {
 
     fn description(&self) -> String {
         match self.clone().inner {
-            ParseError::Method { .. } => "Parsing Method".to_string(),
-            ParseError::Version { .. } => "Parsing Version".to_string(),
-            ParseError::Status { .. } => "Parsing Status".to_string(),
-            ParseError::Filename { .. } => "Parsing Filename".to_string(),
+            ParseError::Method { .. } => "Parsing method".to_string(),
+            ParseError::Version { .. } => "Parsing version".to_string(),
+            ParseError::Status { .. } => "Parsing status code".to_string(),
+            ParseError::Filename { .. } => "Parsing filename".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),
             ParseError::Space { .. } => "Parsing space".to_string(),
             ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
             ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
-            ParseError::JsonpathExpr { .. } => "Parsing jsonpath expression".to_string(),
-            ParseError::XPathExpr { .. } => "Parsing xpath expression".to_string(),
+            ParseError::JsonpathExpr { .. } => "Parsing JSONPath expression".to_string(),
+            ParseError::XPathExpr { .. } => "Parsing XPath expression".to_string(),
             ParseError::TemplateVariable { .. } => "Parsing template variable".to_string(),
-            ParseError::Json { .. } => "Parsing json".to_string(),
+            ParseError::Json { .. } => "Parsing JSON".to_string(),
             ParseError::Predicate { .. } => "Parsing predicate".to_string(),
             ParseError::PredicateValue { .. } => "Parsing predicate value".to_string(),
             ParseError::RegexExpr { .. } => "Parsing regex".to_string(),
@@ -57,7 +57,7 @@ impl Error for parser::Error {
             ParseError::EscapeChar { .. } => "Parsing escape character".to_string(),
             ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
             ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
-            ParseError::UrlIllegalCharacter(_) => "Parsing url".to_string(),
+            ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             _ => format!("{:?}", self),
         }
     }
@@ -65,13 +65,13 @@ impl Error for parser::Error {
     fn fixme(&self) -> String {
         match self.inner.clone() {
             ParseError::Method { name }
-            => format!("The HTTP method is not valid. {}", did_you_mean(
+            => format!("the HTTP method is not valid. {}", did_you_mean(
                 &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"],
                 name.as_str(),
                 "Available HTTP Methods are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE or PATCH",
             )),
-            ParseError::Version { .. } => "The http version must be 1.0, 1.1, 2 or *".to_string(),
-            ParseError::Status { .. } => "The http status is not valid".to_string(),
+            ParseError::Version { .. } => "HTTP version must be 1.0, 1.1, 2 or *".to_string(),
+            ParseError::Status { .. } => "HTTP status code is not valid".to_string(),
             ParseError::Filename { .. } => "expecting a filename".to_string(),
             ParseError::Expecting { value } => format!("expecting '{}'", value),
             ParseError::Space { .. } => "expecting a space".to_string(),
@@ -87,28 +87,28 @@ impl Error for parser::Error {
                 name.as_str(),
                 "Valid values are Captures or Asserts",
             )),
-            ParseError::JsonpathExpr { .. } => "expecting a jsonpath expression".to_string(),
-            ParseError::XPathExpr { .. } => "expecting a xpath expression".to_string(),
+            ParseError::JsonpathExpr { .. } => "expecting a JSONPath expression".to_string(),
+            ParseError::XPathExpr { .. } => "expecting a XPath expression".to_string(),
             ParseError::TemplateVariable { .. } => "expecting a variable".to_string(),
-            ParseError::Json { .. } => "json error".to_string(),
+            ParseError::Json { .. } => "JSON error".to_string(),
             ParseError::Predicate { .. } => "expecting a predicate".to_string(),
             ParseError::PredicateValue { .. } => "invalid predicate value".to_string(),
-            ParseError::RegexExpr { message } => format!("Invalid Regex expression: {}", message),
-            ParseError::DuplicateSection { .. } => "The section is already defined".to_string(),
+            ParseError::RegexExpr { message } => format!("invalid Regex expression: {}", message),
+            ParseError::DuplicateSection { .. } => "the section is already defined".to_string(),
             ParseError::RequestSection { .. } => {
-                "This is not a valid section for a request".to_string()
+                "this is not a valid section for a request".to_string()
             }
             ParseError::ResponseSection { .. } => {
-                "This is not a valid section for a response".to_string()
+                "this is not a valid section for a response".to_string()
             }
-            ParseError::EscapeChar { .. } => "The escaping sequence is not valid".to_string(),
+            ParseError::EscapeChar { .. } => "the escaping sequence is not valid".to_string(),
             ParseError::InvalidCookieAttribute { .. } => {
-                "The cookie attribute is not valid".to_string()
+                "the cookie attribute is not valid".to_string()
             }
             ParseError::OddNumberOfHexDigits { .. } => {
-                "Expecting an even number of hex digits".to_string()
+                "expecting an even number of hex digits".to_string()
             }
-            ParseError::UrlIllegalCharacter(c) => format!("Illegal character <{}>", c),
+            ParseError::UrlIllegalCharacter(c) => format!("illegal character <{}>", c),
             _ => format!("{:?}", self),
         }
     }

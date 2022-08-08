@@ -1,4 +1,4 @@
-error: Http Connection
+error: HTTP connection
   --> tests_failed/http_connection.hurl:1:5
    |
  1 | GET http://unknown

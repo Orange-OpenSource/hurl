@@ -1,4 +1,4 @@
-error: Assert Header Value
+error: Assert header value
   --> tests_failed/assert_header_value.hurl:3:15
    |
  3 | Content-Type: ???

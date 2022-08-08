@@ -1,4 +1,4 @@
-error: Unrenderable Variable
+error: Unrenderable variable
   --> tests_failed/template_variable_not_renderable.hurl:8:11
    |
  8 | param1: {{list}}
