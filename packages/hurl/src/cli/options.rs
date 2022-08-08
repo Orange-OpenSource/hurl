@@ -30,6 +30,7 @@ use crate::cli;
 use crate::cli::CliError;
 use crate::http::ClientOptions;
 use crate::runner::Value;
+use crate::util::logger::BaseLogger;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -306,7 +307,7 @@ pub fn app(version: &str) -> Command {
         )
 }
 
-pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
+pub fn parse_options(matches: &ArgMatches, logger: &BaseLogger) -> Result<CliOptions, CliError> {
     let cacert_file = match get_string(matches, "cacert_file") {
         None => None,
         Some(filename) => {
@@ -386,9 +387,21 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         OutputType::ResponseBody
     };
-    let progress = has_flag(matches, "progress") || test;
+    let progress = has_flag(matches, "progress");
+    if progress {
+        logger.warning(
+            "--progress option is deprecated and will be removed soon. Please use --test or --json",
+        );
+    }
+    let progress = progress || test;
     let proxy = get_string(matches, "proxy");
-    let summary = has_flag(matches, "summary") || test;
+    let summary = has_flag(matches, "summary");
+    if summary {
+        logger.warning(
+            "--summary option is deprecated and will be removed soon. Please use --test or --json",
+        );
+    }
+    let summary = summary || test;
     let timeout = match get_string(matches, "max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
@@ -474,7 +487,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     let mut variables = HashMap::new();
 
     // use environment variables prefix by HURL_
-    for (env_name, env_value) in std::env::vars() {
+    for (env_name, env_value) in env::vars() {
         if let Some(name) = env_name.strip_prefix("HURL_") {
             let value = cli::parse_variable_value(env_value.as_str())?;
             variables.insert(name.to_string(), value);

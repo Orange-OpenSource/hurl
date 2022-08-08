@@ -256,7 +256,7 @@ fn main() {
         || cli::has_flag(&matches, "interactive");
     let color = cli::output_color(&matches);
     let base_logger = BaseLogger::new(color, verbose);
-    let cli_options = cli::parse_options(&matches);
+    let cli_options = cli::parse_options(&matches, &base_logger);
     let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
 
     let mut filenames = vec![];

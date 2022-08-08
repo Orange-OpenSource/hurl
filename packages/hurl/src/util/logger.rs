@@ -24,6 +24,7 @@ use hurl_core::error::Error;
 pub struct BaseLogger {
     pub info: fn(&str),
     pub debug: fn(&str),
+    pub warning: fn(&str),
     pub error: fn(&str),
 }
 
@@ -33,21 +34,25 @@ impl BaseLogger {
             (true, true) => BaseLogger {
                 info: log_info,
                 debug: log_debug,
+                warning: log_warning,
                 error: log_error,
             },
             (false, true) => BaseLogger {
                 info: log_info,
                 debug: log_debug_no_color,
+                warning: log_warning_no_color,
                 error: log_error_no_color,
             },
             (true, false) => BaseLogger {
                 info: log_info,
                 debug: nop1,
+                warning: log_warning,
                 error: log_error,
             },
             (false, false) => BaseLogger {
                 info: log_info,
                 debug: nop1,
+                warning: log_warning_no_color,
                 error: log_error_no_color,
             },
         }
@@ -59,6 +64,10 @@ impl BaseLogger {
 
     pub fn debug(&self, message: &str) {
         (self.debug)(message)
+    }
+
+    pub fn warning(&self, message: &str) {
+        (self.warning)(message)
     }
 
     pub fn error(&self, message: &str) {
@@ -265,7 +274,7 @@ fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
 }
 
 fn log_method_version_out(line: &str) {
-    eprintln!("> {}", line.green().bold())
+    eprintln!("> {}", line.purple().bold())
 }
 
 fn log_method_version_out_no_color(line: &str) {
