@@ -46,22 +46,13 @@ pub trait Tokenizable {
     fn tokenize(&self) -> Vec<Token>;
 }
 
-fn add_tokens(tokens1: &mut Vec<Token>, tokens2: Vec<Token>) {
-    for token in tokens2 {
-        tokens1.push(token);
-    }
-}
-
 impl Tokenizable for HurlFile {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.entries.iter().flat_map(|e| e.tokenize()).collect(),
-        );
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(&mut self.entries.iter().flat_map(|e| e.tokenize()).collect());
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
@@ -73,9 +64,9 @@ impl Tokenizable for HurlFile {
 impl Tokenizable for Entry {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(&mut tokens, self.request.tokenize());
+        tokens.append(&mut self.request.tokenize());
         if let Some(response) = self.clone().response {
-            add_tokens(&mut tokens, response.tokenize())
+            tokens.append(&mut response.tokenize());
         }
         tokens
     }
@@ -84,28 +75,22 @@ impl Tokenizable for Entry {
 impl Tokenizable for Request {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::Method(self.method.to_string()));
-        add_tokens(&mut tokens, self.space1.tokenize());
-        add_tokens(&mut tokens, self.url.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
-        add_tokens(
-            &mut tokens,
-            self.headers.iter().flat_map(|e| e.tokenize()).collect(),
-        );
-        add_tokens(
-            &mut tokens,
-            self.sections.iter().flat_map(|e| e.tokenize()).collect(),
-        );
+        tokens.append(&mut self.space1.tokenize());
+        tokens.append(&mut self.url.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens.append(&mut self.headers.iter().flat_map(|e| e.tokenize()).collect());
+        tokens.append(&mut self.sections.iter().flat_map(|e| e.tokenize()).collect());
         if let Some(body) = self.clone().body {
-            add_tokens(&mut tokens, body.tokenize())
+            tokens.append(&mut body.tokenize());
         }
         tokens
     }
@@ -114,28 +99,22 @@ impl Tokenizable for Request {
 impl Tokenizable for Response {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.version.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
-        add_tokens(&mut tokens, self.status.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
-        add_tokens(
-            &mut tokens,
-            self.headers.iter().flat_map(|e| e.tokenize()).collect(),
-        );
-        add_tokens(
-            &mut tokens,
-            self.sections.iter().flat_map(|e| e.tokenize()).collect(),
-        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.version.tokenize());
+        tokens.append(&mut self.space1.tokenize());
+        tokens.append(&mut self.status.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens.append(&mut self.headers.iter().flat_map(|e| e.tokenize()).collect());
+        tokens.append(&mut self.sections.iter().flat_map(|e| e.tokenize()).collect());
         if let Some(body) = self.clone().body {
-            add_tokens(&mut tokens, body.tokenize())
+            tokens.append(&mut body.tokenize())
         }
         tokens
     }
@@ -169,16 +148,16 @@ impl Tokenizable for Version {
 impl Tokenizable for Body {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.value.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -212,19 +191,17 @@ impl Tokenizable for Bytes {
 impl Tokenizable for Section {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::SectionHeader(format!("[{}]", self.name())));
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
-        add_tokens(&mut tokens, self.value.tokenize());
-        //        add_tokens(&mut tokens, self.space0.tokenize());
-        //        tokens.push(Token::SectionHeader(format!("[{}]", self.name)));
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens.append(&mut self.value.tokenize());
         tokens
     }
 }
@@ -234,43 +211,25 @@ impl Tokenizable for SectionValue {
         let mut tokens: Vec<Token> = vec![];
         match self {
             SectionValue::Asserts(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::QueryParams(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::BasicAuth(item) => {
                 tokens.append(&mut item.tokenize());
             }
             SectionValue::FormParams(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::MultipartFormData(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::Cookies(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
             SectionValue::Captures(items) => {
-                add_tokens(
-                    &mut tokens,
-                    items.iter().flat_map(|e| e.tokenize()).collect(),
-                );
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
         }
         tokens
@@ -280,9 +239,9 @@ impl Tokenizable for SectionValue {
 impl Tokenizable for Base64 {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("base64,"))];
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::String(self.encoded.to_string()));
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Keyword(String::from(";")));
         tokens
     }
@@ -291,9 +250,9 @@ impl Tokenizable for Base64 {
 impl Tokenizable for Hex {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("hex,"))];
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::String(self.encoded.to_string()));
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Keyword(String::from(";")));
         tokens
     }
@@ -302,9 +261,9 @@ impl Tokenizable for Hex {
 impl Tokenizable for File {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword(String::from("file,"))];
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.filename.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.filename.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Keyword(String::from(";")));
         tokens
     }
@@ -313,20 +272,20 @@ impl Tokenizable for File {
 impl Tokenizable for KeyValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.key.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.key.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
-        add_tokens(&mut tokens, self.space2.tokenize());
-        add_tokens(&mut tokens, self.value.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.space2.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -343,13 +302,13 @@ impl Tokenizable for MultipartParam {
 impl Tokenizable for FileParam {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.key.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.key.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
-        add_tokens(&mut tokens, self.space2.tokenize());
+        tokens.append(&mut self.space2.tokenize());
         tokens.append(&mut self.value.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -372,20 +331,20 @@ impl Tokenizable for FileValue {
 impl Tokenizable for Cookie {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.name.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.name.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
-        add_tokens(&mut tokens, self.space2.tokenize());
-        add_tokens(&mut tokens, self.value.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.space2.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -393,20 +352,20 @@ impl Tokenizable for Cookie {
 impl Tokenizable for Capture {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.name.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.name.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
-        add_tokens(&mut tokens, self.space2.tokenize());
-        add_tokens(&mut tokens, self.query.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.space2.tokenize());
+        tokens.append(&mut self.query.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -414,20 +373,20 @@ impl Tokenizable for Capture {
 impl Tokenizable for Assert {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(
-            &mut tokens,
-            self.line_terminators
+        tokens.append(
+            &mut self
+                .line_terminators
                 .iter()
                 .flat_map(|e| e.tokenize())
                 .collect(),
         );
-        add_tokens(&mut tokens, self.space0.tokenize());
-        add_tokens(&mut tokens, self.query.tokenize());
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space0.tokenize());
+        tokens.append(&mut self.query.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         // TODO reconvert back your first predicate for jsonpath
         // so that you can use your firstX predicate for other query
-        add_tokens(&mut tokens, self.predicate.tokenize());
-        add_tokens(&mut tokens, self.line_terminator0.tokenize());
+        tokens.append(&mut self.predicate.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }
@@ -436,7 +395,7 @@ impl Tokenizable for Query {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = self.value.clone().tokenize();
         if let Some((space, subquery)) = &self.subquery {
-            add_tokens(&mut tokens, space.clone().tokenize());
+            tokens.append(&mut space.clone().tokenize());
             tokens.append(&mut subquery.tokenize());
         }
         tokens
@@ -450,36 +409,36 @@ impl Tokenizable for QueryValue {
             QueryValue::Status {} => tokens.push(Token::QueryType(String::from("status"))),
             QueryValue::Header { space0, name } => {
                 tokens.push(Token::QueryType(String::from("header")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, name.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut name.tokenize());
             }
             QueryValue::Cookie { space0, expr } => {
                 tokens.push(Token::QueryType(String::from("cookie")));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.push(Token::CodeDelimiter("\"".to_string()));
-                add_tokens(&mut tokens, expr.tokenize());
+                tokens.append(&mut expr.tokenize());
                 tokens.push(Token::CodeDelimiter("\"".to_string()));
             }
             QueryValue::Body {} => tokens.push(Token::QueryType(String::from("body"))),
             QueryValue::Xpath { space0, expr } => {
                 tokens.push(Token::QueryType(String::from("xpath")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, expr.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut expr.tokenize());
             }
             QueryValue::Jsonpath { space0, expr } => {
                 tokens.push(Token::QueryType(String::from("jsonpath")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, expr.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut expr.tokenize());
             }
             QueryValue::Regex { space0, value } => {
                 tokens.push(Token::QueryType(String::from("regex")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
             QueryValue::Variable { space0, name } => {
                 tokens.push(Token::QueryType(String::from("variable")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, name.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut name.tokenize());
             }
             QueryValue::Duration {} => tokens.push(Token::QueryType(String::from("duration"))),
             QueryValue::Bytes {} => tokens.push(Token::QueryType(String::from("bytes"))),
@@ -502,9 +461,9 @@ impl Tokenizable for RegexValue {
 impl Tokenizable for CookiePath {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(&mut tokens, self.name.tokenize());
+        tokens.append(&mut self.name.tokenize());
         if let Some(attribute) = self.attribute.clone() {
-            add_tokens(&mut tokens, attribute.tokenize());
+            tokens.append(&mut attribute.tokenize());
         }
         tokens
     }
@@ -513,9 +472,9 @@ impl Tokenizable for CookiePath {
 impl Tokenizable for CookieAttribute {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::CodeDelimiter("[".to_string())];
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::String(self.name.value()));
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::CodeDelimiter("]".to_string()));
         tokens
     }
@@ -527,8 +486,8 @@ impl Tokenizable for Subquery {
         match self.value.clone() {
             SubqueryValue::Regex { space0, value } => {
                 tokens.push(Token::QueryType(String::from("regex")));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
             SubqueryValue::Count { .. } => {
                 tokens.push(Token::QueryType(String::from("count")));
@@ -543,9 +502,9 @@ impl Tokenizable for Predicate {
         let mut tokens: Vec<Token> = vec![];
         if self.not {
             tokens.push(Token::Not(String::from("not")));
-            add_tokens(&mut tokens, self.space0.tokenize());
+            tokens.append(&mut self.space0.tokenize());
         }
-        add_tokens(&mut tokens, self.predicate_func.tokenize());
+        tokens.append(&mut self.predicate_func.tokenize());
         tokens
     }
 }
@@ -562,63 +521,63 @@ impl Tokenizable for PredicateFuncValue {
         match self {
             PredicateFuncValue::Equal { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::NotEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::GreaterThan { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::GreaterThanOrEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::LessThan { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::LessThanOrEqual { space0, value, .. } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::CountEqual { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::StartWith { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::EndWith { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Contain { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Include { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
+                tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
             PredicateFuncValue::Match { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
-                add_tokens(&mut tokens, space0.tokenize());
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
             }
 
             PredicateFuncValue::IsInteger {} => {
@@ -701,7 +660,7 @@ impl Tokenizable for Template {
             ));
         }
         for element in self.elements.clone() {
-            add_tokens(&mut tokens, element.tokenize());
+            tokens.append(&mut element.tokenize());
         }
 
         if self.quotes {
@@ -721,7 +680,7 @@ impl Tokenizable for TemplateElement {
             }
             TemplateElement::Expression(value) => {
                 let mut tokens: Vec<Token> = vec![];
-                add_tokens(&mut tokens, value.tokenize());
+                tokens.append(&mut value.tokenize());
                 tokens
             }
         }
@@ -731,9 +690,9 @@ impl Tokenizable for TemplateElement {
 impl Tokenizable for Expr {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::CodeDelimiter(String::from("{{"))];
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::CodeVariable(self.variable.name.clone()));
-        add_tokens(&mut tokens, self.space1.tokenize());
+        tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::CodeDelimiter(String::from("}}")));
         tokens
     }
@@ -749,11 +708,11 @@ impl Tokenizable for Regex {
 impl Tokenizable for LineTerminator {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        add_tokens(&mut tokens, self.space0.tokenize());
+        tokens.append(&mut self.space0.tokenize());
         if let Some(comment) = self.clone().comment {
-            add_tokens(&mut tokens, comment.tokenize());
+            tokens.append(&mut comment.tokenize());
         }
-        add_tokens(&mut tokens, self.newline.tokenize());
+        tokens.append(&mut self.newline.tokenize());
         tokens
     }
 }
