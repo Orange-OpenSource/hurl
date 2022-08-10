@@ -146,7 +146,7 @@ fn eval_implicit_body_asserts(
 ) -> AssertResult {
     match &spec_body.value {
         Bytes::Json { value } => {
-            let expected = match eval_json_value(value.clone(), variables) {
+            let expected = match eval_json_value(value, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };
@@ -263,7 +263,7 @@ fn eval_implicit_body_asserts(
             }
         }
         Bytes::File { .. } => {
-            let expected = match eval_body(spec_body.clone(), variables, context_dir) {
+            let expected = match eval_body(spec_body, variables, context_dir) {
                 Ok(body) => Ok(Value::Bytes(body.bytes())),
                 Err(e) => Err(e),
             };

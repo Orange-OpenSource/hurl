@@ -29,34 +29,34 @@ use crate::http;
 use crate::http::ContextDir;
 
 pub fn eval_body(
-    body: Body,
+    body: &Body,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
-    eval_bytes(body.value, variables, context_dir)
+    eval_bytes(&body.value, variables, context_dir)
 }
 
 pub fn eval_bytes(
-    bytes: Bytes,
+    bytes: &Bytes,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
     match bytes {
         // Body::Text
         Bytes::RawString(RawString { value, .. }) => {
-            let value = eval_template(&value, variables)?;
+            let value = eval_template(value, variables)?;
             Ok(http::Body::Text(value))
         }
-        Bytes::Xml { value, .. } => Ok(http::Body::Text(value)),
+        Bytes::Xml { value, .. } => Ok(http::Body::Text(value.clone())),
         Bytes::Json { value, .. } => {
             let value = eval_json_value(value, variables)?;
             Ok(http::Body::Text(value))
         }
-        Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value)),
-        Bytes::Hex(Hex { value, .. }) => Ok(http::Body::Binary(value)),
+        Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value.clone())),
+        Bytes::Hex(Hex { value, .. }) => Ok(http::Body::Binary(value.clone())),
         Bytes::File(File { filename, .. }) => {
-            let value = eval_file(&filename, context_dir)?;
-            Ok(http::Body::File(value, filename.value))
+            let value = eval_file(filename, context_dir)?;
+            Ok(http::Body::File(value, filename.value.clone()))
         }
     }
 }
@@ -114,7 +114,7 @@ mod tests {
         let file_root = Path::new("");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         assert_eq!(
-            eval_bytes(bytes, &variables, &context_dir).unwrap(),
+            eval_bytes(&bytes, &variables, &context_dir).unwrap(),
             http::Body::File(b"Hello World!".to_vec(), "tests/data.bin".to_string())
         );
     }
@@ -141,7 +141,7 @@ mod tests {
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("file_root");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
-        let error = eval_bytes(bytes, &variables, &context_dir).err().unwrap();
+        let error = eval_bytes(&bytes, &variables, &context_dir).err().unwrap();
         assert_eq!(
             error.inner,
             RunnerError::FileReadAccess {

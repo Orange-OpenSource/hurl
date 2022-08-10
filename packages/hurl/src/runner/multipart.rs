@@ -31,14 +31,14 @@ use super::template::eval_template;
 use super::value::Value;
 
 pub fn eval_multipart_param(
-    multipart_param: MultipartParam,
+    multipart_param: &MultipartParam,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
 ) -> Result<http::MultipartParam, Error> {
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
-            let name = key.value;
-            let value = eval_template(&value, variables)?;
+            let name = key.value.clone();
+            let value = eval_template(value, variables)?;
             Ok(http::MultipartParam::Param(http::Param { name, value }))
         }
         MultipartParam::FileParam(param) => {
@@ -49,10 +49,10 @@ pub fn eval_multipart_param(
 }
 
 pub fn eval_file_param(
-    file_param: FileParam,
+    file_param: &FileParam,
     context_dir: &ContextDir,
 ) -> Result<http::FileParam, Error> {
-    let name = file_param.key.value;
+    let name = file_param.key.value.clone();
     let filename = file_param.value.filename.clone();
     let data = eval_file(&filename, context_dir)?;
     let content_type = file_value_content_type(&file_param.value);
@@ -110,7 +110,7 @@ mod tests {
         let file_root = Path::new("tests");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         let param = eval_file_param(
-            FileParam {
+            &FileParam {
                 line_terminators: vec![],
                 space0: whitespace(),
                 key: EncodedString {

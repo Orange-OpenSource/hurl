@@ -47,44 +47,44 @@ pub struct Request {
 }
 
 impl Request {
-    pub fn querystring_params(self) -> Vec<KeyValue> {
-        for section in self.sections {
-            if let SectionValue::QueryParams(params) = section.value {
-                return params;
+    pub fn querystring_params(&self) -> Vec<KeyValue> {
+        for section in &self.sections {
+            if let SectionValue::QueryParams(params) = &section.value {
+                return params.clone();
             }
         }
         return vec![];
     }
-    pub fn form_params(self) -> Vec<KeyValue> {
-        for section in self.sections {
-            if let SectionValue::FormParams(params) = section.value {
-                return params;
+    pub fn form_params(&self) -> Vec<KeyValue> {
+        for section in &self.sections {
+            if let SectionValue::FormParams(params) = &section.value {
+                return params.clone();
             }
         }
         return vec![];
     }
-    pub fn multipart_form_data(self) -> Vec<MultipartParam> {
-        for section in self.sections {
-            if let SectionValue::MultipartFormData(params) = section.value {
-                return params;
-            }
-        }
-        return vec![];
-    }
-
-    pub fn cookies(self) -> Vec<Cookie> {
-        for section in self.sections {
-            if let SectionValue::Cookies(cookies) = section.value {
-                return cookies;
+    pub fn multipart_form_data(&self) -> Vec<MultipartParam> {
+        for section in &self.sections {
+            if let SectionValue::MultipartFormData(params) = &section.value {
+                return params.clone();
             }
         }
         return vec![];
     }
 
-    pub fn basic_auth(self) -> Option<KeyValue> {
-        for section in self.sections {
-            if let SectionValue::BasicAuth(kv) = section.value {
-                return Some(kv);
+    pub fn cookies(&self) -> Vec<Cookie> {
+        for section in &self.sections {
+            if let SectionValue::Cookies(cookies) = &section.value {
+                return cookies.clone();
+            }
+        }
+        return vec![];
+    }
+
+    pub fn basic_auth(&self) -> Option<KeyValue> {
+        for section in &self.sections {
+            if let SectionValue::BasicAuth(kv) = &section.value {
+                return Some(kv.clone());
             }
         }
         None

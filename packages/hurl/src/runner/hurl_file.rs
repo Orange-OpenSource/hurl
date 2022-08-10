@@ -122,7 +122,7 @@ pub fn run(
         }
 
         let entry_results = entry::run(
-            entry,
+            &entry,
             entry_index,
             http_client,
             &mut variables,
@@ -131,9 +131,9 @@ pub fn run(
             logger,
         );
 
-        for entry_result in entry_results.clone() {
-            for e in entry_result.errors.clone() {
-                logger.error_rich(&e);
+        for entry_result in &entry_results {
+            for e in &entry_result.errors {
+                logger.error_rich(e);
             }
             entries.push(entry_result.clone());
         }
@@ -146,7 +146,7 @@ pub fn run(
     let time_in_ms = start.elapsed().as_millis();
     let success = entries
         .iter()
-        .flat_map(|e| e.errors.clone())
+        .flat_map(|e| e.errors.iter())
         .next()
         .is_none();
 

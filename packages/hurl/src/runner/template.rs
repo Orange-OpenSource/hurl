@@ -44,20 +44,20 @@ fn eval_template_element(
 ) -> Result<String, Error> {
     match template_element {
         TemplateElement::String { value, .. } => Ok(value.clone()),
-        TemplateElement::Expression(expr) => eval_expression(expr.clone(), variables),
+        TemplateElement::Expression(expr) => eval_expression(expr, variables),
     }
 }
 
-pub fn eval_expression(expr: Expr, variables: &HashMap<String, Value>) -> Result<String, Error> {
-    let source_info = expr.variable.source_info;
-    let name = expr.variable.name;
+pub fn eval_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String, Error> {
+    let source_info = &expr.variable.source_info;
+    let name = &expr.variable.name;
     match variables.get(name.as_str()) {
         Some(value) => {
             if value.is_renderable() {
                 Ok(value.clone().to_string())
             } else {
                 Err(Error {
-                    source_info,
+                    source_info: source_info.clone(),
                     inner: RunnerError::UnrenderableVariable {
                         value: value.to_string(),
                     },
@@ -66,8 +66,8 @@ pub fn eval_expression(expr: Expr, variables: &HashMap<String, Value>) -> Result
             }
         }
         _ => Err(Error {
-            source_info,
-            inner: RunnerError::TemplateVariableNotDefined { name },
+            source_info: source_info.clone(),
+            inner: RunnerError::TemplateVariableNotDefined { name: name.clone() },
             assert: false,
         }),
     }

@@ -49,7 +49,7 @@ use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
 ////    });
 /// ```
 pub fn run(
-    entry: Entry,
+    entry: &Entry,
     entry_index: usize,
     http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
@@ -57,11 +57,7 @@ pub fn run(
     client_options: &ClientOptions,
     logger: &Logger,
 ) -> Vec<EntryResult> {
-    let http_request = match eval_request(
-        entry.request.clone(),
-        variables,
-        &runner_options.context_dir,
-    ) {
+    let http_request = match eval_request(&entry.request, variables, &runner_options.context_dir) {
         Ok(r) => r,
         Err(error) => {
             return vec![EntryResult {
@@ -85,14 +81,14 @@ pub fn run(
     // with cookie storage
     //
     use std::str::FromStr;
-    if let Some(s) = cookie_storage_set(entry.request.clone()) {
+    if let Some(s) = cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(&cookie, client_options);
         } else {
             logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
         }
     }
-    if cookie_storage_clear(entry.request.clone()) {
+    if cookie_storage_clear(&entry.request) {
         http_client.clear_cookie_storage(client_options);
     }
 
@@ -122,8 +118,8 @@ pub fn run(
                 asserts: vec![],
                 errors: vec![Error {
                     source_info: SourceInfo {
-                        start: entry.request.url.source_info.start,
-                        end: entry.request.url.source_info.end,
+                        start: entry.request.url.source_info.start.clone(),
+                        end: entry.request.url.source_info.end.clone(),
                     },
                     inner: runner_error,
                     assert: false,

@@ -30,70 +30,75 @@ use super::template::eval_template;
 use super::value::Value;
 use crate::runner::multipart::eval_multipart_param;
 
+/// Transforms an AST request to a spec request given a set of variables.
+///
+/// # Arguments
+/// * `request` - An AST request
+/// * `variables` - A set of variables for templates/expressions.
+/// * `context_dir` - The context directory
 pub fn eval_request(
-    request: Request,
+    request: &Request,
     variables: &HashMap<String, Value>,
     context_dir: &ContextDir,
 ) -> Result<http::RequestSpec, Error> {
-    let method = eval_method(request.method.clone());
-
+    let method = eval_method(&request.method);
     let url = eval_template(&request.url, variables)?;
 
-    // headers
+    // Headers
     let mut headers: Vec<http::Header> = vec![];
-    for header in request.clone().headers {
-        let name = header.key.value;
+    for header in &request.headers {
+        let name = header.key.value.clone();
         let value = eval_template(&header.value, variables)?;
-        headers.push(http::Header { name, value });
+        let header = http::Header { name, value };
+        headers.push(header);
     }
 
-    if let Some(kv) = request.clone().basic_auth() {
+    // Basic auth
+    if let Some(kv) = &request.basic_auth() {
         let value = eval_template(&kv.value, variables)?;
         let user_password = format!("{}:{}", kv.key.value, value);
         let authorization = base64::encode(user_password.as_bytes());
 
         let name = "Authorization".to_string();
         let value = format!("Basic {}", authorization);
-        headers.push(http::Header { name, value });
+        let header = http::Header { name, value };
+        headers.push(header);
     }
 
+    // Query string params
     let mut querystring: Vec<http::Param> = vec![];
-    for param in request.clone().querystring_params() {
-        let name = param.key.value;
+    for param in &request.querystring_params() {
+        let name = param.key.value.clone();
         let value = eval_template(&param.value, variables)?;
-        querystring.push(http::Param { name, value });
+        let param = http::Param { name, value };
+        querystring.push(param);
     }
 
+    // Form params
     let mut form: Vec<http::Param> = vec![];
-    for param in request.clone().form_params() {
-        let name = param.key.value;
+    for param in &request.form_params() {
+        let name = param.key.value.clone();
         let value = eval_template(&param.value, variables)?;
-        form.push(http::Param { name, value });
+        let param = http::Param { name, value };
+        form.push(param);
     }
-    //        if !self.clone().form_params().is_empty() {
-    //            headers.push(http::ast::Header {
-    //                name: String::from("Content-Type"),
-    //                value: String::from("application/x-www-form-urlencoded"),
-    //            });
-    //        }
 
+    // Cookies
     let mut cookies = vec![];
-    for cookie in request.clone().cookies() {
+    for cookie in &request.cookies() {
         let value = eval_template(&cookie.value, variables)?;
-        let cookie = http::RequestCookie {
-            name: cookie.clone().name.value,
-            value,
-        };
+        let name = cookie.name.value.clone();
+        let cookie = http::RequestCookie { name, value };
         cookies.push(cookie);
     }
 
-    let body = match request.clone().body {
+    let body = match &request.body {
         Some(body) => eval_body(body, variables, context_dir)?,
         None => http::Body::Binary(vec![]),
     };
 
     let mut multipart = vec![];
-    for multipart_param in request.clone().multipart_form_data() {
+    for multipart_param in &request.multipart_form_data() {
         let param = eval_multipart_param(multipart_param, variables, context_dir)?;
         multipart.push(param);
     }
@@ -118,18 +123,6 @@ pub fn eval_request(
         None
     };
 
-    // add implicit content type
-    //        if self.content_type().is_none() {
-    //            if let Some(body) = self.body {
-    //                if let Bytes::Json { .. } = body.value {
-    //                    headers.push(http::ast::Header {
-    //                        name: String::from("Content-Type"),
-    //                        value: String::from("application/json"),
-    //                    });
-    //                }
-    //            }
-    //        }
-
     Ok(http::RequestSpec {
         method,
         url,
@@ -143,22 +136,11 @@ pub fn eval_request(
     })
 }
 
-// pub fn get_content_type(request: Request) -> Option<Template> {
-//     for header in request.headers.clone() {
-//         if header.key.value.to_lowercase().as_str() == "content-type" {
-//             return Some(header.value);
-//         }
-//     }
-//     None
-// }
-
-///
-/// experimental feature
+/// Experimental feature
 /// @cookie_storage_add
-///
-pub fn cookie_storage_set(request: Request) -> Option<String> {
+pub fn cookie_storage_set(request: &Request) -> Option<String> {
     for line_terminator in request.line_terminators.iter() {
-        if let Some(s) = line_terminator.comment.clone() {
+        if let Some(s) = &line_terminator.comment {
             if s.value.contains("@cookie_storage_set:") {
                 let index = "#@cookie_storage_set:".to_string().len();
                 let value = &s.value[index..s.value.len()].to_string().trim().to_string();
@@ -169,13 +151,11 @@ pub fn cookie_storage_set(request: Request) -> Option<String> {
     None
 }
 
-///
-/// experimental feature
+/// Experimental feature
 /// @cookie_storage_clear
-///
-pub fn cookie_storage_clear(request: Request) -> bool {
+pub fn cookie_storage_clear(request: &Request) -> bool {
     for line_terminator in request.line_terminators.iter() {
-        if let Some(s) = line_terminator.comment.clone() {
+        if let Some(s) = &line_terminator.comment {
             if s.value.contains("@cookie_storage_clear") {
                 return true;
             }
@@ -184,7 +164,7 @@ pub fn cookie_storage_clear(request: Request) -> bool {
     false
 }
 
-fn eval_method(method: Method) -> http::Method {
+fn eval_method(method: &Method) -> http::Method {
     match method {
         Method::Get => http::Method::Get,
         Method::Head => http::Method::Head,
@@ -339,7 +319,7 @@ mod tests {
     #[test]
     pub fn test_error_variable() {
         let variables = HashMap::new();
-        let error = eval_request(hello_request(), &variables, &ContextDir::default())
+        let error = eval_request(&hello_request(), &variables, &ContextDir::default())
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 15));
@@ -359,7 +339,7 @@ mod tests {
             Value::String(String::from("http://localhost:8000")),
         );
         let http_request =
-            eval_request(hello_request(), &variables, &ContextDir::default()).unwrap();
+            eval_request(&hello_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::hello_http_request());
     }
 
@@ -371,20 +351,20 @@ mod tests {
             Value::String(String::from("value1")),
         );
         let http_request =
-            eval_request(query_request(), &variables, &ContextDir::default()).unwrap();
+            eval_request(&query_request(), &variables, &ContextDir::default()).unwrap();
         assert_eq!(http_request, http::query_http_request());
     }
 
     #[test]
     fn clear_cookie_store() {
-        assert!(!cookie_storage_clear(hello_request()));
+        assert!(!cookie_storage_clear(&hello_request()));
 
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
             newline: whitespace(),
         };
-        assert!(cookie_storage_clear(Request {
+        assert!(cookie_storage_clear(&Request {
             line_terminators: vec![LineTerminator {
                 space0: whitespace(),
                 comment: Some(Comment {
@@ -413,7 +393,7 @@ mod tests {
 
     #[test]
     fn add_cookie_in_storage() {
-        assert_eq!(None, cookie_storage_set(hello_request()));
+        assert_eq!(None, cookie_storage_set(&hello_request()));
 
         let line_terminator = LineTerminator {
             space0: whitespace(),
@@ -422,7 +402,7 @@ mod tests {
         };
         assert_eq!(
             Some("localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA".to_string()),
-            cookie_storage_set(Request {
+            cookie_storage_set(&Request {
                 line_terminators: vec![LineTerminator {
                     space0: whitespace(),
                     comment: Some(Comment {
