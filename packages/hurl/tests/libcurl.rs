@@ -29,15 +29,10 @@ pub fn new_header(name: &str, value: &str) -> Header {
     }
 }
 
-fn default_client() -> Client {
-    let options = ClientOptions::default();
-    Client::init(options)
-}
-
-fn default_get_request(url: String) -> RequestSpec {
+fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {
         method: Method::Get,
-        url,
+        url: url.to_string(),
         headers: vec![],
         querystring: vec![],
         form: vec![],
@@ -52,15 +47,16 @@ fn default_get_request(url: String) -> RequestSpec {
 
 #[test]
 fn test_hello() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://localhost:8000/hello".to_string());
+    let request_spec = default_get_request("http://localhost:8000/hello");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/hello'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/hello".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -95,7 +91,8 @@ fn test_hello() {
 
 #[test]
 fn test_put() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Put,
@@ -109,11 +106,11 @@ fn test_put() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/put' -X PUT".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "PUT".to_string());
     assert_eq!(request.url, "http://localhost:8000/put".to_string());
     assert!(request.headers.contains(&Header {
@@ -131,7 +128,8 @@ fn test_put() {
 
 #[test]
 fn test_patch() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Patch,
@@ -158,11 +156,11 @@ fn test_patch() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/patch/file.txt' -X PATCH -H 'Host: www.example.com' -H 'Content-Type: application/example' -H 'If-Match: \"e0023aa4e\"'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "PATCH".to_string());
     assert_eq!(
         request.url,
@@ -187,7 +185,8 @@ fn test_patch() {
 
 #[test]
 fn test_custom_headers() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Get,
@@ -206,13 +205,13 @@ fn test_custom_headers() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
-    assert!(client.options.curl_args().is_empty());
+    assert!(options.curl_args().is_empty());
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/custom-headers' -H 'Fruit: Raspberry' -H 'Fruit: Apple' -H 'Fruit: Banana' -H 'Fruit: Grape' -H 'Color: Green'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(
         request.url,
@@ -232,7 +231,8 @@ fn test_custom_headers() {
 
 #[test]
 fn test_querystring_params() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Get,
@@ -263,10 +263,10 @@ fn test_querystring_params() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -281,7 +281,8 @@ fn test_querystring_params() {
 
 #[test]
 fn test_form_params() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Post,
@@ -320,11 +321,11 @@ fn test_form_params() {
         content_type: Some("application/x-www-form-urlencoded".to_string()),
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/form-params' --data 'param1=value1' --data 'param2=' --data 'param3=a%3Db' --data 'param4=a%253db' --data 'values[0]=0' --data 'values[1]=1'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "POST".to_string());
     assert_eq!(request.url, "http://localhost:8000/form-params".to_string());
     assert!(request.headers.contains(&Header {
@@ -336,8 +337,8 @@ fn test_form_params() {
     assert!(response.body.is_empty());
 
     // make sure you can reuse client for other request
-    let request = default_get_request("http://localhost:8000/hello".to_string());
-    let (request, response) = client.execute(&request, &logger).unwrap();
+    let request = default_get_request("http://localhost:8000/hello");
+    let (request, response) = client.execute(&request, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/hello".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -351,10 +352,11 @@ fn test_form_params() {
 
 #[test]
 fn test_redirect() {
-    let request_spec = default_get_request("http://localhost:8000/redirect".to_string());
+    let request_spec = default_get_request("http://localhost:8000/redirect");
     let logger = Logger::new(false, false, "", "");
-    let mut client = default_client();
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/redirect".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -369,21 +371,21 @@ fn test_redirect() {
 
 #[test]
 fn test_follow_location() {
-    let request_spec = default_get_request("http://localhost:8000/redirect".to_string());
+    let request_spec = default_get_request("http://localhost:8000/redirect");
     let logger = Logger::new(false, false, "", "");
     let options = ClientOptions {
         follow_location: true,
         ..Default::default()
     };
-    let mut client = Client::init(options);
-    assert_eq!(client.options.curl_args(), vec!["-L".to_string()]);
+    let mut client = Client::new(&options);
+    assert_eq!(options.curl_args(), vec!["-L".to_string()]);
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/redirect' -L".to_string()
     );
 
     let calls = client
-        .execute_with_redirect(&request_spec, &logger)
+        .execute_with_redirect(&request_spec, &options, &logger)
         .unwrap();
     assert_eq!(calls.len(), 2);
 
@@ -406,8 +408,10 @@ fn test_follow_location() {
     assert_eq!(client.redirect_count, 1);
 
     // make sure that the redirect count is reset to 0
-    let request = default_get_request("http://localhost:8000/hello".to_string());
-    let calls = client.execute_with_redirect(&request, &logger).unwrap();
+    let request = default_get_request("http://localhost:8000/hello");
+    let calls = client
+        .execute_with_redirect(&request, &options, &logger)
+        .unwrap();
     let (_, response) = calls.get(0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
@@ -421,27 +425,27 @@ fn test_max_redirect() {
         max_redirect: Some(10),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
 
-    let request_spec = default_get_request("http://localhost:8000/redirect/15".to_string());
+    let request_spec = default_get_request("http://localhost:8000/redirect/15");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/redirect/15' -L --max-redirs 10".to_string()
     );
     let error = client
-        .execute_with_redirect(&request_spec, &logger)
+        .execute_with_redirect(&request_spec, &options, &logger)
         .err()
         .unwrap();
     assert_eq!(error, HttpError::TooManyRedirect);
 
-    let request_spec = default_get_request("http://localhost:8000/redirect/8".to_string());
+    let request_spec = default_get_request("http://localhost:8000/redirect/8");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/redirect/8' -L --max-redirs 10".to_string()
     );
     let calls = client
-        .execute_with_redirect(&request_spec, &logger)
+        .execute_with_redirect(&request_spec, &options, &logger)
         .unwrap();
     let (request, response) = calls.last().unwrap();
     assert_eq!(request.url, "http://localhost:8000/redirect/0".to_string());
@@ -455,7 +459,8 @@ fn test_max_redirect() {
 
 #[test]
 fn test_multipart_form_data() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Post,
@@ -492,11 +497,11 @@ fn test_multipart_form_data() {
         content_type: Some("multipart/form-data".to_string()),
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/multipart-form-data' -F 'key1=value1' -F 'upload1=@data.txt;type=text/plain' -F 'upload2=@data.html;type=text/html' -F 'upload3=@data.txt;type=text/html'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Content-Length".to_string(),
         value: "627".to_string(),
@@ -505,8 +510,8 @@ fn test_multipart_form_data() {
     assert!(response.body.is_empty());
 
     // make sure you can reuse client for other request
-    let request_spec = default_get_request("http://localhost:8000/hello".to_string());
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let request_spec = default_get_request("http://localhost:8000/hello");
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
@@ -518,7 +523,8 @@ fn test_multipart_form_data() {
 
 #[test]
 fn test_post_bytes() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Post,
@@ -532,10 +538,10 @@ fn test_post_bytes() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/post-base64' -H 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Content-Length".to_string(),
         value: "12".to_string(),
@@ -549,7 +555,8 @@ fn test_post_bytes() {
 
 #[test]
 fn test_expect() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Post,
@@ -566,11 +573,11 @@ fn test_expect() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/expect' -H 'Expect: 100-continue' -H 'Content-Type:' --data 'data'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Expect".to_string(),
         value: "100-continue".to_string(),
@@ -586,7 +593,7 @@ fn test_basic_authentication() {
         user: Some("bob@email.com:secret".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Get,
@@ -600,11 +607,11 @@ fn test_basic_authentication() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/basic-authentication' --user 'bob@email.com:secret'"
             .to_string()
     );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
@@ -613,7 +620,8 @@ fn test_basic_authentication() {
     assert_eq!(response.version, Version::Http10);
     assert_eq!(response.body, b"You are authenticated".to_vec());
 
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let request_spec = RequestSpec {
         method: Method::Get,
         url: "http://bob%40email.com:secret@localhost:8000/basic-authentication".to_string(),
@@ -629,7 +637,7 @@ fn test_basic_authentication() {
         request_spec.curl_args(&ContextDir::default()),
         vec!["'http://bob%40email.com:secret@localhost:8000/basic-authentication'".to_string()]
     );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
@@ -645,10 +653,10 @@ fn test_cacert() {
         cacert_file: Some("tests/cert.pem".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("https://localhost:8001/hello".to_string());
-    let (_, response) = client.execute(&request_spec, &logger).unwrap();
+    let request_spec = default_get_request("https://localhost:8001/hello");
+    let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
 
@@ -656,10 +664,14 @@ fn test_cacert() {
 
 #[test]
 fn test_error_could_not_resolve_host() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request = default_get_request("http://unknown".to_string());
-    let error = client.execute(&request, &logger).err().unwrap();
+    let request_spec = default_get_request("http://unknown");
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -675,10 +687,14 @@ fn test_error_could_not_resolve_host() {
 
 #[test]
 fn test_error_fail_to_connect() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://localhost:9999".to_string());
-    let error = client.execute(&request_spec, &logger).err().unwrap();
+    let request_spec = default_get_request("http://localhost:9999");
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -695,9 +711,9 @@ fn test_error_fail_to_connect() {
         proxy: Some("localhost:9999".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
-    let request = default_get_request("http://localhost:8000/hello".to_string());
-    let error = client.execute(&request, &logger).err().unwrap();
+    let mut client = Client::new(&options);
+    let request = default_get_request("http://localhost:8000/hello");
+    let error = client.execute(&request, &options, &logger).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -718,10 +734,13 @@ fn test_error_could_not_resolve_proxy_name() {
         proxy: Some("unknown".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://localhost:8000/hello".to_string());
-    let error = client.execute(&request_spec, &logger).err().unwrap();
+    let request_spec = default_get_request("http://localhost:8000/hello");
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -738,10 +757,13 @@ fn test_error_could_not_resolve_proxy_name() {
 #[test]
 fn test_error_ssl() {
     let options = ClientOptions::default();
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("https://localhost:8001/hello".to_string());
-    let error = client.execute(&request_spec, &logger).err().unwrap();
+    let request_spec = default_get_request("https://localhost:8001/hello");
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     if let HttpError::Libcurl {
         code,
         description,
@@ -768,10 +790,13 @@ fn test_timeout() {
         timeout: Duration::from_millis(100),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://localhost:8000/timeout".to_string());
-    let error = client.execute(&request_spec, &logger).err().unwrap();
+    let request_spec = default_get_request("http://localhost:8000/timeout");
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -791,7 +816,7 @@ fn test_accept_encoding() {
         compressed: true,
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
 
     let request_spec = RequestSpec {
@@ -805,7 +830,7 @@ fn test_accept_encoding() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Accept-Encoding".to_string(),
         value: "gzip, deflate, br".to_string(),
@@ -823,14 +848,17 @@ fn test_connect_timeout() {
         connect_timeout: Duration::from_secs(1),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://10.0.0.0".to_string());
+    let request_spec = default_get_request("http://10.0.0.0");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://10.0.0.0' --connect-timeout 1".to_string()
     );
-    let error = client.execute(&request_spec, &logger).err().unwrap();
+    let error = client
+        .execute(&request_spec, &options, &logger)
+        .err()
+        .unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
         code,
@@ -860,7 +888,8 @@ fn test_connect_timeout() {
 
 #[test]
 fn test_cookie() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Get,
@@ -877,14 +906,14 @@ fn test_cookie() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/cookies/set-request-cookie1-valueA' --cookie 'cookie1=valueA'"
             .to_string()
     );
 
     //assert_eq!(request.cookies(), vec!["cookie1=valueA".to_string(),]);
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "cookie1=valueA".to_string(),
@@ -903,13 +932,14 @@ fn test_cookie() {
         body: Body::Binary(vec![]),
         content_type: None,
     };
-    let (_request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (_request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
 
 #[test]
 fn test_multiple_request_cookies() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec = RequestSpec {
         method: Method::Get,
@@ -936,11 +966,11 @@ fn test_multiple_request_cookies() {
         content_type: None,
     };
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/cookies/set-multiple-request-cookies' --cookie 'user1=Bob; user2=Bill; user3=Bruce'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "user1=Bob; user2=Bill; user3=Bruce".to_string(),
@@ -951,11 +981,12 @@ fn test_multiple_request_cookies() {
 
 #[test]
 fn test_cookie_storage() {
-    let mut client = default_client();
+    let options = ClientOptions::default();
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
     let request_spec =
-        default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA".to_string());
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+        default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA");
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(
         request.url,
         "http://localhost:8000/cookies/set-session-cookie2-valueA".to_string()
@@ -978,10 +1009,9 @@ fn test_cookie_storage() {
         }
     );
 
-    let request_spec = default_get_request(
-        "http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string(),
-    );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "cookie2=valueA".to_string(),
@@ -996,17 +1026,16 @@ fn test_cookie_file() {
         cookie_input_file: Some("tests/cookies.txt".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request(
-        "http://localhost:8000/cookies/assert-that-cookie2-is-valueA".to_string(),
-    );
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA' --cookie tests/cookies.txt".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(
         request.url,
         "http://localhost:8000/cookies/assert-that-cookie2-is-valueA"
@@ -1031,14 +1060,14 @@ fn test_proxy() {
         proxy: Some("localhost:8888".to_string()),
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    let request_spec = default_get_request("http://localhost:8000/proxy".to_string());
+    let request_spec = default_get_request("http://localhost:8000/proxy");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'http://localhost:8000/proxy' --proxy 'localhost:8888'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.url, "http://localhost:8000/proxy");
     assert_eq!(response.status, 200);
 }
@@ -1051,16 +1080,16 @@ fn test_insecure() {
         insecure: true,
         ..Default::default()
     };
-    let mut client = Client::init(options);
+    let mut client = Client::new(&options);
     let logger = Logger::new(false, false, "", "");
-    assert_eq!(client.options.curl_args(), vec!["--insecure".to_string()]);
-    let request_spec = default_get_request("https://localhost:8001/hello".to_string());
+    assert_eq!(options.curl_args(), vec!["--insecure".to_string()]);
+    let request_spec = default_get_request("https://localhost:8001/hello");
     assert_eq!(
-        client.curl_command_line(&request_spec),
+        client.curl_command_line(&request_spec, &options),
         "curl 'https://localhost:8001/hello' --insecure".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &logger).unwrap();
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.url, "https://localhost:8001/hello");
     assert_eq!(response.status, 200);
 }

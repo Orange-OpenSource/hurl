@@ -33,11 +33,11 @@ fn test_hurl_file() {
     let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
-    let options = http::ClientOptions::default();
-    let mut client = http::Client::init(options);
+    let client_options = http::ClientOptions::default();
+    let mut client = http::Client::new(&client_options);
     let logger = Logger::new(false, false, filename, &content);
 
-    let options = RunnerOptions {
+    let runner_options = RunnerOptions {
         fail_fast: false,
         variables,
         to_entry: None,
@@ -48,7 +48,14 @@ fn test_hurl_file() {
         post_entry: || true,
     };
 
-    let _hurl_log = runner::run(&hurl_file, filename, &mut client, &options, &logger);
+    let _hurl_log = runner::run(
+        &hurl_file,
+        filename,
+        &mut client,
+        &runner_options,
+        &client_options,
+        &logger,
+    );
 }
 
 #[cfg(test)]
@@ -114,8 +121,8 @@ fn hello_request() -> Request {
 
 #[test]
 fn test_hello() {
-    let options = http::ClientOptions::default();
-    let mut client = http::Client::init(options);
+    let client_options = http::ClientOptions::default();
+    let mut client = http::Client::new(&client_options);
 
     // We construct a Hurl file ast "by hand", with fake source info.
     // In this particular case, the raw content is empty as the Hurl file hasn't
@@ -162,7 +169,7 @@ fn test_hello() {
         line_terminators: vec![],
     };
     let variables = HashMap::new();
-    let options = RunnerOptions {
+    let runner_options = RunnerOptions {
         fail_fast: true,
         variables,
         to_entry: None,
@@ -173,5 +180,12 @@ fn test_hello() {
         post_entry: || true,
     };
 
-    runner::run(&hurl_file, "filename", &mut client, &options, &logger);
+    runner::run(
+        &hurl_file,
+        "filename",
+        &mut client,
+        &runner_options,
+        &client_options,
+        &logger,
+    );
 }

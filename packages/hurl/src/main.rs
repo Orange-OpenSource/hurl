@@ -168,7 +168,7 @@ fn execute(
             };
             let context_dir = ContextDir::new(current_dir, file_root);
 
-            let options = http::ClientOptions {
+            let client_options = http::ClientOptions {
                 cacert_file,
                 follow_location,
                 max_redirect,
@@ -185,7 +185,7 @@ fn execute(
                 context_dir: context_dir.clone(),
             };
 
-            let mut client = http::Client::init(options);
+            let mut client = http::Client::new(&client_options);
 
             let pre_entry = if cli_options.interactive {
                 cli::interactive::pre_entry
@@ -202,7 +202,7 @@ fn execute(
             let to_entry = cli_options.to_entry;
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
-            let options = RunnerOptions {
+            let runner_options = RunnerOptions {
                 fail_fast,
                 variables,
                 to_entry,
@@ -212,7 +212,14 @@ fn execute(
                 pre_entry,
                 post_entry,
             };
-            let result = runner::run(&hurl_file, filename, &mut client, &options, logger);
+            let result = runner::run(
+                &hurl_file,
+                filename,
+                &mut client,
+                &runner_options,
+                &client_options,
+                logger,
+            );
             if cli_options.progress {
                 logger.test_completed(result.success);
             }

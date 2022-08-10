@@ -19,6 +19,7 @@ use std::collections::HashMap;
 
 use crate::cli::Logger;
 use crate::http;
+use crate::http::ClientOptions;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -49,13 +50,18 @@ use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
 /// ```
 pub fn run(
     entry: Entry,
-    http_client: &mut http::Client,
     entry_index: usize,
+    http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
-    options: &RunnerOptions,
+    runner_options: &RunnerOptions,
+    client_options: &ClientOptions,
     logger: &Logger,
 ) -> Vec<EntryResult> {
-    let http_request = match eval_request(entry.request.clone(), variables, &options.context_dir) {
+    let http_request = match eval_request(
+        entry.request.clone(),
+        variables,
+        &runner_options.context_dir,
+    ) {
         Ok(r) => r,
         Err(error) => {
             return vec![EntryResult {
@@ -81,13 +87,13 @@ pub fn run(
     use std::str::FromStr;
     if let Some(s) = cookie_storage_set(entry.request.clone()) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
-            http_client.add_cookie(cookie);
+            http_client.add_cookie(&cookie, client_options);
         } else {
             logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
         }
     }
     if cookie_storage_clear(entry.request.clone()) {
-        http_client.clear_cookie_storage();
+        http_client.clear_cookie_storage(client_options);
     }
 
     logger.debug("");
@@ -98,10 +104,14 @@ pub fn run(
     logger.debug("");
     log_request_spec(&http_request, logger);
     logger.debug("Request can be run with the following curl command:");
-    logger.debug(http_client.curl_command_line(&http_request).as_str());
+    logger.debug(
+        http_client
+            .curl_command_line(&http_request, client_options)
+            .as_str(),
+    );
     logger.debug("");
 
-    let calls = match http_client.execute_with_redirect(&http_request, logger) {
+    let calls = match http_client.execute_with_redirect(&http_request, client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = RunnerError::from(http_error);
@@ -152,7 +162,7 @@ pub fn run(
             for capture_result in captures.clone() {
                 variables.insert(capture_result.name, capture_result.value);
             }
-            asserts = if options.ignore_asserts {
+            asserts = if runner_options.ignore_asserts {
                 vec![]
             } else {
                 match entry.response.clone() {
@@ -161,7 +171,7 @@ pub fn run(
                         response,
                         variables,
                         http_response.clone(),
-                        &options.context_dir,
+                        &runner_options.context_dir,
                     ),
                 }
             };

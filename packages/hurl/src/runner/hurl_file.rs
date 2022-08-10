@@ -20,6 +20,7 @@ use std::time::Instant;
 
 use crate::cli::Logger;
 use crate::http;
+use crate::http::ClientOptions;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -55,13 +56,13 @@ use super::entry;
 /// let hurl_file = parser::parse_hurl_file(s).unwrap();
 ///
 /// // Create an HTTP client
-/// let options = http::ClientOptions::default();
-/// let mut client = http::Client::init(options);
+/// let client_options = http::ClientOptions::default();
+/// let mut client = http::Client::new(&client_options);
 /// let logger = Logger::new(false, false, filename, s);
 ///
 /// // Define runner options
 /// let variables = std::collections::HashMap::new();
-/// let options = runner::RunnerOptions {
+/// let runner_options = runner::RunnerOptions {
 ///        fail_fast: false,
 ///        variables,
 ///        to_entry: None,
@@ -77,7 +78,8 @@ use super::entry;
 ///     &hurl_file,
 ///     filename,
 ///     &mut client,
-///     &options,
+///     &runner_options,
+///     &client_options,
 ///     &logger,
 /// );
 /// assert!(hurl_results.success);
@@ -88,17 +90,18 @@ pub fn run(
     hurl_file: &HurlFile,
     filename: &str,
     http_client: &mut http::Client,
-    options: &RunnerOptions,
+    runner_options: &RunnerOptions,
+    client_options: &ClientOptions,
     logger: &Logger,
 ) -> HurlResult {
     let mut entries = vec![];
     let mut variables = HashMap::default();
 
-    for (key, value) in options.variables.clone() {
+    for (key, value) in runner_options.variables.clone() {
         variables.insert(key.to_string(), value);
     }
 
-    let n = if let Some(to_entry) = options.to_entry {
+    let n = if let Some(to_entry) = runner_options.to_entry {
         to_entry
     } else {
         hurl_file.entries.len()
@@ -113,17 +116,18 @@ pub fn run(
         .enumerate()
         .collect::<Vec<(usize, Entry)>>()
     {
-        let exit = (options.pre_entry)(entry.clone());
+        let exit = (runner_options.pre_entry)(entry.clone());
         if exit {
             break;
         }
 
         let entry_results = entry::run(
             entry,
-            http_client,
             entry_index,
+            http_client,
             &mut variables,
-            options,
+            runner_options,
+            client_options,
             logger,
         );
 
@@ -133,8 +137,8 @@ pub fn run(
             }
             entries.push(entry_result.clone());
         }
-        let exit = (options.post_entry)();
-        if exit || (options.fail_fast && !entry_results.last().unwrap().errors.is_empty()) {
+        let exit = (runner_options.post_entry)();
+        if exit || (runner_options.fail_fast && !entry_results.last().unwrap().errors.is_empty()) {
             break;
         }
     }
