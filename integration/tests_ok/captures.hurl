@@ -5,7 +5,6 @@ HTTP/1.0 200
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
 param3: header "header2" regex /Hello (.*)!/
-
 [Asserts]
 variable "param1" == "value1"
 variable "param2" == "Bob"
@@ -20,6 +19,7 @@ HTTP/1.0 200
 
 
 GET http://localhost:8000/captures-json
+
 HTTP/1.0 200
 [Captures]
 an_object:  jsonpath "$['an_object']"
@@ -38,6 +38,7 @@ variable "an_integer" == {{an_integer}}
 variable "a_float" == {{a_float}}
 variable "a_bool" == {{a_bool}}
 variable "a_string" == {{a_string}}
+variable "a_string" == "{{a_string}}"
 variable "a_list" == {{a_list}}
 
 
