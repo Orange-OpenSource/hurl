@@ -147,7 +147,7 @@ impl CookieAttribute {
         } else {
             let tokens: Vec<&str> = s.split('=').collect();
             Some(CookieAttribute {
-                name: tokens.get(0).unwrap().to_string().trim().to_string(),
+                name: tokens.first().unwrap().to_string().trim().to_string(),
                 value: tokens.get(1).map(|e| e.to_string()),
             })
         }

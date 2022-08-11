@@ -53,7 +53,7 @@ impl Request {
                 return params.clone();
             }
         }
-        return vec![];
+        vec![]
     }
     pub fn form_params(&self) -> Vec<KeyValue> {
         for section in &self.sections {
@@ -61,7 +61,7 @@ impl Request {
                 return params.clone();
             }
         }
-        return vec![];
+        vec![]
     }
     pub fn multipart_form_data(&self) -> Vec<MultipartParam> {
         for section in &self.sections {
@@ -69,7 +69,7 @@ impl Request {
                 return params.clone();
             }
         }
-        return vec![];
+        vec![]
     }
 
     pub fn cookies(&self) -> Vec<Cookie> {
@@ -78,7 +78,7 @@ impl Request {
                 return cookies.clone();
             }
         }
-        return vec![];
+        vec![]
     }
 
     pub fn basic_auth(&self) -> Option<KeyValue> {
@@ -112,7 +112,7 @@ impl Response {
                 return captures;
             }
         }
-        return vec![];
+        vec![]
     }
     pub fn asserts(self) -> Vec<Assert> {
         for section in self.sections {
@@ -120,7 +120,7 @@ impl Response {
                 return asserts;
             }
         }
-        return vec![];
+        vec![]
     }
 }
 

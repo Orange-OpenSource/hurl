@@ -57,11 +57,9 @@ pub fn parse_json(path: PathBuf) -> Result<Vec<serde_json::Value>, CliError> {
         };
         match serde_json::from_str(s.as_str()) {
             Ok(val) => Ok(val),
-            Err(_) => {
-                return Err(CliError {
-                    message: format!("The file {} is not a valid json file", path.display()),
-                })
-            }
+            Err(_) => Err(CliError {
+                message: format!("The file {} is not a valid json file", path.display()),
+            }),
         }
     } else {
         Ok(vec![])

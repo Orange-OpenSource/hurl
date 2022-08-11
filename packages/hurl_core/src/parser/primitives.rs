@@ -223,13 +223,13 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<'sta
                 Ok(_) => Ok(s2.to_string()),
                 Err(_) => {
                     reader.state = start.clone();
-                    return Err(Error {
+                    Err(Error {
                         pos: start.pos,
                         recoverable: true,
                         inner: ParseError::Expecting {
                             value: format!("<{}> or <{}>", s1, s2),
                         },
-                    });
+                    })
                 }
             }
         }

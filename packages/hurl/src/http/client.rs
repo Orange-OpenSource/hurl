@@ -299,7 +299,7 @@ impl Client {
         self.handle.reset();
 
         let request = Request {
-            url: url.to_string(),
+            url,
             method: method.to_string(),
             headers: request_headers,
             body: request_body,
@@ -327,7 +327,7 @@ impl Client {
 
     /// Generates URL.
     fn generate_url(&mut self, url: &str, params: &[Param]) -> String {
-        let url = if params.is_empty() {
+        if params.is_empty() {
             url.to_string()
         } else {
             let url = if url.ends_with('?') {
@@ -339,8 +339,7 @@ impl Client {
             };
             let s = self.encode_params(params);
             format!("{}{}", url, s)
-        };
-        url
+        }
     }
 
     /// Sets HTTP method.

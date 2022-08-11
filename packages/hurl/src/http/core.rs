@@ -80,7 +80,7 @@ impl FromStr for Cookie {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let tokens = s.split_ascii_whitespace().collect::<Vec<&str>>();
-        let (http_only, domain) = if let Some(&v) = tokens.get(0) {
+        let (http_only, domain) = if let Some(&v) = tokens.first() {
             if let Some(domain) = v.strip_prefix("#HttpOnly_") {
                 (true, domain.to_string())
             } else {

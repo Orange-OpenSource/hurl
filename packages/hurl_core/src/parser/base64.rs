@@ -58,7 +58,7 @@ pub fn parse(reader: &mut Reader) -> Vec<u8> {
                     buf.push(v);
                     if buf.len() == 4 {
                         let bs = decode_four_chars(
-                            *buf.get(0).unwrap(),
+                            *buf.first().unwrap(),
                             *buf.get(1).unwrap(),
                             *buf.get(2).unwrap(),
                             *buf.get(3).unwrap(),
@@ -169,22 +169,22 @@ fn padding(reader: &mut Reader) -> String {
 }
 
 fn decode_two_chars(c1: i32, c2: i32) -> Vec<u8> {
-    return vec![((c1 << 2 & 255) + (c2 >> 4)) as u8];
+    vec![((c1 << 2 & 255) + (c2 >> 4)) as u8]
 }
 
 fn decode_three_chars(c1: i32, c2: i32, c3: i32) -> Vec<u8> {
-    return vec![
+    vec![
         ((c1 << 2 & 255) + (c2 >> 4)) as u8,
         ((c2 << 4 & 255) + (c3 >> 2)) as u8,
-    ];
+    ]
 }
 
 fn decode_four_chars(c1: i32, c2: i32, c3: i32, c4: i32) -> Vec<u8> {
-    return vec![
+    vec![
         ((c1 << 2 & 255) + (c2 >> 4)) as u8,
         ((c2 << 4 & 255) + (c3 >> 2)) as u8,
         (((c3 << 6) & 255) + c4) as u8,
-    ];
+    ]
 }
 
 #[cfg(test)]

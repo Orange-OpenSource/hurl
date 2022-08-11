@@ -130,16 +130,16 @@ impl Htmlable for Response {
 
 impl Htmlable for Method {
     fn to_html(&self) -> String {
-        return format!("<span class=\"method\">{}</span>", self);
+        format!("<span class=\"method\">{}</span>", self)
     }
 }
 
 impl Htmlable for Version {
     fn to_html(&self) -> String {
-        return format!(
+        format!(
             "<span class=\"version\">HTTP/{}</span>",
             self.value.as_str()
-        );
+        )
     }
 }
 
