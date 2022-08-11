@@ -29,28 +29,13 @@ use super::response::{eval_asserts, eval_captures};
 use super::value::Value;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
 
-/// Run an entry with the hurl http client
-/// Return one or more EntryResults (if following redirect)
+/// Runs an `entry` with `http_client` and returns one or more
+/// [`EntryResult`] (if following redirect).
 ///
-/// # Examples
-///
-/// ```
-/// use hurl::http;
-/// use hurl::runner;
-///
-/// // Create an http client
-//// let client = http::client::Client::init(http::client::ClientOptions {
-////        noproxy_hosts: vec![],
-////        insecure: false,
-////        redirect: http::client::Redirect::None,
-////        http_proxy: None,
-////        https_proxy: None,
-////        all_proxy: None
-////    });
-/// ```
+/// `variables` are used to render values at runtime, and can be updated
+/// by captures.
 pub fn run(
     entry: &Entry,
-    entry_index: usize,
     http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
     runner_options: &RunnerOptions,
@@ -71,25 +56,21 @@ pub fn run(
         }
     };
 
-    logger.debug_important(
-        "------------------------------------------------------------------------------",
-    );
-    logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
+    // We computes overridden options for this entry.
+    let client_options = get_entry_options(entry, client_options, logger);
 
-    //
     // Experimental features
     // with cookie storage
-    //
     use std::str::FromStr;
     if let Some(s) = cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
-            http_client.add_cookie(&cookie, client_options);
+            http_client.add_cookie(&cookie, &client_options);
         } else {
             logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
         }
     }
     if cookie_storage_clear(&entry.request) {
-        http_client.clear_cookie_storage(client_options);
+        http_client.clear_cookie_storage(&client_options);
     }
 
     logger.debug("");
@@ -102,12 +83,12 @@ pub fn run(
     logger.debug("Request can be run with the following curl command:");
     logger.debug(
         http_client
-            .curl_command_line(&http_request, client_options)
+            .curl_command_line(&http_request, &client_options)
             .as_str(),
     );
     logger.debug("");
 
-    let calls = match http_client.execute_with_redirect(&http_request, client_options, logger) {
+    let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = RunnerError::from(http_error);
@@ -208,13 +189,7 @@ pub fn run(
     entry_results
 }
 
-/// Logs a HTTP request spec
-///
-/// # Arguments
-///
-/// * `request` - An HTTP request spec
-/// * `logger` - A logger
-///
+/// Logs this HTTP `request` spec.
 fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
     logger.debug_important("Request:");
     logger.debug(format!("{} {}", request.method, request.url).as_str());
@@ -250,4 +225,35 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
         logger.debug(format!("Implicit content-type={}", s).as_str());
     }
     logger.debug("");
+}
+
+/// Returns a new [`ClientOptions`] based on the `entry` optional Options section
+/// and a default `client_options`.
+fn get_entry_options(
+    entry: &Entry,
+    client_options: &ClientOptions,
+    logger: &Logger,
+) -> ClientOptions {
+    let mut client_options = client_options.clone();
+
+    let has_options = entry
+        .request
+        .sections
+        .iter()
+        .any(|s| matches!(s.value, SectionValue::Options(_)));
+    if has_options {
+        logger.debug("");
+        logger.debug_important("Entry options:");
+    }
+
+    for section in &entry.request.sections {
+        if let SectionValue::Options(options) = &section.value {
+            for option in options {
+                let EntryOption::Insecure(insecure_option) = option;
+                client_options.insecure = insecure_option.value;
+                logger.debug(format!("insecure: {}", client_options.insecure).as_str());
+            }
+        }
+    }
+    client_options
 }

@@ -121,9 +121,13 @@ pub fn run(
             break;
         }
 
+        logger.debug_important(
+            "------------------------------------------------------------------------------",
+        );
+        logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
+
         let entry_results = entry::run(
             &entry,
-            entry_index,
             http_client,
             &mut variables,
             runner_options,
