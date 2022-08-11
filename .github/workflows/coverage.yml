@@ -3,6 +3,9 @@ on:
     branches:
       - 'master'
 
+env:
+  RUSTFLAGS: "-C instrument-coverage"
+
 jobs:
   coverage:
     runs-on: ubuntu-latest
@@ -18,21 +21,22 @@ jobs:
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Rust
       run: bin/install_rust_latest.sh
+    - name: Install grcov
+      run: bin/install_grcov.sh
     - name: Build
-      run: bin/release/release.sh
+      run: cargo build
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Run Tests units
-      run: bin/test/test_unit.sh
+      run: export LLVM_PROFILE_FILE="hurl_test_unit" && bin/test/test_unit.sh
     - name: Run Integration Tests
-      run: bin/test/test_integ.sh
+      run: export LLVM_PROFILE_FILE="hurl_test_integration" && bin/test/test_integ.sh
+    - name: build coverage report
+      run: grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: tests-ubuntu-${{ matrix.rust }}-artifacts
         path: |
-          integration/server.log
-          integration/server-ssl.log
-          integration/report/tests.json
-          integration/report/tests.xml
+          coverage
