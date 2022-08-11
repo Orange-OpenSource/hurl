@@ -231,6 +231,9 @@ impl Tokenizable for SectionValue {
             SectionValue::Captures(items) => {
                 tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
             }
+            SectionValue::Options(items) => {
+                tokens.append(&mut items.iter().flat_map(|e| e.tokenize()).collect());
+            }
         }
         tokens
     }
@@ -808,6 +811,35 @@ impl Tokenizable for JsonObjectElement {
         tokens.push(Token::Whitespace(self.space2.clone()));
         tokens.append(&mut self.value.tokenize());
         tokens.push(Token::Whitespace(self.space3.clone()));
+        tokens
+    }
+}
+
+impl Tokenizable for EntryOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            EntryOption::Insecure(option) => option.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for InsecureOption {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(
+            &mut self
+                .line_terminators
+                .iter()
+                .flat_map(|e| e.tokenize())
+                .collect(),
+        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::String("insecure".to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.push(Token::Colon(String::from(":")));
+        tokens.append(&mut self.space2.tokenize());
+        tokens.push(Token::Boolean(self.value.to_string()));
+        tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
 }

@@ -185,17 +185,23 @@ impl Lintable<SectionValue> for SectionValue {
             SectionValue::Cookies(cookies) => {
                 SectionValue::Cookies(cookies.iter().map(|e| e.lint()).collect())
             }
+            SectionValue::Options(options) => {
+                SectionValue::Options(options.iter().map(|e| e.lint()).collect())
+            }
         }
     }
 }
 
 fn section_value_index(section_value: SectionValue) -> u32 {
     match section_value {
-        SectionValue::QueryParams(_) => 0,
-        SectionValue::BasicAuth(_) => 1,
-        SectionValue::FormParams(_) => 2,
-        SectionValue::MultipartFormData(_) => 3,
-        SectionValue::Cookies(_) => 3,
+        // Request sections
+        SectionValue::Options(_) => 0,
+        SectionValue::QueryParams(_) => 1,
+        SectionValue::BasicAuth(_) => 2,
+        SectionValue::FormParams(_) => 3,
+        SectionValue::MultipartFormData(_) => 4,
+        SectionValue::Cookies(_) => 5,
+        // Response sections
         SectionValue::Captures(_) => 0,
         SectionValue::Asserts(_) => 1,
     }
@@ -525,6 +531,7 @@ impl Lintable<PredicateValue> for PredicateValue {
         }
     }
 }
+
 impl Lintable<RawString> for RawString {
     fn errors(&self) -> Vec<Error> {
         let errors = vec![];
@@ -797,6 +804,17 @@ impl Lintable<Template> for Template {
     }
 
     fn lint(&self) -> Template {
+        self.clone()
+    }
+}
+
+impl Lintable<EntryOption> for EntryOption {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> EntryOption {
         self.clone()
     }
 }

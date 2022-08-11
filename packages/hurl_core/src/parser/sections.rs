@@ -53,6 +53,7 @@ fn request_section(reader: &mut Reader) -> ParseResult<'static, Section> {
         "FormParams" => section_value_form_params(reader)?,
         "MultipartFormData" => section_value_multipart_form_data(reader)?,
         "Cookies" => section_value_cookies(reader)?,
+        "Options" => section_value_options(reader)?,
         _ => {
             return Err(Error {
                 pos: Pos {
@@ -148,6 +149,11 @@ fn section_value_captures(reader: &mut Reader) -> ParseResult<'static, SectionVa
 fn section_value_asserts(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
     let asserts = zero_or_more(assert, reader)?;
     Ok(SectionValue::Asserts(asserts))
+}
+
+fn section_value_options(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+    let options = zero_or_more(option, reader)?;
+    Ok(SectionValue::Options(options))
 }
 
 fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
@@ -335,6 +341,37 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
     })
 }
 
+fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    choice(vec![option_insecure, option_cacert], reader)
+}
+
+fn option_insecure(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("insecure", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = nonrecover(boolean, reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = InsecureOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::Insecure(option))
+}
+
+fn option_cacert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    try_literal("cacert", reader)?;
+    unimplemented!()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -477,11 +514,87 @@ mod tests {
                 quotes: false,
                 elements: vec![TemplateElement::String {
                     value: "Bar".to_string(),
-                    encoded: "Bar".to_string()
+                    encoded: "Bar".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 6, 1, 9)
+                source_info: SourceInfo::init(1, 6, 1, 9),
             }
         );
+    }
+
+    #[test]
+    fn test_option_insecure() {
+        let mut reader = Reader::init("insecure: true");
+        let option = option_insecure(&mut reader).unwrap();
+        assert_eq!(
+            option,
+            EntryOption::Insecure(InsecureOption {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 1 },
+                        end: Pos { line: 1, column: 1 }
+                    }
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 9 },
+                        end: Pos { line: 1, column: 9 }
+                    }
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos {
+                            line: 1,
+                            column: 10
+                        },
+                        end: Pos {
+                            line: 1,
+                            column: 11
+                        }
+                    }
+                },
+                value: true,
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 15
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 15
+                            }
+                        }
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 15
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 15
+                            }
+                        }
+                    }
+                }
+            })
+        );
+    }
+
+    #[test]
+    fn test_option_insecure_error() {
+        let mut reader = Reader::init("insecure: error");
+        let error = option_insecure(&mut reader).err().unwrap();
+        assert_eq!(error.recoverable, false)
     }
 
     #[test]
@@ -492,7 +605,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 11
+                column: 11,
             }
         );
         assert!(!error.recoverable);
@@ -675,7 +788,7 @@ mod tests {
             error.pos,
             Pos {
                 line: 1,
-                column: 32
+                column: 32,
             }
         );
         assert_eq!(

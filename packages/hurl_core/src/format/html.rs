@@ -202,6 +202,11 @@ impl Htmlable for SectionValue {
                     buffer.push_str(item.to_html().as_str())
                 }
             }
+            SectionValue::Options(items) => {
+                for item in items {
+                    buffer.push_str(item.to_html().as_str())
+                }
+            }
         }
         buffer
     }
@@ -218,6 +223,31 @@ impl Htmlable for KeyValue {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(format!("<span class=\"string\">{}</span>", self.value.to_html()).as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for EntryOption {
+    fn to_html(&self) -> String {
+        match self {
+            EntryOption::Insecure(option) => option.to_html(),
+        }
+    }
+}
+
+impl Htmlable for InsecureOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">insecure</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(format!("<span class=\"boolean\">{}</span>", self.value).as_str());
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
