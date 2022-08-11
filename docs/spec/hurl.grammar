@@ -56,6 +56,7 @@ request-section:
   | form-params-section
   | multipart-form-data-section
   | cookies-section
+  | options-section
 
 response-section:
     captures-section
@@ -91,6 +92,11 @@ asserts-section:
   "[Asserts]" lt
   assert*
 
+options-section:
+  lt*
+  "[Options]" lt
+  option*
+
 key-value: key-string ":" value-string
 
 multipart-form-data-param: file-param | key-value
@@ -111,6 +117,13 @@ assert:
   lt*
   query sp predicate lt
 
+option:
+  lt*
+  (insecure-option | ca-certificate-option)
+
+insecure-option: "insecure" ":" (boolean | template) lt
+
+ca-certificate-option: "cacert" ":" filename lt
 
 # Query
 
