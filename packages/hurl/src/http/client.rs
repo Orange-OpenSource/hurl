@@ -337,7 +337,7 @@ impl Client {
             } else {
                 format!("{}?", url)
             };
-            let s = self.encode_params(params);
+            let s = self.url_encode_params(params);
             format!("{}{}", url, s)
         }
     }
@@ -417,7 +417,7 @@ impl Client {
     /// Sets form params.
     fn set_form(&mut self, params: &[Param]) {
         if !params.is_empty() {
-            let s = self.encode_params(params);
+            let s = self.url_encode_params(params);
             self.handle.post_fields_copy(s.as_str().as_bytes()).unwrap();
             //self.handle.write_function(sink);
         }
@@ -458,7 +458,7 @@ impl Client {
     }
 
     /// URL encodes parameters.
-    fn encode_params(&mut self, params: &[Param]) -> String {
+    fn url_encode_params(&mut self, params: &[Param]) -> String {
         params
             .iter()
             .map(|p| {
@@ -494,6 +494,7 @@ impl Client {
     }
 
     /// Retrieves an optional location to follow
+    ///
     /// You need:
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
@@ -601,7 +602,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
 
 /// Matches cookie for a given URL.
 pub fn match_cookie(cookie: &Cookie, url: &str) -> bool {
-    // is it possible to do it with libcurl?
+    // FIXME: is it possible to do it with libcurl?
     let url = match Url::parse(url) {
         Ok(url) => url,
         Err(_) => return false,
