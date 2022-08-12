@@ -30,8 +30,6 @@ jobs:
       run: cargo build
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
-    - name: Run Tests units
-      run: export LLVM_PROFILE_FILE="hurl-test-unit-%p-%m.profraw" && bin/test/test_unit.sh
     - name: Run Integration Tests
       run: export LLVM_PROFILE_FILE="hurl-test-integration-%p-%m.profraw" && bin/test/test_integ.sh
     - name: Build Report
