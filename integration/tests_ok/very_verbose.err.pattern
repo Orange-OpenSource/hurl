@@ -17,7 +17,7 @@
 > GET /very-verbose/redirect HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 >
 * Request body:
 *
@@ -45,7 +45,7 @@
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 >
 * Request body:
 *
@@ -74,7 +74,7 @@
 > GET /very-verbose/encoding/latin1 HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 >
 * Request body:
 *
@@ -108,7 +108,7 @@
 > Accept: */*
 > Accept-Encoding: brotli
 > Content-Type: application/json
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 > Content-Length: 37
 >
 * Request body:
@@ -142,7 +142,7 @@
 > GET /very-verbose/cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 >
 * Request body:
 *
@@ -175,7 +175,7 @@
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 > Content-Length: 26572
 > Content-Type: multipart/form-data; boundary=~~~~~
 >
@@ -208,7 +208,7 @@
 > Host: localhost:8000
 > Accept: */*
 > x-foo: bar
-> User-Agent: hurl/~~~-snapshot
+> User-Agent: hurl/~~~
 >
 * Request body:
 *

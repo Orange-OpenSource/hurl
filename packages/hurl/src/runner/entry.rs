@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use crate::cli::Logger;
 use crate::http;
-use crate::http::ClientOptions;
+use crate::http::{ClientOptions, Verbosity};
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -56,21 +56,18 @@ pub fn run(
         }
     };
 
-    // We computes overridden options for this entry.
-    let client_options = get_entry_options(entry, client_options, logger);
-
     // Experimental features
     // with cookie storage
     use std::str::FromStr;
     if let Some(s) = cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
-            http_client.add_cookie(&cookie, &client_options);
+            http_client.add_cookie(&cookie, client_options);
         } else {
             logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
         }
     }
     if cookie_storage_clear(&entry.request) {
-        http_client.clear_cookie_storage(&client_options);
+        http_client.clear_cookie_storage(client_options);
     }
 
     logger.debug("");
@@ -83,12 +80,12 @@ pub fn run(
     logger.debug("Request can be run with the following curl command:");
     logger.debug(
         http_client
-            .curl_command_line(&http_request, &runner_options.context_dir, &client_options)
+            .curl_command_line(&http_request, &runner_options.context_dir, client_options)
             .as_str(),
     );
     logger.debug("");
 
-    let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
+    let calls = match http_client.execute_with_redirect(&http_request, client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = RunnerError::from(http_error);
@@ -229,22 +226,18 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
 
 /// Returns a new [`ClientOptions`] based on the `entry` optional Options section
 /// and a default `client_options`.
-fn get_entry_options(
+pub fn get_entry_options(
     entry: &Entry,
     client_options: &ClientOptions,
     logger: &Logger,
 ) -> ClientOptions {
     let mut client_options = client_options.clone();
-
-    let has_options = entry
-        .request
-        .sections
-        .iter()
-        .any(|s| matches!(s.value, SectionValue::Options(_)));
-    if has_options {
-        logger.debug("");
-        logger.debug_important("Entry options:");
+    if !has_options(entry) {
+        return client_options;
     }
+
+    logger.debug("");
+    logger.debug_important("Entry options:");
 
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
@@ -258,9 +251,46 @@ fn get_entry_options(
                         client_options.cacert_file = Some(option.filename.value.clone());
                         logger.debug(format!("cacert: {}", option.filename.value).as_str());
                     }
+                    EntryOption::Verbose(option) => {
+                        client_options.verbosity = if option.value {
+                            Some(Verbosity::Verbose)
+                        } else {
+                            None
+                        };
+                        logger.debug(format!("verbose: {}", option.value).as_str());
+                    }
                 }
             }
         }
     }
     client_options
+}
+
+/// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.
+fn has_options(entry: &Entry) -> bool {
+    entry
+        .request
+        .sections
+        .iter()
+        .any(|s| matches!(s.value, SectionValue::Options(_)))
+}
+
+/// Returns the overridden `entry` verbosity, or the default `verbosity` file.
+pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Option<Verbosity> {
+    let mut verbosity = verbosity.clone();
+
+    for section in &entry.request.sections {
+        if let SectionValue::Options(options) = &section.value {
+            for option in options {
+                if let EntryOption::Verbose(option) = option {
+                    verbosity = if option.value {
+                        Some(Verbosity::Verbose)
+                    } else {
+                        None
+                    }
+                }
+            }
+        }
+    }
+    verbosity
 }

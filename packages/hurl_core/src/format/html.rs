@@ -234,6 +234,7 @@ impl Htmlable for EntryOption {
         match self {
             EntryOption::Insecure(option) => option.to_html(),
             EntryOption::CaCertificate(option) => option.to_html(),
+            EntryOption::Verbose(option) => option.to_html(),
         }
     }
 }
@@ -266,6 +267,23 @@ impl Htmlable for CaCertificateOption {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.filename.to_html().as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for VerboseOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">verbose</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(format!("<span class=\"boolean\">{}</span>", self.value).as_str());
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer

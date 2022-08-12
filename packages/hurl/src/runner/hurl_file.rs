@@ -21,6 +21,7 @@ use std::time::Instant;
 use crate::cli::Logger;
 use crate::http;
 use crate::http::ClientOptions;
+use crate::runner::entry::get_entry_verbosity;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -90,8 +91,8 @@ pub fn run(
     let mut entries = vec![];
     let mut variables = HashMap::default();
 
-    for (key, value) in runner_options.variables.clone() {
-        variables.insert(key.to_string(), value);
+    for (key, value) in &runner_options.variables {
+        variables.insert(key.to_string(), value.clone());
     }
 
     let n = if let Some(to_entry) = runner_options.to_entry {
@@ -105,9 +106,8 @@ pub fn run(
         .entries
         .iter()
         .take(n)
-        .cloned()
         .enumerate()
-        .collect::<Vec<(usize, Entry)>>()
+        .collect::<Vec<(usize, &Entry)>>()
     {
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
@@ -116,17 +116,30 @@ pub fn run(
             }
         }
 
+        // We compute these new overridden options for this entry, before entering into the `run`
+        // function because entry options can modify the logger and we want the preamble
+        // "Executing entry..." to be displayed based on the entry level verbosity.
+        let entry_verbosity = get_entry_verbosity(entry, &client_options.verbosity);
+        let logger = &Logger::new(
+            logger.color,
+            entry_verbosity.is_some(),
+            logger.filename,
+            logger.content,
+        );
+
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
         logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
 
+        let client_options = entry::get_entry_options(entry, client_options, logger);
+
         let entry_results = entry::run(
-            &entry,
+            entry,
             http_client,
             &mut variables,
             runner_options,
-            client_options,
+            &client_options,
             logger,
         );
 

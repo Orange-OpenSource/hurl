@@ -91,8 +91,10 @@ pub struct Logger<'a> {
     pub header_out: fn(&str, &str),
     pub test_running: fn(&str, usize, usize),
     pub test_completed: fn(&str, bool),
-    pub content: &'a str,
+    pub color: bool,
+    pub verbose: bool,
     pub filename: &'a str,
+    pub content: &'a str,
 }
 
 impl<'a> Logger<'a> {
@@ -112,8 +114,10 @@ impl<'a> Logger<'a> {
                 header_out: log_header_out,
                 test_running: log_test_running,
                 test_completed: log_test_completed,
-                content,
+                color,
+                verbose,
                 filename,
+                content,
             },
             (false, true) => Logger {
                 info: log_info,
@@ -128,8 +132,10 @@ impl<'a> Logger<'a> {
                 header_out: log_header_out_no_color,
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
-                content,
+                color,
+                verbose,
                 filename,
+                content,
             },
             (true, false) => Logger {
                 info: log_info,
@@ -144,8 +150,10 @@ impl<'a> Logger<'a> {
                 header_out: nop2,
                 test_running: log_test_running,
                 test_completed: log_test_completed,
-                content,
+                color,
+                verbose,
                 filename,
+                content,
             },
             (false, false) => Logger {
                 info: log_info,
@@ -160,8 +168,10 @@ impl<'a> Logger<'a> {
                 header_out: nop2,
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
-                content,
+                color,
+                verbose,
                 filename,
+                content,
             },
         }
     }

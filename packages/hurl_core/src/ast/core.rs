@@ -669,6 +669,7 @@ pub struct Variable {
 pub enum EntryOption {
     Insecure(InsecureOption),
     CaCertificate(CaCertificateOption),
+    Verbose(VerboseOption),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -688,5 +689,15 @@ pub struct CaCertificateOption {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub filename: Filename,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct VerboseOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: bool,
     pub line_terminator0: LineTerminator,
 }
