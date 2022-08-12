@@ -22,10 +22,8 @@ use crate::http::*;
 use std::collections::HashMap;
 
 impl RequestSpec {
-    ///
-    /// return request as curl arguments
+    /// Returns this request as curl arguments.
     /// It does not contain the requests cookies (they will be accessed from the client)
-    ///
     pub fn curl_args(&self, context_dir: &ContextDir) -> Vec<String> {
         let querystring = if self.querystring.is_empty() {
             "".to_string()

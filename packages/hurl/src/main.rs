@@ -182,7 +182,6 @@ fn execute(
                 user,
                 user_agent,
                 compressed,
-                context_dir: context_dir.clone(),
             };
 
             let mut client = http::Client::new(&client_options);

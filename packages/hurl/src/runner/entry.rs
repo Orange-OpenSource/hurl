@@ -83,7 +83,7 @@ pub fn run(
     logger.debug("Request can be run with the following curl command:");
     logger.debug(
         http_client
-            .curl_command_line(&http_request, &client_options)
+            .curl_command_line(&http_request, &runner_options.context_dir, &client_options)
             .as_str(),
     );
     logger.debug("");

@@ -30,6 +30,7 @@ use super::request_spec::*;
 use super::response::*;
 use super::{Header, HttpError, Verbosity};
 use crate::cli::Logger;
+use crate::http::ContextDir;
 use std::str::FromStr;
 use url::Url;
 
@@ -556,14 +557,14 @@ impl Client {
         self.handle.cookie_list("ALL").unwrap();
     }
 
-    /// Returns curl command-line for the HTTP request run by this client.
+    /// Returns curl command-line for the HTTP `request_spec` run by this client.
     pub fn curl_command_line(
         &mut self,
         request_spec: &RequestSpec,
+        context_dir: &ContextDir,
         options: &ClientOptions,
     ) -> String {
         let mut arguments = vec!["curl".to_string()];
-        let context_dir = &options.context_dir;
         arguments.append(&mut request_spec.curl_args(context_dir));
 
         let cookies = all_cookies(&self.get_cookie_storage(), request_spec);
