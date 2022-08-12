@@ -33,7 +33,7 @@ use hurl::report::canonicalize_filename;
 use hurl::runner;
 use hurl::runner::{HurlResult, RunnerError, RunnerOptions};
 use hurl::util::logger::BaseLogger;
-use hurl_core::ast::{Pos, SourceInfo};
+use hurl_core::ast::{Entry, Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
 
@@ -187,14 +187,14 @@ fn execute(
             let mut client = http::Client::new(&client_options);
 
             let pre_entry = if cli_options.interactive {
-                cli::interactive::pre_entry
+                Some(cli::interactive::pre_entry as fn(Entry) -> bool)
             } else {
-                |_| false
+                None
             };
             let post_entry = if cli_options.interactive {
-                cli::interactive::post_entry
+                Some(cli::interactive::post_entry as fn() -> bool)
             } else {
-                || false
+                None
             };
             let fail_fast = cli_options.fail_fast;
             let variables = cli_options.variables.clone();

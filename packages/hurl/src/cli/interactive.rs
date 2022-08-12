@@ -33,8 +33,8 @@ pub fn pre_entry(entry: Entry) -> bool {
     let stdin = stdin();
     let mut stderr = stderr().into_raw_mode().unwrap();
 
-    eprintln!("\n\rinteractive mode");
-    eprintln!("\n\rnext request:");
+    eprintln!("\n\rInteractive mode");
+    eprintln!("\n\rNext request:");
     log_request(entry.request);
 
     write!(

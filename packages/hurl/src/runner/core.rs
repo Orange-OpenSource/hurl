@@ -32,8 +32,8 @@ pub struct RunnerOptions {
     pub context_dir: ContextDir,
     pub ignore_asserts: bool,
     pub very_verbose: bool, // If true, log body response in verbose mode.
-    pub pre_entry: fn(Entry) -> bool,
-    pub post_entry: fn() -> bool,
+    pub pre_entry: Option<fn(Entry) -> bool>,
+    pub post_entry: Option<fn() -> bool>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -44,8 +44,8 @@ fn test_hurl_file() {
         context_dir: ContextDir::default(),
         ignore_asserts: false,
         very_verbose: false,
-        pre_entry: |_| true,
-        post_entry: || true,
+        pre_entry: None,
+        post_entry: None,
     };
 
     let _hurl_log = runner::run(
@@ -176,8 +176,8 @@ fn test_hello() {
         context_dir: ContextDir::default(),
         ignore_asserts: false,
         very_verbose: false,
-        pre_entry: |_| true,
-        post_entry: || true,
+        pre_entry: None,
+        post_entry: None,
     };
 
     runner::run(

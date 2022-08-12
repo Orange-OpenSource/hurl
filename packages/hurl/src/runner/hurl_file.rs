@@ -69,8 +69,8 @@ use super::entry;
 ///        context_dir: ContextDir::default(),
 ///        ignore_asserts: false,
 ///        very_verbose: false,
-///        pre_entry: |_| true,
-///        post_entry: || true,
+///        pre_entry: None,
+///        post_entry: None,
 ///  };
 ///
 /// // Run the hurl file
@@ -116,9 +116,11 @@ pub fn run(
         .enumerate()
         .collect::<Vec<(usize, Entry)>>()
     {
-        let exit = (runner_options.pre_entry)(entry.clone());
-        if exit {
-            break;
+        if let Some(pre_entry) = runner_options.pre_entry {
+            let exit = pre_entry(entry.clone());
+            if exit {
+                break;
+            }
         }
 
         logger.debug_important(
@@ -141,8 +143,15 @@ pub fn run(
             }
             entries.push(entry_result.clone());
         }
-        let exit = (runner_options.post_entry)();
-        if exit || (runner_options.fail_fast && !entry_results.last().unwrap().errors.is_empty()) {
+
+        if let Some(post_entry) = runner_options.post_entry {
+            let exit = post_entry();
+            if exit {
+                break;
+            }
+        }
+
+        if runner_options.fail_fast && !entry_results.last().unwrap().errors.is_empty() {
             break;
         }
     }
