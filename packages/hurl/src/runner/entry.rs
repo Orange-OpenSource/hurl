@@ -249,9 +249,16 @@ fn get_entry_options(
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
             for option in options {
-                let EntryOption::Insecure(insecure_option) = option;
-                client_options.insecure = insecure_option.value;
-                logger.debug(format!("insecure: {}", client_options.insecure).as_str());
+                match option {
+                    EntryOption::Insecure(option) => {
+                        client_options.insecure = option.value;
+                        logger.debug(format!("insecure: {}", client_options.insecure).as_str());
+                    }
+                    EntryOption::CaCertificate(option) => {
+                        client_options.cacert_file = Some(option.filename.value.clone());
+                        logger.debug(format!("cacert: {}", option.filename.value).as_str());
+                    }
+                }
             }
         }
     }

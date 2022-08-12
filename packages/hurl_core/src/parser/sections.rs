@@ -368,8 +368,25 @@ fn option_insecure(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
 }
 
 fn option_cacert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
     try_literal("cacert", reader)?;
-    unimplemented!()
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let f = filename::parse(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = CaCertificateOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        filename: f,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::CaCertificate(option))
 }
 
 #[cfg(test)]
@@ -533,28 +550,28 @@ mod tests {
                     value: "".to_string(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 1 },
-                        end: Pos { line: 1, column: 1 }
-                    }
+                        end: Pos { line: 1, column: 1 },
+                    },
                 },
                 space1: Whitespace {
                     value: "".to_string(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
-                        end: Pos { line: 1, column: 9 }
-                    }
+                        end: Pos { line: 1, column: 9 },
+                    },
                 },
                 space2: Whitespace {
                     value: " ".to_string(),
                     source_info: SourceInfo {
                         start: Pos {
                             line: 1,
-                            column: 10
+                            column: 10,
                         },
                         end: Pos {
                             line: 1,
-                            column: 11
-                        }
-                    }
+                            column: 11,
+                        },
+                    },
                 },
                 value: true,
                 line_terminator0: LineTerminator {
@@ -563,13 +580,13 @@ mod tests {
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
-                                column: 15
+                                column: 15,
                             },
                             end: Pos {
                                 line: 1,
-                                column: 15
-                            }
-                        }
+                                column: 15,
+                            },
+                        },
                     },
                     comment: None,
                     newline: Whitespace {
@@ -577,15 +594,15 @@ mod tests {
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
-                                column: 15
+                                column: 15,
                             },
                             end: Pos {
                                 line: 1,
-                                column: 15
-                            }
-                        }
-                    }
-                }
+                                column: 15,
+                            },
+                        },
+                    },
+                },
             })
         );
     }
@@ -594,6 +611,85 @@ mod tests {
     fn test_option_insecure_error() {
         let mut reader = Reader::init("insecure: error");
         let error = option_insecure(&mut reader).err().unwrap();
+        assert_eq!(error.recoverable, false)
+    }
+
+    #[test]
+    fn test_option_cacert() {
+        let mut reader = Reader::init("cacert: /home/foo/cert.pem");
+        let option = option_cacert(&mut reader).unwrap();
+        assert_eq!(
+            option,
+            EntryOption::CaCertificate(CaCertificateOption {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 1 },
+                        end: Pos { line: 1, column: 1 },
+                    },
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 7 },
+                        end: Pos { line: 1, column: 7 },
+                    },
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 8 },
+                        end: Pos { line: 1, column: 9 },
+                    },
+                },
+                filename: Filename {
+                    value: "/home/foo/cert.pem".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 9 },
+                        end: Pos {
+                            line: 1,
+                            column: 27
+                        }
+                    }
+                },
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 27,
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 27,
+                            },
+                        },
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo {
+                            start: Pos {
+                                line: 1,
+                                column: 27,
+                            },
+                            end: Pos {
+                                line: 1,
+                                column: 27,
+                            },
+                        },
+                    },
+                },
+            })
+        );
+    }
+
+    #[test]
+    fn test_option_cacert_error() {
+        let mut reader = Reader::init("cacert: ###");
+        let error = option_cacert(&mut reader).err().unwrap();
         assert_eq!(error.recoverable, false)
     }
 
