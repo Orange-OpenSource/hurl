@@ -129,14 +129,9 @@ fn execute(
                 }
             }
             if let Some(to_entry) = cli_options.to_entry {
-                if to_entry < hurl_file.entries.len() {
-                    logger.debug(
-                        format!("Executing {}/{} entries", to_entry, hurl_file.entries.len())
-                            .as_str(),
-                    );
-                } else {
-                    logger.debug("Executing all entries");
-                }
+                logger.debug(
+                    format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str(),
+                );
             }
             let cacert_file = cli_options.cacert_file.clone();
             let follow_location = cli_options.follow_location;
