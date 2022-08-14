@@ -17,7 +17,7 @@
  */
 use std::path::{Component, Path, PathBuf};
 
-/// Return true if `path` is a descendant path of ancestor, false otherwise
+/// Return true if `path` is a descendant path of `ancestor`, false otherwise.
 pub fn is_descendant(path: &Path, ancestor: &Path) -> bool {
     let path = normalize_path(path);
     let ancestor = normalize_path(ancestor);
@@ -29,10 +29,11 @@ pub fn is_descendant(path: &Path, ancestor: &Path) -> bool {
     false
 }
 
-/// Returns the absolute form of the path with all intermediate components normalized.
-/// Contrary to the methods `canonicalize` on `Path`, this function doesn't require
+/// Returns the absolute form of this `path` with all intermediate components normalized.
+/// Contrary to the methods [`std::fs::canonicalize`] on [`Path`], this function doesn't require
 /// the final path to exist.
-/// Borrowed from https://github.com/rust-lang/cargo src/cargo/util/paths.rs
+///
+/// Borrowed from https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/paths.rs
 fn normalize_path(path: &Path) -> PathBuf {
     let mut components = path.components().peekable();
     let mut ret = if let Some(c @ Component::Prefix(..)) = components.peek().cloned() {
