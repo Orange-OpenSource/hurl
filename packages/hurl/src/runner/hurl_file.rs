@@ -26,16 +26,11 @@ use hurl_core::ast::*;
 use super::core::*;
 use super::entry;
 
-/// Runs a Hurl file with the Hurl HTTP client.
+/// Runs a `hurl_file`, issue from the given `filename` file and `content`, with
+/// an `http_client`. Returns a [`HurlResult`] upon completion.
 ///
-/// # Arguments
-///
-/// * `hurl_file` - The Hurl file ast
-/// * `filename` - Filename of the Hurl file, "-" is used for stdin
-/// * `content` - Content of the Hurl file
-/// * `http_client` - The HTTP client used to run this Hurl file
-/// * `options` - Options for this run
-/// * `logger` - The logger
+/// `filename` and `content` are used to display line base logs (for parsing error or asserts
+/// failures).
 ///
 /// # Example
 ///
@@ -83,9 +78,7 @@ use super::entry;
 ///     &logger,
 /// );
 /// assert!(hurl_results.success);
-///
 /// ```
-///
 pub fn run(
     hurl_file: &HurlFile,
     filename: &str,
