@@ -26,3 +26,35 @@
 < Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
 <
 *
+* ------------------------------------------------------------------------------
+* Executing entry 4
+*
+* Entry options:
+* very-verbose: true
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/hello
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/hello'
+*
+> GET /hello HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Request body:
+*
+* Response:
+*
+< HTTP/1.0 200 OK
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+<
+* Response body:
+* Hello World!
+*

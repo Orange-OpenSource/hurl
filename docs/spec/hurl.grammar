@@ -119,7 +119,7 @@ assert:
 
 option:
   lt*
-  (insecure-option | ca-certificate-option | verbose-option)
+  (insecure-option | ca-certificate-option | verbose-option | very-verbose-option)
 
 insecure-option: "insecure" ":" boolean lt
 
@@ -127,6 +127,7 @@ ca-certificate-option: "cacert" ":" filename lt
 
 verbose-option: "verbose" ":" boolean lt
 
+very-verbose-option: "verbose" ":" boolean lt
 
 # Query
 

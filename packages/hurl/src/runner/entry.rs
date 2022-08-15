@@ -259,6 +259,15 @@ pub fn get_entry_options(
                         };
                         logger.debug(format!("verbose: {}", option.value).as_str());
                     }
+
+                    EntryOption::VeryVerbose(option) => {
+                        client_options.verbosity = if option.value {
+                            Some(Verbosity::VeryVerbose)
+                        } else {
+                            None
+                        };
+                        logger.debug(format!("very-verbose: {}", option.value).as_str());
+                    }
                 }
             }
         }
@@ -282,12 +291,22 @@ pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Opti
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
             for option in options {
-                if let EntryOption::Verbose(option) = option {
-                    verbosity = if option.value {
-                        Some(Verbosity::Verbose)
-                    } else {
-                        None
+                match option {
+                    EntryOption::Verbose(option) => {
+                        verbosity = if option.value {
+                            Some(Verbosity::Verbose)
+                        } else {
+                            None
+                        }
                     }
+                    EntryOption::VeryVerbose(option) => {
+                        verbosity = if option.value {
+                            Some(Verbosity::VeryVerbose)
+                        } else {
+                            None
+                        }
+                    }
+                    _ => {}
                 }
             }
         }

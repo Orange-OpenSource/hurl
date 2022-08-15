@@ -342,7 +342,15 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
 }
 
 fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    choice(vec![option_insecure, option_cacert, option_verbose], reader)
+    choice(
+        vec![
+            option_insecure,
+            option_cacert,
+            option_verbose,
+            option_very_verbose,
+        ],
+        reader,
+    )
 }
 
 fn option_insecure(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
@@ -409,6 +417,28 @@ fn option_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     };
 
     Ok(EntryOption::Verbose(option))
+}
+
+fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("very-verbose", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = nonrecover(boolean, reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = VeryVerboseOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::VeryVerbose(option))
 }
 
 #[cfg(test)]

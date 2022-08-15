@@ -821,6 +821,7 @@ impl Tokenizable for EntryOption {
             EntryOption::Insecure(option) => option.tokenize(),
             EntryOption::CaCertificate(option) => option.tokenize(),
             EntryOption::Verbose(option) => option.tokenize(),
+            EntryOption::VeryVerbose(option) => option.tokenize(),
         }
     }
 }
@@ -879,6 +880,27 @@ impl Tokenizable for VerboseOption {
         );
         tokens.append(&mut self.space0.tokenize());
         tokens.push(Token::String("verbose".to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.push(Token::Colon(String::from(":")));
+        tokens.append(&mut self.space2.tokenize());
+        tokens.push(Token::Boolean(self.value.to_string()));
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for VeryVerboseOption {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(
+            &mut self
+                .line_terminators
+                .iter()
+                .flat_map(|e| e.tokenize())
+                .collect(),
+        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::String("very-verbose".to_string()));
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::Colon(String::from(":")));
         tokens.append(&mut self.space2.tokenize());
