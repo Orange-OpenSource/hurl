@@ -255,6 +255,10 @@ pub fn get_entry_options(
                         client_options.follow_location = option.value;
                         logger.debug(format!("location: {}", option.value).as_str());
                     }
+                    EntryOption::MaxRedirect(option) => {
+                        client_options.max_redirect = Some(option.value);
+                        logger.debug(format!("max-redirs: {}", option.value).as_str());
+                    }
                     EntryOption::Verbose(option) => {
                         client_options.verbosity = if option.value {
                             Some(Verbosity::Verbose)

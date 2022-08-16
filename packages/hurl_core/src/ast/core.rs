@@ -670,6 +670,7 @@ pub enum EntryOption {
     CaCertificate(CaCertificateOption),
     Insecure(InsecureOption),
     FollowLocation(FollowLocationOption),
+    MaxRedirect(MaxRedirectOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
 }
@@ -721,5 +722,15 @@ pub struct FollowLocationOption {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: bool,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MaxRedirectOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: usize,
     pub line_terminator0: LineTerminator,
 }

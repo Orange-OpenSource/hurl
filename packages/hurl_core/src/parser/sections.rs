@@ -347,6 +347,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_cacert,
             option_insecure,
             option_follow_location,
+            option_max_redirect,
             option_verbose,
             option_very_verbose,
         ],
@@ -418,6 +419,30 @@ fn option_follow_location(reader: &mut Reader) -> ParseResult<'static, EntryOpti
     };
 
     Ok(EntryOption::FollowLocation(option))
+}
+
+fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("max-redirs", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = nonrecover(natural, reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    // FIXME: try to not unwrap redirect value
+    // and returns an error if not possible
+    let option = MaxRedirectOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value: usize::try_from(value).unwrap(),
+        line_terminator0,
+    };
+
+    Ok(EntryOption::MaxRedirect(option))
 }
 
 fn option_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
