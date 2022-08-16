@@ -255,6 +255,8 @@ Write output to <file> instead of stdout.
 
 Print filename and status for each test (on stderr)
 
+Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
+
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 
 Use the specified proxy.
@@ -275,9 +277,11 @@ If the HTML report already exists, it will be updated with the new test results.
 
 Print test metrics at the end of the run (on stderr)
 
+Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
+
 ### --test {#test}
 
-Activate test mode; equals [`--no-output`](#no-output) [`--progress`](#progress) [`--summary`](#summary)
+Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. 
 
 ### --to-entry <entry-number> {#to-entry}
 
@@ -306,7 +310,7 @@ Note that defining a variable twice produces an error.
 
 ### -v, --verbose {#verbose}
 
-Turn on verbose output on standard error stream
+Turn on verbose output on standard error stream.
 Useful for debugging.
 
 A line starting with '>' means data sent by Hurl.
@@ -314,6 +318,14 @@ A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
+
+### --very-verbose {#very-verbose}
+
+Turn on more verbose output on standard error stream.
+
+In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and
+response on standard error.
+
 
 ### -h, --help {#help}
 

@@ -4,8 +4,8 @@
 This script uses Hurl doc to generate README suitable for GitHub and crates.io
 
 Examples:
-    $ python3 build_readme.py github > ../../README.md
-    $ python3 build_readme.py crates > ../../packages/hurl/README.md
+    $ python3 bin/docs/build_readme.py github > README.md
+    $ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 
 """
 import os
@@ -55,7 +55,7 @@ def main(dest: str) -> int:
 
     header_md = parse_markdown(text=header)
 
-    home = Path("../../docs/home.md").read_text()
+    home = Path("docs/home.md").read_text()
     # We adapt the "Why Hurl" part to transform h2 tag back to markdown
 
     def showcase_rep(m):
@@ -74,12 +74,10 @@ def main(dest: str) -> int:
     ]
     home_md.remove_nodes(logo_nodes)
 
-    samples_md = parse_markdown(text=Path("../../docs/samples.md").read_text())
-    usage_md = parse_markdown(text=Path("../../docs/man-page.md").read_text())
+    samples_md = parse_markdown(text=Path("docs/samples.md").read_text())
+    usage_md = parse_markdown(text=Path("docs/man-page.md").read_text())
 
-    installation_md = parse_markdown(
-        text=Path("../../docs/installation.md").read_text()
-    )
+    installation_md = parse_markdown(text=Path("docs/installation.md").read_text())
 
     body_md = MarkdownDoc()
     body_md.extend(samples_md)

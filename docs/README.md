@@ -28,6 +28,21 @@ docs/*.md => README.md
 docs/*.md => packages/hurl/README.md
 ```
 
+## Scripts
+
+1. generate man pages
+2. generate <hurl.dev> man page
+3. generate GitHub README
+4. generate crates.io README
+
+```bash
+$ python3 bin/release/gen_manpage.py docs/man/hurl.md > docs/man/hurl.1
+$ python3 bin/release/gen_manpage.py docs/man/hurlfmt.md > docs/man/hurlfmt.1
+$ python3 bin/docs/build_man_md.py docs/man/hurl.md > docs/man-page.md
+$ python3 bin/docs/build_readme.py github > README.md
+$ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
+```
+
 
 [`hurl.md`]: https://github.com/Orange-OpenSource/hurl/tree/master/docs/man/hurl.md
 [`hurlfmt.md`]: https://github.com/Orange-OpenSource/hurl/tree/master/docs/man/hurlfmt.md

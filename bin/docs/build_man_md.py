@@ -6,7 +6,7 @@ This script converts Hurl man file to Markdown suitable for the Hurl canonical d
 This tool takes the Hurl man file as a first argument.
 
 Examples:
-    $ python3 build_man_md.py ../../docs/man/hurl.md > ../../docs/man-page.md
+    $ python3 bin/docs/build_man_md.py docs/man/hurl.md > docs/man-page.md
 
 """
 import re

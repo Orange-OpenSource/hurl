@@ -236,6 +236,8 @@ Write output to <file> instead of stdout.
 
 Print filename and status for each test (on stderr)
 
+Deprecated, use \fI--test\fP or \fI--json\fP instead.
+
 .IP "-x, --proxy [protocol://]host[:port] "
 
 Use the specified proxy.
@@ -256,9 +258,11 @@ If the HTML report already exists, it will be updated with the new test results.
 
 Print test metrics at the end of the run (on stderr)
 
+Deprecated, use \fI--test\fP or \fI--json\fP instead.
+
 .IP "--test "
 
-Activate test mode; equals \fI--no-output\fP \fI--progress\fP \fI--summary\fP
+Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. 
 
 .IP "--to-entry <entry-number> "
 
@@ -287,7 +291,7 @@ Note that defining a variable twice produces an error.
 
 .IP "-v, --verbose "
 
-Turn on verbose output on standard error stream
+Turn on verbose output on standard error stream.
 Useful for debugging.
 
 A line starting with '>' means data sent by Hurl.
@@ -295,6 +299,14 @@ A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
+
+.IP "--very-verbose "
+
+Turn on more verbose output on standard error stream.
+
+In contrast to  \fI--verbose\fP option, this option outputs the full HTTP body request and
+response on standard error.
+
 
 .IP "-h, --help "
 
