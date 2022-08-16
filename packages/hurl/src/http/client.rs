@@ -89,7 +89,14 @@ impl Client {
         loop {
             let (request, response) = self.execute(&request_spec, options, logger)?;
             calls.push((request, response.clone()));
-            if let Some(url) = self.get_follow_location(&response, options) {
+            if !options.follow_location {
+                break;
+            }
+
+            if let Some(url) = self.get_follow_location(&response) {
+                logger.debug("");
+                logger.debug(format!("=> Redirect to {}", url).as_str());
+                logger.debug("");
                 request_spec = RequestSpec {
                     method: Method::Get,
                     url,
@@ -500,14 +507,7 @@ impl Client {
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
     /// 3. a header Location
-    fn get_follow_location(
-        &mut self,
-        response: &Response,
-        options: &ClientOptions,
-    ) -> Option<String> {
-        if !options.follow_location {
-            return None;
-        }
+    fn get_follow_location(&mut self, response: &Response) -> Option<String> {
         let response_code = response.status;
         if !(300..400).contains(&response_code) {
             return None;

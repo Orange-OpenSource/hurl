@@ -42,6 +42,9 @@
 * <a href="/very-verbose/redirected">here</a>.
 * </body>
 * </html>
+*
+* => Redirect to http://localhost:8000/very-verbose/redirected
+*
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*

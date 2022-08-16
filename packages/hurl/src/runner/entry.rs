@@ -243,13 +243,17 @@ pub fn get_entry_options(
         if let SectionValue::Options(options) = &section.value {
             for option in options {
                 match option {
-                    EntryOption::Insecure(option) => {
-                        client_options.insecure = option.value;
-                        logger.debug(format!("insecure: {}", client_options.insecure).as_str());
-                    }
                     EntryOption::CaCertificate(option) => {
                         client_options.cacert_file = Some(option.filename.value.clone());
                         logger.debug(format!("cacert: {}", option.filename.value).as_str());
+                    }
+                    EntryOption::Insecure(option) => {
+                        client_options.insecure = option.value;
+                        logger.debug(format!("insecure: {}", option.value).as_str());
+                    }
+                    EntryOption::FollowLocation(option) => {
+                        client_options.follow_location = option.value;
+                        logger.debug(format!("location: {}", option.value).as_str());
                     }
                     EntryOption::Verbose(option) => {
                         client_options.verbosity = if option.value {

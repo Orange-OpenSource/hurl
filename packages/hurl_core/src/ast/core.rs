@@ -667,8 +667,9 @@ pub struct Variable {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum EntryOption {
-    Insecure(InsecureOption),
     CaCertificate(CaCertificateOption),
+    Insecure(InsecureOption),
+    FollowLocation(FollowLocationOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
 }
@@ -705,6 +706,16 @@ pub struct VerboseOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct VeryVerboseOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: bool,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct FollowLocationOption {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub space1: Whitespace,
