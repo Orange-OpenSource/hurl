@@ -1,4 +1,4 @@
-.TH hurl 1 "23 Jun 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
+.TH hurl 1 "16 Aug 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -19,7 +19,7 @@ Hurl is very versatile, it enables to chain HTTP requests, capture values from H
 
     $ hurl session.hurl
 
-If no input-files are specified, input is read from stdin.
+If no input files are specified, input is read from stdin.
 
     $ echo GET http://httpbin.org/get | hurl
         {
@@ -37,20 +37,20 @@ If no input-files are specified, input is read from stdin.
         }
 
 
-Output goes to stdout by default. For output to a file, use the -o option:
+Output goes to stdout by default. For output to a file, use the \fI-o, --output\fP option:
 
     $ hurl -o output input.hurl
 
 By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
-To have a test oriented output, you can use --test option:
+To have a test oriented output, you can use \fI--test\fP option:
 
     $ hurl --test *.hurl
 
 
 .SH HURL FILE FORMAT
 
-The Hurl file format is fully documented in <https://hurl.dev/docs/hurl-file.html>
+The Hurl file format is fully documented in \fIhttps://hurl.dev/docs/hurl-file.html\fP
 
 It consists of one or several HTTP requests
 
@@ -74,7 +74,7 @@ A typical example occurs with csrf tokens.
     POST https://example.org/login?user=toto&password=1234
     X-CSRF-TOKEN: {{csrf_token}}
 
-More information on captures here <https://hurl.dev/docs/capturing-response.html>
+More information on captures here \fIhttps://hurl.dev/docs/capturing-response.html\fP
 
 .IP "Asserts"
 
@@ -100,11 +100,29 @@ You can also include explicit asserts combining query and predicate
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
-More information on asserts here <https://hurl.dev/docs/asserting-response.html>
+More information on asserts here \fIhttps://hurl.dev/docs/asserting-response.html\fP
 
 .SH OPTIONS
 
-Options that exist in curl have exactly the same semantic.
+Options that exist in curl have exactly the same semantic. 
+
+Options specified on the command line are defined for every Hurl file's entry.
+
+For instance:
+
+    $ hurl --location foo.hurl
+
+will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
+
+    GET https://google.com
+    HTTP/* 301
+
+    GET https://google.com
+    [Options]
+    location: true
+    HTTP/* 200
+
+will follow redirection only for the second entry.
 
 .IP "--cacert "
 
@@ -199,7 +217,7 @@ See also \fI--connect-timeout\fP option.
 
 .IP "--no-color "
 
-Do not colorize Output
+Do not colorize output
 
 .IP "--no-output "
 
@@ -240,7 +258,7 @@ Print test metrics at the end of the run (on stderr)
 
 .IP "--test "
 
-Activate test mode; equals \fI--no-output](#no-output) [--progress](#progress) [--summary\fP
+Activate test mode; equals \fI--no-output\fP \fI--progress\fP \fI--summary\fP
 
 .IP "--to-entry <entry-number> "
 
@@ -306,11 +324,15 @@ Sets the proxy server to use if no protocol-specific proxy is set.
 
 .IP "no_proxy <comma-separated list of hosts>"
 
-list of host names that shouldn't go through any proxy.
+List of host names that shouldn't go through any proxy.
 
 .IP "HURL_name value"
 
-Define variable (name/value) to be used in Hurl templates. This is similar than \fI--variable](#variable) and [--variables-file\fP options.
+Define variable (name/value) to be used in Hurl templates. This is similar than \fI--variable\fP and \fI--variables-file\fP options.
+
+.IP "NO_COLOR"
+
+When set to a non-empty string, do not colorize output (see \fI--no-color\fP option).
 
 .SH EXIT CODES
 

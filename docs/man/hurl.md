@@ -18,7 +18,7 @@ Hurl is very versatile, it enables to chain HTTP requests, capture values from H
 $ hurl session.hurl
 ```
 
-If no input-files are specified, input is read from stdin.
+If no input files are specified, input is read from stdin.
 
 ```
 $ echo GET http://httpbin.org/get | hurl
@@ -38,7 +38,7 @@ $ echo GET http://httpbin.org/get | hurl
 ```
 
 
-Output goes to stdout by default. For output to a file, use the -o option:
+Output goes to stdout by default. For output to a file, use the [`-o, --output`](#output) option:
 
 ```
 $ hurl -o output input.hurl
@@ -46,7 +46,7 @@ $ hurl -o output input.hurl
 
 By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
-To have a test oriented output, you can use --test option:
+To have a test oriented output, you can use [`--test`](#test) option:
 
 ```
 $ hurl --test *.hurl
@@ -55,7 +55,7 @@ $ hurl --test *.hurl
 
 ## HURL FILE FORMAT
 
-The Hurl file format is fully documented in <https://hurl.dev/docs/hurl-file.html>
+The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.html](https://hurl.dev/docs/hurl-file.html)
 
 It consists of one or several HTTP requests
 
@@ -83,7 +83,7 @@ POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
 
-More information on captures here <https://hurl.dev/docs/capturing-response.html>
+More information on captures here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
 
 ### Asserts
 
@@ -115,11 +115,33 @@ xpath "string(//title)" == "301 Moved"
 
 Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
 
-More information on asserts here <https://hurl.dev/docs/asserting-response.html>
+More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 
 ## OPTIONS
 
-Options that exist in curl have exactly the same semantic.
+Options that exist in curl have exactly the same semantic. 
+
+Options specified on the command line are defined for every Hurl file's entry.
+
+For instance:
+
+```
+$ hurl --location foo.hurl
+```
+
+will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
+
+```hurl
+GET https://google.com
+HTTP/* 301
+
+GET https://google.com
+[Options]
+location: true
+HTTP/* 200
+```
+
+will follow redirection only for the second entry.
 
 ### --cacert {#cacert}
 
@@ -140,20 +162,20 @@ Request a compressed response using one of the algorithms br, gzip, deflate and 
 
 Maximum time in seconds that you allow Hurl's connection to take.
 
-See also [-m, --max-time](#max-time) option.
+See also [`-m, --max-time`](#max-time) option.
 
 ### -b, --cookie <file> {#cookie}
 
 Read cookies from file (using the Netscape cookie file format).
 
-Combined with [-c, --cookie-jar](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
+Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
 ### -c, --cookie-jar <file> {#cookie-jar}
 
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
-Combined with [-b, --cookie](#cookie), you can simulate a cookie storage between successive Hurl runs.
+Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
 
 ### --fail-at-end {#fail-at-end}
 
@@ -171,7 +193,7 @@ When this is not explicitly defined, the files are relative to the current direc
 
 ### -L, --location {#location}
 
-Follow redirect.  You can limit the amount of redirects to follow by using the [--max-redirs](#max-redirs) option.
+Follow redirect.  You can limit the amount of redirects to follow by using the [`--max-redirs`](#max-redirs) option.
 
 ### --glob <glob> {#glob}
 
@@ -210,11 +232,11 @@ By default, the limit is set to 50 redirections. Set this option to -1 to make i
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
-See also [--connect-timeout](#connect-timeout) option.
+See also [`--connect-timeout`](#connect-timeout) option.
 
 ### --no-color {#no-color}
 
-Do not colorize Output
+Do not colorize output
 
 ### --no-output {#no-output}
 
@@ -255,7 +277,7 @@ Print test metrics at the end of the run (on stderr)
 
 ### --test {#test}
 
-Activate test mode; equals [--no-output](#no-output) [--progress](#progress) [--summary](#summary)
+Activate test mode; equals [`--no-output`](#no-output) [`--progress`](#progress) [`--summary`](#summary)
 
 ### --to-entry <entry-number> {#to-entry}
 
@@ -278,7 +300,7 @@ Define variable (name/value) to be used in Hurl templates.
 
 Set properties file in which your define your variables.
 
-Each variable is defined as name=value exactly as with [--variable](#variable) option.
+Each variable is defined as name=value exactly as with [`--variable`](#variable) option.
 
 Note that defining a variable twice produces an error.
 
@@ -305,7 +327,7 @@ Prints version information
 
 Environment variables can only be specified in lowercase.
 
-Using an environment variable to set the proxy has the same effect as using the [-x, --proxy](#proxy) option.
+Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
 
 ### http_proxy [protocol://]<host>[:port]
 
@@ -321,11 +343,15 @@ Sets the proxy server to use if no protocol-specific proxy is set.
 
 ### no_proxy <comma-separated list of hosts>
 
-list of host names that shouldn't go through any proxy.
+List of host names that shouldn't go through any proxy.
 
 ### HURL_name value
 
-Define variable (name/value) to be used in Hurl templates. This is similar than [--variable](#variable) and [--variables-file](#variables-file) options.
+Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.
+
+### NO_COLOR
+
+When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).
 
 ## EXIT CODES
 

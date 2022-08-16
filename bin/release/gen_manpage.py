@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""Build Hurl Man File.
+
+This script creates Hurl man file from a Markdown source.
+
+This tool takes the Hurl man Markdown source file as a first argument.
+
+Examples:
+    $ python3 bin/release/gen_manpage.py docs/man/hurl.md > ../../docs/man-page.md
+
+"""
 import sys
 import re
 from datetime import date
@@ -51,7 +61,7 @@ def convert_md(s):
     s = p.sub(".B \\1\n", s)
 
     # Remove link Text
-    p = re.compile("\[(.*)\]\(.*\)")
+    p = re.compile("\[`?(.*?)`?\]\(.*?\)")
     s = p.sub("\\\\fI\\1\\\\fP", s)
 
     # Remove local anchor
