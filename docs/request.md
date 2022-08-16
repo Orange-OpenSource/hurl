@@ -487,6 +487,27 @@ file,data.bin;
 File are relative to the input Hurl file, and cannot contain implicit parent directory (`..`). You can use  
 [`--file-root` option] to specify the root directory of all file nodes.
 
+### Options
+
+Options used to execute this request. 
+
+Options such as [`--location`], [`--verbose`], [`--insecure`] can be used at the command line and applied to every 
+request of an Hurl file. An `[Options]` section can be used to apply option to only one request (without passing options 
+to the command line), while other requests are unaffected.
+
+```hurl
+GET https://example.org
+# An options section, each option is optional and applied only to this request...
+[Options]
+insecure: true          # allows insecure SSL connections and transfers
+cacert: /etc/cert.pem   # a custom certificate file
+location: true          # follow redirection for this request
+max-redirs: 10          # maximum number of redirections
+verbose: true           # allow verbose output
+very-verbose: true      # allow more verbose output    
+```
+
+
 
 [method]: #method
 [url]: #url
@@ -513,3 +534,7 @@ File are relative to the input Hurl file, and cannot contain implicit parent dir
 [`-u/--user` option]: /docs/man-page.md#user
 [Hurl unicode literals \u{20}]: /docs/hurl-file.md#special-character-in-strings
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+[`--location`]: /docs/man-page.html#location
+[`--verbose`]: /docs/man-page.html#verbose
+[`--insecure`]: /docs/man-page.html#insecure
+

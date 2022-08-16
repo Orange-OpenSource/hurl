@@ -65,19 +65,20 @@ HTTP/1.1 302
 
 ```shell
 $ hurl --test create-quiz.hurl
-create-quiz.hurl: RUNNING [1/1]
-error: Assert Status
-  --> integration/create-quiz.hurl:9:10
-   |
- 9 | HTTP/1.1 302
-   |          ^^^ actual value is <403>
-   |
-create-quiz.hurl: FAILURE
+[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1;31merror[0m: [1mAssert status code[0m
+  [1;34m-->[0m create-quiz.hurl:10:10
+   [1;34m|[0m
+[1;34m10[0m [1;34m|[0m HTTP/1.1 302
+   [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <403>[0m
+   [1;34m|[0m
+
+[1mcreate-quiz.hurl[0m: [1;31mFailure[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 0 (0.0%)
 Failed:    1 (100.0%)
-Duration:  13ms
+Duration:  5ms
 ```
 
 This is unexpected! Our test is failing, we're not redirected to the new quiz detail page.
@@ -167,13 +168,13 @@ HTTP/1.1 302
 
 ```shell
 $ hurl --test create-quiz.hurl
-create-quiz.hurl: RUNNING [1/1]
-create-quiz.hurl: SUCCESS
+[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 1 (100.0%)
 Failed:    0 (0.0%)
-Duration:  33ms
+Duration:  10ms
 ```
 
 ## Follow Redirections
@@ -256,13 +257,13 @@ HTTP/1.1 200
 
 ```shell
 $ hurl --test create-quiz.hurl
-create-quiz.hurl: RUNNING [1/1]
-create-quiz.hurl: SUCCESS
+[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 1 (100.0%)
 Failed:    0 (0.0%)
-Duration:  41ms
+Duration:  10ms
 ```
 
 

@@ -135,8 +135,8 @@ additional/test2.hurl
 
 You can simply run your critical tests with
 
-```
-hurl critical/*.hurl
+```shell
+$ hurl --test critical/*.hurl
 ```
 
 ### How can I use my Hurl files outside Hurl?
@@ -153,13 +153,12 @@ User-Agent: Custom
 HTTP/1.1 200
 [Asserts]
 jsonpath "$.name" equals "Bob"
-
 ```
 
 will be converted to json with the following command:
 
-```
-hurlfmt test.hurl --format json | jq
+```shell
+$ hurlfmt test.hurl --format json | jq
 {
   "entries": [
     {
@@ -202,10 +201,19 @@ Calculations can be done beforehand, before running the Hurl File.
 
 For example, with date calculations, variables `now` and `tomorrow` can be used as param or expected value.
 
+```shell
+$ TODAY=$(date '+%y%m%d')
+$ TOMORROW=$(date '+%y%m%d' -d"+1days")
+$ hurl --variable "today=$TODAY" --variable "tomorrow=$TOMORROW" test.hurl
 ```
-TODAY=$(date '+%y%m%d')
-TOMORROW=$(date '+%y%m%d' -d"+1days")
-hurl --variable "today=$TODAY" --variable "tomorrow=$TOMORROW" test.hurl
+
+You can also use environment variables that begins with `HURL_` to inject data in an Hurl file.
+For instance, to inject `today` and `tomorrow` variables:
+
+```shell
+$ export HURL_today=$(date '+%y%m%d')
+$ export HURL_tomorrow=$(date '+%y%m%d' -d"+1days")
+$ hurl test.hurl
 ```
 
 ## macOS
@@ -218,14 +226,14 @@ if you've installed curl with Homebrew and want Hurl to use Homebrew's libcurl),
 the following command:
 
 ```shell
-sudo install_name_tool -change /usr/lib/libcurl.4.dylib PATH_TO_CUSTOM_LIBCURL PATH_TO_HURL_BIN
+$ sudo install_name_tool -change /usr/lib/libcurl.4.dylib PATH_TO_CUSTOM_LIBCURL PATH_TO_HURL_BIN
 ```
 
 For instance:
 
 ```shell
 # /usr/local/opt/curl/lib/libcurl.4.dylib is installed by `brew install curl`
-sudo install_name_tool -change /usr/lib/libcurl.4.dylib /usr/local/opt/curl/lib/libcurl.4.dylib /usr/local/bin/hurl
+$ sudo install_name_tool -change /usr/lib/libcurl.4.dylib /usr/local/opt/curl/lib/libcurl.4.dylib /usr/local/bin/hurl
 ```
 
 ### Hurl error: SSL certificate has expired

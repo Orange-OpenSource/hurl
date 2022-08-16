@@ -132,7 +132,7 @@ echo "Starting Quiz instance to be ready"
 # ...
 
 echo "Running Hurl tests"
-hurl integration/*.hurl --test
+hurl --test integration/*.hurl
 
 echo "Stopping Quiz instance"
 # ...
@@ -153,15 +153,15 @@ Wait 3s
 Wait 4s
 Wait 5s
 Running Hurl tests
-integration/basic.hurl: RUNNING [1/2]
-integration/basic.hurl: SUCCESS
-integration/create-quiz.hurl: RUNNING [2/2]
-integration/create-quiz.hurl: SUCCESS
+[1mintegration/basic.hurl[0m: [1;36mRunning[0m [1/2]
+[1mintegration/basic.hurl[0m: [1;32mSuccess[0m
+[1mintegration/create-quiz.hurl[0m: [1;36mRunning[0m [2/2]
+[1mintegration/create-quiz.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  2
 Succeeded: 2 (100.0%)
 Failed:    0 (0.0%)
-Duration:  1026ms
+Duration:  43ms
 Stopping Quiz instance
 quiz
 ```

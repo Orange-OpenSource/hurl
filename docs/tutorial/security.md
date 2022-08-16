@@ -166,13 +166,13 @@ HTTP/1.1 403
 
 ```shell
 $ hurl --test create-quiz.hurl
-create-quiz.hurl: RUNNING [1/1]
-create-quiz.hurl: SUCCESS
+[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 1 (100.0%)
 Failed:    0 (0.0%)
-Duration:  33ms
+Duration:  15ms
 ```
 
 ## Comments
@@ -213,13 +213,13 @@ xpath "//comment" count == 0     # Check that we don't leak comments
 
 ```shell
 $ hurl --test create-quiz.hurl
-create-quiz.hurl: RUNNING [1/1]
-create-quiz.hurl: SUCCESS
+[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 1 (100.0%)
 Failed:    0 (0.0%)
-Duration:  33ms
+Duration:  15ms
 ```
 
 ## Recap

@@ -106,12 +106,12 @@ is not running, you'll see an error:
 
 ```shell
 $ hurl basic.hurl 
-error: Http Connection
-  --> basic.hurl:1:5
-   |
- 1 | GET http://localhost:8080
-   |     ^^^^^^^^^^^^^^^^^^^^^ Fail to connect
-   |
+[1;31merror[0m: [1mHTTP connection[0m
+  [1;34m-->[0m basic.hurl:1:5
+   [1;34m|[0m
+[1;34m 1[0m [1;34m|[0m GET http://localhost:8080
+   [1;34m|[0m     [1;31m^^^^^^^^^^^^^^^^^^^^^[0m [1;31m(7) Failed to connect to localhost port 8080: Connection refused[0m
+   [1;34m|[0m
 ```
 
 
@@ -160,13 +160,13 @@ test output:
 
 ```shell
 $ hurl --test basic.hurl
-basic.hurl: RUNNING [1/1]
-basic.hurl: SUCCESS
+[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
+[1mbasic.hurl[0m: [1;32mSuccess[0m
 --------------------------------------------------------------------------------
 Executed:  1
 Succeeded: 1 (100.0%)
 Failed:    0 (0.0%)
-Duration:  14ms
+Duration:  7ms
 ```
 
 6. Modify `basic.hurl` to test a different HTTP response status code:
@@ -181,12 +181,20 @@ HTTP/1.1 500
 
 ```shell
 $ hurl --test basic.hurl
-error: Assert Status
-  --> basic.hurl:2:10
-   |
- 2 | HTTP/1.1 500
-   |          ^^^ actual value is <200>
-   |
+[1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
+[1;31merror[0m: [1mAssert status code[0m
+  [1;34m-->[0m basic.hurl:2:10
+   [1;34m|[0m
+[1;34m 2[0m [1;34m|[0m HTTP/1.1 500
+   [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <200>[0m
+   [1;34m|[0m
+
+[1mbasic.hurl[0m: [1;31mFailure[0m
+--------------------------------------------------------------------------------
+Executed:  1
+Succeeded: 0 (0.0%)
+Failed:    1 (100.0%)
+Duration:  5ms
 ```
 
 8. Revert your changes and finally add a comment at the beginning of the file:
