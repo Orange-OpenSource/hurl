@@ -389,8 +389,8 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     // specific case for assert errors
     let message = if column_number == 0 {
         let prefix = format!("{} {}   ", " ".repeat(line_number_size).as_str(), separator);
-        let fix_me = &error.fixme();
-        add_line_prefix(fix_me, prefix)
+        let fix_me = error.fixme();
+        add_line_prefix(&fix_me, &prefix, colored)
     } else {
         let line = lines.get(line_number - 1).unwrap();
         let width = if error.source_info().end.column > column_number {
@@ -408,13 +408,22 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
                 tab_shift += 1;
             }
         }
+        let mut underline = "^".repeat(if width > 1 { width } else { 1 });
+        if colored {
+            underline = underline.red().bold().to_string();
+        }
+
+        let mut fix_me = error.fixme();
+        if colored {
+            fix_me = fix_me.red().bold().to_string();
+        }
         format!(
             "{} {} {}{} {fixme}",
             " ".repeat(line_number_size).as_str(),
             separator,
             " ".repeat(column_number - 1 + tab_shift * 3),
-            "^".repeat(if width > 1 { width } else { 1 }),
-            fixme = error.fixme().as_str(),
+            underline,
+            fixme = fix_me,
         )
     };
 
@@ -438,11 +447,6 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     } else {
         format!(" {}", line)
     };
-    let message = if colored {
-        message.red().bold().to_string()
-    } else {
-        message
-    };
 
     format!(
         r#"{description}
@@ -461,11 +465,17 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     )
 }
 
-fn add_line_prefix(s: &str, prefix: String) -> String {
+fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n").unwrap().split(s).collect();
     lines
         .iter()
-        .map(|line| format!("{}{}", prefix, line,))
+        .map(|line| {
+            if colored {
+                format!("{}{}", prefix, line.red().bold())
+            } else {
+                format!("{}{}", prefix, line)
+            }
+        })
         .collect::<Vec<String>>()
         .join("\n")
 }
@@ -477,9 +487,9 @@ pub mod tests {
     use hurl_core::ast::SourceInfo;
 
     #[test]
-    fn test_add_line_prefix() {
+    fn test_add_line_prefix_no_colored() {
         assert_eq!(
-            add_line_prefix("line1\nline2\nline3", ">".to_string()),
+            add_line_prefix("line1\nline2\nline3", ">", false),
             ">line1\n>line2\n>line3"
         )
     }
