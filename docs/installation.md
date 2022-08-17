@@ -111,7 +111,7 @@ $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 #### Arch based distributions
 
 ```shell
-$ pacman -Sy --noconfirm pkgconf gcc openssl libxml2
+$ pacman -Sy --noconfirm pkgconf gcc glibc openssl libxml2
 ```
 
 #### macOS

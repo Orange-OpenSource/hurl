@@ -764,7 +764,7 @@ Option | Description
 <a href="#variable" id="variable"><code>--variable &lt;name=value&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>
 <a href="#variables-file" id="variables-file"><code>--variables-file &lt;file&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
 <a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream.<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, -i, --include might be the option you're looking for.<br/>
-<a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a> | Turn on more verbose output on standard error stream.<br/><br/>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and<br/>response on standard error.<br/>
+<a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a> | Turn on more verbose output on standard error stream.<br/><br/>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error.<br/>
 <a href="#help" id="help"><code>-h, --help</code></a> | Usage help. This lists all current command line options with a short description.<br/>
 <a href="#version" id="version"><code>-V, --version</code></a> | Prints version information<br/>
 
@@ -914,7 +914,7 @@ $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 #### Arch based distributions
 
 ```shell
-$ pacman -Sy --noconfirm pkgconf gcc openssl libxml2
+$ pacman -Sy --noconfirm pkgconf gcc glibc openssl libxml2
 ```
 
 #### macOS

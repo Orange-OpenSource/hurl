@@ -323,8 +323,7 @@ If you only want HTTP headers in the output, -i, --include might be the option y
 
 Turn on more verbose output on standard error stream.
 
-In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and
-response on standard error.
+In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error.
 
 
 ### -h, --help {#help}
