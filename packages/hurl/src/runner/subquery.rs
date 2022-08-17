@@ -99,10 +99,10 @@ pub mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(""),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let subquery = Subquery {
-            source_info: SourceInfo::init(1, 1, 1, 20),
+            source_info: SourceInfo::new(1, 1, 1, 20),
             value: SubqueryValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
@@ -111,7 +111,7 @@ pub mod tests {
                         value: "Hello (.*)!".to_string(),
                         encoded: "Hello (.*)!".to_string(),
                     }],
-                    source_info: SourceInfo::init(1, 7, 1, 20),
+                    source_info: SourceInfo::new(1, 7, 1, 20),
                 }),
             },
         };
@@ -129,7 +129,7 @@ pub mod tests {
         let error = eval_subquery(subquery, Value::Bool(true), &variables)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
+        assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));
         assert_eq!(
             error.inner,
             RunnerError::SubqueryInvalidInput("boolean".to_string())
@@ -141,10 +141,10 @@ pub mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(""),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let subquery = Subquery {
-            source_info: SourceInfo::init(1, 1, 1, 20),
+            source_info: SourceInfo::new(1, 1, 1, 20),
             value: SubqueryValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
@@ -153,7 +153,7 @@ pub mod tests {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
-                    source_info: SourceInfo::init(1, 7, 1, 20),
+                    source_info: SourceInfo::new(1, 7, 1, 20),
                 }),
             },
         };
@@ -164,7 +164,7 @@ pub mod tests {
         )
         .err()
         .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 7, 1, 20));
+        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 20));
         assert_eq!(error.inner, RunnerError::InvalidRegex {});
     }
 
@@ -172,7 +172,7 @@ pub mod tests {
     fn test_subquery_count() {
         let variables = HashMap::new();
         let subquery = Subquery {
-            source_info: SourceInfo::init(1, 1, 1, 20),
+            source_info: SourceInfo::new(1, 1, 1, 20),
             value: SubqueryValue::Count {},
         };
         assert_eq!(
@@ -193,7 +193,7 @@ pub mod tests {
         let error = eval_subquery(subquery, Value::Bool(true), &variables)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 1, 1, 20));
+        assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));
         assert_eq!(
             error.inner,
             RunnerError::SubqueryInvalidInput("boolean".to_string())

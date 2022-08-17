@@ -224,15 +224,15 @@ mod tests {
             JsonValue::Expression(Expr {
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 variable: Variable {
                     name: "x".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             })
             .to_string()
@@ -249,7 +249,7 @@ mod tests {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
                 }],
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             })
             .to_string()
         );
@@ -306,7 +306,7 @@ mod tests {
                             value: "id".to_string(),
                             encoded: "id".to_string(),
                         }],
-                        source_info: SourceInfo::init(1, 1, 1, 1),
+                        source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                     space1: "".to_string(),
                     space2: " ".to_string(),
@@ -325,15 +325,15 @@ mod tests {
             TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 1, 1, 1),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 variable: Variable {
                     name: "name".to_string(),
-                    source_info: SourceInfo::init(1, 1, 1, 1),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 1, 1, 1),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
                 },
             })
             .encoded(),
@@ -345,18 +345,18 @@ mod tests {
                 elements: vec![TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: "".to_string(),
-                        source_info: SourceInfo::init(1, 1, 1, 1),
+                        source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::init(1, 1, 1, 1),
+                        source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                     space1: Whitespace {
                         value: "".to_string(),
-                        source_info: SourceInfo::init(1, 1, 1, 1),
+                        source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                 })],
-                source_info: SourceInfo::init(1, 1, 1, 1),
+                source_info: SourceInfo::new(1, 1, 1, 1),
             }
             .encoded(),
             "{{name}}".to_string()

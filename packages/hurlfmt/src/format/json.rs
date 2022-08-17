@@ -527,7 +527,7 @@ pub mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: "".to_string(),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -553,7 +553,7 @@ pub mod tests {
                         value: "http://example.com".to_string(),
                         encoded: "not_used".to_string(),
                     }],
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 line_terminator0: line_terminator(),
                 headers: vec![KeyValue {
@@ -563,7 +563,7 @@ pub mod tests {
                         value: "Foo".to_string(),
                         encoded: "unused".to_string(),
                         quotes: false,
-                        source_info: SourceInfo::init(0, 0, 0, 0),
+                        source_info: SourceInfo::new(0, 0, 0, 0),
                     },
                     space1: whitespace(),
                     space2: whitespace(),
@@ -573,13 +573,13 @@ pub mod tests {
                             value: "Bar".to_string(),
                             encoded: "unused".to_string(),
                         }],
-                        source_info: SourceInfo::init(0, 0, 0, 0),
+                        source_info: SourceInfo::new(0, 0, 0, 0),
                     },
                     line_terminator0: line_terminator(),
                 }],
                 sections: vec![],
                 body: None,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             }
             .to_json(),
             JValue::Object(vec![
@@ -606,19 +606,19 @@ pub mod tests {
                 line_terminators: vec![],
                 version: Version {
                     value: VersionValue::Version11,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: whitespace(),
                 status: Status {
                     value: StatusValue::Specific(200),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 line_terminator0: line_terminator(),
                 headers: vec![],
                 sections: vec![],
                 body: None,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             }
             .to_json(),
             JValue::Object(vec![
@@ -634,19 +634,19 @@ pub mod tests {
                 line_terminators: vec![],
                 version: Version {
                     value: VersionValue::VersionAny,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: whitespace(),
                 status: Status {
                     value: StatusValue::Any,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 line_terminator0: line_terminator(),
                 headers: vec![],
                 sections: vec![],
                 body: None,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             }
             .to_json(),
             JValue::Object(vec![])
@@ -655,7 +655,7 @@ pub mod tests {
 
     fn header_query() -> Query {
         Query {
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
             value: QueryValue::Header {
                 space0: whitespace(),
                 name: Template {
@@ -664,7 +664,7 @@ pub mod tests {
                         value: "Content-Length".to_string(),
                         encoded: "10".to_string(),
                     }],
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
             subquery: None,
@@ -679,7 +679,7 @@ pub mod tests {
                 value: "size".to_string(),
                 encoded: "unused".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace(),
             space2: whitespace(),
@@ -704,7 +704,7 @@ pub mod tests {
             not: false,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     value: PredicateValue::Integer(value),

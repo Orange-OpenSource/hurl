@@ -68,7 +68,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
     }
     Ok(Variable {
         name,
-        source_info: SourceInfo::init(
+        source_info: SourceInfo::new(
             start.pos.line,
             start.pos.column,
             reader.state.pos.line,
@@ -91,15 +91,15 @@ mod tests {
             Expr {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 3, 1, 4),
+                    source_info: SourceInfo::new(1, 3, 1, 4),
                 },
                 variable: Variable {
                     name: String::from("name"),
-                    source_info: SourceInfo::init(1, 4, 1, 8),
+                    source_info: SourceInfo::new(1, 4, 1, 8),
                 },
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 8, 1, 8),
+                    source_info: SourceInfo::new(1, 8, 1, 8),
                 },
             }
         );
@@ -140,7 +140,7 @@ mod tests {
             variable_name(&mut reader).unwrap(),
             Variable {
                 name: String::from("name"),
-                source_info: SourceInfo::init(1, 1, 1, 5),
+                source_info: SourceInfo::new(1, 1, 1, 5),
             }
         );
 
@@ -149,7 +149,7 @@ mod tests {
             variable_name(&mut reader).unwrap(),
             Variable {
                 name: String::from("my-id"),
-                source_info: SourceInfo::init(1, 1, 1, 6),
+                source_info: SourceInfo::new(1, 1, 1, 6),
             }
         );
     }

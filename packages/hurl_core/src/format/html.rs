@@ -986,7 +986,7 @@ mod tests {
         let raw_string = RawString {
             newline: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             value: Template {
                 quotes: false,
@@ -994,7 +994,7 @@ mod tests {
                     value: "".to_string(),
                     encoded: "unused".to_string(),
                 }],
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
         };
         assert_eq!(
@@ -1006,7 +1006,7 @@ mod tests {
         let raw_string = RawString {
             newline: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             value: Template {
                 quotes: false,
@@ -1014,7 +1014,7 @@ mod tests {
                     value: "hello".to_string(),
                     encoded: "unused".to_string(),
                 }],
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
         };
         assert_eq!(
@@ -1029,7 +1029,7 @@ mod tests {
         let raw_string = RawString {
             newline: Whitespace {
                 value: "\n".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             value: Template {
                 quotes: false,
@@ -1037,7 +1037,7 @@ mod tests {
                     value: "line1\nline2\n".to_string(),
                     encoded: "unused".to_string(),
                 }],
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
         };
         assert_eq!(
@@ -1070,7 +1070,7 @@ mod tests {
                         value: "id".to_string(),
                         encoded: "id".to_string(),
                     }],
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: "".to_string(),
                 space2: " ".to_string(),
@@ -1092,7 +1092,7 @@ mod tests {
                 value: "\n".to_string(),
                 encoded: "\\n".to_string(),
             }],
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         });
         assert_eq!(
             value.to_html(),

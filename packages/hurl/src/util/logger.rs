@@ -501,7 +501,7 @@ HTTP/1.0 200
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
-            source_info: SourceInfo::init(2, 10, 2, 13),
+            source_info: SourceInfo::new(2, 10, 2, 13),
             inner: runner::RunnerError::AssertStatus {
                 actual: "404".to_string(),
             },
@@ -527,7 +527,7 @@ xpath "strong(//head/title)" equals "Hello"
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
-            source_info: SourceInfo::init(4, 7, 4, 29),
+            source_info: SourceInfo::new(4, 7, 4, 29),
             inner: runner::RunnerError::QueryInvalidXpathEval {},
             assert: true,
         };
@@ -551,7 +551,7 @@ jsonpath "$.count" >= 5
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
-            source_info: SourceInfo::init(4, 0, 4, 0),
+            source_info: SourceInfo::new(4, 0, 4, 0),
             inner: runner::RunnerError::AssertFailure {
                 actual: "int <2>".to_string(),
                 expected: "greater than int <5>".to_string(),
@@ -580,7 +580,7 @@ HTTP/1.0 200
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
-            source_info: SourceInfo::init(3, 4, 4, 1),
+            source_info: SourceInfo::new(3, 4, 4, 1),
             inner: runner::RunnerError::AssertBodyValueError {
                 actual: "<p>Hello</p>\n\n".to_string(),
                 expected: "<p>Hello</p>\n".to_string(),

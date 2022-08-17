@@ -141,7 +141,7 @@ mod tests {
                     encoded: String::from("http://google.fr"),
                 }],
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 17),
+                source_info: SourceInfo::new(1, 1, 1, 17),
             }
         );
         assert_eq!(reader.state.cursor, 16);
@@ -160,7 +160,7 @@ mod tests {
                     ),
                 }],
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 57),
+                source_info: SourceInfo::new(1, 1, 1, 57),
             }
         );
         assert_eq!(reader.state.cursor, 56);
@@ -180,15 +180,15 @@ mod tests {
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: String::from(""),
-                            source_info: SourceInfo::init(1, 10, 1, 10),
+                            source_info: SourceInfo::new(1, 10, 1, 10),
                         },
                         variable: Variable {
                             name: String::from("host"),
-                            source_info: SourceInfo::init(1, 10, 1, 14),
+                            source_info: SourceInfo::new(1, 10, 1, 14),
                         },
                         space1: Whitespace {
                             value: String::from(""),
-                            source_info: SourceInfo::init(1, 14, 1, 14),
+                            source_info: SourceInfo::new(1, 14, 1, 14),
                         },
                     }),
                     TemplateElement::String {
@@ -198,7 +198,7 @@ mod tests {
                 ],
                 //encoded: None,
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 19),
+                source_info: SourceInfo::new(1, 1, 1, 19),
             }
         );
         assert_eq!(reader.state.cursor, 18);

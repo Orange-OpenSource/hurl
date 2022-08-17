@@ -71,11 +71,11 @@ mod tests {
         assert_eq!(
             subquery(&mut reader).unwrap(),
             Subquery {
-                source_info: SourceInfo::init(1, 1, 1, 20),
+                source_info: SourceInfo::new(1, 1, 1, 20),
                 value: SubqueryValue::Regex {
                     space0: Whitespace {
                         value: " ".to_string(),
-                        source_info: SourceInfo::init(1, 6, 1, 7)
+                        source_info: SourceInfo::new(1, 6, 1, 7)
                     },
                     value: RegexValue::Template(Template {
                         quotes: true,
@@ -83,7 +83,7 @@ mod tests {
                             value: "Hello (.*)!".to_string(),
                             encoded: "Hello (.*)!".to_string()
                         }],
-                        source_info: SourceInfo::init(1, 7, 1, 20)
+                        source_info: SourceInfo::new(1, 7, 1, 20)
                     })
                 }
             }
@@ -96,7 +96,7 @@ mod tests {
         assert_eq!(
             subquery(&mut reader).unwrap(),
             Subquery {
-                source_info: SourceInfo::init(1, 1, 1, 6),
+                source_info: SourceInfo::new(1, 1, 1, 6),
                 value: SubqueryValue::Count {}
             }
         );

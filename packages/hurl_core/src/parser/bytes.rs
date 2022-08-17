@@ -132,7 +132,7 @@ mod tests {
                 value: JsonValue::String(Template {
                     quotes: true,
                     elements: vec![],
-                    source_info: SourceInfo::init(1, 2, 1, 2),
+                    source_info: SourceInfo::new(1, 2, 1, 2),
                 })
             }
         );

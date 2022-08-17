@@ -804,7 +804,7 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -827,7 +827,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(1, 1, 0, 0),
+            source_info: SourceInfo::new(1, 1, 0, 0),
         };
 
         let predicate = Predicate {
@@ -839,7 +839,7 @@ mod tests {
                     value: PredicateValue::Integer(10),
                     operator: false,
                 },
-                source_info: SourceInfo::init(1, 11, 1, 12),
+                source_info: SourceInfo::new(1, 11, 1, 12),
             },
         };
 
@@ -856,7 +856,7 @@ mod tests {
                 type_mismatch: false,
             }
         );
-        assert_eq!(error.source_info, SourceInfo::init(1, 0, 1, 0));
+        assert_eq!(error.source_info, SourceInfo::new(1, 0, 1, 0));
 
         assert!(eval_predicate(predicate, &variables, Some(Value::Integer(1))).is_ok());
     }
@@ -866,7 +866,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_predicate_func(
             PredicateFunc {
@@ -875,7 +875,7 @@ mod tests {
                     value: PredicateValue::Integer(10),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Some(Value::Bool(true)),
@@ -892,7 +892,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_predicate_func(
             PredicateFunc {
@@ -901,7 +901,7 @@ mod tests {
                     value: PredicateValue::Integer(10),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Some(Value::Unit),
@@ -918,7 +918,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
 
         let assert_result = eval_something(
@@ -928,7 +928,7 @@ mod tests {
                     value: PredicateValue::Integer(10),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Integer(1),
@@ -946,7 +946,7 @@ mod tests {
                     value: PredicateValue::Bool(true),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Bool(false),
@@ -967,7 +967,7 @@ mod tests {
                     }),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Float(1.1),
@@ -984,7 +984,7 @@ mod tests {
         let variables = HashMap::new();
         let predicate_func = PredicateFunc {
             value: PredicateFuncValue::Exist {},
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
 
         let assert_result =
@@ -1004,7 +1004,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_something(
             PredicateFunc {
@@ -1013,7 +1013,7 @@ mod tests {
                     value: PredicateValue::Integer(1),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Integer(1),
@@ -1030,7 +1030,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_something(
             PredicateFunc {
@@ -1039,7 +1039,7 @@ mod tests {
                     value: PredicateValue::Bool(false),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Bool(false),
@@ -1056,7 +1056,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_something(
             PredicateFunc {
@@ -1068,7 +1068,7 @@ mod tests {
                     }),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Float(1.1),
@@ -1085,7 +1085,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         // a float can be equals to an int (but the reverse)
         let assert_result = eval_something(
@@ -1095,7 +1095,7 @@ mod tests {
                     value: PredicateValue::Integer(1),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Float(1.0),
@@ -1112,7 +1112,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_something(
             PredicateFunc {
@@ -1121,7 +1121,7 @@ mod tests {
                     value: PredicateValue::Integer(1),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Integer(2),
@@ -1138,7 +1138,7 @@ mod tests {
         let mut variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
 
         let template = Template {
@@ -1146,18 +1146,18 @@ mod tests {
             elements: vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 11, 1, 11),
+                    source_info: SourceInfo::new(1, 11, 1, 11),
                 },
                 variable: Variable {
                     name: String::from("base_url"),
-                    source_info: SourceInfo::init(1, 11, 1, 19),
+                    source_info: SourceInfo::new(1, 11, 1, 19),
                 },
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 19, 1, 19),
+                    source_info: SourceInfo::new(1, 19, 1, 19),
                 },
             })],
-            source_info: SourceInfo::init(1, 1, 1, 1),
+            source_info: SourceInfo::new(1, 1, 1, 1),
         };
 
         let error = eval_something(
@@ -1167,7 +1167,7 @@ mod tests {
                     value: PredicateValue::String(template.clone()),
                     operator: false,
                 },
-                source_info: SourceInfo::init(1, 1, 1, 21),
+                source_info: SourceInfo::new(1, 1, 1, 21),
             },
             &variables,
             Value::String(String::from("http://localhost:8000")),
@@ -1180,7 +1180,7 @@ mod tests {
                 name: String::from("base_url")
             }
         );
-        assert_eq!(error.source_info, SourceInfo::init(1, 11, 1, 19));
+        assert_eq!(error.source_info, SourceInfo::new(1, 11, 1, 19));
 
         variables.insert(
             String::from("base_url"),
@@ -1193,7 +1193,7 @@ mod tests {
                     value: PredicateValue::String(template),
                     operator: false,
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::String(String::from("http://localhost:8000")),
@@ -1336,7 +1336,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
 
         let assert_result = eval_something(
@@ -1345,7 +1345,7 @@ mod tests {
                     space0: whitespace.clone(),
                     value: PredicateValue::Integer(10),
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Bool(true),
@@ -1362,7 +1362,7 @@ mod tests {
                     space0: whitespace.clone(),
                     value: PredicateValue::Integer(1),
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::List(vec![]),
@@ -1375,7 +1375,7 @@ mod tests {
 
         let assert_result = eval_something(
             PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace,
                     value: PredicateValue::Integer(1),
@@ -1396,7 +1396,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let assert_result = eval_something(
             PredicateFunc {
@@ -1404,7 +1404,7 @@ mod tests {
                     space0: whitespace.clone(),
                     value: PredicateValue::Integer(1),
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::List(vec![Value::Integer(1)]),
@@ -1421,7 +1421,7 @@ mod tests {
                     space0: whitespace,
                     value: PredicateValue::Integer(1),
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Nodeset(1),
@@ -1439,7 +1439,7 @@ mod tests {
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::IsInteger {},
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Integer(1),
@@ -1453,7 +1453,7 @@ mod tests {
         let assert_result = eval_something(
             PredicateFunc {
                 value: PredicateFuncValue::IsInteger {},
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::Float(1.0),
@@ -1472,7 +1472,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
@@ -1490,7 +1490,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::StartWith {
                     space0: whitespace(),
                     value: PredicateValue::String(Template {
@@ -1499,7 +1499,7 @@ mod tests {
                             value: "toto".to_string(),
                             encoded: "toto".to_string(),
                         }],
-                        source_info: SourceInfo::init(0, 0, 0, 0),
+                        source_info: SourceInfo::new(0, 0, 0, 0),
                     }),
                 },
             },
@@ -1523,7 +1523,7 @@ mod tests {
             not: false,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     value: PredicateValue::Null {},
@@ -1547,7 +1547,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
@@ -1565,7 +1565,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         // // a float can be equals to an int (but the reverse)
         let assert_result = eval_something(
@@ -1576,7 +1576,7 @@ mod tests {
                         inner: regex::Regex::new(r#"a{3}"#).unwrap(),
                     }),
                 },
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             &variables,
             Value::String("aa".to_string()),

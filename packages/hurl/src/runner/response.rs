@@ -310,7 +310,7 @@ mod tests {
     pub fn user_response() -> Response {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(1, 1, 1, 1),
+            source_info: SourceInfo::new(1, 1, 1, 1),
         };
         let line_terminator = LineTerminator {
             space0: whitespace.clone(),
@@ -322,12 +322,12 @@ mod tests {
             line_terminators: vec![],
             version: Version {
                 value: VersionValue::Version1,
-                source_info: SourceInfo::init(2, 6, 2, 9),
+                source_info: SourceInfo::new(2, 6, 2, 9),
             },
             space0: whitespace.clone(),
             status: Status {
                 value: StatusValue::Specific(200),
-                source_info: SourceInfo::init(2, 10, 2, 13),
+                source_info: SourceInfo::new(2, 10, 2, 13),
             },
             space1: whitespace.clone(),
             line_terminator0: line_terminator.clone(),
@@ -338,18 +338,18 @@ mod tests {
                     space0: whitespace.clone(),
                     line_terminator0: line_terminator.clone(),
                     value: SectionValue::Asserts(vec![assert::tests::assert_count_user()]),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 Section {
                     line_terminators: vec![],
                     space0: whitespace,
                     line_terminator0: line_terminator,
                     value: SectionValue::Captures(vec![capture::tests::user_count_capture()]),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             ],
             body: None,
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -368,18 +368,18 @@ mod tests {
                 AssertResult::Version {
                     actual: String::from("1.0"),
                     expected: String::from("1.0"),
-                    source_info: SourceInfo::init(2, 6, 2, 9),
+                    source_info: SourceInfo::new(2, 6, 2, 9),
                 },
                 AssertResult::Status {
                     actual: 200,
                     expected: 200,
-                    source_info: SourceInfo::init(2, 10, 2, 13),
+                    source_info: SourceInfo::new(2, 10, 2, 13),
                 },
                 AssertResult::Explicit {
                     actual: Ok(Some(Value::Nodeset(2))),
-                    source_info: SourceInfo::init(1, 14, 1, 27),
+                    source_info: SourceInfo::new(1, 14, 1, 27),
                     predicate_result: Some(Err(Error {
-                        source_info: SourceInfo::init(1, 0, 1, 0),
+                        source_info: SourceInfo::new(1, 0, 1, 0),
                         inner: RunnerError::AssertFailure {
                             actual: "2".to_string(),
                             expected: "3".to_string(),

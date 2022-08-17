@@ -93,15 +93,15 @@ mod tests {
         TemplateElement::Expression(Expr {
             space0: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::init(1, 3, 1, 3),
+                source_info: SourceInfo::new(1, 3, 1, 3),
             },
             variable: Variable {
                 name: "name".to_string(),
-                source_info: SourceInfo::init(1, 3, 1, 7),
+                source_info: SourceInfo::new(1, 3, 1, 7),
             },
             space1: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::init(1, 7, 1, 7),
+                source_info: SourceInfo::new(1, 7, 1, 7),
             },
         })
     }
@@ -139,7 +139,7 @@ mod tests {
         let error = eval_template_element(&template_element_expression(), &variables)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::init(1, 3, 1, 7));
+        assert_eq!(error.source_info, SourceInfo::new(1, 3, 1, 7));
         assert_eq!(
             error.inner,
             RunnerError::UnrenderableVariable {

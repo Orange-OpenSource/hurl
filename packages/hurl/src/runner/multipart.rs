@@ -95,7 +95,7 @@ mod tests {
     pub fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -117,7 +117,7 @@ mod tests {
                     value: "upload1".to_string(),
                     encoded: "upload1".to_string(),
                     quotes: false,
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 space2: whitespace(),
@@ -125,7 +125,7 @@ mod tests {
                     space0: whitespace(),
                     filename: Filename {
                         value: "hello.txt".to_string(),
-                        source_info: SourceInfo::init(0, 0, 0, 0),
+                        source_info: SourceInfo::new(0, 0, 0, 0),
                     },
                     space1: whitespace(),
                     space2: whitespace(),
@@ -154,7 +154,7 @@ mod tests {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.txt".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 space2: whitespace(),
@@ -168,7 +168,7 @@ mod tests {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.html".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 space2: whitespace(),
@@ -182,7 +182,7 @@ mod tests {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello.txt".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 space2: whitespace(),
@@ -196,7 +196,7 @@ mod tests {
                 space0: whitespace(),
                 filename: Filename {
                     value: "hello".to_string(),
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
                 space2: whitespace(),

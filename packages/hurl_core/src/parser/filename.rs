@@ -60,7 +60,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             Filename {
                 value: String::from("data/data.bin"),
-                source_info: SourceInfo::init(1, 1, 1, 14),
+                source_info: SourceInfo::new(1, 1, 1, 14),
             }
         );
         assert_eq!(reader.state.cursor, 13);
@@ -70,7 +70,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             Filename {
                 value: String::from("data.bin"),
-                source_info: SourceInfo::init(1, 1, 1, 9),
+                source_info: SourceInfo::new(1, 1, 1, 9),
             }
         );
         assert_eq!(reader.state.cursor, 8);
@@ -83,7 +83,7 @@ mod tests {
             parse(&mut reader).unwrap(),
             Filename {
                 value: String::from("file with spaces"),
-                source_info: SourceInfo::init(1, 1, 1, 19),
+                source_info: SourceInfo::new(1, 1, 1, 19),
             }
         );
         assert_eq!(reader.state.cursor, 18);

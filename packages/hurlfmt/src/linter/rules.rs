@@ -85,7 +85,7 @@ impl Lintable<Request> for Request {
         let mut sections: Vec<Section> = self.sections.iter().map(|e| e.lint()).collect();
         sections.sort_by_key(|k| section_value_index(k.value.clone()));
 
-        let source_info = SourceInfo::init(0, 0, 0, 0);
+        let source_info = SourceInfo::new(0, 0, 0, 0);
         Request {
             line_terminators,
             space0,
@@ -135,7 +135,7 @@ impl Lintable<Response> for Response {
             headers,
             sections,
             body: b,
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 }
@@ -153,7 +153,7 @@ impl Lintable<Section> for Section {
             space0: empty_whitespace(),
             value: self.value.lint(),
             line_terminator0: self.clone().line_terminator0,
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 }
@@ -252,7 +252,7 @@ impl Lintable<Query> for Query {
 
     fn lint(&self) -> Query {
         Query {
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
             value: self.value.lint(),
             subquery: self
                 .subquery
@@ -320,7 +320,7 @@ impl Lintable<Subquery> for Subquery {
     }
 
     fn lint(&self) -> Subquery {
-        let source_info = SourceInfo::init(0, 0, 0, 0);
+        let source_info = SourceInfo::new(0, 0, 0, 0);
         let value = self.value.lint();
         Subquery { source_info, value }
     }
@@ -425,7 +425,7 @@ impl Lintable<PredicateFunc> for PredicateFunc {
 
     fn lint(&self) -> PredicateFunc {
         PredicateFunc {
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
             value: self.value.lint(),
         }
     }
@@ -640,7 +640,7 @@ impl Lintable<File> for File {
             space0: one_whitespace(),
             filename: Filename {
                 value: self.filename.clone().value,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: empty_whitespace(),
         }
@@ -722,14 +722,14 @@ impl Lintable<FileParam> for FileParam {
 fn empty_whitespace() -> Whitespace {
     Whitespace {
         value: "".to_string(),
-        source_info: SourceInfo::init(0, 0, 0, 0),
+        source_info: SourceInfo::new(0, 0, 0, 0),
     }
 }
 
 fn one_whitespace() -> Whitespace {
     Whitespace {
         value: " ".to_string(),
-        source_info: SourceInfo::init(0, 0, 0, 0),
+        source_info: SourceInfo::new(0, 0, 0, 0),
     }
 }
 
@@ -759,7 +759,7 @@ impl Lintable<LineTerminator> for LineTerminator {
             None => empty_whitespace(),
             Some(_) => Whitespace {
                 value: self.clone().space0.value,
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
         };
         let comment = self.clone().comment.map(|comment| comment.lint());
@@ -769,7 +769,7 @@ impl Lintable<LineTerminator> for LineTerminator {
             } else {
                 "\n".to_string()
             },
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         };
         LineTerminator {
             space0,

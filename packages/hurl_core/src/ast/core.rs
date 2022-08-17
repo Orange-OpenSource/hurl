@@ -633,7 +633,7 @@ pub struct SourceInfo {
 }
 
 impl SourceInfo {
-    pub fn init(
+    pub fn new(
         start_line: usize,
         start_col: usize,
         end_line: usize,

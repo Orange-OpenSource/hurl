@@ -138,7 +138,7 @@ HTTP/1.0 200
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error {
-                    source_info: SourceInfo::init(2, 10, 2, 13),
+                    source_info: SourceInfo::new(2, 10, 2, 13),
                     inner: RunnerError::AssertStatus {
                         actual: "404".to_string(),
                     },
@@ -177,7 +177,7 @@ HTTP/1.0 200
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error {
-                    source_info: SourceInfo::init(1, 5, 1, 19),
+                    source_info: SourceInfo::new(1, 5, 1, 19),
                     inner: RunnerError::HttpConnection {
                         url: "http://unknown".to_string(),
                         message: "(6) Could not resolve host: unknown".to_string(),

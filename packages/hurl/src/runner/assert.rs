@@ -167,13 +167,13 @@ pub mod tests {
     pub fn assert_count_user() -> Assert {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::init(1, 1, 1, 1),
+            source_info: SourceInfo::new(1, 1, 1, 1),
         };
         let predicate = Predicate {
             not: false,
             space0: whitespace.clone(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::init(1, 14, 1, 27),
+                source_info: SourceInfo::new(1, 14, 1, 27),
                 value: PredicateFuncValue::CountEqual {
                     space0: whitespace.clone(),
                     value: PredicateValue::Integer(3),
@@ -208,7 +208,7 @@ pub mod tests {
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Nodeset(3))),
-                source_info: SourceInfo::init(1, 14, 1, 27),
+                source_info: SourceInfo::new(1, 14, 1, 27),
                 predicate_result: Some(Ok(())),
             }
         );

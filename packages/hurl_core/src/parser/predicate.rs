@@ -366,7 +366,7 @@ mod tests {
                 false,
                 Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 1, 1, 1),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
                 }
             )
         );
@@ -379,7 +379,7 @@ mod tests {
                 true,
                 Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 4, 1, 5),
+                    source_info: SourceInfo::new(1, 4, 1, 5),
                 }
             )
         );
@@ -395,14 +395,14 @@ mod tests {
                 not: true,
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 4, 1, 5),
+                    source_info: SourceInfo::new(1, 4, 1, 5),
                 },
                 predicate_func: PredicateFunc {
-                    source_info: SourceInfo::init(1, 5, 1, 16),
+                    source_info: SourceInfo::new(1, 5, 1, 16),
                     value: PredicateFuncValue::Equal {
                         space0: Whitespace {
                             value: String::from(" "),
-                            source_info: SourceInfo::init(1, 11, 1, 12),
+                            source_info: SourceInfo::new(1, 11, 1, 12),
                         },
                         value: PredicateValue::Bool(true),
                         operator: false
@@ -445,7 +445,7 @@ mod tests {
                 value: PredicateValue::Bool(true),
                 space0: Whitespace {
                     value: String::from("  "),
-                    source_info: SourceInfo::init(1, 7, 1, 9),
+                    source_info: SourceInfo::new(1, 7, 1, 9),
                 },
 
                 operator: false
@@ -462,7 +462,7 @@ mod tests {
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 operator: false
             }
@@ -475,7 +475,7 @@ mod tests {
                 value: PredicateValue::Integer(2),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 operator: false
             },
@@ -488,7 +488,7 @@ mod tests {
                 value: PredicateValue::Integer(2),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 3, 1, 4),
+                    source_info: SourceInfo::new(1, 3, 1, 4),
                 },
                 operator: true
             },
@@ -504,11 +504,11 @@ mod tests {
                         value: "Bob".to_string(),
                         encoded: "Bob".to_string(),
                     }],
-                    source_info: SourceInfo::init(1, 8, 1, 13),
+                    source_info: SourceInfo::new(1, 8, 1, 13),
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 operator: false
             }
@@ -524,20 +524,20 @@ mod tests {
                 value: PredicateValue::Expression(Expr {
                     space0: Whitespace {
                         value: String::from(""),
-                        source_info: SourceInfo::init(1, 10, 1, 10),
+                        source_info: SourceInfo::new(1, 10, 1, 10),
                     },
                     variable: Variable {
                         name: "count".to_string(),
-                        source_info: SourceInfo::init(1, 10, 1, 15),
+                        source_info: SourceInfo::new(1, 10, 1, 15),
                     },
                     space1: Whitespace {
                         value: String::from(""),
-                        source_info: SourceInfo::init(1, 15, 1, 15),
+                        source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 operator: false
             }
@@ -553,7 +553,7 @@ mod tests {
                 value: PredicateValue::Integer(2),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 12, 1, 13),
+                    source_info: SourceInfo::new(1, 12, 1, 13),
                 },
             }
         );

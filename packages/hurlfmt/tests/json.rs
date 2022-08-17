@@ -55,7 +55,7 @@ fn value_boolean() -> BoxedStrategy<JsonValue> {
 }
 
 fn value_string() -> BoxedStrategy<JsonValue> {
-    let source_info = SourceInfo::init(0, 0, 0, 0);
+    let source_info = SourceInfo::new(0, 0, 0, 0);
     let variable = Variable {
         name: "name".to_string(),
         source_info: source_info.clone(),
@@ -224,7 +224,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                                         value: "key1".to_string(),
                                         encoded: "key1".to_string(),
                                     }],
-                                    source_info: SourceInfo::init(1, 1, 1, 1),
+                                    source_info: SourceInfo::new(1, 1, 1, 1),
                                 },
                                 space1,
                                 space2,

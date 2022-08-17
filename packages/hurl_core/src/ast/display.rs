@@ -211,7 +211,7 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: "".to_string(),
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -220,7 +220,7 @@ mod tests {
             space0: whitespace(),
             variable: Variable {
                 name: "name".to_string(),
-                source_info: SourceInfo::init(0, 0, 0, 0),
+                source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace(),
         }
@@ -240,7 +240,7 @@ mod tests {
                     encoded: "!".to_string(),
                 },
             ],
-            source_info: SourceInfo::init(0, 0, 0, 0),
+            source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
@@ -295,7 +295,7 @@ mod tests {
                         value: "LSID".to_string(),
                         encoded: "unused".to_string(),
                     }],
-                    source_info: SourceInfo::init(0, 0, 0, 0),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 attribute: Some(CookieAttribute {
                     space0: whitespace(),

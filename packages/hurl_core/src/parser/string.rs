@@ -296,7 +296,7 @@ mod tests {
             Template {
                 quotes: false,
                 elements: vec![],
-                source_info: SourceInfo::init(1, 1, 1, 1),
+                source_info: SourceInfo::new(1, 1, 1, 1),
             }
         );
         assert_eq!(reader.state.cursor, 0);
@@ -325,7 +325,7 @@ mod tests {
                     value: "a".to_string(),
                     encoded: "a".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 2),
+                source_info: SourceInfo::new(1, 1, 1, 2),
             }
         );
         assert_eq!(reader.state.cursor, 1);
@@ -342,7 +342,7 @@ mod tests {
                     value: "a#".to_string(),
                     encoded: "a\\u{23}".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 8),
+                source_info: SourceInfo::new(1, 1, 1, 8),
             }
         );
         assert_eq!(reader.state.cursor, 7);
@@ -359,7 +359,7 @@ mod tests {
                     value: "\"hi\"".to_string(),
                     encoded: "\"hi\"".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 5),
+                source_info: SourceInfo::new(1, 1, 1, 5),
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -380,15 +380,15 @@ mod tests {
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: "".to_string(),
-                            source_info: SourceInfo::init(1, 14, 1, 14),
+                            source_info: SourceInfo::new(1, 14, 1, 14),
                         },
                         variable: Variable {
                             name: "name".to_string(),
-                            source_info: SourceInfo::init(1, 14, 1, 18),
+                            source_info: SourceInfo::new(1, 14, 1, 18),
                         },
                         space1: Whitespace {
                             value: "".to_string(),
-                            source_info: SourceInfo::init(1, 18, 1, 18),
+                            source_info: SourceInfo::new(1, 18, 1, 18),
                         },
                     }),
                     TemplateElement::String {
@@ -396,7 +396,7 @@ mod tests {
                         encoded: "!".to_string(),
                     },
                 ],
-                source_info: SourceInfo::init(1, 1, 1, 21),
+                source_info: SourceInfo::new(1, 1, 1, 21),
             }
         );
         assert_eq!(reader.state.cursor, 20);
@@ -413,7 +413,7 @@ mod tests {
                     value: "hello world".to_string(),
                     encoded: "hello world".to_string(),
                 },],
-                source_info: SourceInfo::init(1, 1, 1, 12),
+                source_info: SourceInfo::new(1, 1, 1, 12),
             }
         );
         assert_eq!(reader.state.cursor, 11);
@@ -435,7 +435,7 @@ mod tests {
                 value: "key".to_string(),
                 encoded: "key".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 4),
+                source_info: SourceInfo::new(1, 1, 1, 4),
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -447,7 +447,7 @@ mod tests {
                 value: "key :".to_string(),
                 encoded: "key\\u{20}\\u{3a}".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 16),
+                source_info: SourceInfo::new(1, 1, 1, 16),
             }
         );
         assert_eq!(reader.state.cursor, 15);
@@ -462,7 +462,7 @@ mod tests {
                 value: "values[0]".to_string(),
                 encoded: "values\\u{5b}0\\u{5d}".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 20),
+                source_info: SourceInfo::new(1, 1, 1, 20),
             }
         );
         assert_eq!(reader.state.cursor, 19);
@@ -474,7 +474,7 @@ mod tests {
                 value: "values[0]".to_string(),
                 encoded: "values[0]".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 10),
+                source_info: SourceInfo::new(1, 1, 1, 10),
             }
         );
         assert_eq!(reader.state.cursor, 9);
@@ -497,7 +497,7 @@ mod tests {
                 value: "[0]".to_string(),
                 encoded: "\\u{5b}0\\u{5d}".to_string(),
                 quotes: false,
-                source_info: SourceInfo::init(1, 1, 1, 14),
+                source_info: SourceInfo::new(1, 1, 1, 14),
             }
         );
         assert_eq!(reader.state.cursor, 13);
@@ -529,7 +529,7 @@ mod tests {
             Template {
                 quotes: true,
                 elements: vec![],
-                source_info: SourceInfo::init(1, 1, 1, 3),
+                source_info: SourceInfo::new(1, 1, 1, 3),
             }
         );
         assert_eq!(reader.state.cursor, 2);
@@ -543,7 +543,7 @@ mod tests {
                     value: "a#".to_string(),
                     encoded: "a#".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 5),
+                source_info: SourceInfo::new(1, 1, 1, 5),
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -557,7 +557,7 @@ mod tests {
                     value: "{0}".to_string(),
                     encoded: "{0}".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 6),
+                source_info: SourceInfo::new(1, 1, 1, 6),
             }
         );
         assert_eq!(reader.state.cursor, 5);
@@ -575,7 +575,7 @@ mod tests {
                     value: "\"hi\"".to_string(),
                     encoded: "\\\"hi\\\"".to_string()
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 9),
+                source_info: SourceInfo::new(1, 1, 1, 9),
             }
         );
         assert_eq!(reader.state.cursor, 8);

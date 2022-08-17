@@ -38,7 +38,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
             if c == ' ' || c == '\t' {
                 Ok(Whitespace {
                     value: c.to_string(),
-                    source_info: SourceInfo::init(
+                    source_info: SourceInfo::new(
                         start.pos.line,
                         start.pos.column,
                         reader.state.pos.line,
@@ -63,7 +63,7 @@ pub fn one_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::init(
+                source_info: SourceInfo::new(
                     start.pos.line,
                     start.pos.column,
                     reader.state.pos.line,
@@ -83,7 +83,7 @@ pub fn zero_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespac
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::init(
+                source_info: SourceInfo::new(
                     start.pos.line,
                     start.pos.column,
                     reader.state.pos.line,
@@ -102,7 +102,7 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminat
     let nl = if reader.is_eof() {
         Whitespace {
             value: "".to_string(),
-            source_info: SourceInfo::init(
+            source_info: SourceInfo::new(
                 reader.state.pos.line,
                 reader.state.pos.column,
                 reader.state.pos.line,
@@ -241,7 +241,7 @@ pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     match try_literal("\r\n", reader) {
         Ok(_) => Ok(Whitespace {
             value: "\r\n".to_string(),
-            source_info: SourceInfo::init(
+            source_info: SourceInfo::new(
                 start.pos.line,
                 start.pos.column,
                 reader.state.pos.line,
@@ -251,7 +251,7 @@ pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
         Err(_) => match literal("\n", reader) {
             Ok(_) => Ok(Whitespace {
                 value: "\n".to_string(),
-                source_info: SourceInfo::init(
+                source_info: SourceInfo::new(
                     start.pos.line,
                     start.pos.column,
                     reader.state.pos.line,
@@ -666,7 +666,7 @@ mod tests {
             space(&mut reader),
             Ok(Whitespace {
                 value: " ".to_string(),
-                source_info: SourceInfo::init(1, 1, 1, 2),
+                source_info: SourceInfo::new(1, 1, 1, 2),
             }),
         );
         assert_eq!(reader.state.cursor, 1);
@@ -679,7 +679,7 @@ mod tests {
             one_or_more_spaces(&mut reader),
             Ok(Whitespace {
                 value: "  ".to_string(),
-                source_info: SourceInfo::init(1, 1, 1, 3),
+                source_info: SourceInfo::new(1, 1, 1, 3),
             })
         );
 
@@ -695,7 +695,7 @@ mod tests {
             zero_or_more_spaces(&mut reader),
             Ok(Whitespace {
                 value: "  ".to_string(),
-                source_info: SourceInfo::init(1, 1, 1, 3),
+                source_info: SourceInfo::new(1, 1, 1, 3),
             })
         );
         assert_eq!(reader.state.cursor, 2);
@@ -705,7 +705,7 @@ mod tests {
             zero_or_more_spaces(&mut reader),
             Ok(Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::init(1, 1, 1, 1),
+                source_info: SourceInfo::new(1, 1, 1, 1),
             })
         );
         assert_eq!(reader.state.cursor, 0);
@@ -715,7 +715,7 @@ mod tests {
             zero_or_more_spaces(&mut reader),
             Ok(Whitespace {
                 value: " ".to_string(),
-                source_info: SourceInfo::init(1, 1, 1, 2),
+                source_info: SourceInfo::new(1, 1, 1, 2),
             })
         );
         assert_eq!(reader.state.cursor, 1);
@@ -802,7 +802,7 @@ mod tests {
             newline(&mut reader).unwrap(),
             Whitespace {
                 value: String::from("\n"),
-                source_info: SourceInfo::init(1, 1, 2, 1),
+                source_info: SourceInfo::new(1, 1, 2, 1),
             }
         );
     }
@@ -816,21 +816,21 @@ mod tests {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 1, 1, 1),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 key: EncodedString {
                     quotes: false,
                     value: "message".to_string(),
                     encoded: "message".to_string(),
-                    source_info: SourceInfo::init(1, 1, 1, 8),
+                    source_info: SourceInfo::new(1, 1, 1, 8),
                 },
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 8, 1, 8),
+                    source_info: SourceInfo::new(1, 8, 1, 8),
                 },
                 space2: Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::init(1, 9, 1, 10),
+                    source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 value: Template {
                     quotes: false,
@@ -842,15 +842,15 @@ mod tests {
                         TemplateElement::Expression(Expr {
                             space0: Whitespace {
                                 value: "".to_string(),
-                                source_info: SourceInfo::init(1, 18, 1, 18),
+                                source_info: SourceInfo::new(1, 18, 1, 18),
                             },
                             variable: Variable {
                                 name: "name".to_string(),
-                                source_info: SourceInfo::init(1, 18, 1, 22),
+                                source_info: SourceInfo::new(1, 18, 1, 22),
                             },
                             space1: Whitespace {
                                 value: "".to_string(),
-                                source_info: SourceInfo::init(1, 22, 1, 22),
+                                source_info: SourceInfo::new(1, 22, 1, 22),
                             },
                         }),
                         TemplateElement::String {
@@ -858,19 +858,19 @@ mod tests {
                             encoded: "!".to_string(),
                         },
                     ],
-                    source_info: SourceInfo::init(1, 10, 1, 25),
+                    source_info: SourceInfo::new(1, 10, 1, 25),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: " ".to_string(),
-                        source_info: SourceInfo::init(1, 25, 1, 26),
+                        source_info: SourceInfo::new(1, 25, 1, 26),
                     },
                     comment: Some(Comment {
                         value: " comment".to_string()
                     }),
                     newline: Whitespace {
                         value: "".to_string(),
-                        source_info: SourceInfo::init(1, 35, 1, 35),
+                        source_info: SourceInfo::new(1, 35, 1, 35),
                     },
                 },
             }
@@ -1128,12 +1128,12 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 4, 1, 4),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 value: Template {
                     quotes: false,
                     elements: vec![],
-                    source_info: SourceInfo::init(1, 4, 1, 4),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
                 },
             }
         );
@@ -1144,12 +1144,12 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from("\n"),
-                    source_info: SourceInfo::init(1, 4, 2, 1),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
                     quotes: false,
                     elements: vec![],
-                    source_info: SourceInfo::init(2, 1, 2, 1),
+                    source_info: SourceInfo::new(2, 1, 2, 1),
                 },
             }
         );
@@ -1159,12 +1159,12 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from("\r\n"),
-                    source_info: SourceInfo::init(1, 4, 2, 1),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
                     quotes: false,
                     elements: vec![],
-                    source_info: SourceInfo::init(2, 1, 2, 1),
+                    source_info: SourceInfo::new(2, 1, 2, 1),
                 },
             }
         );
@@ -1178,7 +1178,7 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 4, 1, 4),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 value: Template {
                     quotes: false,
@@ -1186,7 +1186,7 @@ mod tests {
                         value: "Hello World!".to_string(),
                         encoded: "Hello World!".to_string(),
                     }],
-                    source_info: SourceInfo::init(1, 4, 1, 16),
+                    source_info: SourceInfo::new(1, 4, 1, 16),
                 },
             }
         );
@@ -1196,7 +1196,7 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 4, 1, 4),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 value: Template {
                     quotes: false,
@@ -1204,7 +1204,7 @@ mod tests {
                         value: "Hello\nWorld!\n".to_string(),
                         encoded: "Hello\nWorld!\n".to_string(),
                     }],
-                    source_info: SourceInfo::init(1, 4, 3, 1),
+                    source_info: SourceInfo::new(1, 4, 3, 1),
                 },
             }
         );
@@ -1218,7 +1218,7 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from("\n"),
-                    source_info: SourceInfo::init(1, 4, 2, 1),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
                     quotes: false,
@@ -1226,7 +1226,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::init(2, 1, 5, 1),
+                    source_info: SourceInfo::new(2, 1, 5, 1),
                 },
             }
         );
@@ -1242,7 +1242,7 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from("\n"),
-                    source_info: SourceInfo::init(1, 4, 2, 1),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
                     quotes: false,
@@ -1250,7 +1250,7 @@ mod tests {
                         value: "\n".to_string(),
                         encoded: "\n".to_string(),
                     }],
-                    source_info: SourceInfo::init(2, 1, 3, 1),
+                    source_info: SourceInfo::new(2, 1, 3, 1),
                 },
             }
         );
@@ -1262,7 +1262,7 @@ mod tests {
             RawString {
                 newline: Whitespace {
                     value: String::from("\n"),
-                    source_info: SourceInfo::init(1, 4, 2, 1),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
                     quotes: false,
@@ -1270,7 +1270,7 @@ mod tests {
                         value: "\r\n".to_string(),
                         encoded: "\r\n".to_string(),
                     }],
-                    source_info: SourceInfo::init(2, 1, 3, 1),
+                    source_info: SourceInfo::new(2, 1, 3, 1),
                 },
             }
         );
@@ -1320,7 +1320,7 @@ mod tests {
             Template {
                 quotes: false,
                 elements: vec![],
-                source_info: SourceInfo::init(1, 1, 1, 1),
+                source_info: SourceInfo::new(1, 1, 1, 1),
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -1334,7 +1334,7 @@ mod tests {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
                 }],
-                source_info: SourceInfo::init(1, 1, 1, 6),
+                source_info: SourceInfo::new(1, 1, 1, 6),
             }
         );
         assert_eq!(reader.state.cursor, 8);
@@ -1360,13 +1360,13 @@ mod tests {
             Hex {
                 space0: Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::init(1, 5, 1, 6),
+                    source_info: SourceInfo::new(1, 5, 1, 6),
                 },
                 value: vec![255],
                 encoded: "ff".to_string(),
                 space1: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 8, 1, 8),
+                    source_info: SourceInfo::new(1, 8, 1, 8),
                 },
             }
         );
@@ -1377,13 +1377,13 @@ mod tests {
             Hex {
                 space0: Whitespace {
                     value: "".to_string(),
-                    source_info: SourceInfo::init(1, 5, 1, 5),
+                    source_info: SourceInfo::new(1, 5, 1, 5),
                 },
                 value: vec![1, 2, 3],
                 encoded: "010203".to_string(),
                 space1: Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::init(1, 11, 1, 12),
+                    source_info: SourceInfo::new(1, 11, 1, 12),
                 },
             }
         );
@@ -1465,15 +1465,15 @@ mod tests {
             File {
                 space0: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 6, 1, 6),
+                    source_info: SourceInfo::new(1, 6, 1, 6),
                 },
                 filename: Filename {
                     value: String::from("data.xml"),
-                    source_info: SourceInfo::init(1, 6, 1, 14),
+                    source_info: SourceInfo::new(1, 6, 1, 14),
                 },
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 14, 1, 14),
+                    source_info: SourceInfo::new(1, 14, 1, 14),
                 },
             }
         );
@@ -1484,15 +1484,15 @@ mod tests {
             File {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 6, 1, 7),
+                    source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 filename: Filename {
                     value: String::from("filename1"),
-                    source_info: SourceInfo::init(1, 7, 1, 16),
+                    source_info: SourceInfo::new(1, 7, 1, 16),
                 },
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 16, 1, 16),
+                    source_info: SourceInfo::new(1, 16, 1, 16),
                 },
             }
         );
@@ -1503,15 +1503,15 @@ mod tests {
             File {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 6, 1, 7),
+                    source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 filename: Filename {
                     value: String::from("tmp/filename1"),
-                    source_info: SourceInfo::init(1, 7, 1, 20),
+                    source_info: SourceInfo::new(1, 7, 1, 20),
                 },
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 20, 1, 20),
+                    source_info: SourceInfo::new(1, 20, 1, 20),
                 },
             }
         );
@@ -1522,15 +1522,15 @@ mod tests {
             File {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::init(1, 6, 1, 7),
+                    source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 filename: Filename {
                     value: String::from("tmp/filename with spaces.txt"),
-                    source_info: SourceInfo::init(1, 7, 1, 37),
+                    source_info: SourceInfo::new(1, 7, 1, 37),
                 },
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 37, 1, 37),
+                    source_info: SourceInfo::new(1, 37, 1, 37),
                 },
             }
         );
@@ -1586,13 +1586,13 @@ mod tests {
             Base64 {
                 space0: Whitespace {
                     value: String::from("  "),
-                    source_info: SourceInfo::init(1, 8, 1, 10),
+                    source_info: SourceInfo::new(1, 8, 1, 10),
                 },
                 value: vec![77, 97],
                 encoded: String::from("T WE="),
                 space1: Whitespace {
                     value: String::from(""),
-                    source_info: SourceInfo::init(1, 15, 1, 15),
+                    source_info: SourceInfo::new(1, 15, 1, 15),
                 },
             }
         );
