@@ -342,7 +342,7 @@ fn main() {
         {
             // By default, we output the body response bytes of the last entry
             if let Some(entry_result) = hurl_result.entries.last() {
-                if let Some(response) = entry_result.response.clone() {
+                if let Some(response) = &entry_result.response {
                     let mut output = vec![];
 
                     // If include options is set, we output the HTTP response headers
@@ -357,7 +357,7 @@ fn main() {
                         }
                         output.append(&mut "\n".to_string().into_bytes());
                     }
-                    let body = if cli_options.compressed {
+                    let mut body = if entry_result.compressed {
                         match response.uncompress_body() {
                             Ok(bytes) => bytes,
                             Err(e) => {
@@ -377,9 +377,9 @@ fn main() {
                             }
                         }
                     } else {
-                        response.body
+                        response.body.clone()
                     };
-                    output.append(&mut body.clone());
+                    output.append(&mut body);
                     let result = write_output(&output, &cli_options.output);
                     unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
                 } else {

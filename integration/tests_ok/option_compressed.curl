@@ -1,0 +1,21 @@
+curl 'http://localhost:8000/compressed/none' --compressed
+curl 'http://localhost:8000/compressed/none'
+curl 'http://localhost:8000/compressed/none' --compressed
+curl 'http://localhost:8000/compressed/none' --compressed
+curl 'http://localhost:8000/compressed/none' --compressed
+curl 'http://localhost:8000/compressed/gzip' --compressed
+curl 'http://localhost:8000/compressed/gzip' --compressed
+curl 'http://localhost:8000/compressed/gzip' --compressed
+curl 'http://localhost:8000/compressed/gzip' --compressed
+curl 'http://localhost:8000/compressed/zlib' --compressed
+curl 'http://localhost:8000/compressed/zlib' --compressed
+curl 'http://localhost:8000/compressed/zlib' --compressed
+curl 'http://localhost:8000/compressed/zlib' --compressed
+# curl needs to be built with brotli support
+curl 'http://localhost:8000/compressed/brotli' --compressed
+curl 'http://localhost:8000/compressed/brotli' --compressed
+curl 'http://localhost:8000/compressed/brotli' --compressed
+curl 'http://localhost:8000/compressed/brotli' --compressed
+curl 'http://localhost:8000/compressed/brotli_large' --compressed
+curl 'http://localhost:8000/compressed/brotli_identity' --compressed
+

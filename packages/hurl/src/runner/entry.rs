@@ -52,6 +52,7 @@ pub fn run(
                 asserts: vec![],
                 errors: vec![error],
                 time_in_ms: 0,
+                compressed: client_options.compressed,
             }];
         }
     };
@@ -103,6 +104,7 @@ pub fn run(
                     assert: false,
                 }],
                 time_in_ms: 0,
+                compressed: client_options.compressed,
             }];
         }
     };
@@ -128,6 +130,7 @@ pub fn run(
                             asserts: vec![],
                             errors: vec![e],
                             time_in_ms,
+                            compressed: client_options.compressed,
                         }];
                     }
                 },
@@ -179,6 +182,7 @@ pub fn run(
             asserts,
             errors,
             time_in_ms,
+            compressed: client_options.compressed,
         };
         entry_results.push(entry_result);
     }
@@ -246,6 +250,10 @@ pub fn get_entry_options(
                     EntryOption::CaCertificate(option) => {
                         client_options.cacert_file = Some(option.filename.value.clone());
                         logger.debug(format!("cacert: {}", option.filename.value).as_str());
+                    }
+                    EntryOption::Compressed(option) => {
+                        client_options.compressed = option.value;
+                        logger.debug(format!("compressed: {}", option.value).as_str());
                     }
                     EntryOption::Insecure(option) => {
                         client_options.insecure = option.value;

@@ -1,0 +1,213 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Uncompressed body tests:</span>
+<span class="line"></span><span class="comment"># ---------------------------</span>
+<span class="line"></span><span class="comment"># --compressed has no effect on non compressed.</span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">12</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">false</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">12</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Test base64 implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test hex implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test file implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">file,<span class="filename">hello.txt</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># GZip compressed body tests:</span>
+<span class="line"></span><span class="comment"># ---------------------------</span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">32</span></span>
+<span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">gzip</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test base64 implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test hex implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test file implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">file,<span class="filename">hello.txt</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># ZLib compressed body tests:</span>
+<span class="line"></span><span class="comment"># ---------------------------</span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">20</span></span>
+<span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">deflate</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test base64 implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test hex implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test file implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">file,<span class="filename">hello.txt</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Brotli compressed body tests:</span>
+<span class="line"></span><span class="comment"># ---------------------------</span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
+<span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test base64 implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test hex implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test file implicit body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line">file,<span class="filename">hello.txt</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Test a large brotli compressed body:</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_large</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">image/jpeg</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">ffd8ffe0</span>;</span>   <span class="comment"># JPEG magic number</span>
+<span class="line">file,<span class="filename">cat.jpg</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_identity</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">compressed</span><span>:</span> <span class="boolean">true</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
+<span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br, identity</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">startsWith</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">48656c6c6f</span>;</span>
+<span class="line"><span class="query-type">sha256</span> <span class="predicate-type">==</span> hex,<span class="hex">7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</span>;</span>
+<span class="line"><span class="query-type">md5</span> <span class="predicate-type">==</span> hex,<span class="hex">ed076287532e86365e841e92bfc50d8c</span>;</span>
+<span class="raw"><span class="line">```Hello World!```</span></span>
+</span></span></code></pre>

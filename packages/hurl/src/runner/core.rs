@@ -59,11 +59,11 @@ impl HurlResult {
 pub struct EntryResult {
     pub request: Option<http::Request>,
     pub response: Option<http::Response>,
-    //pub captures: Vec<(String, Value)>,
     pub captures: Vec<CaptureResult>,
     pub asserts: Vec<AssertResult>,
     pub errors: Vec<Error>,
     pub time_in_ms: u128,
+    pub compressed: bool, // The entry has been executed with `--compressed` option
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

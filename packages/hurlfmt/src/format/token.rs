@@ -819,6 +819,7 @@ impl Tokenizable for EntryOption {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             EntryOption::CaCertificate(option) => option.tokenize(),
+            EntryOption::Compressed(option) => option.tokenize(),
             EntryOption::Insecure(option) => option.tokenize(),
             EntryOption::FollowLocation(option) => option.tokenize(),
             EntryOption::MaxRedirect(option) => option.tokenize(),
@@ -844,6 +845,27 @@ impl Tokenizable for CaCertificateOption {
         tokens.push(Token::Colon(String::from(":")));
         tokens.append(&mut self.space2.tokenize());
         tokens.append(&mut self.filename.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for CompressedOption {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(
+            &mut self
+                .line_terminators
+                .iter()
+                .flat_map(|e| e.tokenize())
+                .collect(),
+        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::String("compressed".to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.push(Token::Colon(String::from(":")));
+        tokens.append(&mut self.space2.tokenize());
+        tokens.push(Token::Boolean(self.value.to_string()));
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }

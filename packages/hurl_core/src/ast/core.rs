@@ -668,11 +668,22 @@ pub struct Variable {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum EntryOption {
     CaCertificate(CaCertificateOption),
+    Compressed(CompressedOption),
     Insecure(InsecureOption),
     FollowLocation(FollowLocationOption),
     MaxRedirect(MaxRedirectOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CompressedOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: bool,
+    pub line_terminator0: LineTerminator,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
