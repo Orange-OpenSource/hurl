@@ -21,7 +21,7 @@
 >
 * Request body:
 *
-* Response:
+* Response: (received 205 bytes in ~~~ ms)
 *
 < HTTP/1.0 301 MOVED PERMANENTLY
 < Content-Type: text/html; charset=utf-8
@@ -52,7 +52,7 @@
 >
 * Request body:
 *
-* Response:
+* Response: (received 11 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
@@ -81,7 +81,7 @@
 >
 * Request body:
 *
-* Response:
+* Response: (received 4 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=ISO-8859-1
@@ -119,7 +119,7 @@
 *     "foo": "bar",
 *     "baz": true
 * }
-* Response:
+* Response: (received 17 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
@@ -149,7 +149,7 @@
 >
 * Request body:
 *
-* Response:
+* Response: (received 25992 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: image/jpeg
@@ -184,7 +184,7 @@
 >
 * Request body:
 * Bytes <~~~~~...>
-* Response:
+* Response: (received 0 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8
@@ -215,7 +215,7 @@
 >
 * Request body:
 *
-* Response:
+* Response: (received 4 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
 < Content-Type: text/html; charset=utf-8

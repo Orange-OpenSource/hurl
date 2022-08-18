@@ -261,11 +261,6 @@ impl Client {
                 .header_function(|h| {
                     if let Some(s) = decode_header(h) {
                         if s.starts_with("HTTP/") {
-                            if verbose {
-                                logger.debug_important("Response:");
-                                logger.debug("");
-                                logger.status_version_in(s.trim());
-                            }
                             status_lines.push(s);
                         } else {
                             response_headers.push(s)
@@ -304,6 +299,7 @@ impl Client {
         };
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
+        let lenght = response_body.len();
         self.handle.reset();
 
         let request = Request {
@@ -321,6 +317,22 @@ impl Client {
         };
 
         if verbose {
+            logger.debug_important(
+                format!(
+                    "Response: (received {} bytes in {} ms)",
+                    lenght,
+                    duration.as_millis()
+                )
+                .as_str(),
+            );
+            logger.debug("");
+
+            // FIXME: Explain why there may be multiple status line
+            status_lines
+                .iter()
+                .filter(|s| s.starts_with("HTTP/"))
+                .for_each(|s| logger.status_version_in(s.trim()));
+
             for header in &response.headers {
                 logger.header_in(&header.name, &header.value);
             }
