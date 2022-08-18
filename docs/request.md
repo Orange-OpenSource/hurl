@@ -499,8 +499,9 @@ to the command line), while other requests are unaffected.
 GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
-insecure: true          # allows insecure SSL connections and transfers
 cacert: /etc/cert.pem   # a custom certificate file
+compressed: true        # request a compressed response
+insecure: true          # allows insecure SSL connections and transfers
 location: true          # follow redirection for this request
 max-redirs: 10          # maximum number of redirections
 verbose: true           # allow verbose output
