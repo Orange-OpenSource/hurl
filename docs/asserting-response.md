@@ -368,6 +368,41 @@ xpath "boolean(count(//h2))" == false               # Check there is no <h2>
 xpath "//h2" not exists                             # Similar assert for <h2> 
 ```
 
+XML Namespaces are also supported. Let's say you want to check this XML response:
+
+```xml
+<?xml version="1.0"?>
+<!-- both namespace prefixes are available throughout -->
+<bk:book xmlns:bk='urn:loc.gov:books'
+         xmlns:isbn='urn:ISBN:0-395-36341-6'>
+    <bk:title>Cheaper by the Dozen</bk:title>
+    <isbn:number>1568491379</isbn:number>
+</bk:book>
+```
+
+This XML response can be tested with the following Hurl file:
+
+```hurl
+GET http://localhost:8000/assert-xpath
+
+HTTP/1.0 200
+[Asserts]
+
+xpath "string(//bk:book/bk:title)" == "Cheaper by the Dozen"
+xpath "string(//*[name()='bk:book']/*[name()='bk:title'])" == "Cheaper by the Dozen"
+xpath "string(//*[local-name()='book']/*[local-name()='title'])" == "Cheaper by the Dozen"
+
+xpath "string(//bk:book/isbn:number)" == "1568491379"
+xpath "string(//*[name()='bk:book']/*[name()='isbn:number'])" == "1568491379"
+xpath "string(//*[local-name()='book']/*[local-name()='number'])" == "1568491379"
+```
+
+The XPath expressions `string(//bk:book/bk:title)` and `string(//bk:book/isbn:number)` are written with `bk` and `isbn`
+namespaces.
+
+> For convenience, the first default namespace can be used with `_`
+
+
 ### JSONPath assert
 
 Check the value of a [JSONPath] query on the received HTTP body decoded as a JSON
