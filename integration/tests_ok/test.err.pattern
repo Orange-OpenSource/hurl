@@ -1,8 +1,8 @@
 tests_ok/test.hurl: Running [1/1]
-tests_ok/test.hurl: Success
+tests_ok/test.hurl: Success (1 request(s) in ~~~ ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  ~~~ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        ~~~ ms
 

@@ -215,7 +215,7 @@ fn execute(
                 logger,
             );
             if cli_options.progress {
-                logger.test_completed(result.success);
+                logger.test_completed(&result);
             }
             result
         }
@@ -571,10 +571,10 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     let mut s =
         "--------------------------------------------------------------------------------\n"
             .to_string();
-    s.push_str(format!("Executed:  {}\n", total).as_str());
+    s.push_str(format!("Executed files:  {}\n", total).as_str());
     s.push_str(
         format!(
-            "Succeeded: {} ({:.1}%)\n",
+            "Succeeded files: {} ({:.1}%)\n",
             success,
             100.0 * success as f32 / total as f32
         )
@@ -582,12 +582,12 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     );
     s.push_str(
         format!(
-            "Failed:    {} ({:.1}%)\n",
+            "Failed files:    {} ({:.1}%)\n",
             failed,
             100.0 * failed as f32 / total as f32
         )
         .as_str(),
     );
-    s.push_str(format!("Duration:  {}ms\n", duration).as_str());
+    s.push_str(format!("Duration:        {} ms\n", duration).as_str());
     s
 }

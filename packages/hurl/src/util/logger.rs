@@ -16,6 +16,7 @@
  *
  */
 
+use crate::runner::HurlResult;
 use colored::*;
 use hurl_core::error::Error;
 
@@ -90,7 +91,7 @@ pub struct Logger<'a> {
     pub header_in: fn(&str, &str),
     pub header_out: fn(&str, &str),
     pub test_running: fn(&str, usize, usize),
-    pub test_completed: fn(&str, bool),
+    pub test_completed: fn(result: &HurlResult),
     pub color: bool,
     pub verbose: bool,
     pub filename: &'a str,
@@ -220,8 +221,8 @@ impl<'a> Logger<'a> {
         (self.test_running)(self.filename, current, total)
     }
 
-    pub fn test_completed(&self, success: bool) {
-        (self.test_completed)(self.filename, success)
+    pub fn test_completed(&self, result: &HurlResult) {
+        (self.test_completed)(result)
     }
 }
 
@@ -329,18 +330,37 @@ fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
     eprintln!("{}: Running [{}/{}]", filename, current, total)
 }
 
-fn log_test_completed(filename: &str, success: bool) {
-    let state = if success {
+fn log_test_completed(result: &HurlResult) {
+    let state = if result.success {
         "Success".green().bold()
     } else {
         "Failure".red().bold()
     };
-    eprintln!("{}: {}", filename.bold(), state)
+    let count = result
+        .entries
+        .iter()
+        .filter(|r| r.request.is_some())
+        .count();
+    eprintln!(
+        "{}: {} ({} request(s) in {} ms)",
+        result.filename.bold(),
+        state,
+        count,
+        result.time_in_ms
+    )
 }
 
-fn log_test_completed_no_color(filename: &str, success: bool) {
-    let state = if success { "Success" } else { "Failure" };
-    eprintln!("{}: {}", filename, state)
+fn log_test_completed_no_color(result: &HurlResult) {
+    let state = if result.success { "Success" } else { "Failure" };
+    let count = result
+        .entries
+        .iter()
+        .filter(|r| r.request.is_some())
+        .count();
+    eprintln!(
+        "{}: {} ({} request(s) in {} ms)",
+        result.filename, state, count, result.time_in_ms
+    )
 }
 
 pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {
