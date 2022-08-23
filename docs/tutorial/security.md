@@ -162,17 +162,16 @@ HTTP/1.1 403
 
 > We're using [the exist predicate] to check labels in the DOM
 
-4. Run `create-quiz.hurl` and verify everything is ok:
+4. Run `create-quiz.hurl` and verify that everything is ok:
 
 ```shell
-$ hurl --test create-quiz.hurl
 [1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (6 request(s) in 33 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  15ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        41 ms
 ```
 
 ## Comments
@@ -209,17 +208,17 @@ xpath "//comment" count == 0     # Check that we don't leak comments
 ```
 
 
-2. Run `create-quiz.hurl` and verify everything is ok:
+2. Run `create-quiz.hurl` and verify that everything is ok:
 
 ```shell
 $ hurl --test create-quiz.hurl
 [1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (6 request(s) in 33 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  15ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        41 ms
 ```
 
 ## Recap

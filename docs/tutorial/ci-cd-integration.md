@@ -154,14 +154,14 @@ Wait 4s
 Wait 5s
 Running Hurl tests
 [1mintegration/basic.hurl[0m: [1;36mRunning[0m [1/2]
-[1mintegration/basic.hurl[0m: [1;32mSuccess[0m
+[1mintegration/basic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 18 ms)
 [1mintegration/create-quiz.hurl[0m: [1;36mRunning[0m [2/2]
-[1mintegration/create-quiz.hurl[0m: [1;32mSuccess[0m
+[1mintegration/create-quiz.hurl[0m: [1;32mSuccess[0m (6 request(s) in 18 ms)
 --------------------------------------------------------------------------------
-Executed:  2
-Succeeded: 2 (100.0%)
-Failed:    0 (0.0%)
-Duration:  43ms
+Executed files:  2
+Succeeded files: 2 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        48 ms
 Stopping Quiz instance
 quiz
 ```

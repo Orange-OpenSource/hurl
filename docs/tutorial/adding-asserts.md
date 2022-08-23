@@ -58,12 +58,12 @@ xpath "string(//head/title)" == "Welcome to Quiz!"
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  11ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        11 ms
 ```
 
 There is no error so everything is good!
@@ -93,12 +93,12 @@ $ hurl --test basic.hurl
    [1;34m|[0m   [1;31mexpected: string <Welcome to Quaz!>[0m
    [1;34m|[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 7 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 0 (0.0%)
-Failed:    1 (100.0%)
-Duration:  6ms
+Executed files:  1
+Succeeded files: 0 (0.0%)
+Failed files:    1 (100.0%)
+Duration:        6 ms
 ```
 
 Hurl has failed now and provides information on which assert is not valid.
@@ -152,12 +152,12 @@ xpath "string((//button)[2])" contains "Create"
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  5ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        11 ms
 ```
 
 
@@ -268,12 +268,12 @@ cookie "JSESSIONID[HttpOnly]" exists
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  6ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        11 ms
 ```
 
 ## Performance Test

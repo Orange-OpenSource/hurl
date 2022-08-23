@@ -24,37 +24,37 @@ test tool with an adapted output, you can use [`--test` option]:
 
 ```shell
 $ hurl --test hello.hurl assert_json.hurl
-hello.hurl: RUNNING [1/2]
-hello.hurl: SUCCESS
-assert_json.hurl: RUNNING [2/2]
-assert_json.hurl: SUCCESS
+[1mhello.hurl[0m: [1;36mRunning[0m [1/2]
+[1mhello.hurl[0m: [1;32mSuccess[0m (6 request(s) in 245 ms)
+[1massert_json.hurl[0m: [1;36mRunning[0m [2/2]
+[1massert_json.hurl[0m: [1;32mSuccess[0m (8 request(s) in 308 ms)
 --------------------------------------------------------------------------------
-Executed:  2
-Succeeded: 2 (100.0%)
-Failed:    0 (0.0%)
-Duration:  427ms
+Executed files:  2
+Succeeded files: 2 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        561 ms
 ```
 
 Or, in case of errors:
 
 ```shell
 $ hurl --test hello.hurl error_assert_status.hurl 
-hello.hurl: RUNNING [1/2]
-hello.hurl: SUCCESS
-error_assert_status.hurl: RUNNING [2/2]
-error: Assert Status
-  --> error_assert_status.hurl:2:10
-   |
- 2 | HTTP/1.0 200
-   |          ^^^ actual value is <404>
-   |
+[1mhello.hurl[0m: [1;36mRunning[0m [1/2]
+[1mhello.hurl[0m: [1;32mSuccess[0m (6 request(s) in 258 ms)
+[1massert_json.hurl[0m: [1;36mRunning[0m [2/2]
+[1;31merror[0m: [1mAssert status code[0m
+  [1;34m-->[0m assert_json.hurl:6:8
+   [1;34m|[0m
+[1;34m 6[0m [1;34m|[0m HTTP/* 200
+   [1;34m|[0m        [1;31m^^^[0m [1;31mactual value is <301>[0m
+   [1;34m|[0m
 
-error_assert_status.hurl: FAILURE
--------------------------------------------------------------
-Executed:  2
-Succeeded: 1 (50.0%)
-Failed:    1 (50.0%)
-Duration:  52ms
+[1massert_json.hurl[0m: [1;31mFailure[0m (5 request(s) in 230 ms)
+--------------------------------------------------------------------------------
+Executed files:  2
+Succeeded files: 1 (50.0%)
+Failed files:    1 (50.0%)
+Duration:        499 ms
 ```
 
 You can use [`--glob` option] to test files that match a given patten:

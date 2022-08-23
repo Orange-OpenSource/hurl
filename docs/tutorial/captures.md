@@ -73,12 +73,12 @@ $ hurl --test create-quiz.hurl
    [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <403>[0m
    [1;34m|[0m
 
-[1mcreate-quiz.hurl[0m: [1;31mFailure[0m
+[1mcreate-quiz.hurl[0m: [1;31mFailure[0m (1 request(s) in 5 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 0 (0.0%)
-Failed:    1 (100.0%)
-Duration:  5ms
+Executed files:  1
+Succeeded files: 0 (0.0%)
+Failed files:    1 (100.0%)
+Duration:        5 ms
 ```
 
 This is unexpected! Our test is failing, we're not redirected to the new quiz detail page.
@@ -169,12 +169,12 @@ HTTP/1.1 302
 ```shell
 $ hurl --test create-quiz.hurl
 [1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (2 request(s) in 10 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  10ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        10 ms
 ```
 
 ## Follow Redirections
@@ -258,12 +258,12 @@ HTTP/1.1 200
 ```shell
 $ hurl --test create-quiz.hurl
 [1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m
+[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (3 request(s) in 39 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  10ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        46 ms
 ```
 
 

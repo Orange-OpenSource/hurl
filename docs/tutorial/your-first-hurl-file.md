@@ -161,12 +161,12 @@ test output:
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 8 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 1 (100.0%)
-Failed:    0 (0.0%)
-Duration:  7ms
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        7 ms
 ```
 
 6. Modify `basic.hurl` to test a different HTTP response status code:
@@ -189,12 +189,12 @@ $ hurl --test basic.hurl
    [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <200>[0m
    [1;34m|[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 8 ms)
 --------------------------------------------------------------------------------
-Executed:  1
-Succeeded: 0 (0.0%)
-Failed:    1 (100.0%)
-Duration:  5ms
+Executed files:  1
+Succeeded files: 0 (0.0%)
+Failed files:    1 (100.0%)
+Duration:        13 ms
 ```
 
 8. Revert your changes and finally add a comment at the beginning of the file:
