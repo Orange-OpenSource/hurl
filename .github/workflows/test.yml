@@ -208,7 +208,7 @@ jobs:
         if (Test-Path C:\vcpkg\installed) {vcpkg update} else {vcpkg install libxml2:x64-windows}
         vcpkg integrate install
         # install proxy and server
-        pip3 install --requirement integration/requirements-frozen.txt
+        pip3 install --requirement bin/requirements-frozen.txt
     - name: Run Tests units
       run: |
         cd .\integration

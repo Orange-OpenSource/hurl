@@ -26,7 +26,7 @@ jobs:
           name: Tests units and integration tests
           command: |
             python3 -m pip install --upgrade pip --quiet
-            pip3 install --requirement integration/requirements-frozen.txt
+            pip3 install --requirement bin/requirements-frozen.txt
             mitmdump --version
             export PATH="$PWD/target/debug:$PATH"
             cd integration

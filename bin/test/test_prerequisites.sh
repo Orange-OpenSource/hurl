@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 echo "----- install servers prerequisites -----"
-pip3 install --requirement integration/requirements-frozen.txt
+pip3 install --requirement bin/requirements-frozen.txt
 echo "----- start servers -----"
 cd integration
 python3 server.py >server.log 2>&1 &
