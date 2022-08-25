@@ -168,8 +168,8 @@ pub fn run(
 
             if !captures.is_empty() {
                 logger.debug_important("Captures:");
-                for capture in captures.clone() {
-                    logger.debug(format!("{}: {}", capture.name, capture.value).as_str());
+                for capture in captures.iter() {
+                    logger.capture(&capture.name, &capture.value);
                 }
             }
             logger.debug("");

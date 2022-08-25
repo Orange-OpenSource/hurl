@@ -16,7 +16,7 @@
  *
  */
 
-use crate::runner::HurlResult;
+use crate::runner::{HurlResult, Value};
 use colored::*;
 use hurl_core::error::Error;
 
@@ -90,6 +90,7 @@ pub struct Logger<'a> {
     pub status_version_in: fn(&str),
     pub header_in: fn(&str, &str),
     pub header_out: fn(&str, &str),
+    pub capture: fn(&str, &Value),
     pub test_running: fn(&str, usize, usize),
     pub test_completed: fn(result: &HurlResult),
     pub color: bool,
@@ -111,6 +112,7 @@ impl<'a> Logger<'a> {
                 error_rich: log_error_rich,
                 method_version_out: log_method_version_out,
                 status_version_in: log_status_version_in,
+                capture: log_capture,
                 header_in: log_header_in,
                 header_out: log_header_out,
                 test_running: log_test_running,
@@ -129,6 +131,7 @@ impl<'a> Logger<'a> {
                 error_rich: log_error_rich_no_color,
                 method_version_out: log_method_version_out_no_color,
                 status_version_in: log_status_version_in_no_color,
+                capture: log_capture_no_color,
                 header_in: log_header_in_no_color,
                 header_out: log_header_out_no_color,
                 test_running: log_test_running_no_color,
@@ -147,6 +150,7 @@ impl<'a> Logger<'a> {
                 error_rich: log_error_rich,
                 method_version_out: nop1,
                 status_version_in: nop1,
+                capture: nop3,
                 header_in: nop2,
                 header_out: nop2,
                 test_running: log_test_running,
@@ -165,6 +169,7 @@ impl<'a> Logger<'a> {
                 error_rich: log_error_rich_no_color,
                 method_version_out: nop1,
                 status_version_in: nop1,
+                capture: nop3,
                 header_in: nop2,
                 header_out: nop2,
                 test_running: log_test_running_no_color,
@@ -209,6 +214,10 @@ impl<'a> Logger<'a> {
         (self.status_version_in)(line)
     }
 
+    pub fn capture(&self, name: &str, value: &Value) {
+        (self.capture)(name, value)
+    }
+
     pub fn header_in(&self, name: &str, value: &str) {
         (self.header_in)(name, value)
     }
@@ -229,6 +238,8 @@ impl<'a> Logger<'a> {
 fn nop1(_one: &str) {}
 
 fn nop2(_one: &str, _two: &str) {}
+
+fn nop3(_one: &str, _two: &Value) {}
 
 fn log_info(message: &str) {
     eprintln!("{}", message);
@@ -298,6 +309,14 @@ fn log_status_version_in(line: &str) {
 
 fn log_status_version_in_no_color(line: &str) {
     eprintln!("< {}", line)
+}
+
+fn log_capture(name: &str, value: &Value) {
+    eprintln!("{} {}: {}", "*".blue().bold(), name.yellow().bold(), value)
+}
+
+fn log_capture_no_color(name: &str, value: &Value) {
+    eprintln!("* {}: {}", name, value)
 }
 
 fn log_header_in(name: &str, value: &str) {
