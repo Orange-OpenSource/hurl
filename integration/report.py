@@ -2,6 +2,7 @@
 # Run Hurl files one by one
 # appending to JSON/XML/HTML reports
 #
+import re
 import sys
 import subprocess
 import os
@@ -20,7 +21,13 @@ def get_files(glob_expr: str) -> List[str]:
     Example:
       get_files("tests_ok/*.hurl")
     """
-    return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr)])
+    return sorted(
+        [
+            f.replace("\\", "/")
+            for f in glob.glob(glob_expr)
+            if not re.match(r".*\.\d+\.hurl$", f)
+        ]
+    )
 
 
 def get_options(hurl_file: str) -> List[str]:
@@ -87,18 +94,20 @@ def exec_hurl_files():
     json_output_file = open("build/tests.json", "w")
 
     for hurl_file in get_files("tests_ok/*.hurl"):
-        count += 1
         result = exec_hurl(hurl_file)
         if result.returncode != 0:
             raise Exception("unexpected exit code %d" % result.returncode)
-        json_output_file.write(result.stdout.decode("utf-8"))
+        json_output = result.stdout.decode("utf-8")
+        count += len(json_output.splitlines())
+        json_output_file.write(json_output)
 
     for hurl_file in get_files("tests_failed/*.hurl"):
-        count += 1
         result = exec_hurl(hurl_file)
         if result.returncode != 0 and result.returncode != 3 and result.returncode != 4:
             raise Exception("unexpected exit code %d" % result.returncode)
-        json_output_file.write(result.stdout.decode("utf-8"))
+        json_output = result.stdout.decode("utf-8")
+        count += len(json_output.splitlines())
+        json_output_file.write(json_output)
     json_output_file.close()
     return count
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import glob
+import re
+
 import test_echo
 import test_lint
 import test_format
@@ -10,6 +12,11 @@ def get_files(glob_expr):
     return sorted([f.replace("\\", "/") for f in glob.glob(glob_expr)])
 
 
+def accept(f: str) -> bool:
+    """Returns True if file `f` should be run, False otherwise."""
+    return not re.match(r".*\.\d+\.hurl$", f)
+
+
 def main():
     # Static run (without server)
     [
@@ -17,6 +24,7 @@ def main():
         for f in get_files("tests_ok/*.hurl")
         + get_files("tests_failed/*.hurl")
         + get_files("tests_error_lint/*.hurl")
+        if accept(f)
     ]
     [test_format.test("json", f) for f in get_files("tests_ok/*.hurl")]
     [test_format.test("json", f) for f in get_files("tests_failed/*.hurl")]
@@ -31,6 +39,7 @@ def main():
         for f in get_files("tests_ok/*.hurl")
         + get_files("tests_failed/*.hurl")
         + get_files("ssl/*.hurl")
+        if accept(f)
     ]
 
     print("test integration ok!")
