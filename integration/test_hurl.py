@@ -138,7 +138,7 @@ def test(hurl_file: str):
         check_json_output.check(expected, actual)
 
     # stderr
-    f = hurl_file.replace(".hurl", "." + get_os() + ".err")
+    f = hurl_file.replace(".hurl", ".err")
     if os.path.exists(f):
         expected = open(f, encoding="utf-8").read().strip()
         actual = decode_string(result.stderr).strip()
@@ -146,15 +146,6 @@ def test(hurl_file: str):
             print(">>> error in stderr")
             print(f"actual: <{actual}>\nexpected: <{expected}>")
             sys.exit(1)
-    else:
-        f = hurl_file.replace(".hurl", ".err")
-        if os.path.exists(f):
-            expected = open(f, encoding="utf-8").read().strip()
-            actual = decode_string(result.stderr).strip()
-            if expected != actual:
-                print(">>> error in stderr")
-                print(f"actual: <{actual}>\nexpected: <{expected}>")
-                sys.exit(1)
 
     # stderr with textual pattern / line per line
     f = hurl_file.replace(".hurl", ".err.pattern")
