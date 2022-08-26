@@ -6,59 +6,22 @@ env:
 
 jobs:
 
-  rustfmt:
+  checks:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Install Rust
-      run: bin/install_rust_latest.sh
-    - name: Check formatting
+    - name: Install Prerequisites
+      run: bin/check/install_prerequisites.sh
+    - name: Rustfmt
       run: bin/check/rustfmt.sh
-
-  clippy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install Rust
-      run: bin/install_rust_latest.sh
-    - name: Run Clippy
+    - name: Clippy
       run: bin/check/clippy.sh
-
-  shellcheck:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Check Shell Scripts
+    - name: Shellcheck
       run: bin/check/shellcheck.sh
-
-  black:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install black
-      run: pip3 install black
-    - name: Check Python Scripts
+    - name: Black
       run: bin/check/black.sh
-
-  xmllint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Install xmllint
-        run: sudo apt update && sudo apt install -y libxml2-utils
-      - name: Check XML/HTML files
-        run: bin/check/xmllint.sh
-
-  crates:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3    
+    - name: Check XML/HTML files
+      run: bin/check/xmllint.sh
     - name: Run crates update
       run: bin/check/crates.sh 
-
