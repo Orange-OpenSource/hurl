@@ -63,7 +63,7 @@ GET https://example.org/news?order=newest&search=something%20to%20search&count=1
 
 [Doc](/docs/request.md#query-parameters)
 
-### Basic Authentification
+### Basic Authentication
 
 ```hurl
 GET https://example.org/protected

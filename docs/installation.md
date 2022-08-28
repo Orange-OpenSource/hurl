@@ -91,7 +91,7 @@ $ npm install --save-dev @orangeopensource/hurl
 
 Hurl sources are available in [GitHub].
 
-### Build on Linux, macOS
+### Build on Linux
 
 Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
 
@@ -114,7 +114,7 @@ $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 $ pacman -Sy --noconfirm pkgconf gcc glibc openssl libxml2
 ```
 
-#### macOS
+### Build on macOS
 
 ```shell
 $ xcode-select --install

@@ -157,7 +157,7 @@ Table of Contents
       * [Getting Data](#getting-data)
          * [HTTP Headers](#http-headers)
          * [Query Params](#query-params)
-         * [Basic Authentification](#basic-authentification)
+         * [Basic Authentication](#basic-authentication)
       * [Sending Data](#sending-data)
          * [Sending HTML Form Datas](#sending-html-form-datas)
          * [Sending Multipart Form Datas](#sending-multipart-form-datas)
@@ -203,11 +203,11 @@ Table of Contents
          * [Docker](#docker)
          * [npm](#npm)
       * [Building From Sources](#building-from-sources)
-         * [Build on Linux, macOS](#build-on-linux-macos)
+         * [Build on Linux](#build-on-linux)
             * [Debian based distributions](#debian-based-distributions)
             * [Red Hat based distributions](#red-hat-based-distributions)
             * [Arch based distributions](#arch-based-distributions)
-            * [macOS](#macos)
+         * [Build on macOS](#build-on-macos)
          * [Build on Windows](#build-on-windows)
 # Samples
 
@@ -274,7 +274,7 @@ GET https://example.org/news?order=newest&search=something%20to%20search&count=1
 
 [Doc](https://hurl.dev/docs/request.html#query-parameters)
 
-### Basic Authentification
+### Basic Authentication
 
 ```hurl
 GET https://example.org/protected
@@ -894,7 +894,7 @@ $ npm install --save-dev @orangeopensource/hurl
 
 Hurl sources are available in [GitHub].
 
-### Build on Linux, macOS
+### Build on Linux
 
 Hurl depends on libssl, libcurl and libxml2 native libraries. You will need their development files in your platform.
 
@@ -917,7 +917,7 @@ $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 $ pacman -Sy --noconfirm pkgconf gcc glibc openssl libxml2
 ```
 
-#### macOS
+### Build on macOS
 
 ```shell
 $ xcode-select --install
