@@ -27,7 +27,18 @@ mod junit;
 pub use junit::create_report as create_junit_report;
 pub use junit::Testcase;
 
-pub fn parse_html(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
+/// The test result to be displayed in an HTML page
+///
+/// The filename has been [canonicalized] (https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.canonicalize)
+/// and does not need to exist in the filesystem
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HTMLResult {
+    pub filename: String,
+    pub time_in_ms: u128,
+    pub success: bool,
+}
+
+pub fn parse_html(path: PathBuf) -> Result<Vec<HTMLResult>, CliError> {
     if path.exists() {
         let s = match std::fs::read_to_string(path.clone()) {
             Ok(s) => s,
@@ -43,7 +54,7 @@ pub fn parse_html(path: PathBuf) -> Result<Vec<HurlResult>, CliError> {
     }
 }
 
-fn parse_html_report(html: &str) -> Vec<HurlResult> {
+fn parse_html_report(html: &str) -> Vec<HTMLResult> {
     let re = regex::Regex::new(
         r#"(?x)
         data-duration="(?P<time_in_ms>\d+)"
@@ -60,27 +71,27 @@ fn parse_html_report(html: &str) -> Vec<HurlResult> {
             // The HTML filename is using a relative path relatively in the report
             // to make the report portable
             // But the original Hurl file is really an absolute file
-            let filename = format!("/{}", filename);
-            let entries = vec![];
             let time_in_ms = cap["time_in_ms"].to_string().parse().unwrap();
             let success = &cap["status"] == "success";
-            let cookies = vec![];
-            HurlResult {
+            HTMLResult {
                 filename,
-                entries,
                 time_in_ms,
                 success,
-                cookies,
             }
         })
-        .collect::<Vec<HurlResult>>()
+        .collect::<Vec<HTMLResult>>()
 }
 
 pub fn write_html_report(dir_path: PathBuf, hurl_results: Vec<HurlResult>) -> Result<(), CliError> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(index_path)?;
     for result in hurl_results {
-        results.push(result);
+        let html_result = HTMLResult {
+            filename: canonicalize_filename(&result.filename),
+            time_in_ms: result.time_in_ms,
+            success: result.success,
+        };
+        results.push(html_result);
     }
     let now: DateTime<Local> = Local::now();
     let html = create_html_index(now.to_rfc2822(), results);
@@ -122,7 +133,7 @@ fn percentage(count: usize, total: usize) -> String {
     format!("{:.1}%", (count as f32 * 100.0) / total as f32)
 }
 
-fn create_html_index(now: String, hurl_results: Vec<HurlResult>) -> html::Html {
+fn create_html_index(now: String, hurl_results: Vec<HTMLResult>) -> html::Html {
     let head = html::Head {
         title: "Test Report".to_string(),
         stylesheet: Some("report.css".to_string()),
@@ -217,7 +228,7 @@ fn create_html_table_header() -> html::Element {
     }
 }
 
-fn create_html_table_body(hurl_results: Vec<HurlResult>) -> html::Element {
+fn create_html_table_body(hurl_results: Vec<HTMLResult>) -> html::Element {
     let children = hurl_results
         .iter()
         .map(|result| create_html_result(result.clone()))
@@ -240,13 +251,12 @@ pub fn canonicalize_filename(input_file: &str) -> String {
     relative_input_file.trim_start_matches('/').to_string()
 }
 
-fn create_html_result(result: HurlResult) -> html::Element {
+fn create_html_result(result: HTMLResult) -> html::Element {
     let status = if result.success {
         "success".to_string()
     } else {
         "failure".to_string()
     };
-    let relative_input_file = canonicalize_filename(&result.filename);
 
     html::Element::NodeElement {
         name: "tr".to_string(),
@@ -254,7 +264,7 @@ fn create_html_result(result: HurlResult) -> html::Element {
             html::Attribute::Class(status.clone()),
             html::Attribute::Data("duration".to_string(), result.time_in_ms.to_string()),
             html::Attribute::Data("status".to_string(), status.clone()),
-            html::Attribute::Data("filename".to_string(), relative_input_file.to_string()),
+            html::Attribute::Data("filename".to_string(), result.filename.clone()),
         ],
         children: vec![
             html::Element::NodeElement {
@@ -262,11 +272,8 @@ fn create_html_result(result: HurlResult) -> html::Element {
                 attributes: vec![],
                 children: vec![html::Element::NodeElement {
                     name: "a".to_string(),
-                    attributes: vec![html::Attribute::Href(format!(
-                        "{}.html",
-                        relative_input_file
-                    ))],
-                    children: vec![html::Element::TextElement(relative_input_file)],
+                    attributes: vec![html::Attribute::Href(format!("{}.html", result.filename))],
+                    children: vec![html::Element::TextElement(result.filename)],
                 }],
             },
             html::Element::NodeElement {
@@ -323,19 +330,15 @@ mod tests {
         assert_eq!(
             parse_html_report(html),
             vec![
-                HurlResult {
-                    filename: "/tests/hello.hurl".to_string(),
-                    entries: vec![],
+                HTMLResult {
+                    filename: "tests/hello.hurl".to_string(),
                     time_in_ms: 100,
                     success: true,
-                    cookies: vec![],
                 },
-                HurlResult {
-                    filename: "/tests/failure.hurl".to_string(),
-                    entries: vec![],
+                HTMLResult {
+                    filename: "tests/failure.hurl".to_string(),
                     time_in_ms: 200,
                     success: false,
-                    cookies: vec![],
                 }
             ]
         );
