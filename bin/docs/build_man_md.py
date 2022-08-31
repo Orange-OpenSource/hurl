@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Build Grammar Markdown Man File.
+"""Build Grammar Markdown Manual File.
 
-This script converts Hurl man file to Markdown suitable for the Hurl canonical docs.
+This script converts Hurl manual file to Markdown suitable for the Hurl canonical docs.
 
-This tool takes the Hurl man file as a first argument.
+This tool takes the Hurl manual file as a first argument.
 
 Examples:
-    $ python3 bin/docs/build_man_md.py docs/man/hurl.md > docs/man-page.md
+    $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual-page.md
 
 """
 import re
@@ -35,7 +35,7 @@ def normalize_h2(doc: MarkdownDoc) -> None:
 
 
 def process_table(doc: MarkdownDoc, nodes: List[Node], col_name: str) -> None:
-    """Transform the list of items from the source man document to a beautiful HTML tables.
+    """Transform the list of items from the source manual document to a beautiful HTML tables.
 
     This can be used to transform options, variables and environment sections.
     """
@@ -128,7 +128,7 @@ def main():
     exits = man.slice(first_exit_h3, www_h2)
     process_table(doc=man, nodes=exits, col_name="Value")
 
-    print("# Man Page\n\n" + man.to_text())
+    print("# Manual Page\n\n" + man.to_text())
 
 
 if __name__ == "__main__":

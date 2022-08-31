@@ -7,7 +7,7 @@ Hurl is [distributed on npm] as a thin wrapper around the native binary.
 ## Publish
 
 ```
-$ cp docs/man/*.1 contrib/npm/hurl/docs/
+$ cp docs/manual/*.1 contrib/npm/hurl/docs/
 ```
 
 

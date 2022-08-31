@@ -2,9 +2,8 @@
 
 ## Character Encoding
 
-Hurl file should be encoded in UTF-8, without byte order mark to the beginning
-(while Hurl ignores the presence of a byte order mark
-rather than treating it as an error)
+Hurl file should be encoded in UTF-8, without a byte order mark at the beginning
+(while Hurl ignores the presence of a byte order mark rather than treating it as an error)
 
 ## File Extension
 

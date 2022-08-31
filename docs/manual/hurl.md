@@ -1,108 +1,122 @@
-.TH hurl 1 "17 Aug 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
-.SH NAME
+## NAME
 
 hurl - run and test HTTP requests.
 
 
-.SH SYNOPSIS
+## SYNOPSIS
 
-.B hurl
-[options] [FILE...]
+**hurl** [options] [FILE...]
 
 
-.SH DESCRIPTION
+## DESCRIPTION
 
-.B Hurl
-is an HTTP client that performs HTTP requests defined in a simple plain text format.
+**Hurl** is an HTTP client that performs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile, it enables to chain HTTP requests, capture values from HTTP responses and make asserts.
-
-    $ hurl session.hurl
+Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
+```
+$ hurl session.hurl
+```
 
 If no input files are specified, input is read from stdin.
 
-    $ echo GET http://httpbin.org/get | hurl
-        {
-          "args": {},
-          "headers": {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip",
-            "Content-Length": "0",
-            "Host": "httpbin.org",
-            "User-Agent": "hurl/0.99.10",
-            "X-Amzn-Trace-Id": "Root=1-5eedf4c7-520814d64e2f9249ea44e0"
-          },
-          "origin": "1.2.3.4",
-          "url": "http://httpbin.org/get"
-        }
+```
+$ echo GET http://httpbin.org/get | hurl
+    {
+      "args": {},
+      "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip",
+        "Content-Length": "0",
+        "Host": "httpbin.org",
+        "User-Agent": "hurl/0.99.10",
+        "X-Amzn-Trace-Id": "Root=1-5eedf4c7-520814d64e2f9249ea44e0"
+      },
+      "origin": "1.2.3.4",
+      "url": "http://httpbin.org/get"
+    }
+```
 
 
-Output goes to stdout by default. For output to a file, use the \fI-o, --output\fP option:
+Output goes to stdout by default. For output to a file, use the [`-o, --output`](#output) option:
 
-    $ hurl -o output input.hurl
+```
+$ hurl -o output input.hurl
+```
 
 By default, Hurl executes all HTTP requests and outputs the response body of the last HTTP call.
 
-To have a test oriented output, you can use \fI--test\fP option:
+To have a test oriented output, you can use [`--test`](#test) option:
 
-    $ hurl --test *.hurl
+```
+$ hurl --test *.hurl
+```
 
 
-.SH HURL FILE FORMAT
+## HURL FILE FORMAT
 
-The Hurl file format is fully documented in \fIhttps://hurl.dev/docs/hurl-file.html\fP
+The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.html](https://hurl.dev/docs/hurl-file.html)
 
 It consists of one or several HTTP requests
 
-    GET http:/example.org/endpoint1
-    GET http:/example.org/endpoint2
+```hurl
+GET http:/example.org/endpoint1
+GET http:/example.org/endpoint2
+```
 
 
-.IP "Capturing values"
+### Capturing values
 
 A value from an HTTP response can be-reused for successive HTTP requests.
 
 A typical example occurs with csrf tokens.
 
-    GET https://example.org
-    HTTP/1.1 200
-    # Capture the CSRF token value from html body.
-    [Captures]
-    csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
+```hurl
+GET https://example.org
+HTTP/1.1 200
+# Capture the CSRF token value from html body.
+[Captures]
+csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 
-    # Do the login !
-    POST https://example.org/login?user=toto&password=1234
-    X-CSRF-TOKEN: {{csrf_token}}
+# Do the login !
+POST https://example.org/login?user=toto&password=1234
+X-CSRF-TOKEN: {{csrf_token}}
+```
 
-More information on captures here \fIhttps://hurl.dev/docs/capturing-response.html\fP
+More information on captures here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
 
-.IP "Asserts"
+### Asserts
 
 The HTTP response defined in the Hurl session are used to make asserts.
 
 At the minimum, the response includes the asserts on the HTTP version and status code.
 
-    GET http:/google.com
-    HTTP/1.1 301
+```hurl
+GET http:/google.com
+HTTP/1.1 301
+```
 
 It can also include asserts on the response headers
 
-    GET http:/google.com
-    HTTP/1.1 301
-    Location: http://www.google.com
+```hurl
+GET http:/google.com
+HTTP/1.1 301
+Location: http://www.google.com
+```
 
 You can also include explicit asserts combining query and predicate
 
-    GET http:/google.com
-    HTTP/1.1 301
-    [Asserts]
-    xpath "string(//title)" == "301 Moved"
+```hurl
+GET http:/google.com
+HTTP/1.1 301
+[Asserts]
+xpath "string(//title)" == "301 Moved"
+```
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
+Thanks to asserts, Hurl can be used as a testing tool to run scenario.
 
-More information on asserts here \fIhttps://hurl.dev/docs/asserting-response.html\fP
+More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 
-.SH OPTIONS
+## OPTIONS
 
 Options that exist in curl have exactly the same semantic. 
 
@@ -110,55 +124,59 @@ Options specified on the command line are defined for every Hurl file's entry.
 
 For instance:
 
-    $ hurl --location foo.hurl
+```
+$ hurl --location foo.hurl
+```
 
 will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
-    GET https://google.com
-    HTTP/* 301
+```hurl
+GET https://google.com
+HTTP/* 301
 
-    GET https://google.com
-    [Options]
-    location: true
-    HTTP/* 200
+GET https://google.com
+[Options]
+location: true
+HTTP/* 200
+```
 
 will follow redirection only for the second entry.
 
-.IP "--cacert "
+### --cacert {#cacert}
 
 Tells curl to use the specified certificate file to verify the peer.
 The file may contain multiple CA certificates.
 The certificate(s) must be in PEM format.
 Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
-.IP "--color "
+### --color {#color}
 
 Colorize Output
 
-.IP "--compressed "
+### --compressed {#compressed}
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
 
-.IP "--connect-timeout <seconds> "
+### --connect-timeout <seconds> {#connect-timeout}
 
 Maximum time in seconds that you allow Hurl's connection to take.
 
-See also \fI-m, --max-time\fP option.
+See also [`-m, --max-time`](#max-time) option.
 
-.IP "-b, --cookie <file> "
+### -b, --cookie <file> {#cookie}
 
 Read cookies from file (using the Netscape cookie file format).
 
-Combined with \fI-c, --cookie-jar\fP, you can simulate a cookie storage between successive Hurl runs.
+Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
-.IP "-c, --cookie-jar <file> "
+### -c, --cookie-jar <file> {#cookie-jar}
 
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
 
-Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
+Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
 
-.IP "--fail-at-end "
+### --fail-at-end {#fail-at-end}
 
 Continue executing requests to the end of the Hurl file even when an assert error occurs.
 By default, Hurl exits after an assert error in the HTTP response.
@@ -167,129 +185,129 @@ Note that this option does not affect the behavior with multiple input Hurl file
 
 All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
-.IP "--file-root <dir> "
+### --file-root <dir> {#file-root}
 
 Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
-.IP "-L, --location "
+### -L, --location {#location}
 
-Follow redirect.  You can limit the amount of redirects to follow by using the \fI--max-redirs\fP option.
+Follow redirect.  You can limit the amount of redirects to follow by using the [`--max-redirs`](#max-redirs) option.
 
-.IP "--glob <glob> "
+### --glob <glob> {#glob}
 
 Specify input files that match the given glob pattern.
 
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
-.IP "-i, --include "
+### -i, --include {#include}
 
 Include the HTTP headers in the output (last entry).
 
-.IP "--ignore-asserts "
+### --ignore-asserts {#ignore-asserts}
 
 Ignore all asserts defined in the Hurl file.
 
-.IP "-k, --insecure "
+### -k, --insecure {#insecure}
 
 This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.
 
-.IP "--interactive "
+### --interactive {#interactive}
 
 Stop between requests.
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
 
-.IP "--json "
+### --json {#json}
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
 
-.IP "--max-redirs <num> "
+### --max-redirs <num> {#max-redirs}
 
 Set maximum number of redirection-followings allowed
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
-.IP "-m, --max-time <seconds> "
+### -m, --max-time <seconds> {#max-time}
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
-See also \fI--connect-timeout\fP option.
+See also [`--connect-timeout`](#connect-timeout) option.
 
-.IP "--no-color "
+### --no-color {#no-color}
 
 Do not colorize output
 
-.IP "--no-output "
+### --no-output {#no-output}
 
 Suppress output. By default, Hurl outputs the body of the last response.
 
-.IP "--noproxy <no-proxy-list> "
+### --noproxy <no-proxy-list> {#noproxy}
 
 Comma-separated list of hosts which do not use a proxy.
 Override value from Environment variable no_proxy.
 
-.IP "-o, --output <file> "
+### -o, --output <file> {#output}
 
 Write output to <file> instead of stdout.
 
-.IP "--progress "
+### --progress {#progress}
 
 Print filename and status for each test (on stderr)
 
-Deprecated, use \fI--test\fP or \fI--json\fP instead.
+Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
 
-.IP "-x, --proxy [protocol://]host[:port] "
+### -x, --proxy [protocol://]host[:port] {#proxy}
 
 Use the specified proxy.
 
-.IP "--report-junit <file> "
+### --report-junit <file> {#report-junit}
 
 Generate JUNIT <file>.
 
 If the <file> report already exists, it will be updated with the new test results.
 
-.IP "--report-html <dir> "
+### --report-html <dir> {#report-html}
 
 Generate HTML report in dir.
 
 If the HTML report already exists, it will be updated with the new test results.
 
-.IP "--summary "
+### --summary {#summary}
 
 Print test metrics at the end of the run (on stderr)
 
-Deprecated, use \fI--test\fP or \fI--json\fP instead.
+Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
 
-.IP "--test "
+### --test {#test}
 
 Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. 
 
-.IP "--to-entry <entry-number> "
+### --to-entry <entry-number> {#to-entry}
 
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
 
-.IP "-u, --user <user:password> "
+### -u, --user <user:password> {#user}
 
 Add basic Authentication header to each request.
 
-.IP "-A, --user-agent <name> "
+### -A, --user-agent <name> {#user-agent}
 
 Specify the User-Agent string to send to the HTTP server.
 
-.IP "--variable <name=value> "
+### --variable <name=value> {#variable}
 
 Define variable (name/value) to be used in Hurl templates.
 
-.IP "--variables-file <file> "
+### --variables-file <file> {#variables-file}
 
 Set properties file in which your define your variables.
 
-Each variable is defined as name=value exactly as with \fI--variable\fP option.
+Each variable is defined as name=value exactly as with [`--variable`](#variable) option.
 
 Note that defining a variable twice produces an error.
 
-.IP "-v, --verbose "
+### -v, --verbose {#verbose}
 
 Turn on verbose output on standard error stream.
 Useful for debugging.
@@ -300,76 +318,74 @@ A line starting with '*' means additional info provided by Hurl.
 
 If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
 
-.IP "--very-verbose "
+### --very-verbose {#very-verbose}
 
 Turn on more verbose output on standard error stream.
 
-In contrast to  \fI--verbose\fP option, this option outputs the full HTTP body request and response on standard error.
+In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error.
 
 
-.IP "-h, --help "
+### -h, --help {#help}
 
 Usage help. This lists all current command line options with a short description.
 
-.IP "-V, --version "
+### -V, --version {#version}
 
 Prints version information
 
-.SH ENVIRONMENT
+## ENVIRONMENT
 
 Environment variables can only be specified in lowercase.
 
-Using an environment variable to set the proxy has the same effect as using the \fI-x, --proxy\fP option.
+Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
 
-.IP "http_proxy [protocol://]<host>[:port]"
+### http_proxy [protocol://]<host>[:port]
 
 Sets the proxy server to use for HTTP.
 
-.IP "https_proxy [protocol://]<host>[:port]"
+### https_proxy [protocol://]<host>[:port]
 
 Sets the proxy server to use for HTTPS.
 
-.IP "all_proxy [protocol://]<host>[:port]"
+### all_proxy [protocol://]<host>[:port]
 
 Sets the proxy server to use if no protocol-specific proxy is set.
 
-.IP "no_proxy <comma-separated list of hosts>"
+### no_proxy <comma-separated list of hosts>
 
 List of host names that shouldn't go through any proxy.
 
-.IP "HURL_name value"
+### HURL_name value
 
-Define variable (name/value) to be used in Hurl templates. This is similar than \fI--variable\fP and \fI--variables-file\fP options.
+Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.
 
-.IP "NO_COLOR"
+### NO_COLOR
 
-When set to a non-empty string, do not colorize output (see \fI--no-color\fP option).
+When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).
 
-.SH EXIT CODES
+## EXIT CODES
 
-.IP "1"
+### 1
 
 Failed to parse command-line options.
 
-.IP "2"
+### 2
 
 Input File Parsing Error.
 
-.IP "3"
+### 3
 
 Runtime error (such as failure to connect to host).
 
-.IP "4"
+### 4
 
 Assert Error.
 
-.SH WWW
+## WWW
 
-\fIhttps://hurl.dev\fP
+[https://hurl.dev](https://hurl.dev)
 
 
-.SH SEE ALSO
+## SEE ALSO
 
 curl(1)  hurlfmt(1)
-
-

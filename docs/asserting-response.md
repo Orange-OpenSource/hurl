@@ -671,7 +671,7 @@ of all file nodes.
 [JSON]: https://www.json.org
 [XML]: https://en.wikipedia.org/wiki/XML
 [Base64]: https://en.wikipedia.org/wiki/Base64
-[`--file-root` option]: /docs/man-page.md#file-root
+[`--file-root` option]: /docs/manual-page.md#file-root
 [`count`]: /docs/capturing-response.md#count-subquery
 [Javascript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [MD5]: https://en.wikipedia.org/wiki/MD5

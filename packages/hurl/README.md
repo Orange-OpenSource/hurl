@@ -174,7 +174,7 @@ Table of Contents
          * [Using SOAP Apis](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
          * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
-   * [Man Page](#man-page)
+   * [Manual Page](#manual-page)
       * [Name](#name)
       * [Synopsis](#synopsis)
       * [Description](#description)
@@ -582,7 +582,7 @@ bytes startsWith hex,efbbbf;
 [Doc](https://hurl.dev/docs/asserting-response.html#bytes-assert)
 
 
-# Man Page
+# Manual Page
 
 ## Name
 
@@ -598,8 +598,7 @@ hurl - run and test HTTP requests.
 
 **Hurl** is an HTTP client that performs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile, it enables to chain HTTP requests, capture values from HTTP responses and make asserts.
-
+Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
 ```
 $ hurl session.hurl
 ```
@@ -699,7 +698,7 @@ HTTP/1.1 301
 xpath "string(//title)" == "301 Moved"
 ```
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
+Thanks to asserts, Hurl can be used as a testing tool to run scenario.
 
 More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 
@@ -970,10 +969,10 @@ Please follow the [contrib on Windows section].
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`-u/--user` option]: https://hurl.dev/docs/man-page.html#user
+[`-u/--user` option]: https://hurl.dev/docs/manual-page.html#user
 [curl]: https://curl.se
 [entry]: https://hurl.dev/docs/entry.html
-[`--test` option]: https://hurl.dev/docs/man-page.html#test
+[`--test` option]: https://hurl.dev/docs/manual-page.html#test
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.6.1-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64.zip
 [hurl-1.6.1-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64-installer.exe

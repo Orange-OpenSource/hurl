@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/Orange-OpenSource/hurl</projectSourceUrl>
     <packageSourceUrl>https://github.com/Orange-OpenSource/hurl/tree/master/contrib/windows/windows_package_managers/chocolatey/hurl</packageSourceUrl>
-    <docsUrl>https://hurl.dev/docs/man-page.html</docsUrl>
+    <docsUrl>https://hurl.dev/docs/manual-page.html</docsUrl>
     <bugTrackerUrl>https://github.com/Orange-OpenSource/hurl/issues</bugTrackerUrl>
     <tags>hurl curl http https cli http-client testing-tool integration-tool automation-tool api-testing cross-platform</tags>
     <summary>Hurl is a command line tool that runs HTTP requests defined in a simple plain text format</summary>

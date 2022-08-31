@@ -86,11 +86,11 @@ To use variables in your tests, you can:
 
 You will find a detail description in the [Injecting Variables] section of the doc.
 
-[`--output /dev/null`]: /docs/man-page.md#output
-[`--test`]: /docs/man-page.md#test
-[`--report-html HTML_DIR`]: /docs/man-page.md#report-html
-[`--test` option]: /docs/man-page.md#test
-[`--glob` option]: /docs/man-page.md#glob
-[`--variable` option]: /docs/man-page.md#variable
-[`--variables-file` option]: /docs/man-page.md#variables-file
+[`--output /dev/null`]: /docs/manual-page.md#output
+[`--test`]: /docs/manual-page.md#test
+[`--report-html HTML_DIR`]: /docs/manual-page.md#report-html
+[`--test` option]: /docs/manual-page.md#test
+[`--glob` option]: /docs/manual-page.md#glob
+[`--variable` option]: /docs/manual-page.md#variable
+[`--variables-file` option]: /docs/manual-page.md#variables-file
 [Injecting Variables]: /docs/templates.md#injecting-variables

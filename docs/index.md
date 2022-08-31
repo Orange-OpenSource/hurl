@@ -9,7 +9,7 @@
 ## [Resources]
 
 
-[Getting Started]: /docs/man-page.md
+[Getting Started]: /docs/manual-page.md
 [File Format]: /docs/hurl-file.md
 [Tutorial]: /docs/tutorial/your-first-hurl-file.md
 [Resources]: /docs/license.md

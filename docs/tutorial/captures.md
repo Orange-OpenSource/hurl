@@ -325,5 +325,5 @@ of a redirection.
 [curl]: https://curl.se
 [header capture]: /docs/capturing-response.md#header-capture
 [`Location`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
-[`-L / --location` option]: /docs/man-page.md#location
+[`-L / --location` option]: /docs/manual-page.md#location
 [capture response data]:  /docs/capturing-response.md
