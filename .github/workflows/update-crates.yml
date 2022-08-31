@@ -5,6 +5,8 @@ on:
     - cron: "0 8 * * *"
   workflow_dispatch:
 
+concurrency: update-crates-${{ github.ref }}
+
 jobs:
   update-crates:
     env:
