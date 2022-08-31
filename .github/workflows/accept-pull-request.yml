@@ -5,6 +5,8 @@ on:
     types:
       - created
 
+concurrency: accept-pull-request-${{ github.ref }}
+
 jobs:
   accept-pull-request:
     env:
