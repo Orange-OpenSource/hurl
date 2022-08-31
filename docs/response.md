@@ -100,5 +100,5 @@ header by example) and add assert and captures on the decoded body as if there w
 [capture value from headers, body]: /docs/capturing-response.md
 [add assert on status code, body or headers]: /docs/asserting-response.md
 [br, gzip, deflate]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
-[`--compressed` option]: /docs/man-page.md#compressed
+[`--compressed` option]: /docs/manual-page.md#compressed
 [`Accept-Encoding`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding

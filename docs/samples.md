@@ -380,7 +380,7 @@ bytes startsWith hex,efbbbf;
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`-u/--user` option]: /docs/man-page.md#user
+[`-u/--user` option]: /docs/manual-page.md#user
 [curl]: https://curl.se
 [entry]: /docs/entry.md
-[`--test` option]: /docs/man-page.md#test
+[`--test` option]: /docs/manual-page.md#test

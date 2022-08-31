@@ -1,4 +1,4 @@
-# Man Page
+# Manual Page
 
 ## Name
 
@@ -14,8 +14,7 @@ hurl - run and test HTTP requests.
 
 **Hurl** is an HTTP client that performs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile, it enables to chain HTTP requests, capture values from HTTP responses and make asserts.
-
+Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
 ```
 $ hurl session.hurl
 ```
@@ -115,7 +114,7 @@ HTTP/1.1 301
 xpath "string(//title)" == "301 Moved"
 ```
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
+Thanks to asserts, Hurl can be used as a testing tool to run scenario.
 
 More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 

@@ -110,7 +110,7 @@ HTTP/* 200
 [response]: /docs/response.md
 [capture values]: /docs/capturing-response.md
 [add asserts to HTTP responses]: /docs/asserting-response.md
-[`--location`]: /docs/man-page.md#location
-[`--max-redirs`]: /docs/man-page.md#max-redirs
+[`--location`]: /docs/manual-page.md#location
+[`--max-redirs`]: /docs/manual-page.md#max-redirs
 [Options]: /docs/man-page.html#options
 [`--location` option]: /docs/man-page.html#location
