@@ -623,7 +623,7 @@ $ echo GET http://httpbin.org/get | hurl
 ```
 
 
-Output goes to stdout by default. For output to a file, use the [`-o, --output`](#output) option:
+Output goes to stdout by default. To have output go to a file, use the [`-o, --output`](#output) option:
 
 ```
 $ hurl -o output input.hurl
@@ -668,7 +668,7 @@ POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
 
-More information on captures here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
+More information on captures can be found here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
 
 ### Asserts
 
@@ -689,7 +689,7 @@ HTTP/1.1 301
 Location: http://www.google.com
 ```
 
-You can also include explicit asserts combining query and predicate
+Explicit asserts can be included by combining a query and a predicate
 
 ```hurl
 GET http:/google.com
@@ -698,9 +698,9 @@ HTTP/1.1 301
 xpath "string(//title)" == "301 Moved"
 ```
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenario.
+With the addition of asserts, Hurl can be used as a testing tool to run scenarios.
 
-More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
+More information on asserts can be found here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 
 ## Options
 
@@ -714,7 +714,7 @@ For instance:
 $ hurl --location foo.hurl
 ```
 
-will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
+will follow redirection for each entry in `foo.hurl`. You can also define an option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
 ```hurl
 GET https://google.com
@@ -726,11 +726,11 @@ location: true
 HTTP/* 200
 ```
 
-will follow redirection only for the second entry.
+will follow a redirection only for the second entry.
 
 Option | Description
  --- | --- 
-<a href="#cacert" id="cacert"><code>--cacert</code></a> | Tells curl to use the specified certificate file to verify the peer.<br/>The file may contain multiple CA certificates.<br/>The certificate(s) must be in PEM format.<br/>Normally curl is built to use a default file for this, so this option is typically used to alter that default file.<br/>
+<a href="#cacert" id="cacert"><code>--cacert</code></a> | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br/>Normally curl is built to use a default file for this, so this option is typically used to alter that default file.<br/>
 <a href="#color" id="color"><code>--color</code></a> | Colorize Output<br/>
 <a href="#compressed" id="compressed"><code>--compressed</code></a> | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.<br/>
 <a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;seconds&gt;</code></a> | Maximum time in seconds that you allow Hurl's connection to take.<br/><br/>See also [`-m, --max-time`](#max-time) option.<br/>
@@ -738,7 +738,7 @@ Option | Description
 <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;file&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
 <a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
-<a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect.  You can limit the amount of redirects to follow by using the [`--max-redirs`](#max-redirs) option.<br/>
+<a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br/>
 <a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given glob pattern.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
 <a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
 <a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a> | Ignore all asserts defined in the Hurl file.<br/>
@@ -756,7 +756,7 @@ Option | Description
 <a href="#report-junit" id="report-junit"><code>--report-junit &lt;file&gt;</code></a> | Generate JUNIT <file>.<br/><br/>If the <file> report already exists, it will be updated with the new test results.<br/>
 <a href="#report-html" id="report-html"><code>--report-html &lt;dir&gt;</code></a> | Generate HTML report in dir.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
 <a href="#summary" id="summary"><code>--summary</code></a> | Print test metrics at the end of the run (on stderr)<br/><br/>Deprecated, use [`--test`](#test) or [`--json`](#json) instead.<br/>
-<a href="#test" id="test"><code>--test</code></a> | Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. <br/>
+<a href="#test" id="test"><code>--test</code></a> | Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.<br/>
 <a href="#to-entry" id="to-entry"><code>--to-entry &lt;entry-number&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
 <a href="#user" id="user"><code>-u, --user &lt;user:password&gt;</code></a> | Add basic Authentication header to each request.<br/>
 <a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;name&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
