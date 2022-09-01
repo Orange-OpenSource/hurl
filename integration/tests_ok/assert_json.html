@@ -1,12 +1,25 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">variable</span><span>:</span> one<span>=</span><span class="number">1</span></span>
+<span class="line"><span class="string">variable</span><span>:</span> two<span>=</span><span class="number">2</span></span>
+<span class="line"><span class="string">variable</span><span>:</span> three<span>=</span><span class="number">3</span></span>
+<span class="line"><span class="string">variable</span><span>:</span> four<span>=</span><span class="number">4</span></span>
+<span class="line"><span class="string">variable</span><span>:</span> five<span>=</span><span class="number">5</span></span>
+<span class="line"><span class="string">insecure</span><span>:</span> <span class="boolean">false</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="line section-header">[Captures]</span>
+<span class="line"><span class="name">count</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.count"</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="expr">{{five}}</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">equals</span> <span class="number">5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">!=</span> <span class="number">4</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">!=</span> <span class="expr">{{four}}</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="not">not</span> <span class="predicate-type">equals</span> <span class="number">4</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;</span> <span class="expr">{{one}}</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">&gt;</span> <span class="number">1.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">greaterThan</span> <span class="number">1.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.success"</span> <span class="predicate-type">==</span> <span class="boolean">false</span></span>
@@ -28,6 +41,7 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">==</span> <span class="number">1.5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;=</span> <span class="number">2.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">&lt;</span> <span class="expr">{{two}}</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThanOrEquals</span> <span class="number">2.0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">lessThan</span> <span class="number">2</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">isFloat</span></span>

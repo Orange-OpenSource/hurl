@@ -1,12 +1,25 @@
 GET http://localhost:8000/assert-json
+[Options]
+variable: one=1
+variable: two=2
+variable: three=3
+variable: four=4
+variable: five=5
+insecure: false
+
 HTTP/1.0 200
+[Captures]
+count: jsonpath "$.count"
 [Asserts]
 jsonpath "$.count" == 5
 jsonpath "$.count" == 5.0
+jsonpath "$.count" == {{five}}
 jsonpath "$.count" equals 5
 jsonpath "$.count" != 4
+jsonpath "$.count" != {{four}}
 jsonpath "$.count" not equals 4
 jsonpath "$.count" > 1
+jsonpath "$.count" > {{one}}
 jsonpath "$.count" > 1.0
 jsonpath "$.count" greaterThan 1.0
 jsonpath "$.success" == false
@@ -28,6 +41,7 @@ jsonpath "$.errors[?(@.id=='error1')].id" == "error1"
 jsonpath "$.duration" == 1.5
 jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" < 2
+jsonpath "$.duration" < {{two}}
 jsonpath "$.duration" lessThanOrEquals 2.0
 jsonpath "$.duration" lessThan 2
 jsonpath "$.duration" isFloat

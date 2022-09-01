@@ -115,6 +115,10 @@ impl PredicateValue {
     pub fn is_bytearray(&self) -> bool {
         matches!(self, PredicateValue::Hex(_)) | matches!(self, PredicateValue::Base64(_))
     }
+
+    pub fn is_expression(&self) -> bool {
+        matches!(self, PredicateValue::Expression(_))
+    }
 }
 
 fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -156,18 +160,19 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_number() {
-        return Err(Error {
+    if value.is_number() || value.is_expression() {
+        Ok(PredicateFuncValue::GreaterThan {
+            space0,
+            value,
+            operator,
+        })
+    } else {
+        Err(Error {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::PredicateValue {},
-        });
+        })
     }
-    Ok(PredicateFuncValue::GreaterThan {
-        space0,
-        value,
-        operator,
-    })
 }
 
 fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -179,18 +184,19 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_number() {
-        return Err(Error {
+    if value.is_number() || value.is_expression() {
+        Ok(PredicateFuncValue::GreaterThanOrEqual {
+            space0,
+            value,
+            operator,
+        })
+    } else {
+        Err(Error {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::PredicateValue {},
-        });
+        })
     }
-    Ok(PredicateFuncValue::GreaterThanOrEqual {
-        space0,
-        value,
-        operator,
-    })
 }
 
 fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -202,18 +208,19 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_number() {
-        return Err(Error {
+    if value.is_number() || value.is_expression() {
+        Ok(PredicateFuncValue::LessThan {
+            space0,
+            value,
+            operator,
+        })
+    } else {
+        Err(Error {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::PredicateValue {},
-        });
+        })
     }
-    Ok(PredicateFuncValue::LessThan {
-        space0,
-        value,
-        operator,
-    })
 }
 
 fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -225,18 +232,19 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predicat
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if !value.is_number() {
-        return Err(Error {
+    if value.is_number() || value.is_expression() {
+        Ok(PredicateFuncValue::LessThanOrEqual {
+            space0,
+            value,
+            operator,
+        })
+    } else {
+        Err(Error {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::PredicateValue {},
-        });
+        })
     }
-    Ok(PredicateFuncValue::LessThanOrEqual {
-        space0,
-        value,
-        operator,
-    })
 }
 
 fn count_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
@@ -405,7 +413,7 @@ mod tests {
                             source_info: SourceInfo::new(1, 11, 1, 12),
                         },
                         value: PredicateValue::Bool(true),
-                        operator: false
+                        operator: false,
                     },
                 },
             }
@@ -448,7 +456,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 9),
                 },
 
-                operator: false
+                operator: false,
             }
         );
 
@@ -458,13 +466,13 @@ mod tests {
             PredicateFuncValue::Equal {
                 value: PredicateValue::Float(Float {
                     value: 1.1,
-                    encoded: "1.1".to_string()
+                    encoded: "1.1".to_string(),
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
-                operator: false
+                operator: false,
             }
         );
 
@@ -477,7 +485,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
-                operator: false
+                operator: false,
             },
         );
 
@@ -490,7 +498,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 3, 1, 4),
                 },
-                operator: true
+                operator: true,
             },
         );
 
@@ -510,7 +518,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
-                operator: false
+                operator: false,
             }
         );
     }
@@ -539,7 +547,7 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
-                operator: false
+                operator: false,
             }
         );
     }
