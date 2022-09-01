@@ -37,7 +37,7 @@ $ echo GET http://httpbin.org/get | hurl
 ```
 
 
-Output goes to stdout by default. For output to a file, use the [`-o, --output`](#output) option:
+Output goes to stdout by default. To have output go to a file, use the [`-o, --output`](#output) option:
 
 ```
 $ hurl -o output input.hurl
@@ -82,7 +82,7 @@ POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 ```
 
-More information on captures here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
+More information on captures can be found here [https://hurl.dev/docs/capturing-response.html](https://hurl.dev/docs/capturing-response.html)
 
 ### Asserts
 
@@ -103,7 +103,7 @@ HTTP/1.1 301
 Location: http://www.google.com
 ```
 
-You can also include explicit asserts combining query and predicate
+Explicit asserts can be included by combining a query and a predicate
 
 ```hurl
 GET http:/google.com
@@ -112,9 +112,9 @@ HTTP/1.1 301
 xpath "string(//title)" == "301 Moved"
 ```
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenario.
+With the addition of asserts, Hurl can be used as a testing tool to run scenarios.
 
-More information on asserts here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
+More information on asserts can be found here [https://hurl.dev/docs/asserting-response.html](https://hurl.dev/docs/asserting-response.html)
 
 ## OPTIONS
 
@@ -128,7 +128,7 @@ For instance:
 $ hurl --location foo.hurl
 ```
 
-will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
+will follow redirection for each entry in `foo.hurl`. You can also define an option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
 ```hurl
 GET https://google.com
@@ -140,13 +140,11 @@ location: true
 HTTP/* 200
 ```
 
-will follow redirection only for the second entry.
+will follow a redirection only for the second entry.
 
 ### --cacert {#cacert}
 
-Tells curl to use the specified certificate file to verify the peer.
-The file may contain multiple CA certificates.
-The certificate(s) must be in PEM format.
+Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
 Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 ### --color {#color}
@@ -192,7 +190,7 @@ When this is not explicitly defined, the files are relative to the current direc
 
 ### -L, --location {#location}
 
-Follow redirect.  You can limit the amount of redirects to follow by using the [`--max-redirs`](#max-redirs) option.
+Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
 
 ### --glob <glob> {#glob}
 
@@ -280,7 +278,7 @@ Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
 
 ### --test {#test}
 
-Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. 
+Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
 
 ### --to-entry <entry-number> {#to-entry}
 
