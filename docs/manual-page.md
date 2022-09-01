@@ -1,4 +1,4 @@
-# Manual Page
+# Manual
 
 ## Name
 

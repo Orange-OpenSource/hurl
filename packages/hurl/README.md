@@ -174,7 +174,7 @@ Table of Contents
          * [Using SOAP Apis](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
          * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
-   * [Manual Page](#manual-page)
+   * [Manual](#manual)
       * [Name](#name)
       * [Synopsis](#synopsis)
       * [Description](#description)
@@ -582,7 +582,7 @@ bytes startsWith hex,efbbbf;
 [Doc](https://hurl.dev/docs/asserting-response.html#bytes-assert)
 
 
-# Manual Page
+# Manual
 
 ## Name
 

@@ -29,8 +29,8 @@ docs/*.md => packages/hurl/README.md
 
 ## Scripts
 
-1. generate manual pages
-2. generate <hurl.dev> manual page
+1. generate manual
+2. generate <hurl.dev> manual
 3. generate GitHub README
 4. generate crates.io README
 

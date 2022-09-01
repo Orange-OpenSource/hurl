@@ -128,7 +128,7 @@ def main():
     exits = man.slice(first_exit_h3, www_h2)
     process_table(doc=man, nodes=exits, col_name="Value")
 
-    print("# Manual Page\n\n" + man.to_text())
+    print("# Manual\n\n" + man.to_text())
 
 
 if __name__ == "__main__":
