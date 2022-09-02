@@ -38,7 +38,7 @@ percent-encoding = "2.1.0"
 regex = "1.6.0"
 serde = "1.0.144"
 serde_json = "1.0.85"
-sha2 = "0.10.3"
+sha2 = "0.10.5"
 url = "2.2.2"
 xmltree = { version = "0.10.3",  features = ["attribute-order"] }
 
