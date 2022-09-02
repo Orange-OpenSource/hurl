@@ -12,6 +12,7 @@ def variables():
     assert request.headers["Id"] == "123"
     assert request.headers["Height"] == "1.7"
     assert request.headers["A_null"] == "null"
+    assert request.headers["Country"] == "Italy"
 
     s = request.data.decode("utf-8")
     data = json.loads(s)
@@ -21,4 +22,5 @@ def variables():
     assert data["id"] == "123"
     assert data["height"] == 1.7
     assert data["a_null"] is None
+    assert data["country"] == "Italy"
     return ""
