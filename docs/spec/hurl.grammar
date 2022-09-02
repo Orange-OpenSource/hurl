@@ -119,22 +119,38 @@ assert:
 
 option:
   lt*
-  (insecure-option
-  | ca-certificate-option
+  ( ca-certificate-option
+  | follow-redirect-option
+  | insecure-option
+  | max-redirs-option
+  | variable-option
   | verbose-option
   | very-verbose-option
-  | follow-redirect-option
-  | max-redirs-option)
-
-insecure-option: "insecure" ":" boolean lt
+  )
 
 ca-certificate-option: "cacert" ":" filename lt
 
+follow-redirect-option: "location" ":" boolean lt
+
+insecure-option: "insecure" ":" boolean lt
+
+max-redirs-option: "max-redirs" ":" integer lt
+
+variable-option: "variable" ":" variable-definition lt
+
 verbose-option: "verbose" ":" boolean lt
 
-very-verbose-option: "verbose" ":" boolean lt
+very-verbose-option: "very-verbose" ":" boolean lt
 
-follow-redirect-option: "location" ":" boolean lt
+variable-definition: variable-name "=" variable-value
+
+variable-value:
+    null
+  | boolean
+  | integer
+  | float
+  | key-string
+  | quoted-string
 
 # Query
 
