@@ -72,7 +72,7 @@ alice: secret
             <br>
         </div>
         <div class="hurl-request-explanation-part-2">
-            <a href="#query-parameters">Query strings</a>, <a href="#form-parameters">form params</a>, <a href="#cookies">cookies</a>, <a href="#basic-authentification">authentification</a> ...<br>(optional sections, unordered)
+            <a href="#query-parameters">Query strings</a>, <a href="#form-parameters">form params</a>, <a href="#cookies">cookies</a>, <a href="#basic-authentication">authentication</a> ...<br>(optional sections, unordered)
         </div>
         <div class="hurl-request-explanation-part-2">
             <br>
@@ -315,7 +315,7 @@ Username is followed by a `:` and a password. The basic authentication section s
 
 
 ```hurl
-# Perform basic authentification with login `bob` and password `secret`.
+# Perform basic authentication with login `bob` and password `secret`.
 GET https://example.org/protected
 [BasicAuth]
 bob: secret

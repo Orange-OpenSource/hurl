@@ -282,7 +282,7 @@ GET https://example.org/protected
 bob: secret
 ```
 
-[Doc](https://hurl.dev/docs/request.html#basic-authentification)
+[Doc](https://hurl.dev/docs/request.html#basic-authentication)
 
 This is equivalent to construct the request with a [Authorization] header:
 
@@ -292,8 +292,8 @@ GET https://example.org/protected
 Authorization: Basic Ym9iOnNlY3JldA== 
 ```
 
-Basic authentification allows per request authentification.
-If you want to add basic authentification to all the request of a Hurl file
+Basic authentication allows per request authentication.
+If you want to add basic authentication to all the request of a Hurl file
 you could use [`-u/--user` option].
 
 ## Sending Data
