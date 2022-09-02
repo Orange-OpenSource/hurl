@@ -969,10 +969,10 @@ Please follow the [contrib on Windows section].
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`-u/--user` option]: https://hurl.dev/docs/manual-page.html#user
+[`-u/--user` option]: https://hurl.dev/docs/manual.html#user
 [curl]: https://curl.se
 [entry]: https://hurl.dev/docs/entry.html
-[`--test` option]: https://hurl.dev/docs/manual-page.html#test
+[`--test` option]: https://hurl.dev/docs/manual.html#test
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-1.6.1-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64.zip
 [hurl-1.6.1-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64-installer.exe

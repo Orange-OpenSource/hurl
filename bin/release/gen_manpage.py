@@ -6,7 +6,7 @@ This script creates Hurl man file from a Markdown source.
 This tool takes the Hurl man Markdown source file as a first argument.
 
 Examples:
-    $ python3 bin/release/gen_manpage.py docs/man/hurl.md > ../../docs/man-page.md
+    $ python3 bin/release/gen_manpage.py docs/manual/hurl.md > ../../docs/manual.md
 
 """
 import sys

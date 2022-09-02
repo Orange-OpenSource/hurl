@@ -9,11 +9,13 @@ The canonical source for the Hurl manual pages is at <https://github.com/Orange-
 The markdown files [`hurl.md`] and [`hurlfmt.md`] are used :
 
 - to generate manual pages [`hurl.1`] and [`hurlfmt.1`]
-- to generate Markdown documentation page [`manual-page.md`] for <https://hurl.dev>
+- to generate Markdown documentation page [`manual.md`] for <https://hurl.dev>
+
+Dependencies:
 
 ```
 docs/manual/hurl.md => docs/manual/hurl.1
-docs/manual/hurl.md => docs/manual-page.md
+docs/manual/hurl.md => docs/manual.md
 
 docs/manual/hurlfmt.md => docs/manual/hurlfmt.1
 ```
@@ -21,6 +23,8 @@ docs/manual/hurlfmt.md => docs/manual/hurlfmt.1
 ## READMEs
 
 [GitHub README] and [crates.io README] are generated from the canonical docs.
+
+Dependencies:
 
 ```
 docs/*.md => README.md
@@ -37,7 +41,7 @@ docs/*.md => packages/hurl/README.md
 ```bash
 $ python3 bin/release/gen_manpage.py docs/manual/hurl.md > docs/manual/hurl.1
 $ python3 bin/release/gen_manpage.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
-$ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual-page.md
+$ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
 $ python3 bin/docs/build_readme.py github > README.md
 $ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 ```
@@ -47,7 +51,7 @@ $ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 [`hurlfmt.md`]: https://github.com/Orange-OpenSource/hurl/tree/master/docs/manual/hurlfmt.md
 [`hurl.1`]: https://github.com/Orange-OpenSource/hurl/tree/master/docs/manual/hurl.1
 [`hurlfmt.1`]: https://github.com/Orange-OpenSource/hurl/tree/master/docs/manual/hurlfmt.1
-[`manual-page.md`]: https://github.com/Orange-OpenSource/hurl/blob/master/docs/manual-page.md
+[`manual.md`]: https://github.com/Orange-OpenSource/hurl/blob/master/docs/manual.md
 [GitHub README]: https://github.com/Orange-OpenSource/hurl/blob/master/README.md
 [crates.io README]: https://github.com/Orange-OpenSource/hurl/blob/master/packages/hurl/README.md
 

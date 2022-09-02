@@ -436,11 +436,11 @@ The web interface of mitmproxy allows you to inspect, intercept any requests run
 the returned response to Hurl.
 
 
-[`-v/--verbose` option]: /docs/manual-page.md#verbose
-[`--very-verbose`]: /docs/manual-page.md#very-verbose
-[`--verbose`]: /docs/manual-page.md#verbose
-[`--interactive` option]: /docs/manual-page.md#interactive
-[`-i/--include` option]: /docs/manual-page.md#include
-[`--to-entry` option]: /docs/manual-page.md#to-entry
+[`-v/--verbose` option]: /docs/manual.md#verbose
+[`--very-verbose`]: /docs/manual.md#very-verbose
+[`--verbose`]: /docs/manual.md#verbose
+[`--interactive` option]: /docs/manual.md#interactive
+[`-i/--include` option]: /docs/manual.md#include
+[`--to-entry` option]: /docs/manual.md#to-entry
 [mitmproxy]: https://mitmproxy.org
-[`-x/--proxy` option]: /docs/manual-page.md#proxy
+[`-x/--proxy` option]: /docs/manual.md#proxy

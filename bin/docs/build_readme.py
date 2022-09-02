@@ -75,7 +75,7 @@ def main(dest: str) -> int:
     home_md.remove_nodes(logo_nodes)
 
     samples_md = parse_markdown(text=Path("docs/samples.md").read_text())
-    usage_md = parse_markdown(text=Path("docs/manual-page.md").read_text())
+    usage_md = parse_markdown(text=Path("docs/manual.md").read_text())
 
     installation_md = parse_markdown(text=Path("docs/installation.md").read_text())
 

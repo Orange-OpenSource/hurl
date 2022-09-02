@@ -6,7 +6,7 @@ This script converts Hurl manual file to Markdown suitable for the Hurl canonica
 This tool takes the Hurl manual file as a first argument.
 
 Examples:
-    $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual-page.md
+    $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
 
 """
 import re

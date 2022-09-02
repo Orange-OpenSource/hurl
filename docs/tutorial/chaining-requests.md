@@ -276,4 +276,4 @@ for your applications.
 [JsonPath assert]: /docs/asserting-response.md#jsonpath-assert
 [JsonPath query]: https://goessner.net/articles/JsonPath/
 [query parameter section]: /docs/request.md#query-parameters
-[`--test`]: /docs/manual-page.md#test
+[`--test`]: /docs/manual.md#test

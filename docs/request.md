@@ -525,17 +525,17 @@ very-verbose: true      # allow more verbose output
 [multiline string body]: #multiline-string-body
 [body section]: #body
 [multipart/form-data on MDN]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
-[`--file-root` option]: /docs/manual-page.md#file-root
+[`--file-root` option]: /docs/manual.md#file-root
 [JSON]: https://www.json.org
 [XML]: https://en.wikipedia.org/wiki/XML
 [Base64]: https://en.wikipedia.org/wiki/Base64
 [hexadecimal string]: #hex-body
 [included file]: #file-body
-[`--file-root` option]: /docs/manual-page.md#file-root
-[`-u/--user` option]: /docs/manual-page.md#user
+[`--file-root` option]: /docs/manual.md#file-root
+[`-u/--user` option]: /docs/manual.md#user
 [Hurl unicode literals \u{20}]: /docs/hurl-file.md#special-character-in-strings
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[`--location`]: /docs/man-page.html#location
-[`--verbose`]: /docs/man-page.html#verbose
-[`--insecure`]: /docs/man-page.html#insecure
+[`--location`]: /docs/manual.md#location
+[`--verbose`]: /docs/manual.md#verbose
+[`--insecure`]: /docs/manual.md#insecure
 

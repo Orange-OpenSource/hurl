@@ -187,8 +187,8 @@ Resulting in a PUT request with the following JSON body:
 }
 ```
 
-[`--variable` option]: /docs/manual-page.md#variable
-[`--variables-file` option]: /docs/manual-page.md#variables-file
+[`--variable` option]: /docs/manual.md#variable
+[`--variables-file` option]: /docs/manual.md#variables-file
 [CSRF token]: https://en.wikipedia.org/wiki/Cross-site_request_forgery
 [JSONPath]: /docs/asserting-response.md#jsonpath-assert
 [JSON body]: /docs/request.md#json-body
