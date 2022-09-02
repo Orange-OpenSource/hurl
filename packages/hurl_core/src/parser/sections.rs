@@ -349,6 +349,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_insecure,
             option_follow_location,
             option_max_redirect,
+            option_variable,
             option_verbose,
             option_very_verbose,
         ],
@@ -466,6 +467,94 @@ fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, EntryOption>
     };
 
     Ok(EntryOption::MaxRedirect(option))
+}
+
+fn option_variable(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("variable", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = variable_definition(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+    let option = VariableOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+    Ok(EntryOption::Variable(option))
+}
+
+fn variable_definition(reader: &mut Reader) -> ParseResult<'static, VariableDefinition> {
+    let name = variable_name(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    literal("=", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    let value = variable_value(reader)?;
+    Ok(VariableDefinition {
+        name,
+        space0,
+        space1,
+        value,
+    })
+}
+
+fn variable_name(reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
+    if name.is_empty() {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "variable name".to_string(),
+            },
+        });
+    }
+    Ok(name)
+}
+
+fn variable_value(reader: &mut Reader) -> ParseResult<'static, VariableValue> {
+    choice(
+        vec![
+            |p1| match null(p1) {
+                Ok(()) => Ok(VariableValue::Null {}),
+                Err(e) => Err(e),
+            },
+            |p1| match boolean(p1) {
+                Ok(value) => Ok(VariableValue::Bool(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match float(p1) {
+                Ok(value) => Ok(VariableValue::Float(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match integer(p1) {
+                Ok(value) => Ok(VariableValue::Integer(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match quoted_template(p1) {
+                Ok(value) => Ok(VariableValue::String(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match unquoted_template(p1) {
+                Ok(value) => Ok(VariableValue::String(value)),
+                Err(e) => Err(e),
+            },
+        ],
+        reader,
+    )
+    .map_err(|e| Error {
+        pos: e.pos,
+        recoverable: false,
+        inner: ParseError::Expecting {
+            value: "variable value".to_string(),
+        },
+    })
 }
 
 fn option_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
@@ -772,9 +861,9 @@ mod tests {
                         start: Pos { line: 1, column: 9 },
                         end: Pos {
                             line: 1,
-                            column: 27
-                        }
-                    }
+                            column: 27,
+                        },
+                    },
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
@@ -814,6 +903,81 @@ mod tests {
         let mut reader = Reader::init("cacert: ###");
         let error = option_cacert(&mut reader).err().unwrap();
         assert_eq!(error.recoverable, false)
+    }
+
+    #[test]
+    fn test_variable_definition() {
+        let mut reader = Reader::init("a=1");
+        assert_eq!(
+            variable_definition(&mut reader).unwrap(),
+            VariableDefinition {
+                name: "a".to_string(),
+                space0: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 2 },
+                        end: Pos { line: 1, column: 2 },
+                    },
+                },
+                space1: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 3 },
+                        end: Pos { line: 1, column: 3 },
+                    },
+                },
+                value: VariableValue::Integer(1),
+            }
+        );
+    }
+
+    #[test]
+    fn test_variable_value() {
+        let mut reader = Reader::init("null");
+        assert_eq!(variable_value(&mut reader).unwrap(), VariableValue::Null {});
+
+        let mut reader = Reader::init("true");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::Bool(true)
+        );
+
+        let mut reader = Reader::init("1");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::Integer(1)
+        );
+
+        let mut reader = Reader::init("toto");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "toto".to_string(),
+                    encoded: "toto".to_string()
+                }],
+                source_info: SourceInfo {
+                    start: Pos { line: 1, column: 1 },
+                    end: Pos { line: 1, column: 5 },
+                }
+            })
+        );
+        let mut reader = Reader::init("\"123\"");
+        assert_eq!(
+            variable_value(&mut reader).unwrap(),
+            VariableValue::String(Template {
+                quotes: true,
+                elements: vec![TemplateElement::String {
+                    value: "123".to_string(),
+                    encoded: "123".to_string()
+                }],
+                source_info: SourceInfo {
+                    start: Pos { line: 1, column: 1 },
+                    end: Pos { line: 1, column: 6 },
+                }
+            })
+        );
     }
 
     #[test]

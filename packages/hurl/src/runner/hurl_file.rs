@@ -126,10 +126,23 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
 
-        let runner_options = entry::get_entry_options(entry, runner_options, logger);
-
-        let entry_results = entry::run(entry, http_client, &mut variables, &runner_options, logger);
-
+        let entry_results =
+            match entry::get_entry_options(entry, runner_options, &mut variables, logger) {
+                Ok(runner_options) => {
+                    entry::run(entry, http_client, &mut variables, &runner_options, logger)
+                }
+                Err(error) => {
+                    vec![EntryResult {
+                        request: None,
+                        response: None,
+                        captures: vec![],
+                        asserts: vec![],
+                        errors: vec![error],
+                        time_in_ms: 0,
+                        compressed: false,
+                    }]
+                }
+            };
         for entry_result in &entry_results {
             for e in &entry_result.errors {
                 logger.error_rich(e);

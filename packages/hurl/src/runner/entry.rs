@@ -28,6 +28,7 @@ use super::request::eval_request;
 use super::response::{eval_asserts, eval_captures};
 use super::value::Value;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
+use crate::runner::template::eval_template;
 
 /// Runs an `entry` with `http_client` and returns one or more
 /// [`EntryResult`] (if following redirect).
@@ -253,14 +254,16 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
 /// and a default `runner_options`.
+/// The [`variables`] can also be updated if `variable` keys are present in the section.
 pub fn get_entry_options(
     entry: &Entry,
     runner_options: &RunnerOptions,
+    variables: &mut HashMap<String, Value>,
     logger: &Logger,
-) -> RunnerOptions {
+) -> Result<RunnerOptions, Error> {
     let mut runner_options = runner_options.clone();
     if !has_options(entry) {
-        return runner_options;
+        return Ok(runner_options);
     }
 
     logger.debug("");
@@ -290,6 +293,13 @@ pub fn get_entry_options(
                         runner_options.max_redirect = Some(option.value);
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
                     }
+                    EntryOption::Variable(VariableOption {
+                        value: VariableDefinition { name, value, .. },
+                        ..
+                    }) => {
+                        let value = eval_variable_value(value, variables)?;
+                        variables.insert(name.clone(), value);
+                    }
                     EntryOption::Verbose(option) => {
                         runner_options.verbosity = if option.value {
                             Some(Verbosity::Verbose)
@@ -311,7 +321,23 @@ pub fn get_entry_options(
             }
         }
     }
-    runner_options
+    Ok(runner_options)
+}
+
+fn eval_variable_value(
+    variable_value: &VariableValue,
+    variables: &mut HashMap<String, Value>,
+) -> Result<Value, Error> {
+    match variable_value {
+        VariableValue::Null {} => Ok(Value::Null),
+        VariableValue::Bool(v) => Ok(Value::Bool(*v)),
+        VariableValue::Integer(v) => Ok(Value::Integer(*v)),
+        VariableValue::Float(Float { value, .. }) => Ok(Value::Float(*value)),
+        VariableValue::String(template) => {
+            let s = eval_template(template, variables)?;
+            Ok(Value::String(s))
+        }
+    }
 }
 
 /// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.

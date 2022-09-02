@@ -237,6 +237,7 @@ impl Htmlable for EntryOption {
             EntryOption::Insecure(option) => option.to_html(),
             EntryOption::FollowLocation(option) => option.to_html(),
             EntryOption::MaxRedirect(option) => option.to_html(),
+            EntryOption::Variable(option) => option.to_html(),
             EntryOption::Verbose(option) => option.to_html(),
             EntryOption::VeryVerbose(option) => option.to_html(),
         }
@@ -325,6 +326,45 @@ impl Htmlable for MaxRedirectOption {
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
+    }
+}
+
+impl Htmlable for VariableOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">variable</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(self.value.to_html().as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+impl Htmlable for VariableDefinition {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        buffer.push_str(self.name.as_str());
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>=</span>");
+        buffer.push_str(self.value.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for VariableValue {
+    fn to_html(&self) -> String {
+        match self {
+            VariableValue::Null { .. } => "<span class=\"null\">null</span>".to_string(),
+            VariableValue::Bool(v) => format!("<span class=\"boolean\">{}</span>", v),
+            VariableValue::Integer(v) => format!("<span class=\"number\">{}</span>", v),
+            VariableValue::Float(v) => format!("<span class=\"number\">{}</span>", v),
+            VariableValue::String(t) => t.to_html(),
+        }
     }
 }
 

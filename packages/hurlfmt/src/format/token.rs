@@ -823,6 +823,7 @@ impl Tokenizable for EntryOption {
             EntryOption::Insecure(option) => option.tokenize(),
             EntryOption::FollowLocation(option) => option.tokenize(),
             EntryOption::MaxRedirect(option) => option.tokenize(),
+            EntryOption::Variable(option) => option.tokenize(),
             EntryOption::Verbose(option) => option.tokenize(),
             EntryOption::VeryVerbose(option) => option.tokenize(),
         }
@@ -931,6 +932,50 @@ impl Tokenizable for MaxRedirectOption {
         tokens.push(Token::Number(self.value.to_string()));
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
+    }
+}
+
+impl Tokenizable for VariableOption {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(
+            &mut self
+                .line_terminators
+                .iter()
+                .flat_map(|e| e.tokenize())
+                .collect(),
+        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::String("variable".to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.push(Token::Colon(String::from(":")));
+        tokens.append(&mut self.space2.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for VariableDefinition {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![Token::String(self.name.clone())];
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::Keyword("=".to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for VariableValue {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            VariableValue::Null { .. } => vec![Token::Keyword("null".to_string())],
+            VariableValue::Bool(v) => vec![Token::Boolean(v.to_string())],
+            VariableValue::Integer(v) => vec![Token::Number(v.to_string())],
+            VariableValue::Float(v) => vec![Token::Number(v.to_string())],
+            VariableValue::String(v) => v.tokenize(),
+        }
     }
 }
 

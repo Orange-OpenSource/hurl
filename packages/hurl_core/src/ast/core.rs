@@ -672,6 +672,7 @@ pub enum EntryOption {
     Insecure(InsecureOption),
     FollowLocation(FollowLocationOption),
     MaxRedirect(MaxRedirectOption),
+    Variable(VariableOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
 }
@@ -744,4 +745,31 @@ pub struct MaxRedirectOption {
     pub space2: Whitespace,
     pub value: usize,
     pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct VariableOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: VariableDefinition,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct VariableDefinition {
+    pub name: String,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub value: VariableValue,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum VariableValue {
+    Null {},
+    Bool(bool),
+    Integer(i64),
+    Float(Float),
+    String(Template),
 }
