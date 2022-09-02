@@ -27,11 +27,11 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
-use hurl::http::{ContextDir, Verbosity};
+use hurl::http::ContextDir;
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
-use hurl::runner::{HurlResult, RunnerError, RunnerOptions};
+use hurl::runner::{HurlResult, RunnerError, RunnerOptions, Verbosity};
 use hurl::util::logger::BaseLogger;
 use hurl_core::ast::{Entry, Pos, SourceInfo};
 use hurl_core::error::Error;
@@ -163,24 +163,6 @@ fn execute(
             };
             let context_dir = ContextDir::new(current_dir, file_root);
 
-            let client_options = http::ClientOptions {
-                cacert_file,
-                follow_location,
-                max_redirect,
-                cookie_input_file,
-                proxy,
-                no_proxy,
-                verbosity,
-                insecure,
-                timeout,
-                connect_timeout,
-                user,
-                user_agent,
-                compressed,
-            };
-
-            let mut client = http::Client::new(&client_options);
-
             let pre_entry = if cli_options.interactive {
                 Some(cli::interactive::pre_entry as fn(Entry) -> bool)
             } else {
@@ -197,23 +179,49 @@ fn execute(
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
             let runner_options = RunnerOptions {
+                cacert_file,
+                compressed,
                 fail_fast,
                 variables,
                 to_entry,
+                user,
                 context_dir,
                 ignore_asserts,
+                insecure,
+                max_redirect,
                 very_verbose,
                 pre_entry,
+                proxy,
                 post_entry,
+                connect_timeout,
+                cookie_input_file,
+                follow_location,
+                no_proxy,
+                timeout,
+                user_agent,
+                verbosity,
             };
-            let result = runner::run(
-                &hurl_file,
-                filename,
-                &mut client,
-                &runner_options,
-                &client_options,
-                logger,
-            );
+            let client_options = http::ClientOptions {
+                cacert_file: runner_options.cacert_file.clone(),
+                follow_location: runner_options.follow_location,
+                max_redirect: runner_options.max_redirect,
+                cookie_input_file: runner_options.cookie_input_file.clone(),
+                proxy: runner_options.proxy.clone(),
+                no_proxy: runner_options.no_proxy.clone(),
+                verbosity: runner_options.verbosity.as_ref().map(|v| match v {
+                    Verbosity::Verbose => http::Verbosity::Verbose,
+                    Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
+                }),
+                insecure: runner_options.insecure,
+                timeout: runner_options.timeout,
+                connect_timeout: runner_options.connect_timeout,
+                user: runner_options.user.clone(),
+                user_agent: runner_options.user_agent.clone(),
+                compressed: runner_options.compressed,
+            };
+            let mut client = http::Client::new(&client_options);
+
+            let result = runner::run(&hurl_file, filename, &mut client, &runner_options, logger);
             if cli_options.progress {
                 logger.test_completed(&result);
             }

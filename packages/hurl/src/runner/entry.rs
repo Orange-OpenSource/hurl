@@ -19,7 +19,6 @@ use std::collections::HashMap;
 
 use crate::cli::Logger;
 use crate::http;
-use crate::http::{ClientOptions, Verbosity};
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -39,7 +38,6 @@ pub fn run(
     http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
     runner_options: &RunnerOptions,
-    client_options: &ClientOptions,
     logger: &Logger,
 ) -> Vec<EntryResult> {
     let http_request = match eval_request(&entry.request, variables, &runner_options.context_dir) {
@@ -52,9 +50,28 @@ pub fn run(
                 asserts: vec![],
                 errors: vec![error],
                 time_in_ms: 0,
-                compressed: client_options.compressed,
+                compressed: runner_options.compressed,
             }];
         }
+    };
+
+    let client_options = http::ClientOptions {
+        cacert_file: runner_options.cacert_file.clone(),
+        follow_location: runner_options.follow_location,
+        max_redirect: runner_options.max_redirect,
+        cookie_input_file: runner_options.cookie_input_file.clone(),
+        proxy: runner_options.proxy.clone(),
+        no_proxy: runner_options.no_proxy.clone(),
+        verbosity: runner_options.verbosity.as_ref().map(|v| match v {
+            Verbosity::Verbose => http::Verbosity::Verbose,
+            Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
+        }),
+        insecure: runner_options.insecure,
+        timeout: runner_options.timeout,
+        connect_timeout: runner_options.connect_timeout,
+        user: runner_options.user.clone(),
+        user_agent: runner_options.user_agent.clone(),
+        compressed: runner_options.compressed,
     };
 
     // Experimental features
@@ -62,13 +79,13 @@ pub fn run(
     use std::str::FromStr;
     if let Some(s) = cookie_storage_set(&entry.request) {
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
-            http_client.add_cookie(&cookie, client_options);
+            http_client.add_cookie(&cookie, &client_options);
         } else {
             logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
         }
     }
     if cookie_storage_clear(&entry.request) {
-        http_client.clear_cookie_storage(client_options);
+        http_client.clear_cookie_storage(&client_options);
     }
 
     logger.debug("");
@@ -81,12 +98,12 @@ pub fn run(
     logger.debug("Request can be run with the following curl command:");
     logger.debug(
         http_client
-            .curl_command_line(&http_request, &runner_options.context_dir, client_options)
+            .curl_command_line(&http_request, &runner_options.context_dir, &client_options)
             .as_str(),
     );
     logger.debug("");
 
-    let calls = match http_client.execute_with_redirect(&http_request, client_options, logger) {
+    let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = RunnerError::from(http_error);
@@ -228,16 +245,16 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
     logger.debug("");
 }
 
-/// Returns a new [`ClientOptions`] based on the `entry` optional Options section
-/// and a default `client_options`.
+/// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
+/// and a default `runner_options`.
 pub fn get_entry_options(
     entry: &Entry,
-    client_options: &ClientOptions,
+    runner_options: &RunnerOptions,
     logger: &Logger,
-) -> ClientOptions {
-    let mut client_options = client_options.clone();
+) -> RunnerOptions {
+    let mut runner_options = runner_options.clone();
     if !has_options(entry) {
-        return client_options;
+        return runner_options;
     }
 
     logger.debug("");
@@ -248,27 +265,27 @@ pub fn get_entry_options(
             for option in options {
                 match option {
                     EntryOption::CaCertificate(option) => {
-                        client_options.cacert_file = Some(option.filename.value.clone());
+                        runner_options.cacert_file = Some(option.filename.value.clone());
                         logger.debug(format!("cacert: {}", option.filename.value).as_str());
                     }
                     EntryOption::Compressed(option) => {
-                        client_options.compressed = option.value;
+                        runner_options.compressed = option.value;
                         logger.debug(format!("compressed: {}", option.value).as_str());
                     }
                     EntryOption::Insecure(option) => {
-                        client_options.insecure = option.value;
+                        runner_options.insecure = option.value;
                         logger.debug(format!("insecure: {}", option.value).as_str());
                     }
                     EntryOption::FollowLocation(option) => {
-                        client_options.follow_location = option.value;
+                        runner_options.follow_location = option.value;
                         logger.debug(format!("location: {}", option.value).as_str());
                     }
                     EntryOption::MaxRedirect(option) => {
-                        client_options.max_redirect = Some(option.value);
+                        runner_options.max_redirect = Some(option.value);
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
                     }
                     EntryOption::Verbose(option) => {
-                        client_options.verbosity = if option.value {
+                        runner_options.verbosity = if option.value {
                             Some(Verbosity::Verbose)
                         } else {
                             None
@@ -277,7 +294,7 @@ pub fn get_entry_options(
                     }
 
                     EntryOption::VeryVerbose(option) => {
-                        client_options.verbosity = if option.value {
+                        runner_options.verbosity = if option.value {
                             Some(Verbosity::VeryVerbose)
                         } else {
                             None
@@ -288,7 +305,7 @@ pub fn get_entry_options(
             }
         }
     }
-    client_options
+    runner_options
 }
 
 /// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.

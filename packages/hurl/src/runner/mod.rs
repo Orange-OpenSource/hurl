@@ -25,6 +25,7 @@
 
 pub use self::core::{
     AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
+    Verbosity,
 };
 pub use self::hurl_file::run;
 pub use self::value::Value;

@@ -20,7 +20,6 @@ use std::time::Instant;
 
 use crate::cli::Logger;
 use crate::http;
-use crate::http::ClientOptions;
 use crate::runner::entry::get_entry_verbosity;
 use hurl_core::ast::*;
 
@@ -57,17 +56,10 @@ use super::entry;
 /// let logger = Logger::new(false, false, filename, s);
 ///
 /// // Define runner options
-/// let variables = std::collections::HashMap::new();
 /// let runner_options = runner::RunnerOptions {
-///        fail_fast: false,
-///        variables,
-///        to_entry: None,
-///        context_dir: ContextDir::default(),
-///        ignore_asserts: false,
-///        very_verbose: false,
-///        pre_entry: None,
-///        post_entry: None,
-///  };
+///   very_verbose: true,
+///   ..runner::RunnerOptions::default()
+/// };
 ///
 /// // Run the hurl file
 /// let hurl_results = runner::run(
@@ -75,8 +67,7 @@ use super::entry;
 ///     filename,
 ///     &mut client,
 ///     &runner_options,
-///     &client_options,
-///     &logger,
+///     &logger
 /// );
 /// assert!(hurl_results.success);
 /// ```
@@ -85,7 +76,6 @@ pub fn run(
     filename: &str,
     http_client: &mut http::Client,
     runner_options: &RunnerOptions,
-    client_options: &ClientOptions,
     logger: &Logger,
 ) -> HurlResult {
     let mut entries = vec![];
@@ -119,7 +109,7 @@ pub fn run(
         // We compute these new overridden options for this entry, before entering into the `run`
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
-        let entry_verbosity = get_entry_verbosity(entry, &client_options.verbosity);
+        let entry_verbosity = get_entry_verbosity(entry, &runner_options.verbosity);
         let logger = &Logger::new(
             logger.color,
             entry_verbosity.is_some(),
@@ -132,16 +122,9 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
 
-        let client_options = entry::get_entry_options(entry, client_options, logger);
+        let runner_options = entry::get_entry_options(entry, runner_options, logger);
 
-        let entry_results = entry::run(
-            entry,
-            http_client,
-            &mut variables,
-            runner_options,
-            &client_options,
-            logger,
-        );
+        let entry_results = entry::run(entry, http_client, &mut variables, &runner_options, logger);
 
         for entry_result in &entry_results {
             for e in &entry_result.errors {

@@ -16,15 +16,15 @@
  *
  */
 
+use std::collections::HashMap;
+
 use hurl::cli;
 use hurl::cli::Logger;
 use hurl::http;
-use hurl::http::ContextDir;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
 use hurl_core::ast::*;
 use hurl_core::parser;
-use std::collections::HashMap;
 
 // Can be used for debugging
 #[test]
@@ -38,24 +38,12 @@ fn test_hurl_file() {
     let logger = Logger::new(false, false, filename, &content);
 
     let runner_options = RunnerOptions {
-        fail_fast: false,
         variables,
-        to_entry: None,
-        context_dir: ContextDir::default(),
-        ignore_asserts: false,
-        very_verbose: false,
-        pre_entry: None,
-        post_entry: None,
+
+        ..RunnerOptions::default()
     };
 
-    let _hurl_log = runner::run(
-        &hurl_file,
-        filename,
-        &mut client,
-        &runner_options,
-        &client_options,
-        &logger,
-    );
+    let _hurl_log = runner::run(&hurl_file, filename, &mut client, &runner_options, &logger);
 }
 
 #[cfg(test)]
@@ -168,24 +156,12 @@ fn test_hello() {
         }],
         line_terminators: vec![],
     };
-    let variables = HashMap::new();
-    let runner_options = RunnerOptions {
-        fail_fast: true,
-        variables,
-        to_entry: None,
-        context_dir: ContextDir::default(),
-        ignore_asserts: false,
-        very_verbose: false,
-        pre_entry: None,
-        post_entry: None,
-    };
-
+    let runner_options = RunnerOptions::default();
     runner::run(
         &hurl_file,
         "filename",
         &mut client,
         &runner_options,
-        &client_options,
         &logger,
     );
 }
