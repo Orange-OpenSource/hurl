@@ -19,6 +19,7 @@ use std::collections::HashMap;
 
 use crate::cli::Logger;
 use crate::http;
+use crate::http::ClientOptions;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -54,25 +55,7 @@ pub fn run(
             }];
         }
     };
-
-    let client_options = http::ClientOptions {
-        cacert_file: runner_options.cacert_file.clone(),
-        follow_location: runner_options.follow_location,
-        max_redirect: runner_options.max_redirect,
-        cookie_input_file: runner_options.cookie_input_file.clone(),
-        proxy: runner_options.proxy.clone(),
-        no_proxy: runner_options.no_proxy.clone(),
-        verbosity: runner_options.verbosity.as_ref().map(|v| match v {
-            Verbosity::Verbose => http::Verbosity::Verbose,
-            Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
-        }),
-        insecure: runner_options.insecure,
-        timeout: runner_options.timeout,
-        connect_timeout: runner_options.connect_timeout,
-        user: runner_options.user.clone(),
-        user_agent: runner_options.user_agent.clone(),
-        compressed: runner_options.compressed,
-    };
+    let client_options = http::ClientOptions::from(runner_options);
 
     // Experimental features
     // with cookie storage
@@ -205,6 +188,29 @@ pub fn run(
     }
 
     entry_results
+}
+
+impl From<&RunnerOptions> for ClientOptions {
+    fn from(runner_options: &RunnerOptions) -> Self {
+        ClientOptions {
+            cacert_file: runner_options.cacert_file.clone(),
+            follow_location: runner_options.follow_location,
+            max_redirect: runner_options.max_redirect,
+            cookie_input_file: runner_options.cookie_input_file.clone(),
+            proxy: runner_options.proxy.clone(),
+            no_proxy: runner_options.no_proxy.clone(),
+            verbosity: runner_options.verbosity.as_ref().map(|v| match v {
+                Verbosity::Verbose => http::Verbosity::Verbose,
+                Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
+            }),
+            insecure: runner_options.insecure,
+            timeout: runner_options.timeout,
+            connect_timeout: runner_options.connect_timeout,
+            user: runner_options.user.clone(),
+            user_agent: runner_options.user_agent.clone(),
+            compressed: runner_options.compressed,
+        }
+    }
 }
 
 /// Logs this HTTP `request` spec.
