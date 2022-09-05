@@ -33,10 +33,8 @@ fn test_hurl_file() {
     let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
-    let client_options = http::ClientOptions::default();
-    let mut client = http::Client::new(&client_options);
+    let mut client = http::Client::new(None);
     let logger = Logger::new(false, false, filename, &content);
-
     let runner_options = RunnerOptions {
         variables,
 
@@ -109,8 +107,7 @@ fn hello_request() -> Request {
 
 #[test]
 fn test_hello() {
-    let client_options = http::ClientOptions::default();
-    let mut client = http::Client::new(&client_options);
+    let mut client = http::Client::new(None);
 
     // We construct a Hurl file ast "by hand", with fake source info.
     // In this particular case, the raw content is empty as the Hurl file hasn't

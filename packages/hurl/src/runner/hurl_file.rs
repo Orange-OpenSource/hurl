@@ -51,8 +51,7 @@ use super::entry;
 /// let hurl_file = parser::parse_hurl_file(s).unwrap();
 ///
 /// // Create an HTTP client
-/// let client_options = http::ClientOptions::default();
-/// let mut client = http::Client::new(&client_options);
+/// let mut client = http::Client::new(None);
 /// let logger = Logger::new(false, false, filename, s);
 ///
 /// // Define runner options

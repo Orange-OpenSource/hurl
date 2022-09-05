@@ -201,25 +201,7 @@ fn execute(
                 user_agent,
                 verbosity,
             };
-            let client_options = http::ClientOptions {
-                cacert_file: runner_options.cacert_file.clone(),
-                follow_location: runner_options.follow_location,
-                max_redirect: runner_options.max_redirect,
-                cookie_input_file: runner_options.cookie_input_file.clone(),
-                proxy: runner_options.proxy.clone(),
-                no_proxy: runner_options.no_proxy.clone(),
-                verbosity: runner_options.verbosity.as_ref().map(|v| match v {
-                    Verbosity::Verbose => http::Verbosity::Verbose,
-                    Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
-                }),
-                insecure: runner_options.insecure,
-                timeout: runner_options.timeout,
-                connect_timeout: runner_options.connect_timeout,
-                user: runner_options.user.clone(),
-                user_agent: runner_options.user_agent.clone(),
-                compressed: runner_options.compressed,
-            };
-            let mut client = http::Client::new(&client_options);
+            let mut client = http::Client::new(runner_options.cookie_input_file.clone());
 
             let result = runner::run(&hurl_file, filename, &mut client, &runner_options, logger);
             if cli_options.progress {

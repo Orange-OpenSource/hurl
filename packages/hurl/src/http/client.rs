@@ -45,7 +45,7 @@ pub struct Client {
 
 impl Client {
     /// Creates HTTP Hurl client.
-    pub fn new(options: &ClientOptions) -> Client {
+    pub fn new(cookie_input_file: Option<String>) -> Client {
         let mut h = easy::Easy::new();
 
         // Set handle attributes
@@ -53,14 +53,8 @@ impl Client {
 
         // Activate cookie storage
         // with or without persistence (empty string)
-        h.cookie_file(
-            options
-                .cookie_input_file
-                .clone()
-                .unwrap_or_else(|| "".to_string())
-                .as_str(),
-        )
-        .unwrap();
+        h.cookie_file(cookie_input_file.unwrap_or_else(|| "".to_string()).as_str())
+            .unwrap();
 
         Client {
             handle: Box::new(h),
