@@ -21,6 +21,7 @@ use std::time::Instant;
 use crate::cli::Logger;
 use crate::http;
 use crate::runner::entry::get_entry_verbosity;
+use crate::runner::Value;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -35,12 +36,14 @@ use super::entry;
 /// # Example
 ///
 /// ```
+/// use std::collections::HashMap;
 /// use std::path::PathBuf;
 /// use hurl::cli::Logger;
 /// use hurl_core::parser;
 /// use hurl::http;
 /// use hurl::http::ContextDir;
 /// use hurl::runner;
+/// use hurl::runner::Value;
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl";
@@ -60,12 +63,17 @@ use super::entry;
 ///   ..runner::RunnerOptions::default()
 /// };
 ///
+/// // set variables
+/// let mut variables = HashMap::default();
+/// variables.insert("name".to_string(), Value::String("toto".to_string()));
+///
 /// // Run the hurl file
 /// let hurl_results = runner::run(
 ///     &hurl_file,
 ///     filename,
 ///     &mut client,
 ///     &runner_options,
+///     &variables,
 ///     &logger
 /// );
 /// assert!(hurl_results.success);
@@ -75,14 +83,11 @@ pub fn run(
     filename: &str,
     http_client: &mut http::Client,
     runner_options: &RunnerOptions,
+    variables: &HashMap<String, Value>,
     logger: &Logger,
 ) -> HurlResult {
     let mut entries = vec![];
-    let mut variables = HashMap::default();
-
-    for (key, value) in &runner_options.variables {
-        variables.insert(key.to_string(), value.clone());
-    }
+    let mut variables = variables.clone();
 
     let n = if let Some(to_entry) = runner_options.to_entry {
         to_entry

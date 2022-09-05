@@ -35,13 +35,15 @@ fn test_hurl_file() {
     let variables = HashMap::new();
     let mut client = http::Client::new(None);
     let logger = Logger::new(false, false, filename, &content);
-    let runner_options = RunnerOptions {
-        variables,
-
-        ..RunnerOptions::default()
-    };
-
-    let _hurl_log = runner::run(&hurl_file, filename, &mut client, &runner_options, &logger);
+    let runner_options = RunnerOptions::default();
+    let _hurl_log = runner::run(
+        &hurl_file,
+        filename,
+        &mut client,
+        &runner_options,
+        &variables,
+        &logger,
+    );
 }
 
 #[cfg(test)]
@@ -153,12 +155,14 @@ fn test_hello() {
         }],
         line_terminators: vec![],
     };
+    let variables = HashMap::new();
     let runner_options = RunnerOptions::default();
     runner::run(
         &hurl_file,
         "filename",
         &mut client,
         &runner_options,
+        &variables,
         &logger,
     );
 }

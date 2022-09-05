@@ -182,7 +182,6 @@ fn execute(
                 cacert_file,
                 compressed,
                 fail_fast,
-                variables,
                 to_entry,
                 user,
                 context_dir,
@@ -202,8 +201,14 @@ fn execute(
                 verbosity,
             };
             let mut client = http::Client::new(runner_options.cookie_input_file.clone());
-
-            let result = runner::run(&hurl_file, filename, &mut client, &runner_options, logger);
+            let result = runner::run(
+                &hurl_file,
+                filename,
+                &mut client,
+                &runner_options,
+                &variables,
+                logger,
+            );
             if cli_options.progress {
                 logger.test_completed(&result);
             }

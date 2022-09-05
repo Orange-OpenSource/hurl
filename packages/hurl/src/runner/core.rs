@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
 use std::path::PathBuf;
 use std::time::Duration;
 
@@ -45,7 +44,6 @@ pub struct RunnerOptions {
     pub to_entry: Option<usize>,
     pub user: Option<String>,
     pub user_agent: Option<String>,
-    pub variables: HashMap<String, Value>,
     pub verbosity: Option<Verbosity>,
     pub very_verbose: bool, // If true, log body response in verbose mode.
 }
@@ -77,7 +75,6 @@ impl Default for RunnerOptions {
             to_entry: None,
             user: None,
             user_agent: None,
-            variables: Default::default(),
             verbosity: None,
             very_verbose: false,
         }
