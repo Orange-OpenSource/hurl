@@ -168,6 +168,7 @@ main-query:
   | duration-query
   | bytes-query
   | sha256-query
+  | md5-query
 
 status-query: "status"
 
@@ -188,6 +189,8 @@ variable-query: "variable" sp quoted-string
 duration-query: "duration"
 
 sha256-query: "sha256"
+
+md5-query: "md5"
 
 bytes-query: "bytes"
 

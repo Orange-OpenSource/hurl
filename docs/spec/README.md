@@ -3,6 +3,6 @@ https://github.com/fabricereix/grammar
 
 Validate and generate HTML
 
-```
-./generate_html.sh
+```shell
+$ ./generate_html.sh
 ```
