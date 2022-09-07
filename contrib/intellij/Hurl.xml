@@ -1,0 +1,18 @@
+<filetype binary="false" default_extension="hurl" description="Hurl" name="Hurl">
+    <highlighting>
+        <options>
+            <option name="LINE_COMMENT" value="#" />
+            <option name="COMMENT_START" value="" />
+            <option name="COMMENT_END" value="" />
+            <option name="HEX_PREFIX" value="" />
+            <option name="NUM_POSTFIXES" value="" />
+        </options>
+        <keywords keywords="CONNECT;DELETE;GET;HEAD;OPTIONS;PATCH;POST;PUT;TRACE" ignore_case="false" />
+        <keywords2 keywords="[Asserts];[Captures];[Cookies];[FormParams];[MultipartFormData];[QueryStringParams];[Options]" />
+        <keywords3 keywords="body;bytes;cookie;duration;header;jsonpath;regex;sha256;status;variable;xpath" />
+        <keywords4 keywords="&lt;;&lt;=;==;&gt;;&gt;=;contains;count;exists;includes;not;startsWith" />
+    </highlighting>
+    <extensionMap>
+        <mapping ext="hurl" />
+    </extensionMap>
+</filetype>
