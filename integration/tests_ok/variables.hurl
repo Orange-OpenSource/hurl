@@ -1,6 +1,7 @@
 # Variables can be set from:
 # - an external properties file
 # - at the command-line with the --variable option
+# - with HURL_xxx environment variable
 # - in the Hurl File in the [Options] section
 
 POST http://localhost:8000/variables
