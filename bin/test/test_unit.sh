@@ -3,4 +3,4 @@ set -e
 echo "----- unit tests  -----"
 PATH="$HOME"/.cargo/bin:$PATH
 export PATH
-cargo test --features strict --tests
+cargo test --release --features strict --tests

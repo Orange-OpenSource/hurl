@@ -2,7 +2,7 @@
 set -e
 
 echo "----- integration tests -----"
-export PATH="$PWD/target/debug:$PATH"
+export PATH="$PWD/target/release:$PATH"
 cd integration || exit
 ./integration.py
 ./test_curl_commands.sh "$(find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')"
