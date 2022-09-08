@@ -11,8 +11,8 @@ is welcome 🤓).
 1. Quit IntelliJ (or CLion etc...)
 2. 
     ```shell
-    $ mkdir -p ~/Library/Application\ Support/JetBrains/filetype/[YOUR_INTELLIJ_VERSION]/filetypes
-    $ cp Hurl.xml ~/Library/Application\ Support/JetBrains/filetype/[YOUR_INTELLIJ_VERSION]/filetypes
+    $ mkdir -p ~/Library/Application\ Support/JetBrains/[YOUR_INTELLIJ_VERSION]/filetypes
+    $ cp Hurl.xml ~/Library/Application\ Support/JetBrains/[YOUR_INTELLIJ_VERSION]/filetypes
     ```
 3. Start IntelliJ
 

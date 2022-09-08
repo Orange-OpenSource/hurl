@@ -9,8 +9,8 @@
         </options>
         <keywords keywords="CONNECT;DELETE;GET;HEAD;OPTIONS;PATCH;POST;PUT;TRACE" ignore_case="false" />
         <keywords2 keywords="[Asserts];[Captures];[Cookies];[FormParams];[MultipartFormData];[QueryStringParams];[Options]" />
-        <keywords3 keywords="body;bytes;cookie;duration;header;jsonpath;regex;sha256;status;variable;xpath" />
-        <keywords4 keywords="&lt;;&lt;=;==;&gt;;&gt;=;contains;count;exists;includes;not;startsWith" />
+        <keywords3 keywords="body;bytes;cookie;duration;header;jsonpath;regex;sha256;status;variable;xpath;HTTP/" />
+        <keywords4 keywords="&lt;;&lt;=;==;&gt;;&gt;=;contains;count;exists;includes;not;startsWith;endsWith;matches" />
     </highlighting>
     <extensionMap>
         <mapping ext="hurl" />

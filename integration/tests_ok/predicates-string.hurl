@@ -20,4 +20,4 @@ GET http://localhost:8000/predicates-string-unicode
 HTTP/1.0 200
 [Asserts]
 body == "\u{2708}"
-bytes count equals 3
+bytes count == 3
