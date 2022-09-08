@@ -96,6 +96,7 @@ impl ToJson for Request {
 }
 
 impl ToJson for Response {
+    /// Transforms this response to a JSON object.
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
         if let Some(v) = get_json_version(self.version.value.clone()) {
@@ -105,20 +106,15 @@ impl ToJson for Response {
             attributes.push(("status".to_string(), JValue::Number(n.to_string())));
         }
         add_headers(&mut attributes, self.headers.clone());
-        if !self.clone().captures().is_empty() {
-            let captures = self
-                .clone()
-                .captures()
-                .iter()
-                .map(|c| c.to_json())
-                .collect();
+        if !self.captures().is_empty() {
+            let captures = self.captures().iter().map(|c| c.to_json()).collect();
             attributes.push(("captures".to_string(), JValue::List(captures)));
         }
-        if !self.clone().asserts().is_empty() {
-            let asserts = self.clone().asserts().iter().map(|a| a.to_json()).collect();
+        if !self.asserts().is_empty() {
+            let asserts = self.asserts().iter().map(|a| a.to_json()).collect();
             attributes.push(("asserts".to_string(), JValue::List(asserts)));
         }
-        if let Some(body) = self.body.clone() {
+        if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
         JValue::Object(attributes)

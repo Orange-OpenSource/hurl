@@ -32,17 +32,17 @@ use sha2::Digest;
 pub type QueryResult = Result<Option<Value>, Error>;
 
 pub fn eval_query(
-    query: Query,
+    query: &Query,
     variables: &HashMap<String, Value>,
-    http_response: http::Response,
+    http_response: &http::Response,
 ) -> QueryResult {
-    let value = eval_query_value(query.clone(), variables, http_response)?;
-    if let Some((_, subquery)) = query.subquery {
-        if let Some(value) = value {
+    let value = eval_query_value(query, variables, http_response)?;
+    if let Some((_, subquery)) = &query.subquery {
+        if let Some(value) = &value {
             eval_subquery(subquery, value, variables)
         } else {
             Err(Error {
-                source_info: subquery.source_info,
+                source_info: subquery.source_info.clone(),
                 inner: RunnerError::SubqueryInvalidInput("none".to_string()),
                 assert: false,
             })
@@ -52,9 +52,9 @@ pub fn eval_query(
     }
 }
 pub fn eval_query_value(
-    query: Query,
+    query: &Query,
     variables: &HashMap<String, Value>,
-    http_response: http::Response,
+    http_response: &http::Response,
 ) -> QueryResult {
     match query.value.clone() {
         QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
@@ -96,18 +96,18 @@ pub fn eval_query_value(
             match http_response.text() {
                 Ok(s) => Ok(Some(Value::String(s))),
                 Err(inner) => Err(Error {
-                    source_info: query.source_info,
+                    source_info: query.source_info.clone(),
                     inner: RunnerError::from(inner),
                     assert: false,
                 }),
             }
         }
         QueryValue::Xpath { expr, .. } => {
-            let source_info = expr.source_info.clone();
+            let source_info = &expr.source_info;
             let value = eval_template(&expr, variables)?;
             match http_response.text() {
                 Err(inner) => Err(Error {
-                    source_info: query.source_info,
+                    source_info: query.source_info.clone(),
                     inner: RunnerError::from(inner),
                     assert: false,
                 }),
@@ -120,17 +120,17 @@ pub fn eval_query_value(
                     match result {
                         Ok(value) => Ok(Some(value)),
                         Err(xpath::XpathError::InvalidXml {}) => Err(Error {
-                            source_info: query.source_info,
+                            source_info: query.source_info.clone(),
                             inner: RunnerError::QueryInvalidXml,
                             assert: false,
                         }),
                         Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
-                            source_info: query.source_info,
+                            source_info: query.source_info.clone(),
                             inner: RunnerError::QueryInvalidXml,
                             assert: false,
                         }),
                         Err(xpath::XpathError::Eval {}) => Err(Error {
-                            source_info,
+                            source_info: source_info.clone(),
                             inner: RunnerError::QueryInvalidXpathEval,
                             assert: false,
                         }),
@@ -157,7 +157,7 @@ pub fn eval_query_value(
             let json = match http_response.text() {
                 Err(inner) => {
                     return Err(Error {
-                        source_info: query.source_info,
+                        source_info: query.source_info.clone(),
                         inner: RunnerError::from(inner),
                         assert: false,
                     });
@@ -167,7 +167,7 @@ pub fn eval_query_value(
             let value = match serde_json::from_str(json.as_str()) {
                 Err(_) => {
                     return Err(Error {
-                        source_info: query.source_info,
+                        source_info: query.source_info.clone(),
                         inner: RunnerError::QueryInvalidJson,
                         assert: false,
                     });
@@ -188,7 +188,7 @@ pub fn eval_query_value(
             let s = match http_response.text() {
                 Err(inner) => {
                     return Err(Error {
-                        source_info: query.source_info,
+                        source_info: query.source_info.clone(),
                         inner: RunnerError::from(inner),
                         assert: false,
                     });
@@ -234,7 +234,7 @@ pub fn eval_query_value(
         QueryValue::Bytes {} => match http_response.uncompress_body() {
             Ok(s) => Ok(Some(Value::Bytes(s))),
             Err(inner) => Err(Error {
-                source_info: query.source_info,
+                source_info: query.source_info.clone(),
                 inner: RunnerError::from(inner),
                 assert: false,
             }),
@@ -244,7 +244,7 @@ pub fn eval_query_value(
                 Ok(s) => s,
                 Err(inner) => {
                     return Err(Error {
-                        source_info: query.source_info,
+                        source_info: query.source_info.clone(),
                         inner: RunnerError::from(inner),
                         assert: false,
                     })
@@ -261,7 +261,7 @@ pub fn eval_query_value(
                 Ok(s) => s,
                 Err(inner) => {
                     return Err(Error {
-                        source_info: query.source_info,
+                        source_info: query.source_info.clone(),
                         inner: RunnerError::from(inner),
                         assert: false,
                     })
@@ -573,13 +573,13 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_query(
-                Query {
+                &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Status {},
                     subquery: None
                 },
                 &variables,
-                http::hello_http_response(),
+                &http::hello_http_response(),
             )
             .unwrap()
             .unwrap(),
@@ -613,7 +613,7 @@ pub mod tests {
         //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
         //    assert_eq!(error.inner, RunnerError::QueryHeaderNotFound);
         assert_eq!(
-            eval_query(query_header, &variables, http::hello_http_response()).unwrap(),
+            eval_query(&query_header, &variables, &http::hello_http_response()).unwrap(),
             None
         );
     }
@@ -641,7 +641,7 @@ pub mod tests {
             subquery: None,
         };
         assert_eq!(
-            eval_query(query_header, &variables, http::hello_http_response())
+            eval_query(&query_header, &variables, &http::hello_http_response())
                 .unwrap()
                 .unwrap(),
             Value::String(String::from("text/html; charset=utf-8"))
@@ -688,7 +688,7 @@ pub mod tests {
             subquery: None,
         };
         assert_eq!(
-            eval_query(query, &variables, response.clone())
+            eval_query(&query, &variables, &response.clone())
                 .unwrap()
                 .unwrap(),
             Value::String("DQAAAKEaem_vYg".to_string())
@@ -718,7 +718,7 @@ pub mod tests {
             subquery: None,
         };
         assert_eq!(
-            eval_query(query, &variables, response.clone())
+            eval_query(&query, &variables, &response.clone())
                 .unwrap()
                 .unwrap(),
             Value::String("/accounts".to_string())
@@ -748,7 +748,7 @@ pub mod tests {
             subquery: None,
         };
         assert_eq!(
-            eval_query(query, &variables, response.clone())
+            eval_query(&query, &variables, &response.clone())
                 .unwrap()
                 .unwrap(),
             Value::Unit
@@ -777,7 +777,7 @@ pub mod tests {
             },
             subquery: None,
         };
-        assert_eq!(eval_query(query, &variables, response).unwrap(), None);
+        assert_eq!(eval_query(&query, &variables, &response).unwrap(), None);
     }
 
     #[test]
@@ -863,26 +863,26 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_query(
-                Query {
+                &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Body {},
                     subquery: None
                 },
                 &variables,
-                http::hello_http_response(),
+                &http::hello_http_response(),
             )
             .unwrap()
             .unwrap(),
             Value::String(String::from("Hello World!"))
         );
         let error = eval_query(
-            Query {
+            &Query {
                 source_info: SourceInfo::new(1, 1, 1, 2),
                 value: QueryValue::Body {},
                 subquery: None,
             },
             &variables,
-            http::bytes_http_response(),
+            &http::bytes_http_response(),
         )
         .err()
         .unwrap();
@@ -905,7 +905,7 @@ pub mod tests {
             body: vec![200],
             duration: Default::default(),
         };
-        let error = eval_query(xpath_users(), &variables, http_response)
+        let error = eval_query(&xpath_users(), &variables, &http_response)
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
@@ -939,7 +939,7 @@ pub mod tests {
             },
             subquery: None,
         };
-        let error = eval_query(query, &variables, http::xml_two_users_http_response())
+        let error = eval_query(&query, &variables, &http::xml_two_users_http_response())
             .err()
             .unwrap();
         assert_eq!(error.inner, RunnerError::QueryInvalidXpathEval);
@@ -952,9 +952,9 @@ pub mod tests {
 
         assert_eq!(
             eval_query(
-                xpath_users(),
+                &xpath_users(),
                 &variables,
-                http::xml_two_users_http_response(),
+                &http::xml_two_users_http_response(),
             )
             .unwrap()
             .unwrap(),
@@ -962,9 +962,9 @@ pub mod tests {
         );
         assert_eq!(
             eval_query(
-                xpath_count_user_query(),
+                &xpath_count_user_query(),
                 &variables,
-                http::xml_two_users_http_response(),
+                &http::xml_two_users_http_response(),
             )
             .unwrap()
             .unwrap(),
@@ -1000,9 +1000,13 @@ pub mod tests {
     fn test_query_xpath_with_html() {
         let variables = HashMap::new();
         assert_eq!(
-            eval_query(xpath_html_charset(), &variables, http::html_http_response())
-                .unwrap()
-                .unwrap(),
+            eval_query(
+                &xpath_html_charset(),
+                &variables,
+                &http::html_http_response()
+            )
+            .unwrap()
+            .unwrap(),
             Value::String(String::from("UTF-8"))
         );
     }
@@ -1032,7 +1036,7 @@ pub mod tests {
             subquery: None,
         };
 
-        let error = eval_query(jsonpath_query, &variables, json_http_response())
+        let error = eval_query(&jsonpath_query, &variables, &json_http_response())
             .err()
             .unwrap();
         assert_eq!(
@@ -1060,7 +1064,7 @@ pub mod tests {
             body: String::into_bytes(String::from("xxx")),
             duration: Default::default(),
         };
-        let error = eval_query(jsonpath_success(), &variables, http_response)
+        let error = eval_query(&jsonpath_success(), &variables, &http_response)
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });
@@ -1079,7 +1083,7 @@ pub mod tests {
         };
         //assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));
         assert_eq!(
-            eval_query(jsonpath_success(), &variables, http_response).unwrap(),
+            eval_query(&jsonpath_success(), &variables, &http_response).unwrap(),
             None
         );
     }
@@ -1088,13 +1092,13 @@ pub mod tests {
     fn test_query_json() {
         let variables = HashMap::new();
         assert_eq!(
-            eval_query(jsonpath_success(), &variables, json_http_response())
+            eval_query(&jsonpath_success(), &variables, &json_http_response())
                 .unwrap()
                 .unwrap(),
             Value::Bool(false)
         );
         assert_eq!(
-            eval_query(jsonpath_errors(), &variables, json_http_response())
+            eval_query(&jsonpath_errors(), &variables, &json_http_response())
                 .unwrap()
                 .unwrap(),
             Value::List(vec![
@@ -1110,7 +1114,7 @@ pub mod tests {
         );
 
         assert_eq!(
-            eval_query(jsonpath_errors_count(), &variables, json_http_response())
+            eval_query(&jsonpath_errors_count(), &variables, &json_http_response())
                 .unwrap()
                 .unwrap(),
             Value::Integer(2)
@@ -1121,13 +1125,13 @@ pub mod tests {
     fn test_query_regex() {
         let variables = HashMap::new();
         assert_eq!(
-            eval_query(regex_name(), &variables, http::hello_http_response())
+            eval_query(&regex_name(), &variables, &http::hello_http_response())
                 .unwrap()
                 .unwrap(),
             Value::String("World".to_string())
         );
 
-        let error = eval_query(regex_invalid(), &variables, http::hello_http_response())
+        let error = eval_query(&regex_invalid(), &variables, &http::hello_http_response())
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 10));
@@ -1139,13 +1143,13 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_query(
-                Query {
+                &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Bytes {},
                     subquery: None
                 },
                 &variables,
-                http::hello_http_response(),
+                &http::hello_http_response(),
             )
             .unwrap()
             .unwrap(),
@@ -1158,13 +1162,13 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_query(
-                Query {
+                &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Sha256 {},
                     subquery: None
                 },
                 &variables,
-                http::Response {
+                &http::Response {
                     version: http::Version::Http10,
                     status: 200,
                     headers: vec![],

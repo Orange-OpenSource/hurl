@@ -22,14 +22,16 @@ use hurl_core::ast::Expr;
 use super::core::{Error, RunnerError};
 use super::value::Value;
 
-pub fn eval_expr(expr: Expr, variables: &HashMap<String, Value>) -> Result<Value, Error> {
+/// Evaluates the expression `expr` with `variables` map and `http_response`, returns a
+/// [`Value`] on success or an [`Error`] .
+pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, Error> {
     if let Some(value) = variables.get(expr.variable.name.as_str()) {
         Ok(value.clone())
     } else {
         Err(Error {
-            source_info: expr.variable.source_info,
+            source_info: expr.variable.source_info.clone(),
             inner: RunnerError::TemplateVariableNotDefined {
-                name: expr.variable.name,
+                name: expr.variable.name.clone(),
             },
             assert: false,
         })

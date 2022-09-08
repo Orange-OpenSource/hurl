@@ -24,39 +24,39 @@ use regex::Regex;
 use std::collections::HashMap;
 
 pub fn eval_subquery(
-    subquery: Subquery,
-    value: Value,
+    subquery: &Subquery,
+    value: &Value,
     variables: &HashMap<String, Value>,
 ) -> Result<Option<Value>, Error> {
-    match subquery.value {
+    match &subquery.value {
         SubqueryValue::Regex {
             value: regex_value, ..
-        } => eval_regex(value, regex_value, variables, subquery.source_info),
-        SubqueryValue::Count {} => eval_count(value, subquery.source_info),
+        } => eval_regex(value, regex_value, variables, &subquery.source_info),
+        SubqueryValue::Count {} => eval_count(value, &subquery.source_info),
     }
 }
 
 fn eval_regex(
-    value: Value,
-    regex_value: RegexValue,
+    value: &Value,
+    regex_value: &RegexValue,
     variables: &HashMap<String, Value>,
-    source_info: SourceInfo,
+    source_info: &SourceInfo,
 ) -> Result<Option<Value>, Error> {
     let re = match regex_value {
         RegexValue::Template(t) => {
-            let value = eval_template(&t, variables)?;
+            let value = eval_template(t, variables)?;
             match Regex::new(value.as_str()) {
                 Ok(re) => re,
                 Err(_) => {
                     return Err(Error {
-                        source_info: t.source_info,
+                        source_info: t.source_info.clone(),
                         inner: RunnerError::InvalidRegex(),
                         assert: false,
                     })
                 }
             }
         }
-        RegexValue::Regex(re) => re.inner,
+        RegexValue::Regex(re) => re.inner.clone(),
     };
 
     match value {
@@ -68,20 +68,20 @@ fn eval_regex(
             None => Ok(None),
         },
         v => Err(Error {
-            source_info,
+            source_info: source_info.clone(),
             inner: RunnerError::SubqueryInvalidInput(v._type()),
             assert: false,
         }),
     }
 }
 
-fn eval_count(value: Value, source_info: SourceInfo) -> Result<Option<Value>, Error> {
+fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Option<Value>, Error> {
     match value {
         Value::List(values) => Ok(Some(Value::Integer(values.len() as i64))),
         Value::Bytes(values) => Ok(Some(Value::Integer(values.len() as i64))),
-        Value::Nodeset(size) => Ok(Some(Value::Integer(size as i64))),
+        Value::Nodeset(size) => Ok(Some(Value::Integer(*size as i64))),
         v => Err(Error {
-            source_info,
+            source_info: source_info.clone(),
             inner: RunnerError::SubqueryInvalidInput(v._type()),
             assert: false,
         }),
@@ -117,8 +117,8 @@ pub mod tests {
         };
         assert_eq!(
             eval_subquery(
-                subquery.clone(),
-                Value::String("Hello Bob!".to_string()),
+                &subquery,
+                &Value::String("Hello Bob!".to_string()),
                 &variables,
             )
             .unwrap()
@@ -126,7 +126,7 @@ pub mod tests {
             Value::String("Bob".to_string())
         );
 
-        let error = eval_subquery(subquery, Value::Bool(true), &variables)
+        let error = eval_subquery(&subquery, &Value::Bool(true), &variables)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));
@@ -158,8 +158,8 @@ pub mod tests {
             },
         };
         let error = eval_subquery(
-            subquery,
-            Value::String("Hello Bob!".to_string()),
+            &subquery,
+            &Value::String("Hello Bob!".to_string()),
             &variables,
         )
         .err()
@@ -177,8 +177,8 @@ pub mod tests {
         };
         assert_eq!(
             eval_subquery(
-                subquery.clone(),
-                Value::List(vec![
+                &subquery,
+                &Value::List(vec![
                     Value::Integer(1),
                     Value::Integer(2),
                     Value::Integer(3),
@@ -190,7 +190,7 @@ pub mod tests {
             Value::Integer(3)
         );
 
-        let error = eval_subquery(subquery, Value::Bool(true), &variables)
+        let error = eval_subquery(&subquery, &Value::Bool(true), &variables)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));

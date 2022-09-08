@@ -119,7 +119,7 @@ pub fn run(
 
         // We runs capture and asserts on the last HTTP request/response chains.
         if i == calls.len() - 1 {
-            captures = match entry.response.clone() {
+            captures = match &entry.response {
                 None => vec![],
                 Some(response) => match eval_captures(response, http_response, variables) {
                     Ok(captures) => captures,
@@ -137,25 +137,25 @@ pub fn run(
                 },
             };
             // Update variables now!
-            for capture_result in captures.clone() {
-                variables.insert(capture_result.name, capture_result.value);
+            for capture_result in captures.iter() {
+                variables.insert(capture_result.name.clone(), capture_result.value.clone());
             }
             asserts = if runner_options.ignore_asserts {
                 vec![]
             } else {
-                match entry.response.clone() {
+                match &entry.response {
                     None => vec![],
                     Some(response) => eval_asserts(
                         response,
                         variables,
-                        http_response.clone(),
+                        http_response,
                         &runner_options.context_dir,
                     ),
                 }
             };
             errors = asserts
                 .iter()
-                .filter_map(|assert| assert.clone().error())
+                .filter_map(|assert| assert.error())
                 .map(
                     |Error {
                          source_info, inner, ..

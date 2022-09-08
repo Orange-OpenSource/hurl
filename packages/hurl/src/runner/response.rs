@@ -38,9 +38,9 @@ use super::value::Value;
 /// * `http_response` - The actual HTTP response
 /// * `context_dir` - The context directory for files
 pub fn eval_asserts(
-    response: Response,
+    response: &Response,
     variables: &HashMap<String, Value>,
-    http_response: http::Response,
+    http_response: &http::Response,
     context_dir: &ContextDir,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
@@ -71,17 +71,17 @@ pub fn eval_asserts(
                 });
             }
             Ok(expected) => {
-                let header_name = header.key.value.clone();
-                let actuals = http_response.get_header_values(&header_name);
+                let header_name = &header.key.value;
+                let actuals = http_response.get_header_values(header_name);
                 if actuals.is_empty() {
                     asserts.push(AssertResult::Header {
                         actual: Err(Error {
-                            source_info: header.key.clone().source_info,
+                            source_info: header.key.source_info.clone(),
                             inner: RunnerError::QueryHeaderNotFound {},
                             assert: false,
                         }),
                         expected,
-                        source_info: header.key.clone().source_info,
+                        source_info: header.key.source_info.clone(),
                     });
                 } else if actuals.len() == 1 {
                     let actual = actuals.first().unwrap().to_string();
@@ -119,12 +119,12 @@ pub fn eval_asserts(
     }
 
     if let Some(body) = &response.body {
-        let assert = eval_implicit_body_asserts(body, variables, &http_response, context_dir);
+        let assert = eval_implicit_body_asserts(body, variables, http_response, context_dir);
         asserts.push(assert);
     }
 
-    for assert in response.asserts() {
-        let assert_result = eval_assert(assert, variables, http_response.clone());
+    for assert in response.asserts().iter() {
+        let assert_result = eval_assert(assert, variables, http_response);
         asserts.push(assert_result);
     }
     asserts
@@ -288,13 +288,13 @@ fn eval_implicit_body_asserts(
 }
 
 pub fn eval_captures(
-    response: Response,
+    response: &Response,
     http_response: &http::Response,
     variables: &HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, Error> {
     let mut captures = vec![];
-    for capture in response.captures() {
-        let capture_result = eval_capture(capture, variables, http_response.clone())?;
+    for capture in response.captures().iter() {
+        let capture_result = eval_capture(capture, variables, http_response)?;
         captures.push(capture_result);
     }
     Ok(captures)
@@ -359,9 +359,9 @@ mod tests {
         let context_dir = ContextDir::default();
         assert_eq!(
             eval_asserts(
-                user_response(),
+                &user_response(),
                 &variables,
-                http::xml_two_users_http_response(),
+                &http::xml_two_users_http_response(),
                 &context_dir,
             ),
             vec![
@@ -397,7 +397,7 @@ mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_captures(
-                user_response(),
+                &user_response(),
                 &http::xml_two_users_http_response(),
                 &variables,
             )

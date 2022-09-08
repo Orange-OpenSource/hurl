@@ -26,24 +26,29 @@ use super::core::{CaptureResult, Error};
 use super::query::eval_query;
 use super::value::Value;
 
+/// Evaluates a `capture` with `variables` map and `http_response`, returns a
+/// [`CaptureResult`] on success or an [`Error`] .
 pub fn eval_capture(
-    capture: Capture,
+    capture: &Capture,
     variables: &HashMap<String, Value>,
-    http_response: http::Response,
+    http_response: &http::Response,
 ) -> Result<CaptureResult, Error> {
-    let name = capture.name.value;
-    let value = eval_query(capture.query.clone(), variables, http_response)?;
+    let name = &capture.name.value;
+    let value = eval_query(&capture.query, variables, http_response)?;
     let value = match value {
         None => {
             return Err(Error {
-                source_info: capture.query.source_info,
+                source_info: capture.query.source_info.clone(),
                 inner: RunnerError::NoQueryResult {},
                 assert: false,
             });
         }
         Some(value) => value,
     };
-    Ok(CaptureResult { name, value })
+    Ok(CaptureResult {
+        name: name.clone(),
+        value,
+    })
 }
 
 #[cfg(test)]
@@ -137,7 +142,7 @@ pub mod tests {
             },
         };
 
-        let error = eval_capture(capture, &variables, http::xml_three_users_http_response())
+        let error = eval_capture(&capture, &variables, &http::xml_three_users_http_response())
             .err()
             .unwrap();
         assert_eq!(error.source_info.start, Pos { line: 1, column: 7 });
@@ -193,9 +198,9 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_capture(
-                user_count_capture(),
+                &user_count_capture(),
                 &variables,
-                http::xml_three_users_http_response(),
+                &http::xml_three_users_http_response(),
             )
             .unwrap(),
             CaptureResult {
@@ -205,7 +210,7 @@ pub mod tests {
         );
 
         assert_eq!(
-            eval_capture(duration_capture(), &variables, http::json_http_response()).unwrap(),
+            eval_capture(&duration_capture(), &variables, &http::json_http_response()).unwrap(),
             CaptureResult {
                 name: "duration".to_string(),
                 value: Value::from_f64(1.5),

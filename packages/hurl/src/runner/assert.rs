@@ -28,21 +28,7 @@ use super::query::eval_query;
 use super::value::Value;
 
 impl AssertResult {
-    pub fn fail(self) -> bool {
-        match self {
-            AssertResult::Version {
-                actual, expected, ..
-            } => actual != expected,
-            AssertResult::Status {
-                actual, expected, ..
-            } => actual != expected,
-            AssertResult::Header { .. } => false,
-            AssertResult::Explicit { .. } => true,
-            AssertResult::Body { .. } => true,
-        }
-    }
-
-    pub fn error(self) -> Option<Error> {
+    pub fn error(&self) -> Option<Error> {
         match self {
             AssertResult::Version {
                 actual,
@@ -53,8 +39,10 @@ impl AssertResult {
                     None
                 } else {
                     Some(Error {
-                        source_info,
-                        inner: RunnerError::AssertVersion { actual },
+                        source_info: source_info.clone(),
+                        inner: RunnerError::AssertVersion {
+                            actual: actual.clone(),
+                        },
                         assert: false,
                     })
                 }
@@ -68,7 +56,7 @@ impl AssertResult {
                     None
                 } else {
                     Some(Error {
-                        source_info,
+                        source_info: source_info.clone(),
                         inner: RunnerError::AssertStatus {
                             actual: actual.to_string(),
                         },
@@ -81,14 +69,14 @@ impl AssertResult {
                 expected,
                 source_info,
             } => match actual {
-                Err(e) => Some(e),
+                Err(e) => Some(e.clone()),
                 Ok(s) => {
                     if s == expected {
                         None
                     } else {
                         Some(Error {
-                            source_info,
-                            inner: RunnerError::AssertHeaderValueError { actual: s },
+                            source_info: source_info.clone(),
+                            inner: RunnerError::AssertHeaderValueError { actual: s.clone() },
                             assert: false,
                         })
                     }
@@ -99,9 +87,9 @@ impl AssertResult {
                 expected,
                 source_info,
             } => match expected {
-                Err(e) => Some(e),
+                Err(e) => Some(e.clone()),
                 Ok(expected) => match actual {
-                    Err(e) => Some(e),
+                    Err(e) => Some(e.clone()),
                     Ok(actual) => {
                         if actual == expected {
                             None
@@ -109,7 +97,7 @@ impl AssertResult {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
                             Some(Error {
-                                source_info,
+                                source_info: source_info.clone(),
                                 inner: RunnerError::AssertBodyValueError { actual, expected },
                                 assert: false,
                             })
@@ -118,11 +106,11 @@ impl AssertResult {
                 },
             },
 
-            AssertResult::Explicit { actual: Err(e), .. } => Some(e),
+            AssertResult::Explicit { actual: Err(e), .. } => Some(e.clone()),
             AssertResult::Explicit {
                 predicate_result: Some(Err(e)),
                 ..
-            } => Some(e),
+            } => Some(e.clone()),
             _ => None,
         }
     }
@@ -138,20 +126,20 @@ impl AssertResult {
 }
 
 pub fn eval_assert(
-    assert: Assert,
+    assert: &Assert,
     variables: &HashMap<String, Value>,
-    http_response: http::Response,
+    http_response: &http::Response,
 ) -> AssertResult {
-    let actual = eval_query(assert.query.clone(), variables, http_response);
-    let source_info = assert.predicate.clone().predicate_func.source_info;
-    let predicate_result = match actual.clone() {
+    let actual = eval_query(&assert.query, variables, http_response);
+    let source_info = &assert.predicate.predicate_func.source_info;
+    let predicate_result = match &actual {
         Err(_) => None,
-        Ok(actual) => Some(eval_predicate(assert.predicate, variables, actual)),
+        Ok(actual) => Some(eval_predicate(&assert.predicate, variables, actual)),
     };
 
     AssertResult::Explicit {
         actual,
-        source_info,
+        source_info: source_info.clone(),
         predicate_result,
     }
 }
@@ -202,9 +190,9 @@ pub mod tests {
         let variables = HashMap::new();
         assert_eq!(
             eval_assert(
-                assert_count_user(),
+                &assert_count_user(),
                 &variables,
-                http::xml_three_users_http_response()
+                &http::xml_three_users_http_response()
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Nodeset(3))),

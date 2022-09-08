@@ -25,28 +25,28 @@ use super::template::eval_template;
 use super::value::Value;
 
 pub fn eval_predicate_value(
-    predicate_value: PredicateValue,
+    predicate_value: &PredicateValue,
     variables: &HashMap<String, Value>,
 ) -> Result<Value, Error> {
     match predicate_value {
         PredicateValue::String(template) => {
-            let s = eval_template(&template, variables)?;
+            let s = eval_template(template, variables)?;
             Ok(Value::String(s))
         }
         PredicateValue::Raw(value) => {
             let s = eval_template(&value.value, variables)?;
             Ok(Value::String(s))
         }
-        PredicateValue::Integer(value) => Ok(Value::Integer(value)),
+        PredicateValue::Integer(value) => Ok(Value::Integer(*value)),
         PredicateValue::Float(value) => Ok(Value::Float(value.value)),
-        PredicateValue::Bool(value) => Ok(Value::Bool(value)),
+        PredicateValue::Bool(value) => Ok(Value::Bool(*value)),
         PredicateValue::Null {} => Ok(Value::Null {}),
-        PredicateValue::Hex(value) => Ok(Value::Bytes(value.value)),
-        PredicateValue::Base64(value) => Ok(Value::Bytes(value.value)),
+        PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
+        PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Expression(expr) => {
             let value = eval_expr(expr, variables)?;
             Ok(value)
         }
-        PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner)),
+        PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner.clone())),
     }
 }

@@ -106,18 +106,21 @@ pub struct Response {
 }
 
 impl Response {
-    pub fn captures(self) -> Vec<Capture> {
-        for section in self.sections {
-            if let SectionValue::Captures(captures) = section.value {
-                return captures;
+    /// Returns the captures list of this spec response.
+    pub fn captures(&self) -> Vec<Capture> {
+        for section in self.sections.iter() {
+            if let SectionValue::Captures(captures) = &section.value {
+                return captures.clone();
             }
         }
         vec![]
     }
-    pub fn asserts(self) -> Vec<Assert> {
-        for section in self.sections {
-            if let SectionValue::Asserts(asserts) = section.value {
-                return asserts;
+
+    /// Returns the asserts list of this spec response.
+    pub fn asserts(&self) -> Vec<Assert> {
+        for section in self.sections.iter() {
+            if let SectionValue::Asserts(asserts) = &section.value {
+                return asserts.clone();
             }
         }
         vec![]
