@@ -5,6 +5,7 @@
 <span class="line"><span class="string">variable</span><span>:</span> three<span>=</span><span class="number">3</span></span>
 <span class="line"><span class="string">variable</span><span>:</span> four<span>=</span><span class="number">4</span></span>
 <span class="line"><span class="string">variable</span><span>:</span> five<span>=</span><span class="number">5</span></span>
+<span class="line"><span class="string">variable</span><span>:</span> foo<span>=</span>abc</span>
 <span class="line"><span class="string">insecure</span><span>:</span> <span class="boolean">false</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
@@ -47,6 +48,12 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">isFloat</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="not">not</span> <span class="predicate-type">isInteger</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.nullable"</span> <span class="predicate-type">==</span> <span class="null">null</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">==</span> <span class="string">"test"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">&gt;</span> <span class="string">"te"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">&lt;</span> <span class="string">"testabc"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">&lt;=</span> <span class="string">"test"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">&gt;</span> <span class="string">"{{foo}}"</span></span>
+<span class="line"></span>
 <span class="line"></span>
 <span class="json"><span class="line">{</span>
 <span class="line">  "count": 5,</span>

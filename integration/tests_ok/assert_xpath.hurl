@@ -4,6 +4,7 @@ HTTP/1.0 200
 [Asserts]
 xpath "normalize-space(//data)" == "café"
 xpath "normalize-space(//data)" == "caf\u{00e9}"
+xpath "normalize-space(//data)" > "CAFÉ"
 xpath "//toto" not exists
 
 <data>café</data>
@@ -42,6 +43,7 @@ GET http://localhost:8000/assert-xpath-namespaces
 HTTP/1.0 200
 [Asserts]
 xpath "string(//_:book/_:title)" == "Cheaper by the Dozen"
+xpath "string(//_:book/_:title)" > "Cheaper"
 xpath "string(//_:book/isbn:number)" == "1568491379"
 xpath "//*[name()='book']/*[name()='notes']" count == 1
 xpath "//*[local-name()='book']/*[local-name()='notes']" count == 1

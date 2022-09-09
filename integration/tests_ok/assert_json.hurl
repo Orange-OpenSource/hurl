@@ -5,6 +5,7 @@ variable: two=2
 variable: three=3
 variable: four=4
 variable: five=5
+variable: foo=abc
 insecure: false
 
 HTTP/1.0 200
@@ -47,6 +48,12 @@ jsonpath "$.duration" lessThan 2
 jsonpath "$.duration" isFloat
 jsonpath "$.duration" not isInteger
 jsonpath "$.nullable" == null
+jsonpath "$.tags[0]" == "test"
+jsonpath "$.tags[0]" > "te"
+jsonpath "$.tags[0]" < "testabc"
+jsonpath "$.tags[0]" <= "test"
+jsonpath "$.tags[0]" > "{{foo}}"
+
 
 {
   "count": 5,

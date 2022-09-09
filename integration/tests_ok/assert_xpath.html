@@ -4,6 +4,7 @@
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">==</span> <span class="string">"café"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">==</span> <span class="string">"caf\u{00e9}"</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">&gt;</span> <span class="string">"CAFÉ"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"//toto"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
 <span class="line"></span>
 <span class="xml"><span class="line">&lt;data&gt;café&lt;/data&gt;</span></span>
@@ -42,6 +43,7 @@
 <span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/_:title)"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/_:title)"</span> <span class="predicate-type">&gt;</span> <span class="string">"Cheaper"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/isbn:number)"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"//*[name()='book']/*[name()='notes']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"//*[local-name()='book']/*[local-name()='notes']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 use regex;
@@ -643,7 +644,8 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
 fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.display();
     let expected = format!("greater than {}", expected_value.display());
-    match compare_numbers(actual_value, expected_value) {
+
+    match compare_values(actual_value, expected_value) {
         Some(1) => AssertResult {
             success: true,
             actual,
@@ -668,7 +670,7 @@ fn assert_values_greater(actual_value: &Value, expected_value: &Value) -> Assert
 fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.display();
     let expected = format!("greater or equal than {}", expected_value.display());
-    match compare_numbers(actual_value, expected_value) {
+    match compare_values(actual_value, expected_value) {
         Some(1) | Some(0) => AssertResult {
             success: true,
             actual,
@@ -693,7 +695,7 @@ fn assert_values_greater_or_equal(actual_value: &Value, expected_value: &Value) 
 fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.display();
     let expected = format!("less than {}", expected_value.display());
-    match compare_numbers(actual_value, expected_value) {
+    match compare_values(actual_value, expected_value) {
         Some(-1) => AssertResult {
             success: true,
             actual,
@@ -718,7 +720,7 @@ fn assert_values_less(actual_value: &Value, expected_value: &Value) -> AssertRes
 fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> AssertResult {
     let actual = actual_value.display();
     let expected = format!("less or equal than {}", expected_value.display());
-    match compare_numbers(actual_value, expected_value) {
+    match compare_values(actual_value, expected_value) {
         Some(-1) | Some(0) => AssertResult {
             success: true,
             actual,
@@ -740,18 +742,45 @@ fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> 
     }
 }
 
-// return -1, 0 or 1
-// none if one of the value is not a number
-fn compare_numbers(actual: &Value, expected: &Value) -> Option<i32> {
+/// Compares `actual` and `expected`.
+///
+/// Returns
+/// - `Some(-1)` if `actual` > `expected`,
+/// - `Some(0)` if `actual` = `expected`
+/// - `Some(-1)` if `actual` = `expected`
+/// - `None` if `actual` and `expected` are not comparable.
+fn compare_values(actual: &Value, expected: &Value) -> Option<i32> {
     match (actual, expected) {
         (Value::Integer(i1), Value::Integer(i2)) => Some(compare_float(*i1 as f64, *i2 as f64)),
         (Value::Float(f1), Value::Float(f2)) => Some(compare_float(*f1, *f2)),
         (Value::Float(f1), Value::Integer(i2)) => Some(compare_float(*f1, *i2 as f64)),
         (Value::Integer(i1), Value::Float(f2)) => Some(compare_float(*i1 as f64, *f2)),
+        (Value::String(s1), Value::String(s2)) => Some(compare_string(s1, s2)),
         _ => None,
     }
 }
 
+/// Compares strings `s1` and `s2` lexicographically.
+///
+/// Returns
+/// - `-1` if `s1` > `s2`,
+/// - `0` if `s1` = `s2`
+/// - `-1` if `s1` = `s2`
+fn compare_string(s1: &str, s2: &str) -> i32 {
+    let order = s1.cmp(s2);
+    match order {
+        Ordering::Less => -1,
+        Ordering::Equal => 0,
+        Ordering::Greater => 1,
+    }
+}
+
+/// Compares floats `f1` and `f2`.
+///
+/// Returns
+/// - `-1` if `f1` > `f2`,
+/// - `0` if `f1` = `f2`
+/// - `-1` if `f1` = `f2`
 fn compare_float(f1: f64, f2: f64) -> i32 {
     if f1 > f2 {
         1
@@ -1225,71 +1254,113 @@ mod tests {
     fn test_compare_numbers() {
         // 2 integers
         assert_eq!(
-            compare_numbers(&Value::Integer(2), &Value::Integer(1)).unwrap(),
+            compare_values(&Value::Integer(2), &Value::Integer(1)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Integer(1), &Value::Integer(1)).unwrap(),
+            compare_values(&Value::Integer(1), &Value::Integer(1)).unwrap(),
             0
         );
         assert_eq!(
-            compare_numbers(&Value::Integer(1), &Value::Integer(2)).unwrap(),
+            compare_values(&Value::Integer(1), &Value::Integer(2)).unwrap(),
             -1
         );
         assert_eq!(
-            compare_numbers(&Value::Integer(-1), &Value::Integer(-2)).unwrap(),
+            compare_values(&Value::Integer(-1), &Value::Integer(-2)).unwrap(),
             1
         );
 
         // 2 floats
         assert_eq!(
-            compare_numbers(&Value::Float(2.3), &Value::Float(1.2)).unwrap(),
+            compare_values(&Value::Float(2.3), &Value::Float(1.2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(2.3), &Value::Float(2.2)).unwrap(),
+            compare_values(&Value::Float(2.3), &Value::Float(2.2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(1.2), &Value::Float(1.5)).unwrap(),
+            compare_values(&Value::Float(1.2), &Value::Float(1.5)).unwrap(),
             -1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(-2.1), &Value::Float(-3.1)).unwrap(),
+            compare_values(&Value::Float(-2.1), &Value::Float(-3.1)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(1.1), &Value::Float(-2.1)).unwrap(),
+            compare_values(&Value::Float(1.1), &Value::Float(-2.1)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(1.1), &Value::Float(1.1)).unwrap(),
+            compare_values(&Value::Float(1.1), &Value::Float(1.1)).unwrap(),
             0
         );
 
         // 1 float and 1 integer
         assert_eq!(
-            compare_numbers(&Value::Float(2.3), &Value::Integer(2)).unwrap(),
+            compare_values(&Value::Float(2.3), &Value::Integer(2)).unwrap(),
             1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(2.3), &Value::Integer(3)).unwrap(),
+            compare_values(&Value::Float(2.3), &Value::Integer(3)).unwrap(),
             -1
         );
         assert_eq!(
-            compare_numbers(&Value::Float(2.0), &Value::Integer(2)).unwrap(),
+            compare_values(&Value::Float(2.0), &Value::Integer(2)).unwrap(),
             0
         );
 
         // 1 integer and 1 float
         assert_eq!(
-            compare_numbers(&Value::Integer(2), &Value::Float(2.0)).unwrap(),
+            compare_values(&Value::Integer(2), &Value::Float(2.0)).unwrap(),
             0
         );
 
         // with a non number
-        assert!(
-            compare_numbers(&Value::Integer(-1), &Value::String("hello".to_string())).is_none()
+        assert!(compare_values(&Value::Integer(-1), &Value::String("hello".to_string())).is_none());
+    }
+
+    #[test]
+    fn test_compare_strings() {
+        assert_eq!(
+            compare_values(
+                &Value::String("foo".to_string()),
+                &Value::String("bar".to_string())
+            )
+            .unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_values(
+                &Value::String("bar".to_string()),
+                &Value::String("foo".to_string())
+            )
+            .unwrap(),
+            -1
+        );
+        assert_eq!(
+            compare_values(
+                &Value::String("foo".to_string()),
+                &Value::String("foo".to_string())
+            )
+            .unwrap(),
+            0
+        );
+        assert_eq!(
+            compare_values(
+                &Value::String("foo".to_string()),
+                &Value::String("FOO".to_string())
+            )
+            .unwrap(),
+            1
+        );
+        assert_eq!(
+            compare_values(
+                &Value::String("foobar".to_string()),
+                &Value::String("foo".to_string())
+            )
+            .unwrap(),
+            1
         );
     }
 

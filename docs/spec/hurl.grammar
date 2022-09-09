@@ -229,13 +229,13 @@ equal-predicate: ("equals" | "==") sp predicate-value
 
 not-equal-predicate: ("notEquals" | "!=") sp predicate-value
 
-greater-predicate: ("greaterThan" | ">") sp (integer | float)
+greater-predicate: ("greaterThan" | ">") sp (integer | float | quoted-string)
 
-greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (integer | float)
+greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (integer | float | quoted-string)
 
-less-predicate: ("lessThan" | "<") sp (integer | float)
+less-predicate: ("lessThan" | "<") sp (integer | float | quoted-string)
 
-less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (integer | float)
+less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (integer | float | quoted-string)
 
 start-with-predicate: "startsWith" sp (quoted-string | oneline-hex | oneline-base64)
 

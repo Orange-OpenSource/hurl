@@ -160,7 +160,7 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if value.is_number() || value.is_expression() {
+    if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::GreaterThan {
             space0,
             value,
@@ -184,7 +184,7 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if value.is_number() || value.is_expression() {
+    if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::GreaterThanOrEqual {
             space0,
             value,
@@ -208,7 +208,7 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if value.is_number() || value.is_expression() {
+    if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::LessThan {
             space0,
             value,
@@ -232,7 +232,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predicat
     };
     let start = reader.state.clone();
     let value = predicate_value(reader)?;
-    if value.is_number() || value.is_expression() {
+    if value.is_number() || value.is_string() || value.is_expression() {
         Ok(PredicateFuncValue::LessThanOrEqual {
             space0,
             value,
