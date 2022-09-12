@@ -24,9 +24,8 @@ use super::reader::Reader;
 use super::ParseResult;
 
 pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
-    // can not be json-encoded
-    // can not be empty
-    // but more restrictive: whitelist characters, not empty
+    // Can not be json-encoded, nor empty.
+    // But more restrictive: whitelist characters, not empty
 
     let start = reader.state.clone();
     let mut elements = vec![];
@@ -37,6 +36,16 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
             pos: start.pos,
             recoverable: false,
             inner: ParseError::Url {},
+        });
+    }
+
+    // Urls must begin with http/https or { (templates).
+    let first_char = reader.peek();
+    if first_char != Some('h') && first_char != Some('{') {
+        return Err(Error {
+            pos: reader.state.pos.clone(),
+            recoverable: false,
+            inner: ParseError::UrlIllegalCharacter(first_char.unwrap()),
         });
     }
 
@@ -250,7 +259,7 @@ mod tests {
         let mut reader = Reader::init(" # eol");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Url {});
+        assert_eq!(error.inner, ParseError::UrlIllegalCharacter(' '));
     }
 
     #[test]
@@ -261,8 +270,6 @@ mod tests {
             "http://www.google.com/",
             "http://www.google.com/file%20one%26two",
             "http://www.google.com/#file%20one%26two",
-            "ftp://webmaster@www.google.com/",
-            "ftp://john%20doe@www.google.com/",
             "http://www.google.com/?",
             "http://www.google.com/?foo=bar?",
             "http://www.google.com/?q=go+language",

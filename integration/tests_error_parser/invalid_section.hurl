@@ -1,3 +1,3 @@
-GET xx
+GET https://xx
 [Asserts]
 

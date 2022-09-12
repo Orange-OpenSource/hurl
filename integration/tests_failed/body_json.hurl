@@ -1,4 +1,4 @@
-POST unused
+POST https://unused
 {
     "success": {{success}}
 }

@@ -1,0 +1,7 @@
+error: Parsing URL
+  --> tests_error_parser/url_bad_prefix.hurl:2:5
+   |
+ 2 | GET "http://localhost:8000"
+   |     ^ illegal character <">
+   |
+
