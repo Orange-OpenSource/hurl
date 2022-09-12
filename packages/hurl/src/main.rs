@@ -226,16 +226,17 @@ fn execute(
 fn unwrap_or_exit<T>(result: Result<T, CliError>, code: i32, logger: &BaseLogger) -> T {
     match result {
         Ok(v) => v,
-        Err(e) => exit(&e.message, code, logger),
+        Err(e) => exit_with_error(&e.message, code, logger),
     }
 }
 
 /// Prints an error message and exits the current process with an exit code.
-fn exit(message: &str, code: i32, logger: &BaseLogger) -> ! {
-    logger.error(message);
+fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
+    if !message.is_empty() {
+        logger.error(message);
+    }
     std::process::exit(code);
 }
-
 /// Executes Hurl entry point.
 fn main() {
     let version_info = format!(
@@ -271,7 +272,7 @@ fn main() {
         } else {
             ""
         };
-        exit(error, EXIT_ERROR_COMMANDLINE, &base_logger);
+        exit_with_error(error, EXIT_ERROR_COMMANDLINE, &base_logger);
     } else if filenames.is_empty() {
         filenames.push("-".to_string());
     }
@@ -279,7 +280,7 @@ fn main() {
     let current_dir = match std::env::current_dir() {
         Ok(c) => c,
         Err(error) => {
-            exit(
+            exit_with_error(
                 error.to_string().as_str(),
                 EXIT_ERROR_UNDEFINED,
                 &base_logger,
@@ -306,7 +307,7 @@ fn main() {
                 "hurl: cannot access '{}': No such file or directory",
                 filename
             );
-            exit(&message, EXIT_ERROR_PARSING, &base_logger);
+            exit_with_error(&message, EXIT_ERROR_PARSING, &base_logger);
         }
         let content = cli::read_to_string(filename);
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
@@ -368,7 +369,7 @@ fn main() {
                                     assert: false,
                                 };
                                 let message = error.fixme();
-                                exit(&message, EXIT_ERROR_RUNTIME, &base_logger);
+                                exit_with_error(&message, EXIT_ERROR_RUNTIME, &base_logger);
                             }
                         }
                     } else {
