@@ -221,7 +221,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("progress")
                 .long("progress")
-                .help("Print filename and status for each test (stderr)"),
+                .help("Print filename and status for each test (stderr) - deprecated use --test"),
         )
         .arg(
             clap::Arg::new("proxy")
@@ -247,12 +247,12 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("summary")
                 .long("summary")
-                .help("Print test metrics at the end of the run (stderr)"),
+                .help("Print test metrics at the end of the run (stderr) - deprecated use --test"),
         )
         .arg(
             clap::Arg::new("test")
                 .long("test")
-                .help("Activate test mode; equals --no-output --progress --summary"),
+                .help("Activate test mode."),
         )
         .arg(
             clap::Arg::new("to_entry")
