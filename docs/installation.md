@@ -4,12 +4,12 @@
 
 ### Linux
 
-Precompiled binary is available at [hurl-1.6.1-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-1.7.0-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-1.6.1:$PATH
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-1.7.0:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -17,8 +17,8 @@ $ export PATH=$INSTALL_DIR/hurl-1.6.1:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl_1.6.1_amd64.deb
-$ sudo dpkg -i hurl_1.6.1_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl_1.7.0_amd64.deb
+$ sudo dpkg -i hurl_1.7.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -31,7 +31,7 @@ $ sudo dpkg -i hurl_1.6.1_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.6.1-x86_64-osx.tar.gz].
+Precompiled binary is available at [hurl-1.7.0-x86_64-osx.tar.gz].
 
 Hurl can also be installed with [Homebrew]:
 
@@ -43,11 +43,11 @@ $ brew install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-1.6.1-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-1.7.0-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-1.6.1-win64-installer.exe] is also available.
+An installer [hurl-1.7.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -144,10 +144,10 @@ $ ./target/release/hurl --version
 Please follow the [contrib on Windows section].
 
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-1.6.1-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64.zip
-[hurl-1.6.1-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-win64-installer.exe
-[hurl-1.6.1-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-x86_64-osx.tar.gz
-[hurl-1.6.1-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl-1.6.1-x86_64-linux.tar.gz
+[hurl-1.7.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-win64.zip
+[hurl-1.7.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-win64-installer.exe
+[hurl-1.7.0-x86_64-osx.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-osx.tar.gz
+[hurl-1.7.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-linux.tar.gz
 [Homebrew]: https://brew.sh
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
