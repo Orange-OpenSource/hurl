@@ -70,6 +70,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Install Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
       - name: Environment
         run: bin/environment.sh
       - name: Install Prerequisites
