@@ -74,6 +74,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.8'
+      - name: Install Curl 7.68
+        uses: myci-actions/add-deb-repo@10
+        with:
+          repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+          repo-name: focal
+          install: curl
       - name: Environment
         run: bin/environment.sh
       - name: Install Prerequisites
