@@ -1,4 +1,4 @@
-.TH hurl 1 "17 Aug 2022" "hurl 1.7.0-snapshot" " Hurl Manual"
+.TH hurl 1 "13 Sep 2022" "hurl 1.7.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -15,7 +15,7 @@ hurl - run and test HTTP requests.
 .B Hurl
 is an HTTP client that performs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile, it enables to chain HTTP requests, capture values from HTTP responses and make asserts.
+Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
 
     $ hurl session.hurl
 
@@ -37,7 +37,7 @@ If no input files are specified, input is read from stdin.
         }
 
 
-Output goes to stdout by default. For output to a file, use the \fI-o, --output\fP option:
+Output goes to stdout by default. To have output go to a file, use the \fI-o, --output\fP option:
 
     $ hurl -o output input.hurl
 
@@ -74,7 +74,7 @@ A typical example occurs with csrf tokens.
     POST https://example.org/login?user=toto&password=1234
     X-CSRF-TOKEN: {{csrf_token}}
 
-More information on captures here \fIhttps://hurl.dev/docs/capturing-response.html\fP
+More information on captures can be found here \fIhttps://hurl.dev/docs/capturing-response.html\fP
 
 .IP "Asserts"
 
@@ -91,16 +91,16 @@ It can also include asserts on the response headers
     HTTP/1.1 301
     Location: http://www.google.com
 
-You can also include explicit asserts combining query and predicate
+Explicit asserts can be included by combining a query and a predicate
 
     GET http:/google.com
     HTTP/1.1 301
     [Asserts]
     xpath "string(//title)" == "301 Moved"
 
-Thanks to asserts, Hurl can be used as a testing tool to run scenarii.
+With the addition of asserts, Hurl can be used as a testing tool to run scenarios.
 
-More information on asserts here \fIhttps://hurl.dev/docs/asserting-response.html\fP
+More information on asserts can be found here \fIhttps://hurl.dev/docs/asserting-response.html\fP
 
 .SH OPTIONS
 
@@ -112,7 +112,7 @@ For instance:
 
     $ hurl --location foo.hurl
 
-will follow redirection for each entry in `foo.hurl`. You can also define option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
+will follow redirection for each entry in `foo.hurl`. You can also define an option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
     GET https://google.com
     HTTP/* 301
@@ -122,13 +122,11 @@ will follow redirection for each entry in `foo.hurl`. You can also define option
     location: true
     HTTP/* 200
 
-will follow redirection only for the second entry.
+will follow a redirection only for the second entry.
 
 .IP "--cacert "
 
-Tells curl to use the specified certificate file to verify the peer.
-The file may contain multiple CA certificates.
-The certificate(s) must be in PEM format.
+Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
 Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
 
 .IP "--color "
@@ -174,7 +172,7 @@ When this is not explicitly defined, the files are relative to the current direc
 
 .IP "-L, --location "
 
-Follow redirect.  You can limit the amount of redirects to follow by using the \fI--max-redirs\fP option.
+Follow redirect. To limit the amount of redirects to follow use the \fI--max-redirs\fP option
 
 .IP "--glob <glob> "
 
@@ -262,7 +260,7 @@ Deprecated, use \fI--test\fP or \fI--json\fP instead.
 
 .IP "--test "
 
-Activate test mode: the HTTP response is not outputted anymore, progress is reported for each Hurl file tested and a text summary is displayed when all files have been run. 
+Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
 
 .IP "--to-entry <entry-number> "
 

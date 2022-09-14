@@ -1,6 +1,6 @@
 {
   "name": "@orangeopensource/hurl",
-  "version": "1.6.5",
+  "version": "1.7.1",
   "description": "Run and Test HTTP Requests with plain text and curl",
   "author": "Jean-Christophe Amiel <jeanchristophe.amiel@orange.com>",
   "contributors": [

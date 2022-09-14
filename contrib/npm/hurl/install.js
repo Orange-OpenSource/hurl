@@ -4,9 +4,7 @@ const os = require("os");
 const path = require("path");
 const cTable = require("console.table");
 const archive = require("./archive");
-//const {version} = require("./package.json");
-// FIXME: temporary fix to test npm installation, we use an "hard coded" version of Hurl
-const version = "1.6.1";
+const {version} = require("./package.json");
 
 const supportedPlatforms = require("./platform.json")
 
