@@ -26,7 +26,7 @@ $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";c:\vcpkg"
 Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-vcpkg install libxml2:x64-windows
+vcpkg install libxml2:x64-windows curl:x64-windows
 vcpkg integrate install
 Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
 $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")

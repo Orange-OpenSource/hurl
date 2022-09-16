@@ -252,8 +252,13 @@ jobs:
       run: |
         # vcpkg build prequisites
         (Get-Command vcpkg).Path
-        if (Test-Path C:\vcpkg\installed) {vcpkg update} else {vcpkg install libxml2:x64-windows}
+        Get-ChildItem -Path C:\vcpkg\installed
+        if (Test-Path C:\vcpkg\installed\x64-windows\lib\libcurl.lib) {echo "curl already installed"} else {vcpkg install curl:x64-windows}
+        if (Test-Path C:\vcpkg\installed\x64-windows\lib\libxml2.lib) {echo "libxml2 already installed"} else {vcpkg install libxml2:x64-windows}
+        vcpkg update
+        vcpkg upgrade
         vcpkg integrate install
+        refreshenv
         # install proxy and server
         pip3 install --requirement bin/requirements-frozen.txt
     - name: Run Tests units
