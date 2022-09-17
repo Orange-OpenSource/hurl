@@ -154,7 +154,7 @@ Please follow the [contrib on Windows section].
 [install]: https://www.rust-lang.org/tools/install
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
-[NixOS / Nix package]: https://search.nixos.org/packages?channel=21.11&from=0&size=1&sort=relevance&type=packages&query=hurl
+[NixOS / Nix package]: https://search.nixos.org/packages?from=0&size=1&sort=relevance&type=packages&query=hurl
 
 
 
