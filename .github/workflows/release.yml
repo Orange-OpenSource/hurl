@@ -1,6 +1,6 @@
 name: release
 
-on: [pull_request]
+on:
   workflow_run:
     workflows: ["test"]
     types: 
