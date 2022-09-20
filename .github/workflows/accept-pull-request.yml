@@ -52,7 +52,7 @@ jobs:
 
       - name: Notify user
         run: |
-            comment="Order `${{ github.event.comment.body }}` is running at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}, please wait for completion."
+            comment="${{ github.event.comment.body }} is running at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}, please wait for completion."
             gh pr comment "${PR_NUMBER}" --body "${comment}"
 
       - name: Check comment user permission
