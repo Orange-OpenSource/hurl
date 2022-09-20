@@ -63,7 +63,7 @@ SectionGroup "executables"
     SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
-    ; Write windows uninstall panel informations  
+    ; Write windows uninstall panel informations
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl"
@@ -78,14 +78,14 @@ SectionGroup "executables"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "NoModify" 1
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "NoRepair" 1
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "InstallLocation" "$INSTDIR"
-    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "Publisher" "Orange-OpenSource"    
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "Publisher" "Orange-OpenSource"
     WriteRegDWORD HKLM "${UNINSTALLPANELKEY}" "EstimatedSize" "$0"
   SectionEnd
   Section "hurlfmt.exe"
     SectionIn RO
     SetOutPath $INSTDIR
     File "hurlfmt.exe"
-  SectionEnd  
+  SectionEnd
 SectionGroupEnd
 
 SectionGroup "dlls"
@@ -113,7 +113,12 @@ SectionGroup "dlls"
     SectionIn RO
     SetOutPath $INSTDIR
     File "zlib1.dll"
-  SectionEnd 
+  SectionEnd
+  Section "libcurl.dll"
+    SectionIn RO
+    SetOutPath $INSTDIR
+    File "libcurl.dll"
+  SectionEnd
 SectionGroupEnd
 
 SectionGroup "txt"
@@ -131,16 +136,16 @@ SectionGroup "txt"
     SectionIn 3
     SetOutPath $INSTDIR
     File "..\..\CHANGELOG.md"
-  SectionEnd    
+  SectionEnd
   Section "LICENSE"
     SectionIn 3
     SetOutPath $INSTDIR
     File "..\..\LICENSE"
-  SectionEnd  
+  SectionEnd
 SectionGroupEnd
 
 ; Uninstaller
-Section "Uninstall" 
+Section "Uninstall"
   ; Remove installed files
   Delete $INSTDIR\*
   RMDir "$INSTDIR"
