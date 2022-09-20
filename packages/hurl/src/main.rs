@@ -239,10 +239,12 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
 }
 /// Executes Hurl entry point.
 fn main() {
+    let libcurl_version = http::libcurl_version_info();
     let version_info = format!(
-        "{} {}",
+        "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
         clap::crate_version!(),
-        http::libcurl_version_info().join(" ")
+        libcurl_version.libraries.join(" "),
+        libcurl_version.features.join(" "),
     );
     let app = cli::app(version_info.as_str());
     let matches = app.clone().get_matches();
