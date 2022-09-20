@@ -50,6 +50,12 @@ jobs:
           ref: ${{ env.BASE_REF }}
           fetch-depth: 0
 
+      - name: Notify user
+        run: |
+            order="${{ github.event.comment.body }}"
+            comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+
       - name: Check comment user permission
         run: |
             comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
