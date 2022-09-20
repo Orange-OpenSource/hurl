@@ -1,6 +1,10 @@
 name: release
 
 on: [pull_request]
+  workflow_run:
+    workflows: ["test"]
+    types: 
+      - completed
 
 env:
   CARGO_TERM_COLOR: always
