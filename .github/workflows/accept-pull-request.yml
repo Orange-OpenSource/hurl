@@ -44,6 +44,11 @@ jobs:
             echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
             echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
 
+      - name: Notify user
+        run: |
+            echo "Order `${{ github.event.comment.body }}` is running at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}, please wait for completion."
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
