@@ -1,6 +1,10 @@
 name: test
 
 on: [pull_request]
+  workflow_run:
+    workflows: ["check"]
+    types: 
+      - completed
 
 env:
   CARGO_TERM_COLOR: always
