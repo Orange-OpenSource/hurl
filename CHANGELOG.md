@@ -1,3 +1,65 @@
+[1.7.0 (2022-09-13)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.7.0)
+========================================================================================================================
+
+Thanks to
+[@danielbprice](https://github.com/danielbprice),
+[@fourjay](https://github.com/fourjay),
+[@datamuc](https://github.com/datamuc),
+[@bdmorin](https://github.com/bdmorin),
+[@humphd](https://github.com/humphd),
+[@kautsig](https://github.com/kautsig),
+[@Karrq](https://github.com/Karrq),
+[@balroggg](https://github.com/balroggg),
+
+
+Enhancements:
+
+* Add string comparison predicates [#798](https://github.com/Orange-OpenSource/hurl/issues/798)
+
+* Improve text summary [#779](https://github.com/Orange-OpenSource/hurl/issues/779) [#593](https://github.com/Orange-OpenSource/hurl/issues/593)
+
+* Support NO_COLOR env variable (https://no-color.org) [#713](https://github.com/Orange-OpenSource/hurl/issues/713)
+
+* Improve url parsing error message [#662](https://github.com/Orange-OpenSource/hurl/issues/662)
+
+* Display deprecated warning when using --progress and --summary option [#637](https://github.com/Orange-OpenSource/hurl/issues/637)
+
+* Log body request in very verbose [#628](https://github.com/Orange-OpenSource/hurl/issues/628)
+
+* Add options section [#612](https://github.com/Orange-OpenSource/hurl/issues/612)
+
+* Install Hurl with npm [#544](https://github.com/Orange-OpenSource/hurl/issues/544)
+
+* Add very verbose option [#499](https://github.com/Orange-OpenSource/hurl/issues/499)
+
+* Add support for XML namespaces in XPath query [#493](https://github.com/Orange-OpenSource/hurl/issues/493)
+
+* Use Template type for cookie value [#473](https://github.com/Orange-OpenSource/hurl/issues/473)
+
+
+Bugs Fixed:
+
+* Accept expression in comparison predicate [#799](https://github.com/Orange-OpenSource/hurl/issues/799)
+
+* Fix file access authorization [#674](https://github.com/Orange-OpenSource/hurl/issues/674)
+
+* Fix body file access [#674](https://github.com/Orange-OpenSource/hurl/issues/674)
+
+* Fix implicit body asserts on compressed response body [#567](https://github.com/Orange-OpenSource/hurl/issues/567)
+
+* Fix Brotli response body decoding [#564](https://github.com/Orange-OpenSource/hurl/issues/564)
+
+* Fix sha256, md5, bytes query on compressed body [#563](https://github.com/Orange-OpenSource/hurl/issues/563)
+
+* Fix redirection not followed [#552](https://github.com/Orange-OpenSource/hurl/issues/552)
+
+* Encode string variables in JSON body [#530](https://github.com/Orange-OpenSource/hurl/issues/530)
+
+* Fix curl export shell escape [#530](https://github.com/Orange-OpenSource/hurl/issues/530)
+
+* Allow different types in JSON array [#495](https://github.com/Orange-OpenSource/hurl/issues/495)
+
+
 [1.6.1 (2022-03-25)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.6.1)
 ========================================================================================================================
 
