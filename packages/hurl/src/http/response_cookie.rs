@@ -29,11 +29,8 @@ impl Response {
 
     /// Returns optional cookies from response.
     pub fn get_cookie(&self, name: String) -> Option<ResponseCookie> {
-        for cookie in self.cookies() {
-            if cookie.name == name {
-                return Some(cookie);
-            }
-        }
-        None
+        self.cookies()
+            .into_iter()
+            .find(|cookie| cookie.name == name)
     }
 }

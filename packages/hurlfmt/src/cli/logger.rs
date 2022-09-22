@@ -138,7 +138,7 @@ fn log_error(
         // edd an empty line at the end?
         for line in fixme_lines {
             eprintln!(
-                "{} |   {}",
+                "{} |   {fixme}",
                 " ".repeat(line_number_size).as_str(),
                 fixme = line,
             );
