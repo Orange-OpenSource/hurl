@@ -6,7 +6,7 @@ First update *.nuspec and tools/*.ps1 files and then execute local installer:
 choco pack
 choco install hurl -s .
 hurl --version
-echo GET google.fr | hurl --location
+echo "https://GET google.fr" | hurl --location
 ```
 
 and finally push package to official chocolatey repository
