@@ -28,7 +28,7 @@ mypy-extensions==0.4.3
 passlib==1.7.4
 pathspec==0.9.0
 platformdirs==2.5.2
-protobuf==3.19.4
+protobuf==3.19.5
 publicsuffix2==2.20191221
 pyasn1==0.4.8
 pycparser==2.21
