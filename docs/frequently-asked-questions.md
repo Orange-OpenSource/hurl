@@ -26,7 +26,7 @@ We think that Hurl has some advantages compared to similar tools.
 
 Hurl is foremost a command line tool and should be easy to use on a local computer, or in a CI/CD pipeline. Some
 tools in the same space as Hurl ([Postman] for instance), are GUI oriented, and we find it
-less attractive than CLI. As a command line tool, Hurl can be used to get HTTP datas (like [curl]),
+less attractive than CLI. As a command line tool, Hurl can be used to get HTTP data (like [curl]),
 but also as a test tool for HTTP sessions, or even as documentation.
 
 Having a text based [file format] is another advantage. The Hurl format is simple,

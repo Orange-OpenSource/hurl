@@ -619,7 +619,7 @@ or
 ~~~
 
 
-Finaly, raw string can be used without any newline:
+Finally, raw string can be used without any newline:
 
 ~~~
 ```line``` 

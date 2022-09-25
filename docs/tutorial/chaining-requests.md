@@ -167,7 +167,7 @@ jsonpath "$[0].title" == "What is a pennyroyal?"
 > in our Quiz application. That's something you don't want to do when building
 > your application, you want to build an app production ready. A better way to
 > do this should have been to expose a "debug" or "integration" mode on our app
-> positioned by environnement variables. If our app is launched in "integration" mode,
+> positioned by environment variables. If our app is launched in "integration" mode,
 > mocked data is used and asserts can be tested on known values. Our app could also use
 > a mocked database, configured in our tests suits.
 

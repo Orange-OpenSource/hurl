@@ -4,7 +4,7 @@
 
 Request describes an HTTP request: a mandatory [method] and [url], followed by optional [headers].
 
-Then, [query parameters], [form parameters], [multipart form datas], [cookies] and
+Then, [query parameters], [form parameters], [multipart form data], [cookies] and
 [basic authentication] can be used to configure the HTTP request.
 
 Finally, an optional [body] can be used to configure the HTTP request body.
@@ -115,7 +115,7 @@ id: 4567
 order: newest
 ```
 
-The last optional part of a request configuration is the request [body]. Request body must be the last paremeter of a request
+The last optional part of a request configuration is the request [body]. Request body must be the last parameter of a request
 (after [headers] and request sections). Like headers, [body] have no explicit marker:
 
 ```hurl
@@ -435,7 +435,7 @@ or
 ~~~
 
 
-Finaly, raw string can be used without any newline:
+Finally, raw string can be used without any newline:
 
 ~~~
 ```line``` 
@@ -516,7 +516,7 @@ very-verbose: true      # allow more verbose output
 [Headers]: #headers
 [query parameters]: #query-parameters
 [form parameters]: #form-parameters
-[multipart form datas]: #multipart-form-data
+[multipart form data]: #multipart-form-data
 [cookies]: #cookies
 [basic authentication]: #basic-authentication
 [body]: #body

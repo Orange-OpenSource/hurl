@@ -117,7 +117,7 @@ the container and waits for a `200 OK` response.
 
 Next, we're going to add our Hurl tests to the script.
 
-6. Modify `bin/integration.sh` to add integraion tests:
+6. Modify `bin/integration.sh` to add integration tests:
 
 ```bash
 #!/bin/bash

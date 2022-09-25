@@ -186,7 +186,7 @@ All the input files are executed independently. The result of one file does not 
 
 ### --file-root <dir> {#file-root}
 
-Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.
+Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
 ### -L, --location {#location}

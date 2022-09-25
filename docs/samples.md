@@ -87,7 +87,7 @@ you could use [`-u/--user` option].
 
 ## Sending Data
 
-### Sending HTML Form Datas
+### Sending HTML Form Data
 
 ```hurl
 POST https://example.org/contact
@@ -100,7 +100,7 @@ number: 33611223344
 
 [Doc](/docs/request.md#form-parameters)
 
-### Sending Multipart Form Datas
+### Sending Multipart Form Data
 
 ```hurl
 POST https://example.org/upload
@@ -225,7 +225,7 @@ jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
 jsonpath "$.order" matches "^order-\\d{8}$"
-jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex litteral
+jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex literal
 ```
 
 [Doc](/docs/asserting-response.md#jsonpath-assert)

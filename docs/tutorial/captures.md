@@ -58,7 +58,7 @@ question4: 0fec576c
 HTTP/1.1 302
 ```
 
-> When sending form datas with a Form parameters section, you don't need to set the
+> When sending form data with a Form parameters section, you don't need to set the
 > `Content-Type` HTTP header: Hurl enfers that the content type of the request is `application/x-www-form-urlencoded`.
 
 2. Run `create-quiz.hurl`:

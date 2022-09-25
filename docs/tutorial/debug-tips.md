@@ -10,7 +10,7 @@ We can run our test with [`-v/--verbose` option]. In this mode, each entry is di
 information like request HTTP headers, response HTTP headers, cookie storage, duration etc...
 
 ```shell
-$ hurl --verbose --no-ouput basic.hurl
+$ hurl --verbose --no-output basic.hurl
 [1;34m*[0m [1mOptions:[0m
 [1;34m*[0m     fail fast: true
 [1;34m*[0m     insecure: false
@@ -94,7 +94,7 @@ In verbose mode, HTTP request and response bodies are not displayed in the debug
 request or response body, you can display more logs with [`--very-verbose`] option:
 
 ```shell
-$ hurl --very-verbose --no-ouput basic.hurl
+$ hurl --very-verbose --no-output basic.hurl
 [1;34m*[0m [1mOptions:[0m
 [1;34m*[0m     fail fast: true
 [1;34m*[0m     insecure: false
@@ -246,7 +246,7 @@ HTTP/1.1 200
 And run it without [`--verbose`] option:
 
 ```shell
-$ hurl --no-ouput basic.hurl
+$ hurl --no-output basic.hurl
 [1;34m*[0m [1m------------------------------------------------------------------------------[0m
 [1;34m*[0m [1mExecuting entry 4[0m
 [1;34m*[0m

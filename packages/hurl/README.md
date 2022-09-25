@@ -159,8 +159,8 @@ Table of Contents
          * [Query Params](#query-params)
          * [Basic Authentication](#basic-authentication)
       * [Sending Data](#sending-data)
-         * [Sending HTML Form Datas](#sending-html-form-datas)
-         * [Sending Multipart Form Datas](#sending-multipart-form-datas)
+         * [Sending HTML Form Data](#sending-html-form-data)
+         * [Sending Multipart Form Data](#sending-multipart-form-data)
          * [Posting a JSON Body](#posting-a-json-body)
          * [Templating a JSON / XML Body](#templating-a-json--xml-body)
       * [Testing Response](#testing-response)
@@ -298,7 +298,7 @@ you could use [`-u/--user` option].
 
 ## Sending Data
 
-### Sending HTML Form Datas
+### Sending HTML Form Data
 
 ```hurl
 POST https://example.org/contact
@@ -311,7 +311,7 @@ number: 33611223344
 
 [Doc](https://hurl.dev/docs/request.html#form-parameters)
 
-### Sending Multipart Form Datas
+### Sending Multipart Form Data
 
 ```hurl
 POST https://example.org/upload
@@ -436,7 +436,7 @@ jsonpath "$.hasDevice" == false
 jsonpath "$.links" count == 12
 jsonpath "$.state" != null
 jsonpath "$.order" matches "^order-\\d{8}$"
-jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex litteral
+jsonpath "$.order" matches /^order-\d{8}$/     # Alternative syntax with regex literal
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#jsonpath-assert)
@@ -738,7 +738,7 @@ Option | Description
 <a href="#cookie" id="cookie"><code>-b, --cookie &lt;file&gt;</code></a> | Read cookies from file (using the Netscape cookie file format).<br/><br/>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;file&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
-<a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root filesystem to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
+<a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
 <a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br/>
 <a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given glob pattern.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
 <a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
@@ -985,5 +985,5 @@ Please follow the [contrib on Windows section].
 [install]: https://www.rust-lang.org/tools/install
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
-[NixOS / Nix package]: https://search.nixos.org/packages?channel=21.11&from=0&size=1&sort=relevance&type=packages&query=hurl
+[NixOS / Nix package]: https://search.nixos.org/packages?from=0&size=1&sort=relevance&type=packages&query=hurl
 

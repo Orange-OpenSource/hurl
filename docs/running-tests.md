@@ -57,7 +57,7 @@ Failed files:    1 (50.0%)
 Duration:        499 ms
 ```
 
-You can use [`--glob` option] to test files that match a given patten:
+You can use [`--glob` option] to test files that match a given pattern:
 
 ```shell
 $ hurl --test --glob "test/integration/**/*.hurl"
