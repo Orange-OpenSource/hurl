@@ -43,12 +43,12 @@ jobs:
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Rust
       run: bin/install_rust_latest.sh
-    - name: Build
-      run: bin/release/release.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Run Tests units
       run: bin/test/test_unit.sh
+    - name: Build
+      run: bin/release/release.sh
     - name: Run Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
@@ -86,12 +86,12 @@ jobs:
         run: bin/install_prerequisites_ubuntu.sh
       - name: Install Rust
         run: bin/install_rust_latest.sh
-      - name: Build
-        run: bin/release/release.sh
       - name: Test Prerequisites
         run: bin/test/test_prerequisites.sh
       - name: Run Tests units
         run: bin/test/test_unit.sh
+      - name: Build
+        run: bin/release/release.sh
       - name: Run Integration Tests
         run: bin/test/test_integ.sh
       - name: Archive production artifacts
@@ -104,10 +104,6 @@ jobs:
             integration/server-ssl.log
             integration/report/tests.json
             integration/report/tests.xml
-
-
-
-
 
   test-docker-archlinux-x64:
     runs-on: ubuntu-latest
@@ -123,8 +119,8 @@ jobs:
           bin/environment.sh
           bin/install_prerequisites_archlinux.sh
           bin/install_rust_latest.sh
-          bin/release/release.sh
           bin/test/test.sh
+          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -149,8 +145,8 @@ jobs:
           bin/environment.sh
           bin/install_prerequisites_fedora.sh
           bin/install_rust_latest.sh
-          bin/release/release.sh
           bin/test/test.sh
+          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -175,8 +171,8 @@ jobs:
           bin/environment.sh
           bin/install_prerequisites_alpine.sh
           bin/install_rust_latest.sh
-          bin/release/release.sh
           bin/test/test.sh
+          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -199,12 +195,12 @@ jobs:
       run: bin/environment.sh
     - name: Install Rust
       run: bin/install_rust_latest.sh
-    - name: Build
-      run: bin/release/release.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Run Tests units
       run: bin/test/test_unit.sh
+    - name: Build
+      run: bin/release/release.sh
     - name: Run Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
