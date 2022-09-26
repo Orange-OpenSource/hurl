@@ -5,5 +5,7 @@ PATH="$HOME"/.cargo/bin:$PATH
 export PATH
 cargo build --release --verbose --locked
 
-target/release/hurl --version
-
+PATH="$PWD/target/release:$PATH"
+export PATH
+which hurl
+hurl --version
