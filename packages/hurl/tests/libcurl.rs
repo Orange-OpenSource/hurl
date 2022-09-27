@@ -784,8 +784,10 @@ fn test_error_ssl() {
     {
         assert_eq!(code, 60);
         let descriptions = [
-            // Windows messages:
+            // Windows 2000 github runner messages:
             "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.".to_string(),
+            // Windows 10 Enterprise 2009 10.0.19041.1806
+            "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325)".to_string(),
             // Unix-like, before OpenSSL 3.0.0
             "SSL certificate problem: self signed certificate".to_string(),
             // Unix-like, after OpenSSL 3.0.0
