@@ -1,4 +1,4 @@
-echo "----- create windows64 zip package -----"
+powershell write-host -foregroundcolor Cyan "----- create windows64 zip package -----"
 
 $actual_dir=(Get-Location).Path
 

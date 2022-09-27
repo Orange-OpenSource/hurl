@@ -1,4 +1,4 @@
-echo "----- context -----"
+powershell write-host -foregroundcolor Cyan "----- context -----"
 
 # get windows infos
 Get-ComputerInfo -Property WindowsProductName,WindowsVersion,OsHardwareAbstractionLayer

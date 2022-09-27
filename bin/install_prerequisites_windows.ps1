@@ -1,4 +1,4 @@
-echo "----- install system prerequisites -----"
+powershell write-host -foregroundcolor Cyan "----- install system prerequisites -----"
 
 # install libxml and libcurl
 $vcpkg_dir=(Get-command vcpkg).Source

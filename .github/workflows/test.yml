@@ -47,8 +47,6 @@ jobs:
       run: bin/test/test_prerequisites.sh
     - name: Run Tests units
       run: bin/test/test_unit.sh
-    - name: Build
-      run: bin/release/release.sh
     - name: Run Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
@@ -90,8 +88,6 @@ jobs:
         run: bin/test/test_prerequisites.sh
       - name: Run Tests units
         run: bin/test/test_unit.sh
-      - name: Build
-        run: bin/release/release.sh
       - name: Run Integration Tests
         run: bin/test/test_integ.sh
       - name: Archive production artifacts
@@ -120,7 +116,6 @@ jobs:
           bin/install_prerequisites_archlinux.sh
           bin/install_rust_latest.sh
           bin/test/test.sh
-          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -146,7 +141,6 @@ jobs:
           bin/install_prerequisites_fedora.sh
           bin/install_rust_latest.sh
           bin/test/test.sh
-          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -172,7 +166,6 @@ jobs:
           bin/install_prerequisites_alpine.sh
           bin/install_rust_latest.sh
           bin/test/test.sh
-          bin/release/release.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -199,8 +192,6 @@ jobs:
       run: bin/test/test_prerequisites.sh
     - name: Run Tests units
       run: bin/test/test_unit.sh
-    - name: Build
-      run: bin/release/release.sh
     - name: Run Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
@@ -238,20 +229,17 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run: |
-        .\bin\environment.ps1
+      run: .\bin\environment.ps1
+    - name: Install Prerequisites
+      run: .\bin\install_prerequisites_windows.ps1
     - name: Build and test 
-      run: |
-        .\bin\install_prerequisites_windows.ps1
-        .\bin\test\test_prerequisites.ps1
-        .\bin\test\test_unit.ps1
-        .\bin\release\release.ps1
-        .\bin\test\test_integ.ps1
+      run: .\bin\test\test.ps1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
         path: |
+          integration/mitmdump.log
           integration/server.log
           integration/server-ssl.log

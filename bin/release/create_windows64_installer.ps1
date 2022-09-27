@@ -1,4 +1,4 @@
-echo "----- create windows64 installer -----"
+powershell write-host -foregroundcolor Cyan "----- create windows64 installer -----"
 
 $actual_dir=(Get-Location).Path
 
