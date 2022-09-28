@@ -90,7 +90,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 HTTP/1.1 200
 ```
 
-Hurl can also be used to test HTTP endpoints performances:
+Hurl can also be used to performance test HTTP endpoints:
 
 ```hurl
 GET https://example.org/api/v1/pets
@@ -100,7 +100,7 @@ HTTP/1.0 200
 duration < 1000  # Duration in ms
 ```
 
-And responses bytes content
+And response bytes
 
 ```hurl
 GET https://example.org/data.tar.gz
@@ -122,8 +122,8 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 # Powered by curl
 
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
-powered by [libcurl], one of the most powerful and reliable file transfer library.
-With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests,
+powered by [libcurl], one of the most powerful and reliable file transfer libraries.
+With its text file format, Hurl adds syntactic sugar to run and test HTTP requests,
 but it's still the [curl] that we love.
 
 # Feedbacks
@@ -293,7 +293,7 @@ Authorization: Basic Ym9iOnNlY3JldA==
 ```
 
 Basic authentication allows per request authentication.
-If you want to add basic authentication to all the request of a Hurl file
+If you want to add basic authentication to all the requests of a Hurl file
 you could use [`-u/--user` option].
 
 ## Sending Data
@@ -705,7 +705,7 @@ More information on asserts can be found here [https://hurl.dev/docs/asserting-r
 
 ## Options
 
-Options that exist in curl have exactly the same semantic. 
+Options that exist in curl have exactly the same semantics.
 
 Options specified on the command line are defined for every Hurl file's entry.
 

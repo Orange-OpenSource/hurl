@@ -287,7 +287,7 @@ cookie "LSID[SameSite]" equals "Lax"
 ```
 
 > `Secure` and `HttpOnly` attributes can only be tested with `exists` or `not exists` predicates
-> to reflect the [Set-Cookie header] semantic (in other words, queries `<cookie-name>[HttpOnly]`
+> to reflect the [Set-Cookie header] semantics (in other words, queries `<cookie-name>[HttpOnly]`
 > and `<cookie-name>[Secure]` don't return boolean).
 
 ### Body assert

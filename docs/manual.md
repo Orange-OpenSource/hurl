@@ -121,7 +121,7 @@ More information on asserts can be found here [https://hurl.dev/docs/asserting-r
 
 ## Options
 
-Options that exist in curl have exactly the same semantic. 
+Options that exist in curl have exactly the same semantics.
 
 Options specified on the command line are defined for every Hurl file's entry.
 

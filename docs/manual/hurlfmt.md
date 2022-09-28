@@ -10,7 +10,7 @@ hurlfmt - format Hurl files
 
 ## DESCRIPTION
 
-**hurlfmt** formats Hurl files and converts to other formats.
+**hurlfmt** formats Hurl files and converts them to other formats.
 
 With no FILE, read standard input.
 

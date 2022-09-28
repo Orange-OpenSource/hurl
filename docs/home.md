@@ -88,7 +88,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 HTTP/1.1 200
 ```
 
-Hurl can also be used to test HTTP endpoints performances:
+Hurl can also be used to performance test HTTP endpoints:
 
 ```hurl
 GET https://example.org/api/v1/pets
@@ -98,7 +98,7 @@ HTTP/1.0 200
 duration < 1000  # Duration in ms
 ```
 
-And responses bytes content
+And response bytes
 
 ```hurl
 GET https://example.org/data.tar.gz
@@ -120,8 +120,8 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 # Powered by curl
 
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
-powered by [libcurl], one of the most powerful and reliable file transfer library.
-With its text file format, Hurl adds syntactic sugar to run and tests HTTP requests,
+powered by [libcurl], one of the most powerful and reliable file transfer libraries.
+With its text file format, Hurl adds syntactic sugar to run and test HTTP requests,
 but it's still the [curl] that we love.
 
 # Feedbacks

@@ -333,7 +333,7 @@ Authorization: Basic Ym9iOnNlY3JldA==
 ```
 
 Basic authentication allows per request authentication.
-If you want to add basic authentication to all the request of a Hurl file
+If you want to add basic authentication to all the requests of a Hurl file
 you can use [`-u/--user` option].
 
 ### Body

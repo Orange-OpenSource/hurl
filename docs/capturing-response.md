@@ -3,11 +3,11 @@
 ## Captures
 
 Captures are optional values captured from the HTTP response, in a named variable. Captures can be the
-response status code, part or the entire of the body, and response headers.
+response status code, part of or the entire the body, and response headers.
 
 Captured variables are available through a run session; each new value of a given variable overrides the last value.
 
-Captures allow using data from one request to another request, when working with
+Captures allow using data from one request in another request, when working with
 [CSRF tokens] for instance. Variables can also be initialized at the start of the
 session, by passing [variable values], or can be used in [templates].
 
@@ -169,7 +169,7 @@ HTTP/1.1 200
 ```
 
 XPath captures are not limited to node values (like string, or boolean); any
-valid XPath can be captured and assert with variable asserts.
+valid XPath can be captured and asserted with variable asserts.
 
 ```hurl
 # Test that the XML endpoint return 200 pets

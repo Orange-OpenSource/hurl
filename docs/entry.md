@@ -2,7 +2,7 @@
 
 ## Definition
 
-A Hurl file is a list of entry, each entry being a mandatory [request], optionally followed by a [response].
+A Hurl file is a list of entries, each entry being a mandatory [request], optionally followed by a [response].
 
 Responses are not mandatory, a Hurl file consisting only of requests is perfectly valid. To sum up, responses can be used
 to [capture values] to perform subsequent requests, or [add asserts to HTTP responses].

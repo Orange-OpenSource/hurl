@@ -1,7 +1,7 @@
 # Security
 
 In the previous part, we have tested the basic creation of a quiz, through the <http://localhost:8080/new-quiz>
-endpoint. Our test file `create-quiz.hurl` is now:
+endpoint. Our test file `create-quiz.hurl` now looks like:
 
 ```hurl
 # First, get the quiz creation page to capture
@@ -53,8 +53,8 @@ Our HTML form is:
 ```
 
 The first input, name, has validation HTML attributes: `minlenght="4"`, `maxlenght="32"` and `required`.
-In a browser, these attributes will prevent user to fill invalid data like a missing value or a name too long. If your
-tests rely on a "headless" browser, this type of validation can block you to test your server-side
+In a browser, these attributes will prevent the user from entering invalid data like a missing value or a name that is too long. If your
+tests rely on a "headless" browser, it can stop you from testing your server-side
 validation. Client-side validation can also use JavaScript, and it can be a challenge to send invalid data to your server.
 
 But server-side validation is critical to secure your app. You must always validate and sanitize data on your backend,
@@ -179,14 +179,14 @@ Duration:        41 ms
 So Hurl, being close to the HTTP layer, has no "browser protection" / client-side validation: it facilitates
 the testing of your app's security with no preconception.
 
-Another use case is checking if there are no comment in your served HTML. These leaks can reveal sensitive information
+Another use case is checking if there are no comments in your served HTML. Comments can reveal sensitive information
 and [is it recommended] to trim HTML comments in your production files.
 
-Popular front-end construction technologies use client-side JavaScript like [ReactJS] or [Vue.js].
-If you use one of this framework, and you inspect the DOM with the browser developer tools, you won't see any comment
-because the framework is managing the DOM and removing them.
+Popular front-end frameworks like [ReactJS] or [Vue.js] use client-side JavaScript.
+If you use one of these frameworks, and you inspect the DOM with the browser developer tools, you won't see any comments
+because the framework is managing the DOM and is removing them.
 
-But, if you look at the HTML page sent on the network, i.e. is the real HTML document sent by the
+But, if you look at the HTML page sent on the network, i.e. the real HTML document sent by the
 server (and not _the document dynamically created by the framework_), you can still see those HTML comments.
 
 With Hurl, you will be able to check the content of the _real_ network data.

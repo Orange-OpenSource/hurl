@@ -19,7 +19,7 @@ X-CSRF-TOKEN: {{csrf_token}}
 HTTP/1.1 302
 ```
 
-In this example, we capture the value of the [CSRF token] from the body a first response, and inject it
+In this example, we capture the value of the [CSRF token] from the body of the first response, and inject it
 as a header in the next POST request.
 
 ```hurl
@@ -39,7 +39,7 @@ In this second example, we capture the body in a variable `index`, and reuse thi
 
 ## Types
 
-Variable are typed, and can be either string, bool, number, `null` or collections. Depending on the variable type,
+Variables are typed, and can be either string, bool, number, `null` or collections. Depending on the variable type,
 templates can be rendered differently. Let's say we have captured an integer value into a variable named
 `count`:
 

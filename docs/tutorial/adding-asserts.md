@@ -187,7 +187,7 @@ header "Content-Type" == "text/html;charset=UTF-8"
 > In this case, the `header` query will return collections and could be tested with
 > `countEqual` or `include` predicates.
 
-For HTTP headers, we can also use an [implicit header assert]. You can use indifferently implicit or
+For HTTP headers, we can also use an [implicit header assert]. You can use either implicit or
 explicit header assert: the implicit one allows you to only check the exact value of the header,
 while the explicit one allows you to use other [predicates] (like `contains`, `startsWith`, `matches` etc...).
 
@@ -242,7 +242,7 @@ it simplifies tests on cookies, particularly when there are multiple `Set-Cookie
 > has no Javascript runtime and stays close to the HTTP layer. With others tools relying on headless browser, it can be
 > difficult to access some HTTP requests attributes, like `Set-Cookie` header.
 
-So to test that our server is responding a `HttpOnly` session cookie, we can modify our file and add cookie asserts.
+So to test that our server is responding with a `HttpOnly` session cookie, we can modify our file and add cookie asserts.
 
 4. Add two cookie asserts on the cookie `JESSIONID`:
 

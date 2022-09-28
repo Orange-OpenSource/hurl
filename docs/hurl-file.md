@@ -45,7 +45,7 @@ jsonpath "$.slideshow.title" == "A beautiful ✈!"
 jsonpath "$.slideshow.title" == "A beautiful \u{2708}!"
 ```
 
-In some case, (in headers value, etc..), you will also need to escape # to distinguish from a comment.
+In some case, (in headers value, etc..), you will also need to escape # to distinguish it from a comment.
 In the following example:
 
 ```hurl

@@ -22,7 +22,7 @@ cookie "JSESSIONID[HttpOnly]" exists
 ```
 
 We're only running one HTTP request and have already added lots of tests on the response. Don't hesitate to add
-many tests, the more asserts you will write, the less fragile will be your tests suite.
+many tests, the more asserts you write, the less fragile your tests suite will become.
 
 Now, we want to perform other HTTP requests and keep adding tests. In the same file, we can simply write another
 request following our first request. Let's say we want to test that we have a [404 page] on a broken link:
@@ -57,7 +57,7 @@ xpath "string(//h1)" == "Error 404, Page not Found!"
 Now, we have two entries in our Hurl file: each entry is composed of one request and one expected response
 description.
 
-> In a Hurl file, response description are optional. We could also have written
+> In a Hurl file, response descriptions are optional. We could also have written
 > our file with only requests:
 >
 > ```hurl
@@ -80,7 +80,7 @@ Failed files:    0 (0.0%)
 Duration:        12 ms
 ```
 
-We can see that the test is still ok, now two requests are ran in chain, and each response can be
+We can see that the test is still ok, now two requests are being run in sequence, and each response can be
 tested independently.
 
 ## Test REST Api
@@ -112,7 +112,7 @@ So, our health api returns this JSON resource:
 ```
 
 We can test it with a [JsonPath assert]. JsonPath asserts have the same structure as XPath asserts: a query
-followed by a predicate. [JsonPath query] are simple expressions to inspect a JSON object.
+followed by a predicate. A [JsonPath query] is a simple expression to inspect a JSON object.
 
 2. Modify `basic.hurl` to add a third request that asserts our </api/health> REST api:
 
@@ -134,10 +134,10 @@ jsonpath "$.healthy" == true
 jsonpath "$.operationId" exists
 ```
 
-Like XPath assert, JsonPath predicates values are typed. String, boolean, number and
-collections are supported. Let's practice it by using another api. In our Quiz model, a
+Like XPath assert, JsonPath predicate values are typed. String, boolean, number and
+collections are supported. Let's practice writing JsonPath asserts by using another api. In our Quiz model, a
 quiz is a set of questions, and a question resource is exposed through a
-REST api exposed et <http://localhost:8080/api/questions>. We can use it to add checks on getting questions
+REST api exposed at <http://localhost:8080/api/questions>. We can use it to add checks on getting questions
 through the api endpoint.
 
 3. Add JSONPath asserts on the </api/questions> REST apis:
@@ -167,7 +167,7 @@ jsonpath "$[0].title" == "What is a pennyroyal?"
 > in our Quiz application. That's something you don't want to do when building
 > your application, you want to build an app production ready. A better way to
 > do this should have been to expose a "debug" or "integration" mode on our app
-> positioned by environment variables. If our app is launched in "integration" mode,
+> defined by environment variables. If our app is launched in "integration" mode,
 > mocked data is used and asserts can be tested on known values. Our app could also use
 > a mocked database, configured in our tests suits.
 

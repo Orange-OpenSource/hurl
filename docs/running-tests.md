@@ -84,7 +84,7 @@ To use variables in your tests, you can:
 - use [`--variables-file` option]
 - define environment variables, for instance `HURL_foo=bar`
 
-You will find a detail description in the [Injecting Variables] section of the doc.
+You will find a detailed description in the [Injecting Variables] section of the docs.
 
 [`--output /dev/null`]: /docs/manual.md#output
 [`--test`]: /docs/manual.md#test
