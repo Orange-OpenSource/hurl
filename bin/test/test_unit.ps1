@@ -12,7 +12,12 @@ Get-ChildItem -Path $release_dir -Recurse -Include *.dll -File | Copy-Item -Dest
 Get-ChildItem -Path $release_dir -Recurse -Include hurl*.exe -File | Copy-Item -Destination $package_dir
 
 # add hurl to PATH
-$oldpath=(Get-ItemProperty -Path HKCU:\Environment -Name Path).Path
-$newpath="$package_dir;$oldpath"
-Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
-$env:Path =  [System.Environment]::GetEnvironmentVariable("Path","User") + ";" + [System.Environment]::GetEnvironmentVariable("Path","Machine")
+$registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
+$registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
+$env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
+
+# hurl infos
+(Get-Command hurl).Path
+(Get-Command hurlfmt).Path
+hurl --version
+hurlfmt --version

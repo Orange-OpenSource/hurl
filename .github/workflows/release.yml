@@ -56,6 +56,10 @@ jobs:
     env:
       VCPKGRS_DYNAMIC: 1
     steps:
+    - name: Set git to use LF
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
     - name: Checkout repository
       uses: actions/checkout@v3
     - uses: actions/cache@v3
@@ -72,16 +76,27 @@ jobs:
     - name: Environment
       run: |
         .\bin\environment.ps1
-    - name: Build
+    - name: Install prerequisites
+      run: .\bin\install_prerequisites_windows.ps1
+    - name: Build and test integ
       run: |
-        .\bin\install_prerequisites_windows.ps1
         .\bin\release\release.ps1
+        .\bin\test\test_prerequisites.ps1
+        .\bin\test\test_integ.ps1
     - name: Create windows64 Zip package
+      run: .\bin\release\create_windows64_zip_package.ps1
+    - name: Install win64 zip and test integ
       run: |
-        .\bin\release\create_windows64_zip_package.ps1
+        .\bin\test\test_prerequisites.ps1
+        .\bin\release\install_windows64_zip_package.ps1
+        .\bin\test\test_integ.ps1
     - name: Create windows64 installer
+      run: .\bin\release\create_windows64_installer.ps1
+    - name: Install win64 installer and test integ
       run: |
-        .\bin\release\create_windows64_installer.ps1
+        .\bin\test\test_prerequisites.ps1
+        .\bin\release\install_windows64_installer.ps1
+        .\bin\test\test_integ.ps1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
