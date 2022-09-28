@@ -42,7 +42,7 @@ Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
-It is well adapted for <b>REST / JSON apis</b>
+It is well adapted for <b>REST / JSON APIs</b>
 
 ```hurl
 POST https://example.org/api/tests
@@ -69,7 +69,7 @@ HTTP/1.1 200
 xpath "normalize-space(//head/title)" == "Hello world!"
 ```
 
-and even SOAP apis
+and even SOAP APIs
 
 ```hurl
 POST https://example.org/InStock

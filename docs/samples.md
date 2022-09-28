@@ -208,7 +208,7 @@ header "Location" contains "www.example.net"
 [Doc](/docs/asserting-response.md#header-assert)
 
 
-### Testing REST Apis
+### Testing REST APIs
 
 Asserting JSON body response (node values, collection count etc...) with [JSONPath]:
 
@@ -320,7 +320,7 @@ duration < 1000   # Check that response time is less than one second
 
 [Doc](/docs/asserting-response.md#duration-assert)
 
-### Using SOAP Apis
+### Using SOAP APIs
 
 ```hurl
 POST https://example.org/InStock

@@ -83,9 +83,9 @@ Duration:        12 ms
 We can see that the test is still ok, now two requests are being run in sequence, and each response can be
 tested independently.
 
-## Test REST Api
+## Test REST API
 
-So far, we have tested two HTML endpoints. We're going to see now how to test a REST api.
+So far, we have tested two HTML endpoints. We're going to see now how to test a REST API.
 
 Our quiz application exposes a health REST resource, available at <http://localhost:8080/api/health>.
 Let's use Hurl to check it.
@@ -100,7 +100,7 @@ $ echo 'GET http://localhost:8080/api/health' | hurl
 > Being a classic CLI application, we can use the standard input with Hurl to provide requests
 > to be executed, instead of a file.
 
-So, our health api returns this JSON resource:
+So, our health API returns this JSON resource:
 
 ```
 {
@@ -114,7 +114,7 @@ So, our health api returns this JSON resource:
 We can test it with a [JsonPath assert]. JsonPath asserts have the same structure as XPath asserts: a query
 followed by a predicate. A [JsonPath query] is a simple expression to inspect a JSON object.
 
-2. Modify `basic.hurl` to add a third request that asserts our </api/health> REST api:
+2. Modify `basic.hurl` to add a third request that asserts our </api/health> REST API:
 
 ```hurl
 # Checking our home page:
@@ -123,7 +123,7 @@ followed by a predicate. A [JsonPath query] is a simple expression to inspect a 
 # Check that we have a 404 response for broken links:
 # ...
 
-# Check our health api:
+# Check our health API:
 GET http://localhost:8080/api/health
 
 HTTP/1.1 200
@@ -135,12 +135,12 @@ jsonpath "$.operationId" exists
 ```
 
 Like XPath assert, JsonPath predicate values are typed. String, boolean, number and
-collections are supported. Let's practice writing JsonPath asserts by using another api. In our Quiz model, a
+collections are supported. Let's practice writing JsonPath asserts by using another API. In our Quiz model, a
 quiz is a set of questions, and a question resource is exposed through a
-REST api exposed at <http://localhost:8080/api/questions>. We can use it to add checks on getting questions
-through the api endpoint.
+REST API exposed at <http://localhost:8080/api/questions>. We can use it to add checks on getting questions
+through the API endpoint.
 
-3. Add JSONPath asserts on the </api/questions> REST apis:
+3. Add JSONPath asserts on the </api/questions> REST APIs:
 
 ```hurl
 # Checking our home page:
@@ -149,10 +149,10 @@ through the api endpoint.
 # Check that we have a 404 response for broken links:
 # ...
 
-# Check our health api:
+# Check our health API:
 # ...
 
-# Check question api:
+# Check question API:
 GET http://localhost:8080/api/questions?offset=0&size=20&sort=oldest
 
 HTTP/1.1 200
@@ -171,7 +171,7 @@ jsonpath "$[0].title" == "What is a pennyroyal?"
 > mocked data is used and asserts can be tested on known values. Our app could also use
 > a mocked database, configured in our tests suits.
 
-Note that the question api use query parameters `offset`, `size` and `sort`, that's why we have written the url with
+Note that the question API use query parameters `offset`, `size` and `sort`, that's why we have written the url with
 query parameters <http://localhost:8080/api/questions?offset=0&size=20&sort=oldest>. We can set the query parameters
 in the url, or use a [query parameter section].
 
@@ -184,10 +184,10 @@ in the url, or use a [query parameter section].
 # Check that we have a 404 response for broken links:
 # ...
 
-# Check our health api:
+# Check our health API:
 # ...
 
-# Check question api:
+# Check question API:
 GET http://localhost:8080/api/questions
 [QueryStringParams]
 offset: 0
@@ -228,7 +228,7 @@ HTTP/1.1 404
 header "Content-Type" == "text/html;charset=UTF-8"
 xpath "string(//h1)" == "Error 404, Page not Found!"
 
-# Check our health api:
+# Check our health API:
 GET http://localhost:8080/api/health
 
 HTTP/1.1 200
@@ -238,7 +238,7 @@ jsonpath "$.status" == "RUNNING"
 jsonpath "$.healthy" == true
 jsonpath "$.operationId" exists
 
-# Check question api:
+# Check question API:
 GET http://localhost:8080/api/questions
 [QueryStringParams]
 offset: 0

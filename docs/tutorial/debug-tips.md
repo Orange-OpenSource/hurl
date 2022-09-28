@@ -226,10 +226,10 @@ use an `[Options]` section that will activate logs only for the specified entry:
 # Check that we have a 404 response for broken links:
 # ...
 
-# Check our health api:
+# Check our health API:
 # ...
 
-# Check question api:
+# Check question API:
 GET http://localhost:8080/api/questions
 # You can pass options to this entry only
 [Options]

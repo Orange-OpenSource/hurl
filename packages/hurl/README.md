@@ -44,7 +44,7 @@ Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
-It is well adapted for <b>REST / JSON apis</b>
+It is well adapted for <b>REST / JSON APIs</b>
 
 ```hurl
 POST https://example.org/api/tests
@@ -71,7 +71,7 @@ HTTP/1.1 200
 xpath "normalize-space(//head/title)" == "Hello world!"
 ```
 
-and even SOAP apis
+and even SOAP APIs
 
 ```hurl
 POST https://example.org/InStock
@@ -165,13 +165,13 @@ Table of Contents
          * [Templating a JSON / XML Body](#templating-a-json--xml-body)
       * [Testing Response](#testing-response)
          * [Testing Response Headers](#testing-response-headers)
-         * [Testing REST Apis](#testing-rest-apis)
+         * [Testing REST APIs](#testing-rest-apis)
          * [Testing HTML Response](#testing-html-response)
          * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
          * [Testing Bytes Content](#testing-bytes-content)
       * [Others](#others)
          * [Testing Endpoint Performance](#testing-endpoint-performance)
-         * [Using SOAP Apis](#using-soap-apis)
+         * [Using SOAP APIs](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
          * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
    * [Manual](#manual)
@@ -419,7 +419,7 @@ header "Location" contains "www.example.net"
 [Doc](https://hurl.dev/docs/asserting-response.html#header-assert)
 
 
-### Testing REST Apis
+### Testing REST APIs
 
 Asserting JSON body response (node values, collection count etc...) with [JSONPath]:
 
@@ -531,7 +531,7 @@ duration < 1000   # Check that response time is less than one second
 
 [Doc](https://hurl.dev/docs/asserting-response.html#duration-assert)
 
-### Using SOAP Apis
+### Using SOAP APIs
 
 ```hurl
 POST https://example.org/InStock

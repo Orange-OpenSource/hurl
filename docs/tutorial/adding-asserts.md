@@ -22,7 +22,7 @@ of an HTTP request with Hurl, we have to _describe_ tests that the response cont
 To do so, we're going to use [asserts].
 
 As our endpoint <http://localhost:8080> is serving HTML content, it makes sense to use [XPath asserts].
-If we want to test a REST api or any sort of api that serves JSON content,
+If we want to test a REST API or any sort of API that serves JSON content,
 we could use [JSONPath asserts] instead. There are other type of asserts but every one shares
 the same structure. So, let's look how to write a [XPath asserts].
 
@@ -291,7 +291,7 @@ Our Hurl file is now around 10 lines long, but we're already testing a lot on ou
 
 You can see now that launching and running requests with Hurl is fast, _really_ fast.
 
-In the next session, we're going to see how we chain request tests, and how we add basic check on a REST api.
+In the next session, we're going to see how we chain request tests, and how we add basic check on a REST API.
 
 [asserts]: /docs/asserting-response.md
 [XPath asserts]: /docs/asserting-response.md#xpath-assert

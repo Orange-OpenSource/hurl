@@ -8,9 +8,9 @@ chain like [GitHub Action] and [GitLab CI/CD].
 The quiz application consists of:
 
 - a website that lets people create or play a series of quizzes
-- a set of REST apis to list, create and delete question and quiz
+- a set of REST APIs to list, create and delete question and quiz
 
-With Hurl, we're going to add tests for the website and the apis.
+With Hurl, we're going to add tests for the website and the APIs.
 
 ## Prerequisites
 
