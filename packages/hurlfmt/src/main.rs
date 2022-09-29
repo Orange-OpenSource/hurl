@@ -21,6 +21,7 @@ use std::path::Path;
 use std::process;
 
 use atty::Stream;
+use clap::ArgAction;
 
 use hurl_core::parser;
 use hurlfmt::cli;
@@ -39,7 +40,7 @@ pub fn init_colored() {
 }
 
 fn main() {
-    let app = clap::Command::new("hurlfmt")
+    let mut app = clap::Command::new("hurlfmt")
         .version(clap::crate_version!())
         .disable_colored_help(true)
         .about("Format hurl FILE")
@@ -47,59 +48,67 @@ fn main() {
             clap::Arg::new("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
-                .index(1),
+                .index(1)
+                .num_args(1),
         )
         .arg(
             clap::Arg::new("check")
                 .long("check")
+                .help("Run in 'check' mode")
                 .conflicts_with("format")
                 .conflicts_with("output")
-                .help("Run in 'check' mode"),
+                .action(ArgAction::SetTrue),
         )
         .arg(
             clap::Arg::new("color")
                 .long("color")
+                .help("Colorize Output")
                 .conflicts_with("no_color")
-                .conflicts_with("in_place")
-                .help("Colorize Output"),
+                .conflicts_with("in_place"),
         )
         .arg(
             clap::Arg::new("format")
                 .long("format")
-                .conflicts_with("check")
                 .value_name("FORMAT")
+                .help("Specify output format: text (default), json or html")
+                .conflicts_with("check")
                 .default_value("text")
-                .help("Specify output format: text (default), json or html"),
+                .num_args(1),
         )
         .arg(
             clap::Arg::new("in_place")
                 .long("in-place")
+                .help("Modify file in place")
                 .conflicts_with("output")
                 .conflicts_with("color")
-                .help("Modify file in place"),
+                .action(ArgAction::SetTrue),
         )
         .arg(
             clap::Arg::new("no_color")
                 .long("no-color")
+                .help("Do not colorize output")
                 .conflicts_with("color")
-                .help("Do not colorize output"),
+                .action(ArgAction::SetTrue),
         )
         .arg(
             clap::Arg::new("no_format")
                 .long("no-format")
-                .help("Do not format output"),
+                .help("Do not format output")
+                .action(ArgAction::SetTrue),
         )
         .arg(
             clap::Arg::new("output")
                 .short('o')
                 .long("output")
                 .value_name("FILE")
-                .help("Write to FILE instead of stdout"),
+                .help("Write to FILE instead of stdout")
+                .num_args(1),
         )
         .arg(
             clap::Arg::new("standalone")
                 .long("standalone")
-                .help("Standalone Html"),
+                .help("Standalone Html")
+                .action(ArgAction::SetTrue),
         );
 
     let matches = app.clone().get_matches();
@@ -129,7 +138,7 @@ fn main() {
     };
 
     if filename == "-" && atty::is(Stream::Stdin) {
-        if app.clone().print_help().is_err() {
+        if app.print_help().is_err() {
             panic!("panic during printing help");
         }
         println!();

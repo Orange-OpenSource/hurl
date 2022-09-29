@@ -246,7 +246,7 @@ fn main() {
         libcurl_version.libraries.join(" "),
         libcurl_version.features.join(" "),
     );
-    let app = cli::app(version_info.as_str());
+    let mut app = cli::app(&version_info);
     let matches = app.clone().get_matches();
     init_colored();
 
@@ -269,7 +269,7 @@ fn main() {
     }
 
     if filenames.is_empty() && atty::is(Stream::Stdin) {
-        let error = if app.clone().print_help().is_err() {
+        let error = if app.print_help().is_err() {
             "Panic during printing help"
         } else {
             ""

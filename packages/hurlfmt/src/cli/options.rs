@@ -29,5 +29,5 @@ pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
 }
 
 pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
-    matches.contains_id(name)
+    matches.get_one::<bool>(name) == Some(&true)
 }

@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use atty::Stream;
-use clap::{AppSettings, ArgAction, ArgMatches, Command};
+use clap::{ArgAction, ArgMatches, Command};
 
 use crate::cli;
 use crate::cli::CliError;
@@ -76,191 +76,212 @@ pub enum OutputType {
 pub fn app(version: &str) -> Command {
     Command::new("hurl")
         .about("Run hurl FILE(s) or standard input")
-        .setting(AppSettings::DeriveDisplayOrder)
         .disable_colored_help(true)
-        .version(version)
+        .version(version.to_string())
         .arg(
             clap::Arg::new("INPUT")
                 .help("Sets the input file to use")
                 .required(false)
-                .multiple_values(true),
+                .num_args(1..)
         )
         .arg(
             clap::Arg::new("cacert_file")
                 .long("cacert")
                 .value_name("FILE")
-                .help("CA certificate to verify peer against (PEM format)"),
+                .help("CA certificate to verify peer against (PEM format)")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("color")
                 .long("color")
+                .help("Colorize Output")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("no_color")
-                .help("Colorize Output"),
         )
         .arg(
             clap::Arg::new("compressed")
                 .long("compressed")
-                .help("Request compressed response (using deflate or gzip)"),
+                .help("Request compressed response (using deflate or gzip)")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("connect_timeout")
                 .long("connect-timeout")
                 .value_name("SECONDS")
-                .help("Maximum time allowed for connection"),
+                .help("Maximum time allowed for connection")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("cookies_input_file")
                 .short('b')
                 .long("cookie")
                 .value_name("FILE")
-                .help("Read cookies from FILE"),
+                .help("Read cookies from FILE")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("cookies_output_file")
                 .short('c')
                 .long("cookie-jar")
                 .value_name("FILE")
-                .help("Write cookies to FILE after running the session (only for one session)"),
+                .help("Write cookies to FILE after running the session (only for one session)")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("fail_at_end")
                 .long("fail-at-end")
                 .help("Fail at end")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("file_root")
                 .long("file-root")
                 .value_name("DIR")
                 .help("set root filesystem to import file in hurl (default is current directory)")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("follow_location")
                 .short('L')
                 .long("location")
-                .help("Follow redirects"),
+                .help("Follow redirects")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("glob")
                 .long("glob")
                 .value_name("GLOB")
+                .help("Specify input files that match the given blob. Multiple glob flags may be used.")
                 .action(ArgAction::Append)
                 .number_of_values(1)
-                .help("Specify input files that match the given blob. Multiple glob flags may be used."),
         )
         .arg(
             clap::Arg::new("include")
                 .short('i')
                 .long("include")
-                .help("Include the HTTP headers in the output"),
+                .help("Include the HTTP headers in the output")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("ignore_asserts")
                 .long("ignore-asserts")
-                .help("Ignore asserts defined in the Hurl file."),
+                .help("Ignore asserts defined in the Hurl file.")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("insecure")
                 .short('k')
                 .long("insecure")
-                .help("Allow insecure SSL connections"),
+                .help("Allow insecure SSL connections")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("interactive")
                 .long("interactive")
+                .help("Turn on interactive mode")
                 .conflicts_with("to_entry")
-                .help("Turn on interactive mode"),
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("json")
                 .long("json")
+                .help("Output each hurl file result to JSON")
                 .conflicts_with("no_output")
-                .help("Output each hurl file result to JSON"),
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("max_redirects")
                 .long("max-redirs")
                 .value_name("NUM")
+                .help("Maximum number of redirects allowed")
                 .allow_hyphen_values(true)
-                .help("Maximum number of redirects allowed"),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("max_time")
                 .long("max-time")
                 .short('m')
                 .value_name("NUM")
+                .help("Maximum time allowed for the transfer")
                 .allow_hyphen_values(true)
-                .help("Maximum time allowed for the transfer"),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("no_color")
                 .long("no-color")
+                .help("Do not colorize Output")
                 .conflicts_with("color")
-                .help("Do not colorize Output"),
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("no_output")
                 .long("no-output")
+                .help("Suppress output. By default, Hurl outputs the body of the last response.")
                 .conflicts_with("json")
-                .help("Suppress output. By default, Hurl outputs the body of the last response."),
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("noproxy")
                 .long("noproxy")
                 .value_name("HOST(S)")
                 .help("List of hosts which do not use proxy")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("output")
                 .short('o')
                 .long("output")
                 .value_name("FILE")
-                .help("Write to FILE instead of stdout"),
+                .help("Write to FILE instead of stdout")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("progress")
                 .long("progress")
-                .help("Print filename and status for each test (stderr) - deprecated use --test"),
+                .help("Print filename and status for each test (stderr) - deprecated use --test")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("proxy")
                 .short('x')
                 .long("proxy")
                 .value_name("[PROTOCOL://]HOST[:PORT]")
-                .help("Use proxy on given protocol/host/port"),
+                .help("Use proxy on given protocol/host/port")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("junit")
                 .long("report-junit")
                 .value_name("FILE")
                 .help("Write a Junit XML report to the given file")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("report_html")
                 .long("report-html")
                 .value_name("DIR")
                 .help("Generate html report to dir")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("summary")
                 .long("summary")
-                .help("Print test metrics at the end of the run (stderr) - deprecated use --test"),
+                .help("Print test metrics at the end of the run (stderr) - deprecated use --test")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("test")
                 .long("test")
-                .help("Activate test mode."),
+                .help("Activate test mode.")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("to_entry")
                 .long("to-entry")
                 .value_name("ENTRY_NUMBER")
-                .conflicts_with("interactive")
                 .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
-                .takes_value(true),
+                .conflicts_with("interactive")
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("user")
@@ -268,7 +289,7 @@ pub fn app(version: &str) -> Command {
                 .long("user")
                 .value_name("user:password")
                 .help("Add basic Authentication header to each request.")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("user_agent")
@@ -276,34 +297,36 @@ pub fn app(version: &str) -> Command {
                 .long("user-agent")
                 .value_name("name")
                 .help("Specify the User-Agent string to send to the HTTP server.")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("variable")
                 .long("variable")
                 .value_name("NAME=VALUE")
+                .help("Define a variable")
                 .action(ArgAction::Append)
                 .number_of_values(1)
-                .help("Define a variable")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("variables_file")
                 .long("variables-file")
                 .value_name("FILE")
                 .help("Define a properties file in which you define your variables")
-                .takes_value(true),
+                .num_args(1)
         )
         .arg(
             clap::Arg::new("verbose")
                 .short('v')
                 .long("verbose")
-                .help("Turn on verbose output"),
+                .help("Turn on verbose output")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("very_verbose")
                 .long("very-verbose")
-                .help("Turn on verbose output, uncluding HTTP response"),
+                .help("Turn on verbose output, uncluding HTTP response")
+                .action(ArgAction::SetTrue)
         )
 }
 
@@ -583,5 +606,5 @@ pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
 }
 
 pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
-    matches.contains_id(name)
+    matches.get_one::<bool>(name) == Some(&true)
 }
