@@ -30,7 +30,10 @@ jobs:
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Run Integration Tests
-      run: export LLVM_PROFILE_FILE="hurl-test-integration-%p-%m.profraw" && bin/test/test_integ.sh
+      run: |
+        export LLVM_PROFILE_FILE="hurl-test-integration-%p-%m.profraw"
+        export PATH="$PWD/target/debug:$PATH"
+        bin/test/test_integ.sh
     - name: Build Report
       run: | 
         grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
