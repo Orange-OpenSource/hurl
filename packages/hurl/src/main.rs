@@ -209,7 +209,7 @@ fn execute(
                 &variables,
                 logger,
             );
-            if cli_options.progress {
+            if cli_options.test {
                 logger.test_completed(&result);
             }
             result
@@ -255,7 +255,7 @@ fn main() {
         || cli::has_flag(&matches, "interactive");
     let color = cli::output_color(&matches);
     let base_logger = BaseLogger::new(color, verbose);
-    let cli_options = cli::parse_options(&matches, &base_logger);
+    let cli_options = cli::parse_options(&matches);
     let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
 
     let mut filenames = vec![];
@@ -314,7 +314,7 @@ fn main() {
         let content = cli::read_to_string(filename);
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
-        let progress = if cli_options.progress {
+        let progress = if cli_options.test {
             Some(Progress {
                 current,
                 total: filenames.len(),
@@ -429,7 +429,7 @@ fn main() {
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
-    if cli_options.summary {
+    if cli_options.test {
         let duration = start.elapsed().as_millis();
         let summary = get_summary(duration, &hurl_results);
         base_logger.info(summary.as_str());

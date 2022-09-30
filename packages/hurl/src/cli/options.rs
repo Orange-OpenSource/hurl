@@ -30,7 +30,6 @@ use crate::cli;
 use crate::cli::CliError;
 use crate::http::ClientOptions;
 use crate::runner::Value;
-use crate::util::logger::BaseLogger;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -54,9 +53,8 @@ pub struct CliOptions {
     pub no_proxy: Option<String>,
     pub output: Option<String>,
     pub output_type: OutputType,
-    pub progress: bool,
     pub proxy: Option<String>,
-    pub summary: bool,
+    pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
@@ -236,12 +234,6 @@ pub fn app(version: &str) -> Command {
                 .num_args(1)
         )
         .arg(
-            clap::Arg::new("progress")
-                .long("progress")
-                .help("Print filename and status for each test (stderr) - deprecated use --test")
-                .action(ArgAction::SetTrue)
-        )
-        .arg(
             clap::Arg::new("proxy")
                 .short('x')
                 .long("proxy")
@@ -262,12 +254,6 @@ pub fn app(version: &str) -> Command {
                 .value_name("DIR")
                 .help("Generate html report to dir")
                 .num_args(1)
-        )
-        .arg(
-            clap::Arg::new("summary")
-                .long("summary")
-                .help("Print test metrics at the end of the run (stderr) - deprecated use --test")
-                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("test")
@@ -330,7 +316,7 @@ pub fn app(version: &str) -> Command {
         )
 }
 
-pub fn parse_options(matches: &ArgMatches, logger: &BaseLogger) -> Result<CliOptions, CliError> {
+pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let cacert_file = match get_string(matches, "cacert_file") {
         None => None,
         Some(filename) => {
@@ -410,21 +396,7 @@ pub fn parse_options(matches: &ArgMatches, logger: &BaseLogger) -> Result<CliOpt
     } else {
         OutputType::ResponseBody
     };
-    let progress = has_flag(matches, "progress");
-    if progress {
-        logger.warning(
-            "--progress option is deprecated and will be removed soon. Please use --test or --json",
-        );
-    }
-    let progress = progress || test;
     let proxy = get_string(matches, "proxy");
-    let summary = has_flag(matches, "summary");
-    if summary {
-        logger.warning(
-            "--summary option is deprecated and will be removed soon. Please use --test or --json",
-        );
-    }
-    let summary = summary || test;
     let timeout = match get_string(matches, "max_time") {
         None => ClientOptions::default().timeout,
         Some(s) => match s.parse::<u64>() {
@@ -464,9 +436,8 @@ pub fn parse_options(matches: &ArgMatches, logger: &BaseLogger) -> Result<CliOpt
         no_proxy,
         output,
         output_type,
-        progress,
         proxy,
-        summary,
+        test,
         timeout,
         to_entry,
         user,
