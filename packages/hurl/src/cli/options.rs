@@ -92,7 +92,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("color")
                 .long("color")
-                .help("Colorize Output")
+                .help("Colorize output")
                 .action(ArgAction::SetTrue)
                 .conflicts_with("no_color")
         )
@@ -135,7 +135,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("file_root")
                 .long("file-root")
                 .value_name("DIR")
-                .help("set root filesystem to import file in hurl (default is current directory)")
+                .help("Set root filesystem to import file (default is current directory)")
                 .num_args(1)
         )
         .arg(
@@ -149,7 +149,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("glob")
                 .long("glob")
                 .value_name("GLOB")
-                .help("Specify input files that match the given blob. Multiple glob flags may be used.")
+                .help("Specify input files that match the given blob. Multiple glob flags may be used")
                 .action(ArgAction::Append)
                 .number_of_values(1)
         )
@@ -163,7 +163,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("ignore_asserts")
                 .long("ignore-asserts")
-                .help("Ignore asserts defined in the Hurl file.")
+                .help("Ignore asserts defined in the Hurl file")
                 .action(ArgAction::SetTrue)
         )
         .arg(
@@ -183,7 +183,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("json")
                 .long("json")
-                .help("Output each hurl file result to JSON")
+                .help("Output each Hurl file result to JSON")
                 .conflicts_with("no_output")
                 .action(ArgAction::SetTrue)
         )
@@ -207,14 +207,14 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("no_color")
                 .long("no-color")
-                .help("Do not colorize Output")
+                .help("Do not colorize output")
                 .conflicts_with("color")
                 .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("no_output")
                 .long("no-output")
-                .help("Suppress output. By default, Hurl outputs the body of the last response.")
+                .help("Suppress output. By default, Hurl outputs the body of the last response")
                 .conflicts_with("json")
                 .action(ArgAction::SetTrue)
         )
@@ -252,20 +252,20 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("report_html")
                 .long("report-html")
                 .value_name("DIR")
-                .help("Generate html report to dir")
+                .help("Generate HTML report to dir")
                 .num_args(1)
         )
         .arg(
             clap::Arg::new("test")
                 .long("test")
-                .help("Activate test mode.")
+                .help("Activate test mode")
                 .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("to_entry")
                 .long("to-entry")
                 .value_name("ENTRY_NUMBER")
-                .help("Execute hurl file to ENTRY_NUMBER (starting at 1)")
+                .help("Execute Hurl file to ENTRY_NUMBER (starting at 1)")
                 .conflicts_with("interactive")
                 .num_args(1)
         )
@@ -274,7 +274,7 @@ pub fn app(version: &str) -> Command {
                 .short('u')
                 .long("user")
                 .value_name("user:password")
-                .help("Add basic Authentication header to each request.")
+                .help("Add basic Authentication header to each request")
                 .num_args(1)
         )
         .arg(
@@ -282,7 +282,7 @@ pub fn app(version: &str) -> Command {
                 .short('A')
                 .long("user-agent")
                 .value_name("name")
-                .help("Specify the User-Agent string to send to the HTTP server.")
+                .help("Specify the User-Agent string to send to the HTTP server")
                 .num_args(1)
         )
         .arg(
@@ -311,7 +311,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("very_verbose")
                 .long("very-verbose")
-                .help("Turn on verbose output, uncluding HTTP response")
+                .help("Turn on verbose output, including HTTP response")
                 .action(ArgAction::SetTrue)
         )
 }
