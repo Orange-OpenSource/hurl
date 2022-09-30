@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="5 / 5">100.0 %</abbr></p>
+                <abbr title="5 / 5">100 %</abbr></p>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100.0 %</abbr></p>
+                <abbr title="0 / 0">100 %</abbr></p>
         </div>
     </div>
 
@@ -574,8 +574,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -590,12 +590,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    query: Query,</pre>
+                <pre class="has-background-success-light py-0 px-2">    query: &amp;Query,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -606,8 +606,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -622,12 +622,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    http_response: http::Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    http_response: &amp;http::Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -638,8 +638,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -654,12 +654,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let value = eval_query_value(query.clone(), variables, http_response)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let value = eval_query_value(query, variables, http_response)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -670,12 +670,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1052">
-                1052
+                role="cell" aria-label="1104">
+                1104
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if let Some((_, subquery)) = query.subquery {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if let Some((_, subquery)) = &amp;query.subquery {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -691,7 +691,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(value) = value {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(value) = &amp;value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -755,7 +755,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                source_info: subquery.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                source_info: subquery.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -846,8 +846,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="972">
-                972
+                role="cell" aria-label="1024">
+                1024
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -878,8 +878,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -894,8 +894,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -910,12 +910,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    query: Query,</pre>
+                <pre class="has-background-success-light py-0 px-2">    query: &amp;Query,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -926,8 +926,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -942,12 +942,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    http_response: http::Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    http_response: &amp;http::Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -958,8 +958,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -974,8 +974,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1619,7 +1619,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    source_info: query.source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                    source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1710,8 +1710,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1726,12 +1726,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let source_info = expr.source_info.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">            let source_info = &amp;expr.source_info;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1742,8 +1742,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1758,8 +1758,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1795,7 +1795,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1854,8 +1854,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1870,8 +1870,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="96">
+                96
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1918,8 +1918,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="68">
-                68
+                role="cell" aria-label="76">
+                76
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1966,8 +1966,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="76">
-                76
+                role="cell" aria-label="84">
+                84
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2003,7 +2003,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2083,7 +2083,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                            source_info: query.source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                            source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2163,7 +2163,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                            source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                            source_info: source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2334,8 +2334,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="388">
-                388
+                role="cell" aria-label="428">
+                428
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2350,8 +2350,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="388">
-                388
+                role="cell" aria-label="428">
+                428
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2366,8 +2366,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="388">
-                388
+                role="cell" aria-label="428">
+                428
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2382,8 +2382,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="388">
-                388
+                role="cell" aria-label="428">
+                428
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2398,8 +2398,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="384">
-                384
+                role="cell" aria-label="424">
+                424
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2542,8 +2542,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="384">
-                384
+                role="cell" aria-label="424">
+                424
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2595,7 +2595,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        source_info: query.source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                        source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2670,8 +2670,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="380">
-                380
+                role="cell" aria-label="420">
+                420
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2702,8 +2702,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="380">
-                380
+                role="cell" aria-label="420">
+                420
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2755,7 +2755,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        source_info: query.source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                        source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2830,8 +2830,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="376">
-                376
+                role="cell" aria-label="416">
+                416
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2846,8 +2846,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="376">
-                376
+                role="cell" aria-label="416">
+                416
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2862,8 +2862,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="376">
-                376
+                role="cell" aria-label="416">
+                416
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2878,8 +2878,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="376">
-                376
+                role="cell" aria-label="416">
+                416
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2910,8 +2910,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="364">
-                364
+                role="cell" aria-label="404">
+                404
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2942,8 +2942,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="360">
-                360
+                role="cell" aria-label="400">
+                400
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3091,7 +3091,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3598,8 +3598,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="92">
+                92
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3614,8 +3614,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="92">
+                92
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3630,8 +3630,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="88">
-                88
+                role="cell" aria-label="92">
+                92
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3646,8 +3646,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="80">
-                80
+                role="cell" aria-label="84">
+                84
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -3827,7 +3827,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3987,7 +3987,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4259,7 +4259,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        source_info: query.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4414,8 +4414,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1084">
-                1084
+                role="cell" aria-label="1136">
+                1136
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4910,8 +4910,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="592">
-                592
+                role="cell" aria-label="632">
+                632
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4926,8 +4926,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="592">
-                592
+                role="cell" aria-label="632">
+                632
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4974,8 +4974,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="240">
-                240
+                role="cell" aria-label="260">
+                260
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4990,8 +4990,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="240">
-                240
+                role="cell" aria-label="260">
+                260
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5006,8 +5006,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="108">
-                108
+                role="cell" aria-label="112">
+                112
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5038,8 +5038,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="132">
-                132
+                role="cell" aria-label="148">
+                148
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5086,8 +5086,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="192">
-                192
+                role="cell" aria-label="212">
+                212
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5294,8 +5294,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="592">
-                592
+                role="cell" aria-label="632">
+                632
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -9251,7 +9251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Query {</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9347,7 +9347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::hello_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::hello_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9891,7 +9891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(query_header, &amp;variables, http::hello_http_response()).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;query_header, &amp;variables, &amp;http::hello_http_response()).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10339,7 +10339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(query_header, &amp;variables, http::hello_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;query_header, &amp;variables, &amp;http::hello_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11091,7 +11091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(query, &amp;variables, response.clone())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;query, &amp;variables, &amp;response.clone())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11571,7 +11571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(query, &amp;variables, response.clone())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;query, &amp;variables, &amp;response.clone())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12051,7 +12051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(query, &amp;variables, response.clone())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;query, &amp;variables, &amp;response.clone())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12515,7 +12515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_query(query, &amp;variables, response).unwrap(), None);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_query(&amp;query, &amp;variables, &amp;response).unwrap(), None);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13891,7 +13891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Query {</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13987,7 +13987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::hello_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::hello_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14099,7 +14099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Query {</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14195,7 +14195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            http::bytes_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;http::bytes_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14563,7 +14563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_query(xpath_users(), &amp;variables, http_response)</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_query(&amp;xpath_users(), &amp;variables, &amp;http_response)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15107,7 +15107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_query(query, &amp;variables, http::xml_two_users_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_query(&amp;query, &amp;variables, &amp;http::xml_two_users_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15315,7 +15315,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                xpath_users(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;xpath_users(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15347,7 +15347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::xml_two_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15475,7 +15475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                xpath_count_user_query(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;xpath_count_user_query(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15507,7 +15507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::xml_two_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16083,7 +16083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(xpath_html_charset(), &amp;variables, http::html_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16099,7 +16099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;xpath_html_charset(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16115,7 +16115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16131,7 +16131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;UTF-8&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::html_http_response()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16147,7 +16147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16163,7 +16163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16179,7 +16179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16195,7 +16195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;UTF-8&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16211,7 +16211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_jsonpath_invalid_expression() {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16227,7 +16227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16259,7 +16259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; jsonpath xxx</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16275,7 +16275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let jsonpath_query = Query {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_jsonpath_invalid_expression() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16291,7 +16291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16307,7 +16307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            value: QueryValue::Jsonpath {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16323,7 +16323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                space0: Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; jsonpath xxx</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16339,7 +16339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: String::from(&quot;&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">        let jsonpath_query = Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16355,7 +16355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 9, 1, 10),</pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16371,7 +16371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">            value: QueryValue::Jsonpath {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16387,7 +16387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expr: Template {</pre>
+                <pre class="has-background-white py-0 px-2">                space0: Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16403,7 +16403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    elements: vec![TemplateElement::String {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: String::from(&quot;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16419,7 +16419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;xxx&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 9, 1, 10),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16435,7 +16435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        encoded: String::from(&quot;xxx&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16451,7 +16451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    }],</pre>
+                <pre class="has-background-white py-0 px-2">                expr: Template {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16467,7 +16467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    quotes: true,</pre>
+                <pre class="has-background-white py-0 px-2">                    elements: vec![TemplateElement::String {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16483,7 +16483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &#x2F;&#x2F; delimiter: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: String::from(&quot;xxx&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16499,7 +16499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 10, 1, 13),</pre>
+                <pre class="has-background-white py-0 px-2">                        encoded: String::from(&quot;xxx&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16515,7 +16515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                    }],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16531,7 +16531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">                    quotes: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16547,7 +16547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            subquery: None,</pre>
+                <pre class="has-background-white py-0 px-2">                    &#x2F;&#x2F; delimiter: &quot;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16563,7 +16563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 10, 1, 13),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16579,7 +16579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16595,7 +16595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_query(jsonpath_query, &amp;variables, json_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16611,7 +16611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
+                <pre class="has-background-white py-0 px-2">            subquery: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16627,7 +16627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16643,7 +16643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16659,7 +16659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.source_info.start,</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_query(&amp;jsonpath_query, &amp;variables, &amp;json_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16675,7 +16675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Pos {</pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16691,7 +16691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16707,7 +16707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                column: 10,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16723,7 +16723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            error.source_info.start,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16739,7 +16739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            Pos {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16755,7 +16755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16771,7 +16771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">                column: 10,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16787,7 +16787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RunnerError::QueryInvalidJsonpathExpression {</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16803,7 +16803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;xxx&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16819,7 +16819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16835,7 +16835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16851,7 +16851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            RunnerError::QueryInvalidJsonpathExpression {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16867,7 +16867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                value: &quot;xxx&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16883,7 +16883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16899,7 +16899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_invalid_json() {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16915,7 +16915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16931,7 +16931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let http_response = http::Response {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16947,7 +16947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: http::Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16963,7 +16963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 0,</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_invalid_json() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16979,7 +16979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16995,7 +16995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: String::into_bytes(String::from(&quot;xxx&quot;)),</pre>
+                <pre class="has-background-white py-0 px-2">        let http_response = http::Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17011,7 +17011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            version: http::Version::Http10,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17027,7 +17027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            status: 0,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17043,7 +17043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_query(jsonpath_success(), &amp;variables, http_response)</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17059,7 +17059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
+                <pre class="has-background-white py-0 px-2">            body: String::into_bytes(String::from(&quot;xxx&quot;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17075,7 +17075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17091,7 +17091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17107,7 +17107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, RunnerError::QueryInvalidJson);</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_query(&amp;jsonpath_success(), &amp;variables, &amp;http_response)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17123,7 +17123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17139,7 +17139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17155,7 +17155,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.source_info.start, Pos { line: 1, column: 1 });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17171,7 +17171,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_json_not_found() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, RunnerError::QueryInvalidJson);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17187,7 +17187,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17203,7 +17203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let http_response = http::Response {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17219,7 +17219,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: http::Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17235,7 +17235,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 0,</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_json_not_found() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17251,7 +17251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17267,7 +17267,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: String::into_bytes(String::from(&quot;{}&quot;)),</pre>
+                <pre class="has-background-white py-0 px-2">        let http_response = http::Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17283,7 +17283,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            version: http::Version::Http10,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17299,7 +17299,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            status: 0,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17315,7 +17315,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F;assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17331,7 +17331,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            body: String::into_bytes(String::from(&quot;{}&quot;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17347,7 +17347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(jsonpath_success(), &amp;variables, http_response).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17363,7 +17363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            None</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17379,7 +17379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F;assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17395,7 +17395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17411,7 +17411,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;jsonpath_success(), &amp;variables, &amp;http_response).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17427,7 +17427,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            None</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17443,7 +17443,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_json() {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17459,7 +17459,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17475,7 +17475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17491,7 +17491,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(jsonpath_success(), &amp;variables, json_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17507,7 +17507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_json() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17523,7 +17523,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17539,7 +17539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Bool(false)</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17555,7 +17555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;jsonpath_success(), &amp;variables, &amp;json_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17571,7 +17571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17587,7 +17587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(jsonpath_errors(), &amp;variables, json_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17603,7 +17603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">            Value::Bool(false)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17619,7 +17619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17635,7 +17635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::List(vec![</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17651,7 +17651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Value::Object(vec![(</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;jsonpath_errors(), &amp;variables, &amp;json_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17667,7 +17667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    String::from(&quot;id&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17683,7 +17683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Value::String(String::from(&quot;error1&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17699,7 +17699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )]),</pre>
+                <pre class="has-background-white py-0 px-2">            Value::List(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17747,7 +17747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Value::String(String::from(&quot;error2&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    Value::String(String::from(&quot;error1&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17763,7 +17763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )])</pre>
+                <pre class="has-background-white py-0 px-2">                )]),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17779,7 +17779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ])</pre>
+                <pre class="has-background-white py-0 px-2">                Value::Object(vec![(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17795,7 +17795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                    String::from(&quot;id&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17811,7 +17811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                    Value::String(String::from(&quot;error2&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17827,7 +17827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                )])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17843,7 +17843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(jsonpath_errors_count(), &amp;variables, json_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">            ])</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17859,7 +17859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17875,7 +17875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17891,7 +17891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Integer(2)</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17907,7 +17907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;jsonpath_errors_count(), &amp;variables, &amp;json_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17923,7 +17923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17939,7 +17939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17955,7 +17955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            Value::Integer(2)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17971,7 +17971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_regex() {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -17987,7 +17987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18003,7 +18003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18019,7 +18019,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(regex_name(), &amp;variables, http::hello_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18035,7 +18035,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_regex() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18051,7 +18051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18067,7 +18067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;World&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18083,7 +18083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(&amp;regex_name(), &amp;variables, &amp;http::hello_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18099,7 +18099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18115,7 +18115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_query(regex_invalid(), &amp;variables, http::hello_http_response())</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18131,7 +18131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;World&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18147,7 +18147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18163,7 +18163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 10));</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18179,7 +18179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, RunnerError::InvalidRegex());</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_query(&amp;regex_invalid(), &amp;variables, &amp;http::hello_http_response())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18195,7 +18195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18211,7 +18211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18227,7 +18227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 10));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18243,7 +18243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_bytes() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, RunnerError::InvalidRegex());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18259,7 +18259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18275,7 +18275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18291,7 +18291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18307,7 +18307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Query {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_bytes() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18323,7 +18323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18339,7 +18339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: QueryValue::Bytes {},</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18355,7 +18355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    subquery: None</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18371,7 +18371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18387,7 +18387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18403,7 +18403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::hello_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: QueryValue::Bytes {},</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18419,7 +18419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                    subquery: None</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18435,7 +18435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18451,7 +18451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18467,7 +18467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Bytes(String::into_bytes(String::from(&quot;Hello World!&quot;)))</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::hello_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18483,7 +18483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18499,7 +18499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18515,7 +18515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18531,7 +18531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            Value::Bytes(String::into_bytes(String::from(&quot;Hello World!&quot;)))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18547,7 +18547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_query_sha256() {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18563,7 +18563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18579,7 +18579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18595,7 +18595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_query(</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18611,7 +18611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Query {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_query_sha256() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18627,7 +18627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18643,7 +18643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: QueryValue::Sha256 {},</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18659,7 +18659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    subquery: None</pre>
+                <pre class="has-background-white py-0 px-2">            eval_query(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18675,7 +18675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Query {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18691,7 +18691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18707,7 +18707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::Response {</pre>
+                <pre class="has-background-white py-0 px-2">                    value: QueryValue::Sha256 {},</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18723,7 +18723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    version: http::Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">                    subquery: None</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18739,7 +18739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18755,7 +18755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18771,7 +18771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    body: vec![0xff],</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18787,7 +18787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">                    version: http::Version::Http10,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18803,7 +18803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                    status: 200,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18819,7 +18819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                    headers: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18835,7 +18835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">                    body: vec![0xff],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18851,7 +18851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                    duration: Default::default(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18867,7 +18867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::Bytes(</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18883,7 +18883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                hex!(&quot;a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89&quot;).to_vec()</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18899,7 +18899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18915,7 +18915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18931,7 +18931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            Value::Bytes(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -18947,13 +18947,77 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">                hex!(&quot;a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89&quot;).to_vec()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1183"
+                role="cell">
+                <a href="#1183">1183</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            )</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1184"
+                role="cell">
+                <a href="#1184">1184</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1185"
+                role="cell">
+                <a href="#1185">1185</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="1186"
+                role="cell">
+                <a href="#1186">1186</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-09-02 10:52</p>
+                <p class="heading">Date: 2022-09-30 08:59</p>
             </div>
         </footer>
     </body>

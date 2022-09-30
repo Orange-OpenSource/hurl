@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="4 / 4">100.0 %</abbr></p>
+                <abbr title="4 / 4">100 %</abbr></p>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100.0 %</abbr></p>
+                <abbr title="0 / 0">100 %</abbr></p>
         </div>
     </div>
 
@@ -691,7 +691,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    response: Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    response: &amp;Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -723,7 +723,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    http_response: http::Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    http_response: &amp;http::Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1219,7 +1219,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let header_name = header.key.value.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">                let header_name = &amp;header.key.value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1235,7 +1235,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let actuals = http_response.get_header_values(&amp;header_name);</pre>
+                <pre class="has-background-success-light py-0 px-2">                let actuals = http_response.get_header_values(header_name);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1299,7 +1299,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                            source_info: header.key.clone().source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                            source_info: header.key.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1379,7 +1379,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        source_info: header.key.clone().source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">                        source_info: header.key.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1987,7 +1987,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let assert = eval_implicit_body_asserts(body, variables, &amp;http_response, context_dir);</pre>
+                <pre class="has-background-success-light py-0 px-2">        let assert = eval_implicit_body_asserts(body, variables, http_response, context_dir);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2046,12 +2046,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1008">
-                1008
+                role="cell" aria-label="1056">
+                1056
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    for assert in response.asserts() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    for assert in response.asserts().iter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2062,12 +2062,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1008">
-                1008
+                role="cell" aria-label="1056">
+                1056
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let assert_result = eval_assert(assert, variables, http_response.clone());</pre>
+                <pre class="has-background-success-light py-0 px-2">        let assert_result = eval_assert(assert, variables, http_response);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2078,8 +2078,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1008">
-                1008
+                role="cell" aria-label="1056">
+                1056
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -2094,8 +2094,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1008">
-                1008
+                role="cell" aria-label="1056">
+                1056
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -4691,7 +4691,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    response: Response,</pre>
+                <pre class="has-background-success-light py-0 px-2">    response: &amp;Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4771,7 +4771,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    for capture in response.captures() {</pre>
+                <pre class="has-background-success-light py-0 px-2">    for capture in response.captures().iter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4782,12 +4782,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="76">
-                76
+                role="cell" aria-label="80">
+                80
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let capture_result = eval_capture(capture, variables, http_response.clone())?;</pre>
+                <pre class="has-background-success-light py-0 px-2">        let capture_result = eval_capture(capture, variables, http_response)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4798,8 +4798,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="76">
-                76
+                role="cell" aria-label="80">
+                80
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -5827,7 +5827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                user_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5859,7 +5859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                http::xml_two_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6435,7 +6435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                user_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6617,7 +6617,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-09-02 10:52</p>
+                <p class="heading">Date: 2022-09-30 08:59</p>
             </div>
         </footer>
     </body>

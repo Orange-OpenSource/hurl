@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-warning">
-                <abbr title="38 / 50">76.0 %</abbr></p>
+                <abbr title="38 / 50">76 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="3 / 3">100.0 %</abbr></p>
+                <abbr title="3 / 3">100 %</abbr></p>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100.0 %</abbr></p>
+                <abbr title="0 / 0">100 %</abbr></p>
         </div>
     </div>
 
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    subquery: Subquery,</pre>
+                <pre class="has-background-success-light py-0 px-2">    subquery: &amp;Subquery,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -483,7 +483,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    value: Value,</pre>
+                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    match subquery.value {</pre>
+                <pre class="has-background-success-light py-0 px-2">    match &amp;subquery.value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -579,7 +579,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_regex(value, regex_value, variables, subquery.source_info),</pre>
+                <pre class="has-background-success-light py-0 px-2">        } =&gt; eval_regex(value, regex_value, variables, &amp;subquery.source_info),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -595,7 +595,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        SubqueryValue::Count {} =&gt; eval_count(value, subquery.source_info),</pre>
+                <pre class="has-background-success-light py-0 px-2">        SubqueryValue::Count {} =&gt; eval_count(value, &amp;subquery.source_info),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -675,7 +675,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    value: Value,</pre>
+                <pre class="has-background-success-light py-0 px-2">    value: &amp;Value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -691,7 +691,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    regex_value: RegexValue,</pre>
+                <pre class="has-background-success-light py-0 px-2">    regex_value: &amp;RegexValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -723,7 +723,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    source_info: SourceInfo,</pre>
+                <pre class="has-background-success-light py-0 px-2">    source_info: &amp;SourceInfo,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -787,7 +787,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let value = eval_template(&amp;t, variables)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">            let value = eval_template(t, variables)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -867,7 +867,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        source_info: t.source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        source_info: t.source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -979,7 +979,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        RegexValue::Regex(re) =&gt; re.inner,</pre>
+                <pre class="has-background-success-light py-0 px-2">        RegexValue::Regex(re) =&gt; re.inner.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1171,7 +1171,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            source_info,</pre>
+                <pre class="has-background-danger-light py-0 px-2">            source_info: source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1283,7 +1283,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">fn eval_count(value: Value, source_info: SourceInfo) -&gt; Result&lt;Option&lt;Value&gt;, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">fn eval_count(value: &amp;Value, source_info: &amp;SourceInfo) -&gt; Result&lt;Option&lt;Value&gt;, Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1347,7 +1347,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Value::Nodeset(size) =&gt; Ok(Some(Value::Integer(size as i64))),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Value::Nodeset(size) =&gt; Ok(Some(Value::Integer(*size as i64))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1379,7 +1379,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            source_info,</pre>
+                <pre class="has-background-success-light py-0 px-2">            source_info: source_info.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1955,7 +1955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                subquery.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;subquery,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1971,7 +1971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Value::String(&quot;Hello Bob!&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::String(&quot;Hello Bob!&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2099,7 +2099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_subquery(subquery, Value::Bool(true), &amp;variables)</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_subquery(&amp;subquery, &amp;Value::Bool(true), &amp;variables)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2611,7 +2611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            subquery,</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;subquery,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2627,7 +2627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Hello Bob!&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">            &amp;Value::String(&quot;Hello Bob!&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2915,7 +2915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                subquery.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;subquery,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2931,7 +2931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Value::List(vec![</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;Value::List(vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3123,7 +3123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = eval_subquery(subquery, Value::Bool(true), &amp;variables)</pre>
+                <pre class="has-background-white py-0 px-2">        let error = eval_subquery(&amp;subquery, &amp;Value::Bool(true), &amp;variables)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3273,7 +3273,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-09-02 10:52</p>
+                <p class="heading">Date: 2022-09-30 08:59</p>
             </div>
         </footer>
     </body>
