@@ -22,12 +22,33 @@ jobs:
         bin/release/man.sh       
         bin/release/release.sh
         bin/release/create_tarball.sh linux
-    - name: Create deb
-      run: bin/release/deb.sh
-    - name: Archive production artifacts (tarball)
+    - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: release-linux-x64-artifacts
+        name: release-generic-linux-x64-artifacts
+        path: target/upload/*
+  
+  release-deb-x64:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install
+      run: |
+        bin/install_prerequisites_ubuntu.sh
+        bin/install_rust_latest.sh
+    - name: set Version
+      run: bin/release/version.sh
+    - name: Build
+      run: |
+        bin/release/man.sh       
+        bin/release/release.sh
+    - name: Create deb
+      run: bin/release/deb.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-deb-x64-artifacts
         path: target/upload/*
 
   release-macos-x64:
