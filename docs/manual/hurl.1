@@ -1,4 +1,4 @@
-.TH hurl 1 "28 Sep 2022" "hurl 1.8.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "30 Sep 2022" "hurl 1.8.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -230,12 +230,6 @@ Override value from Environment variable no_proxy.
 
 Write output to <file> instead of stdout.
 
-.IP "--progress "
-
-Print filename and status for each test (on stderr)
-
-Deprecated, use \fI--test\fP or \fI--json\fP instead.
-
 .IP "-x, --proxy [protocol://]host[:port] "
 
 Use the specified proxy.
@@ -251,12 +245,6 @@ If the <file> report already exists, it will be updated with the new test result
 Generate HTML report in dir.
 
 If the HTML report already exists, it will be updated with the new test results.
-
-.IP "--summary "
-
-Print test metrics at the end of the run (on stderr)
-
-Deprecated, use \fI--test\fP or \fI--json\fP instead.
 
 .IP "--test "
 

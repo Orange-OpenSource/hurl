@@ -249,12 +249,6 @@ Override value from Environment variable no_proxy.
 
 Write output to <file> instead of stdout.
 
-### --progress {#progress}
-
-Print filename and status for each test (on stderr)
-
-Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
-
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 
 Use the specified proxy.
@@ -270,12 +264,6 @@ If the <file> report already exists, it will be updated with the new test result
 Generate HTML report in dir.
 
 If the HTML report already exists, it will be updated with the new test results.
-
-### --summary {#summary}
-
-Print test metrics at the end of the run (on stderr)
-
-Deprecated, use [`--test`](#test) or [`--json`](#json) instead.
 
 ### --test {#test}
 
