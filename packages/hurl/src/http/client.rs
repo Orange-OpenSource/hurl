@@ -293,7 +293,7 @@ impl Client {
         };
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
-        let lenght = response_body.len();
+        let length = response_body.len();
         self.handle.reset();
 
         let request = Request {
@@ -314,7 +314,7 @@ impl Client {
             logger.debug_important(
                 format!(
                     "Response: (received {} bytes in {} ms)",
-                    lenght,
+                    length,
                     duration.as_millis()
                 )
                 .as_str(),
@@ -437,7 +437,7 @@ impl Client {
         }
     }
 
-    /// Sets multipart form datas.
+    /// Sets multipart form data.
     fn set_multipart(&mut self, params: &[MultipartParam]) {
         if !params.is_empty() {
             let mut form = easy::Form::new();

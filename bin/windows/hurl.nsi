@@ -63,7 +63,7 @@ SectionGroup "executables"
     SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
     ; Write the uninstall
     WriteUninstaller "$INSTDIR\uninstall.exe"
-    ; Write windows uninstall panel informations
+    ; Write windows uninstall panel information
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "DisplayName" "Hurl"

@@ -13,7 +13,7 @@ from typing import List, Dict
 
 
 def get_files(glob_expr: str) -> List[str]:
-    """return sorted list of files matching a glob expresion
+    """return sorted list of files matching a glob expression
 
     Arguments:
       glob_expr -- the input file glob expression

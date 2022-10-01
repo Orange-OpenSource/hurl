@@ -198,7 +198,7 @@ while the explicit one allows you to use other [predicates] (like `contains`, `s
 GET http://localhost:8080
 
 HTTP/1.1 200
-# Implicitely testing response headers:
+# Implicitly testing response headers:
 Content-Type: text/html;charset=UTF-8
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"

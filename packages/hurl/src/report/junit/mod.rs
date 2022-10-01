@@ -20,7 +20,7 @@
 // XML JUnit report
 //
 // It does not really seem to be used nowadays
-// The link bellow seems the most "official" spec
+// The link below seems the most "official" spec
 // https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format
 //
 // One Hurl file will result into one junit <testcase>.

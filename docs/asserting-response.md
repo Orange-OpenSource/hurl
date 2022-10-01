@@ -267,7 +267,7 @@ GET http://localhost:8000/cookies/set
 HTTP/1.0 200
 
 # Explicit check of Set-Cookie header value. If the attributes are
-# not in this excat order, this assert will fail. 
+# not in this exact order, this assert will fail. 
 Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/accounts; SameSite=Lax;
 Set-Cookie: HSID=AYQEVnDKrdst; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly; Path=/
 Set-Cookie: SSID=Ap4PGTEq; Domain=.localhost; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly; Path=/

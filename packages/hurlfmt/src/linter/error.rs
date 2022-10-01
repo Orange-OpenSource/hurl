@@ -33,16 +33,16 @@ impl Error for linter::Error {
 
     fn description(&self) -> String {
         match self.inner {
-            LinterError::UnneccessarySpace { .. } => "Unnecessary space".to_string(),
-            LinterError::UnneccessaryJsonEncoding {} => "Unnecessary json encoding".to_string(),
+            LinterError::UnnecessarySpace { .. } => "Unnecessary space".to_string(),
+            LinterError::UnnecessaryJsonEncoding {} => "Unnecessary json encoding".to_string(),
             LinterError::OneSpace {} => "One space ".to_string(),
         }
     }
 
     fn fixme(&self) -> String {
         match self.inner {
-            LinterError::UnneccessarySpace { .. } => "Remove space".to_string(),
-            LinterError::UnneccessaryJsonEncoding {} => "Use Simple String".to_string(),
+            LinterError::UnnecessarySpace { .. } => "Remove space".to_string(),
+            LinterError::UnnecessaryJsonEncoding {} => "Use Simple String".to_string(),
             LinterError::OneSpace {} => "Use only one space".to_string(),
         }
     }

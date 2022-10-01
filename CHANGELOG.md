@@ -357,7 +357,7 @@ Changes:
 
 * Add Hurl File JSON export  [#65](https://github.com/Orange-OpenSource/hurl/issues/65)
 
-* Support wildcard value in implicit status code reponse [#55](https://github.com/Orange-OpenSource/hurl/issues/55)
+* Support wildcard value in implicit status code response [#55](https://github.com/Orange-OpenSource/hurl/issues/55)
 
 
 Bugs Fixes:

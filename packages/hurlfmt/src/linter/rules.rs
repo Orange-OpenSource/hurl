@@ -57,7 +57,7 @@ impl Lintable<Request> for Request {
         if !self.space0.value.is_empty() {
             errors.push(Error {
                 source_info: self.clone().space0.source_info,
-                inner: LinterError::UnneccessarySpace {},
+                inner: LinterError::UnnecessarySpace {},
             });
         }
         if self.space1.value != " " {
@@ -107,7 +107,7 @@ impl Lintable<Response> for Response {
         if !self.space0.value.is_empty() {
             errors.push(Error {
                 source_info: self.clone().space0.source_info,
-                inner: LinterError::UnneccessarySpace {},
+                inner: LinterError::UnnecessarySpace {},
             });
         }
         errors
@@ -746,7 +746,7 @@ impl Lintable<LineTerminator> for LineTerminator {
                 if !self.space0.value.is_empty() {
                     errors.push(Error {
                         source_info: self.clone().space0.source_info,
-                        inner: LinterError::UnneccessarySpace {},
+                        inner: LinterError::UnnecessarySpace {},
                     });
                 }
             }

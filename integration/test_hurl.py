@@ -12,7 +12,7 @@ import argparse
 
 
 def decode_string(encoded: bytes) -> str:
-    """Decodes bytes to string from infering encoding."""
+    """Decodes bytes to string from inferring encoding."""
     if encoded.startswith(codecs.BOM_UTF8):
         return encoded.decode("utf-8-sig")
     elif encoded.startswith(codecs.BOM_UTF16):

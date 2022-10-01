@@ -47,7 +47,7 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
 }
 
 // return the last error when no default error is specified
-// tipically this should be recoverable
+// typically this should be recoverable
 pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, p: &mut Reader) -> ParseResult<'a, T> {
     match fs.get(0) {
         None => panic!("You can call choice with an empty vector of choice"),

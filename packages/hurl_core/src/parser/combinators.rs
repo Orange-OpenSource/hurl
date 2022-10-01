@@ -110,7 +110,7 @@ pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResu
             }
         }
         Err(Error { pos, inner, .. }) => {
-            // if zero occurence => should fail?
+            // if zero occurrence => should fail?
             Err(Error {
                 pos,
                 recoverable: false,
@@ -122,7 +122,7 @@ pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResu
 
 pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, reader: &mut Reader) -> ParseResult<'a, T> {
     // return the last error when no default error is specified
-    // tipically this should be recoverable
+    // typically this should be recoverable
     match fs.get(0) {
         None => panic!("You can call choice with an empty vector of choice"),
         Some(f) => {

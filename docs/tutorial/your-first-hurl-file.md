@@ -59,7 +59,7 @@ the jar application from <https://github.com/jcamiel/quiz/releases/latest> and r
 $ java -jar quiz-0.0.2.jar 
 ```
 
-Either you're using the Docker images ot the jar app, you can open a browser and test the quiz application by
+Either you're using the Docker images or the jar app, you can open a browser and test the quiz application by
 typing the url <http://localhost:8080>:
 
 <div>
