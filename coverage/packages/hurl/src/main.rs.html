@@ -3427,7 +3427,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if cli_options.progress {</pre>
+                <pre class="has-background-success-light py-0 px-2">            if cli_options.test {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4019,7 +4019,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let app = cli::app(version_info.as_str());</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut app = cli::app(&amp;version_info);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4163,7 +4163,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let cli_options = cli::parse_options(&amp;matches, &amp;base_logger);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let cli_options = cli::parse_options(&amp;matches);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4387,7 +4387,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        let error = if app.clone().print_help().is_err() {</pre>
+                <pre class="has-background-danger-light py-0 px-2">        let error = if app.print_help().is_err() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5107,7 +5107,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let progress = if cli_options.progress {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let progress = if cli_options.test {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6947,7 +6947,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if cli_options.summary {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if cli_options.test {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9497,7 +9497,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-09-30 09:09</p>
+                <p class="heading">Date: 2022-10-01 08:31</p>
             </div>
         </footer>
     </body>
