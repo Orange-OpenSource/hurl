@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use atty::Stream;
-use clap::{ArgAction, ArgMatches, Command};
+use clap::{value_parser, ArgAction, ArgMatches, Command};
 
 use crate::cli;
 use crate::cli::CliError;
@@ -72,6 +72,17 @@ pub enum OutputType {
 }
 
 pub fn app(version: &str) -> Command {
+    let ClientOptions {
+        connect_timeout: default_connect_timeout,
+        max_redirect: default_max_redirect,
+        timeout: default_timeout,
+        ..
+    } = ClientOptions::default();
+
+    let default_connect_timeout = default_connect_timeout.as_secs();
+    let default_max_redirect = default_max_redirect.unwrap();
+    let default_timeout = default_timeout.as_secs();
+
     Command::new("hurl")
         .about("Run hurl FILE(s) or standard input")
         .disable_colored_help(true)
@@ -107,6 +118,8 @@ pub fn app(version: &str) -> Command {
                 .long("connect-timeout")
                 .value_name("SECONDS")
                 .help("Maximum time allowed for connection")
+                .default_value(default_connect_timeout.to_string())
+                .value_parser(value_parser!(u64))
                 .num_args(1)
         )
         .arg(
@@ -135,7 +148,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("file_root")
                 .long("file-root")
                 .value_name("DIR")
-                .help("Set root filesystem to import file (default is current directory)")
+                .help("Set root filesystem to import files (default is current directory)")
                 .num_args(1)
         )
         .arg(
@@ -149,7 +162,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("glob")
                 .long("glob")
                 .value_name("GLOB")
-                .help("Specify input files that match the given blob. Multiple glob flags may be used")
+                .help("Specify input files that match the given GLOB. Multiple glob flags may be used")
                 .action(ArgAction::Append)
                 .number_of_values(1)
         )
@@ -191,8 +204,10 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("max_redirects")
                 .long("max-redirs")
                 .value_name("NUM")
-                .help("Maximum number of redirects allowed")
+                .help("Maximum number of redirects allowed, -1 for unlimited redirects")
+                .default_value(default_max_redirect.to_string())
                 .allow_hyphen_values(true)
+                .value_parser(value_parser!(i32).range(-1..))
                 .num_args(1)
         )
         .arg(
@@ -201,7 +216,9 @@ pub fn app(version: &str) -> Command {
                 .short('m')
                 .value_name("NUM")
                 .help("Maximum time allowed for the transfer")
+                .default_value(default_timeout.to_string())
                 .allow_hyphen_values(true)
+                .value_parser(value_parser!(u64))
                 .num_args(1)
         )
         .arg(
@@ -245,14 +262,14 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("junit")
                 .long("report-junit")
                 .value_name("FILE")
-                .help("Write a Junit XML report to the given file")
+                .help("Write a Junit XML report to FILE")
                 .num_args(1)
         )
         .arg(
             clap::Arg::new("report_html")
                 .long("report-html")
                 .value_name("DIR")
-                .help("Generate HTML report to dir")
+                .help("Generate HTML report to DIR")
                 .num_args(1)
         )
         .arg(
@@ -267,6 +284,8 @@ pub fn app(version: &str) -> Command {
                 .value_name("ENTRY_NUMBER")
                 .help("Execute Hurl file to ENTRY_NUMBER (starting at 1)")
                 .conflicts_with("interactive")
+                .allow_hyphen_values(true)
+                .value_parser(value_parser!(u32).range(1..))
                 .num_args(1)
         )
         .arg(
@@ -316,8 +335,9 @@ pub fn app(version: &str) -> Command {
         )
 }
 
+/// Parses command line options `matches`.
 pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
-    let cacert_file = match get_string(matches, "cacert_file") {
+    let cacert_file = match get::<String>(matches, "cacert_file") {
         None => None,
         Some(filename) => {
             if !Path::new(&filename).is_file() {
@@ -330,24 +350,15 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     };
     let color = output_color(matches);
     let compressed = has_flag(matches, "compressed");
-    let connect_timeout = match get_string(matches, "connect_timeout") {
-        None => ClientOptions::default().connect_timeout,
-        Some(s) => match s.parse::<u64>() {
-            Ok(n) => Duration::from_secs(n),
-            Err(_) => {
-                return Err(CliError {
-                    message: "connect-timeout option can not be parsed".to_string(),
-                });
-            }
-        },
-    };
-    let cookie_input_file = get_string(matches, "cookies_input_file");
-    let cookie_output_file = get_string(matches, "cookies_output_file");
+    let connect_timeout = get::<u64>(matches, "connect_timeout").unwrap();
+    let connect_timeout = Duration::from_secs(connect_timeout);
+    let cookie_input_file = get::<String>(matches, "cookies_input_file");
+    let cookie_output_file = get::<String>(matches, "cookies_output_file");
     let fail_fast = !has_flag(matches, "fail_at_end");
-    let file_root = get_string(matches, "file_root");
+    let file_root = get::<String>(matches, "file_root");
     let follow_location = has_flag(matches, "follow_location");
     let glob_files = match_glob_files(matches)?;
-    let report_html = get_string(matches, "report_html");
+    let report_html = get::<String>(matches, "report_html");
     let html_dir = if let Some(dir) = report_html {
         let path = Path::new(&dir);
         if !path.exists() {
@@ -373,21 +384,14 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let include = has_flag(matches, "include");
     let insecure = has_flag(matches, "insecure");
     let interactive = has_flag(matches, "interactive");
-    let junit_file = get_string(matches, "junit");
-    let max_redirect = match get_string(matches, "max_redirects").as_deref() {
-        None => Some(50),
-        Some("-1") => None,
-        Some(s) => match s.parse::<usize>() {
-            Ok(x) => Some(x),
-            Err(_) => {
-                return Err(CliError {
-                    message: "max_redirs option can not be parsed".to_string(),
-                });
-            }
-        },
+    let junit_file = get::<String>(matches, "junit");
+    let max_redirect = get::<i32>(matches, "max_redirects").unwrap();
+    let max_redirect = match max_redirect {
+        m if m == -1 => None,
+        m => Some(m as usize),
     };
-    let no_proxy = get_string(matches, "proxy");
-    let output = get_string(matches, "output");
+    let no_proxy = get::<String>(matches, "proxy");
+    let output = get::<String>(matches, "output");
     let test = has_flag(matches, "test");
     let output_type = if has_flag(matches, "json") {
         OutputType::Json
@@ -396,22 +400,13 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     } else {
         OutputType::ResponseBody
     };
-    let proxy = get_string(matches, "proxy");
-    let timeout = match get_string(matches, "max_time") {
-        None => ClientOptions::default().timeout,
-        Some(s) => match s.parse::<u64>() {
-            Ok(n) => Duration::from_secs(n),
-            Err(_) => {
-                return Err(CliError {
-                    message: "max_time option can not be parsed".to_string(),
-                });
-            }
-        },
-    };
-    let to_entry = to_entry(matches)?;
-    let user = get_string(matches, "user");
-    let user_agent = get_string(matches, "user_agent");
-    let variables = variables(matches.clone())?;
+    let proxy = get::<String>(matches, "proxy");
+    let timeout = get::<u64>(matches, "max_time").unwrap();
+    let timeout = Duration::from_secs(timeout);
+    let to_entry = get::<u32>(matches, "to_entry").map(|x| x as usize);
+    let user = get::<String>(matches, "user");
+    let user_agent = get::<String>(matches, "user_agent");
+    let variables = variables(matches)?;
     let very_verbose = has_flag(matches, "very_verbose");
     let verbose = has_flag(matches, "verbose") || has_flag(matches, "interactive") || very_verbose;
 
@@ -464,23 +459,11 @@ pub fn output_color(matches: &ArgMatches) -> bool {
     atty::is(Stream::Stdout)
 }
 
-fn to_entry(matches: &ArgMatches) -> Result<Option<usize>, CliError> {
-    match get_string(matches, "to_entry") {
-        Some(value) => match value.parse() {
-            Ok(v) => Ok(Some(v)),
-            Err(_) => Err(CliError {
-                message: "Invalid value for option --to-entry - must be a positive integer!"
-                    .to_string(),
-            }),
-        },
-        None => Ok(None),
-    }
-}
-
-fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
+/// Returns a map of variables from the command line options `matches`.
+fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     let mut variables = HashMap::new();
 
-    // use environment variables prefix by HURL_
+    // Use environment variables prefix by HURL_
     for (env_name, env_value) in env::vars() {
         if let Some(name) = env_name.strip_prefix("HURL_") {
             let value = cli::parse_variable_value(env_value.as_str())?;
@@ -488,7 +471,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
         }
     }
 
-    if let Some(filename) = get_string(&matches, "variables_file") {
+    if let Some(filename) = get::<String>(matches, "variables_file") {
         let path = Path::new(&filename);
         if !path.exists() {
             return Err(CliError {
@@ -516,7 +499,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
         }
     }
 
-    if let Some(input) = get_strings(&matches, "variable") {
+    if let Some(input) = get_strings(matches, "variable") {
         for s in input {
             let (name, value) = cli::parse_variable(&s)?;
             variables.insert(name.to_string(), value);
@@ -526,12 +509,7 @@ fn variables(matches: ArgMatches) -> Result<HashMap<String, Value>, CliError> {
     Ok(variables)
 }
 
-///
-/// Returns a list of path names that match `matches`.
-///
-/// # Arguments
-/// * `matches` - A pattern to be matched
-///
+/// Returns a list of path names from the command line options `matches`.
 fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
     let mut filenames = vec![];
     if let Some(exprs) = get_strings(matches, "glob") {
@@ -566,16 +544,19 @@ fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
     Ok(filenames)
 }
 
-fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
-    matches.get_one::<String>(name).map(|x| x.to_string())
+/// Returns a optional value of type `T` from the command line `matches` given the option `name`.
+fn get<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, name: &str) -> Option<T> {
+    matches.get_one::<T>(name).cloned()
 }
 
+/// Returns a list of `String` from the command line options `matches` given the option `name`.
 pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
 }
 
+/// Returns true if the command line options `matches` has a given flag `name`.
 pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
     matches.get_one::<bool>(name) == Some(&true)
 }
