@@ -22,6 +22,9 @@ In a first step, we're going to write a bash script that will pull our Docker
 image, launch it and run Hurl tests against it. Once we have checked that this
 script runs locally, we'll see how to run it automatically in a CI/CD pipeline.
 
+> To install the hurl into your GitHub actions workflow you can use 
+> [gacts/install-hurl](https://github.com/gacts/install-hurl) action.
+
 ## Integration Script
 
 1. First, create a directory name `quiz-project`, add [`integration/basic.hurl`]
