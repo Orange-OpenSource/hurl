@@ -9,25 +9,27 @@ jobs:
   benchsuite:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Environment
-        run: bin/environment.sh
-      - name: Install Prerequisites
-        run: bin/install_prerequisites_ubuntu.sh
-      - name: Install Rust
-        run: bin/install_rust_latest.sh
-      - name: Build
-        run: bin/release/release.sh
-      - name: Run Bench Suite
-        run: bin/test/bench.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v3
-        if: ${{ always() }}
-        with:
-          name: tests-bench-artifacts
-          path: |
-            bench/server.log
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Rust
+      run: bin/install_rust_latest.sh
+    - name: Build
+      run: |
+        bin/release/release.sh
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Bench Suite
+      run: bin/test/bench.sh
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: tests-bench-artifacts
+        path: |
+          bench/server.log
 
   test-ubuntu-x64-latest:
     runs-on: ubuntu-latest
@@ -45,9 +47,11 @@ jobs:
       run: bin/install_rust_latest.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
-    - name: Run Tests units
-      run: bin/test/test_unit.sh
-    - name: Run Integration Tests
+    - name: Tests units
+      run: |
+        bin/test/test_unit.sh
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -66,40 +70,42 @@ jobs:
       matrix:
         rust: [stable]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Install Python 3.8
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-      - name: Install Curl 7.68
-        uses: myci-actions/add-deb-repo@10
-        with:
-          repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
-          repo-name: focal
-          install: curl
-      - name: Environment
-        run: bin/environment.sh
-      - name: Install Prerequisites
-        run: bin/install_prerequisites_ubuntu.sh
-      - name: Install Rust
-        run: bin/install_rust_latest.sh
-      - name: Test Prerequisites
-        run: bin/test/test_prerequisites.sh
-      - name: Run Tests units
-        run: bin/test/test_unit.sh
-      - name: Run Integration Tests
-        run: bin/test/test_integ.sh
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        if: ${{ always() }}
-        with:
-          name: tests-ubuntu-${{ matrix.rust }}-artifacts
-          path: |
-            integration/server.log
-            integration/server-ssl.log
-            integration/report/tests.json
-            integration/report/tests.xml
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: Install Curl 7.68
+      uses: myci-actions/add-deb-repo@10
+      with:
+        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo-name: focal
+        install: curl
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Rust
+      run: bin/install_rust_latest.sh
+    - name: Test Prerequisites
+      run: bin/test/test_prerequisites.sh
+    - name: Tests units
+      run: |
+        bin/test/test_unit.sh
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Integration Tests
+      run: bin/test/test_integ.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: tests-ubuntu-${{ matrix.rust }}-artifacts
+        path: |
+          integration/server.log
+          integration/server-ssl.log
+          integration/report/tests.json
+          integration/report/tests.xml
 
   test-docker-archlinux-x64:
     runs-on: ubuntu-latest
@@ -190,9 +196,11 @@ jobs:
       run: bin/install_rust_latest.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
-    - name: Run Tests units
-      run: bin/test/test_unit.sh
-    - name: Run Integration Tests
+    - name: Tests units
+      run: |
+        bin/test/test_unit.sh
+        echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Integration Tests
       run: bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
