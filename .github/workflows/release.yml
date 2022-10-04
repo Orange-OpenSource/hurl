@@ -21,13 +21,35 @@ jobs:
       run: |
         bin/release/man.sh       
         bin/release/release.sh
-        bin/release/create_tarball.sh linux
-    - name: Create deb
+    - name: Create generic linux package
+      run: bin/release/create_tarball.sh linux
+    - name: Archive production artifacts (tarball)
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-generic-linux-x64-artifacts
+        path: target/upload/*
+
+  release-deb-x64:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install
+      run: |
+        bin/install_prerequisites_ubuntu.sh
+        bin/install_rust_latest.sh
+    - name: set Version
+      run: bin/release/version.sh
+    - name: Build
+      run: |
+        bin/release/man.sh
+        bin/release/release.sh
+    - name: Create deb package
       run: bin/release/deb.sh
     - name: Archive production artifacts (tarball)
       uses: actions/upload-artifact@v3
       with:
-        name: release-linux-x64-artifacts
+        name: release-deb-x64-artifacts
         path: target/upload/*
 
   release-macos-x64:
@@ -36,8 +58,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      run: |
-          bin/install_rust_latest.sh
+      run: bin/install_rust_latest.sh
     - name: set Version
       run: bin/release/version.sh
     - name: Build
@@ -74,8 +95,7 @@ jobs:
         override: true
         profile: minimal
     - name: Environment
-      run: |
-        .\bin\environment.ps1
+      run: .\bin\environment.ps1
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
     - name: Build and test integ
