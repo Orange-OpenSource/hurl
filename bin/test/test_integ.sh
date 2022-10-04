@@ -2,7 +2,14 @@
 set -e
 
 echo "----- integration tests -----"
-export PATH="$PWD/target/release:$PATH"
+
+# hurl infos
+command -v hurl
+command -v hurlfmt
+hurl --version
+hurlfmt --version
+
+# integration tests
 cd integration || exit
 ./integration.py
 ./test_curl_commands.sh "$(find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')"
