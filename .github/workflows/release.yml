@@ -55,6 +55,39 @@ jobs:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
 
+  test-generic-linux-docker-debian-x64:
+    needs: release-generic-linux-x64
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Retrieve release-generic-linux-x64-artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-generic-linux-x64-artifacts
+        path: target/upload
+    - name: Install package and tests integ
+      uses: addnab/docker-run-action@v3
+      with:
+        image: debian
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        run: |
+          bin/install_prerequisites_docker_ubuntu.sh
+          bin/environment.sh
+          bin/release/install_generic_linux_package.sh
+          export PATH="/tmp/hurl-generic-linux:$PATH"
+          bin/test/test_prerequisites.sh
+          bin/test/test_integ.sh
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: test-generic-linux-package-docker-debian-x64-artifacts
+        path: |
+          integration/mitmdump.log
+          integration/server.log
+          integration/server-ssl.log
+
   release-deb-x64:
     runs-on: ubuntu-18.04
     steps:
