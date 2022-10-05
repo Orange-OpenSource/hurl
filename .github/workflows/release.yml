@@ -119,7 +119,21 @@ jobs:
       run: |
         bin/release/man.sh
         bin/release/release.sh
-        bin/release/create_tarball.sh macos
+        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Test integ
+      run: |
+        bin/test/test_prerequisites.sh
+        bin/test/test_integ.sh
+    - name: Create generic macos package
+      run: bin/release/create_tarball.sh macos
+    - name: Install package
+      run: |
+        bin/release/install_generic_macos_package.sh
+        echo "PATH=/tmp/hurl-generic-macos:$PATH" >> "${GITHUB_ENV}"
+    - name: Test integ
+      run: |
+        bin/test/test_prerequisites.sh
+        bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
