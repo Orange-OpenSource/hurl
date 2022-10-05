@@ -4,8 +4,8 @@ set -e
 echo "----- install deb package -----"
 
 # install
-package_dir="$(cd target/upload ; pwd)"
-deb_package=$(ls "${package_dir}"/hurl_*_amd64.deb)
+deb_package=$(ls target/upload/hurl_*_amd64.deb)
+echo "$deb_package"
 install_dir="/tmp/hurl-deb-package"
 mkdir -p "${install_dir}"
 dpkg -x "${deb_package}" "${install_dir}"
