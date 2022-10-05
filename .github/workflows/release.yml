@@ -25,21 +25,22 @@ jobs:
       run: |
         bin/install_prerequisites_ubuntu.sh
         bin/install_rust_latest.sh
-    - name: Get version
-      run: |
-        VERSION=$(bin/release/get_version.sh)
-        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Build
       run: |
-        bin/release/man.sh       
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
+    - name: Get version
+      run: |
+        VERSION=$(bin/release/get_version.sh)
+        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Create generic linux package
-      run: bin/release/create_tarball.sh linux
+      run: |
+        bin/release/man.sh
+        bin/release/create_tarball.sh linux
     - name: Install package
       run: |
         bin/release/install_generic_linux_package.sh
@@ -75,21 +76,22 @@ jobs:
         bin/install_rust_latest.sh
     - name: Environment
       run: bin/environment.sh
-    - name: Get version
-      run: |
-        VERSION=$(bin/release/get_version.sh)
-        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Build
       run: |
-        bin/release/man.sh
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
+    - name: Get version
+      run: |
+        VERSION=$(bin/release/get_version.sh)
+        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Create deb package
-      run: bin/release/create_deb_package.sh
+      run: |
+        bin/release/man.sh
+        bin/release/create_deb_package.sh
     - name: Install package
       run: |
         bin/release/install_deb_package.sh
@@ -111,21 +113,22 @@ jobs:
       uses: actions/checkout@v3
     - name: Install Rust
       run: bin/install_rust_latest.sh
-    - name: Get version
-      run: |
-        VERSION=$(bin/release/get_version.sh)
-        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Build
       run: |
-        bin/release/man.sh
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
+    - name: Get version
+      run: |
+        VERSION=$(bin/release/get_version.sh)
+        echo "VERSION=${VERSION}" | tee -a "${GITHUB_ENV}"
     - name: Create generic macos package
-      run: bin/release/create_tarball.sh macos
+      run: |
+        bin/release/man.sh
+        bin/release/create_tarball.sh macos
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh
