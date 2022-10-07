@@ -355,11 +355,7 @@ fn log_test_completed(result: &HurlResult) {
     } else {
         "Failure".red().bold()
     };
-    let count = result
-        .entries
-        .iter()
-        .filter(|r| r.request.is_some())
-        .count();
+    let count = result.entries.iter().flat_map(|r| &r.calls).count();
     eprintln!(
         "{}: {} ({} request(s) in {} ms)",
         result.filename.bold(),
@@ -371,11 +367,7 @@ fn log_test_completed(result: &HurlResult) {
 
 fn log_test_completed_no_color(result: &HurlResult) {
     let state = if result.success { "Success" } else { "Failure" };
-    let count = result
-        .entries
-        .iter()
-        .filter(|r| r.request.is_some())
-        .count();
+    let count = result.entries.iter().flat_map(|r| &r.calls).count();
     eprintln!(
         "{}: {} ({} request(s) in {} ms)",
         result.filename, state, count, result.time_in_ms

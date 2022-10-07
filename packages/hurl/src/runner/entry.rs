@@ -41,19 +41,18 @@ pub fn run(
     variables: &mut HashMap<String, Value>,
     runner_options: &RunnerOptions,
     logger: &Logger,
-) -> Vec<EntryResult> {
+) -> EntryResult {
     let http_request = match eval_request(&entry.request, variables, &runner_options.context_dir) {
         Ok(r) => r,
         Err(error) => {
-            return vec![EntryResult {
-                request: None,
-                response: None,
+            return EntryResult {
+                calls: vec![],
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![error],
                 time_in_ms: 0,
                 compressed: runner_options.compressed,
-            }];
+            };
         }
     };
     let client_options = http::ClientOptions::from(runner_options);
@@ -87,108 +86,108 @@ pub fn run(
     );
     logger.debug("");
 
+    // Run the HTTP requests (optionally follow redirection)
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
             let runner_error = RunnerError::from(http_error);
-            return vec![EntryResult {
-                request: None,
-                response: None,
+            let error = Error {
+                source_info: SourceInfo {
+                    start: entry.request.url.source_info.start.clone(),
+                    end: entry.request.url.source_info.end.clone(),
+                },
+                inner: runner_error,
+                assert: false,
+            };
+            return EntryResult {
+                calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![Error {
-                    source_info: SourceInfo {
-                        start: entry.request.url.source_info.start.clone(),
-                        end: entry.request.url.source_info.end.clone(),
-                    },
-                    inner: runner_error,
-                    assert: false,
-                }],
+                errors: vec![error],
                 time_in_ms: 0,
                 compressed: client_options.compressed,
-            }];
+            };
         }
     };
 
-    let mut entry_results = vec![];
-    for (i, (http_request, http_response)) in calls.iter().enumerate() {
-        let mut captures = vec![];
-        let mut asserts = vec![];
-        let mut errors = vec![];
-        let time_in_ms = http_response.duration.as_millis();
+    // We runs capture and asserts on the last HTTP request/response chains.
+    let (_, http_response) = calls.last().unwrap();
+    let calls: Vec<Call> = calls
+        .iter()
+        .map(|(req, resp)| Call {
+            request: req.clone(),
+            response: resp.clone(),
+        })
+        .collect();
+    let time_in_ms = calls.iter().map(|c| c.response.duration.as_millis()).sum();
 
-        // We runs capture and asserts on the last HTTP request/response chains.
-        if i == calls.len() - 1 {
-            captures = match &entry.response {
-                None => vec![],
-                Some(response) => match eval_captures(response, http_response, variables) {
-                    Ok(captures) => captures,
-                    Err(e) => {
-                        return vec![EntryResult {
-                            request: Some(http_request.clone()),
-                            response: Some(http_response.clone()),
-                            captures: vec![],
-                            asserts: vec![],
-                            errors: vec![e],
-                            time_in_ms,
-                            compressed: client_options.compressed,
-                        }];
-                    }
-                },
-            };
-            // Update variables now!
-            for capture_result in captures.iter() {
-                variables.insert(capture_result.name.clone(), capture_result.value.clone());
+    // Compute captures
+    let captures = match &entry.response {
+        None => vec![],
+        Some(response_spec) => match eval_captures(response_spec, http_response, variables) {
+            Ok(captures) => captures,
+            Err(e) => {
+                return EntryResult {
+                    calls,
+                    captures: vec![],
+                    asserts: vec![],
+                    errors: vec![e],
+                    time_in_ms,
+                    compressed: client_options.compressed,
+                };
             }
-            asserts = if runner_options.ignore_asserts {
-                vec![]
-            } else {
-                match &entry.response {
-                    None => vec![],
-                    Some(response) => eval_asserts(
-                        response,
-                        variables,
-                        http_response,
-                        &runner_options.context_dir,
-                    ),
-                }
-            };
-            errors = asserts
-                .iter()
-                .filter_map(|assert| assert.error())
-                .map(
-                    |Error {
-                         source_info, inner, ..
-                     }| Error {
-                        source_info,
-                        inner,
-                        assert: true,
-                    },
-                )
-                .collect();
+        },
+    };
 
-            if !captures.is_empty() {
-                logger.debug_important("Captures:");
-                for capture in captures.iter() {
-                    logger.capture(&capture.name, &capture.value);
-                }
-            }
-            logger.debug("");
-        }
-
-        let entry_result = EntryResult {
-            request: Some(http_request.clone()),
-            response: Some(http_response.clone()),
-            captures,
-            asserts,
-            errors,
-            time_in_ms,
-            compressed: client_options.compressed,
-        };
-        entry_results.push(entry_result);
+    // Update variables now!
+    for c in captures.iter() {
+        variables.insert(c.name.clone(), c.value.clone());
     }
+    if !captures.is_empty() {
+        logger.debug_important("Captures:");
+        for c in captures.iter() {
+            logger.capture(&c.name, &c.value);
+        }
+    }
+    logger.debug("");
 
-    entry_results
+    // Compute asserts
+    let asserts = if runner_options.ignore_asserts {
+        vec![]
+    } else {
+        match &entry.response {
+            None => vec![],
+            Some(response_spec) => eval_asserts(
+                response_spec,
+                variables,
+                http_response,
+                &runner_options.context_dir,
+            ),
+        }
+    };
+
+    let errors = asserts
+        .iter()
+        .filter_map(|assert| assert.error())
+        .map(
+            |Error {
+                 source_info, inner, ..
+             }| Error {
+                source_info,
+                inner,
+                assert: true,
+            },
+        )
+        .collect();
+
+    EntryResult {
+        calls,
+        captures,
+        asserts,
+        errors,
+        time_in_ms,
+        compressed: client_options.compressed,
+    }
 }
 
 impl From<&RunnerOptions> for ClientOptions {

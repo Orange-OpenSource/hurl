@@ -20,7 +20,7 @@ use crate::cli;
 use crate::http::{
     Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
 };
-use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
+use crate::runner::{AssertResult, Call, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
     pub fn to_json(&self, content: &str) -> serde_json::Value {
@@ -32,7 +32,7 @@ impl HurlResult {
         let entries = self
             .entries
             .iter()
-            .map(|e| e.clone().to_json(&self.filename, content))
+            .map(|e| e.to_json(&self.filename, content))
             .collect();
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
         map.insert(
@@ -43,7 +43,7 @@ impl HurlResult {
             "time".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.time_in_ms as u64)),
         );
-        let cookies = self.cookies.iter().map(|e| e.clone().to_json()).collect();
+        let cookies = self.cookies.iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
         serde_json::Value::Object(map)
     }
@@ -52,24 +52,30 @@ impl HurlResult {
 impl EntryResult {
     fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
-        if let Some(request) = &self.request {
-            map.insert("request".to_string(), request.to_json());
-        }
-        if let Some(response) = &self.response {
-            map.insert("response".to_string(), response.to_json());
-        }
-        let captures = self.captures.iter().map(|c| c.clone().to_json()).collect();
+
+        let calls = self.calls.iter().map(|c| c.to_json()).collect();
+        map.insert("calls".to_string(), calls);
+        let captures = self.captures.iter().map(|c| c.to_json()).collect();
         map.insert("captures".to_string(), captures);
         let asserts = self
             .asserts
             .iter()
-            .map(|a| a.clone().to_json(filename, content))
+            .map(|a| a.to_json(filename, content))
             .collect();
         map.insert("asserts".to_string(), asserts);
         map.insert(
             "time".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.time_in_ms as u64)),
         );
+        serde_json::Value::Object(map)
+    }
+}
+
+impl Call {
+    fn to_json(&self) -> serde_json::Value {
+        let mut map = serde_json::Map::new();
+        map.insert("request".to_string(), self.request.to_json());
+        map.insert("response".to_string(), self.response.to_json());
         serde_json::Value::Object(map)
     }
 }
@@ -85,20 +91,14 @@ impl Request {
             "url".to_string(),
             serde_json::Value::String(self.url.clone()),
         );
-        let headers = self.headers.iter().map(|h| h.clone().to_json()).collect();
+        let headers = self.headers.iter().map(|h| h.to_json()).collect();
         map.insert("headers".to_string(), headers);
-        let cookies = self
-            .clone()
-            .cookies()
-            .iter()
-            .map(|e| e.clone().to_json())
-            .collect();
+        let cookies = self.cookies().iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
         let query_string = self
-            .clone()
             .query_string_params()
             .iter()
-            .map(|e| e.clone().to_json())
+            .map(|e| e.to_json())
             .collect();
         map.insert(
             "queryString".to_string(),
@@ -116,14 +116,9 @@ impl Response {
             "status".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.status)),
         );
-        let headers = self.headers.iter().map(|h| h.clone().to_json()).collect();
+        let headers = self.headers.iter().map(|h| h.to_json()).collect();
         map.insert("headers".to_string(), headers);
-        let cookies = self
-            .clone()
-            .cookies()
-            .iter()
-            .map(|e| e.clone().to_json())
-            .collect();
+        let cookies = self.cookies().iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
         serde_json::Value::Object(map)
     }
@@ -197,37 +192,37 @@ impl ResponseCookie {
             serde_json::Value::String(self.value.clone()),
         );
 
-        if let Some(expires) = &self.clone().expires() {
+        if let Some(expires) = &self.expires() {
             map.insert(
                 "expires".to_string(),
                 serde_json::Value::String(expires.to_string()),
             );
         }
-        if let Some(max_age) = &self.clone().max_age() {
+        if let Some(max_age) = &self.max_age() {
             map.insert(
                 "max_age".to_string(),
                 serde_json::Value::String(max_age.to_string()),
             );
         }
-        if let Some(domain) = &self.clone().domain() {
+        if let Some(domain) = &self.domain() {
             map.insert(
                 "domain".to_string(),
                 serde_json::Value::String(domain.to_string()),
             );
         }
-        if let Some(path) = &self.clone().path() {
+        if let Some(path) = &self.path() {
             map.insert(
                 "path".to_string(),
                 serde_json::Value::String(path.to_string()),
             );
         }
-        if self.clone().has_secure() {
+        if self.has_secure() {
             map.insert("secure".to_string(), serde_json::Value::Bool(true));
         }
-        if self.clone().has_httponly() {
+        if self.has_httponly() {
             map.insert("httponly".to_string(), serde_json::Value::Bool(true));
         }
-        if let Some(samesite) = &self.clone().samesite() {
+        if let Some(samesite) = &self.samesite() {
             map.insert(
                 "samesite".to_string(),
                 serde_json::Value::String(samesite.to_string()),
@@ -253,10 +248,10 @@ impl AssertResult {
     fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
-        let success = self.clone().error().is_none();
+        let success = self.error().is_none();
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
-        if let Some(err) = self.clone().error() {
+        if let Some(err) = self.error() {
             let message = cli::error_string_no_color(filename, content, &err);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }

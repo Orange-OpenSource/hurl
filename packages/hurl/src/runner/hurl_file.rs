@@ -126,29 +126,24 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
 
-        let entry_results =
+        let entry_result =
             match entry::get_entry_options(entry, runner_options, &mut variables, logger) {
                 Ok(runner_options) => {
                     entry::run(entry, http_client, &mut variables, &runner_options, logger)
                 }
-                Err(error) => {
-                    vec![EntryResult {
-                        request: None,
-                        response: None,
-                        captures: vec![],
-                        asserts: vec![],
-                        errors: vec![error],
-                        time_in_ms: 0,
-                        compressed: false,
-                    }]
-                }
+                Err(error) => EntryResult {
+                    calls: vec![],
+                    captures: vec![],
+                    asserts: vec![],
+                    errors: vec![error],
+                    time_in_ms: 0,
+                    compressed: false,
+                },
             };
-        for entry_result in &entry_results {
-            for e in &entry_result.errors {
-                logger.error_rich(e);
-            }
-            entries.push(entry_result.clone());
+        for e in &entry_result.errors {
+            logger.error_rich(e);
         }
+        entries.push(entry_result.clone());
 
         if let Some(post_entry) = runner_options.post_entry {
             let exit = post_entry();
@@ -157,7 +152,7 @@ pub fn run(
             }
         }
 
-        if runner_options.fail_fast && !entry_results.last().unwrap().errors.is_empty() {
+        if runner_options.fail_fast && !entry_result.errors.is_empty() {
             break;
         }
     }

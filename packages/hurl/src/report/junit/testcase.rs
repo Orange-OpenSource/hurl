@@ -133,8 +133,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
-                request: None,
-                response: None,
+                calls: vec![],
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error {
@@ -173,8 +172,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
-                request: None,
-                response: None,
+                calls: vec![],
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error {

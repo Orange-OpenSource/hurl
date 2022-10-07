@@ -24,7 +24,7 @@
 //!
 
 pub use self::core::{
-    AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
+    AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult, RunnerError, RunnerOptions,
     Verbosity,
 };
 pub use self::hurl_file::run;

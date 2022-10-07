@@ -340,7 +340,8 @@ fn main() {
         {
             // By default, we output the body response bytes of the last entry
             if let Some(entry_result) = hurl_result.entries.last() {
-                if let Some(response) = &entry_result.response {
+                if let Some(call) = entry_result.calls.last() {
+                    let response = &call.response;
                     let mut output = vec![];
 
                     // If include options is set, we output the HTTP response headers
