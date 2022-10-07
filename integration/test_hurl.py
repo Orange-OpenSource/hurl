@@ -6,7 +6,6 @@ import sys
 import subprocess
 import os
 import platform
-import check_json_output
 import re
 import argparse
 
@@ -36,7 +35,7 @@ def get_os() -> str:
     elif platform.system() == "Windows":
         return "windows"
     else:
-        raise Error("Invalid Platform " + platform.system())
+        raise ValueError("Invalid Platform " + platform.system())
 
 
 def test(hurl_file: str):
@@ -55,7 +54,6 @@ def test(hurl_file: str):
     else:
         curl_file = hurl_file.replace(".hurl", ".curl")
 
-    json_output_file = hurl_file.replace(".hurl", ".output.json")
     profile_file = hurl_file.replace(".hurl", ".profile")
 
     options = []
@@ -63,9 +61,6 @@ def test(hurl_file: str):
         options = open(options_file, encoding="utf-8").read().strip().split("\n")
     if os.path.exists(curl_file):
         options.append("--verbose")
-
-    if os.path.exists(json_output_file):
-        options.append("--json")
 
     env = os.environ.copy()
     if os.path.exists(profile_file):
@@ -131,12 +126,6 @@ def test(hurl_file: str):
                 )
                 sys.exit(1)
 
-    # stdout (json)
-    if os.path.exists(json_output_file):
-        expected = open(json_output_file, encoding="utf-8").read()
-        actual = result.stdout
-        check_json_output.check(expected, actual)
-
     # stderr
     f = hurl_file.replace(".hurl", ".err")
     if os.path.exists(f):
@@ -201,7 +190,7 @@ def test(hurl_file: str):
 def parse_pattern(s: str) -> str:
     """Transform a stderr pattern to a regex"""
     # Escape regex metacharacters
-    for c in ["\\", ".", "(", ")", "[", "]", "^", "$", "*", "+", "?"]:
+    for c in ["\\", ".", "(", ")", "[", "]", "^", "$", "*", "+", "?", "|"]:
         s = s.replace(c, "\\" + c)
 
     s = re.sub("~+", ".*", s)

@@ -47,7 +47,8 @@ def get_options(hurl_file: str) -> List[str]:
     options_file = hurl_file.replace(".hurl", ".options")
     if os.path.exists(options_file):
         for option in open(options_file, encoding="utf-8").read().strip().split("\n"):
-            options.append(option)
+            if option != "--json":
+                options.append(option)
     return options
 
 
