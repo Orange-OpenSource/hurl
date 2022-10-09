@@ -172,6 +172,7 @@ impl From<HttpError> for RunnerError {
             HttpError::UnsupportedContentEncoding { description } => {
                 RunnerError::UnsupportedContentEncoding(description)
             }
+            HttpError::InvalidUrl(url) => RunnerError::InvalidUrl(url),
         }
     }
 }

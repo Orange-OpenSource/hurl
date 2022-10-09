@@ -1,2 +1,5 @@
-curl 'http://localhost:8000/redirect'
 curl 'http://localhost:8000/redirected'
+curl 'http://localhost:8000/redirect-absolute'
+curl 'http://localhost:8000/redirect-absolute' -L
+curl 'http://localhost:8000/redirect-relative'
+curl 'http://localhost:8000/redirect-relative' -L

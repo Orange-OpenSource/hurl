@@ -82,12 +82,13 @@ impl Client {
         self.redirect_count = 0;
         loop {
             let (request, response) = self.execute(&request_spec, options, logger)?;
-            calls.push((request, response.clone()));
+            calls.push((request.clone(), response.clone()));
             if !options.follow_location {
                 break;
             }
 
-            if let Some(url) = self.get_follow_location(&response) {
+            let base_url = request.base_url()?;
+            if let Some(url) = self.get_follow_location(&response, &base_url) {
                 logger.debug("");
                 logger.debug(format!("=> Redirect to {}", url).as_str());
                 logger.debug("");
@@ -513,14 +514,14 @@ impl Client {
     /// 1. the option follow_location set to true
     /// 2. a 3xx response code
     /// 3. a header Location
-    fn get_follow_location(&mut self, response: &Response) -> Option<String> {
+    fn get_follow_location(&mut self, response: &Response, base_url: &str) -> Option<String> {
         let response_code = response.status;
         if !(300..400).contains(&response_code) {
             return None;
         }
         let location = match response.get_header_values("Location").get(0) {
             None => return None,
-            Some(value) => value.clone(),
+            Some(value) => get_redirect_url(value, base_url),
         };
 
         if location.is_empty() {
@@ -587,6 +588,15 @@ impl Client {
         }
         arguments.append(&mut options.curl_args());
         arguments.join(" ")
+    }
+}
+
+/// Returns the redirect url.
+fn get_redirect_url(location: &str, base_url: &str) -> String {
+    if location.starts_with('/') {
+        format!("{}{}", base_url, location)
+    } else {
+        location.to_string()
     }
 }
 
@@ -738,5 +748,17 @@ mod tests {
         assert!(match_cookie(&cookie, "http://example.com/toto"));
         assert!(match_cookie(&cookie, "http://sub.example.com/toto"));
         assert!(!match_cookie(&cookie, "http://example.com/tata"));
+    }
+
+    #[test]
+    fn test_redirect_url() {
+        assert_eq!(
+            get_redirect_url("http://localhost:8000/redirected", "http://localhost:8000"),
+            "http://localhost:8000/redirected".to_string()
+        );
+        assert_eq!(
+            get_redirect_url("/redirected", "http://localhost:8000"),
+            "http://localhost:8000/redirected".to_string()
+        );
     }
 }

@@ -18,7 +18,7 @@
 
 use super::core::*;
 use super::Header;
-use crate::http::header;
+use crate::http::{header, HttpError};
 use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -60,6 +60,26 @@ impl Request {
         header::get_values(&self.headers, "Content-Type")
             .get(0)
             .cloned()
+    }
+
+    /// Returns the base url http(s)://host(:port)
+    pub fn base_url(&self) -> Result<String, HttpError> {
+        // FIXME: is it possible to do it with libcurl?
+        let url = match Url::parse(&self.url) {
+            Ok(url) => url,
+            Err(_) => return Err(HttpError::InvalidUrl(self.url.clone())),
+        };
+        let base_url = format!(
+            "{}://{}{}",
+            url.scheme(),
+            url.host().unwrap(),
+            if let Some(port) = url.port() {
+                format!(":{}", port)
+            } else {
+                "".to_string()
+            }
+        );
+        Ok(base_url)
     }
 }
 
@@ -136,20 +156,20 @@ pub mod tests {
             vec![
                 Param {
                     name: "param1".to_string(),
-                    value: "value1".to_string()
+                    value: "value1".to_string(),
                 },
                 Param {
                     name: "param2".to_string(),
-                    value: "".to_string()
+                    value: "".to_string(),
                 },
                 Param {
                     name: "param3".to_string(),
-                    value: "a=b".to_string()
+                    value: "a=b".to_string(),
                 },
                 Param {
                     name: "param4".to_string(),
-                    value: "1,2,3".to_string()
-                }
+                    value: "1,2,3".to_string(),
+                },
             ]
         )
     }
@@ -162,12 +182,12 @@ pub mod tests {
             vec![
                 RequestCookie {
                     name: "cookie1".to_string(),
-                    value: "value1".to_string()
+                    value: "value1".to_string(),
                 },
                 RequestCookie {
                     name: "cookie2".to_string(),
-                    value: "value2".to_string()
-                }
+                    value: "value2".to_string(),
+                },
             ]
         )
     }
@@ -179,12 +199,12 @@ pub mod tests {
             vec![
                 RequestCookie {
                     name: "cookie1".to_string(),
-                    value: "value1".to_string()
+                    value: "value1".to_string(),
                 },
                 RequestCookie {
                     name: "cookie2".to_string(),
-                    value: "value2".to_string()
-                }
+                    value: "value2".to_string(),
+                },
             ]
         )
     }
@@ -195,8 +215,45 @@ pub mod tests {
             parse_cookie("cookie1=value1"),
             RequestCookie {
                 name: "cookie1".to_string(),
-                value: "value1".to_string()
+                value: "value1".to_string(),
             },
         )
+    }
+
+    #[test]
+    fn test_base_url() {
+        assert_eq!(
+            Request {
+                url: "http://localhost".to_string(),
+                method: "".to_string(),
+                headers: vec![],
+                body: vec![],
+            }
+            .base_url()
+            .unwrap(),
+            "http://localhost".to_string()
+        );
+        assert_eq!(
+            Request {
+                url: "http://localhost:8000/redirect-relative".to_string(),
+                method: "".to_string(),
+                headers: vec![],
+                body: vec![],
+            }
+            .base_url()
+            .unwrap(),
+            "http://localhost:8000".to_string()
+        );
+        assert_eq!(
+            Request {
+                url: "https://localhost:8000".to_string(),
+                method: "".to_string(),
+                headers: vec![],
+                body: vec![],
+            }
+            .base_url()
+            .unwrap(),
+            "https://localhost:8000".to_string()
+        );
     }
 }

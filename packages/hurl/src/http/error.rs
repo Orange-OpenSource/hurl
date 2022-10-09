@@ -40,4 +40,5 @@ pub enum HttpError {
     UnsupportedContentEncoding {
         description: String,
     },
+    InvalidUrl(String),
 }

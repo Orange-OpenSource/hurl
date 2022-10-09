@@ -358,13 +358,16 @@ fn test_form_params() {
 
 #[test]
 fn test_redirect() {
-    let request_spec = default_get_request("http://localhost:8000/redirect");
+    let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
     let logger = Logger::new(false, false, "", "");
     let options = ClientOptions::default();
     let mut client = Client::new(None);
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
-    assert_eq!(request.url, "http://localhost:8000/redirect".to_string());
+    assert_eq!(
+        request.url,
+        "http://localhost:8000/redirect-absolute".to_string()
+    );
     assert_eq!(request.headers.len(), 3);
 
     assert_eq!(response.status, 302);
@@ -377,7 +380,7 @@ fn test_redirect() {
 
 #[test]
 fn test_follow_location() {
-    let request_spec = default_get_request("http://localhost:8000/redirect");
+    let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
     let logger = Logger::new(false, false, "", "");
     let options = ClientOptions {
         follow_location: true,
@@ -388,7 +391,7 @@ fn test_follow_location() {
     assert_eq!(options.curl_args(), vec!["-L".to_string()]);
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl 'http://localhost:8000/redirect' -L".to_string()
+        "curl 'http://localhost:8000/redirect-absolute' -L".to_string()
     );
 
     let calls = client
@@ -398,7 +401,10 @@ fn test_follow_location() {
 
     let (request1, response1) = calls.get(0).unwrap();
     assert_eq!(request1.method, "GET".to_string());
-    assert_eq!(request1.url, "http://localhost:8000/redirect".to_string());
+    assert_eq!(
+        request1.url,
+        "http://localhost:8000/redirect-absolute".to_string()
+    );
     assert_eq!(request1.headers.len(), 3);
     assert_eq!(response1.status, 302);
     assert!(response1.headers.contains(&Header {
