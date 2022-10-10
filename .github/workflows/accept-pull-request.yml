@@ -5,7 +5,7 @@ on:
     types:
       - created
 
-concurrency: accept-pull-request-${{ github.ref }}
+concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
