@@ -31,15 +31,15 @@ $ sudo dpkg -i hurl_1.7.0_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.7.0-x86_64-macos.tar.gz].
+Precompiled binary is available at [hurl-1.7.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-1.7.0-arm64-macos.tar.gz] for ARM CPUS.
 
-Hurl can also be installed with [Homebrew]:
+#### Homebrew
 
 ```shell
 $ brew install hurl
 ```
 
-Hurl can also be installed via [MacPorts]:
+#### MacPorts
 
 ```shell
 $ sudo port install hurl
@@ -154,9 +154,8 @@ Please follow the [contrib on Windows section].
 [hurl-1.7.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-win64.zip
 [hurl-1.7.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-win64-installer.exe
 [hurl-1.7.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-macos.tar.gz
+[hurl-1.7.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-arm64-macos.tar.gz
 [hurl-1.7.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-linux.tar.gz
-[Homebrew]: https://brew.sh
-[MacPorts]: https://ports.macports.org/port/hurl/
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
