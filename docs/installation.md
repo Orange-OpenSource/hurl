@@ -39,6 +39,13 @@ Hurl can also be installed with [Homebrew]:
 $ brew install hurl
 ```
 
+Hurl can also be installed via [MacPorts]:
+
+```shell
+$ sudo port install hurl
+```
+
+
 ### Windows
 
 #### Zip File
@@ -149,6 +156,7 @@ Please follow the [contrib on Windows section].
 [hurl-1.7.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-macos.tar.gz
 [hurl-1.7.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.7.0/hurl-1.7.0-x86_64-linux.tar.gz
 [Homebrew]: https://brew.sh
+[MacPorts]: https://ports.macports.org/port/hurl/
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
