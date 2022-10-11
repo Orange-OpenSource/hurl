@@ -251,6 +251,52 @@ HTTP/1.1 302
 header "Location" contains "www.example.net"
 ```
 
+If there are multiple headers with the same name, the header assert returns a collection, so `count`, `includes` can be
+used in this case to test the header list.
+
+Let's say we have this request and response:
+
+```
+> GET /hello HTTP/1.1
+> Host: example.org
+> Accept: */*
+> User-Agent: hurl/1.8.0-SNAPSHOT
+>
+* Response: (received 12 bytes in 11 ms)
+*
+< HTTP/1.0 200 OK
+< Vary: Content-Type
+< Vary: User-Agent
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 12
+< Server: Flask Server
+< Date: Fri, 07 Oct 2022 20:53:35 GMT
+```
+
+One can use explicit header asserts:
+
+```hurl
+GET https://example.org/hello
+
+HTTP/* 200
+[Asserts]
+header "Vary" count == 2
+header "Vary" includes "User-Agent"
+header "Vary" includes "Content-Type"
+```
+
+Or implicit header asserts:
+
+```hurl
+GET https://example.org/hello
+
+HTTP/* 200
+Vary: User-Agent
+Vary: Content-Type
+```
+
+
+
 ### Cookie assert
 
 Check value or attributes of a [`Set-Cookie`] response header. Cookie assert
