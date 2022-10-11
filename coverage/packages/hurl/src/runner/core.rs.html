@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="11 / 38">28.95 %</abbr></p>
+                <abbr title="12 / 39">30.77 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-danger">
-                <abbr title="11 / 36">30.56 %</abbr></p>
+                <abbr title="12 / 40">30 %</abbr></p>
         </div>
     </div>
 
@@ -462,8 +462,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="870">
-                870
+                role="cell" aria-label="906">
+                906
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -846,8 +846,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="596">
-                596
+                role="cell" aria-label="632">
+                632
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1374,8 +1374,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1286">
-                1286
+                role="cell" aria-label="1300">
+                1300
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1534,8 +1534,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="838">
-                838
+                role="cell" aria-label="844">
+                844
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1550,8 +1550,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1758">
-                1758
+                role="cell" aria-label="1778">
+                1778
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1566,8 +1566,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="838">
-                838
+                role="cell" aria-label="844">
+                844
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1678,8 +1678,8 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3976">
-                3976
+                role="cell" aria-label="3612">
+                3612
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -1715,7 +1715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub request: Option&lt;http::Request&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub calls: Vec&lt;Call&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1731,7 +1731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub response: Option&lt;http::Response&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub captures: Vec&lt;CaptureResult&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1747,7 +1747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub captures: Vec&lt;CaptureResult&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub asserts: Vec&lt;AssertResult&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1763,7 +1763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub asserts: Vec&lt;AssertResult&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub errors: Vec&lt;Error&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1779,7 +1779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub errors: Vec&lt;Error&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub time_in_ms: u128,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1795,7 +1795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub time_in_ms: u128,</pre>
+                <pre class="has-background-white py-0 px-2">    pub compressed: bool, &#x2F;&#x2F; The entry has been executed with `--compressed` option</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1811,7 +1811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub compressed: bool, &#x2F;&#x2F; The entry has been executed with `--compressed` option</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1827,7 +1827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1837,13 +1837,13 @@
                 <a href="#113">113</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3514">
+                3514
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1853,13 +1853,13 @@
                 <a href="#114">114</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18906">
-                18906
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">pub struct Call {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1875,7 +1875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum AssertResult {</pre>
+                <pre class="has-background-white py-0 px-2">    pub request: http::Request,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1891,7 +1891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Version {</pre>
+                <pre class="has-background-white py-0 px-2">    pub response: http::Response,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1907,7 +1907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1923,7 +1923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1933,13 +1933,13 @@
                 <a href="#119">119</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="13068">
+                13068
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        source_info: SourceInfo,</pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1955,7 +1955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">pub enum AssertResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1971,7 +1971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Status {</pre>
+                <pre class="has-background-white py-0 px-2">    Version {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1987,7 +1987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: u64,</pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2003,7 +2003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: u64,</pre>
+                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2051,7 +2051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Header {</pre>
+                <pre class="has-background-white py-0 px-2">    Status {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2067,7 +2067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: Result&lt;String, Error&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        actual: u64,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2083,7 +2083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
+                <pre class="has-background-white py-0 px-2">        expected: u64,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2131,7 +2131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Body {</pre>
+                <pre class="has-background-white py-0 px-2">    Header {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2147,7 +2147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: Result&lt;Value, Error&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        actual: Result&lt;String, Error&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2163,7 +2163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: Result&lt;Value, Error&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2211,7 +2211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Explicit {</pre>
+                <pre class="has-background-white py-0 px-2">    Body {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2227,7 +2227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: Result&lt;Option&lt;Value&gt;, Error&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        actual: Result&lt;Value, Error&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2243,7 +2243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        source_info: SourceInfo,</pre>
+                <pre class="has-background-white py-0 px-2">        expected: Result&lt;Value, Error&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2259,7 +2259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        predicate_result: Option&lt;PredicateResult&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">        source_info: SourceInfo,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2291,7 +2291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    Explicit {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2307,7 +2307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        actual: Result&lt;Option&lt;Value&gt;, Error&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2317,13 +2317,13 @@
                 <a href="#143">143</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="400">
-                400
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">        source_info: SourceInfo,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2339,7 +2339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct CaptureResult {</pre>
+                <pre class="has-background-white py-0 px-2">        predicate_result: Option&lt;PredicateResult&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2355,7 +2355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub name: String,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2371,7 +2371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub value: Value,</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2387,7 +2387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2397,13 +2397,13 @@
                 <a href="#148">148</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="374">
+                374
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2419,7 +2419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub type PredicateResult = Result&lt;(), Error&gt;;</pre>
+                <pre class="has-background-white py-0 px-2">pub struct CaptureResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2435,7 +2435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    pub name: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2451,7 +2451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; endregion</pre>
+                <pre class="has-background-white py-0 px-2">    pub value: Value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2467,7 +2467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2483,7 +2483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; region error</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2499,7 +2499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">pub type PredicateResult = Result&lt;(), Error&gt;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2509,13 +2509,13 @@
                 <a href="#155">155</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4896">
-                4896
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2531,7 +2531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub struct Error {</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; endregion</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2547,7 +2547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub source_info: SourceInfo,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2563,7 +2563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub inner: RunnerError,</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; region error</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2579,7 +2579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub assert: bool,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2589,13 +2589,13 @@
                 <a href="#160">160</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="4292">
+                4292
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2611,7 +2611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">pub struct Error {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2621,13 +2621,13 @@
                 <a href="#162">162</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="4896">
-                4896
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2">    pub source_info: SourceInfo,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2643,7 +2643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum RunnerError {</pre>
+                <pre class="has-background-white py-0 px-2">    pub inner: RunnerError,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2659,7 +2659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    TemplateVariableNotDefined {</pre>
+                <pre class="has-background-white py-0 px-2">    pub assert: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2675,7 +2675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        name: String,</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2691,7 +2691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2701,13 +2701,13 @@
                 <a href="#167">167</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="4292">
+                4292
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    VariableNotDefined {</pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2723,7 +2723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        name: String,</pre>
+                <pre class="has-background-white py-0 px-2">pub enum RunnerError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2739,7 +2739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    TemplateVariableNotDefined {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2755,7 +2755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidJson {</pre>
+                <pre class="has-background-white py-0 px-2">        name: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2771,7 +2771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        value: String,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2787,7 +2787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    VariableNotDefined {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2803,7 +2803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidUrl(String),</pre>
+                <pre class="has-background-white py-0 px-2">        name: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2819,7 +2819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2835,7 +2835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    HttpConnection {</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidJson {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2851,7 +2851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        url: String,</pre>
+                <pre class="has-background-white py-0 px-2">        value: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2867,7 +2867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        message: String,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2883,7 +2883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidUrl(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2899,7 +2899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    CouldNotResolveProxyName,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2915,7 +2915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    CouldNotResolveHost(String),</pre>
+                <pre class="has-background-white py-0 px-2">    HttpConnection {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2931,7 +2931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    FailToConnect,</pre>
+                <pre class="has-background-white py-0 px-2">        url: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2947,7 +2947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Timeout,</pre>
+                <pre class="has-background-white py-0 px-2">        message: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2963,7 +2963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    TooManyRedirect,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2979,7 +2979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    CouldNotParseResponse,</pre>
+                <pre class="has-background-white py-0 px-2">    CouldNotResolveProxyName,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2995,7 +2995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    SslCertificate(String),</pre>
+                <pre class="has-background-white py-0 px-2">    CouldNotResolveHost(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3011,7 +3011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    FailToConnect,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3027,7 +3027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    UnsupportedContentEncoding(String),</pre>
+                <pre class="has-background-white py-0 px-2">    Timeout,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3043,7 +3043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    CouldNotUncompressResponse(String),</pre>
+                <pre class="has-background-white py-0 px-2">    TooManyRedirect,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3059,7 +3059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    CouldNotParseResponse,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3075,7 +3075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    FileReadAccess {</pre>
+                <pre class="has-background-white py-0 px-2">    SslCertificate(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3091,7 +3091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        value: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3107,7 +3107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    UnsupportedContentEncoding(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3123,7 +3123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidDecoding {</pre>
+                <pre class="has-background-white py-0 px-2">    CouldNotUncompressResponse(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3139,7 +3139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        charset: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3155,7 +3155,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    FileReadAccess {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3171,7 +3171,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidCharset {</pre>
+                <pre class="has-background-white py-0 px-2">        value: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3187,7 +3187,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        charset: String,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3203,7 +3203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidDecoding {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3219,7 +3219,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        charset: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3235,7 +3235,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Query</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3251,7 +3251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryHeaderNotFound,</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidCharset {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3267,7 +3267,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryCookieNotFound,</pre>
+                <pre class="has-background-white py-0 px-2">        charset: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3283,7 +3283,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryInvalidJsonpathExpression {</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3299,7 +3299,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        value: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3315,7 +3315,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Query</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3331,7 +3331,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryInvalidXpathEval,</pre>
+                <pre class="has-background-white py-0 px-2">    QueryHeaderNotFound,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3347,7 +3347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryInvalidXml,</pre>
+                <pre class="has-background-white py-0 px-2">    QueryCookieNotFound,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3363,7 +3363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    QueryInvalidJson,</pre>
+                <pre class="has-background-white py-0 px-2">    QueryInvalidJsonpathExpression {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3379,7 +3379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    NoQueryResult,</pre>
+                <pre class="has-background-white py-0 px-2">        value: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3395,7 +3395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3411,7 +3411,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    SubqueryInvalidInput(String),</pre>
+                <pre class="has-background-white py-0 px-2">    QueryInvalidXpathEval,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3427,7 +3427,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    QueryInvalidXml,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3443,7 +3443,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Predicate</pre>
+                <pre class="has-background-white py-0 px-2">    QueryInvalidJson,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3459,7 +3459,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    PredicateType,</pre>
+                <pre class="has-background-white py-0 px-2">    NoQueryResult,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3475,7 +3475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    PredicateValue(Value),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3491,7 +3491,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    AssertFailure {</pre>
+                <pre class="has-background-white py-0 px-2">    SubqueryInvalidInput(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3507,7 +3507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3523,7 +3523,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Predicate</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3539,7 +3539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        type_mismatch: bool,</pre>
+                <pre class="has-background-white py-0 px-2">    PredicateType,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3555,7 +3555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    PredicateValue(Value),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3571,7 +3571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidRegex(),</pre>
+                <pre class="has-background-white py-0 px-2">    AssertFailure {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3587,7 +3587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3603,7 +3603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    AssertHeaderValueError {</pre>
+                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3619,7 +3619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2">        type_mismatch: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3651,7 +3651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    AssertBodyValueError {</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidRegex(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3667,7 +3667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3683,7 +3683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
+                <pre class="has-background-white py-0 px-2">    AssertHeaderValueError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3699,7 +3699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3715,7 +3715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    AssertVersion {</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3731,7 +3731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2">    AssertBodyValueError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3747,7 +3747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3763,7 +3763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    AssertStatus {</pre>
+                <pre class="has-background-white py-0 px-2">        expected: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3779,7 +3779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3795,7 +3795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">    AssertVersion {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3811,7 +3811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3827,7 +3827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    UnrenderableVariable {</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3843,7 +3843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        value: String,</pre>
+                <pre class="has-background-white py-0 px-2">    AssertStatus {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3859,7 +3859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        actual: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3875,7 +3875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3891,7 +3891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    UnauthorizedFileAccess {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3907,7 +3907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        path: PathBuf,</pre>
+                <pre class="has-background-white py-0 px-2">    UnrenderableVariable {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3923,7 +3923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    },</pre>
+                <pre class="has-background-white py-0 px-2">        value: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3939,7 +3939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3971,13 +3971,93 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">    UnauthorizedFileAccess {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="247"
+                role="cell">
+                <a href="#247">247</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        path: PathBuf,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="248"
+                role="cell">
+                <a href="#248">248</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    },</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="249"
+                role="cell">
+                <a href="#249">249</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="250"
+                role="cell">
+                <a href="#250">250</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="251"
+                role="cell">
+                <a href="#251">251</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; endregion</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-10-10 08:37</p>
+                <p class="heading">Date: 2022-10-11 08:35</p>
             </div>
         </footer>
     </body>
