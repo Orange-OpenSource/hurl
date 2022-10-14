@@ -111,7 +111,7 @@ pub fn run(
     };
 
     // We runs capture and asserts on the last HTTP request/response chains.
-    let (_, http_response) = calls.last().unwrap();
+    let (http_request, http_response) = calls.last().unwrap();
     let calls: Vec<Call> = calls
         .iter()
         .map(|(req, resp)| Call {
@@ -140,6 +140,15 @@ pub fn run(
     };
 
     // Update variables now!
+
+    // Set variables implicitly
+    // For the time-being, the variable self_request_url should only be used by the query <url>
+    // In the long-term, we should set a request object with several fields that will be accessed
+    // with the expression {{request.url}}
+    variables.insert(
+        "self_request_url".to_string(),
+        Value::String(http_request.url.clone()),
+    );
     for c in captures.iter() {
         variables.insert(c.name.clone(), c.value.clone());
     }
