@@ -19,6 +19,7 @@
 use crate::runner::{HurlResult, Value};
 use colored::*;
 use hurl_core::error::Error;
+use std::cmp::max;
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 /// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
@@ -46,13 +47,13 @@ impl BaseLogger {
             },
             (true, false) => BaseLogger {
                 info: log_info,
-                debug: nop1,
+                debug: |_| {},
                 warning: log_warning,
                 error: log_error,
             },
             (false, false) => BaseLogger {
                 info: log_info,
-                debug: nop1,
+                debug: |_| {},
                 warning: log_warning_no_color,
                 error: log_error_no_color,
             },
@@ -83,6 +84,7 @@ pub struct Logger<'a> {
     pub info: fn(&str),
     pub debug: fn(&str),
     pub debug_important: fn(&str),
+    pub debug_error: fn(&str, &str, &dyn Error),
     pub warning: fn(&str),
     pub error: fn(&str),
     pub error_rich: fn(&str, &str, &dyn Error),
@@ -107,6 +109,7 @@ impl<'a> Logger<'a> {
                 info: log_info,
                 debug: log_debug,
                 debug_important: log_debug_important,
+                debug_error: log_debug_error,
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
@@ -126,6 +129,7 @@ impl<'a> Logger<'a> {
                 info: log_info,
                 debug: log_debug_no_color,
                 debug_important: log_debug_no_color,
+                debug_error: log_debug_error_no_color,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
@@ -143,16 +147,17 @@ impl<'a> Logger<'a> {
             },
             (true, false) => Logger {
                 info: log_info,
-                debug: nop1,
-                debug_important: nop1,
+                debug: |_| {},
+                debug_important: |_| {},
+                debug_error: |_, _, _| {},
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
-                method_version_out: nop1,
-                status_version_in: nop1,
-                capture: nop3,
-                header_in: nop2,
-                header_out: nop2,
+                method_version_out: |_| {},
+                status_version_in: |_| {},
+                capture: |_, _| {},
+                header_in: |_, _| {},
+                header_out: |_, _| {},
                 test_running: log_test_running,
                 test_completed: log_test_completed,
                 color,
@@ -162,16 +167,17 @@ impl<'a> Logger<'a> {
             },
             (false, false) => Logger {
                 info: log_info,
-                debug: nop1,
-                debug_important: nop1,
+                debug: |_| {},
+                debug_important: |_| {},
+                debug_error: |_, _, _| {},
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
-                method_version_out: nop1,
-                status_version_in: nop1,
-                capture: nop3,
-                header_in: nop2,
-                header_out: nop2,
+                method_version_out: |_| {},
+                status_version_in: |_| {},
+                capture: |_, _| {},
+                header_in: |_, _| {},
+                header_out: |_, _| {},
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
                 color,
@@ -192,6 +198,10 @@ impl<'a> Logger<'a> {
 
     pub fn debug_important(&self, message: &str) {
         (self.debug_important)(message)
+    }
+
+    pub fn debug_error(&self, error: &dyn Error) {
+        (self.debug_error)(self.filename, self.content, error)
     }
 
     pub fn warning(&self, message: &str) {
@@ -235,12 +245,6 @@ impl<'a> Logger<'a> {
     }
 }
 
-fn nop1(_one: &str) {}
-
-fn nop2(_one: &str, _two: &str) {}
-
-fn nop3(_one: &str, _two: &Value) {}
-
 fn log_info(message: &str) {
     eprintln!("{}", message);
 }
@@ -269,8 +273,20 @@ fn log_debug_important(message: &str) {
     }
 }
 
+fn log_debug_error(filename: &str, content: &str, error: &dyn Error) {
+    let message = error_string(filename, content, error, true);
+    get_lines(&message).iter().for_each(|l| log_debug(l));
+}
+
+fn log_debug_error_no_color(filename: &str, content: &str, error: &dyn Error) {
+    let message = error_string(filename, content, error, false);
+    get_lines(&message)
+        .iter()
+        .for_each(|l| log_debug_no_color(l));
+}
+
 fn log_warning(message: &str) {
-    eprintln!("{}: {}", "warning".yellow().bold(), message);
+    eprintln!("{}: {}", "warning".yellow().bold(), message.bold());
 }
 
 fn log_warning_no_color(message: &str) {
@@ -380,23 +396,13 @@ pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -
 
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
 fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool) -> String {
-    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-        .unwrap()
-        .split(content)
-        .collect();
-
-    let line_number_size = if lines.len() < 100 {
-        2
-    } else if lines.len() < 1000 {
-        3
+    let lines = get_lines(content);
+    let line_number_size = max(lines.len().to_string().len(), 2);
+    let arrow = if colored {
+        "-->".blue().bold().to_string()
     } else {
-        4
+        "-->".to_string()
     };
-
-    let mut arrow = "-->".to_string();
-    if colored {
-        arrow = arrow.blue().bold().to_string()
-    }
     let line_number = error.source_info().start.line;
     let column_number = error.source_info().start.column;
 
@@ -411,10 +417,11 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
 
     let line = lines.get(line_number - 1).unwrap();
     let line = str::replace(line, "\t", "    "); // replace all your tabs with 4 characters
-    let mut separator = "|".to_string();
-    if colored {
-        separator = separator.blue().bold().to_string()
-    }
+    let separator = if colored {
+        "|".blue().bold().to_string()
+    } else {
+        "|".to_string()
+    };
 
     // TODO: to clean/Refacto
     // specific case for assert errors
@@ -497,8 +504,7 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
 }
 
 fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
-    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n").unwrap().split(s).collect();
-    lines
+    get_lines(s)
         .iter()
         .map(|line| {
             if colored {
@@ -509,6 +515,10 @@ fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
         })
         .collect::<Vec<String>>()
         .join("\n")
+}
+
+fn get_lines(text: &str) -> Vec<&str> {
+    regex::Regex::new(r"\n|\r\n").unwrap().split(text).collect()
 }
 
 #[cfg(test)]

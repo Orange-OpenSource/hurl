@@ -35,10 +35,7 @@ impl HurlResult {
             .map(|e| e.to_json(&self.filename, content))
             .collect();
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
-        map.insert(
-            "success".to_string(),
-            serde_json::Value::Bool(self.clone().success),
-        );
+        map.insert("success".to_string(), serde_json::Value::Bool(self.success));
         map.insert(
             "time".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.time_in_ms as u64)),
@@ -53,6 +50,10 @@ impl EntryResult {
     fn to_json(&self, filename: &str, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
 
+        map.insert(
+            "index".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(self.entry_index)),
+        );
         let calls = self.calls.iter().map(|c| c.to_json()).collect();
         map.insert("calls".to_string(), calls);
         let captures = self.captures.iter().map(|c| c.to_json()).collect();

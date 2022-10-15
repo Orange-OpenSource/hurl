@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::thread;
 use std::time::Instant;
 
 use crate::cli::Logger;
@@ -88,21 +89,21 @@ pub fn run(
 ) -> HurlResult {
     let mut entries = vec![];
     let mut variables = variables.clone();
-
+    let mut entry_index = 1;
+    let mut retry_count = 0;
     let n = if let Some(to_entry) = runner_options.to_entry {
         to_entry
     } else {
         hurl_file.entries.len()
     };
-
     let start = Instant::now();
-    for (entry_index, entry) in hurl_file
-        .entries
-        .iter()
-        .take(n)
-        .enumerate()
-        .collect::<Vec<(usize, &Entry)>>()
-    {
+
+    loop {
+        if entry_index > n {
+            break;
+        }
+        let entry = &hurl_file.entries[entry_index - 1];
+
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
             if exit {
@@ -124,14 +125,20 @@ pub fn run(
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
-        logger.debug_important(format!("Executing entry {}", entry_index + 1).as_str());
+        logger.debug_important(format!("Executing entry {}", entry_index).as_str());
 
         let entry_result =
             match entry::get_entry_options(entry, runner_options, &mut variables, logger) {
-                Ok(runner_options) => {
-                    entry::run(entry, http_client, &mut variables, &runner_options, logger)
-                }
+                Ok(runner_options) => entry::run(
+                    entry,
+                    entry_index,
+                    http_client,
+                    &mut variables,
+                    &runner_options,
+                    logger,
+                ),
                 Err(error) => EntryResult {
+                    entry_index,
                     calls: vec![],
                     captures: vec![],
                     asserts: vec![],
@@ -140,8 +147,19 @@ pub fn run(
                     compressed: false,
                 },
             };
+
+        // Check if we need to retry.
+        let has_error = !entry_result.errors.is_empty();
+        let retry = runner_options.retry && has_error;
+
+        // If we're going to retry the entry, we log error only in verbose. Otherwise,
+        // we log error on stderr.
         for e in &entry_result.errors {
-            logger.error_rich(e);
+            if retry {
+                logger.debug_error(e);
+            } else {
+                logger.error_rich(e);
+            }
         }
         entries.push(entry_result.clone());
 
@@ -152,20 +170,35 @@ pub fn run(
             }
         }
 
-        if runner_options.fail_fast && !entry_result.errors.is_empty() {
+        if runner_options.retry && has_error {
+            let delay = runner_options.retry_interval.as_millis();
+            logger.debug("");
+            logger.debug_important(
+                format!(
+                    "Retry entry {} (x{} pause {} ms)",
+                    entry_index,
+                    retry_count + 1,
+                    delay
+                )
+                .as_str(),
+            );
+            retry_count += 1;
+            thread::sleep(runner_options.retry_interval);
+            continue;
+        }
+        if runner_options.fail_fast && has_error {
             break;
         }
+
+        // We pass to the next entry
+        entry_index += 1;
+        retry_count = 0;
     }
 
     let time_in_ms = start.elapsed().as_millis();
-    let success = entries
-        .iter()
-        .flat_map(|e| e.errors.iter())
-        .next()
-        .is_none();
-
     let cookies = http_client.get_cookie_storage();
     let filename = filename.to_string();
+    let success = is_success(&entries);
     HurlResult {
         filename,
         entries,
@@ -173,4 +206,19 @@ pub fn run(
         success,
         cookies,
     }
+}
+
+fn is_success(entries: &[EntryResult]) -> bool {
+    let mut next_entries = entries.iter().skip(1);
+    for entry in entries.iter() {
+        match next_entries.next() {
+            None => return entry.errors.is_empty(),
+            Some(next) => {
+                if next.entry_index != entry.entry_index && !entry.errors.is_empty() {
+                    return false;
+                }
+            }
+        }
+    }
+    true
 }

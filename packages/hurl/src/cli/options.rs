@@ -54,6 +54,8 @@ pub struct CliOptions {
     pub output: Option<String>,
     pub output_type: OutputType,
     pub proxy: Option<String>,
+    pub retry: bool,
+    pub retry_interval: Duration,
     pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
@@ -273,6 +275,21 @@ pub fn app(version: &str) -> Command {
                 .num_args(1)
         )
         .arg(
+            clap::Arg::new("retry")
+                .long("retry")
+                .help("Retry requests on errors")
+                .action(ArgAction::SetTrue)
+        )
+        .arg(
+            clap::Arg::new("retry_interval")
+                .long("retry-interval")
+                .value_name("MILLISECONDS")
+                .help("Interval in milliseconds before a retry")
+                .value_parser(value_parser!(u64))
+                .default_value("1000")
+                .num_args(1)
+        )
+        .arg(
             clap::Arg::new("test")
                 .long("test")
                 .help("Activate test mode")
@@ -401,6 +418,9 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         OutputType::ResponseBody
     };
     let proxy = get::<String>(matches, "proxy");
+    let retry = has_flag(matches, "retry");
+    let retry_interval = get::<u64>(matches, "retry_interval").unwrap();
+    let retry_interval = Duration::from_millis(retry_interval);
     let timeout = get::<u64>(matches, "max_time").unwrap();
     let timeout = Duration::from_secs(timeout);
     let to_entry = get::<u32>(matches, "to_entry").map(|x| x as usize);
@@ -432,6 +452,8 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         output,
         output_type,
         proxy,
+        retry,
+        retry_interval,
         test,
         timeout,
         to_entry,
@@ -549,7 +571,6 @@ fn get<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, name: &str) -> Op
     matches.get_one::<T>(name).cloned()
 }
 
-/// Returns a list of `String` from the command line options `matches` given the option `name`.
 pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)

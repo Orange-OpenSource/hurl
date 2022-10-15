@@ -40,6 +40,8 @@ pub struct RunnerOptions {
     pub post_entry: Option<fn() -> bool>,
     pub pre_entry: Option<fn(Entry) -> bool>,
     pub proxy: Option<String>,
+    pub retry: bool,
+    pub retry_interval: Duration,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
     pub user: Option<String>,
@@ -71,6 +73,8 @@ impl Default for RunnerOptions {
             post_entry: None,
             pre_entry: None,
             proxy: None,
+            retry: false,
+            retry_interval: Duration::from_millis(1000),
             timeout: Duration::from_secs(300),
             to_entry: None,
             user: None,
@@ -91,17 +95,26 @@ pub struct HurlResult {
 }
 
 impl HurlResult {
-    pub fn errors(&self) -> Vec<Error> {
-        self.entries.iter().flat_map(|e| e.errors.clone()).collect()
-    }
-
-    pub fn success(&self) -> bool {
-        self.errors().is_empty()
+    pub fn errors(&self) -> Vec<&Error> {
+        let mut errors = vec![];
+        let mut next_entries = self.entries.iter().skip(1);
+        for entry in self.entries.iter() {
+            match next_entries.next() {
+                None => errors.extend(&entry.errors),
+                Some(next) => {
+                    if next.entry_index != entry.entry_index {
+                        errors.extend(&entry.errors)
+                    }
+                }
+            }
+        }
+        errors
     }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryResult {
+    pub entry_index: usize,
     pub calls: Vec<Call>,
     pub captures: Vec<CaptureResult>,
     pub asserts: Vec<AssertResult>,

@@ -37,6 +37,7 @@ use crate::runner::template::eval_template;
 /// by captures.
 pub fn run(
     entry: &Entry,
+    entry_index: usize,
     http_client: &mut http::Client,
     variables: &mut HashMap<String, Value>,
     runner_options: &RunnerOptions,
@@ -46,6 +47,7 @@ pub fn run(
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
+                entry_index,
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -100,6 +102,7 @@ pub fn run(
                 assert: false,
             };
             return EntryResult {
+                entry_index,
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -128,6 +131,7 @@ pub fn run(
             Ok(captures) => captures,
             Err(e) => {
                 return EntryResult {
+                    entry_index,
                     calls,
                     captures: vec![],
                     asserts: vec![],
@@ -181,6 +185,7 @@ pub fn run(
         .collect();
 
     EntryResult {
+        entry_index,
         calls,
         captures,
         asserts,

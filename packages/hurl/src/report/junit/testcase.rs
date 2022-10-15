@@ -40,7 +40,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = cli::error_string_no_color(&hurl_result.filename, content, &error);
+            let message = cli::error_string_no_color(&hurl_result.filename, content, error);
             if error.assert {
                 failures.push(message);
             } else {
@@ -133,6 +133,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
+                entry_index: 1,
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -172,6 +173,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
+                entry_index: 1,
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],

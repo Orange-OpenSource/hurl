@@ -84,16 +84,7 @@ struct Progress {
     pub total: usize,
 }
 
-/// Runs a Hurl file and returns a result.
-///
-/// # Arguments
-///
-/// * `filename` - Filename of the Hurl file, "-" is used for stdin
-/// * `content` - Content of the Hurl file
-/// * `current_dir` - The current directory of execution (absolute)
-/// * `cli_options` - Options for this run
-/// * `progress` - The progression of this execution
-/// * `logger` - The logger
+/// Runs a Hurl format `content` originated form the file `filename` and returns a result.
 fn execute(
     filename: &str,
     content: &str,
@@ -114,14 +105,15 @@ fn execute(
         Ok(hurl_file) => {
             logger.debug_important("Options:");
             logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
-            logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
             logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
+            logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
             if let Some(n) = cli_options.max_redirect {
                 logger.debug(format!("    max redirect: {}", n).as_str());
             }
             if let Some(proxy) = &cli_options.proxy {
                 logger.debug(format!("    proxy: {}", proxy).as_str());
             }
+            logger.debug(format!("    retry: {}", cli_options.retry).as_str());
             if !cli_options.variables.is_empty() {
                 logger.debug_important("Variables:");
                 for (name, value) in cli_options.variables.clone() {
@@ -176,29 +168,33 @@ fn execute(
             let fail_fast = cli_options.fail_fast;
             let variables = cli_options.variables.clone();
             let to_entry = cli_options.to_entry;
+            let retry = cli_options.retry;
+            let retry_interval = cli_options.retry_interval;
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
             let runner_options = RunnerOptions {
                 cacert_file,
                 compressed,
-                fail_fast,
-                to_entry,
-                user,
+                connect_timeout,
                 context_dir,
+                cookie_input_file,
+                fail_fast,
+                follow_location,
                 ignore_asserts,
                 insecure,
                 max_redirect,
-                very_verbose,
+                no_proxy,
+                post_entry,
                 pre_entry,
                 proxy,
-                post_entry,
-                connect_timeout,
-                cookie_input_file,
-                follow_location,
-                no_proxy,
+                retry,
+                retry_interval,
                 timeout,
+                to_entry,
+                user,
                 user_agent,
                 verbosity,
+                very_verbose,
             };
             let mut client = http::Client::new(runner_options.cookie_input_file.clone());
             let result = runner::run(
@@ -335,7 +331,7 @@ fn main() {
         hurl_results.push(hurl_result.clone());
 
         if matches!(cli_options.output_type, OutputType::ResponseBody)
-            && hurl_result.errors().is_empty()
+            && hurl_result.success
             && !cli_options.interactive
         {
             // By default, we output the body response bytes of the last entry
@@ -444,7 +440,7 @@ fn exit_code(hurl_results: &[HurlResult]) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for hurl_result in hurl_results {
-        let errors = hurl_result.clone().errors();
+        let errors = hurl_result.errors();
         if errors.is_empty() {
         } else if errors.iter().filter(|e| !e.assert).count() == 0 {
             count_errors_assert += 1;
