@@ -1,0 +1,5 @@
+--retry
+--retry-interval
+100
+--verbose
+--json

@@ -1,0 +1,25 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Create a new job</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/jobs</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/*</span> <span class="number">201</span></span>
+<span class="line section-header">[Captures]</span>
+<span class="line"><span class="name">job_id</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.id"</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.state"</span> <span class="predicate-type">==</span> <span class="string">"RUNNING"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Pull job status until it is completed</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/jobs/{{job_id}}</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.state"</span> <span class="predicate-type">==</span> <span class="string">"COMPLETED"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Delete the job</span>
+<span class="line"><span class="method">DELETE</span> <span class="url">http://localhost:8000/jobs/{{job_id}}</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/jobs/{{job_id}}</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/*</span> <span class="number">404</span></span>
+</span></span></code></pre>

@@ -1,8 +1,9 @@
 * Options:
 *     fail fast: true
-*     insecure: false
 *     follow redirect: false
+*     insecure: false
 *     max redirect: 50
+*     retry: false
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *

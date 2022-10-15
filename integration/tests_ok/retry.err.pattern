@@ -1,0 +1,244 @@
+* Options:
+*     fail fast: true
+*     follow redirect: false
+*     insecure: false
+*     max redirect: 50
+*     retry: true
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* POST http://localhost:8000/jobs
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs' -X POST
+*
+> POST /jobs HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 60 bytes in ~~~ ms)
+*
+< HTTP/1.0 201 CREATED
+< Content-Type: application/json
+< Content-Length: 60
+< Server: Flask Server
+< Date: ~~~
+<
+* Captures:
+* job_id: ~~~
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 60 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 60
+< Server: Flask Server
+< Date: ~~~
+<
+*
+* Assert failure
+*   --> tests_ok/retry.hurl:16:0
+*    |
+* 16 | jsonpath "$.state" == "COMPLETED"
+*    |   actual:   string <RUNNING>
+*    |   expected: string <COMPLETED>
+*    |
+*
+* Retry entry 2 (x1 pause 100 ms)
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 60 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 60
+< Server: Flask Server
+< Date: ~~~
+<
+*
+* Assert failure
+*   --> tests_ok/retry.hurl:16:0
+*    |
+* 16 | jsonpath "$.state" == "COMPLETED"
+*    |   actual:   string <RUNNING>
+*    |   expected: string <COMPLETED>
+*    |
+*
+* Retry entry 2 (x2 pause 100 ms)
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 60 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 60
+< Server: Flask Server
+< Date: ~~~
+<
+*
+* Assert failure
+*   --> tests_ok/retry.hurl:16:0
+*    |
+* 16 | jsonpath "$.state" == "COMPLETED"
+*    |   actual:   string <RUNNING>
+*    |   expected: string <COMPLETED>
+*    |
+*
+* Retry entry 2 (x3 pause 100 ms)
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 60 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 60
+< Server: Flask Server
+< Date: ~~~
+<
+*
+* Assert failure
+*   --> tests_ok/retry.hurl:16:0
+*    |
+* 16 | jsonpath "$.state" == "COMPLETED"
+*    |   actual:   string <RUNNING>
+*    |   expected: string <COMPLETED>
+*    |
+*
+* Retry entry 2 (x4 pause 100 ms)
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 62 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Content-Length: 62
+< Server: Flask Server
+< Date: ~~~
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 3
+*
+* Cookie store:
+*
+* Request:
+* DELETE http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~' -X DELETE
+*
+> DELETE /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 0 bytes in ~~~ ms)
+*
+< HTTP/1.0 200 OK
+< Content-Type: application/json
+< Server: Flask Server
+< Content-Length: 0
+< Date: ~~~
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 4
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/jobs/~~~
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/jobs/~~~'
+*
+> GET /jobs/~~~ HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 42 bytes in ~~~ ms)
+*
+< HTTP/1.0 404 NOT FOUND
+< Content-Type: application/json
+< Content-Length: 42
+< Server: Flask Server
+< Date: ~~~
+<
+*
