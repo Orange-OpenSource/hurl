@@ -95,6 +95,10 @@ pub struct HurlResult {
 }
 
 impl HurlResult {
+    /// Returns all the effective errors of this `HurlResult`.
+    ///
+    /// The errors are only the "effective" ones: those that are due to retry are
+    /// ignored.
     pub fn errors(&self) -> Vec<&Error> {
         let mut errors = vec![];
         let mut next_entries = self.entries.iter().skip(1);

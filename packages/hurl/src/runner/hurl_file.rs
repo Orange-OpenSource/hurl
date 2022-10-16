@@ -208,6 +208,12 @@ pub fn run(
     }
 }
 
+/// Returns `true` if all the entries ar successful, `false` otherwise.
+///
+/// For a given list of entry, only the last one on the same index is checked.
+/// For instance:
+/// entry a:1, entry b:1, entry c:2, entry d:3, entry e:3
+/// Only the entry b, c and e are checked for the success state.
 fn is_success(entries: &[EntryResult]) -> bool {
     let mut next_entries = entries.iter().skip(1);
     for entry in entries.iter() {
