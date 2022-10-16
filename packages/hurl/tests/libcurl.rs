@@ -375,6 +375,10 @@ fn test_redirect() {
         response.get_header_values("Location").get(0).unwrap(),
         "http://localhost:8000/redirected"
     );
+    assert_eq!(
+        response.url,
+        "http://localhost:8000/redirect-absolute".to_string()
+    );
     assert_eq!(client.redirect_count, 0);
 }
 
@@ -411,12 +415,20 @@ fn test_follow_location() {
         name: "Location".to_string(),
         value: "http://localhost:8000/redirected".to_string(),
     }));
+    assert_eq!(
+        response1.url,
+        "http://localhost:8000/redirect-absolute".to_string()
+    );
 
     let (request2, response2) = calls.get(1).unwrap();
     assert_eq!(request2.method, "GET".to_string());
     assert_eq!(request2.url, "http://localhost:8000/redirected".to_string());
     assert_eq!(request2.headers.len(), 3);
     assert_eq!(response2.status, 200);
+    assert_eq!(
+        response2.url,
+        "http://localhost:8000/redirected".to_string()
+    );
 
     assert_eq!(client.redirect_count, 1);
 

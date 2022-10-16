@@ -27,6 +27,7 @@ pub struct Response {
     pub headers: Vec<Header>,
     pub body: Vec<u8>,
     pub duration: Duration,
+    pub url: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -81,6 +82,7 @@ pub mod tests {
             ],
             body: String::into_bytes(String::from("Hello World!")),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -96,6 +98,7 @@ pub mod tests {
                 "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
             )),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -120,6 +123,7 @@ xxx
                 .to_string(),
             ),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -148,6 +152,7 @@ xxx
                 .to_string(),
             ),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -177,6 +182,7 @@ xxx
                 .to_string(),
             ),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -199,6 +205,7 @@ xxx
                 .to_string(),
             ),
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -218,6 +225,7 @@ xxx
             ],
             body: vec![255],
             duration: Default::default(),
+            url: "".to_string(),
         }
     }
 
@@ -232,6 +240,7 @@ xxx
             }],
             body: vec![],
             duration: Default::default(),
+            url: "".to_string(),
         };
         assert_eq!(
             response.get_header_values("Content-Length"),

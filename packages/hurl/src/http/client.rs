@@ -298,7 +298,7 @@ impl Client {
         self.handle.reset();
 
         let request = Request {
-            url,
+            url: url.clone(),
             method: method.to_string(),
             headers: request_headers,
             body: request_body,
@@ -309,6 +309,7 @@ impl Client {
             headers,
             body: response_body,
             duration,
+            url,
         };
 
         if verbose {
