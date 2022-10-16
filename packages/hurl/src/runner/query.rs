@@ -58,6 +58,7 @@ pub fn eval_query_value(
 ) -> QueryResult {
     match query.value.clone() {
         QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
+        QueryValue::Url {} => Ok(Some(Value::String(http_response.url.clone()))),
         QueryValue::Header { name, .. } => {
             let header_name = eval_template(&name, variables)?;
             let values = http_response.get_header_values(&header_name);

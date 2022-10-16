@@ -60,6 +60,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     choice(
         vec![
             status_query,
+            url_query,
             header_query,
             cookie_query,
             body_query,
@@ -79,6 +80,11 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn status_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("status", reader)?;
     Ok(QueryValue::Status {})
+}
+
+fn url_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("url", reader)?;
+    Ok(QueryValue::Url {})
 }
 
 fn header_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {

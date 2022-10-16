@@ -510,6 +510,9 @@ impl Htmlable for QueryValue {
             QueryValue::Status {} => {
                 buffer.push_str("<span class=\"query-type\">status</span>");
             }
+            QueryValue::Url {} => {
+                buffer.push_str("<span class=\"query-type\">url</span>");
+            }
             QueryValue::Header { space0, name } => {
                 buffer.push_str("<span class=\"query-type\">header</span>");
                 buffer.push_str(space0.to_html().as_str());

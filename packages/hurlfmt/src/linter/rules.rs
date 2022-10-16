@@ -271,6 +271,7 @@ impl Lintable<QueryValue> for QueryValue {
     fn lint(&self) -> QueryValue {
         match self {
             QueryValue::Status {} => QueryValue::Status {},
+            QueryValue::Url {} => QueryValue::Url {},
             QueryValue::Header { name, .. } => QueryValue::Header {
                 name: name.clone(),
                 space0: one_whitespace(),

@@ -410,6 +410,7 @@ impl Tokenizable for QueryValue {
         let mut tokens: Vec<Token> = vec![];
         match self.clone() {
             QueryValue::Status {} => tokens.push(Token::QueryType(String::from("status"))),
+            QueryValue::Url {} => tokens.push(Token::QueryType(String::from("url"))),
             QueryValue::Header { space0, name } => {
                 tokens.push(Token::QueryType(String::from("header")));
                 tokens.append(&mut space0.tokenize());

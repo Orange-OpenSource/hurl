@@ -158,6 +158,7 @@ query: main-query (sp subquery)?
 
 main-query:
     status-query
+  | url-query
   | header-query
   | cookie-query
   | body-query
@@ -171,6 +172,8 @@ main-query:
   | md5-query
 
 status-query: "status"
+
+url-query: "url"
 
 header-query: "header" sp quoted-string
 

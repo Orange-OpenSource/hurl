@@ -281,6 +281,9 @@ fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
         QueryValue::Status {} => {
             attributes.push(("type".to_string(), JValue::String("status".to_string())));
         }
+        QueryValue::Url {} => {
+            attributes.push(("type".to_string(), JValue::String("url".to_string())));
+        }
         QueryValue::Body {} => {
             attributes.push(("type".to_string(), JValue::String("body".to_string())));
         }
