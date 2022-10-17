@@ -23,7 +23,7 @@
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 *
 * ------------------------------------------------------------------------------
@@ -53,7 +53,7 @@
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * Hello World!

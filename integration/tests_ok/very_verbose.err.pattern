@@ -4,6 +4,7 @@
 *     insecure: false
 *     max redirect: 50
 *     retry: false
+*     retry max count: 10
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
@@ -29,7 +30,7 @@
 < Content-Length: 205
 < Location: http://localhost:8000/very-verbose/redirected
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * <html>
@@ -59,7 +60,7 @@
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 11
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * Redirected.
@@ -88,7 +89,7 @@
 < Content-Type: text/html; charset=ISO-8859-1
 < Content-Length: 4
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * café
@@ -127,7 +128,7 @@
 < Content-Length: 17
 < Content-Encoding: br
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * Hello World!
@@ -156,7 +157,7 @@
 < Content-Type: image/jpeg
 < Content-Length: 25992
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
@@ -191,7 +192,7 @@
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 0
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 *
@@ -222,7 +223,7 @@
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 4
 < Server: Flask Server
-< Date: ~~~, ~~ ~~~ ~~~~ ~~:~~:~~ GMT
+< Date: ~~~
 <
 * Response body:
 * Done

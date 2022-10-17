@@ -90,7 +90,7 @@ pub fn run(
     let mut entries = vec![];
     let mut variables = variables.clone();
     let mut entry_index = 1;
-    let mut retry_count = 0;
+    let mut retry_count = 1;
     let n = if let Some(to_entry) = runner_options.to_entry {
         to_entry
     } else {
@@ -104,13 +104,6 @@ pub fn run(
         }
         let entry = &hurl_file.entries[entry_index - 1];
 
-        if let Some(pre_entry) = runner_options.pre_entry {
-            let exit = pre_entry(entry.clone());
-            if exit {
-                break;
-            }
-        }
-
         // We compute these new overridden options for this entry, before entering into the `run`
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
@@ -122,35 +115,51 @@ pub fn run(
             logger.content,
         );
 
+        if let Some(pre_entry) = runner_options.pre_entry {
+            let exit = pre_entry(entry.clone());
+            if exit {
+                break;
+            }
+        }
+
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
         logger.debug_important(format!("Executing entry {}", entry_index).as_str());
 
-        let entry_result =
-            match entry::get_entry_options(entry, runner_options, &mut variables, logger) {
-                Ok(runner_options) => entry::run(
-                    entry,
-                    entry_index,
-                    http_client,
-                    &mut variables,
-                    &runner_options,
-                    logger,
-                ),
-                Err(error) => EntryResult {
-                    entry_index,
-                    calls: vec![],
-                    captures: vec![],
-                    asserts: vec![],
-                    errors: vec![error],
-                    time_in_ms: 0,
-                    compressed: false,
-                },
-            };
+        let options_result =
+            entry::get_entry_options(entry, runner_options, &mut variables, logger);
+        let entry_result = match options_result {
+            Ok(options) => entry::run(
+                entry,
+                entry_index,
+                http_client,
+                &mut variables,
+                &options,
+                logger,
+            ),
+            Err(error) => EntryResult {
+                entry_index,
+                calls: vec![],
+                captures: vec![],
+                asserts: vec![],
+                errors: vec![error],
+                time_in_ms: 0,
+                compressed: false,
+            },
+        };
 
         // Check if we need to retry.
         let has_error = !entry_result.errors.is_empty();
-        let retry = runner_options.retry && has_error;
+        let retry_max_reached = match runner_options.retry_max_count {
+            None => false,
+            Some(r) => retry_count > r,
+        };
+        if retry_max_reached {
+            logger.debug("");
+            logger.debug_important("Retry max count reached, no more retry");
+        }
+        let retry = runner_options.retry && !retry_max_reached && has_error;
 
         // If we're going to retry the entry, we log error only in verbose. Otherwise,
         // we log error on stderr.
@@ -170,15 +179,13 @@ pub fn run(
             }
         }
 
-        if runner_options.retry && has_error {
+        if retry {
             let delay = runner_options.retry_interval.as_millis();
             logger.debug("");
             logger.debug_important(
                 format!(
                     "Retry entry {} (x{} pause {} ms)",
-                    entry_index,
-                    retry_count + 1,
-                    delay
+                    entry_index, retry_count, delay
                 )
                 .as_str(),
             );
@@ -192,7 +199,7 @@ pub fn run(
 
         // We pass to the next entry
         entry_index += 1;
-        retry_count = 0;
+        retry_count = 1;
     }
 
     let time_in_ms = start.elapsed().as_millis();

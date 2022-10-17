@@ -4,6 +4,7 @@
 *     insecure: false
 *     max redirect: 50
 *     retry: false
+*     retry max count: 10
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *

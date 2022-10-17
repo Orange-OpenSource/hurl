@@ -114,6 +114,9 @@ fn execute(
                 logger.debug(format!("    proxy: {}", proxy).as_str());
             }
             logger.debug(format!("    retry: {}", cli_options.retry).as_str());
+            if let Some(n) = cli_options.retry_max_count {
+                logger.debug(format!("    retry max count: {}", n).as_str());
+            }
             if !cli_options.variables.is_empty() {
                 logger.debug_important("Variables:");
                 for (name, value) in cli_options.variables.clone() {
@@ -170,6 +173,7 @@ fn execute(
             let to_entry = cli_options.to_entry;
             let retry = cli_options.retry;
             let retry_interval = cli_options.retry_interval;
+            let retry_max_count = cli_options.retry_max_count;
             let ignore_asserts = cli_options.ignore_asserts;
             let very_verbose = cli_options.very_verbose;
             let runner_options = RunnerOptions {
@@ -189,6 +193,7 @@ fn execute(
                 proxy,
                 retry,
                 retry_interval,
+                retry_max_count,
                 timeout,
                 to_entry,
                 user,
@@ -213,12 +218,7 @@ fn execute(
     }
 }
 
-/// Unwraps a result or exit with message.
-///
-/// # Arguments
-///
-/// * result - Something to unwrap
-/// * logger - A logger to log the error
+/// Unwraps a `result` or exit with message.
 fn unwrap_or_exit<T>(result: Result<T, CliError>, code: i32, logger: &BaseLogger) -> T {
     match result {
         Ok(v) => v,

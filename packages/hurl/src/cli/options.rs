@@ -56,6 +56,7 @@ pub struct CliOptions {
     pub proxy: Option<String>,
     pub retry: bool,
     pub retry_interval: Duration,
+    pub retry_max_count: Option<usize>,
     pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
@@ -77,6 +78,7 @@ pub fn app(version: &str) -> Command {
     let ClientOptions {
         connect_timeout: default_connect_timeout,
         max_redirect: default_max_redirect,
+        retry_max_count: default_retry_max_count,
         timeout: default_timeout,
         ..
     } = ClientOptions::default();
@@ -84,6 +86,7 @@ pub fn app(version: &str) -> Command {
     let default_connect_timeout = default_connect_timeout.as_secs();
     let default_max_redirect = default_max_redirect.unwrap();
     let default_timeout = default_timeout.as_secs();
+    let default_retry_max_count = default_retry_max_count.unwrap();
 
     Command::new("hurl")
         .about("Run Hurl file(s) or standard input")
@@ -290,6 +293,16 @@ pub fn app(version: &str) -> Command {
                 .num_args(1)
         )
         .arg(
+            clap::Arg::new("retry_max_count")
+                .long("retry-max-count")
+                .value_name("NUM")
+                .help("Maximum number of retries, -1 for unlimited retries")
+                .default_value(default_retry_max_count.to_string())
+                .allow_hyphen_values(true)
+                .value_parser(value_parser!(i32).range(-1..))
+                .num_args(1)
+        )
+        .arg(
             clap::Arg::new("test")
                 .long("test")
                 .help("Activate test mode")
@@ -421,6 +434,11 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let retry = has_flag(matches, "retry");
     let retry_interval = get::<u64>(matches, "retry_interval").unwrap();
     let retry_interval = Duration::from_millis(retry_interval);
+    let retry_max_count = get::<i32>(matches, "retry_max_count").unwrap();
+    let retry_max_count = match retry_max_count {
+        r if r == -1 => None,
+        r => Some(r as usize),
+    };
     let timeout = get::<u64>(matches, "max_time").unwrap();
     let timeout = Duration::from_secs(timeout);
     let to_entry = get::<u32>(matches, "to_entry").map(|x| x as usize);
@@ -454,6 +472,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         proxy,
         retry,
         retry_interval,
+        retry_max_count,
         test,
         timeout,
         to_entry,
