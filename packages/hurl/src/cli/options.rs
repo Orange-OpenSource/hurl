@@ -86,11 +86,11 @@ pub fn app(version: &str) -> Command {
     let default_timeout = default_timeout.as_secs();
 
     Command::new("hurl")
-        .about("Run hurl FILE(s) or standard input")
+        .about("Run Hurl file(s) or standard input")
         .disable_colored_help(true)
         .version(version.to_string())
         .arg(
-            clap::Arg::new("INPUT")
+            clap::Arg::new("FILE")
                 .help("Sets the input file to use")
                 .required(false)
                 .num_args(1..)
@@ -309,7 +309,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("user")
                 .short('u')
                 .long("user")
-                .value_name("user:password")
+                .value_name("USER:PASSWORD")
                 .help("Add basic Authentication header to each request")
                 .num_args(1)
         )
@@ -317,7 +317,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("user_agent")
                 .short('A')
                 .long("user-agent")
-                .value_name("name")
+                .value_name("NAME")
                 .help("Specify the User-Agent string to send to the HTTP server")
                 .num_args(1)
         )

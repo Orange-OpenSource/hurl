@@ -255,7 +255,7 @@ fn main() {
     let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
 
     let mut filenames = vec![];
-    if let Some(values) = cli::get_strings(&matches, "INPUT") {
+    if let Some(values) = cli::get_strings(&matches, "FILE") {
         for value in values {
             filenames.push(value.to_string());
         }
