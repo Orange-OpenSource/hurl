@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"HEAD","url":"http://localhost:8000/head"},"response":{"version":"HTTP/1.0","status":200,"headers":[{"name":"Content-Type","value":"text/html; charset=utf-8"},{"name":"Content-Length","value":"10"},{"name":"Server","value":"Flask Server"}],"asserts":[{"query":{"type":"bytes","subquery":{"type":"count"}},"predicate":{"type":"equal","value":0}}]}}]}

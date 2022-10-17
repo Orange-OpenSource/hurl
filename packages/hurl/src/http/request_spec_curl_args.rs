@@ -118,7 +118,7 @@ impl Method {
                     vec![]
                 }
             }
-            Method::Head => vec!["-X".to_string(), "HEAD".to_string()],
+            Method::Head => vec!["--head".to_string()],
             Method::Post => {
                 if data {
                     vec![]

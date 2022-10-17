@@ -182,6 +182,10 @@ impl Client {
         // of key-value.
         let mut request_body = Vec::<u8>::new();
         let mut response_body = Vec::<u8>::new();
+
+        if *method == Method::Head {
+            self.handle.nobody(true).unwrap();
+        }
         {
             let mut transfer = self.handle.transfer();
             if !request_spec_body.is_empty() {
@@ -189,6 +193,7 @@ impl Client {
                     .read_function(|buf| Ok(request_spec_body.read(buf).unwrap_or(0)))
                     .unwrap();
             }
+
             transfer
                 .debug_function(|info_type, data| match info_type {
                     // Return all request headers (not one by one)

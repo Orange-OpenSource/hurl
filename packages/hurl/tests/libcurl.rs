@@ -1133,6 +1133,39 @@ fn test_insecure() {
 }
 
 #[test]
+fn test_head() {
+    let options = ClientOptions {
+        ..Default::default()
+    };
+    let context_dir = ContextDir::default();
+    let mut client = Client::new(None);
+    let logger = Logger::new(false, false, "", "");
+    let request_spec = RequestSpec {
+        method: Method::Head,
+        url: "http://localhost:8000/head".to_string(),
+        headers: vec![],
+        querystring: vec![],
+        form: vec![],
+        multipart: vec![],
+        cookies: vec![],
+        body: Body::Binary(vec![]),
+        content_type: None,
+    };
+    assert_eq!(
+        client.curl_command_line(&request_spec, &context_dir, &options),
+        "curl 'http://localhost:8000/head' --head".to_string()
+    );
+
+    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    assert_eq!(request.url, "http://localhost:8000/head");
+    assert_eq!(response.status, 200);
+    assert!(response.headers.contains(&Header {
+        name: "Content-Length".to_string(),
+        value: "10".to_string(),
+    }));
+}
+
+#[test]
 fn test_version() {
     // This test if only informative for the time-being
 
