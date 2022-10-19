@@ -141,6 +141,12 @@ def test(hurl_file: str):
     if os.path.exists(f):
         expected = open(f, encoding="utf-8").read()
         actual = decode_string(result.stderr)
+
+        # curl debug logs are too dependent on the context, so we filter
+        # them and not take them into account for testing differences.
+        expected = remove_curl_debug_lines(expected)
+        actual = remove_curl_debug_lines(actual)
+
         expected_lines = expected.split("\n")
         expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
         actual_lines = re.split(r"\r?\n", actual)
@@ -196,6 +202,13 @@ def parse_pattern(s: str) -> str:
     s = re.sub("~+", ".*", s)
     s = "^" + s + "$"
     return s
+
+
+def remove_curl_debug_lines(text: str) -> str:
+    """Removes curl debug logs from text and returns the new text."""
+    lines = text.split("\n")
+    lines = [line for line in lines if not line.startswith("**")]
+    return "\n".join(lines)
 
 
 def main():

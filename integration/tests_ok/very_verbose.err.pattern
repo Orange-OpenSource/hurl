@@ -16,6 +16,8 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/redirect' -L
 *
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#0)
 > GET /very-verbose/redirect HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -23,6 +25,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 0
 * Response: (received 205 bytes in ~~~ ms)
 *
 < HTTP/1.0 301 MOVED PERMANENTLY
@@ -47,6 +52,9 @@
 *
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#1)
 > GET /very-verbose/redirected HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -54,6 +62,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 1
 * Response: (received 11 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
@@ -76,6 +87,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/encoding/latin1' -L
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#2)
 > GET /very-verbose/encoding/latin1 HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -83,6 +97,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 2
 * Response: (received 4 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
@@ -108,6 +125,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/compressed/brotli' -H 'Accept-Encoding: brotli' -H 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' -L
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#3)
 > POST /very-verbose/compressed/brotli HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -121,6 +141,10 @@
 *     "foo": "bar",
 *     "baz": true
 * }
+** We are completely uploaded and fine
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 3
 * Response: (received 17 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
@@ -144,6 +168,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/cat' -L
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#4)
 > GET /very-verbose/cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -151,6 +178,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 4
 * Response: (received 25992 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
@@ -177,6 +207,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/update-cat' -F 'cat=@tests_ok~cat.jpg;type=image/jpeg' -L
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#5)
 > POST /very-verbose/update-cat HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -186,6 +219,10 @@
 >
 * Request body:
 * Bytes <~~~~~...>
+** We are completely uploaded and fine
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 5
 * Response: (received 0 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK
@@ -209,6 +246,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/very-verbose/done' -H 'x-foo: bar' -L
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#6)
 > GET /very-verbose/done HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -217,6 +257,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 6
 * Response: (received 4 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK

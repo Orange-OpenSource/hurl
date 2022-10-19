@@ -80,12 +80,11 @@ pub fn run(
     }
     logger.debug("");
     log_request_spec(&http_request, logger);
+
     logger.debug("Request can be run with the following curl command:");
-    logger.debug(
-        http_client
-            .curl_command_line(&http_request, &runner_options.context_dir, &client_options)
-            .as_str(),
-    );
+    let curl_command =
+        http_client.curl_command_line(&http_request, &runner_options.context_dir, &client_options);
+    logger.debug(curl_command.as_str());
     logger.debug("");
 
     // Run the HTTP requests (optionally follow redirection)

@@ -254,6 +254,16 @@ impl Client {
                             }
                         }
                     }
+                    // Curl debug logs
+                    easy::InfoType::Text => {
+                        let len = data.len();
+                        if very_verbose && len > 0 {
+                            let text = str::from_utf8(&data[..len - 1]);
+                            if let Ok(text) = text {
+                                logger.debug_curl(text);
+                            }
+                        }
+                    }
                     _ => {}
                 })
                 .unwrap();

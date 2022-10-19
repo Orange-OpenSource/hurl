@@ -40,6 +40,9 @@
 * Request can be run with the following curl command:
 * curl 'http://localhost:8000/hello'
 *
+** Hostname localhost was found in DNS cache
+**   Trying 127.0.0.1:8000...
+** Connected to localhost (127.0.0.1) port 8000 (#3)
 > GET /hello HTTP/1.1
 > Host: localhost:8000
 > Accept: */*
@@ -47,6 +50,9 @@
 >
 * Request body:
 *
+** Mark bundle as not supporting multiuse
+** HTTP 1.0, assume close after body
+** Closing connection 3
 * Response: (received 12 bytes in ~~~ ms)
 *
 < HTTP/1.0 200 OK

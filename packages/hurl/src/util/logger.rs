@@ -83,8 +83,9 @@ impl BaseLogger {
 pub struct Logger<'a> {
     pub info: fn(&str),
     pub debug: fn(&str),
-    pub debug_important: fn(&str),
+    pub debug_curl: fn(&str),
     pub debug_error: fn(&str, &str, &dyn Error),
+    pub debug_important: fn(&str),
     pub warning: fn(&str),
     pub error: fn(&str),
     pub error_rich: fn(&str, &str, &dyn Error),
@@ -108,8 +109,9 @@ impl<'a> Logger<'a> {
             (true, true) => Logger {
                 info: log_info,
                 debug: log_debug,
-                debug_important: log_debug_important,
+                debug_curl: log_debug_curl,
                 debug_error: log_debug_error,
+                debug_important: log_debug_important,
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
@@ -128,8 +130,9 @@ impl<'a> Logger<'a> {
             (false, true) => Logger {
                 info: log_info,
                 debug: log_debug_no_color,
-                debug_important: log_debug_no_color,
+                debug_curl: log_debug_curl_no_color,
                 debug_error: log_debug_error_no_color,
+                debug_important: log_debug_no_color,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
@@ -148,8 +151,9 @@ impl<'a> Logger<'a> {
             (true, false) => Logger {
                 info: log_info,
                 debug: |_| {},
-                debug_important: |_| {},
+                debug_curl: |_| {},
                 debug_error: |_, _, _| {},
+                debug_important: |_| {},
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
@@ -168,8 +172,9 @@ impl<'a> Logger<'a> {
             (false, false) => Logger {
                 info: log_info,
                 debug: |_| {},
-                debug_important: |_| {},
+                debug_curl: |_| {},
                 debug_error: |_, _, _| {},
+                debug_important: |_| {},
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
@@ -194,6 +199,10 @@ impl<'a> Logger<'a> {
 
     pub fn debug(&self, message: &str) {
         (self.debug)(message)
+    }
+
+    pub fn debug_curl(&self, message: &str) {
+        (self.debug_curl)(message)
     }
 
     pub fn debug_important(&self, message: &str) {
@@ -262,6 +271,22 @@ fn log_debug_no_color(message: &str) {
         eprintln!("*");
     } else {
         eprintln!("* {}", message);
+    }
+}
+
+fn log_debug_curl(message: &str) {
+    if message.is_empty() {
+        eprintln!("{}", "**".blue().bold());
+    } else {
+        eprintln!("{} {}", "**".blue().bold(), message.green());
+    }
+}
+
+fn log_debug_curl_no_color(message: &str) {
+    if message.is_empty() {
+        eprintln!("**");
+    } else {
+        eprintln!("** {}", message);
     }
 }
 
