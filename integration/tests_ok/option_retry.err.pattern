@@ -35,6 +35,10 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
+* Entry options:
+* retry: true
+* retry-interval: 100
+*
 * Cookie store:
 *
 * Request:
@@ -58,9 +62,9 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/option_retry.hurl:19:0
 *    |
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 19 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -69,6 +73,10 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
+* Entry options:
+* retry: true
+* retry-interval: 100
+*
 * Cookie store:
 *
 * Request:
@@ -92,9 +100,9 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/option_retry.hurl:19:0
 *    |
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 19 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -103,6 +111,10 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
+* Entry options:
+* retry: true
+* retry-interval: 100
+*
 * Cookie store:
 *
 * Request:
@@ -126,9 +138,9 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/option_retry.hurl:19:0
 *    |
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 19 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -137,6 +149,10 @@
 * ------------------------------------------------------------------------------
 * Executing entry 2
 *
+* Entry options:
+* retry: true
+* retry-interval: 100
+*
 * Cookie store:
 *
 * Request:
@@ -160,9 +176,9 @@
 <
 *
 * Assert failure
-*   --> tests_ok/retry.hurl:16:0
+*   --> tests_ok/option_retry.hurl:19:0
 *    |
-* 16 | jsonpath "$.state" == "COMPLETED"
+* 19 | jsonpath "$.state" == "COMPLETED"
 *    |   actual:   string <RUNNING>
 *    |   expected: string <COMPLETED>
 *    |
@@ -170,6 +186,10 @@
 * Retry entry 2 (x4 pause 100 ms)
 * ------------------------------------------------------------------------------
 * Executing entry 2
+*
+* Entry options:
+* retry: true
+* retry-interval: 100
 *
 * Cookie store:
 *

@@ -16,6 +16,7 @@
  *
  */
 use std::collections::HashMap;
+use std::time::Duration;
 
 use crate::cli::Logger;
 use crate::http;
@@ -300,6 +301,10 @@ pub fn get_entry_options(
                     EntryOption::Retry(option) => {
                         runner_options.retry = option.value;
                         logger.debug(format!("retry: {}", option.value).as_str());
+                    }
+                    EntryOption::RetryInterval(option) => {
+                        runner_options.retry_interval = Duration::from_millis(option.value);
+                        logger.debug(format!("retry-interval: {}", option.value).as_str());
                     }
                     EntryOption::Variable(VariableOption {
                         value: VariableDefinition { name, value, .. },

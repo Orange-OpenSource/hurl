@@ -12,6 +12,7 @@ jsonpath "$.state" == "RUNNING"
 GET http://localhost:8000/jobs/{{job_id}}
 [Options]
 retry: true
+retry-interval: 100
 
 HTTP/* 200
 [Asserts]
