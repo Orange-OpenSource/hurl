@@ -237,6 +237,7 @@ impl Htmlable for EntryOption {
             EntryOption::Insecure(option) => option.to_html(),
             EntryOption::FollowLocation(option) => option.to_html(),
             EntryOption::MaxRedirect(option) => option.to_html(),
+            EntryOption::Retry(option) => option.to_html(),
             EntryOption::Variable(option) => option.to_html(),
             EntryOption::Verbose(option) => option.to_html(),
             EntryOption::VeryVerbose(option) => option.to_html(),
@@ -323,6 +324,23 @@ impl Htmlable for MaxRedirectOption {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(format!("<span class=\"number\">{}</span>", self.value).as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for RetryOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">retry</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(format!("<span class=\"boolean\">{}</span>", self.value).as_str());
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer

@@ -129,13 +129,13 @@ pub fn run(
 
         let options_result =
             entry::get_entry_options(entry, runner_options, &mut variables, logger);
-        let entry_result = match options_result {
+        let entry_result = match &options_result {
             Ok(options) => entry::run(
                 entry,
                 entry_index,
                 http_client,
                 &mut variables,
-                &options,
+                options,
                 logger,
             ),
             Err(error) => EntryResult {
@@ -143,7 +143,7 @@ pub fn run(
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![error],
+                errors: vec![error.clone()],
                 time_in_ms: 0,
                 compressed: false,
             },
@@ -151,7 +151,19 @@ pub fn run(
 
         // Check if we need to retry.
         let has_error = !entry_result.errors.is_empty();
-        let retry_max_reached = match runner_options.retry_max_count {
+        let (retry, retry_max_count, retry_interval) = match &options_result {
+            Ok(options) => (
+                options.retry,
+                options.retry_max_count,
+                options.retry_interval,
+            ),
+            Err(_) => (
+                runner_options.retry,
+                runner_options.retry_max_count,
+                runner_options.retry_interval,
+            ),
+        };
+        let retry_max_reached = match retry_max_count {
             None => false,
             Some(r) => retry_count > r,
         };
@@ -159,7 +171,7 @@ pub fn run(
             logger.debug("");
             logger.debug_important("Retry max count reached, no more retry");
         }
-        let retry = runner_options.retry && !retry_max_reached && has_error;
+        let retry = retry && !retry_max_reached && has_error;
 
         // If we're going to retry the entry, we log error only in verbose. Otherwise,
         // we log error on stderr.
@@ -180,7 +192,7 @@ pub fn run(
         }
 
         if retry {
-            let delay = runner_options.retry_interval.as_millis();
+            let delay = retry_interval.as_millis();
             logger.debug("");
             logger.debug_important(
                 format!(
@@ -190,7 +202,7 @@ pub fn run(
                 .as_str(),
             );
             retry_count += 1;
-            thread::sleep(runner_options.retry_interval);
+            thread::sleep(retry_interval);
             continue;
         }
         if runner_options.fail_fast && has_error {

@@ -285,17 +285,21 @@ pub fn get_entry_options(
                         runner_options.compressed = option.value;
                         logger.debug(format!("compressed: {}", option.value).as_str());
                     }
-                    EntryOption::Insecure(option) => {
-                        runner_options.insecure = option.value;
-                        logger.debug(format!("insecure: {}", option.value).as_str());
-                    }
                     EntryOption::FollowLocation(option) => {
                         runner_options.follow_location = option.value;
                         logger.debug(format!("location: {}", option.value).as_str());
                     }
+                    EntryOption::Insecure(option) => {
+                        runner_options.insecure = option.value;
+                        logger.debug(format!("insecure: {}", option.value).as_str());
+                    }
                     EntryOption::MaxRedirect(option) => {
                         runner_options.max_redirect = Some(option.value);
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
+                    }
+                    EntryOption::Retry(option) => {
+                        runner_options.retry = option.value;
+                        logger.debug(format!("retry: {}", option.value).as_str());
                     }
                     EntryOption::Variable(VariableOption {
                         value: VariableDefinition { name, value, .. },
