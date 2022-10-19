@@ -31,7 +31,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_max_count.hurl:2:8
+*   --> tests_failed/retry.hurl:2:8
 *    |
 *  2 | HTTP/* 200
 *    |        ^^^ actual value is <404>
@@ -64,7 +64,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_max_count.hurl:2:8
+*   --> tests_failed/retry.hurl:2:8
 *    |
 *  2 | HTTP/* 200
 *    |        ^^^ actual value is <404>
@@ -97,7 +97,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_max_count.hurl:2:8
+*   --> tests_failed/retry.hurl:2:8
 *    |
 *  2 | HTTP/* 200
 *    |        ^^^ actual value is <404>
@@ -130,7 +130,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_max_count.hurl:2:8
+*   --> tests_failed/retry.hurl:2:8
 *    |
 *  2 | HTTP/* 200
 *    |        ^^^ actual value is <404>
@@ -163,7 +163,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/retry_max_count.hurl:2:8
+*   --> tests_failed/retry.hurl:2:8
 *    |
 *  2 | HTTP/* 200
 *    |        ^^^ actual value is <404>
@@ -198,7 +198,7 @@
 *
 * Retry max count reached, no more retry
 error: Assert status code
-  --> tests_failed/retry_max_count.hurl:2:8
+  --> tests_failed/retry.hurl:2:8
    |
  2 | HTTP/* 200
    |        ^^^ actual value is <404>

@@ -306,6 +306,10 @@ pub fn get_entry_options(
                         runner_options.retry_interval = Duration::from_millis(option.value);
                         logger.debug(format!("retry-interval: {}", option.value).as_str());
                     }
+                    EntryOption::RetryMaxCount(option) => {
+                        runner_options.retry_max_count = Some(option.value);
+                        logger.debug(format!("retry-max-count: {}", option.value).as_str());
+                    }
                     EntryOption::Variable(VariableOption {
                         value: VariableDefinition { name, value, .. },
                         ..

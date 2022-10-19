@@ -678,6 +678,7 @@ pub enum EntryOption {
     MaxRedirect(MaxRedirectOption),
     Retry(RetryOption),
     RetryInterval(RetryIntervalOption),
+    RetryMaxCount(RetryMaxCountOption),
     Variable(VariableOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
@@ -730,6 +731,16 @@ pub struct RetryIntervalOption {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: u64,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RetryMaxCountOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: usize,
     pub line_terminator0: LineTerminator,
 }
 
