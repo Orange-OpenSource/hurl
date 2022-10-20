@@ -85,14 +85,14 @@ pub struct Logger<'a> {
     pub debug: fn(&str),
     pub debug_curl: fn(&str),
     pub debug_error: fn(&str, &str, &dyn Error),
+    pub debug_header_in: fn(&str, &str),
+    pub debug_header_out: fn(&str, &str),
     pub debug_important: fn(&str),
+    pub debug_method_version_out: fn(&str),
+    pub debug_status_version_in: fn(&str),
     pub warning: fn(&str),
     pub error: fn(&str),
     pub error_rich: fn(&str, &str, &dyn Error),
-    pub method_version_out: fn(&str),
-    pub status_version_in: fn(&str),
-    pub header_in: fn(&str, &str),
-    pub header_out: fn(&str, &str),
     pub capture: fn(&str, &Value),
     pub test_running: fn(&str, usize, usize),
     pub test_completed: fn(result: &HurlResult),
@@ -111,15 +111,15 @@ impl<'a> Logger<'a> {
                 debug: log_debug,
                 debug_curl: log_debug_curl,
                 debug_error: log_debug_error,
+                debug_header_in: log_debug_header_in,
+                debug_header_out: log_debug_header_out,
                 debug_important: log_debug_important,
+                debug_method_version_out: log_debug_method_version_out,
+                debug_status_version_in: log_debug_status_version_in,
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
-                method_version_out: log_method_version_out,
-                status_version_in: log_status_version_in,
                 capture: log_capture,
-                header_in: log_header_in,
-                header_out: log_header_out,
                 test_running: log_test_running,
                 test_completed: log_test_completed,
                 color,
@@ -132,15 +132,15 @@ impl<'a> Logger<'a> {
                 debug: log_debug_no_color,
                 debug_curl: log_debug_curl_no_color,
                 debug_error: log_debug_error_no_color,
+                debug_header_in: log_debug_header_in_no_color,
+                debug_header_out: log_debug_header_out_no_color,
                 debug_important: log_debug_no_color,
+                debug_method_version_out: log_debug_method_version_out_no_color,
+                debug_status_version_in: log_debug_status_version_in_no_color,
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
-                method_version_out: log_method_version_out_no_color,
-                status_version_in: log_status_version_in_no_color,
                 capture: log_capture_no_color,
-                header_in: log_header_in_no_color,
-                header_out: log_header_out_no_color,
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
                 color,
@@ -153,15 +153,15 @@ impl<'a> Logger<'a> {
                 debug: |_| {},
                 debug_curl: |_| {},
                 debug_error: |_, _, _| {},
+                debug_header_in: |_, _| {},
+                debug_header_out: |_, _| {},
                 debug_important: |_| {},
+                debug_method_version_out: |_| {},
+                debug_status_version_in: |_| {},
                 warning: log_warning,
                 error: log_error,
                 error_rich: log_error_rich,
-                method_version_out: |_| {},
-                status_version_in: |_| {},
                 capture: |_, _| {},
-                header_in: |_, _| {},
-                header_out: |_, _| {},
                 test_running: log_test_running,
                 test_completed: log_test_completed,
                 color,
@@ -174,15 +174,15 @@ impl<'a> Logger<'a> {
                 debug: |_| {},
                 debug_curl: |_| {},
                 debug_error: |_, _, _| {},
+                debug_header_in: |_, _| {},
+                debug_header_out: |_, _| {},
                 debug_important: |_| {},
+                debug_method_version_out: |_| {},
+                debug_status_version_in: |_| {},
                 warning: log_warning_no_color,
                 error: log_error_no_color,
                 error_rich: log_error_rich_no_color,
-                method_version_out: |_| {},
-                status_version_in: |_| {},
                 capture: |_, _| {},
-                header_in: |_, _| {},
-                header_out: |_, _| {},
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
                 color,
@@ -205,12 +205,24 @@ impl<'a> Logger<'a> {
         (self.debug_curl)(message)
     }
 
+    pub fn debug_error(&self, error: &dyn Error) {
+        (self.debug_error)(self.filename, self.content, error)
+    }
+
+    pub fn debug_header_in(&self, name: &str, value: &str) {
+        (self.debug_header_in)(name, value)
+    }
+
+    pub fn debug_header_out(&self, name: &str, value: &str) {
+        (self.debug_header_out)(name, value)
+    }
+
     pub fn debug_important(&self, message: &str) {
         (self.debug_important)(message)
     }
 
-    pub fn debug_error(&self, error: &dyn Error) {
-        (self.debug_error)(self.filename, self.content, error)
+    pub fn debug_status_version_in(&self, line: &str) {
+        (self.debug_status_version_in)(line)
     }
 
     pub fn warning(&self, message: &str) {
@@ -226,23 +238,11 @@ impl<'a> Logger<'a> {
     }
 
     pub fn method_version_out(&self, line: &str) {
-        (self.method_version_out)(line)
-    }
-
-    pub fn status_version_in(&self, line: &str) {
-        (self.status_version_in)(line)
+        (self.debug_method_version_out)(line)
     }
 
     pub fn capture(&self, name: &str, value: &Value) {
         (self.capture)(name, value)
-    }
-
-    pub fn header_in(&self, name: &str, value: &str) {
-        (self.header_in)(name, value)
-    }
-
-    pub fn header_out(&self, name: &str, value: &str) {
-        (self.header_out)(name, value)
     }
 
     pub fn test_running(&self, current: usize, total: usize) {
@@ -310,6 +310,38 @@ fn log_debug_error_no_color(filename: &str, content: &str, error: &dyn Error) {
         .for_each(|l| log_debug_no_color(l));
 }
 
+fn log_debug_header_in(name: &str, value: &str) {
+    eprintln!("< {}: {}", name.cyan().bold(), value)
+}
+
+fn log_debug_header_in_no_color(name: &str, value: &str) {
+    eprintln!("< {}: {}", name, value)
+}
+
+fn log_debug_header_out(name: &str, value: &str) {
+    eprintln!("> {}: {}", name.cyan().bold(), value)
+}
+
+fn log_debug_header_out_no_color(name: &str, value: &str) {
+    eprintln!("> {}: {}", name, value)
+}
+
+fn log_debug_method_version_out(line: &str) {
+    eprintln!("> {}", line.purple().bold())
+}
+
+fn log_debug_method_version_out_no_color(line: &str) {
+    eprintln!("> {}", line)
+}
+
+fn log_debug_status_version_in(line: &str) {
+    eprintln!("< {}", line.green().bold())
+}
+
+fn log_debug_status_version_in_no_color(line: &str) {
+    eprintln!("< {}", line)
+}
+
 fn log_warning(message: &str) {
     eprintln!("{}: {}", "warning".yellow().bold(), message.bold());
 }
@@ -336,44 +368,12 @@ fn log_error_rich_no_color(filename: &str, content: &str, error: &dyn Error) {
     eprintln!("error: {}\n", &message)
 }
 
-fn log_method_version_out(line: &str) {
-    eprintln!("> {}", line.purple().bold())
-}
-
-fn log_method_version_out_no_color(line: &str) {
-    eprintln!("> {}", line)
-}
-
-fn log_status_version_in(line: &str) {
-    eprintln!("< {}", line.green().bold())
-}
-
-fn log_status_version_in_no_color(line: &str) {
-    eprintln!("< {}", line)
-}
-
 fn log_capture(name: &str, value: &Value) {
     eprintln!("{} {}: {}", "*".blue().bold(), name.yellow().bold(), value)
 }
 
 fn log_capture_no_color(name: &str, value: &Value) {
     eprintln!("* {}: {}", name, value)
-}
-
-fn log_header_in(name: &str, value: &str) {
-    eprintln!("< {}: {}", name.cyan().bold(), value)
-}
-
-fn log_header_in_no_color(name: &str, value: &str) {
-    eprintln!("< {}: {}", name, value)
-}
-
-fn log_header_out(name: &str, value: &str) {
-    eprintln!("> {}: {}", name.cyan().bold(), value)
-}
-
-fn log_header_out_no_color(name: &str, value: &str) {
-    eprintln!("> {}: {}", name, value)
 }
 
 fn log_test_running(filename: &str, current: usize, total: usize) {

@@ -224,7 +224,7 @@ impl Client {
                                 body: Vec::new(),
                             };
                             for header in &debug_request.headers {
-                                logger.header_out(&header.name, &header.value);
+                                logger.debug_header_out(&header.name, &header.value);
                             }
                             logger.info(">");
 
@@ -245,7 +245,7 @@ impl Client {
                                 body: Vec::from(data),
                             };
                             for header in &debug_request.headers {
-                                logger.header_out(&header.name, &header.value);
+                                logger.debug_header_out(&header.name, &header.value);
                             }
                             logger.info(">");
 
@@ -342,10 +342,10 @@ impl Client {
             status_lines
                 .iter()
                 .filter(|s| s.starts_with("HTTP/"))
-                .for_each(|s| logger.status_version_in(s.trim()));
+                .for_each(|s| logger.debug_status_version_in(s.trim()));
 
             for header in &response.headers {
-                logger.header_in(&header.name, &header.value);
+                logger.debug_header_in(&header.name, &header.value);
             }
             logger.info("<");
             if very_verbose {

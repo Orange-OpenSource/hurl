@@ -27,7 +27,7 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
-use hurl::http::ContextDir;
+use hurl::http::{ContextDir, Response};
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
@@ -343,14 +343,8 @@ fn main() {
                     // If include options is set, we output the HTTP response headers
                     // with status and version (to mimic curl outputs)
                     if cli_options.include {
-                        let status_line =
-                            format!("HTTP/{} {}\n", response.version, response.status);
-                        output.append(&mut status_line.into_bytes());
-                        for header in response.headers.clone() {
-                            let header_line = format!("{}: {}\n", header.name, header.value);
-                            output.append(&mut header_line.into_bytes());
-                        }
-                        output.append(&mut "\n".to_string().into_bytes());
+                        let text = get_status_line_headers(response, color);
+                        output.append(&mut text.into_bytes());
                     }
                     let mut body = if entry_result.compressed {
                         match response.uncompress_body() {
@@ -585,4 +579,26 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     );
     s.push_str(format!("Duration:        {} ms\n", duration).as_str());
     s
+}
+
+/// Returns status, version and HTTP headers from an HTTP `response`.
+fn get_status_line_headers(response: &Response, color: bool) -> String {
+    let mut str = String::new();
+    let status_line = format!("HTTP/{} {}\n", response.version, response.status);
+    let status_line = if color {
+        format!("{}", status_line.green().bold())
+    } else {
+        status_line
+    };
+    str.push_str(&status_line);
+    for header in response.headers.iter() {
+        let header_line = if color {
+            format!("{}: {}\n", header.name.cyan().bold(), header.value)
+        } else {
+            format!("{}: {}\n", header.name, header.value)
+        };
+        str.push_str(&header_line);
+    }
+    str.push('\n');
+    str
 }
