@@ -16,75 +16,16 @@
  *
  */
 use std::path::PathBuf;
-use std::time::Duration;
 
 use crate::http;
-use crate::http::ContextDir;
-use hurl_core::ast::{Entry, SourceInfo};
+use hurl_core::ast::SourceInfo;
 
 use super::value::Value;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RunnerOptions {
-    pub cacert_file: Option<String>,
-    pub compressed: bool,
-    pub connect_timeout: Duration,
-    pub context_dir: ContextDir,
-    pub cookie_input_file: Option<String>,
-    pub fail_fast: bool,
-    pub follow_location: bool,
-    pub ignore_asserts: bool,
-    pub insecure: bool,
-    pub max_redirect: Option<usize>,
-    pub no_proxy: Option<String>,
-    pub post_entry: Option<fn() -> bool>,
-    pub pre_entry: Option<fn(Entry) -> bool>,
-    pub proxy: Option<String>,
-    pub retry: bool,
-    pub retry_interval: Duration,
-    pub retry_max_count: Option<usize>,
-    pub timeout: Duration,
-    pub to_entry: Option<usize>,
-    pub user: Option<String>,
-    pub user_agent: Option<String>,
-    pub verbosity: Option<Verbosity>,
-    pub very_verbose: bool, // If true, log body response in verbose mode.
-}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
     Verbose,
     VeryVerbose,
-}
-
-impl Default for RunnerOptions {
-    fn default() -> Self {
-        RunnerOptions {
-            cacert_file: None,
-            compressed: false,
-            connect_timeout: Duration::from_secs(300),
-            context_dir: Default::default(),
-            cookie_input_file: None,
-            fail_fast: false,
-            follow_location: false,
-            ignore_asserts: false,
-            insecure: false,
-            max_redirect: Some(50),
-            no_proxy: None,
-            post_entry: None,
-            pre_entry: None,
-            proxy: None,
-            retry: false,
-            retry_interval: Duration::from_millis(1000),
-            retry_max_count: Some(10),
-            timeout: Duration::from_secs(300),
-            to_entry: None,
-            user: None,
-            user_agent: None,
-            verbosity: None,
-            very_verbose: false,
-        }
-    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -29,6 +29,7 @@ use super::request::eval_request;
 use super::response::{eval_asserts, eval_captures};
 use super::value::Value;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
+use crate::runner::runner_options::RunnerOptions;
 use crate::runner::template::eval_template;
 
 /// Runs an `entry` with `http_client` and returns one or more

@@ -22,6 +22,7 @@ use std::time::Instant;
 use crate::cli::Logger;
 use crate::http;
 use crate::runner::entry::get_entry_verbosity;
+use crate::runner::runner_options::RunnerOptions;
 use crate::runner::Value;
 use hurl_core::ast::*;
 

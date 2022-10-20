@@ -27,13 +27,14 @@ use colored::*;
 use hurl::cli;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
-use hurl::http::{ContextDir, Response};
+use hurl::http::Response;
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
-use hurl::runner::{HurlResult, RunnerError, RunnerOptions, Verbosity};
+use hurl::runner::RunnerOptions;
+use hurl::runner::{HurlResult, RunnerError};
 use hurl::util::logger::BaseLogger;
-use hurl_core::ast::{Entry, Pos, SourceInfo};
+use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
 
@@ -128,79 +129,8 @@ fn execute(
                     format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str(),
                 );
             }
-            let cacert_file = cli_options.cacert_file.clone();
-            let follow_location = cli_options.follow_location;
-            let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
-                (true, true) => Some(Verbosity::VeryVerbose),
-                (true, _) => Some(Verbosity::Verbose),
-                _ => None,
-            };
-            let insecure = cli_options.insecure;
-            let max_redirect = cli_options.max_redirect;
-            let proxy = cli_options.proxy.clone();
-            let no_proxy = cli_options.no_proxy.clone();
-            let cookie_input_file = cli_options.cookie_input_file.clone();
-            let timeout = cli_options.timeout;
-            let connect_timeout = cli_options.connect_timeout;
-            let user = cli_options.user.clone();
-            let user_agent = cli_options.user_agent.clone();
-            let compressed = cli_options.compressed;
-            let file_root = match cli_options.file_root {
-                Some(ref filename) => Path::new(filename),
-                None => {
-                    if filename == "-" {
-                        current_dir
-                    } else {
-                        let path = Path::new(filename);
-                        path.parent().unwrap()
-                    }
-                }
-            };
-            let context_dir = ContextDir::new(current_dir, file_root);
-
-            let pre_entry = if cli_options.interactive {
-                Some(cli::interactive::pre_entry as fn(Entry) -> bool)
-            } else {
-                None
-            };
-            let post_entry = if cli_options.interactive {
-                Some(cli::interactive::post_entry as fn() -> bool)
-            } else {
-                None
-            };
-            let fail_fast = cli_options.fail_fast;
             let variables = cli_options.variables.clone();
-            let to_entry = cli_options.to_entry;
-            let retry = cli_options.retry;
-            let retry_interval = cli_options.retry_interval;
-            let retry_max_count = cli_options.retry_max_count;
-            let ignore_asserts = cli_options.ignore_asserts;
-            let very_verbose = cli_options.very_verbose;
-            let runner_options = RunnerOptions {
-                cacert_file,
-                compressed,
-                connect_timeout,
-                context_dir,
-                cookie_input_file,
-                fail_fast,
-                follow_location,
-                ignore_asserts,
-                insecure,
-                max_redirect,
-                no_proxy,
-                post_entry,
-                pre_entry,
-                proxy,
-                retry,
-                retry_interval,
-                retry_max_count,
-                timeout,
-                to_entry,
-                user,
-                user_agent,
-                verbosity,
-                very_verbose,
-            };
+            let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
             let mut client = http::Client::new(runner_options.cookie_input_file.clone());
             let result = runner::run(
                 &hurl_file,
