@@ -219,7 +219,7 @@ pub fn app(version: &str) -> Command {
             clap::Arg::new("max_time")
                 .long("max-time")
                 .short('m')
-                .value_name("NUM")
+                .value_name("SECONDS")
                 .help("Maximum time allowed for the transfer")
                 .default_value(default_timeout.to_string())
                 .allow_hyphen_values(true)
