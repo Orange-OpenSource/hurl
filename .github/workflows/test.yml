@@ -72,6 +72,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Environment
+      run: bin/environment.sh
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install Rust
+      run: bin/install_rust_latest.sh
     - name: Install Python 3.8
       uses: actions/setup-python@v4
       with:
@@ -82,12 +88,6 @@ jobs:
         repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
-    - name: Environment
-      run: bin/environment.sh
-    - name: Install Prerequisites
-      run: bin/install_prerequisites_ubuntu.sh
-    - name: Install Rust
-      run: bin/install_rust_latest.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests units

@@ -11,6 +11,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Install
+      run: |
+        bin/install_prerequisites_ubuntu.sh
+        bin/install_rust_latest.sh
+    - name: Build
+      run: |
+        bin/release/release.sh
+        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Install Python 3.8
       uses: actions/setup-python@v4
       with:
@@ -21,14 +29,6 @@ jobs:
         repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
-    - name: Install
-      run: |
-        bin/install_prerequisites_ubuntu.sh
-        bin/install_rust_latest.sh
-    - name: Build
-      run: |
-        bin/release/release.sh
-        echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -159,16 +159,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Install Python 3.8
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-    - name: Install Curl 7.68
-      uses: myci-actions/add-deb-repo@10
-      with:
-        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
-        repo-name: focal
-        install: curl
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
@@ -179,6 +169,16 @@ jobs:
       run: |
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
+    - name: Install Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: Install Curl 7.68
+      uses: myci-actions/add-deb-repo@10
+      with:
+        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo-name: focal
+        install: curl
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
