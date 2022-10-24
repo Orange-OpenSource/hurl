@@ -25,7 +25,7 @@ def test(format_type, hurl_file):
     cmd = ["hurlfmt", "--format", format_type, hurl_file]
     print(" ".join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
-    expected = open(output_file, encoding="utf-8").read().strip()
+    expected = open(output_file, encoding="utf-8").read()
     actual = decode_string(result.stdout)
     if actual != expected:
         print(f">>> error in stdout for {format_type}")

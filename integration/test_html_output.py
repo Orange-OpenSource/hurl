@@ -16,7 +16,7 @@ def test(html_file):
     expected = codecs.open(
         hurl_file, encoding="utf-8-sig"
     ).read()  # Input file can be saved with a BOM
-    if actual != expected:
+    if actual.strip() != expected.strip():
         print(">>> error in html file")
         print(f"actual: <{actual}>\nexpected: <{expected}>")
         sys.exit(1)

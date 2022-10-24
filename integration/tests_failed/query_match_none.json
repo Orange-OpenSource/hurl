@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/query-match-none"},"response":{"asserts":[{"query":{"type":"header","name":"Location"},"predicate":{"type":"match","value":"^foo$","encoding":"regex"}}]}}]}

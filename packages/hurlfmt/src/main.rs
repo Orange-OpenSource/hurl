@@ -238,6 +238,11 @@ fn main() {
                         process::exit(1);
                     }
                 };
+                let output = if output.ends_with('\n') {
+                    output
+                } else {
+                    format!("{}\n", output)
+                };
                 write_output(output.into_bytes(), output_file.as_deref());
             }
         }

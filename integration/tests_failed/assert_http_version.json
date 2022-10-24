@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert/http-version"},"response":{"version":"HTTP/2","status":200}}]}
