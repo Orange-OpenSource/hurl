@@ -11,8 +11,8 @@
 
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
-It can perform requests, capture values and evaluate queries on headers and body response. Hurl is very
-versatile: it can be used for both <b>fetching data</b> and <b>testing HTTP</b> sessions.
+It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very
+versatile: it can be used for <b>fetching data</b>, <b>testing HTTP</b> sessions and testing <b>XML / JSON APIs</b>.
 
 ```hurl
 # Get home:
@@ -172,6 +172,7 @@ Table of Contents
          * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
          * [Testing Bytes Content](#testing-bytes-content)
       * [Others](#others)
+         * [Polling and Retry](#polling-and-retry)
          * [Testing Endpoint Performance](#testing-endpoint-performance)
          * [Using SOAP APIs](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
@@ -523,6 +524,35 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 ## Others
 
+### Polling and Retry
+
+Retry request on any errors (asserts, captures, status code, runtime etc...):
+
+```hurl
+# Create a new job
+POST https://api.example.org/jobs
+
+HTTP/* 201
+[Captures]
+job_id: jsonpath "$.id"
+[Asserts]
+jsonpath "$.state" == "RUNNING"
+
+
+# Pull job status until it is completed
+GET https://api.example.org/jobs/{{job_id}}
+[Options]
+retry: true
+
+HTTP/* 200
+[Asserts]
+jsonpath "$.state" == "COMPLETED"
+```
+
+[Doc](https://hurl.dev/docs/entry.html#retry)
+
+
+
 ### Testing Endpoint Performance
 
 ```hurl
@@ -735,38 +765,41 @@ will follow a redirection only for the second entry.
 
 Option | Description
  --- | --- 
-<a href="#cacert" id="cacert"><code>--cacert</code></a> | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br/>Normally curl is built to use a default file for this, so this option is typically used to alter that default file.<br/>
-<a href="#color" id="color"><code>--color</code></a> | Colorize Output<br/>
+<a href="#cacert" id="cacert"><code>--cacert</code></a> | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br/>Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.<br/>
+<a href="#color" id="color"><code>--color</code></a> | Colorize Output.<br/>
 <a href="#compressed" id="compressed"><code>--compressed</code></a> | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.<br/>
-<a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;seconds&gt;</code></a> | Maximum time in seconds that you allow Hurl's connection to take.<br/><br/>See also [`-m, --max-time`](#max-time) option.<br/>
-<a href="#cookie" id="cookie"><code>-b, --cookie &lt;file&gt;</code></a> | Read cookies from file (using the Netscape cookie file format).<br/><br/>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br/>
-<a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;file&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
+<a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;SECONDS&gt;</code></a> | Maximum time in seconds that you allow Hurl's connection to take.<br/><br/>See also [`-m, --max-time`](#max-time) option.<br/>
+<a href="#cookie" id="cookie"><code>-b, --cookie &lt;FILE&gt;</code></a> | Read cookies from FILE (using the Netscape cookie file format).<br/><br/>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br/>
+<a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;FILE&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
 <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
-<a href="#file-root" id="file-root"><code>--file-root &lt;dir&gt;</code></a> | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
+<a href="#file-root" id="file-root"><code>--file-root &lt;DIR&gt;</code></a> | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
 <a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br/>
-<a href="#glob" id="glob"><code>--glob &lt;glob&gt;</code></a> | Specify input files that match the given glob pattern.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
+<a href="#glob" id="glob"><code>--glob &lt;GLOB&gt;</code></a> | Specify input files that match the given glob pattern.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
 <a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
 <a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a> | Ignore all asserts defined in the Hurl file.<br/>
 <a href="#insecure" id="insecure"><code>-k, --insecure</code></a> | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.<br/>
 <a href="#interactive" id="interactive"><code>--interactive</code></a> | Stop between requests.<br/>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br/>
 <a href="#json" id="json"><code>--json</code></a> | Output each hurl file result to JSON. The format is very closed to HAR format. <br/>
-<a href="#max-redirs" id="max-redirs"><code>--max-redirs &lt;num&gt;</code></a> | Set maximum number of redirection-followings allowed<br/>By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.<br/>
-<a href="#max-time" id="max-time"><code>-m, --max-time &lt;seconds&gt;</code></a> | Maximum time in seconds that you allow a request/response to take. This is the standard timeout.<br/><br/>See also [`--connect-timeout`](#connect-timeout) option.<br/>
-<a href="#no-color" id="no-color"><code>--no-color</code></a> | Do not colorize output<br/>
+<a href="#max-redirs" id="max-redirs"><code>--max-redirs &lt;NUM&gt;</code></a> | Set maximum number of redirection-followings allowed<br/>By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.<br/>
+<a href="#max-time" id="max-time"><code>-m, --max-time &lt;SECONDS&gt;</code></a> | Maximum time in seconds that you allow a request/response to take. This is the standard timeout.<br/><br/>See also [`--connect-timeout`](#connect-timeout) option.<br/>
+<a href="#no-color" id="no-color"><code>--no-color</code></a> | Do not colorize output.<br/>
 <a href="#no-output" id="no-output"><code>--no-output</code></a> | Suppress output. By default, Hurl outputs the body of the last response.<br/>
-<a href="#noproxy" id="noproxy"><code>--noproxy &lt;no-proxy-list&gt;</code></a> | Comma-separated list of hosts which do not use a proxy.<br/>Override value from Environment variable no_proxy.<br/>
-<a href="#output" id="output"><code>-o, --output &lt;file&gt;</code></a> | Write output to <file> instead of stdout.<br/>
+<a href="#noproxy" id="noproxy"><code>--noproxy &lt;HOST(S)&gt;</code></a> | Comma-separated list of hosts which do not use a proxy.<br/>Override value from Environment variable no_proxy.<br/>
+<a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a> | Write output to FILE instead of stdout.<br/>
 <a href="#proxy" id="proxy"><code>-x, --proxy [protocol://]host[:port]</code></a> | Use the specified proxy.<br/>
-<a href="#report-junit" id="report-junit"><code>--report-junit &lt;file&gt;</code></a> | Generate JUNIT <file>.<br/><br/>If the <file> report already exists, it will be updated with the new test results.<br/>
-<a href="#report-html" id="report-html"><code>--report-html &lt;dir&gt;</code></a> | Generate HTML report in dir.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
+<a href="#report-junit" id="report-junit"><code>--report-junit &lt;FILE&gt;</code></a> | Generate JUnit File.<br/><br/>If the FILE report already exists, it will be updated with the new test results.<br/>
+<a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a> | Generate HTML report in DIR.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
+<a href="#retry" id="retry"><code>--retry</code></a> | Retry requests if any error occurs (asserts, captures, runtimes etc...).<br/>
+<a href="#retry-interval" id="retry-interval"><code>--retry-interval &lt;MILLISECONDS&gt;</code></a> | Duration in milliseconds between each retry. Default is 1000 ms.<br/>
+<a href="#retry-max-count" id="retry-max-count"><code>--retry-max-count &lt;NUM&gt;</code></a> | Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.<br/>
 <a href="#test" id="test"><code>--test</code></a> | Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.<br/>
-<a href="#to-entry" id="to-entry"><code>--to-entry &lt;entry-number&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
-<a href="#user" id="user"><code>-u, --user &lt;user:password&gt;</code></a> | Add basic Authentication header to each request.<br/>
-<a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;name&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
-<a href="#variable" id="variable"><code>--variable &lt;name=value&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>
-<a href="#variables-file" id="variables-file"><code>--variables-file &lt;file&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
-<a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream.<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, -i, --include might be the option you're looking for.<br/>
-<a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a> | Turn on more verbose output on standard error stream.<br/><br/>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error.<br/>
+<a href="#to-entry" id="to-entry"><code>--to-entry &lt;ENTRY_NUMBER&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
+<a href="#user" id="user"><code>-u, --user &lt;USER:PASSWORD&gt;</code></a> | Add basic Authentication header to each request.<br/>
+<a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
+<a href="#variable" id="variable"><code>--variable &lt;NAME=VALUE&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>
+<a href="#variables-file" id="variables-file"><code>--variables-file &lt;FILE&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
+<a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream.<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.<br/>
+<a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a> | Turn on more verbose output on standard error stream.<br/><br/>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.<br/>
 <a href="#help" id="help"><code>-h, --help</code></a> | Usage help. This lists all current command line options with a short description.<br/>
 <a href="#version" id="version"><code>-V, --version</code></a> | Prints version information<br/>
 

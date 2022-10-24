@@ -360,7 +360,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("very_verbose")
                 .long("very-verbose")
-                .help("Turn on verbose output, including HTTP response")
+                .help("Turn on verbose output, including HTTP response and libcurl logs")
                 .action(ArgAction::SetTrue)
         )
 }

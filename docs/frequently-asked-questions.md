@@ -1,18 +1,5 @@
 # Frequently Asked Questions
 
-- [General](#general)
-    - [Why "Hurl"?](#why-hurl)
-    - [Yet Another Tool, I already use X](#yet-another-tool-i-already-use-x)
-    - [Hurl is build on top of libcurl, but what is added?](#hurl-is-build-on-top-of-libcurl-but-what-is-added)
-    - [Why shouldn't I use Hurl?](#why-shouldnt-i-use-hurl)
-    - [I have a large numbers of tests, how to run just specific tests?](#i-have-a-large-numbers-of-tests-how-to-run-just-specific-tests)
-    - [How can I use my Hurl files outside Hurl?](#how-can-i-use-my-hurl-files-outside-hurl)
-    - [Can I do calculation within a Hurl file?](#can-i-do-calculation-within-a-hurl-file)
-- [macOS](#macos)
-    - [How can I use a custom libcurl (from Homebrew by instance)?](#how-can-i-use-a-custom-libcurl-from-homebrew-by-instance)
-    - [Hurl error: SSL certificate has expired](#hurl-error-ssl-certificate-has-expired)
-    - [Hurl warning on Big Sur: Closing connection 0](#hurl-warning-on-big-sur-closing-connection-0)
-
 ## General
 
 ### Why "Hurl"?

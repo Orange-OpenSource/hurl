@@ -146,29 +146,29 @@ will follow a redirection only for the second entry.
 ### --cacert {#cacert}
 
 Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
-Normally curl is built to use a default file for this, so this option is typically used to alter that default file.
+Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.
 
 ### --color {#color}
 
-Colorize Output
+Colorize Output.
 
 ### --compressed {#compressed}
 
 Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.
 
-### --connect-timeout <seconds> {#connect-timeout}
+### --connect-timeout <SECONDS> {#connect-timeout}
 
 Maximum time in seconds that you allow Hurl's connection to take.
 
 See also [`-m, --max-time`](#max-time) option.
 
-### -b, --cookie <file> {#cookie}
+### -b, --cookie <FILE> {#cookie}
 
-Read cookies from file (using the Netscape cookie file format).
+Read cookies from FILE (using the Netscape cookie file format).
 
 Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 
-### -c, --cookie-jar <file> {#cookie-jar}
+### -c, --cookie-jar <FILE> {#cookie-jar}
 
 Write cookies to FILE after running the session (only for one session).
 The file will be written using the Netscape cookie file format.
@@ -184,7 +184,7 @@ Note that this option does not affect the behavior with multiple input Hurl file
 
 All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
-### --file-root <dir> {#file-root}
+### --file-root <DIR> {#file-root}
 
 Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
@@ -193,7 +193,7 @@ When this is not explicitly defined, the files are relative to the current direc
 
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
 
-### --glob <glob> {#glob}
+### --glob <GLOB> {#glob}
 
 Specify input files that match the given glob pattern.
 
@@ -221,12 +221,12 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
 
-### --max-redirs <num> {#max-redirs}
+### --max-redirs <NUM> {#max-redirs}
 
 Set maximum number of redirection-followings allowed
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
-### -m, --max-time <seconds> {#max-time}
+### -m, --max-time <SECONDS> {#max-time}
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
@@ -234,59 +234,71 @@ See also [`--connect-timeout`](#connect-timeout) option.
 
 ### --no-color {#no-color}
 
-Do not colorize output
+Do not colorize output.
 
 ### --no-output {#no-output}
 
 Suppress output. By default, Hurl outputs the body of the last response.
 
-### --noproxy <no-proxy-list> {#noproxy}
+### --noproxy <HOST(S)> {#noproxy}
 
 Comma-separated list of hosts which do not use a proxy.
 Override value from Environment variable no_proxy.
 
-### -o, --output <file> {#output}
+### -o, --output <FILE> {#output}
 
-Write output to <file> instead of stdout.
+Write output to FILE instead of stdout.
 
 ### -x, --proxy [protocol://]host[:port] {#proxy}
 
 Use the specified proxy.
 
-### --report-junit <file> {#report-junit}
+### --report-junit <FILE> {#report-junit}
 
-Generate JUNIT <file>.
+Generate JUnit File.
 
-If the <file> report already exists, it will be updated with the new test results.
+If the FILE report already exists, it will be updated with the new test results.
 
-### --report-html <dir> {#report-html}
+### --report-html <DIR> {#report-html}
 
-Generate HTML report in dir.
+Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
+
+### --retry {#retry}
+
+Retry requests if any error occurs (asserts, captures, runtimes etc...).
+
+### --retry-interval <MILLISECONDS> {#retry-interval}
+
+Duration in milliseconds between each retry. Default is 1000 ms.
+
+### --retry-max-count <NUM> {#retry-max-count}
+
+Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.
 
 ### --test {#test}
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
 
-### --to-entry <entry-number> {#to-entry}
+### --to-entry <ENTRY_NUMBER> {#to-entry}
 
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
 
-### -u, --user <user:password> {#user}
+### -u, --user <USER:PASSWORD> {#user}
 
 Add basic Authentication header to each request.
 
-### -A, --user-agent <name> {#user-agent}
+### -A, --user-agent <NAME> {#user-agent}
 
 Specify the User-Agent string to send to the HTTP server.
 
-### --variable <name=value> {#variable}
+### --variable <NAME=VALUE> {#variable}
 
 Define variable (name/value) to be used in Hurl templates.
 
-### --variables-file <file> {#variables-file}
+### --variables-file <FILE> {#variables-file}
 
 Set properties file in which your define your variables.
 
@@ -303,13 +315,13 @@ A line starting with '>' means data sent by Hurl.
 A line staring with '<' means data received by Hurl.
 A line starting with '*' means additional info provided by Hurl.
 
-If you only want HTTP headers in the output, -i, --include might be the option you're looking for.
+If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.
 
 ### --very-verbose {#very-verbose}
 
 Turn on more verbose output on standard error stream.
 
-In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error.
+In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.
 
 
 ### -h, --help {#help}

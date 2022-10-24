@@ -308,6 +308,35 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 ## Others
 
+### Polling and Retry
+
+Retry request on any errors (asserts, captures, status code, runtime etc...):
+
+```hurl
+# Create a new job
+POST https://api.example.org/jobs
+
+HTTP/* 201
+[Captures]
+job_id: jsonpath "$.id"
+[Asserts]
+jsonpath "$.state" == "RUNNING"
+
+
+# Pull job status until it is completed
+GET https://api.example.org/jobs/{{job_id}}
+[Options]
+retry: true
+
+HTTP/* 200
+[Asserts]
+jsonpath "$.state" == "COMPLETED"
+```
+
+[Doc](/docs/entry.md#retry)
+
+
+
 ### Testing Endpoint Performance
 
 ```hurl
