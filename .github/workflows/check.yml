@@ -25,3 +25,5 @@ jobs:
       run: bin/check/xmllint.sh
     - name: Run crates update
       run: bin/check/crates.sh 
+    - name: Check ad hoc
+      run: bin/check/ad_hoc.sh
