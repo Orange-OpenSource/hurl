@@ -70,11 +70,11 @@ error: Assert failure
    |   expected: matches regex <hi>
    |
 
-error: Subquery error
+error: Filter Error
   --> tests_failed/predicate.hurl:14:22
    |
 14 | jsonpath "$.message" count == 1
-   |                      ^^^^^ type <string> from query result and subquery do not match
+   |                      ^^^^^ Invalid Filter Input <string>
    |
 
 error: Assert failure
