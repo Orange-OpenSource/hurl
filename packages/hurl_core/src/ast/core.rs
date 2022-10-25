@@ -301,7 +301,7 @@ pub struct Assert {
 pub struct Query {
     pub source_info: SourceInfo,
     pub value: QueryValue,
-    pub subquery: Option<(Whitespace, Subquery)>,
+    pub filters: Vec<(Whitespace, Filter)>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -384,21 +384,6 @@ impl CookieAttributeName {
             | CookieAttributeName::SameSite(value) => value.to_string(),
         }
     }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Subquery {
-    pub source_info: SourceInfo,
-    pub value: SubqueryValue,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum SubqueryValue {
-    Regex {
-        space0: Whitespace,
-        value: RegexValue,
-    },
-    Count {},
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -809,4 +794,21 @@ pub enum VariableValue {
     Integer(i64),
     Float(Float),
     String(Template),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Filter {
+    pub source_info: SourceInfo,
+    pub value: FilterValue,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FilterValue {
+    Count {},
+    Regex {
+        space0: Whitespace,
+        value: RegexValue,
+    },
+    EscapeUrl {},
+    UnEscapeUrl {},
 }

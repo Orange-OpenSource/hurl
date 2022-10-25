@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::*;
+use crate::parser::filter::filter;
 use crate::parser::{Error, ParseError};
 
 use super::combinators::*;
@@ -23,36 +24,38 @@ use super::cookiepath::cookiepath;
 use super::primitives::*;
 use super::reader::Reader;
 use super::string::*;
-use super::subquery::subquery;
 use super::ParseResult;
 
 pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
     let start = reader.state.pos.clone();
     let value = query_value(reader)?;
-    let end = reader.state.pos.clone();
 
-    let save = reader.state.clone();
-    let space = zero_or_more_spaces(reader)?;
-    let optional_subquery = if space.value.is_empty() {
-        reader.state = save;
-        None
-    } else {
-        match subquery(reader) {
-            Ok(q) => Some((space, q)),
+    let mut filters = vec![];
+    loop {
+        let save = reader.state.clone();
+        let space = zero_or_more_spaces(reader)?;
+        if space.value.is_empty() {
+            break;
+        }
+        match filter(reader) {
+            Ok(f) => {
+                filters.push((space, f));
+            }
             Err(e) => {
                 if e.recoverable {
                     reader.state = save;
-                    None
+                    break;
                 } else {
                     return Err(e);
                 }
             }
         }
-    };
+    }
+    let end = reader.state.pos.clone();
     Ok(Query {
         source_info: SourceInfo { start, end },
         value,
-        subquery: optional_subquery,
+        filters,
     })
 }
 
@@ -214,7 +217,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                subquery: None,
+                filters: vec![],
             }
         );
     }
@@ -227,7 +230,7 @@ mod tests {
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                subquery: None,
+                filters: vec![],
             }
         );
     }
@@ -371,5 +374,28 @@ mod tests {
                 },
             },
         );
+    }
+
+    #[test]
+    fn test_query_with_filters() {
+        let mut reader = Reader::init("body unescapeUrl ");
+        assert_eq!(
+            query(&mut reader).unwrap(),
+            Query {
+                source_info: SourceInfo::new(1, 1, 1, 17),
+                value: QueryValue::Body {},
+                filters: vec![(
+                    Whitespace {
+                        value: " ".to_string(),
+                        source_info: SourceInfo::new(1, 5, 1, 6)
+                    },
+                    Filter {
+                        source_info: SourceInfo::new(1, 6, 1, 17),
+                        value: FilterValue::UnEscapeUrl {},
+                    }
+                )],
+            }
+        );
+        assert_eq!(reader.state.cursor, 16);
     }
 }

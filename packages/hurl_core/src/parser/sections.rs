@@ -729,7 +729,7 @@ mod tests {
                                 source_info: SourceInfo::new(2, 8, 2, 18),
                             },
                         },
-                        subquery: None,
+                        filters: vec![],
                     },
                     space1: Whitespace {
                         value: String::from(" "),
@@ -1026,12 +1026,12 @@ mod tests {
                 quotes: false,
                 elements: vec![TemplateElement::String {
                     value: "toto".to_string(),
-                    encoded: "toto".to_string()
+                    encoded: "toto".to_string(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
                     end: Pos { line: 1, column: 5 },
-                }
+                },
             })
         );
         let mut reader = Reader::init("\"123\"");
@@ -1041,12 +1041,12 @@ mod tests {
                 quotes: true,
                 elements: vec![TemplateElement::String {
                     value: "123".to_string(),
-                    encoded: "123".to_string()
+                    encoded: "123".to_string(),
                 }],
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 1 },
                     end: Pos { line: 1, column: 6 },
-                }
+                },
             })
         );
     }
@@ -1177,20 +1177,20 @@ mod tests {
                         source_info: SourceInfo::new(1, 13, 1, 23),
                     },
                 },
-                subquery: None,
+                filters: vec![],
             }
         );
     }
 
     #[test]
-    fn test_capture_with_subquery() {
+    fn test_capture_with_filter() {
         let mut reader = Reader::init("token: header \"Location\" regex \"token=(.*)\"");
         let capture0 = capture(&mut reader).unwrap();
 
         assert_eq!(
             capture0.query,
             Query {
-                source_info: SourceInfo::new(1, 8, 1, 25),
+                source_info: SourceInfo::new(1, 8, 1, 44),
                 value: QueryValue::Header {
                     space0: Whitespace {
                         value: String::from(" "),
@@ -1206,14 +1206,14 @@ mod tests {
                     },
                 },
 
-                subquery: Some((
+                filters: vec![(
                     Whitespace {
                         value: " ".to_string(),
                         source_info: SourceInfo::new(1, 25, 1, 26),
                     },
-                    Subquery {
+                    Filter {
                         source_info: SourceInfo::new(1, 26, 1, 44),
-                        value: SubqueryValue::Regex {
+                        value: FilterValue::Regex {
                             space0: Whitespace {
                                 value: " ".to_string(),
                                 source_info: SourceInfo::new(1, 31, 1, 32),
@@ -1228,14 +1228,14 @@ mod tests {
                             }),
                         },
                     }
-                )),
+                )],
             }
         );
         assert_eq!(reader.state.cursor, 43);
     }
 
     #[test]
-    fn test_capture_with_subquery_error() {
+    fn test_capture_with_filter_error() {
         let mut reader = Reader::init("token: header \"Location\" regex ");
         let error = capture(&mut reader).err().unwrap();
         assert_eq!(
@@ -1294,7 +1294,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 8, 1, 18),
                     },
                 },
-                subquery: None,
+                filters: vec![],
             }
         );
     }

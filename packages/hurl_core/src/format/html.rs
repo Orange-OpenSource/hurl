@@ -549,9 +549,9 @@ impl Htmlable for Capture {
 impl Htmlable for Query {
     fn to_html(&self) -> String {
         let mut buffer = self.value.clone().to_html();
-        if let Some((space, subquery)) = self.clone().subquery {
+        for (space, filter) in self.clone().filters {
             buffer.push_str(space.to_html().as_str());
-            buffer.push_str(subquery.to_html().as_str());
+            buffer.push_str(filter.to_html().as_str());
         }
         buffer
     }
@@ -634,26 +634,6 @@ impl Htmlable for RegexValue {
             }
             RegexValue::Regex(regex) => regex.to_html(),
         }
-    }
-}
-
-impl Htmlable for Subquery {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        match self.value.clone() {
-            SubqueryValue::Regex { value, space0 } => {
-                buffer.push_str("<span class=\"subquery-type\">regex</span>");
-                buffer.push_str(space0.to_html().as_str());
-                // buffer.push_str(
-                //     format!("<span class=\"string\">\"{}\"</span>", value.to_html()).as_str(),
-                // );
-                buffer.push_str(value.to_html().as_str());
-            }
-            SubqueryValue::Count {} => {
-                buffer.push_str("<span class=\"subquery-type\">count</span>")
-            }
-        }
-        buffer
     }
 }
 
@@ -1064,6 +1044,31 @@ impl Htmlable for Expr {
         buffer.push_str(self.to_string().as_str());
         buffer.push_str("}}</span>");
         buffer
+    }
+}
+
+impl Htmlable for Filter {
+    fn to_html(&self) -> String {
+        self.value.to_html()
+    }
+}
+
+impl Htmlable for FilterValue {
+    fn to_html(&self) -> String {
+        match self {
+            FilterValue::Count {} => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::Regex { space0, value } => {
+                let mut buffer = "".to_string();
+                buffer.push_str("<span class=\"filter-type\">regex</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(value.to_html().as_str());
+                buffer
+            }
+            FilterValue::EscapeUrl {} => "<span class=\"filter-type\">escapeUrl</span>".to_string(),
+            FilterValue::UnEscapeUrl {} => {
+                "<span class=\"filter-type\">unescapeUrl</span>".to_string()
+            }
+        }
     }
 }
 

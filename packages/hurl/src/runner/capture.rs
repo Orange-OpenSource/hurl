@@ -183,7 +183,7 @@ pub mod tests {
                     },
                 },
 
-                subquery: None,
+                filters: vec![],
             },
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),

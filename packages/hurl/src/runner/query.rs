@@ -25,7 +25,7 @@ use super::value::Value;
 use super::xpath;
 use crate::http;
 use crate::jsonpath;
-use crate::runner::subquery::eval_subquery;
+use crate::runner::filter::eval_filter;
 use hurl_core::ast::*;
 use sha2::Digest;
 
@@ -36,20 +36,19 @@ pub fn eval_query(
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
 ) -> QueryResult {
-    let value = eval_query_value(query, variables, http_response)?;
-    if let Some((_, subquery)) = &query.subquery {
-        if let Some(value) = &value {
-            eval_subquery(subquery, value, variables)
+    let mut value = eval_query_value(query, variables, http_response)?;
+    for (_, filter) in &query.filters {
+        if let Some(existing_value) = value {
+            value = eval_filter(filter, &existing_value, variables)?;
         } else {
-            Err(Error {
-                source_info: subquery.source_info.clone(),
-                inner: RunnerError::SubqueryInvalidInput("none".to_string()),
+            return Err(Error {
+                source_info: filter.source_info.clone(),
+                inner: RunnerError::CouldNotResolveProxyName,
                 assert: false,
-            })
+            });
         }
-    } else {
-        Ok(value)
     }
+    Ok(value)
 }
 pub fn eval_query_value(
     query: &Query,
@@ -355,7 +354,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -377,7 +376,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -399,7 +398,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -444,7 +443,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 19),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -467,7 +466,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -490,16 +489,16 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
-            subquery: Some((
+            filters: vec![(
                 Whitespace {
                     value: "".to_string(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
-                Subquery {
+                Filter {
                     source_info: SourceInfo::new(0, 0, 0, 0),
-                    value: SubqueryValue::Count {},
+                    value: FilterValue::Count {},
                 },
-            )),
+            )],
         }
     }
 
@@ -522,7 +521,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -544,7 +543,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 26),
                 }),
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -566,7 +565,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 }),
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -578,7 +577,7 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Status {},
-                    subquery: None
+                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -609,7 +608,7 @@ pub mod tests {
                     source_info: SourceInfo::new(2, 8, 2, 14),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         //    let error = query_header.eval(http::hello_http_response()).err().unwrap();
         //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
@@ -640,7 +639,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 8, 1, 16),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         assert_eq!(
             eval_query(&query_header, &variables, &http::hello_http_response())
@@ -688,7 +687,7 @@ pub mod tests {
                     attribute: None,
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -718,7 +717,7 @@ pub mod tests {
                     }),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -748,7 +747,7 @@ pub mod tests {
                     }),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -778,7 +777,7 @@ pub mod tests {
                     }),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         assert_eq!(eval_query(&query, &variables, &response).unwrap(), None);
     }
@@ -869,7 +868,7 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Body {},
-                    subquery: None
+                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -882,7 +881,7 @@ pub mod tests {
             &Query {
                 source_info: SourceInfo::new(1, 1, 1, 2),
                 value: QueryValue::Body {},
-                subquery: None,
+                filters: vec![],
             },
             &variables,
             &http::bytes_http_response(),
@@ -941,7 +940,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
         let error = eval_query(&query, &variables, &http::xml_two_users_http_response())
             .err()
@@ -996,7 +995,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 
@@ -1037,7 +1036,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 13),
                 },
             },
-            subquery: None,
+            filters: vec![],
         };
 
         let error = eval_query(&jsonpath_query, &variables, &json_http_response())
@@ -1152,7 +1151,7 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Bytes {},
-                    subquery: None
+                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -1171,7 +1170,7 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Sha256 {},
-                    subquery: None
+                    filters: vec![]
                 },
                 &variables,
                 &http::Response {

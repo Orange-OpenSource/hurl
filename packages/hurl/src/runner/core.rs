@@ -173,8 +173,6 @@ pub enum RunnerError {
     QueryInvalidJson,
     NoQueryResult,
 
-    SubqueryInvalidInput(String),
-
     // Predicate
     PredicateType,
     PredicateValue(Value),
@@ -206,6 +204,10 @@ pub enum RunnerError {
     UnauthorizedFileAccess {
         path: PathBuf,
     },
+
+    // Filter
+    FilterMissingInput {},
+    FilterInvalidInput(String),
 }
 
 // endregion

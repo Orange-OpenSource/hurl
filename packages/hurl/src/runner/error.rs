@@ -37,7 +37,6 @@ impl Error for runner::Error {
             RunnerError::QueryInvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid JSONPath".to_string(),
             RunnerError::PredicateType { .. } => "Assert - inconsistent predicate type".to_string(),
-            RunnerError::SubqueryInvalidInput { .. } => "Subquery error".to_string(),
             RunnerError::InvalidDecoding { .. } => "Invalid decoding".to_string(),
             RunnerError::InvalidCharset { .. } => "Invalid charset".to_string(),
             RunnerError::AssertFailure { .. } => "Assert failure".to_string(),
@@ -47,6 +46,8 @@ impl Error for runner::Error {
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
             RunnerError::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
+            RunnerError::FilterMissingInput { .. } => "Filter Error".to_string(),
+            RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
         }
     }
 
@@ -98,9 +99,6 @@ impl Error for runner::Error {
             RunnerError::PredicateType { .. } => {
                 "predicate type inconsistent with value return by query".to_string()
             }
-            RunnerError::SubqueryInvalidInput(t) => {
-                format!("type <{}> from query result and subquery do not match", t)
-            }
             RunnerError::InvalidDecoding { charset } => {
                 format!("the body can not be decoded with charset '{}'", charset)
             }
@@ -141,6 +139,12 @@ impl Error for runner::Error {
                     "unauthorized access to file {}, check --file-root option",
                     path.to_str().unwrap()
                 )
+            }
+            RunnerError::FilterMissingInput { .. } => {
+                "Missing value to apply the filter".to_string()
+            }
+            RunnerError::FilterInvalidInput(message) => {
+                format!("Invalid Filter Input <{}>", message)
             }
         }
     }

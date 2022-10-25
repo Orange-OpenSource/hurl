@@ -254,10 +254,11 @@ impl Lintable<Query> for Query {
         Query {
             source_info: SourceInfo::new(0, 0, 0, 0),
             value: self.value.lint(),
-            subquery: self
-                .subquery
-                .clone()
-                .map(|(_, s)| (one_whitespace(), s.lint())),
+            filters: self
+                .filters
+                .iter()
+                .map(|(_, f)| (one_whitespace(), f.lint()))
+                .collect(),
         }
     }
 }
@@ -314,19 +315,6 @@ impl Lintable<QueryValue> for QueryValue {
     }
 }
 
-impl Lintable<Subquery> for Subquery {
-    fn errors(&self) -> Vec<Error> {
-        let errors = vec![];
-        errors
-    }
-
-    fn lint(&self) -> Subquery {
-        let source_info = SourceInfo::new(0, 0, 0, 0);
-        let value = self.value.lint();
-        Subquery { source_info, value }
-    }
-}
-
 impl Lintable<RegexValue> for RegexValue {
     fn errors(&self) -> Vec<Error> {
         let errors = vec![];
@@ -337,22 +325,6 @@ impl Lintable<RegexValue> for RegexValue {
         match self {
             RegexValue::Template(template) => RegexValue::Template(template.lint()),
             RegexValue::Regex(regex) => RegexValue::Regex(regex.clone()),
-        }
-    }
-}
-impl Lintable<SubqueryValue> for SubqueryValue {
-    fn errors(&self) -> Vec<Error> {
-        let errors = vec![];
-        errors
-    }
-
-    fn lint(&self) -> SubqueryValue {
-        match self {
-            SubqueryValue::Regex { value, .. } => SubqueryValue::Regex {
-                space0: one_whitespace(),
-                value: value.lint(),
-            },
-            SubqueryValue::Count {} => SubqueryValue::Count {},
         }
     }
 }
@@ -817,6 +789,37 @@ impl Lintable<EntryOption> for EntryOption {
 
     fn lint(&self) -> EntryOption {
         self.clone()
+    }
+}
+
+impl Lintable<Filter> for Filter {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> Filter {
+        Filter {
+            source_info: SourceInfo::new(0, 0, 0, 0),
+            value: self.value.lint(),
+        }
+    }
+}
+
+impl Lintable<FilterValue> for FilterValue {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> FilterValue {
+        match self {
+            FilterValue::Regex { value, .. } => FilterValue::Regex {
+                space0: one_whitespace(),
+                value: value.lint(),
+            },
+            f => f.clone(),
+        }
     }
 }
 

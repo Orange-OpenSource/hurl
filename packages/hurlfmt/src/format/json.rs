@@ -268,8 +268,9 @@ impl ToJson for Assert {
 impl ToJson for Query {
     fn to_json(&self) -> JValue {
         let mut attributes = query_value_attributes(&self.value);
-        if let Some((_, subquery)) = self.subquery.clone() {
-            attributes.push(("subquery".to_string(), subquery.to_json()));
+        if !self.filters.is_empty() {
+            let filters = JValue::List(self.filters.iter().map(|(_, f)| f.to_json()).collect());
+            attributes.push(("filters".to_string(), filters));
         }
         JValue::Object(attributes)
     }
@@ -325,28 +326,6 @@ fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
         }
     };
     attributes
-}
-
-impl ToJson for Subquery {
-    fn to_json(&self) -> JValue {
-        self.value.to_json()
-    }
-}
-
-impl ToJson for SubqueryValue {
-    fn to_json(&self) -> JValue {
-        let mut attributes = vec![];
-        match self {
-            SubqueryValue::Regex { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
-                attributes.push(("expr".to_string(), value.to_json()));
-            }
-            SubqueryValue::Count { .. } => {
-                attributes.push(("type".to_string(), JValue::String("count".to_string())));
-            }
-        }
-        JValue::Object(attributes)
-    }
 }
 
 impl ToJson for RegexValue {
@@ -519,6 +498,37 @@ impl ToJson for hurl_core::ast::JsonListElement {
     }
 }
 
+impl ToJson for Filter {
+    fn to_json(&self) -> JValue {
+        self.value.to_json()
+    }
+}
+
+impl ToJson for FilterValue {
+    fn to_json(&self) -> JValue {
+        let mut attributes = vec![];
+        match self {
+            FilterValue::Regex { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
+                attributes.push(("expr".to_string(), value.to_json()));
+            }
+            FilterValue::Count { .. } => {
+                attributes.push(("type".to_string(), JValue::String("count".to_string())));
+            }
+            FilterValue::EscapeUrl { .. } => {
+                attributes.push(("type".to_string(), JValue::String("escapeUrl".to_string())));
+            }
+            FilterValue::UnEscapeUrl { .. } => {
+                attributes.push((
+                    "type".to_string(),
+                    JValue::String("unescapeUrl".to_string()),
+                ));
+            }
+        }
+        JValue::Object(attributes)
+    }
+}
+
 #[cfg(test)]
 pub mod tests {
     use super::*;
@@ -666,7 +676,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            subquery: None,
+            filters: vec![],
         }
     }
 

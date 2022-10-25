@@ -26,6 +26,7 @@ pub enum Token {
     SectionHeader(String),
     QueryType(String),
     PredicateType(String),
+    FilterType(String),
     Not(String),
     Keyword(String),
 
@@ -397,9 +398,9 @@ impl Tokenizable for Assert {
 impl Tokenizable for Query {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = self.value.clone().tokenize();
-        if let Some((space, subquery)) = &self.subquery {
+        for (space, filter) in &self.filters {
             tokens.append(&mut space.clone().tokenize());
-            tokens.append(&mut subquery.tokenize());
+            tokens.append(&mut filter.tokenize());
         }
         tokens
     }
@@ -480,23 +481,6 @@ impl Tokenizable for CookieAttribute {
         tokens.push(Token::String(self.name.value()));
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::CodeDelimiter("]".to_string()));
-        tokens
-    }
-}
-
-impl Tokenizable for Subquery {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        match self.value.clone() {
-            SubqueryValue::Regex { space0, value } => {
-                tokens.push(Token::QueryType(String::from("regex")));
-                tokens.append(&mut space0.tokenize());
-                tokens.append(&mut value.tokenize());
-            }
-            SubqueryValue::Count { .. } => {
-                tokens.push(Token::QueryType(String::from("count")));
-            }
-        }
         tokens
     }
 }
@@ -1085,5 +1069,22 @@ impl Tokenizable for VeryVerboseOption {
         tokens.push(Token::Boolean(self.value.to_string()));
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
+    }
+}
+
+impl Tokenizable for Filter {
+    fn tokenize(&self) -> Vec<Token> {
+        match self.value.clone() {
+            FilterValue::Regex { space0, value } => {
+                let mut tokens: Vec<Token> = vec![];
+                tokens.push(Token::FilterType(String::from("regex")));
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut value.tokenize());
+                tokens
+            }
+            FilterValue::Count { .. } => vec![Token::FilterType(String::from("count"))],
+            FilterValue::EscapeUrl { .. } => vec![Token::FilterType(String::from("escapeUrl"))],
+            FilterValue::UnEscapeUrl { .. } => vec![Token::FilterType(String::from("unescapeUrl"))],
+        }
     }
 }

@@ -114,5 +114,12 @@ pub fn format_token(token: Token, color: bool) -> String {
             }
         }
         Token::Keyword(value) => value,
+        Token::FilterType(value) => {
+            if color {
+                value.cyan().to_string()
+            } else {
+                value
+            }
+        }
     }
 }
