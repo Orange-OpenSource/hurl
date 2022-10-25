@@ -31,9 +31,9 @@
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//_:svg/_:g/_:circle"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[local-name()='svg']/*[local-name()='g']/*[local-name()='circle']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span>  <span class="number">3</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[name()='svg']/*[name()='g']/*[name()='circle']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//_:svg/_:g/_:circle"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[local-name()='svg']/*[local-name()='g']/*[local-name()='circle']"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span>  <span class="number">3</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[name()='svg']/*[name()='g']/*[name()='circle']"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"></span><span class="comment"># Test XPath assert with default and prefixed XML namespace.</span>
@@ -45,8 +45,8 @@
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/_:title)"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/_:title)"</span> <span class="predicate-type">&gt;</span> <span class="string">"Cheaper"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//_:book/isbn:number)"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[name()='book']/*[name()='notes']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[local-name()='book']/*[local-name()='notes']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
-<span class="line"><span class="query-type">xpath</span> <span class="string">"//_:book/_:notes/*[local-name()='p']"</span> <span class="subquery-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[name()='book']/*[name()='notes']"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//*[local-name()='book']/*[local-name()='notes']"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">xpath</span> <span class="string">"//_:book/_:notes/*[local-name()='p']"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
 </span></span><span class="line"></span>
 </code></pre>
