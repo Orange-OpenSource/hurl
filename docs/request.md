@@ -533,7 +533,7 @@ very-verbose: true      # allow more verbose output
 [included file]: #file-body
 [`--file-root` option]: /docs/manual.md#file-root
 [`-u/--user` option]: /docs/manual.md#user
-[Hurl unicode literals \u{20}]: /docs/hurl-file.md#special-character-in-strings
+[Hurl unicode literals \u{20}]: /docs/hurl-file.md#special-characters-in-strings
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`--location`]: /docs/manual.md#location
 [`--verbose`]: /docs/manual.md#verbose
