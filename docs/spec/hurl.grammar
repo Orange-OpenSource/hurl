@@ -111,11 +111,11 @@ file-contenttype: [a-zA-Z0-9/+-]+
 
 capture:
   lt*
-  key-string ":" query lt
+  key-string ":" query (sp filter)* lt
 
 assert:
   lt*
-  query sp predicate lt
+  query (sp filter)* sp predicate lt
 
 option:
   lt*
@@ -163,9 +163,7 @@ variable-value:
 
 # Query
 
-query: main-query (sp filter)*
-
-main-query:
+query:
     status-query
   | url-query
   | header-query
