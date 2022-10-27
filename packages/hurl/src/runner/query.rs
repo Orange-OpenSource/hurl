@@ -25,32 +25,12 @@ use super::value::Value;
 use super::xpath;
 use crate::http;
 use crate::jsonpath;
-use crate::runner::filter::eval_filter;
 use hurl_core::ast::*;
 use sha2::Digest;
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
 pub fn eval_query(
-    query: &Query,
-    variables: &HashMap<String, Value>,
-    http_response: &http::Response,
-) -> QueryResult {
-    let mut value = eval_query_value(query, variables, http_response)?;
-    for (_, filter) in &query.filters {
-        if let Some(existing_value) = value {
-            value = eval_filter(filter, &existing_value, variables)?;
-        } else {
-            return Err(Error {
-                source_info: filter.source_info.clone(),
-                inner: RunnerError::CouldNotResolveProxyName,
-                assert: false,
-            });
-        }
-    }
-    Ok(value)
-}
-pub fn eval_query_value(
     query: &Query,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
@@ -354,7 +334,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -376,7 +355,6 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -398,7 +376,6 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -443,7 +420,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 19),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -466,39 +442,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
-            filters: vec![],
-        }
-    }
-
-    pub fn jsonpath_errors_count() -> Query {
-        // jsonpath "$.errors" count
-        Query {
-            source_info: SourceInfo::new(1, 1, 1, 19),
-            value: QueryValue::Jsonpath {
-                space0: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
-                },
-                expr: Template {
-                    elements: vec![TemplateElement::String {
-                        value: String::from("$.errors"),
-                        encoded: String::from("$.errors"),
-                    }],
-                    quotes: true,
-                    //   delimiter: "".to_string(),
-                    source_info: SourceInfo::new(1, 10, 1, 18),
-                },
-            },
-            filters: vec![(
-                Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
-                },
-                Filter {
-                    source_info: SourceInfo::new(0, 0, 0, 0),
-                    value: FilterValue::Count {},
-                },
-            )],
         }
     }
 
@@ -521,7 +464,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -543,7 +485,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 26),
                 }),
             },
-            filters: vec![],
         }
     }
 
@@ -565,7 +506,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 }),
             },
-            filters: vec![],
         }
     }
 
@@ -577,7 +517,6 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Status {},
-                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -608,7 +547,6 @@ pub mod tests {
                     source_info: SourceInfo::new(2, 8, 2, 14),
                 },
             },
-            filters: vec![],
         };
         //    let error = query_header.eval(http::hello_http_response()).err().unwrap();
         //    assert_eq!(error.source_info.start, Pos { line: 1, column: 8 });
@@ -639,7 +577,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 8, 1, 16),
                 },
             },
-            filters: vec![],
         };
         assert_eq!(
             eval_query(&query_header, &variables, &http::hello_http_response())
@@ -667,7 +604,7 @@ pub mod tests {
             ],
             body: vec![],
             duration: Default::default(),
-            url: "".to_string()
+            url: "".to_string(),
         };
 
         // cookie "LSID"
@@ -687,7 +624,6 @@ pub mod tests {
                     attribute: None,
                 },
             },
-            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -717,7 +653,6 @@ pub mod tests {
                     }),
                 },
             },
-            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -747,7 +682,6 @@ pub mod tests {
                     }),
                 },
             },
-            filters: vec![],
         };
         assert_eq!(
             eval_query(&query, &variables, &response.clone())
@@ -777,7 +711,6 @@ pub mod tests {
                     }),
                 },
             },
-            filters: vec![],
         };
         assert_eq!(eval_query(&query, &variables, &response).unwrap(), None);
     }
@@ -868,7 +801,6 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Body {},
-                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -881,7 +813,6 @@ pub mod tests {
             &Query {
                 source_info: SourceInfo::new(1, 1, 1, 2),
                 value: QueryValue::Body {},
-                filters: vec![],
             },
             &variables,
             &http::bytes_http_response(),
@@ -940,7 +871,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 10),
                 },
             },
-            filters: vec![],
         };
         let error = eval_query(&query, &variables, &http::xml_two_users_http_response())
             .err()
@@ -995,7 +925,6 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -1006,7 +935,7 @@ pub mod tests {
             eval_query(
                 &xpath_html_charset(),
                 &variables,
-                &http::html_http_response()
+                &http::html_http_response(),
             )
             .unwrap()
             .unwrap(),
@@ -1036,7 +965,6 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 10, 1, 13),
                 },
             },
-            filters: vec![],
         };
 
         let error = eval_query(&jsonpath_query, &variables, &json_http_response())
@@ -1117,13 +1045,6 @@ pub mod tests {
                 )])
             ])
         );
-
-        assert_eq!(
-            eval_query(&jsonpath_errors_count(), &variables, &json_http_response())
-                .unwrap()
-                .unwrap(),
-            Value::Integer(2)
-        );
     }
 
     #[test]
@@ -1151,7 +1072,6 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Bytes {},
-                    filters: vec![]
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -1170,7 +1090,6 @@ pub mod tests {
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                     value: QueryValue::Sha256 {},
-                    filters: vec![]
                 },
                 &variables,
                 &http::Response {
@@ -1180,7 +1099,7 @@ pub mod tests {
                     body: vec![0xff],
                     duration: Default::default(),
                     url: "".to_string()
-                },
+                }
             )
             .unwrap()
             .unwrap(),

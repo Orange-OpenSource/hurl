@@ -15,11 +15,36 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Filter, FilterValue, SourceInfo};
+use crate::ast::{Filter, FilterValue, SourceInfo, Whitespace};
 use crate::parser::combinators::choice;
-use crate::parser::primitives::{one_or_more_spaces, try_literal};
+use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
 use crate::parser::{Error, ParseError, ParseResult, Reader};
+
+pub fn filters(reader: &mut Reader) -> ParseResult<'static, Vec<(Whitespace, Filter)>> {
+    let mut filters = vec![];
+    loop {
+        let save = reader.state.clone();
+        let space = zero_or_more_spaces(reader)?;
+        if space.value.is_empty() {
+            break;
+        }
+        match filter(reader) {
+            Ok(f) => {
+                filters.push((space, f));
+            }
+            Err(e) => {
+                if e.recoverable {
+                    reader.state = save;
+                    break;
+                } else {
+                    return Err(e);
+                }
+            }
+        }
+    }
+    Ok(filters)
+}
 
 pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     let start = reader.state.pos.clone();

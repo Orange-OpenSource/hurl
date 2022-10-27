@@ -19,6 +19,7 @@
 use std::collections::HashMap;
 
 use crate::http;
+use crate::runner::filter::eval_filters;
 use hurl_core::ast::*;
 
 use super::core::RunnerError;
@@ -43,7 +44,10 @@ pub fn eval_capture(
                 assert: false,
             });
         }
-        Some(value) => value,
+        Some(value) => {
+            let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
+            eval_filters(&filters, &value, variables)?
+        }
     };
     Ok(CaptureResult {
         name: name.clone(),
@@ -79,6 +83,7 @@ pub mod tests {
 
             // xpath count(//user)
             query: query::tests::xpath_count_user_query(),
+            filters: vec![],
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -107,6 +112,7 @@ pub mod tests {
 
             // xpath count(//user)
             query: query::tests::jsonpath_duration(),
+            filters: vec![],
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,
@@ -131,6 +137,7 @@ pub mod tests {
                 encoded: "count".to_string(),
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
+            filters: vec![],
             space1: whitespace.clone(),
             space2: whitespace.clone(),
 
@@ -182,9 +189,8 @@ pub mod tests {
                         source_info: SourceInfo::new(1, 7, 1, 13),
                     },
                 },
-
-                filters: vec![],
             },
+            filters: vec![],
             line_terminator0: LineTerminator {
                 space0: whitespace.clone(),
                 comment: None,

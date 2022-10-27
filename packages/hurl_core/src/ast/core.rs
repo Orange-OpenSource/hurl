@@ -284,6 +284,7 @@ pub struct Capture {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub query: Query,
+    pub filters: Vec<(Whitespace, Filter)>,
     pub line_terminator0: LineTerminator,
 }
 
@@ -292,6 +293,7 @@ pub struct Assert {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub query: Query,
+    pub filters: Vec<(Whitespace, Filter)>,
     pub space1: Whitespace,
     pub predicate: Predicate,
     pub line_terminator0: LineTerminator,
@@ -301,7 +303,6 @@ pub struct Assert {
 pub struct Query {
     pub source_info: SourceInfo,
     pub value: QueryValue,
-    pub filters: Vec<(Whitespace, Filter)>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

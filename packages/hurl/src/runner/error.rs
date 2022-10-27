@@ -65,6 +65,7 @@ impl Error for runner::Error {
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
             RunnerError::FilterMissingInput { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
+            RunnerError::FilterRegexNoCapture { .. } => "Filter Error".to_string(),
         }
     }
 
@@ -163,6 +164,7 @@ impl Error for runner::Error {
             RunnerError::FilterInvalidInput(message) => {
                 format!("Invalid Filter Input <{}>", message)
             }
+            RunnerError::FilterRegexNoCapture { .. } => "Capture not found".to_string(),
         }
     }
 }

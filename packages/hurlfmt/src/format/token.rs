@@ -369,6 +369,10 @@ impl Tokenizable for Capture {
         tokens.push(Token::Colon(String::from(":")));
         tokens.append(&mut self.space2.tokenize());
         tokens.append(&mut self.query.tokenize());
+        for (space, filter) in &self.filters {
+            tokens.append(&mut space.clone().tokenize());
+            tokens.append(&mut filter.tokenize());
+        }
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
     }
@@ -386,6 +390,10 @@ impl Tokenizable for Assert {
         );
         tokens.append(&mut self.space0.tokenize());
         tokens.append(&mut self.query.tokenize());
+        for (space, filter) in &self.filters {
+            tokens.append(&mut space.clone().tokenize());
+            tokens.append(&mut filter.tokenize());
+        }
         tokens.append(&mut self.space1.tokenize());
         // TODO reconvert back your first predicate for jsonpath
         // so that you can use your firstX predicate for other query
@@ -397,12 +405,7 @@ impl Tokenizable for Assert {
 
 impl Tokenizable for Query {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = self.value.clone().tokenize();
-        for (space, filter) in &self.filters {
-            tokens.append(&mut space.clone().tokenize());
-            tokens.append(&mut filter.tokenize());
-        }
-        tokens
+        self.value.clone().tokenize()
     }
 }
 

@@ -21,11 +21,23 @@ use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo};
 use regex::Regex;
 use std::collections::HashMap;
 
-pub fn eval_filter(
+pub fn eval_filters(
+    filters: &Vec<Filter>,
+    value: &Value,
+    variables: &HashMap<String, Value>,
+) -> Result<Value, Error> {
+    let mut value = value.clone();
+    for filter in filters {
+        value = eval_filter(filter, &value, variables)?;
+    }
+    Ok(value)
+}
+
+fn eval_filter(
     filter: &Filter,
     value: &Value,
     variables: &HashMap<String, Value>,
-) -> Result<Option<Value>, Error> {
+) -> Result<Value, Error> {
     match &filter.value {
         FilterValue::Regex {
             value: regex_value, ..
@@ -41,7 +53,7 @@ fn eval_regex(
     regex_value: &RegexValue,
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
-) -> Result<Option<Value>, Error> {
+) -> Result<Value, Error> {
     let re = match regex_value {
         RegexValue::Template(t) => {
             let value = eval_template(t, variables)?;
@@ -52,7 +64,7 @@ fn eval_regex(
                         source_info: t.source_info.clone(),
                         inner: RunnerError::InvalidRegex(),
                         assert: false,
-                    })
+                    });
                 }
             }
         }
@@ -62,10 +74,18 @@ fn eval_regex(
     match value {
         Value::String(s) => match re.captures(s.as_str()) {
             Some(captures) => match captures.get(1) {
-                Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                None => Ok(None),
+                Some(v) => Ok(Value::String(v.as_str().to_string())),
+                None => Err(Error {
+                    source_info: source_info.clone(),
+                    inner: RunnerError::FilterRegexNoCapture {},
+                    assert: false,
+                }),
             },
-            None => Ok(None),
+            None => Err(Error {
+                source_info: source_info.clone(),
+                inner: RunnerError::FilterRegexNoCapture {},
+                assert: false,
+            }),
         },
         v => Err(Error {
             source_info: source_info.clone(),
@@ -75,11 +95,11 @@ fn eval_regex(
     }
 }
 
-fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Option<Value>, Error> {
+fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
     match value {
-        Value::List(values) => Ok(Some(Value::Integer(values.len() as i64))),
-        Value::Bytes(values) => Ok(Some(Value::Integer(values.len() as i64))),
-        Value::Nodeset(size) => Ok(Some(Value::Integer(*size as i64))),
+        Value::List(values) => Ok(Value::Integer(values.len() as i64)),
+        Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
+        Value::Nodeset(size) => Ok(Value::Integer(*size as i64)),
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -93,30 +113,51 @@ pub mod tests {
     use super::*;
     use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
 
-    #[test]
-    pub fn filter_count() {
-        // count
-        let filter = Filter {
+    pub fn filter_count() -> Filter {
+        Filter {
             source_info: SourceInfo::new(1, 1, 1, 6),
             value: FilterValue::Count {},
-        };
+        }
+    }
+
+    #[test]
+    pub fn test_filters() {
         let variables = HashMap::new();
 
         assert_eq!(
-            eval_filter(
-                &filter,
+            eval_filters(
+                &vec![filter_count()],
                 &Value::List(vec![
                     Value::Integer(1),
                     Value::Integer(2),
-                    Value::Integer(2)
+                    Value::Integer(2),
                 ]),
                 &variables,
             )
             .unwrap(),
-            Some(Value::Integer(3))
+            Value::Integer(3)
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_count() {
+        let variables = HashMap::new();
+
+        assert_eq!(
+            eval_filter(
+                &filter_count(),
+                &Value::List(vec![
+                    Value::Integer(1),
+                    Value::Integer(2),
+                    Value::Integer(2),
+                ]),
+                &variables,
+            )
+            .unwrap(),
+            Value::Integer(3)
         );
 
-        let error = eval_filter(&filter, &Value::Bool(true), &variables)
+        let error = eval_filter(&filter_count(), &Value::Bool(true), &variables)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 6));
@@ -127,7 +168,7 @@ pub mod tests {
     }
 
     #[test]
-    fn test_filter_regex() {
+    fn eval_filter_regex() {
         // regex "Hello (.*)!"
         let variables = HashMap::new();
         let whitespace = Whitespace {
@@ -154,7 +195,6 @@ pub mod tests {
                 &Value::String("Hello Bob!".to_string()),
                 &variables,
             )
-            .unwrap()
             .unwrap(),
             Value::String("Bob".to_string())
         );
@@ -170,7 +210,7 @@ pub mod tests {
     }
 
     #[test]
-    fn test_filter_invalid_regex() {
+    fn eval_filter_invalid_regex() {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(""),

@@ -247,31 +247,33 @@ impl ToJson for Cookie {
 
 impl ToJson for Capture {
     fn to_json(&self) -> JValue {
-        let attributes = vec![
+        let mut attributes = vec![
             ("name".to_string(), JValue::String(self.name.value.clone())),
             ("query".to_string(), self.query.to_json()),
         ];
+        if !self.filters.is_empty() {
+            let filters = JValue::List(self.filters.iter().map(|(_, f)| f.to_json()).collect());
+            attributes.push(("filters".to_string(), filters));
+        }
         JValue::Object(attributes)
     }
 }
 
 impl ToJson for Assert {
     fn to_json(&self) -> JValue {
-        let attributes = vec![
-            ("query".to_string(), self.query.to_json()),
-            ("predicate".to_string(), self.predicate.to_json()),
-        ];
+        let mut attributes = vec![("query".to_string(), self.query.to_json())];
+        if !self.filters.is_empty() {
+            let filters = JValue::List(self.filters.iter().map(|(_, f)| f.to_json()).collect());
+            attributes.push(("filters".to_string(), filters));
+        }
+        attributes.push(("predicate".to_string(), self.predicate.to_json()));
         JValue::Object(attributes)
     }
 }
 
 impl ToJson for Query {
     fn to_json(&self) -> JValue {
-        let mut attributes = query_value_attributes(&self.value);
-        if !self.filters.is_empty() {
-            let filters = JValue::List(self.filters.iter().map(|(_, f)| f.to_json()).collect());
-            attributes.push(("filters".to_string(), filters));
-        }
+        let attributes = query_value_attributes(&self.value);
         JValue::Object(attributes)
     }
 }
@@ -471,7 +473,7 @@ impl ToJson for RawString {
     }
 }
 
-impl ToJson for hurl_core::ast::JsonValue {
+impl ToJson for JsonValue {
     fn to_json(&self) -> JValue {
         match self {
             JsonValue::Null {} => JValue::Null {},
@@ -492,7 +494,7 @@ impl ToJson for hurl_core::ast::JsonValue {
     }
 }
 
-impl ToJson for hurl_core::ast::JsonListElement {
+impl ToJson for JsonListElement {
     fn to_json(&self) -> JValue {
         self.value.to_json()
     }
@@ -676,7 +678,6 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
-            filters: vec![],
         }
     }
 
@@ -693,6 +694,7 @@ pub mod tests {
             space1: whitespace(),
             space2: whitespace(),
             query: header_query(),
+            filters: vec![],
             line_terminator0: line_terminator(),
         }
     }
@@ -702,6 +704,7 @@ pub mod tests {
             line_terminators: vec![],
             space0: whitespace(),
             query: header_query(),
+            filters: vec![],
             space1: whitespace(),
             predicate: equal_int_predicate(10),
             line_terminator0: line_terminator(),

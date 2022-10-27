@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::*;
+use crate::parser::filter::filters;
 
 use super::combinators::*;
 use super::error::*;
@@ -286,7 +287,7 @@ fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
     let q = query(reader)?;
-
+    let filters = filters(reader)?;
     let line_terminator0 = line_terminator(reader)?;
     Ok(Capture {
         line_terminators,
@@ -295,6 +296,7 @@ fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
         space1,
         space2,
         query: q,
+        filters,
         line_terminator0,
     })
 }
@@ -303,6 +305,7 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let query0 = query(reader)?;
+    let filters = filters(reader)?;
     let space1 = one_or_more_spaces(reader)?;
     let predicate0 = predicate(reader)?;
 
@@ -335,6 +338,7 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
         line_terminators,
         space0,
         query: query0,
+        filters,
         space1,
         predicate: predicate0,
         line_terminator0,
@@ -729,8 +733,8 @@ mod tests {
                                 source_info: SourceInfo::new(2, 8, 2, 18),
                             },
                         },
-                        filters: vec![],
                     },
+                    filters: vec![],
                     space1: Whitespace {
                         value: String::from(" "),
                         source_info: SourceInfo::new(2, 18, 2, 19),
@@ -1177,7 +1181,6 @@ mod tests {
                         source_info: SourceInfo::new(1, 13, 1, 23),
                     },
                 },
-                filters: vec![],
             }
         );
     }
@@ -1190,7 +1193,7 @@ mod tests {
         assert_eq!(
             capture0.query,
             Query {
-                source_info: SourceInfo::new(1, 8, 1, 44),
+                source_info: SourceInfo::new(1, 8, 1, 25),
                 value: QueryValue::Header {
                     space0: Whitespace {
                         value: String::from(" "),
@@ -1205,30 +1208,6 @@ mod tests {
                         source_info: SourceInfo::new(1, 15, 1, 25),
                     },
                 },
-
-                filters: vec![(
-                    Whitespace {
-                        value: " ".to_string(),
-                        source_info: SourceInfo::new(1, 25, 1, 26),
-                    },
-                    Filter {
-                        source_info: SourceInfo::new(1, 26, 1, 44),
-                        value: FilterValue::Regex {
-                            space0: Whitespace {
-                                value: " ".to_string(),
-                                source_info: SourceInfo::new(1, 31, 1, 32),
-                            },
-                            value: RegexValue::Template(Template {
-                                quotes: true,
-                                elements: vec![TemplateElement::String {
-                                    value: "token=(.*)".to_string(),
-                                    encoded: "token=(.*)".to_string(),
-                                }],
-                                source_info: SourceInfo::new(1, 32, 1, 44),
-                            }),
-                        },
-                    }
-                )],
             }
         );
         assert_eq!(reader.state.cursor, 43);
@@ -1294,7 +1273,6 @@ mod tests {
                         source_info: SourceInfo::new(1, 8, 1, 18),
                     },
                 },
-                filters: vec![],
             }
         );
     }

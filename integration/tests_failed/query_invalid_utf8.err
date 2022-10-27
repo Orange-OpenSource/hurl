@@ -2,6 +2,6 @@ error: Invalid decoding
   --> tests_failed/query_invalid_utf8.hurl:4:1
    |
  4 | jsonpath "$.errors" count == 2
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^ the body can not be decoded with charset 'utf-8'
+   | ^^^^^^^^^^^^^^^^^^^ the body can not be decoded with charset 'utf-8'
    |
 

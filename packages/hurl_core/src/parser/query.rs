@@ -16,7 +16,6 @@
  *
  */
 use crate::ast::*;
-use crate::parser::filter::filter;
 use crate::parser::{Error, ParseError};
 
 use super::combinators::*;
@@ -29,33 +28,10 @@ use super::ParseResult;
 pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
     let start = reader.state.pos.clone();
     let value = query_value(reader)?;
-
-    let mut filters = vec![];
-    loop {
-        let save = reader.state.clone();
-        let space = zero_or_more_spaces(reader)?;
-        if space.value.is_empty() {
-            break;
-        }
-        match filter(reader) {
-            Ok(f) => {
-                filters.push((space, f));
-            }
-            Err(e) => {
-                if e.recoverable {
-                    reader.state = save;
-                    break;
-                } else {
-                    return Err(e);
-                }
-            }
-        }
-    }
     let end = reader.state.pos.clone();
     Ok(Query {
         source_info: SourceInfo { start, end },
         value,
-        filters,
     })
 }
 
@@ -208,6 +184,7 @@ fn md5_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::parser::filter::filters;
 
     #[test]
     fn test_query() {
@@ -217,7 +194,6 @@ mod tests {
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                filters: vec![],
             }
         );
     }
@@ -230,7 +206,6 @@ mod tests {
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
                 value: QueryValue::Status {},
-                filters: vec![],
             }
         );
     }
@@ -382,19 +357,22 @@ mod tests {
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
-                source_info: SourceInfo::new(1, 1, 1, 17),
+                source_info: SourceInfo::new(1, 1, 1, 5),
                 value: QueryValue::Body {},
-                filters: vec![(
-                    Whitespace {
-                        value: " ".to_string(),
-                        source_info: SourceInfo::new(1, 5, 1, 6)
-                    },
-                    Filter {
-                        source_info: SourceInfo::new(1, 6, 1, 17),
-                        value: FilterValue::UnEscapeUrl {},
-                    }
-                )],
             }
+        );
+        assert_eq!(
+            filters(&mut reader).unwrap(),
+            vec![(
+                Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo::new(1, 5, 1, 6)
+                },
+                Filter {
+                    source_info: SourceInfo::new(1, 6, 1, 17),
+                    value: FilterValue::UnEscapeUrl {},
+                }
+            )]
         );
         assert_eq!(reader.state.cursor, 16);
     }

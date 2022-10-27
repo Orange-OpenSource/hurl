@@ -208,6 +208,7 @@ pub enum RunnerError {
     // Filter
     FilterMissingInput {},
     FilterInvalidInput(String),
+    FilterRegexNoCapture {},
 }
 
 // endregion

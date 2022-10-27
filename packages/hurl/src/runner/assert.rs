@@ -19,6 +19,7 @@
 use std::collections::HashMap;
 
 use crate::http;
+use crate::runner::filter::eval_filters;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -130,7 +131,35 @@ pub fn eval_assert(
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
 ) -> AssertResult {
-    let actual = eval_query(&assert.query, variables, http_response);
+    let query_result = eval_query(&assert.query, variables, http_response);
+
+    let actual = if assert.filters.is_empty() {
+        query_result
+    } else if let Ok(optional_value) = query_result {
+        match optional_value {
+            None => Err(Error {
+                source_info: assert
+                    .filters
+                    .first()
+                    .expect("at least one filter")
+                    .1
+                    .source_info
+                    .clone(),
+                inner: RunnerError::FilterMissingInput {},
+                assert: true,
+            }),
+            Some(value) => {
+                let filters = assert.filters.iter().map(|(_, f)| f.clone()).collect();
+                match eval_filters(&filters, &value, variables) {
+                    Ok(value) => Ok(Some(value)),
+                    Err(e) => Err(e),
+                }
+            }
+        }
+    } else {
+        query_result
+    };
+
     let source_info = &assert.predicate.predicate_func.source_info;
     let predicate_result = match &actual {
         Err(_) => None,
@@ -172,6 +201,7 @@ pub mod tests {
             line_terminators: vec![],
             space0: whitespace.clone(),
             query: query::tests::xpath_users(),
+            filters: vec![],
             space1: whitespace.clone(),
             predicate,
             line_terminator0: LineTerminator {

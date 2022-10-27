@@ -214,10 +214,16 @@ impl Lintable<Assert> for Assert {
     }
 
     fn lint(&self) -> Assert {
+        let filters = self
+            .filters
+            .iter()
+            .map(|(_, f)| (one_whitespace(), f.lint()))
+            .collect();
         Assert {
             line_terminators: self.line_terminators.clone(),
             space0: empty_whitespace(),
             query: self.query.lint(),
+            filters,
             space1: one_whitespace(),
             predicate: self.predicate.lint(),
             line_terminator0: self.line_terminator0.clone(),
@@ -232,6 +238,11 @@ impl Lintable<Capture> for Capture {
     }
 
     fn lint(&self) -> Capture {
+        let filters = self
+            .filters
+            .iter()
+            .map(|(_, f)| (one_whitespace(), f.lint()))
+            .collect();
         Capture {
             line_terminators: self.clone().line_terminators,
             space0: empty_whitespace(),
@@ -239,6 +250,7 @@ impl Lintable<Capture> for Capture {
             space1: empty_whitespace(),
             space2: one_whitespace(),
             query: self.query.lint(),
+            filters,
             line_terminator0: self.line_terminator0.lint(),
         }
     }
@@ -254,11 +266,6 @@ impl Lintable<Query> for Query {
         Query {
             source_info: SourceInfo::new(0, 0, 0, 0),
             value: self.value.lint(),
-            filters: self
-                .filters
-                .iter()
-                .map(|(_, f)| (one_whitespace(), f.lint()))
-                .collect(),
         }
     }
 }

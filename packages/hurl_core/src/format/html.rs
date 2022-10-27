@@ -540,6 +540,10 @@ impl Htmlable for Capture {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.query.to_html().as_str());
+        for (space, filter) in self.clone().filters {
+            buffer.push_str(space.to_html().as_str());
+            buffer.push_str(filter.to_html().as_str());
+        }
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
         buffer
@@ -548,12 +552,7 @@ impl Htmlable for Capture {
 
 impl Htmlable for Query {
     fn to_html(&self) -> String {
-        let mut buffer = self.value.clone().to_html();
-        for (space, filter) in self.clone().filters {
-            buffer.push_str(space.to_html().as_str());
-            buffer.push_str(filter.to_html().as_str());
-        }
-        buffer
+        self.value.clone().to_html()
     }
 }
 
@@ -667,6 +666,10 @@ impl Htmlable for Assert {
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.query.to_html().as_str());
+        for (space, filter) in self.clone().filters {
+            buffer.push_str(space.to_html().as_str());
+            buffer.push_str(filter.to_html().as_str());
+        }
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str(self.predicate.to_html().as_str());
         buffer.push_str("</span>");
