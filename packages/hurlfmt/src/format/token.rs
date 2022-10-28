@@ -1086,8 +1086,8 @@ impl Tokenizable for Filter {
                 tokens
             }
             FilterValue::Count { .. } => vec![Token::FilterType(String::from("count"))],
-            FilterValue::EscapeUrl { .. } => vec![Token::FilterType(String::from("escapeUrl"))],
-            FilterValue::UnEscapeUrl { .. } => vec![Token::FilterType(String::from("unescapeUrl"))],
+            FilterValue::UrlEncode { .. } => vec![Token::FilterType(String::from("urlEncode"))],
+            FilterValue::UrlDecode { .. } => vec![Token::FilterType(String::from("urlDecode"))],
         }
     }
 }

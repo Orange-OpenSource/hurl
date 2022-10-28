@@ -353,7 +353,7 @@ mod tests {
 
     #[test]
     fn test_query_with_filters() {
-        let mut reader = Reader::init("body unescapeUrl ");
+        let mut reader = Reader::init("body urlDecode ");
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
@@ -369,11 +369,11 @@ mod tests {
                     source_info: SourceInfo::new(1, 5, 1, 6)
                 },
                 Filter {
-                    source_info: SourceInfo::new(1, 6, 1, 17),
-                    value: FilterValue::UnEscapeUrl {},
+                    source_info: SourceInfo::new(1, 6, 1, 15),
+                    value: FilterValue::UrlDecode {},
                 }
             )]
         );
-        assert_eq!(reader.state.cursor, 16);
+        assert_eq!(reader.state.cursor, 14);
     }
 }

@@ -810,6 +810,6 @@ pub enum FilterValue {
         space0: Whitespace,
         value: RegexValue,
     },
-    EscapeUrl {},
-    UnEscapeUrl {},
+    UrlEncode {},
+    UrlDecode {},
 }

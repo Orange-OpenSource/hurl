@@ -18,6 +18,7 @@
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};
 use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo};
+use percent_encoding::AsciiSet;
 use regex::Regex;
 use std::collections::HashMap;
 
@@ -43,8 +44,8 @@ fn eval_filter(
             value: regex_value, ..
         } => eval_regex(value, regex_value, variables, &filter.source_info),
         FilterValue::Count {} => eval_count(value, &filter.source_info),
-        FilterValue::EscapeUrl { .. } => todo!(),
-        FilterValue::UnEscapeUrl { .. } => todo!(),
+        FilterValue::UrlEncode { .. } => eval_url_encode(value, &filter.source_info),
+        FilterValue::UrlDecode { .. } => eval_url_decode(value, &filter.source_info),
     }
 }
 
@@ -100,6 +101,48 @@ fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
         Value::List(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Nodeset(size) => Ok(Value::Integer(*size as i64)),
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+}
+
+// does not encopde "/"
+// like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
+fn eval_url_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+    match value {
+        Value::String(value) => {
+            const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
+                .remove(b'-')
+                .remove(b'.')
+                .remove(b'_')
+                .remove(b'~')
+                .remove(b'/');
+            let encoded = percent_encoding::percent_encode(value.as_bytes(), FRAGMENT).to_string();
+            Ok(Value::String(encoded))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+    match value {
+        Value::String(value) => {
+            match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
+                Ok(decoded) => Ok(Value::String(decoded.to_string())),
+                Err(_) => Err(Error {
+                    source_info: source_info.clone(),
+                    inner: RunnerError::FilterInvalidInput("Invalid UTF8 stream".to_string()),
+                    assert: false,
+                }),
+            }
+        }
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -239,5 +282,43 @@ pub mod tests {
         .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 20));
         assert_eq!(error.inner, RunnerError::InvalidRegex {});
+    }
+
+    #[test]
+    pub fn eval_filter_url_encode() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(0, 0, 0, 0),
+            value: FilterValue::UrlEncode {},
+        };
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("https://mozilla.org/?x=шеллы".to_string()),
+                &variables,
+            )
+            .unwrap(),
+            Value::String(
+                "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()
+            )
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_url_decode() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(0, 0, 0, 0),
+            value: FilterValue::UrlDecode {},
+        };
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
+                &variables,
+            )
+            .unwrap(),
+            Value::String("https://mozilla.org/?x=шеллы".to_string())
+        );
     }
 }

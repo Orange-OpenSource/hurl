@@ -1038,10 +1038,8 @@ impl Htmlable for FilterValue {
                 buffer.push_str(value.to_html().as_str());
                 buffer
             }
-            FilterValue::EscapeUrl {} => "<span class=\"filter-type\">escapeUrl</span>".to_string(),
-            FilterValue::UnEscapeUrl {} => {
-                "<span class=\"filter-type\">unescapeUrl</span>".to_string()
-            }
+            FilterValue::UrlEncode {} => "<span class=\"filter-type\">urlEncode</span>".to_string(),
+            FilterValue::UrlDecode {} => "<span class=\"filter-type\">urlDecode</span>".to_string(),
         }
     }
 }

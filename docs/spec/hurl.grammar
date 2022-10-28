@@ -409,16 +409,16 @@ variable-name: [A-Za-z] [A-Za-z_-0-9]*
 filter:
     regex-filter
   | count-filter
-  | escapeurl-filter
-  | unescapeurl-filter
+  | url-encode-filter
+  | url-decode-filter
 
 regex-filter: "regex" sp (quoted-string | regex)
 
 count-filter: "count"
 
-escapeurl-filter: "escapeUrl"
+url-encode-filter: "urlEncode"
 
-unescapeurl-filter: "unescapeUrl"
+url-decode-filter: "urlDecode"
 
 
 # Lexical Grammar

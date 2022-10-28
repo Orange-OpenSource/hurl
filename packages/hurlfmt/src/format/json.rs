@@ -517,14 +517,11 @@ impl ToJson for FilterValue {
             FilterValue::Count { .. } => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
-            FilterValue::EscapeUrl { .. } => {
-                attributes.push(("type".to_string(), JValue::String("escapeUrl".to_string())));
+            FilterValue::UrlEncode { .. } => {
+                attributes.push(("type".to_string(), JValue::String("urlEncode".to_string())));
             }
-            FilterValue::UnEscapeUrl { .. } => {
-                attributes.push((
-                    "type".to_string(),
-                    JValue::String("unescapeUrl".to_string()),
-                ));
+            FilterValue::UrlDecode { .. } => {
+                attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
             }
         }
         JValue::Object(attributes)

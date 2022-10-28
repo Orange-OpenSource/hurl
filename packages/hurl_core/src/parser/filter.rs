@@ -52,8 +52,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
         vec![
             count_filter,
             regex_filter,
-            escape_url_filter,
-            unescape_url_filter,
+            url_encode_filter,
+            url_decode_filter,
         ],
         reader,
     )
@@ -87,14 +87,14 @@ fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     Ok(FilterValue::Regex { space0, value })
 }
 
-fn escape_url_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
-    try_literal("escapeUrl", reader)?;
-    Ok(FilterValue::EscapeUrl {})
+fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("urlEncode", reader)?;
+    Ok(FilterValue::UrlEncode {})
 }
 
-fn unescape_url_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
-    try_literal("unescapeUrl", reader)?;
-    Ok(FilterValue::UnEscapeUrl {})
+fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("urlDecode", reader)?;
+    Ok(FilterValue::UrlDecode {})
 }
 
 #[cfg(test)]
