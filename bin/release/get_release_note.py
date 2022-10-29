@@ -127,18 +127,23 @@ def get_linked_pulls(issue_number) -> List[Pull]:
     # because the API does not provide the relationship between issues and Pull request
 
     url = "https://github.com/Orange-OpenSource/hurl/issues/%d" % issue_number
+    sys.stderr.write("* GET %s\n" % url)
     r = requests.get(url)
     html = r.text
-    parser = etree.HTMLParser()
+    pulls = webscrapping_linked_pulls(html)
+    return pulls
 
+
+def webscrapping_linked_pulls(html) -> List[Pull]:
+    parser = etree.HTMLParser()
     tree = etree.parse(StringIO(html), parser)
     links = tree.xpath("//development-menu//a")
     pulls = []
     for link in links:
         url = link.attrib["href"]
-        description = link.text.strip()
         if url == "/Orange-OpenSource/hurl":
             continue
+        description = "".join(link.itertext()).strip()
         pull = Pull(url, description)
         pulls.append(pull)
     return pulls
