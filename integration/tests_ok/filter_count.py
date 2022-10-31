@@ -2,7 +2,7 @@ from app import app
 from flask import Response
 
 
-@app.route("/subquery-count")
+@app.route("/filter-count")
 def subquery_count():
     return Response(
         """{
