@@ -20,7 +20,7 @@ Enhancements:
 
 * Support NO_COLOR env variable (https://no-color.org) [#713](https://github.com/Orange-OpenSource/hurl/issues/713)
 
-* Improve url parsing error message [#662](https://github.com/Orange-OpenSource/hurl/issues/662)
+* Improve URL parsing error message [#662](https://github.com/Orange-OpenSource/hurl/issues/662)
 
 * Display deprecated warning when using --progress and --summary option [#637](https://github.com/Orange-OpenSource/hurl/issues/637)
 
@@ -232,7 +232,7 @@ Changes:
 
 * Add operators for arithmetic predicates [#210](https://github.com/Orange-OpenSource/hurl/issues/210)
 
-* Improve error messages if the url contains an illegal character [#207](https://github.com/Orange-OpenSource/hurl/issues/207)
+* Improve error messages if the URL contains an illegal character [#207](https://github.com/Orange-OpenSource/hurl/issues/207)
 
 * Improve Error message for the countEquals predicate [#195](https://github.com/Orange-OpenSource/hurl/issues/195)
 
@@ -362,7 +362,7 @@ Changes:
 
 Bugs Fixes:
 
-* Can not parse user in url (Basic Authentication) [#73](https://github.com/Orange-OpenSource/hurl/issues/73)
+* Can not parse user in URL (Basic Authentication) [#73](https://github.com/Orange-OpenSource/hurl/issues/73)
 
 * MultipartFormData is not present in json export [#63](https://github.com/Orange-OpenSource/hurl/issues/63)
 

@@ -60,7 +60,7 @@ $ java -jar quiz-0.0.2.jar
 ```
 
 Either you're using the Docker images or the jar app, you can open a browser and test the quiz application by
-typing the url <http://localhost:8080>:
+typing the URL <http://localhost:8080>:
 
 <div>
      <img class="light-img" src="/docs/assets/img/quiz-light.png" width="400px" alt="Quiz home page"/>

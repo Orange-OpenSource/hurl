@@ -296,10 +296,10 @@ Vary: User-Agent
 Vary: Content-Type
 ```
 
-### Url assert
+### URL assert
 
-Check the last fetched url. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
-[`--location` option]). Url assert consists of the keyword `url` followed by a predicate function and value.
+Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+[`--location` option]). URL assert consists of the keyword `url` followed by a predicate function and value.
 
 ```hurl
 GET https://example.org/redirecting

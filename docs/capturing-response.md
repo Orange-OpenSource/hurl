@@ -90,10 +90,10 @@ HTTP/1.1 302
 next_url: header "Location"
 ```
 
-### Url capture
+### URL capture
 
-Capture the last fetched url. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
-[`--location` option]). Url capture consists of a variable name, followed by a `:`, and the keyword `url`.
+Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+[`--location` option]). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
 
 ```hurl
 GET https://example.org/redirecting
