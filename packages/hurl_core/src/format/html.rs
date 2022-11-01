@@ -861,40 +861,11 @@ impl Htmlable for RawString {
     fn to_html(&self) -> String {
         let mut buffer = "".to_string();
         buffer.push_str("<span class=\"raw\">");
-        buffer.push_str("<span class=\"line\">```");
-
-        if !self.newline.value.as_str().is_empty() {
-            buffer.push_str(
-                format!(
-                    "</span>{}<span class=\"line\">",
-                    self.newline.value.as_str()
-                )
-                .as_str(),
-            );
-        }
-
-        let mut lines: Vec<String> = regex::Regex::new(r"\n|\r\n")
-            .unwrap()
-            .split(self.value.to_string().trim())
-            .map(|l| xml_escape(l.to_string()))
-            .filter(|l| !l.is_empty())
-            .collect();
-
-        if lines.is_empty() {
-            buffer.push_str("```</span>");
-        } else if lines.len() == 1 {
-            buffer.push_str(encode_html(lines.get(0).unwrap().to_string()).as_str());
-            buffer.push_str("```</span>");
-        } else {
-            buffer.push_str(encode_html(lines.remove(0)).as_str());
-            buffer.push_str("</span>\n");
-            for line in lines {
-                buffer.push_str("<span class=\"line\">");
-                buffer.push_str(encode_html(line).as_str());
-                buffer.push_str("</span>\n");
-            }
-            buffer.push_str("<span class=\"line\">```</span>");
-        }
+        let mut s = "```".to_string();
+        s.push_str(self.newline.value.as_str());
+        s.push_str(self.value.to_string().as_str());
+        s.push_str("```");
+        buffer.push_str(multilines(s).as_str());
         buffer.push_str("</span>");
         buffer
     }
@@ -1167,6 +1138,27 @@ mod tests {
             raw_string.to_html(),
             "<span class=\"raw\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
         );
+
+        // ```Hello
+        // ```
+        let raw_string = RawString {
+            newline: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            value: Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "Hello\n".to_string(),
+                    encoded: "unused".to_string(),
+                }],
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+        };
+        assert_eq!(
+            raw_string.to_html(),
+            "<span class=\"raw\"><span class=\"line\">```Hello</span>\n<span class=\"line\">```</span></span>".to_string()
+        );
     }
 
     #[test]
@@ -1178,6 +1170,11 @@ mod tests {
         assert_eq!(
             multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>".to_string()),
             "<span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span>"
+        );
+
+        assert_eq!(
+            multilines("Hello\n".to_string()),
+            "<span class=\"line\">Hello</span>\n<span class=\"line\"></span>"
         );
     }
 

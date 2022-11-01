@@ -1,0 +1,19 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Testing trailing whitespace</span>
+<span class="line"></span><span class="comment"># Response '&lt;p&gt;Hello&lt;/p&gt;\n\n'</span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Testing with a raw string</span>
+<span class="line"></span><span class="comment"># check exactly the whitespace</span>
+<span class="line"></span><span class="comment"># It should produce an assert error</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-assert-newline</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+<span class="raw"><span class="line">```&lt;p&gt;Hello&lt;/p&gt;</span>
+<span class="line">```</span></span>
+</span></span><span class="line"></span>
+<span class="line"></span><span class="comment"># TODO</span>
+<span class="line"></span><span class="comment"># Testing with XML</span>
+<span class="line"></span><span class="comment"># Ignore trailing whitespace (semantic comparison)</span>
+<span class="line"></span><span class="comment"># It should not produce an error</span>
+<span class="line"></span><span class="comment"># GET http://localhost:8000/error-assert-newline</span>
+<span class="line"></span><span class="comment"># HTTP/1.0 200</span>
+<span class="line"></span><span class="comment"># &lt;p&gt;Hello&lt;/p&gt;</span>
+</code></pre>
