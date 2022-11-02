@@ -218,6 +218,10 @@ jobs:
       run: bin/environment.sh
     - name: Install Rust
       run: bin/install_rust_latest.sh
+    - name: Install Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests units
