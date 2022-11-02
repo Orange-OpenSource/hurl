@@ -1,3 +1,34 @@
+[1.8.0 (2022-11-02)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.8.0)
+========================================================================================================================
+
+Thanks to
+[@Jiehong](https://github.com/Jiehong),
+[@Goffen](https://github.com/Goffen),
+
+
+Enhancements:
+
+ * Add curl logs [#899](https://github.com/Orange-OpenSource/hurl/issues/899)
+
+ * Add query url [#895](https://github.com/Orange-OpenSource/hurl/issues/895)
+
+ * Make compact help [#861](https://github.com/Orange-OpenSource/hurl/issues/861)
+
+ * List all libcurl features with --version [#836](https://github.com/Orange-OpenSource/hurl/issues/836)
+
+ * Add --retry and --retry-interval option to retry request until asserts and captures are ok [#525](https://github.com/Orange-OpenSource/hurl/issues/525)
+
+
+Bugs Fixed:
+
+ * Fix missing line in HTML output [#924](https://github.com/Orange-OpenSource/hurl/issues/924)
+
+ * Fix HTTP HEAD [#903](https://github.com/Orange-OpenSource/hurl/issues/903)
+
+ * Fix relative redirect [#875](https://github.com/Orange-OpenSource/hurl/issues/875)
+
+
+
 [1.7.0 (2022-09-13)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.7.0)
 ========================================================================================================================
 
