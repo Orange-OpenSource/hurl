@@ -601,7 +601,7 @@ Optionally, asserts can be refined using filters `count` and `regex`.
 GET https://pets.org/cats/cutest
 
 HTTP/1.0 200
-[Captures]
+[Asserts]
 jsonpath "$.cats" count == 12
 ```
 
@@ -612,7 +612,7 @@ GET https://pets.org/cats/cutest
 
 HTTP/1.0 200
 # Cat name are structured like this `meow + id`: for instance `meow123456` 
-[Captures]
+[Asserts]
 jsonpath "$.cats[0].name" regex /meow(\d+)/ == "123456"
 ```
 
