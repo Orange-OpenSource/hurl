@@ -137,7 +137,8 @@ jobs:
       - name: Check tag existence
         id: check-tag-existence
         run: |
-          tag_exists=$(git ls-remote --tags | (grep -c "${{ needs.control-release.outputs.release_version }}" || true))
+          escaped_version=$(echo "${{ needs.control-release.outputs.release_version }}" | sed "s#\.#\\\.#g")
+          tag_exists=$(git ls-remote --tags | (grep -c "${escaped_version}" || true))
           if [ ${tag_exists} -eq 0 ] ; then
             echo "  - ✅ The origin/${{ needs.control-release.outputs.release_version }} tag does not exists on remote."
             echo "release_tag_exists=false" | tee -a $GITHUB_OUTPUT
