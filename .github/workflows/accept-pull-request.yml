@@ -9,6 +9,7 @@ concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept') }}
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}    
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -16,33 +17,39 @@ jobs:
       REPO: ${{ github.event.repository.name }}
       PR_NUMBER: ${{ github.event.issue.number }}
       COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
+    outputs:
+      base_ref: ${{ steps.init-all-internal-env-vars.outputs.base_ref }}
+      new_version_master_snapshot_version:  ${{ steps.check-github-release.outputs.new_version_master_snapshot_version }}
+      is_a_github_release_pr: ${{ steps.check-github-release.outputs.is_a_github_release_pr }}
     name: accept-pull-request
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept') }}
     steps:
 
-      - name: Init all internal env vars       
+      - name: Init all internal env vars
+        id: init-all-internal-env-vars
         run: |
-            pr_detail_file="pr_detail.json"
-            gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
-            jq . "${pr_detail_file}"
-            HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
-            BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
-            if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
-                HEAD_TYPE=origin
-            else
-                HEAD_TYPE=fork
-            fi        
-            echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
-            echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
-            echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
-            echo "HEAD_REF=$(jq -rc .head.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "BASE_REF=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-            echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
-            echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
+          pr_detail_file="pr_detail.json"
+          gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
+          jq . "${pr_detail_file}"
+          echo ${{ github.event.issue.title }}
+          HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
+          BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
+          if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
+            HEAD_TYPE=origin
+          else
+            HEAD_TYPE=fork
+          fi        
+          echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
+          echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
+          echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
+          echo "HEAD_REF=$(jq -rc .head.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          echo "BASE_REF=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
+          echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
+          echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
+          echo "base_ref=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,136 +59,202 @@ jobs:
 
       - name: Notify user
         run: |
-            order="${{ github.event.comment.body }}"
-            comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
-            gh pr comment "${PR_NUMBER}" --body "${comment}"
+          order="${{ github.event.comment.body }}"
+          comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
+          gh pr comment "${PR_NUMBER}" --body "${comment}"
 
       - name: Check comment user permission
         run: |
-            comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
-            if [ "${comment_user_permission}" = "admin" ] ; then
-                echo "  - ✅ You have the ${comment_user_permission} permission then you are allowed to accept pull request n°${PR_NUMBER}"
-            else
-                comment="❌ Sorry \`${COMMENT_USER_LOGIN}\`, you are not allowed to accept this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1
-            fi
+          comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
+          if [ "${comment_user_permission}" = "admin" ] ; then
+            echo "  - ✅ You have the ${comment_user_permission} permission then you are allowed to accept pull request n°${PR_NUMBER}"
+          else
+            comment="❌ Sorry \`${COMMENT_USER_LOGIN}\`, you are not allowed to accept this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi
 
       - name: Check if pull request state is open
         run: |
-            if [ "${{ env.PR_STATE }}" = "open" ] ; then
-                echo "  - ✅ Pull request is ${{ env.PR_STATE }}."
-            else
-                comment="❌ Can not accept this pull request because it is not open (actual state=${{ env.PR_STATE }})."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1         
-            fi
+          if [ "${{ env.PR_STATE }}" = "open" ] ; then
+            echo "  - ✅ Pull request is ${{ env.PR_STATE }}."
+          else
+            comment="❌ Can not accept this pull request because it is not open (actual state=${{ env.PR_STATE }})."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi
 
       - name: Check if pull request is ready
         run: |
-            if [ "${{ env.PR_DRAFT }}" = "false" ] ; then
-                echo "  - ✅ Pull request draft state is ${{ env.PR_DRAFT }}."
-            else
-                comment="❌ Can not accept this pull request because it is still in draft."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1         
-            fi
+          if [ "${{ env.PR_DRAFT }}" = "false" ] ; then
+            echo "  - ✅ Pull request draft state is ${{ env.PR_DRAFT }}."
+          else
+            comment="❌ Can not accept this pull request because it is still in draft."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1         
+          fi
 
       - name: Check if pull request is mergeable
         run: |
-            if [ "${{ env.PR_MERGEABLE }}" = "true" ] ; then
-                echo "  - ✅ Pull request mergeable state is ${{ env.PR_MERGEABLE }}."
+          if [ "${{ env.PR_MERGEABLE }}" = "true" ] ; then
+            echo "  - ✅ Pull request mergeable state is ${{ env.PR_MERGEABLE }}."
+          else
+            comment="❌ Pull request is not mergeable, please check unresolved discussions and pull request messages."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1         
+          fi
+
+      - name: Check github release
+        id: check-github-release
+        run: |
+          if [ $(echo ${{ env.HEAD_REF }} | grep -Ec '^release/') -eq 0 ] ; then
+            echo "  - ✅ Pull request is not about a pending github release."
+          else
+            tag_version="$(echo ${{ env.HEAD_REF }} | cut --delimiter '/' --field 2)"
+            gh_result=$(gh api repos/"${OWNER}"/"${REPO}"/releases/tags/"${tag_version}" | tr ":" "=" | tr -d '"' | tr -d " ")
+            echo "gh_result=${gh_result}"
+            if [ $(echo "${gh_result}" | grep -Ec "message=NotFound|prerelease=true") -eq 0 ] ; then
+              comment="✅ Github release ${tag_version}  is published."
+              echo "  - ${comment}"
             else
-                comment="❌ Pull request is not mergeable, please check unresolved discussions and pull request messages."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1         
+              comment="❌ Github release ${tag_version} is still in draft/prerelease. Please publish it before trying to merge this release PR."
+              echo "  - ${comment}"
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
+              exit 1
             fi
+          fi
+          go=$(echo "${tag_version}" | cut --delimiter "." --field 1)
+          ro=$(echo "${tag_version}" | cut --delimiter "." --field 2)
+          echo "go=${go}"
+          echo "ro=${ro}"
+          new_ro="$((ro + 1))"
+          echo "new_ro=${new_ro}"
+          new_version_master_snapshot_version="${go}.${new_ro}.0-SNAPSHOT"
+          echo "is_a_github_release_pr=true" | tee -a "${GITHUB_OUTPUT}"
+          echo "new_version_master_snapshot_version=${new_version_master_snapshot_version}" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Check if pull request checks are successful
         if: ${{ !contains(github.event.comment.body, '--force') }}
         run: |
-            gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
-            if [ "${exit_code}" -eq 0 ] ; then
-                echo "  - ✅ Pull request checks are successful."
-            else
-                comment="❌ Some checks are still failing, please fix them before trying to /accept this pull request."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1
-            fi            
+          gh pr checks "${PR_NUMBER}" --watch --interval 30 && exit_code=0 || exit_code=$?
+          if [ "${exit_code}" -eq 0 ] ; then
+            echo "  - ✅ Pull request checks are successful."
+          else
+            comment="❌ Some checks are still failing, please fix them before trying to /accept this pull request."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi            
 
       - name: Add remote source branch
         run: |
-            if [ "${{ env.HEAD_TYPE }}" = "fork" ] ; then
-                git remote add fork https://github.com/${{ env.HEAD_REPO_FULL_NAME}}
-                git remote --verbose
-                git fetch --all
-            fi
-            echo "  - ✅ Source branch is from ${{ env.HEAD_TYPE }} repo"
+          if [ "${{ env.HEAD_TYPE }}" = "fork" ] ; then
+            git remote add fork https://github.com/${{ env.HEAD_REPO_FULL_NAME}}
+            git remote --verbose
+            git fetch --all
+          fi
+          echo "  - ✅ Source branch is from ${{ env.HEAD_TYPE }} repo"
 
       - name: Check if source branch is rebased from target branch 
         run: |
-            git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
-            if [ ${exit_code} -eq 1 ] ; then
-                comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1
-            fi
-            diff_count=$(grep -c ^+ ${{ env.REMAINING_COMMITS_FILE }} || true)
-            if [ ${diff_count} -eq 0 ] ; then
-                echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
-            else
-                comment="❌ You have to rebase your \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch first because there are new commits pending on target \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1
-            fi
+          git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
+          if [ ${exit_code} -eq 1 ] ; then
+            comment="❌ Rebase check fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi
+          diff_count=$(grep -c ^+ ${{ env.REMAINING_COMMITS_FILE }} || true)
+          if [ ${diff_count} -eq 0 ] ; then
+            echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
+          else
+            comment="❌ You have to rebase your \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch first because there are new commits pending on target \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi
 
       - name: Get new commits list
         run: |
-            git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
+          git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
 
       - name: Merge fast forward head ref to base ref 
         run: |
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
-            if [ ${exit_code} -eq 0 ] ; then
-                echo "  - ✅ Merge fast forward succeeds."
-            else
-                comment="❌ Merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1         
-            fi
-            git push && exit_code=0 || exit_code=1
-            if [ ${exit_code} -eq 0 ] ; then
-                echo "  - ✅ Push merge fast forward succeeds."
-            else
-                comment="❌ Push merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-                echo "  - ${comment}"
-                gh pr comment "${PR_NUMBER}" --body "${comment}"
-                exit 1         
-            fi
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
+          if [ ${exit_code} -eq 0 ] ; then
+            echo "  - ✅ Merge fast forward succeeds."
+          else
+            comment="❌ Merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1         
+          fi
+          git push && exit_code=0 || exit_code=1
+          if [ ${exit_code} -eq 0 ] ; then
+            echo "  - ✅ Push merge fast forward succeeds."
+          else
+            comment="❌ Push merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1         
+          fi
 
       - name: Close pull request
         run: |
-            if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
-                comment="✅ Pull request accepted without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."          
-            else
-                comment="✅ Pull request accepted and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
-            fi
-            gh pr close "${PR_NUMBER}" --delete-branch --comment "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.NEW_COMMITS_FILE }})" && exit_code=0 || exit_code=1
-            if [ ${exit_code} -eq 0 ] ; then
-                echo "  - ${comment}"     
-            else
-                comment="❌ A problem occured when closing pull request and/or deleting branch."
-                echo "  - ${comment}"
-                #gh pr comment "${PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-                #exit 1       
-            fi
+          if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
+            comment="✅ Pull request accepted without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."          
+          else
+            comment="✅ Pull request accepted and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
+          fi
+          gh pr close "${PR_NUMBER}" --delete-branch --comment "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.NEW_COMMITS_FILE }})" && exit_code=0 || exit_code=1
+          if [ ${exit_code} -eq 0 ] ; then
+            echo "  - ${comment}"     
+          else
+            comment="❌ A problem occured when closing pull request and/or deleting branch."
+            echo "  - ${comment}"
+            #gh pr comment "${PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
+            #exit 1       
+          fi
+
+      - name: Release mode comment
+        if: contains(github.event.comment.body, '--release')
+        run: |
+          gh pr comment "${PR_NUMBER}" --body "🕗 As you used \`--release\` mode, a new PR will be created shortly to automatically update master branch to next ${{ steps.check-github-release.outputs.new_version_master_snapshot_version }} dev version"
+
+  update-branch-version:
+    needs:
+      - accept-pull-request
+    name: update-branch-version
+    if: needs.accept-pull-request.outputs.is_a_github_release_pr == 'true' && contains(github.event.comment.body, '--release')
+    uses: lepapareil/hurl-releasing/.github/workflows/update-branch-version.yml@master
+    with:
+      new_version: ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }}
+      branch: ${{ needs.accept-pull-request.outputs.base_ref }}
+    secrets: inherit
+
+  release-final-comment:
+    if: contains(github.event.comment.body, '--release')
+    needs:
+      - accept-pull-request
+      - update-branch-version
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    name: release-final-comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BASE_REF }}
+          fetch-depth: 0
+
+      - name: release-final-comment
+        run: |      
+          gh pr comment "${{ github.event.issue.number }}" --body "✅ New PR [${{ needs.update-branch-version.outputs.pr_number }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${{ needs.update-branch-version.outputs.pr_number }}) created to update master branch to ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }} version"
+

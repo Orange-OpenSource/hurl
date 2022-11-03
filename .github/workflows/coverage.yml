@@ -17,18 +17,25 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
     - name: Environment
       run: bin/environment.sh
+
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
+
     - name: Install Rust
       run: bin/install_rust_latest.sh
+
     - name: Install Grcov
       run: bin/install_grcov.sh
+
     - name: Build
       run: cargo build
+
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
+
     - name: Run Integration Tests
       run: |
         export LLVM_PROFILE_FILE="hurl-test-integration-%p-%m.profraw"
@@ -37,6 +44,7 @@ jobs:
     - name: Build Report
       run: | 
         grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
+
     - name: Deploy Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -44,6 +52,7 @@ jobs:
         publish_branch: github-pages
         publish_dir: coverage
         destination_dir: coverage
+
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
@@ -52,3 +61,4 @@ jobs:
         path: |
           coverage
           *.profraw
+
