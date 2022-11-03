@@ -1,5 +1,14 @@
 name: check
-on: [pull_request]
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      branch:
+        description: "ref branch for this workflow"
+        default: "master"
+        required: true
+        type: string
 
 env:
   CARGO_TERM_COLOR: always
@@ -9,23 +18,36 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.branch }}
+
     - name: Install Prerequisites
       run: bin/check/install_prerequisites.sh
+
     - name: Rustfmt
       run: bin/check/rustfmt.sh
+
     - name: Clippy
       run: bin/check/clippy.sh
+
     - name: Shellcheck
       run: bin/check/shellcheck.sh
+
     - name: Black
       run: bin/check/black.sh
+
     - name: Check XML/HTML files
       run: bin/check/xmllint.sh
+
     - name: Run crates update
       run: bin/check/crates.sh 
+
     - name: Check CHANGELOG
-      run: bin/check/changelog.sh 
+      run: bin/check/changelog.sh
+
     - name: Check ad hoc
       run: bin/check/ad_hoc.sh
+
