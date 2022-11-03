@@ -43,7 +43,7 @@ pub fn read_to_string(filename: &str) -> Result<String, CliError> {
         };
     }
 
-    let mut f = match File::open(&filename) {
+    let mut f = match File::open(filename) {
         Ok(f) => f,
         Err(e) => {
             return Err(CliError {
@@ -51,7 +51,7 @@ pub fn read_to_string(filename: &str) -> Result<String, CliError> {
             })
         }
     };
-    let metadata = fs::metadata(&filename).expect("unable to read metadata");
+    let metadata = fs::metadata(filename).expect("unable to read metadata");
     let mut buffer = vec![0; metadata.len() as usize];
     if let Err(e) = f.read(&mut buffer) {
         return Err(CliError {

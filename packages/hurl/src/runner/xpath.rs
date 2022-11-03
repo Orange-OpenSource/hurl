@@ -41,7 +41,7 @@ pub fn eval_xml(xml: &str, expr: &str) -> Result<Value, XpathError> {
     let parser = libxml::parser::Parser::default();
     match parser.parse_string(xml) {
         Ok(doc) => {
-            if doc.get_root_element() == None {
+            if doc.get_root_element().is_none() {
                 Err(XpathError::InvalidXml {})
             } else {
                 eval(&doc, expr, true)
@@ -64,7 +64,7 @@ pub fn eval_html(html: &str, expr: &str) -> Result<Value, XpathError> {
         Ok(doc) => {
             // You can have a doc structure even if the input xml is not valid
             // check that the root element exists
-            if doc.get_root_element() == None {
+            if doc.get_root_element().is_none() {
                 Err(XpathError::InvalidHtml {})
             } else {
                 eval(&doc, expr, false)

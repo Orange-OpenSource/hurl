@@ -261,7 +261,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<&str>) {
         }
         Some(filename) => {
             let path = Path::new(filename);
-            let mut file = match std::fs::File::create(&path) {
+            let mut file = match std::fs::File::create(path) {
                 Err(why) => {
                     eprintln!("Issue writing to {}: {:?}", path.display(), why);
                     std::process::exit(1);

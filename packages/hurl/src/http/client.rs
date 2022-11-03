@@ -53,7 +53,7 @@ impl Client {
 
         // Activate cookie storage
         // with or without persistence (empty string)
-        h.cookie_file(cookie_input_file.unwrap_or_else(|| "".to_string()).as_str())
+        h.cookie_file(cookie_input_file.unwrap_or_default())
             .unwrap();
 
         Client {
@@ -167,7 +167,7 @@ impl Client {
         self.set_headers(request_spec, options);
 
         let start = Instant::now();
-        let verbose = options.verbosity != None;
+        let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers: Vec<Header> = vec![];
         let mut status_lines = vec![];
@@ -564,7 +564,7 @@ impl Client {
 
     /// Adds a cookie to the cookie jar.
     pub fn add_cookie(&mut self, cookie: &Cookie, options: &ClientOptions) {
-        if options.verbosity != None {
+        if options.verbosity.is_some() {
             eprintln!("* add to cookie store: {}", cookie);
         }
         self.handle
@@ -574,7 +574,7 @@ impl Client {
 
     /// Clears cookie storage.
     pub fn clear_cookie_storage(&mut self, options: &ClientOptions) {
-        if options.verbosity != None {
+        if options.verbosity.is_some() {
             eprintln!("* clear cookie storage");
         }
         self.handle.cookie_list("ALL").unwrap();
@@ -625,7 +625,7 @@ pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec
             .filter(|c| c.expires != "1") // cookie expired when libcurl set value to 1?
             .filter(|c| match_cookie(c, request_spec.url.as_str()))
             .map(|c| RequestCookie {
-                name: (*c).name.clone(),
+                name: c.name.clone(),
                 value: c.value.clone(),
             })
             .collect(),

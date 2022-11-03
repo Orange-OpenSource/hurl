@@ -421,7 +421,7 @@ fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), CliErr
         None => write_bytes(bytes.as_slice()),
         Some(filename) => {
             let path = Path::new(filename.as_str());
-            let mut file = match std::fs::File::create(&path) {
+            let mut file = match std::fs::File::create(path) {
                 Err(why) => {
                     return Err(CliError {
                         message: format!("Issue writing to {}: {:?}", path.display(), why),
@@ -448,7 +448,7 @@ fn cookies_output_file(filename: &str, n: usize) -> Result<PathBuf, CliError> {
 }
 
 fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
-    let mut file = match std::fs::File::create(&file_path) {
+    let mut file = match std::fs::File::create(file_path) {
         Err(why) => {
             return Err(CliError {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
