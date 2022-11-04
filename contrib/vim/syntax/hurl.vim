@@ -5,36 +5,34 @@ if exists("b:current_syntax")
   finish
 endif
 
-syntax match Method  "^GET"
-syntax match Method  "^POST"
-syntax match Method  "^PUT"
-syntax match Method  "^DELETE"
-syntax match Method  "^CONNECT"
-syntax match Method  "^OPTIONS"
-syntax match Method  "^TRACE"
-syntax match Method  "^PATCH"
+syntax keyword method  GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH
+syntax keyword operators == != > >= <= sp lt
+syntax match http "^HTTP/*"
+syntax keyword hurlKeywords jsonpath xpath null header count
 
-syntax match Comment "#.*$"
-syntax match EscapeNumberSign  "\\#"
-syntax match EscapeQuote  "\\\"" 
-syntax match Section "\[[A-Za-z]*\]"
-syntax match Number  "\s[0-9]*"
+syntax match comment "#.*$"
+syntax match escapeNumberSign  "\\#"
+syntax match escapeQuote  "\\\""
+syntax match section "\[[A-Za-z]*\]"
+syntax match number  "\s[0-9]*"
 
-syntax region String   start='"' end='"'  contains=EscapeQuote
-syntax region String   start='```' end='```'
-syntax region Json     start='{' end='}' contains=Template
-syntax region Template start='{{' end='}}'
+syntax region string   start='"' end='"'  contains=escapeQuote
+syntax region string   start='```' end='```'
+syntax include @jsonSyntax syntax/json.vim
+syntax region json     start='{' end='}' contains=@jsonSyntax contained
+syntax region template start='{{' end='}}'
 
 
-" colors
-highlight Comment             ctermfg=grey
-highlight Method              ctermfg=yellow
-highlight Section             ctermfg=magenta
-highlight String              ctermfg=green
-highlight Json                ctermfg=green
-highlight Number              ctermfg=lightblue
-highlight EscapeNumberSign    ctermfg=white
-highlight EscapeQuote         ctermfg=green
-highlight Template            ctermfg=red
+hi def link comment Comment
+hi def link method Keyword
+hi def link http Keyword
+hi def link section Label
+hi def link operators Operator
+hi def link string String
+hi def link number Number
+hi def link hurlKeywords Keyword
+hi def link template Identifier
+hi def link escapeQuote SpecialChar
+hi def link escapeNumberSign SpecialChar
 
-
+let b:current_syntax = "hurl"
