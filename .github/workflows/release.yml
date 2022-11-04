@@ -339,6 +339,7 @@ jobs:
           gh release create ${{ needs.control-release.outputs.release_version }} \
             --target ${{ needs.control-release.outputs.release_branch }} \
             --notes-file release_changelog.md \
+            --title ${{ needs.control-release.outputs.release_version }} \
             --draft \
             artifacts/release-deb-x64-artifacts/hurl_"${{ needs.control-release.outputs.release_version }}"_amd64.deb \
             artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.control-release.outputs.release_version }}"-x86_64-linux.tar.gz \
