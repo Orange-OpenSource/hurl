@@ -5,7 +5,7 @@ if exists("b:current_syntax")
   finish
 endif
 
-syntax keyword method  GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH
+syntax keyword method GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH
 syntax keyword operators == != > >= <= sp lt
 syntax match http "^HTTP/*"
 syntax keyword hurlKeywords jsonpath xpath null header count
