@@ -335,7 +335,7 @@ jobs:
 
       - name: deliver release
         run: |
-          python3 bin/release/changelog_extract.py ${{ needs.control-release.outputs.release_version }} > release_changelog.md
+          cat CHANGELOG.md | python3 bin/release/changelog_extract.py ${{ needs.control-release.outputs.release_version }} > release_changelog.md
           gh release create ${{ needs.control-release.outputs.release_version }} \
             --target ${{ needs.control-release.outputs.release_branch }} \
             --notes-file release_changelog.md \
