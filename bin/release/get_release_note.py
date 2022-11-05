@@ -185,7 +185,7 @@ def generate_md(
                 "[#%s](%s/issues/%s)" % (issue, hurl_repo_url, issue)
                 for issue in pull.issues
             )
-            s += "\n\n * %s %s" % (pull.description, issues)
+            s += "\n\n* %s %s" % (pull.description, issues)
 
     s += "\n"
     return s

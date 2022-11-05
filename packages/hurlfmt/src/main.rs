@@ -55,14 +55,15 @@ fn main() {
             clap::Arg::new("check")
                 .long("check")
                 .help("Run in 'check' mode")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("format")
-                .conflicts_with("output")
-                .action(ArgAction::SetTrue),
+                .conflicts_with("output"),
         )
         .arg(
             clap::Arg::new("color")
                 .long("color")
                 .help("Colorize Output")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("no_color")
                 .conflicts_with("in_place"),
         )
@@ -79,16 +80,16 @@ fn main() {
             clap::Arg::new("in_place")
                 .long("in-place")
                 .help("Modify file in place")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("output")
-                .conflicts_with("color")
-                .action(ArgAction::SetTrue),
+                .conflicts_with("color"),
         )
         .arg(
             clap::Arg::new("no_color")
                 .long("no-color")
                 .help("Do not colorize output")
-                .conflicts_with("color")
-                .action(ArgAction::SetTrue),
+                .action(ArgAction::SetTrue)
+                .conflicts_with("color"),
         )
         .arg(
             clap::Arg::new("no_format")

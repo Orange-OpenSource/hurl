@@ -2,30 +2,33 @@
 ========================================================================================================================
 
 Thanks to
+[@chenrui333](https://github.com/chenrui333),
 [@Jiehong](https://github.com/Jiehong),
 [@Goffen](https://github.com/Goffen),
 
 
 Enhancements:
 
- * Add curl logs [#899](https://github.com/Orange-OpenSource/hurl/issues/899)
+* Add curl logs [#899](https://github.com/Orange-OpenSource/hurl/issues/899)
 
- * Add query url [#895](https://github.com/Orange-OpenSource/hurl/issues/895)
+* Add query url [#895](https://github.com/Orange-OpenSource/hurl/issues/895)
 
- * Make compact help [#861](https://github.com/Orange-OpenSource/hurl/issues/861)
+* Make compact help [#861](https://github.com/Orange-OpenSource/hurl/issues/861)
 
- * List all libcurl features with --version [#836](https://github.com/Orange-OpenSource/hurl/issues/836)
+* List all libcurl features with --version [#836](https://github.com/Orange-OpenSource/hurl/issues/836)
 
- * Add --retry and --retry-interval option to retry request until asserts and captures are ok [#525](https://github.com/Orange-OpenSource/hurl/issues/525)
+* Add --retry and --retry-interval option to retry request until asserts and captures are ok [#525](https://github.com/Orange-OpenSource/hurl/issues/525)
 
 
 Bugs Fixed:
 
- * Fix missing line in HTML output [#924](https://github.com/Orange-OpenSource/hurl/issues/924)
+* Fix hurlfmt --color crash [#957](https://github.com/Orange-OpenSource/hurl/issues/957)
 
- * Fix HTTP HEAD [#903](https://github.com/Orange-OpenSource/hurl/issues/903)
+* Fix missing line in HTML output [#924](https://github.com/Orange-OpenSource/hurl/issues/924)
 
- * Fix relative redirect [#875](https://github.com/Orange-OpenSource/hurl/issues/875)
+* Fix HTTP HEAD [#903](https://github.com/Orange-OpenSource/hurl/issues/903)
+
+* Fix relative redirect [#875](https://github.com/Orange-OpenSource/hurl/issues/875)
 
 
 

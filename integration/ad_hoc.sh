@@ -24,3 +24,8 @@ echo "Check stdin"
 actual=$(echo 'GET http://localhost:8000/hello' | hurl)
 expected="Hello World!"
 assert_equals "$actual" "$expected"
+
+echo "Check hurlfmt --color"
+actual=$(echo 'GET http://localhost:8000/hello' | hurlfmt --color)
+expected="[33mGET[0m [32mhttp://localhost:8000/hello[0m"
+assert_equals "$actual" "$expected"
