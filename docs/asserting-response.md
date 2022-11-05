@@ -664,7 +664,7 @@ HTTP/1.1 200
 </catalog>
 ~~~
 
-### Raw string body
+### Multiline string body
 
 ~~~hurl
 GET https://example.org/models
@@ -679,7 +679,7 @@ Year,Make,Model,Description,Price
 ```
 ~~~
 
-The standard usage of a raw string is :
+The standard usage of a multiline string is :
 
 ~~~
 ```
@@ -706,7 +706,7 @@ or
 ~~~
 
 
-Finally, raw string can be used without any newline:
+Finally, multiline can be used without any newline:
 
 ~~~
 ```line``` 

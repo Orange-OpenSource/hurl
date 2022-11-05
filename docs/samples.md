@@ -107,7 +107,7 @@ POST https://example.org/upload
 [MultipartFormData]
 field1: value1
 field2: file,example.txt;
-# On can specify the file content type:
+# One can specify the file content type:
 field3: file,example.zip; application/zip
 ```
 
@@ -140,7 +140,7 @@ file,data.json;
 ### Templating a JSON / XML Body
 
 Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
-Besides, you can use templates in [raw string body] with variables to send a JSON or XML body:
+Besides, you can use templates in [multiline string body] with variables to send a JSON or XML body:
 
 ~~~hurl
 PUT https://example.org/api/hits
@@ -176,7 +176,7 @@ Resulting in a PUT request with the following JSON body:
 }
 ```
 
-[Doc](/docs/request.md#raw-string-body)
+[Doc](/docs/request.md#multiline-string-body)
 
 ## Testing Response
 
@@ -402,7 +402,7 @@ bytes startsWith hex,efbbbf;
 
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
-[raw string body]: /docs/request.md#raw-string-body
+[multiline string body]: /docs/request.md#multiline-string-body
 [predicates]: /docs/asserting-response.md#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme

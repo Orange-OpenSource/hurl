@@ -392,7 +392,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 </soap:Envelope>
 ~~~
 
-#### Raw string body
+#### Multiline string body
 
 For text based body that are not JSON nor XML, one can used multiline string, started and ending with
 <code>&#96;&#96;&#96;</code>.
@@ -408,7 +408,7 @@ Year,Make,Model,Description,Price
 ```
 ~~~
 
-The standard usage of a raw string is:
+The standard usage of a multiline string is:
 
 ~~~
 ```
@@ -435,7 +435,7 @@ or
 ~~~
 
 
-Finally, raw string can be used without any newline:
+Finally, multiline string can be used without any newline:
 
 ~~~
 ```line``` 

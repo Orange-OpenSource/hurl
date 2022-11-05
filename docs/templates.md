@@ -155,7 +155,7 @@ $ hurl test.hurl
 ## Templating Body
 
 Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
-Besides, you can use templates in [raw string body] with variables to send a JSON or XML body:
+Besides, you can use templates in [multiline string body] with variables to send a JSON or XML body:
 
 ~~~hurl
 PUT https://example.org/api/hits
@@ -193,4 +193,4 @@ Resulting in a PUT request with the following JSON body:
 [JSONPath]: /docs/asserting-response.md#jsonpath-assert
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
-[raw string body]: /docs/request.md#raw-string-body
+[multiline string body]: /docs/request.md#multiline-string-body
