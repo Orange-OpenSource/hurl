@@ -1,5 +1,5 @@
 black==22.6.0
-bs4==0.0.1
+beautifulsoup4==4.11.1
 Flask==2.0.3
 lxml==4.9.1
 mitmproxy==8.0.0

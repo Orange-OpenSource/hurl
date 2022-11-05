@@ -8,11 +8,10 @@ Example:
 import datetime
 import json
 import sys
-from io import StringIO
 from typing import List
 
 import requests
-from lxml import etree
+from bs4 import BeautifulSoup
 
 hurl_repo_url = "https://github.com/Orange-OpenSource/hurl"
 
@@ -135,15 +134,14 @@ def get_linked_pulls(issue_number) -> List[Pull]:
 
 
 def webscrapping_linked_pulls(html) -> List[Pull]:
-    parser = etree.HTMLParser()
-    tree = etree.parse(StringIO(html), parser)
-    links = tree.xpath("//development-menu//a")
+    soup = BeautifulSoup(html, "html.parser")
+    links = soup.select("development-menu a")
     pulls = []
     for link in links:
-        url = link.attrib["href"]
+        url = link["href"]
         if url == "/Orange-OpenSource/hurl":
             continue
-        description = "".join(link.itertext()).strip()
+        description = "".join(link.getText()).strip()
         pull = Pull(url, description)
         pulls.append(pull)
     return pulls

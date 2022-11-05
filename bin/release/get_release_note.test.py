@@ -153,6 +153,22 @@ ISSUE_HTML = """<development-menu data-catalyst="">
 """
 
 
+ISSUE_WITH_EMOJI_HTML = """
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="👋 hello">
+    <title>Issue</title>
+</head>
+<body>
+<development-menu>
+    <a href="/Orange-OpenSource/hurl/pull/958">Issue 958</a>
+</development-menu>
+</body>
+</html>
+"""
+
+
 class GetReleaseNoteTest(unittest.TestCase):
     def test_authors_from_issues(self):
         self.assertEqual(["bob", "bill"], authors_from_issues(ISSUES))
@@ -164,6 +180,12 @@ class GetReleaseNoteTest(unittest.TestCase):
         self.assertEqual(
             [Pull("/Orange-OpenSource/hurl/pull/904", "Fix HTTP HEAD", [], [])],
             webscrapping_linked_pulls(ISSUE_HTML),
+        )
+
+    def test_webscrapping_issue_with_emoji(self):
+        self.assertEqual(
+            [Pull("/Orange-OpenSource/hurl/pull/958", "Issue 958", [], [])],
+            webscrapping_linked_pulls(ISSUE_WITH_EMOJI_HTML),
         )
 
     def test_generate_md(self):
@@ -178,16 +200,16 @@ Thanks to
 
 Enhancements:
 
- * pull1 [#1](https://github.com/Orange-OpenSource/hurl/issues/1)
+* pull1 [#1](https://github.com/Orange-OpenSource/hurl/issues/1)
 
- * pull4 [#3](https://github.com/Orange-OpenSource/hurl/issues/3) [#4](https://github.com/Orange-OpenSource/hurl/issues/4)
+* pull4 [#3](https://github.com/Orange-OpenSource/hurl/issues/3) [#4](https://github.com/Orange-OpenSource/hurl/issues/4)
 
 
 Bugs Fixed:
 
- * pull2 [#2](https://github.com/Orange-OpenSource/hurl/issues/2)
+* pull2 [#2](https://github.com/Orange-OpenSource/hurl/issues/2)
 
- * pull3 [#2](https://github.com/Orange-OpenSource/hurl/issues/2)
+* pull3 [#2](https://github.com/Orange-OpenSource/hurl/issues/2)
 """,
             generate_md(
                 milestone="1.0.0",
