@@ -136,7 +136,7 @@ jobs:
           fi
 
       - name: Add fork source branch
-        if: ${{ env.HEAD_TYPE }}" == "fork"      
+        if: env.HEAD_TYPE == 'fork'
         run: |
           git remote add fork https://github.com/${{ env.HEAD_REPO_FULL_NAME}}
           git remote --verbose
