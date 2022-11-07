@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       new_version:
-        description: 'Version (G.R.C or G.R.C-SNASPHOT)'
+        description: 'Version (Major.Minor.Patch or Major.Minor.Patch-SNASPHOT)'
         required: true
         type: string
   workflow_call:
@@ -14,7 +14,7 @@ on:
         required: true
     inputs:
       new_version:
-        description: "Version (G.R.C or G.R.C-SNASPHOT)"
+        description: "Version (Major.Minor.Patch or Major.Minor.Patch-SNASPHOT)"
         required: true
         type: string
       branch:

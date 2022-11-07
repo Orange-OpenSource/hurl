@@ -333,7 +333,7 @@ jobs:
             exit 1
           fi
 
-      - name: deliver release
+      - name: Deliver release
         run: |
           cat CHANGELOG.md | python3 bin/release/changelog_extract.py ${{ needs.control-release.outputs.release_version }} > release_changelog.md
           gh release create ${{ needs.control-release.outputs.release_version }} \
@@ -362,7 +362,7 @@ jobs:
           echo "- Please use \`/accept --release\` if you want to automatically update master branch to next SNAPSHOT version"
           } > file-body.txt
           gh pr create \
-            --title "Merge github published ${{ needs.control-release.outputs.release_branch }} into master" \
+            --title "Merge Github ${{ needs.control-release.outputs.release_branch }} into master" \
             --body-file file-body.txt \
             --base master \
             --label bot && gh_exit_code=0 || gh_exit_code=$?
