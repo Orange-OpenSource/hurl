@@ -22,8 +22,6 @@ Enhancements:
 
 Bugs Fixed:
 
-* Fix hurlfmt --color crash [#957](https://github.com/Orange-OpenSource/hurl/issues/957)
-
 * Fix missing line in HTML output [#924](https://github.com/Orange-OpenSource/hurl/issues/924)
 
 * Fix HTTP HEAD [#903](https://github.com/Orange-OpenSource/hurl/issues/903)
