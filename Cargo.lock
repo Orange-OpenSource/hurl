@@ -153,9 +153,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.0.19"
+version = "4.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e67816e006b17427c9b4386915109b494fec2d929c63e3bd3561234cbf1bf1e"
+checksum = "426eed9136e68a14d9de937db20cfd79fcc25c09709872e8005897c618a8365e"
 dependencies = [
  "atty",
  "bitflags",
@@ -488,7 +488,7 @@ checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
 name = "hurl"
-version = "1.8.0-SNAPSHOT"
+version = "1.8.0"
 dependencies = [
  "atty",
  "base64",
@@ -521,7 +521,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "1.8.0-SNAPSHOT"
+version = "1.8.0"
 dependencies = [
  "float-cmp",
  "regex",
@@ -530,7 +530,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "1.8.0-SNAPSHOT"
+version = "1.8.0"
 dependencies = [
  "atty",
  "base64",
