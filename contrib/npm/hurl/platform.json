@@ -5,7 +5,7 @@
     "rust_target": "win64",
     "binary_name": "hurl.exe",
     "archive_extension": ".zip",
-    "checksum": "f055884fa4450555e55c34742e573e6c40a54f8d7781dbf5775461caa7e8eba5"
+    "checksum": "1bcef2531c7c67a6387726bfa90a5959a167af402e8f47a24b2404906c985e92"
   },
   {
     "type": "Linux",
@@ -13,7 +13,7 @@
     "rust_target": "x86_64-linux",
     "binary_name": "hurl",
     "archive_extension": ".tar.gz",
-    "checksum": "f509c40b4395c6997d7827a9c53248ce257fcbbc49cab9b43d22e08c9e3e749d"
+    "checksum": "125056d36d605b369dfdadd7316c7c893c67683ba2104924aaf462e6027c09af"
   },
   {
     "type": "Darwin",
@@ -21,7 +21,7 @@
     "rust_target": "x86_64-macos",
     "binary_name": "hurl",
     "archive_extension": ".tar.gz",
-    "checksum": "27a8d26d4885137efd45c96b526dc3f0aa477efa6dba5e8ea521d85ca28c89f3"
+    "checksum": "fbd74b6be3265a50c3bc7692a8fdcfa1a6fc573fe8277cecfaa2ffecbf1ffd29"
   },
   {
     "type": "Darwin",
@@ -29,6 +29,6 @@
     "rust_target": "arm64-macos",
     "binary_name": "hurl",
     "archive_extension": ".tar.gz",
-    "checksum": "033fafedb4705ac3aaccc25bceffa9126064a1ca4e56ac51157bd2ed55ab0546"
+    "checksum": "cd62eb21fdd4e1718e02499581be1becbd46dfb321c2647129d0a452fa709243"
   }
 ]
