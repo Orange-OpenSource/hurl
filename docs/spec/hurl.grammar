@@ -36,7 +36,7 @@ version:
     "HTTP/1.0"
   | "HTTP/1.1"
   | "HTTP/2"
-  | "HTTP/*"
+  | "HTTP"
 
 status: [0-9]+
 

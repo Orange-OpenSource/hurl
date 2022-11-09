@@ -36,7 +36,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="version">version</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression">&nbsp;<span class="grammar-literal">HTTP/1.0</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/1.1</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/2</span><br>
-<span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/*</span></div></div>
+<span class="grammar-symbol">|</span><span class="grammar-literal">HTTP</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="status">status</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[0-9]+</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="header">header</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
 <a href="#key-value">key-value</a>&nbsp;<a href="#lt">lt</a></div></div>
