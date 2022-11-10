@@ -15,10 +15,11 @@ request:
 
 response:
   lt*
-  version sp status lt
+  "HTTP" version? sp status lt
   header*
   response-section*
   body?
+
 
 method:
     "GET"
@@ -31,12 +32,10 @@ method:
   | "TRACE"
   | "PATCH"
 
-
 version:
-    "HTTP/1.0"
-  | "HTTP/1.1"
-  | "HTTP/2"
-  | "HTTP"
+    "/1.0"
+  | "/1.1"
+  | "/2"
 
 status: [0-9]+
 
