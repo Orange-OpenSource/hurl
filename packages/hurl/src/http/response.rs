@@ -40,9 +40,9 @@ pub enum Version {
 impl fmt::Display for Version {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
-            Version::Http10 => "1.0",
-            Version::Http11 => "1.1",
-            Version::Http2 => "2",
+            Version::Http10 => "HTTP/1.0",
+            Version::Http11 => "HTTP/1.1",
+            Version::Http2 => "HTTP/2",
         };
         write!(f, "{}", value)
     }

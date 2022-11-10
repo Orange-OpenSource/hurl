@@ -136,10 +136,7 @@ impl Htmlable for Method {
 
 impl Htmlable for Version {
     fn to_html(&self) -> String {
-        format!(
-            "<span class=\"version\">HTTP/{}</span>",
-            self.value.as_str()
-        )
+        format!("<span class=\"version\">{}</span>", self.value)
     }
 }
 

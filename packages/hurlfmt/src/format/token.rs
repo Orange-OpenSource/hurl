@@ -134,15 +134,7 @@ impl Tokenizable for Status {
 
 impl Tokenizable for Version {
     fn tokenize(&self) -> Vec<Token> {
-        vec![Token::Version(format!(
-            "HTTP/{}",
-            match self.value {
-                VersionValue::Version1 => String::from("1.0"),
-                VersionValue::Version11 => String::from("1.1"),
-                VersionValue::Version2 => String::from("2"),
-                VersionValue::VersionAny => String::from("*"),
-            }
-        ))]
+        vec![Token::Version(self.value.to_string())]
     }
 }
 

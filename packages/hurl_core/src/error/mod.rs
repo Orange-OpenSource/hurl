@@ -70,7 +70,7 @@ impl Error for parser::Error {
                 name.as_str(),
                 "Available HTTP Methods are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE or PATCH",
             )),
-            ParseError::Version { .. } => "HTTP version must be 1.0, 1.1, 2 or *".to_string(),
+            ParseError::Version { .. } => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
             ParseError::Status { .. } => "HTTP status code is not valid".to_string(),
             ParseError::Filename { .. } => "expecting a filename".to_string(),
             ParseError::Expecting { value } => format!("expecting '{}'", value),

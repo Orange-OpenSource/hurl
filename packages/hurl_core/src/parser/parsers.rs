@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::ast::VersionValue::VersionAny;
 use crate::ast::*;
 
 use super::bytes::*;
@@ -160,32 +161,52 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
 }
 
 fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
-    try_literal("HTTP/", reader)?;
-    let available_version = vec![
-        ("1.0", VersionValue::Version1),
-        ("1.1", VersionValue::Version11),
-        ("2", VersionValue::Version2),
-        ("*", VersionValue::VersionAny),
-    ];
     let start = reader.state.clone();
-    for (s, value) in available_version {
-        if try_literal(s, reader).is_ok() {
-            return Ok(Version {
-                value,
-                source_info: SourceInfo::new(
-                    start.pos.line,
-                    start.pos.column,
-                    reader.state.pos.line,
-                    reader.state.pos.column,
-                ),
-            });
+    try_literal("HTTP", reader)?;
+
+    let next_c = reader.peek();
+    match next_c {
+        Some('/') => {
+            let available_version = vec![
+                ("/1.0", VersionValue::Version1),
+                ("/1.1", VersionValue::Version11),
+                ("/2", VersionValue::Version2),
+                ("/*", VersionValue::VersionAnyLegacy),
+            ];
+            for (s, value) in available_version.iter() {
+                if try_literal(s, reader).is_ok() {
+                    return Ok(Version {
+                        value: value.clone(),
+                        source_info: SourceInfo::new(
+                            start.pos.line,
+                            start.pos.column,
+                            reader.state.pos.line,
+                            reader.state.pos.column,
+                        ),
+                    });
+                }
+            }
+            Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::Version {},
+            })
         }
+        Some(' ') => Ok(Version {
+            value: VersionAny,
+            source_info: SourceInfo::new(
+                start.pos.line,
+                start.pos.column,
+                reader.state.pos.line,
+                reader.state.pos.column,
+            ),
+        }),
+        _ => Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Version {},
+        }),
     }
-    Err(Error {
-        pos: start.pos,
-        recoverable: false,
-        inner: ParseError::Version {},
-    })
 }
 
 fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
@@ -514,7 +535,7 @@ mod tests {
 
         let mut reader = Reader::init("HTTP/1. 200");
         let error = version(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 6 });
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
     }
 
     #[test]
@@ -530,7 +551,6 @@ mod tests {
         let mut reader = Reader::init("xxx");
         let result = status(&mut reader);
         assert!(result.is_err());
-        // assert!(result.err().unwrap().pos, Pos { line: 1, column: 1 });
     }
 
     #[test]

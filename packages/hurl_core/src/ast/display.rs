@@ -44,10 +44,11 @@ impl fmt::Display for Version {
 impl fmt::Display for VersionValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            VersionValue::Version1 => "1.0",
-            VersionValue::Version11 => "1.1",
-            VersionValue::Version2 => "2",
-            VersionValue::VersionAny => "*",
+            VersionValue::Version1 => "HTTP/1.0",
+            VersionValue::Version11 => "HTTP/1.1",
+            VersionValue::Version2 => "HTTP/2",
+            VersionValue::VersionAny => "HTTP",
+            VersionValue::VersionAnyLegacy => "HTTP/*",
         };
         write!(f, "{}", s)
     }

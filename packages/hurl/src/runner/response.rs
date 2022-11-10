@@ -29,14 +29,7 @@ use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
 
-/// Returns a list of response assert results.
-///
-/// # Arguments
-///
-/// * `response` - The spec HTTP response
-/// * `variables` - A map of input variables
-/// * `http_response` - The actual HTTP response
-/// * `context_dir` - The context directory for files
+/// Returns a list of assert results, given a set of `variables`, an actual `http_response` and a spec `response`.
 pub fn eval_asserts(
     response: &Response,
     variables: &HashMap<String, Value>,
@@ -45,23 +38,23 @@ pub fn eval_asserts(
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
 
-    let version = response.clone().version;
+    let version = &response.version;
     asserts.push(AssertResult::Version {
         actual: http_response.version.to_string(),
-        expected: version.value.as_str().to_string(),
-        source_info: version.source_info,
+        expected: version.value.to_string(),
+        source_info: version.source_info.clone(),
     });
 
-    let status = response.clone().status;
+    let status = &response.status;
     if let StatusValue::Specific(v) = status.value {
         asserts.push(AssertResult::Status {
             actual: http_response.status as u64,
             expected: v as u64,
-            source_info: status.source_info,
+            source_info: status.source_info.clone(),
         });
     }
 
-    for header in response.clone().headers {
+    for header in response.headers.iter() {
         match eval_template(&header.value, variables) {
             Err(e) => {
                 asserts.push(AssertResult::Header {
@@ -322,7 +315,7 @@ mod tests {
             line_terminators: vec![],
             version: Version {
                 value: VersionValue::Version1,
-                source_info: SourceInfo::new(2, 6, 2, 9),
+                source_info: SourceInfo::new(2, 1, 2, 9),
             },
             space0: whitespace.clone(),
             status: Status {
@@ -366,9 +359,9 @@ mod tests {
             ),
             vec![
                 AssertResult::Version {
-                    actual: String::from("1.0"),
-                    expected: String::from("1.0"),
-                    source_info: SourceInfo::new(2, 6, 2, 9),
+                    actual: String::from("HTTP/1.0"),
+                    expected: String::from("HTTP/1.0"),
+                    source_info: SourceInfo::new(2, 1, 2, 9),
                 },
                 AssertResult::Status {
                     actual: 200,

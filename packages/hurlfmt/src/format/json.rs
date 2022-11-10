@@ -39,7 +39,7 @@ impl ToJson for HurlFile {
 impl ToJson for Entry {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![("request".to_string(), self.request.to_json())];
-        if let Some(response) = self.response.clone() {
+        if let Some(response) = &self.response {
             attributes.push(("response".to_string(), response.to_json()));
         }
         JValue::Object(attributes)
@@ -55,40 +55,33 @@ impl ToJson for Request {
             ),
             ("url".to_string(), JValue::String(self.url.to_string())),
         ];
-        add_headers(&mut attributes, self.headers.clone());
+        add_headers(&mut attributes, &self.headers);
 
-        if !self.clone().querystring_params().is_empty() {
+        if !self.querystring_params().is_empty() {
             let params = self
-                .clone()
                 .querystring_params()
                 .iter()
                 .map(|p| p.to_json())
                 .collect();
             attributes.push(("query_string_params".to_string(), JValue::List(params)));
         }
-        if !self.clone().form_params().is_empty() {
-            let params = self
-                .clone()
-                .form_params()
-                .iter()
-                .map(|p| p.to_json())
-                .collect();
+        if !self.form_params().is_empty() {
+            let params = self.form_params().iter().map(|p| p.to_json()).collect();
             attributes.push(("form_params".to_string(), JValue::List(params)));
         }
-        if !self.clone().multipart_form_data().is_empty() {
+        if !self.multipart_form_data().is_empty() {
             let params = self
-                .clone()
                 .multipart_form_data()
                 .iter()
                 .map(|p| p.to_json())
                 .collect();
             attributes.push(("multipart_form_data".to_string(), JValue::List(params)));
         }
-        if !self.clone().cookies().is_empty() {
-            let cookies = self.clone().cookies().iter().map(|c| c.to_json()).collect();
+        if !self.cookies().is_empty() {
+            let cookies = self.cookies().iter().map(|c| c.to_json()).collect();
             attributes.push(("cookies".to_string(), JValue::List(cookies)));
         }
-        if let Some(body) = self.body.clone() {
+        if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
         JValue::Object(attributes)
@@ -99,13 +92,13 @@ impl ToJson for Response {
     /// Transforms this response to a JSON object.
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
-        if let Some(v) = get_json_version(self.version.value.clone()) {
+        if let Some(v) = get_json_version(&self.version.value) {
             attributes.push(("version".to_string(), JValue::String(v)))
         }
         if let StatusValue::Specific(n) = self.status.value {
             attributes.push(("status".to_string(), JValue::Number(n.to_string())));
         }
-        add_headers(&mut attributes, self.headers.clone());
+        add_headers(&mut attributes, &self.headers);
         if !self.captures().is_empty() {
             let captures = self.captures().iter().map(|c| c.to_json()).collect();
             attributes.push(("captures".to_string(), JValue::List(captures)));
@@ -121,7 +114,7 @@ impl ToJson for Response {
     }
 }
 
-fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: Vec<Header>) {
+fn add_headers(attributes: &mut Vec<(String, JValue)>, headers: &Vec<Header>) {
     if !headers.is_empty() {
         let headers = JValue::List(headers.iter().map(|h| h.to_json()).collect());
         attributes.push(("headers".to_string(), headers))
@@ -191,12 +184,13 @@ impl ToJson for File {
     }
 }
 
-fn get_json_version(version_value: VersionValue) -> Option<String> {
+fn get_json_version(version_value: &VersionValue) -> Option<String> {
     match version_value {
         VersionValue::Version1 => Some("HTTP/1.0".to_string()),
         VersionValue::Version11 => Some("HTTP/1.1".to_string()),
         VersionValue::Version2 => Some("HTTP/2".to_string()),
         VersionValue::VersionAny => None,
+        VersionValue::VersionAnyLegacy => None,
     }
 }
 

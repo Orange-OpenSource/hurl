@@ -29,6 +29,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
 *   --> tests_failed/retry.hurl:2:8
@@ -62,6 +63,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
 *   --> tests_failed/retry.hurl:2:8
@@ -95,6 +97,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
 *   --> tests_failed/retry.hurl:2:8
@@ -128,6 +131,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
 *   --> tests_failed/retry.hurl:2:8
@@ -161,6 +165,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
 *   --> tests_failed/retry.hurl:2:8
@@ -194,6 +199,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_failed/retry.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 *
 * Retry max count reached, no more retry

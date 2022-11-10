@@ -30,12 +30,7 @@ use super::template::eval_template;
 use super::value::Value;
 use crate::runner::multipart::eval_multipart_param;
 
-/// Transforms an AST request to a spec request given a set of variables.
-///
-/// # Arguments
-/// * `request` - An AST request
-/// * `variables` - A set of variables for templates/expressions.
-/// * `context_dir` - The context directory
+/// Transforms an AST `request` to a spec request given a set of `variables`.
 pub fn eval_request(
     request: &Request,
     variables: &HashMap<String, Value>,

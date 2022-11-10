@@ -152,17 +152,7 @@ pub enum VersionValue {
     Version11,
     Version2,
     VersionAny,
-}
-
-impl VersionValue {
-    pub fn as_str<'a>(&self) -> &'a str {
-        match self {
-            VersionValue::Version1 => "1.0",
-            VersionValue::Version11 => "1.1",
-            VersionValue::Version2 => "2",
-            VersionValue::VersionAny => "*",
-        }
-    }
+    VersionAnyLegacy,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

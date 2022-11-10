@@ -25,6 +25,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/option_verbose.hurl:7:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4

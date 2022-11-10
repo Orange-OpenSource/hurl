@@ -29,6 +29,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:4:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 * Captures:
 * job_id: ~~~
 *
@@ -56,6 +57,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:14:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/retry.hurl:16:0
@@ -90,6 +92,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:14:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/retry.hurl:16:0
@@ -124,6 +127,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:14:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/retry.hurl:16:0
@@ -158,6 +162,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:14:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/retry.hurl:16:0
@@ -192,6 +197,7 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:14:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -217,6 +223,7 @@
 < Content-Length: 0
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:21:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -242,4 +249,5 @@
 < Server: Flask Server
 < Date: ~~~
 <
+warning: tests_ok/retry.hurl:24:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *

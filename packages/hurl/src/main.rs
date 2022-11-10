@@ -514,7 +514,7 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
 /// Returns status, version and HTTP headers from an HTTP `response`.
 fn get_status_line_headers(response: &Response, color: bool) -> String {
     let mut str = String::new();
-    let status_line = format!("HTTP/{} {}\n", response.version, response.status);
+    let status_line = format!("{} {}\n", response.version, response.status);
     let status_line = if color {
         format!("{}", status_line.green().bold())
     } else {

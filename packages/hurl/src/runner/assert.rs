@@ -29,6 +29,7 @@ use super::query::eval_query;
 use super::value::Value;
 
 impl AssertResult {
+    /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
     pub fn error(&self) -> Option<Error> {
         match self {
             AssertResult::Version {
@@ -36,7 +37,10 @@ impl AssertResult {
                 expected,
                 source_info,
             } => {
-                if expected.as_str() == "*" || actual == expected {
+                if expected.as_str() == "HTTP"
+                    || expected.as_str() == "HTTP/*"
+                    || actual == expected
+                {
                     None
                 } else {
                     Some(Error {
