@@ -11,6 +11,7 @@ Start-Process powershell "$package_dir\*win64-installer.exe /S" -NoNewWindow -Wa
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$registry_user_path;$registry_machine_path"
+sleep 10
 
 
 # hurl infos

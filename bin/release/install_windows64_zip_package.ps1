@@ -15,6 +15,7 @@ $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\C
 echo registry_user_path $registry_user_path
 echo registry_machine_path $registry_machine_path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
+sleep 10
 
 # hurl infos
 (Get-Command hurl).Path

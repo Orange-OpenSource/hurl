@@ -19,6 +19,7 @@ Get-Content $package_dir\version.txt
 $registry_user_path=(Get-ItemProperty -Path 'HKCU:\Environment').Path
 $registry_machine_path=(Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').Path
 $env:Path = "$package_dir;$registry_user_path;$registry_machine_path"
+sleep 10
 
 # hurl infos
 (Get-Command hurl).Path
