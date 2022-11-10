@@ -1,33 +1,55 @@
 # Releasing Process
 
-We are starting with current version x.y.0-snapshot (in Cargo.toml).
-
-Releasing a new version of Hurl will create a release M.m.0
-and update master to M.(m+1).0-snapshot
-
-## Steps
-
-0. Create branch/PR release/M.m.0
-1. Update CHANGELOG from Issues/PR
-2. Update Cargo.toml (x3) remove -snapshot suffix and Cargo.lock
-3. Update version in docs/installations.md
-4. Regenerate man pages and README
-5. Commit
-6. Tag M.n.0
-7. Create GitHub Release
-8. Copy Changelog and upload artifacts
-9. Merge (Fast forward) release branch to master
-10. Increase Version in Cargo.toml to M.(m+1).0-snapshot
-11. Commit
-12. Upload packages to external package managers
+We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
 
 ## CHANGELOG
 
-- Issues are grouped into Changes (Enhancement) and Bug Fixes.
-- Use description from PR (starts with a verb)
-- Add link(s) to related issue(s)
+- Add enhancement or Bug label to the issue
+- Add target milestone to the issue
+- Use a well formatted description on PR (starts with a verb)
+- Add link(s) to the issue
+
+## Release steps
+
+- Run `release.yml` workflow on `master` branch, it will:
+  - Clean pending release
+  - Create new `release/x.y.0` branch
+  - Checkout this new branch
+  - Update all toml with `x.y.0`
+  - Update all crate with `x.y.0`
+  - Update man and docs with `x.y.0`
+  - Generate CHANGELOG
+  - Commit all updates
+  - Create the `x.y.0` tag
+  - Create draft github release `x.y.0`
+  - Create PR from `release/x.y.0` to `master`
+- You have to `/accept --release` this PR, it will:
+  - Merge fast-forward this PR
+  - Open a new one to update `master` files to next version `x.y+1.0-SNAPSHOT`
+
+## Hotfix steps
+
+- Create a new branch `release/x.y.z` from desired tag `x.y.0`, for example `release/1.8.1` from tag `1.8.0`
+- Run `update-branch-version.yml` workflow on the new branch filling version field with `x.y.z-SNAPSHOT`, for example `1.8.1-SNAPSHOT` for `release/1.8.1` branch
+- Run release.yml workflow on `release/x.y.z` branch, it will:
+  - Clean pending release
+  - Checkout `release/x.y.z` branch
+  - Update all toml with `x.y.z`
+  - Update all crate with `x.y.z`
+  - Update man and docs with `x.y.z`
+  - Generate CHANGELOG
+  - Commit all updates
+  - Create the `x.y.z` tag
+  - Create draft github release `x.y.z`
+  - Create PR from `release/x.y.z` to `master`
+- You have to manually `merge` as a revert rebase to reorder commits between this new hotfix and  master
+- Run `update-branch-version.yml` workflow on `master` to restore actual dev version to `x.y+1.0-SNAPSHOT`, for example from `1.8.1` to `1.9.0-SNAPSHOT`
 
 ## Additional
 
-- push source packages (checkout tag) to crates.io
+- push package to chocolatey
+- push package to winget
+- push package to docker
+- push package to brew
+- push source packages to crates.io
 
