@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-file"},"response":{"version":"HTTP/1.0","status":200,"body":{"type":"file","filename":"data.txt"}}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-file"},"response":{"status":200,"body":{"type":"file","filename":"data.txt"}}}]}

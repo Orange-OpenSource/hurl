@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"DELETE","url":"http://localhost:8000/delete"},"response":{"version":"HTTP/1.0","status":200}}]}
+{"entries":[{"request":{"method":"DELETE","url":"http://localhost:8000/delete"},"response":{"status":200}}]}

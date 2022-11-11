@@ -4,6 +4,6 @@
 
 
 GET http://localhost:8000/error-assert-file
-HTTP/1.0 200
+HTTP 200
 file,data.txt;
 

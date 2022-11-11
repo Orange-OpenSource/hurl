@@ -5,7 +5,7 @@ upload1: file,data.txt;
 upload2: file,data.html;
 upload3: file,data.txt; text/html
 
-HTTP/1.0 200
+HTTP 200
 
 
 

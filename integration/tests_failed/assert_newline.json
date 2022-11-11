@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-newline"},"response":{"version":"HTTP/1.0","status":200,"body":{"type":"raw-string","value":"<p>Hello</p>\n"}}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-newline"},"response":{"status":200,"body":{"type":"raw-string","value":"<p>Hello</p>\n"}}}]}

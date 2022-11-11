@@ -1,5 +1,5 @@
 GET http://localhost:8000/predicate/error/type
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 jsonpath "$.status" equals "true"
 #jsonpath "$.count" equals "0"

@@ -1,5 +1,5 @@
 GET http://localhost:8000/error-assert-value
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 header "content-type" equals "XXX"
 header "content-type" notEquals "text/html; charset=utf-8"

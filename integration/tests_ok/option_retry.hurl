@@ -1,7 +1,7 @@
 # Create a new job
 POST http://localhost:8000/jobs
 
-HTTP/* 201
+HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
 [Asserts]
@@ -14,14 +14,14 @@ GET http://localhost:8000/jobs/{{job_id}}
 retry: true
 retry-interval: 100
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
 
 
 # Delete the job
 DELETE http://localhost:8000/jobs/{{job_id}}
-HTTP/* 200
+HTTP 200
 
 GET http://localhost:8000/jobs/{{job_id}}
-HTTP/* 404
+HTTP 404

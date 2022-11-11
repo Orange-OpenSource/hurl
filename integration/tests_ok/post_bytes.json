@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/post-bytes","headers":[{"name":"Content-Type","value":"application/octet-stream"}],"body":{"encoding":"base64","value":"AQID"}},"response":{"version":"HTTP/1.0","status":200}}]}
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/post-bytes","headers":[{"name":"Content-Type","value":"application/octet-stream"}],"body":{"encoding":"base64","value":"AQID"}},"response":{"status":200}}]}

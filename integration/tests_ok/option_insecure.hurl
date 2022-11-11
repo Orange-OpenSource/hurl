@@ -3,5 +3,5 @@ GET http://localhost:8000/hello
 # Option insecure has no effect on HTTP endpoint
 insecure: false
 
-HTTP/* 200
+HTTP 200
 ```Hello World!```

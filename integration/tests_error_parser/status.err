@@ -1,7 +1,7 @@
 error: Parsing status code
-  --> tests_error_parser/status.hurl:2:10
+  --> tests_error_parser/status.hurl:2:6
    |
- 2 | HTTP/1.1 oa0
-   |          ^ HTTP status code is not valid
+ 2 | HTTP oa0
+   |      ^ HTTP status code is not valid
    |
 

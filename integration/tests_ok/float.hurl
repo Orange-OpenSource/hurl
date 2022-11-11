@@ -1,5 +1,5 @@
 GET http://localhost:8000/float
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 jsonpath "$[1]" == 0.0
 jsonpath "$[2]" == 0.0

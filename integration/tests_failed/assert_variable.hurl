@@ -1,5 +1,5 @@
 GET http://localhost:8000/error-assert-variable
-HTTP/1.0 200
+HTTP 200
 [Captures]
 status: status
 length: header "content-length"

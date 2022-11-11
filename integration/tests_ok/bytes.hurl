@@ -1,5 +1,5 @@
 GET http://localhost:8000/bytes
-HTTP/1.0 200
+HTTP 200
 Content-Type: application/octet-stream
 [Asserts]
 bytes == hex,010203;

@@ -5,7 +5,7 @@ Content-Type: application/example
 If-Match: "e0023aa4e"
 
 
-HTTP/1.0 204
+HTTP 204
 Content-Location: /file.txt
 ETag: "e0023aa4f"
 

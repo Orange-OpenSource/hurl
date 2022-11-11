@@ -34,13 +34,12 @@
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_failed/option_retry.hurl:6:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:6:8
+*   --> tests_failed/option_retry.hurl:6:6
 *    |
-*  6 | HTTP/* 200
-*    |        ^^^ actual value is <404>
+*  6 | HTTP 200
+*    |      ^^^ actual value is <404>
 *    |
 *
 * Retry entry 1 (x1 pause 0 ms)
@@ -73,13 +72,12 @@ warning: tests_failed/option_retry.hurl:6:1 'HTTP/*' keyword is deprecated, plea
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_failed/option_retry.hurl:6:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:6:8
+*   --> tests_failed/option_retry.hurl:6:6
 *    |
-*  6 | HTTP/* 200
-*    |        ^^^ actual value is <404>
+*  6 | HTTP 200
+*    |      ^^^ actual value is <404>
 *    |
 *
 * Retry entry 1 (x2 pause 0 ms)
@@ -112,14 +110,13 @@ warning: tests_failed/option_retry.hurl:6:1 'HTTP/*' keyword is deprecated, plea
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_failed/option_retry.hurl:6:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 *
 * Retry max count reached, no more retry
 error: Assert status code
-  --> tests_failed/option_retry.hurl:6:8
+  --> tests_failed/option_retry.hurl:6:6
    |
- 6 | HTTP/* 200
-   |        ^^^ actual value is <404>
+ 6 | HTTP 200
+   |      ^^^ actual value is <404>
    |
 

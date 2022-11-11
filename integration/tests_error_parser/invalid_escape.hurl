@@ -1,5 +1,5 @@
 GET http://localhost:8000/hello
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "//item" equals "\d\d\d\d-\d\d-\d\d"
 #xpath "//item" contains "\\d\\d\\d\\d-\\d\\d-\\d\\d"

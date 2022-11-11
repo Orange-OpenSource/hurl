@@ -1,4 +1,3 @@
-warning: tests_failed/query_match_none.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 error: Assert failure
   --> tests_failed/query_match_none.hurl:4:0
    |

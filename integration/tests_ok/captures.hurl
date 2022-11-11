@@ -1,6 +1,6 @@
 GET http://localhost:8000/captures
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
@@ -15,12 +15,12 @@ GET http://localhost:8000/captures-check
 param1: {{param1}}
 param2: {{param2}}
 
-HTTP/1.0 200
+HTTP 200
 
 
 GET http://localhost:8000/captures-json
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 an_object:  jsonpath "$['an_object']"
 a_list:     jsonpath "$['a_list']"

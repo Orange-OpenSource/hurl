@@ -11,22 +11,22 @@ POST http://localhost:8000/post-json
     "variable": "{{string_variable}}"
 }
 
-HTTP/1.0 200
+HTTP 200
 
 POST http://localhost:8000/post-json-array
 [1,2,3]
 
-HTTP/1.0 200
+HTTP 200
 
 POST http://localhost:8000/post-json-string
 "Hello"
 
-HTTP/1.0 200
+HTTP 200
 
 POST http://localhost:8000/post-json-number
 100
 
-HTTP/1.0 200
+HTTP 200
 
 POST http://localhost:8000/post-json-numbers
 {
@@ -37,18 +37,18 @@ POST http://localhost:8000/post-json-numbers
 }
 
 
-HTTP/1.0 200
+HTTP 200
 
 POST http://localhost:8000/post-json-boolean
 true
 
-HTTP/1.0 200
+HTTP 200
 
 #
 # Use variable in your input json
 #
 GET http://localhost:8000/get-name
-HTTP/1.0 200
+HTTP 200
 [Captures]
 name: body
 

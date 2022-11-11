@@ -8,7 +8,7 @@ variable: five=5
 variable: foo=abc
 insecure: false
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 count: jsonpath "$.count"
 [Asserts]
@@ -66,12 +66,12 @@ jsonpath "$.tags[0]" > "{{foo}}"
 }
 
 GET http://localhost:8000/assert-json/index
-HTTP/1.0 200
+HTTP 200
 [Captures]
 index: body
 
 GET http://localhost:8000/assert-json
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 jsonpath "$.errors[{{index}}].id" == "error2"
 jsonpath "$.tags" includes "test"
@@ -80,13 +80,13 @@ jsonpath "$.tags" not includes null
 
 
 GET http://localhost:8000/assert-json/list
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 jsonpath "$" count == 2
 jsonpath "$.[0].name" == "Bob"
 jsonpath "$[0].name" == "Bob"
 
 GET http://localhost:8000/assert-json/filter
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 jsonpath "$.fruit[?(@.price.US==200)].name" equals "grape"

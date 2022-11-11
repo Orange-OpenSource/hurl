@@ -1,5 +1,6 @@
 GET http://localhost:8000/assert-header
-HTTP/1.0 200
+
+HTTP 200
 Content-Type: text/html; charset=utf-8
 Set-Cookie: cookie1=value1; Path=/
 Set-Cookie: cookie2=value2; Path=/

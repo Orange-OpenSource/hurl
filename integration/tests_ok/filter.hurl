@@ -1,6 +1,6 @@
 GET http://localhost:8000/filter
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 url: jsonpath "$.url"
 [Asserts]

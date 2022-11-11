@@ -5,10 +5,10 @@
 
 # @cookie_storage_set: localhost    FALSE   /   FALSE   0   cookie1 valueA
 GET http://localhost:8000/cookie-storage/assert-that-cookie1-is-valueA
-HTTP/1.0 200
+HTTP 200
 
 # @cookie_storage_clear
 GET http://localhost:8000/cookie-storage/assert-that-cookie1-is-not-in-session
-HTTP/1.0 200
+HTTP 200
 
 

@@ -75,7 +75,6 @@
 <
 * Response body:
 * Redirected.
-warning: tests_ok/very_verbose.hurl:2:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -111,7 +110,6 @@ warning: tests_ok/very_verbose.hurl:2:1 'HTTP/*' keyword is deprecated, please u
 <
 * Response body:
 * café
-warning: tests_ok/very_verbose.hurl:5:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -158,7 +156,6 @@ warning: tests_ok/very_verbose.hurl:5:1 'HTTP/*' keyword is deprecated, please u
 <
 * Response body:
 * Hello World!
-warning: tests_ok/very_verbose.hurl:13:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -194,7 +191,6 @@ warning: tests_ok/very_verbose.hurl:13:1 'HTTP/*' keyword is deprecated, please 
 <
 * Response body:
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
-warning: tests_ok/very_verbose.hurl:16:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -237,7 +233,6 @@ warning: tests_ok/very_verbose.hurl:16:1 'HTTP/*' keyword is deprecated, please 
 <
 * Response body:
 *
-warning: tests_ok/very_verbose.hurl:21:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 6
@@ -275,5 +270,4 @@ warning: tests_ok/very_verbose.hurl:21:1 'HTTP/*' keyword is deprecated, please 
 <
 * Response body:
 * Done
-warning: tests_ok/very_verbose.hurl:25:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *

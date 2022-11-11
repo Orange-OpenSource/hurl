@@ -3,4 +3,4 @@ GET http://localhost:8000/not-found
 retry: true
 retry-interval: 0
 retry-max-count: 2
-HTTP/* 200
+HTTP 200

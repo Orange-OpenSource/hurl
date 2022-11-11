@@ -29,7 +29,6 @@
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:4:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 * Captures:
 * job_id: ~~~
 *
@@ -61,7 +60,6 @@ warning: tests_ok/option_retry.hurl:4:1 'HTTP/*' keyword is deprecated, please u
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/option_retry.hurl:19:0
@@ -100,7 +98,6 @@ warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please 
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/option_retry.hurl:19:0
@@ -139,7 +136,6 @@ warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please 
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/option_retry.hurl:19:0
@@ -178,7 +174,6 @@ warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please 
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * Assert failure
 *   --> tests_ok/option_retry.hurl:19:0
@@ -217,7 +212,6 @@ warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please 
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -243,7 +237,6 @@ warning: tests_ok/option_retry.hurl:17:1 'HTTP/*' keyword is deprecated, please 
 < Content-Length: 0
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:24:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *
 * ------------------------------------------------------------------------------
 * Executing entry 4
@@ -269,5 +262,4 @@ warning: tests_ok/option_retry.hurl:24:1 'HTTP/*' keyword is deprecated, please 
 < Server: Flask Server
 < Date: ~~~
 <
-warning: tests_ok/option_retry.hurl:27:1 'HTTP/*' keyword is deprecated, please use 'HTTP' instead
 *

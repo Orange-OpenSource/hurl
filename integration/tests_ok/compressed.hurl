@@ -3,7 +3,7 @@
 # --compressed has no effect on non compressed.
 
 GET http://localhost:8000/compressed/none
-HTTP/1.0 200
+HTTP 200
 Content-Length: 12
 Content-Type: text/html; charset=utf-8
 [Asserts]
@@ -15,17 +15,17 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/none
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
 GET http://localhost:8000/compressed/none
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
 GET http://localhost:8000/compressed/none
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -33,7 +33,7 @@ file,hello.txt;
 # ---------------------------
 
 GET http://localhost:8000/compressed/gzip
-HTTP/1.0 200
+HTTP 200
 Content-Length: 32
 Content-Encoding: gzip
 Content-Type: text/html; charset=utf-8
@@ -46,17 +46,17 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/gzip
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
 GET http://localhost:8000/compressed/gzip
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
 GET http://localhost:8000/compressed/gzip
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -64,7 +64,7 @@ file,hello.txt;
 # ---------------------------
 
 GET http://localhost:8000/compressed/zlib
-HTTP/1.0 200
+HTTP 200
 Content-Length: 20
 Content-Encoding: deflate
 Content-Type: text/html; charset=utf-8
@@ -77,17 +77,17 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/zlib
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
 GET http://localhost:8000/compressed/zlib
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
 GET http://localhost:8000/compressed/zlib
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -95,7 +95,7 @@ file,hello.txt;
 # ---------------------------
 
 GET http://localhost:8000/compressed/brotli
-HTTP/1.0 200
+HTTP 200
 Content-Length: 17
 Content-Encoding: br
 Content-Type: text/html; charset=utf-8
@@ -108,22 +108,22 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/brotli
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
 GET http://localhost:8000/compressed/brotli
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
 GET http://localhost:8000/compressed/brotli
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 # Test a large brotli compressed body:
 GET http://localhost:8000/compressed/brotli_large
-HTTP/1.0 200
+HTTP 200
 Content-Encoding: br
 Content-Type: image/jpeg
 [Asserts]
@@ -131,7 +131,7 @@ bytes startsWith hex,ffd8ffe0;   # JPEG magic number
 file,cat.jpg;
 
 GET http://localhost:8000/compressed/brotli_identity
-HTTP/1.0 200
+HTTP 200
 Content-Length: 17
 Content-Encoding: br, identity
 Content-Type: text/html; charset=utf-8

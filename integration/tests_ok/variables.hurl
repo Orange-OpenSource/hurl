@@ -24,7 +24,7 @@ variable: country=Italy
   "country": "{{country}}"
 }
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 variable "name" == "Jennifer"
 variable "female" == true

@@ -6,6 +6,7 @@
 
 
 GET http://localhost:8000/assert-base64
-HTTP/1.0 200
+
+HTTP 200
 base64,bGluZTEKbGluZTINCmxpbmUzCg==;
 

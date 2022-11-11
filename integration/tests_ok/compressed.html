@@ -3,7 +3,7 @@
 <span class="line"></span><span class="comment"># --compressed has no effect on non compressed.</span>
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">12</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
 <span class="line section-header">[Asserts]</span>
@@ -15,17 +15,17 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test base64 implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test hex implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test file implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/none</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">file,<span class="filename">hello.txt</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
@@ -33,7 +33,7 @@
 <span class="line"></span><span class="comment"># ---------------------------</span>
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">32</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">gzip</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
@@ -46,17 +46,17 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test base64 implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test hex implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test file implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/gzip</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">file,<span class="filename">hello.txt</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
@@ -64,7 +64,7 @@
 <span class="line"></span><span class="comment"># ---------------------------</span>
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">20</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">deflate</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
@@ -77,17 +77,17 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test base64 implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test hex implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test file implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/zlib</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">file,<span class="filename">hello.txt</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
@@ -95,7 +95,7 @@
 <span class="line"></span><span class="comment"># ---------------------------</span>
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>
@@ -108,22 +108,22 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test base64 implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">base64,<span class="base64">SGVsbG8gV29ybGQh</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test hex implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">hex,<span class="hex">48656c6c6f20576f726c6421</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test file implicit body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line">file,<span class="filename">hello.txt</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Test a large brotli compressed body:</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_large</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">image/jpeg</span></span>
 <span class="line section-header">[Asserts]</span>
@@ -131,7 +131,7 @@
 <span class="line">file,<span class="filename">cat.jpg</span>;</span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/compressed/brotli_identity</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP/1.0</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Length</span><span>:</span> <span class="string">17</span></span>
 <span class="line"><span class="string">Content-Encoding</span><span>:</span> <span class="string">br, identity</span></span>
 <span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">text/html; charset=utf-8</span></span>

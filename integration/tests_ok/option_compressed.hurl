@@ -6,7 +6,7 @@ GET http://localhost:8000/compressed/none
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 12
 Content-Type: text/html; charset=utf-8
 [Asserts]
@@ -20,7 +20,7 @@ GET http://localhost:8000/compressed/none
 [Options]
 compressed: false
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 12
 Content-Type: text/html; charset=utf-8
 [Asserts]
@@ -36,7 +36,7 @@ GET http://localhost:8000/compressed/none
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
@@ -44,7 +44,7 @@ GET http://localhost:8000/compressed/none
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
@@ -52,7 +52,7 @@ GET http://localhost:8000/compressed/none
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -63,7 +63,7 @@ GET http://localhost:8000/compressed/gzip
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 32
 Content-Encoding: gzip
 Content-Type: text/html; charset=utf-8
@@ -79,7 +79,7 @@ GET http://localhost:8000/compressed/gzip
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
@@ -87,7 +87,7 @@ GET http://localhost:8000/compressed/gzip
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
@@ -95,7 +95,7 @@ GET http://localhost:8000/compressed/gzip
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -106,7 +106,7 @@ GET http://localhost:8000/compressed/zlib
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 20
 Content-Encoding: deflate
 Content-Type: text/html; charset=utf-8
@@ -122,7 +122,7 @@ GET http://localhost:8000/compressed/zlib
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
@@ -130,7 +130,7 @@ GET http://localhost:8000/compressed/zlib
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
@@ -138,7 +138,7 @@ GET http://localhost:8000/compressed/zlib
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 
@@ -149,7 +149,7 @@ GET http://localhost:8000/compressed/brotli
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 17
 Content-Encoding: br
 Content-Type: text/html; charset=utf-8
@@ -165,7 +165,7 @@ GET http://localhost:8000/compressed/brotli
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 base64,SGVsbG8gV29ybGQh;
 
 # Test hex implicit body:
@@ -173,7 +173,7 @@ GET http://localhost:8000/compressed/brotli
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 hex,48656c6c6f20576f726c6421;
 
 # Test file implicit body:
@@ -181,7 +181,7 @@ GET http://localhost:8000/compressed/brotli
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 file,hello.txt;
 
 # Test a large brotli compressed body:
@@ -189,7 +189,7 @@ GET http://localhost:8000/compressed/brotli_large
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Encoding: br
 Content-Type: image/jpeg
 [Asserts]
@@ -200,7 +200,7 @@ GET http://localhost:8000/compressed/brotli_identity
 [Options]
 compressed: true
 
-HTTP/1.0 200
+HTTP 200
 Content-Length: 17
 Content-Encoding: br, identity
 Content-Type: text/html; charset=utf-8

@@ -1,7 +1,7 @@
 error: Assert status code
-  --> tests_failed/assert_status.hurl:2:10
+  --> tests_failed/assert_status.hurl:2:6
    |
- 2 | HTTP/1.0 200
-   |          ^^^ actual value is <404>
+ 2 | HTTP 200
+   |      ^^^ actual value is <404>
    |
 

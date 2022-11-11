@@ -5,11 +5,11 @@ bob,10
 bill,22
 ```
 
-HTTP/1.0 200
+HTTP 200
 
 
 GET http://localhost:8000/get-bob-age
-HTTP/1.0 200
+HTTP 200
 [Captures]
 bob_age: body
 
@@ -20,4 +20,4 @@ name,age
 bob,{{bob_age}}
 bill,22
 ```
-HTTP/1.0 200
+HTTP 200
