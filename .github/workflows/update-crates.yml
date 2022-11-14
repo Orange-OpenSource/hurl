@@ -11,7 +11,7 @@ jobs:
   update-crates:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
       BOT_UPDATE_BRANCHE_NAME: "bot/update-crates"
     name: update-crates
@@ -68,8 +68,8 @@ jobs:
       - name: Push updates to branch
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "bot@hurl.dev"
+          git config --local user.name "hurl-bot"
           git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
           git commit -am "Update crates"
           git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
@@ -90,7 +90,7 @@ jobs:
       - name: Create new pull request
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-          GITHUB_TOKEN=${{ secrets.LEPAPAREIL_CI_TOKEN }}
+          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           gh pr create --fill --base master --head "${BOT_UPDATE_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
@@ -108,7 +108,6 @@ jobs:
                      sed "s/^=>/###/g" | \
                        sed "s/^ /- /g" > "${pr_comment_file}"
           pr_comment="$(cat "${pr_comment_file}")"
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           gh pr comment "${NEW_PR_NUMBER}" --body "${pr_comment}" && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             echo "  - ✅ Comment updates list to pull request n° ${NEW_PR_NUMBER} succeeds."

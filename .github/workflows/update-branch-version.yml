@@ -9,8 +9,8 @@ on:
         type: string
   workflow_call:
     secrets:
-      LEPAPAREIL_CI_TOKEN:
-        description: 'secrets.LEPAPAREIL_CI_TOKEN from the caller workflow'
+      HURL_BOT_TOKEN:
+        description: 'secrets.HURL_BOT_TOKEN from the caller workflow'
         required: true
     inputs:
       new_version:
@@ -33,7 +33,7 @@ jobs:
   update-branch-version:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
     outputs:
       pr_number: ${{ steps.create-new-version-pr.outputs.pr_number }}
@@ -94,8 +94,8 @@ jobs:
 
       - name: Push commits
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "bot@hurl.dev"
+          git config --local user.name "hurl-bot"
           git checkout -b "${BOT_UPDATE_VERSION_BRANCHE_NAME}"
           git commit -am "Update hurl version to ${{ inputs.new_version }}"
           git push --set-upstream origin "${BOT_UPDATE_VERSION_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?
@@ -109,7 +109,7 @@ jobs:
       - name: Create new version PR
         id: create-new-version-pr
         run: |
-          GITHUB_TOKEN=${{ secrets.LEPAPAREIL_CI_TOKEN }}
+          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           git fetch
           base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g")
           gh pr create --fill --label bot --base "${base}"  --head "${BOT_UPDATE_VERSION_BRANCHE_NAME}" && gh_exit_code=0 || gh_exit_code=$?

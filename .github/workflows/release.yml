@@ -25,7 +25,7 @@ jobs:
     if: github.event.inputs.create-release-branch == 'true'
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
     outputs:
       release_version: ${{ steps.set-release-version.outputs.release_version }}
       release_branch: ${{ steps.set-release-branch.outputs.release_branch }}
@@ -69,7 +69,7 @@ jobs:
     needs: set-context
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
     name: clean-release
     runs-on: ubuntu-latest
     steps:
@@ -185,7 +185,7 @@ jobs:
       - set-context
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
     name: create-release-branch
     runs-on: ubuntu-latest
     steps:
@@ -212,8 +212,8 @@ jobs:
 
       - name: Init git credentials
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "bot@hurl.dev"
+          git config --local user.name "hurl-bot"
 
       - name: Update version
         run: |
@@ -290,7 +290,7 @@ jobs:
   deliver-github-release:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       REPO: ${{ github.repository }}
     needs:
       - set-context
@@ -308,8 +308,8 @@ jobs:
 
       - name: Init git credentials
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "bot@hurl.dev"
+          git config --local user.name "hurl-bot"
       - uses: actions/download-artifact@master
         with:
           path: artifacts
@@ -349,7 +349,7 @@ jobs:
 
       - name: Create new pull request
         run: |
-          GITHUB_TOKEN=${{ secrets.LEPAPAREIL_CI_TOKEN }}
+          GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           {
           echo "⚠ This is a github releasing PR."
           echo "- Please use \`/accept --release\` if you want to automatically update master branch to next SNAPSHOT version"
