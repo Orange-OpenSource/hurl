@@ -15,7 +15,7 @@ It can chain requests, capture values and evaluate queries on headers and body r
 versatile: it can be used for <b>fetching data</b>, <b>testing HTTP</b> sessions and testing <b>XML / JSON APIs</b>.
 
 ```hurl
-# Get home:
+# Get home: 
 GET https://example.org
 
 HTTP/1.1 200
