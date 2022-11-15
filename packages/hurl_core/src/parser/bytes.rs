@@ -16,6 +16,7 @@
  *
  */
 use crate::ast::*;
+use crate::parser::multiline::multiline_string;
 
 use super::combinators::*;
 use super::json::parse as parse_json;
@@ -25,10 +26,9 @@ use super::xml;
 use super::ParseResult;
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
-    //let start = p.state.clone();
     choice(
         &[
-            raw_string_bytes,
+            multiline_string_bytes,
             json_bytes,
             xml_bytes,
             base64_bytes,
@@ -37,9 +37,6 @@ pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
         ],
         reader,
     )
-}
-fn raw_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
-    raw_string(reader).map(Bytes::RawString)
 }
 
 fn xml_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
@@ -68,9 +65,12 @@ fn hex_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     hex(reader).map(Bytes::Hex)
 }
 
+pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+    multiline_string(reader).map(Bytes::RawString)
+}
+
 #[cfg(test)]
 mod tests {
-
     use super::super::error::*;
     use super::*;
 

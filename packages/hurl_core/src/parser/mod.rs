@@ -42,6 +42,7 @@ mod expr;
 mod filename;
 mod filter;
 mod json;
+mod multiline;
 mod parsers;
 mod predicate;
 mod predicate_value;

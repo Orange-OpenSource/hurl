@@ -141,10 +141,20 @@ impl ToJson for Bytes {
                 ("type".to_string(), JValue::String("xml".to_string())),
                 ("value".to_string(), JValue::String(value.clone())),
             ]),
-            Bytes::RawString(value) => JValue::Object(vec![
-                ("type".to_string(), JValue::String("raw-string".to_string())),
-                ("value".to_string(), JValue::String(value.value.to_string())),
-            ]),
+            Bytes::RawString(value) => {
+                let lang = match &value.lang {
+                    // TODO: change raw-string for undefined
+                    None | Some(Lang { value: None, .. }) => "raw-string".to_string(),
+                    Some(Lang {
+                        value: Some(lang_value),
+                        ..
+                    }) => lang_value.to_string(),
+                };
+                JValue::Object(vec![
+                    ("type".to_string(), JValue::String(lang)),
+                    ("value".to_string(), JValue::String(value.value.to_string())),
+                ])
+            }
         }
     }
 }

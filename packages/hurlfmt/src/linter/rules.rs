@@ -520,7 +520,7 @@ impl Lintable<RawString> for RawString {
 
     fn lint(&self) -> RawString {
         RawString {
-            newline: self.newline.clone(),
+            lang: None,
             value: self.value.lint(),
         }
     }

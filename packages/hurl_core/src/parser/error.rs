@@ -61,6 +61,7 @@ pub enum ParseError {
     OddNumberOfHexDigits,
     UrlIllegalCharacter(char),
     InvalidOption,
+    Multiline,
 }
 
 impl Error {

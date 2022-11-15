@@ -41,6 +41,7 @@ pub enum Token {
     String(String),
     CodeDelimiter(String),
     CodeVariable(String),
+    Lang(String),
 }
 
 pub trait Tokenizable {
@@ -605,13 +606,32 @@ impl Tokenizable for PredicateValue {
 
 impl Tokenizable for RawString {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![
-            Token::Keyword("```".to_string()),
-            Token::Whitespace(self.newline.value.clone()),
-        ];
+        let mut tokens: Vec<Token> = vec![Token::Keyword("```".to_string())];
+        if let Some(kind) = &self.lang {
+            tokens.append(&mut kind.tokenize())
+        }
         tokens.append(&mut self.value.tokenize());
         tokens.push(Token::Keyword("```".to_string()));
         tokens
+    }
+}
+
+impl Tokenizable for Lang {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        if let Some(value) = &self.value {
+            tokens.append(&mut value.tokenize());
+        }
+        tokens.append(&mut self.space.tokenize());
+        tokens.append(&mut self.newline.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for LangValue {
+    fn tokenize(&self) -> Vec<Token> {
+        let token = Token::Lang(self.to_string());
+        vec![token]
     }
 }
 

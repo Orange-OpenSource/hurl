@@ -407,10 +407,17 @@ mod tests {
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
                 value: Bytes::RawString(RawString {
-                    newline: Whitespace {
-                        value: "\n".to_string(),
-                        source_info: SourceInfo::new(2, 4, 3, 1),
-                    },
+                    lang: Some(Lang {
+                        value: None,
+                        space: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(2, 4, 2, 4),
+                        },
+                        newline: Whitespace {
+                            source_info: SourceInfo::new(2, 4, 3, 1),
+                            value: "\n".to_string(),
+                        }
+                    }),
                     value: Template {
                         elements: vec![TemplateElement::String {
                             value: String::from("Hello World!\n"),

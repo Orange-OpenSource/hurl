@@ -6,7 +6,8 @@
 # It should produce an assert error
 GET http://localhost:8000/error-assert-newline
 HTTP 200
-```<p>Hello</p>
+```
+<p>Hello</p>
 ```
 
 # TODO

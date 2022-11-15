@@ -482,8 +482,24 @@ pub enum PredicateFuncValue {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RawString {
-    pub newline: Whitespace,
+    pub lang: Option<Lang>,
     pub value: Template,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Lang {
+    pub value: Option<LangValue>,
+    pub space: Whitespace,
+    pub newline: Whitespace,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum LangValue {
+    Base64,
+    Hex,
+    Json,
+    Xml,
+    GraphQl,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

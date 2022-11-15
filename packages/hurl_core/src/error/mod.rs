@@ -58,6 +58,7 @@ impl Error for parser::Error {
             ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
             ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
+            ParseError::Multiline => "Parsing multine".to_string(),
             _ => format!("{:?}", self),
         }
     }
@@ -109,7 +110,9 @@ impl Error for parser::Error {
                 "expecting an even number of hex digits".to_string()
             }
             ParseError::UrlIllegalCharacter(c) => format!("illegal character <{}>", c),
+            ParseError::Multiline => "the multiline is not valid".to_string(),
             _ => format!("{:?}", self),
+
         }
     }
 }

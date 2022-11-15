@@ -859,7 +859,12 @@ impl Htmlable for RawString {
         let mut buffer = "".to_string();
         buffer.push_str("<span class=\"raw\">");
         let mut s = "```".to_string();
-        s.push_str(self.newline.value.as_str());
+        if let Some(lang) = &self.lang {
+            if let Some(lang_value) = &lang.value {
+                s.push_str(format!("{}", lang_value).as_str());
+            }
+            s.push('\n');
+        }
         s.push_str(self.value.to_string().as_str());
         s.push_str("```");
         buffer.push_str(multilines(s).as_str());
@@ -1073,10 +1078,7 @@ mod tests {
     fn test_raw_string() {
         // ``````
         let raw_string = RawString {
-            newline: Whitespace {
-                value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
+            lang: None,
             value: Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
@@ -1093,10 +1095,7 @@ mod tests {
 
         // ```hello```
         let raw_string = RawString {
-            newline: Whitespace {
-                value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
+            lang: None,
             value: Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
@@ -1116,10 +1115,23 @@ mod tests {
         // line2
         // ```
         let raw_string = RawString {
-            newline: Whitespace {
-                value: "\n".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
+            lang: Some(Lang {
+                value: None,
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 4 },
+                        end: Pos { line: 1, column: 4 },
+                    },
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo {
+                        start: Pos { line: 1, column: 4 },
+                        end: Pos { line: 2, column: 1 },
+                    },
+                },
+            }),
             value: Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
@@ -1132,27 +1144,6 @@ mod tests {
         assert_eq!(
             raw_string.to_html(),
             "<span class=\"raw\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
-        );
-
-        // ```Hello
-        // ```
-        let raw_string = RawString {
-            newline: Whitespace {
-                value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
-            value: Template {
-                quotes: false,
-                elements: vec![TemplateElement::String {
-                    value: "Hello\n".to_string(),
-                    encoded: "unused".to_string(),
-                }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
-        };
-        assert_eq!(
-            raw_string.to_html(),
-            "<span class=\"raw\"><span class=\"line\">```Hello</span>\n<span class=\"line\">```</span></span>".to_string()
         );
     }
 
