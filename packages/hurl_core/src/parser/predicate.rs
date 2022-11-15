@@ -71,7 +71,7 @@ fn predicate_func(reader: &mut Reader) -> ParseResult<'static, PredicateFunc> {
 fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let start = reader.state.clone();
     match choice(
-        vec![
+        &[
             equal_predicate,
             not_equal_predicate,
             greater_or_equal_predicate,

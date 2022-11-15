@@ -45,7 +45,7 @@ fn query(reader: &mut Reader) -> ParseResult<Query> {
 
 fn selector(reader: &mut Reader) -> ParseResult<Selector> {
     choice(
-        vec![
+        &[
             selector_filter,
             selector_wildcard,
             selector_recursive_wildcard,
@@ -241,7 +241,7 @@ fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
 
 fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
     choice(
-        vec![
+        &[
             equal_number_predicate_func,
             greater_than_predicate_func,
             greater_than_or_equal_predicate_func,

@@ -27,7 +27,7 @@ use super::ParseResult;
 pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     //let start = p.state.clone();
     choice(
-        vec![
+        &[
             raw_string_bytes,
             json_bytes,
             xml_bytes,

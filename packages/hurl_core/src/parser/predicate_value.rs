@@ -28,7 +28,7 @@ use crate::parser::{Error, ParseError};
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateValue> {
     choice(
-        vec![
+        &[
             |p1| match null(p1) {
                 Ok(()) => Ok(PredicateValue::Null {}),
                 Err(e) => Err(e),

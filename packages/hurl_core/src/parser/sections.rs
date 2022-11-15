@@ -347,7 +347,7 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
 
 fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     choice(
-        vec![
+        &[
             option_cacert,
             option_compressed,
             option_insecure,
@@ -595,7 +595,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, String> {
 
 fn variable_value(reader: &mut Reader) -> ParseResult<'static, VariableValue> {
     choice(
-        vec![
+        &[
             |p1| match null(p1) {
                 Ok(()) => Ok(VariableValue::Null {}),
                 Err(e) => Err(e),

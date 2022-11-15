@@ -37,7 +37,7 @@ pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
 
 fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     choice(
-        vec![
+        &[
             status_query,
             url_query,
             header_query,
@@ -133,7 +133,7 @@ fn regex_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 
 pub fn regex_value(reader: &mut Reader) -> ParseResult<'static, RegexValue> {
     choice(
-        vec![
+        &[
             |p1| match quoted_template(p1) {
                 Ok(value) => Ok(RegexValue::Template(value)),
                 Err(e) => Err(e),

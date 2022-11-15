@@ -27,7 +27,7 @@ use crate::parser::expr;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     choice(
-        vec![
+        &[
             null_value,
             boolean_value,
             string_value,

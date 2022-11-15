@@ -120,26 +120,23 @@ pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResu
     }
 }
 
-pub fn choice<'a, T>(fs: Vec<ParseFunc<'a, T>>, reader: &mut Reader) -> ParseResult<'a, T> {
-    // return the last error when no default error is specified
-    // typically this should be recoverable
-    match fs.get(0) {
-        None => panic!("You can call choice with an empty vector of choice"),
-        Some(f) => {
-            let start = reader.state.clone();
-            if fs.len() == 1 {
-                f(reader)
-            } else {
-                match f(reader) {
-                    Err(Error {
-                        recoverable: true, ..
-                    }) => {
-                        reader.state = start;
-                        choice(fs.clone().into_iter().skip(1).collect(), reader)
-                    }
-                    x => x,
-                }
+/// Tries to apply the list of parser functions `fs` until one ot them succeeds.
+/// Typically this should be recoverable
+pub fn choice<'a, T>(fs: &[ParseFunc<'a, T>], reader: &mut Reader) -> ParseResult<'a, T> {
+    for (pos, f) in fs.iter().enumerate() {
+        let start = reader.state.clone();
+        if pos == fs.len() - 1 {
+            return f(reader);
+        }
+        match f(reader) {
+            Err(Error {
+                recoverable: true, ..
+            }) => {
+                reader.state = start;
+                continue;
             }
+            x => return x,
         }
     }
+    panic!("You can't call choice with an empty vector of choice")
 }

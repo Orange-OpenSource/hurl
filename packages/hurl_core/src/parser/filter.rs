@@ -49,7 +49,7 @@ pub fn filters(reader: &mut Reader) -> ParseResult<'static, Vec<(Whitespace, Fil
 pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     let start = reader.state.pos.clone();
     let value = choice(
-        vec![
+        &[
             count_filter,
             regex_filter,
             url_encode_filter,
