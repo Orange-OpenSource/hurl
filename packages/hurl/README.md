@@ -842,12 +842,12 @@ curl(1)  hurlfmt(1)
 
 ### Linux
 
-Precompiled binary is available at [hurl-1.9.0-SNAPSHOT-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-1.10.0-SNAPSHOT-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-1.9.0-SNAPSHOT:$PATH
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-1.10.0-SNAPSHOT:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -855,8 +855,8 @@ $ export PATH=$INSTALL_DIR/hurl-1.9.0-SNAPSHOT:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl_1.9.0-SNAPSHOT_amd64.deb
-$ sudo dpkg -i hurl_1.9.0-SNAPSHOT_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl_1.10.0-SNAPSHOT_amd64.deb
+$ sudo dpkg -i hurl_1.10.0-SNAPSHOT_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -869,7 +869,7 @@ $ sudo dpkg -i hurl_1.9.0-SNAPSHOT_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.9.0-SNAPSHOT-x86_64-macos.tar.gz] for x86 CPUs and [hurl-1.9.0-SNAPSHOT-arm64-macos.tar.gz] for ARM CPUS.
+Precompiled binary is available at [hurl-1.10.0-SNAPSHOT-x86_64-macos.tar.gz] for x86 CPUs and [hurl-1.10.0-SNAPSHOT-arm64-macos.tar.gz] for ARM CPUS.
 
 #### Homebrew
 
@@ -888,11 +888,11 @@ $ sudo port install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-1.9.0-SNAPSHOT-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-1.10.0-SNAPSHOT-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-1.9.0-SNAPSHOT-win64-installer.exe] is also available.
+An installer [hurl-1.10.0-SNAPSHOT-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -1017,11 +1017,11 @@ Please follow the [contrib on Windows section].
 [entry]: https://hurl.dev/docs/entry.html
 [`--test` option]: https://hurl.dev/docs/manual.html#test
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-1.9.0-SNAPSHOT-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-win64.zip
-[hurl-1.9.0-SNAPSHOT-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-win64-installer.exe
-[hurl-1.9.0-SNAPSHOT-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-x86_64-macos.tar.gz
-[hurl-1.9.0-SNAPSHOT-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-arm64-macos.tar.gz
-[hurl-1.9.0-SNAPSHOT-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.9.0-SNAPSHOT/hurl-1.9.0-SNAPSHOT-x86_64-linux.tar.gz
+[hurl-1.10.0-SNAPSHOT-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-win64.zip
+[hurl-1.10.0-SNAPSHOT-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-win64-installer.exe
+[hurl-1.10.0-SNAPSHOT-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-x86_64-macos.tar.gz
+[hurl-1.10.0-SNAPSHOT-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-arm64-macos.tar.gz
+[hurl-1.10.0-SNAPSHOT-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.10.0-SNAPSHOT/hurl-1.10.0-SNAPSHOT-x86_64-linux.tar.gz
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
