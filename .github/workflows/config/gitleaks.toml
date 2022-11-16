@@ -1,0 +1,8 @@
+title = "gitleaks config"
+
+[allowlist]
+description = "global allow lists"
+paths = [
+    '''integration'''
+]
+

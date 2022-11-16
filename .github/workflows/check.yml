@@ -24,6 +24,13 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
 
+    - name: Git leaks
+      uses: addnab/docker-run-action@v3
+      with:
+        image: zricethezav/gitleaks:latest
+        options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged --env CARGO_TERM_COLOR=always
+        run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
+
     - name: Install Prerequisites
       run: bin/check/install_prerequisites.sh
 
