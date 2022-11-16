@@ -13,9 +13,9 @@ We like to discuss things before implementation and want to be sure that:
 
 ## Pull Requests
 
-Automated tests are run for each commit, and all tests must be green before merge.
-
-Hurl git history is linear, so we ask to rebase your PR before final merge. 
+- Commits have to be signed.
+- All tests must be green before merge.
+- Hurl git history is linear, so we ask to rebase your PR before final merge. 
 
 ## Hurl Core Values
 
