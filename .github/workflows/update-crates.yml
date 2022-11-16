@@ -65,11 +65,19 @@ jobs:
             exit 1
           fi
 
+      - name: Init git bot context
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_committer_name: "hurl-bot"
+          git_committer_email: "bot@hurl.dev"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Push updates to branch
         if: env.UPDATED_CRATES_COUNT != 0
         run: |
-          git config --local user.email "bot@hurl.dev"
-          git config --local user.name "hurl-bot"
           git checkout -b "${BOT_UPDATE_BRANCHE_NAME}"
           git commit -am "Update crates"
           git push --set-upstream origin "${BOT_UPDATE_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?

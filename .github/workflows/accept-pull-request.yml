@@ -196,10 +196,18 @@ jobs:
         run: |
           git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
 
+      - name: Init git bot context
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_committer_name: "hurl-bot"
+          git_committer_email: "bot@hurl.dev"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Merge fast forward head ref to base ref 
         run: |
-          git config --local user.email "bot@hurl.dev"
-          git config --local user.name "hurl-bot"
           git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
             echo "  - ✅ Merge fast forward succeeds."
@@ -271,5 +279,4 @@ jobs:
       - name: release-final-comment
         run: |      
           gh pr comment "${{ github.event.issue.number }}" --body "✅ New PR [${{ needs.update-branch-version.outputs.pr_number }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${{ needs.update-branch-version.outputs.pr_number }}) created to update master branch to ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }} version"
-
 

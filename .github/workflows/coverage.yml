@@ -45,10 +45,22 @@ jobs:
       run: | 
         grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
 
+    - name: Init git bot context
+      uses: crazy-max/ghaction-import-gpg@v5
+      with:
+        gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+        git_committer_name: "hurl-bot"
+        git_committer_email: "bot@hurl.dev"
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+
     - name: Deploy Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.HURL_BOT_TOKEN }}
+        personal_token: ${{ secrets.HURL_BOT_TOKEN }}
+        user_name: 'hurl-bot'
+        user_email: 'bot@hurl.dev'
         publish_branch: github-pages
         publish_dir: coverage
         destination_dir: coverage

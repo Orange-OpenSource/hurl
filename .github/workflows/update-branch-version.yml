@@ -12,6 +12,12 @@ on:
       HURL_BOT_TOKEN:
         description: 'secrets.HURL_BOT_TOKEN from the caller workflow'
         required: true
+      HURL_BOT_GPG_PRIVATE_KEY:
+        description: 'secrets.HURL_BOT_GPG_PRIVATE_KEY from the caller workflow'
+        required: true
+      HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE:
+        description: 'secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE from the caller workflow'
+        required: true
     inputs:
       new_version:
         description: "Version (x.y.z-SNASPHOT)"
@@ -92,10 +98,18 @@ jobs:
           python3 bin/docs/build_readme.py github > README.md
           python3 bin/docs/build_readme.py crates > packages/hurl/README.md
 
+      - name: Init git bot context
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_committer_name: "hurl-bot"
+          git_committer_email: "bot@hurl.dev"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Push commits
         run: |
-          git config --local user.email "bot@hurl.dev"
-          git config --local user.name "hurl-bot"
           git checkout -b "${BOT_UPDATE_VERSION_BRANCHE_NAME}"
           git commit -am "Update hurl version to ${{ inputs.new_version }}"
           git push --set-upstream origin "${BOT_UPDATE_VERSION_BRANCHE_NAME}" && git_exit_code=0 || git_exit_code=$?

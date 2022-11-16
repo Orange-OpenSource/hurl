@@ -210,11 +210,6 @@ jobs:
         with:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
-      - name: Init git credentials
-        run: |
-          git config --local user.email "bot@hurl.dev"
-          git config --local user.name "hurl-bot"
-
       - name: Update version
         run: |
           hurl_packages="hurl_core hurl hurlfmt"
@@ -256,6 +251,16 @@ jobs:
           python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
           python3 bin/docs/build_readme.py github > README.md
           python3 bin/docs/build_readme.py crates > packages/hurl/README.md
+
+      - name: Init git bot context
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_committer_name: "hurl-bot"
+          git_committer_email: "bot@hurl.dev"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - name: Push create release commits
         run: |
@@ -306,10 +311,16 @@ jobs:
         with:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
-      - name: Init git credentials
-        run: |
-          git config --local user.email "bot@hurl.dev"
-          git config --local user.name "hurl-bot"
+      - name: Init git bot context
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.HURL_BOT_GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_committer_name: "hurl-bot"
+          git_committer_email: "bot@hurl.dev"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - uses: actions/download-artifact@master
         with:
           path: artifacts
