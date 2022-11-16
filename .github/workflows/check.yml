@@ -24,6 +24,12 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
 
+    - name: Shellcheck
+      run: bin/check/shellcheck.sh
+
+    - name: Check ad hoc
+      run: bin/check/ad_hoc.sh
+
     - name: Git leaks
       uses: addnab/docker-run-action@v3
       with:
@@ -40,9 +46,6 @@ jobs:
     - name: Clippy
       run: bin/check/clippy.sh
 
-    - name: Shellcheck
-      run: bin/check/shellcheck.sh
-
     - name: Black
       run: bin/check/black.sh
 
@@ -54,7 +57,4 @@ jobs:
 
     - name: Check CHANGELOG
       run: bin/check/changelog.sh
-
-    - name: Check ad hoc
-      run: bin/check/ad_hoc.sh
 
