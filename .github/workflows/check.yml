@@ -55,6 +55,9 @@ jobs:
     - name: Run crates update
       run: bin/check/crates.sh 
 
+    - name: Check crates licence
+      run: python3 bin/check/license.py
+
     - name: Check CHANGELOG
       run: bin/check/changelog.sh
 
