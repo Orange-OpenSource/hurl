@@ -499,7 +499,7 @@ impl Lintable<PredicateValue> for PredicateValue {
     fn lint(&self) -> PredicateValue {
         match self {
             PredicateValue::String(value) => PredicateValue::String(value.lint()),
-            PredicateValue::Raw(value) => PredicateValue::Raw(value.lint()),
+            PredicateValue::MultilineString(value) => PredicateValue::MultilineString(value.lint()),
             PredicateValue::Integer(value) => PredicateValue::Integer(*value),
             PredicateValue::Float(value) => PredicateValue::Float(value.clone()),
             PredicateValue::Bool(value) => PredicateValue::Bool(*value),
@@ -512,14 +512,14 @@ impl Lintable<PredicateValue> for PredicateValue {
     }
 }
 
-impl Lintable<RawString> for RawString {
+impl Lintable<MultilineString> for MultilineString {
     fn errors(&self) -> Vec<Error> {
         let errors = vec![];
         errors
     }
 
-    fn lint(&self) -> RawString {
-        RawString {
+    fn lint(&self) -> MultilineString {
+        MultilineString {
             lang: None,
             value: self.value.lint(),
         }
@@ -572,7 +572,7 @@ impl Lintable<Bytes> for Bytes {
             Bytes::Json { value } => Bytes::Json {
                 value: value.clone(),
             },
-            Bytes::RawString(value) => Bytes::RawString(value.lint()),
+            Bytes::MultilineString(value) => Bytes::MultilineString(value.lint()),
             Bytes::Xml { value } => Bytes::Xml {
                 value: value.clone(),
             },

@@ -406,7 +406,7 @@ mod tests {
                     value: String::from(""),
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
-                value: Bytes::RawString(RawString {
+                value: Bytes::MultilineString(MultilineString {
                     lang: Some(Lang {
                         value: None,
                         space: Whitespace {

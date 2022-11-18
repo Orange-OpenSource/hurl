@@ -23,21 +23,25 @@ pub trait Htmlable {
 
 pub fn format_standalone(hurl_file: HurlFile) -> String {
     let css = include_str!("hurl.css");
+    let body = hurl_file.to_html();
 
-    let mut buffer = String::from("");
-    buffer.push_str("<!DOCTYPE html>\n");
-    buffer.push_str("<html>");
-    buffer.push_str("<head>");
-    buffer.push_str("<title>Hurl File</title>");
-    buffer.push_str("<style>\n");
-    buffer.push_str(css);
-    buffer.push_str("</style>");
-    buffer.push_str("</head>");
-    buffer.push_str("<body>\n");
-    buffer.push_str(hurl_file.to_html().as_str());
-    buffer.push_str("\n</body>");
-    buffer.push_str("</html>");
-    buffer
+    format!(
+        r#"<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hurl File</title>
+        <style>
+{css}
+        </style>
+    </head>
+    <body>
+{body}
+    </body>
+</html>
+"#,
+        css = css,
+        body = body
+    )
 }
 
 pub fn format(hurl_file: HurlFile, standalone: bool) -> String {
@@ -839,7 +843,7 @@ impl Htmlable for PredicateValue {
             PredicateValue::String(value) => {
                 format!("<span class=\"string\">\"{}\"</span>", value.to_html())
             }
-            PredicateValue::Raw(value) => value.to_html(),
+            PredicateValue::MultilineString(value) => value.to_html(),
             PredicateValue::Integer(value) => format!("<span class=\"number\">{}</span>", value),
             PredicateValue::Float(value) => {
                 format!("<span class=\"number\">{}</span>", value)
@@ -854,10 +858,10 @@ impl Htmlable for PredicateValue {
     }
 }
 
-impl Htmlable for RawString {
+impl Htmlable for MultilineString {
     fn to_html(&self) -> String {
         let mut buffer = "".to_string();
-        buffer.push_str("<span class=\"raw\">");
+        buffer.push_str("<span class=\"multiline\">");
         let mut s = "```".to_string();
         if let Some(lang) = &self.lang {
             if let Some(lang_value) = &lang.value {
@@ -891,7 +895,7 @@ impl Htmlable for Bytes {
             Bytes::File(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::Hex(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::Json { value } => value.to_html(),
-            Bytes::RawString(value) => value.to_html(),
+            Bytes::MultilineString(value) => value.to_html(),
             Bytes::Xml { value } => xml_html(value),
         }
     }
@@ -1075,9 +1079,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_raw_string() {
+    fn test_multiline_string() {
         // ``````
-        let raw_string = RawString {
+        let multiline_string = MultilineString {
             lang: None,
             value: Template {
                 quotes: false,
@@ -1089,12 +1093,12 @@ mod tests {
             },
         };
         assert_eq!(
-            raw_string.to_html(),
-            "<span class=\"raw\"><span class=\"line\">``````</span></span>".to_string()
+            multiline_string.to_html(),
+            "<span class=\"multiline\"><span class=\"line\">``````</span></span>".to_string()
         );
 
         // ```hello```
-        let raw_string = RawString {
+        let multiline_string = MultilineString {
             lang: None,
             value: Template {
                 quotes: false,
@@ -1106,15 +1110,15 @@ mod tests {
             },
         };
         assert_eq!(
-            raw_string.to_html(),
-            "<span class=\"raw\"><span class=\"line\">```hello```</span></span>".to_string()
+            multiline_string.to_html(),
+            "<span class=\"multiline\"><span class=\"line\">```hello```</span></span>".to_string()
         );
 
         // ```
         // line1
         // line2
         // ```
-        let raw_string = RawString {
+        let multiline_string = MultilineString {
             lang: Some(Lang {
                 value: None,
                 space: Whitespace {
@@ -1142,8 +1146,8 @@ mod tests {
             },
         };
         assert_eq!(
-            raw_string.to_html(),
-            "<span class=\"raw\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
+            multiline_string.to_html(),
+            "<span class=\"multiline\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
         );
     }
 

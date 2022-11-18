@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/follow-redirect"},"response":{"status":200,"body":{"type":"raw-string","value":"Followed redirect!"}}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/follow-redirect"},"response":{"status":200,"body":{"type":"multiline-string","value":"Followed redirect!"}}}]}

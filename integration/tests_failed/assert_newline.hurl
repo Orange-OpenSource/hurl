@@ -1,7 +1,7 @@
 # Testing trailing whitespace
 # Response '<p>Hello</p>\n\n'
 
-# Testing with a raw string
+# Testing with a multiline string
 # check exactly the whitespace
 # It should produce an assert error
 GET http://localhost:8000/error-assert-newline

@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/expect","headers":[{"name":"Expect","value":"100-continue"}],"body":{"type":"raw-string","value":"data"}},"response":{"status":200}}]}
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/expect","headers":[{"name":"Expect","value":"100-continue"}],"body":{"type":"multiline-string","value":"data"}},"response":{"status":200}}]}

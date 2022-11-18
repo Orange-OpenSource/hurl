@@ -400,7 +400,7 @@ pub struct PredicateFunc {
 #[allow(clippy::large_enum_variant)]
 pub enum PredicateValue {
     String(Template),
-    Raw(RawString),
+    MultilineString(MultilineString),
     Integer(i64),
     Float(Float),
     Bool(bool),
@@ -481,7 +481,7 @@ pub enum PredicateFuncValue {
 //
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RawString {
+pub struct MultilineString {
     pub lang: Option<Lang>,
     pub value: Template,
 }
@@ -589,7 +589,7 @@ pub struct LineTerminator {
 pub enum Bytes {
     Json { value: json::Value },
     Xml { value: String },
-    RawString(RawString),
+    MultilineString(MultilineString),
     Base64(Base64),
     File(File),
     Hex(Hex),

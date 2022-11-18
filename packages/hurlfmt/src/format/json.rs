@@ -141,10 +141,24 @@ impl ToJson for Bytes {
                 ("type".to_string(), JValue::String("xml".to_string())),
                 ("value".to_string(), JValue::String(value.clone())),
             ]),
-            Bytes::RawString(value) => {
+            Bytes::MultilineString(value) => {
                 let lang = match &value.lang {
-                    // TODO: change raw-string for undefined
-                    None | Some(Lang { value: None, .. }) => "raw-string".to_string(),
+                    // TODO: check these values. Mayve we want to have the same
+                    // export when using:
+                    //
+                    // ~~~
+                    // GET https://foo.com
+                    // ```base64
+                    // SGVsbG8gd29ybGQ=
+                    // ```
+                    //
+                    // or
+                    //
+                    // ~~~
+                    // GET https://foo.com
+                    // base64,SGVsbG8gd29ybGQ=;
+                    // ~~~
+                    None | Some(Lang { value: None, .. }) => "multiline-string".to_string(),
                     Some(Lang {
                         value: Some(lang_value),
                         ..
@@ -451,7 +465,7 @@ fn add_predicate_value(attributes: &mut Vec<(String, JValue)>, predicate_value: 
 fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<String>) {
     match predicate_value {
         PredicateValue::String(value) => (JValue::String(value.to_string()), None),
-        PredicateValue::Raw(value) => (JValue::String(value.value.to_string()), None),
+        PredicateValue::MultilineString(value) => (JValue::String(value.value.to_string()), None),
         PredicateValue::Integer(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
@@ -471,7 +485,7 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
     }
 }
 
-impl ToJson for RawString {
+impl ToJson for MultilineString {
     fn to_json(&self) -> JValue {
         JValue::String(self.value.to_string())
     }

@@ -165,7 +165,7 @@ impl Tokenizable for Bytes {
                 tokens.push(Token::String(value.to_string()));
             }
             //            Bytes::MultilineString { value: _ } => {}
-            Bytes::RawString(value) => {
+            Bytes::MultilineString(value) => {
                 tokens.append(&mut value.tokenize());
             }
             Bytes::Base64(value) => {
@@ -591,7 +591,7 @@ impl Tokenizable for PredicateValue {
     fn tokenize(&self) -> Vec<Token> {
         match self {
             PredicateValue::String(value) => value.tokenize(),
-            PredicateValue::Raw(value) => value.tokenize(),
+            PredicateValue::MultilineString(value) => value.tokenize(),
             PredicateValue::Integer(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Float(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
@@ -604,7 +604,7 @@ impl Tokenizable for PredicateValue {
     }
 }
 
-impl Tokenizable for RawString {
+impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Keyword("```".to_string())];
         if let Some(kind) = &self.lang {

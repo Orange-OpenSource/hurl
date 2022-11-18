@@ -43,7 +43,7 @@ pub fn eval_bytes(
 ) -> Result<http::Body, Error> {
     match bytes {
         // Body::Text
-        Bytes::RawString(RawString { value, .. }) => {
+        Bytes::MultilineString(MultilineString { value, .. }) => {
             let value = eval_template(value, variables)?;
             Ok(http::Body::Text(value))
         }

@@ -22,7 +22,7 @@ use crate::ast::*;
 use crate::parser::primitives::*;
 use crate::parser::{template, Error, ParseError};
 
-pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, RawString> {
+pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     try_literal("```", reader)?;
     let save = reader.state.clone();
 
@@ -39,7 +39,7 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, RawString> 
     ) {
         Ok(lang) => {
             let value = multiline_string_value(reader)?;
-            Ok(RawString {
+            Ok(MultilineString {
                 value,
                 lang: Some(lang),
             })
@@ -47,7 +47,7 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, RawString> 
         Err(_) => {
             reader.state = save;
             let value = oneline_string_value(reader)?;
-            Ok(RawString { value, lang: None })
+            Ok(MultilineString { value, lang: None })
         }
     }
 }
@@ -290,7 +290,7 @@ mod tests {
         let mut reader = Reader::init("``````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: None,
                 value: Template {
                     quotes: false,
@@ -303,7 +303,7 @@ mod tests {
         let mut reader = Reader::init("```\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: Some(Lang {
                     value: None,
                     space: Whitespace {
@@ -325,7 +325,7 @@ mod tests {
         let mut reader = Reader::init("```\r\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: Some(Lang {
                     value: None,
                     space: Whitespace {
@@ -347,11 +347,11 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_hello() {
+    fn test_multiline_string_hello() {
         let mut reader = Reader::init("```Hello World!```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: None,
                 value: Template {
                     quotes: false,
@@ -366,11 +366,11 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_base64_prefix() {
+    fn test_multiline_string_base64_prefix() {
         let mut reader = Reader::init("```base64_inline```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: None,
                 value: Template {
                     quotes: false,
@@ -385,11 +385,11 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_csv() {
+    fn test_multiline_string_csv() {
         let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: Some(Lang {
                     value: None,
                     space: Whitespace {
@@ -414,13 +414,13 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_one_emptyline() {
+    fn test_multiline_string_one_empty_line() {
         // one newline
         // the value takes the value of the newline??
         let mut reader = Reader::init("```\n\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: Some(Lang {
                     value: None,
                     space: Whitespace {
@@ -447,7 +447,7 @@ mod tests {
         let mut reader = Reader::init("```\n\r\n````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            RawString {
+            MultilineString {
                 lang: Some(Lang {
                     value: None,
                     space: Whitespace {
@@ -472,7 +472,7 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_error() {
+    fn test_multiline_string_error() {
         let mut reader = Reader::init("xxx");
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
@@ -508,7 +508,7 @@ mod tests {
     }
 
     #[test]
-    fn test_raw_string_value() {
+    fn test_multiline_string_value() {
         let mut reader = Reader::init("```");
         assert_eq!(
             multiline_string_value(&mut reader).unwrap(),

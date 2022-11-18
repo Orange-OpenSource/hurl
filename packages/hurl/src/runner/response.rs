@@ -179,7 +179,7 @@ fn eval_implicit_body_asserts(
                 source_info: spec_body.space0.source_info.clone(),
             }
         }
-        Bytes::RawString(RawString { value, .. }) => {
+        Bytes::MultilineString(MultilineString { value, .. }) => {
             let expected = match eval_template(value, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),

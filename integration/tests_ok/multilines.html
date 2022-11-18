@@ -3,7 +3,7 @@
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="string">"line1\nline2\nline3\n"</span></span>
-<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="raw"><span class="line">```</span>
+<span class="line"><span class="query-type">body</span> <span class="predicate-type">==</span> <span class="multiline"><span class="line">```</span>
 <span class="line">line1</span>
 <span class="line">line2</span>
 <span class="line">line3</span>
@@ -13,7 +13,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/multilines/base64</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```base64</span>
+<span class="multiline"><span class="line">```base64</span>
 <span class="line">TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwg</span>
 <span class="line">c2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWdu</span>
 <span class="line">YSBhbGlxdWEuIFV0IGVuaW0gYWQgbWluaW0gdmVuaWFtLCBxdWlzIG5vc3RydWQgZXhlcmNpdGF0</span>
@@ -28,7 +28,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/multilines/hex</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```hex</span>
+<span class="multiline"><span class="line">```hex</span>
 <span class="line">039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81</span>
 <span class="line">```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
@@ -36,7 +36,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/multilines/json</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```json</span>
+<span class="multiline"><span class="line">```json</span>
 <span class="line">{</span>
 <span class="line">  "foo": "bar"</span>
 <span class="line">  "baz": 123456</span>
@@ -47,7 +47,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/multilines/xml</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```xml</span>
+<span class="multiline"><span class="line">```xml</span>
 <span class="line">&lt;?xml version="1.0"?&gt;</span>
 <span class="line">&lt;catalog&gt;</span>
 <span class="line">   &lt;book id="bk101"&gt;</span>
@@ -66,7 +66,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/multilines/graphql</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```graphql</span>
+<span class="multiline"><span class="line">```graphql</span>
 <span class="line">{</span>
 <span class="line">  hero {</span>
 <span class="line">    name</span>

@@ -33,7 +33,7 @@ pub fn eval_predicate_value(
             let s = eval_template(template, variables)?;
             Ok(Value::String(s))
         }
-        PredicateValue::Raw(value) => {
+        PredicateValue::MultilineString(value) => {
             let s = eval_template(&value.value, variables)?;
             Ok(Value::String(s))
         }

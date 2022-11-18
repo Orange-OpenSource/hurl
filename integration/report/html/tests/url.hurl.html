@@ -58,7 +58,7 @@ span.line:before {
 .string {
     color: darkgreen;
 }
-.raw {
+.multiline {
     color: darkgreen;
 }
 .comment {
@@ -87,16 +87,16 @@ span.line:before {
 }</style></head><body>
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/~user</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```user```</span></span>
+<span class="multiline"><span class="line">```user```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/%7Euser</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```user```</span></span>
+<span class="multiline"><span class="line">```user```</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># TODO: add single quote (needs to be escaped in curl command-line)</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/!$&amp;()*+,;=:@[]</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="raw"><span class="line">```weird```</span></span>
+<span class="multiline"><span class="line">```weird```</span></span>
 </span></span><span class="line"></span>
 </code></pre>
 </body></html>

@@ -66,7 +66,7 @@ fn hex_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 }
 
 pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
-    multiline_string(reader).map(Bytes::RawString)
+    multiline_string(reader).map(Bytes::MultilineString)
 }
 
 #[cfg(test)]

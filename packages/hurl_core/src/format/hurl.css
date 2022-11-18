@@ -56,7 +56,7 @@ span.line:before {
 .string {
     color: darkgreen;
 }
-.raw {
+.multiline {
     color: darkgreen;
 }
 .comment {

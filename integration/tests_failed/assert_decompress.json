@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-decompress"},"response":{"status":200,"body":{"type":"raw-string","value":"Hello World!"}}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-decompress"},"response":{"status":200,"body":{"type":"multiline-string","value":"Hello World!"}}}]}
