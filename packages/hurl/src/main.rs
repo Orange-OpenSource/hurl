@@ -335,7 +335,7 @@ fn main() {
 
     if let Some(dir_path) = cli_options.html_dir {
         base_logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
-        let result = report::write_html_report(dir_path.clone(), hurl_results.clone());
+        let result = report::write_html_report(&dir_path, &hurl_results);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
 
         for filename in filenames {
