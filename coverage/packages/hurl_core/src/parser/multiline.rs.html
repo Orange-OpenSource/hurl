@@ -435,7 +435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub fn multiline_string(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, RawString&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">pub fn multiline_string(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, MultilineString&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -707,7 +707,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(RawString {</pre>
+                <pre class="has-background-success-light py-0 px-2">            Ok(MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -835,7 +835,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(RawString { value, lang: None })</pre>
+                <pre class="has-background-success-light py-0 px-2">            Ok(MultilineString { value, lang: None })</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4723,7 +4723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4931,7 +4931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5283,7 +5283,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5635,7 +5635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_hello() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_hello() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5699,7 +5699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5939,7 +5939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_base64_prefix() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_base64_prefix() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6003,7 +6003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6243,7 +6243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_csv() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_csv() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6307,7 +6307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6707,7 +6707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_one_emptyline() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_one_empty_line() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6803,7 +6803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7235,7 +7235,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RawString {</pre>
+                <pre class="has-background-white py-0 px-2">            MultilineString {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7635,7 +7635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_error() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_error() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8211,7 +8211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_raw_string_value() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiline_string_value() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8633,7 +8633,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-11-18 08:26</p>
+                <p class="heading">Date: 2022-11-19 08:26</p>
             </div>
         </footer>
     </body>
