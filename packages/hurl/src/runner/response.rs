@@ -19,6 +19,7 @@ use std::collections::HashMap;
 
 use crate::http;
 use crate::http::ContextDir;
+use crate::runner::multiline::eval_multiline;
 use hurl_core::ast::*;
 
 use super::assert::eval_assert;
@@ -179,8 +180,8 @@ fn eval_implicit_body_asserts(
                 source_info: spec_body.space0.source_info.clone(),
             }
         }
-        Bytes::MultilineString(MultilineString { value, .. }) => {
-            let expected = match eval_template(value, variables) {
+        Bytes::MultilineString(multi) => {
+            let expected = match eval_multiline(multi, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };
@@ -198,7 +199,7 @@ fn eval_implicit_body_asserts(
             AssertResult::Body {
                 actual,
                 expected,
-                source_info: value.source_info.clone(),
+                source_info: multi.value().source_info,
             }
         }
         Bytes::Base64(Base64 {

@@ -26,30 +26,60 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineSt
     try_literal("```", reader)?;
     let save = reader.state.clone();
 
-    match choice(
-        &[
-            base64_lang,
-            hex_lang,
-            json_lang,
-            xml_lang,
-            graphql_lang,
-            undefined_lang,
-        ],
-        reader,
-    ) {
-        Ok(lang) => {
-            let value = multiline_string_value(reader)?;
-            Ok(MultilineString {
-                value,
-                lang: Some(lang),
-            })
-        }
+    match choice(&[json_text, xml_text, graphql, plain_text], reader) {
+        Ok(multi) => Ok(multi),
         Err(_) => {
             reader.state = save;
             let value = oneline_string_value(reader)?;
-            Ok(MultilineString { value, lang: None })
+            Ok(MultilineString::TextOneline(value))
         }
     }
+}
+
+fn text(lang: &str, reader: &mut Reader) -> ParseResult<'static, Text> {
+    try_literal(lang, reader)?;
+    let space = zero_or_more_spaces(reader)?;
+    let newline = newline(reader)?;
+    let value = multiline_string_value(reader)?;
+    Ok(Text {
+        space,
+        newline,
+        value,
+    })
+}
+
+fn json_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+    let text = text("json", reader)?;
+    Ok(MultilineString::Json(text))
+}
+
+fn xml_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+    let text = text("xml", reader)?;
+    Ok(MultilineString::Xml(text))
+}
+
+fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+    try_literal("graphql", reader)?;
+    let space = zero_or_more_spaces(reader)?;
+    let newline = newline(reader)?;
+    let value = multiline_string_value(reader)?;
+    Ok(MultilineString::GraphQl(GraphQl {
+        space,
+        newline,
+        value,
+        variables: None,
+    }))
+}
+
+fn plain_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+    let space = zero_or_more_spaces(reader)?;
+    let newline = newline(reader)?;
+    let value = multiline_string_value(reader)?;
+    Ok(MultilineString::Text(Text {
+        space,
+        newline,
+        value,
+    }))
 }
 
 fn multiline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
@@ -117,159 +147,134 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
     })
 }
 
-fn undefined_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: None,
-        space,
-        newline,
-    })
-}
-
-fn base64_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    try_literal("base64", reader)?;
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: Some(LangValue::Base64),
-        space,
-        newline,
-    })
-}
-
-fn hex_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    try_literal("hex", reader)?;
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: Some(LangValue::Hex),
-        space,
-        newline,
-    })
-}
-
-fn json_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    try_literal("json", reader)?;
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: Some(LangValue::Json),
-        space,
-        newline,
-    })
-}
-
-fn xml_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    try_literal("xml", reader)?;
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: Some(LangValue::Xml),
-        space,
-        newline,
-    })
-}
-
-fn graphql_lang(reader: &mut Reader) -> ParseResult<'static, Lang> {
-    try_literal("graphql", reader)?;
-    let space = zero_or_more_spaces(reader)?;
-    let newline = newline(reader)?;
-    Ok(Lang {
-        value: Some(LangValue::GraphQl),
-        space,
-        newline,
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_base64_multiline_string_type() {
-        let mut reader = Reader::init("base64\nxxxx");
+    fn test_multiline_string_undefined() {
+        let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
         assert_eq!(
-            base64_lang(&mut reader).unwrap(),
-            Lang {
-                value: Some(LangValue::Base64),
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::Text(Text {
                 space: Whitespace {
-                    value: String::from(""),
-                    source_info: SourceInfo::new(1, 7, 1, 7),
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 7, 2, 1)
-                }
-            }
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "line1\nline2\nline3\n".to_string(),
+                        encoded: "line1\nline2\nline3\n".to_string(),
+                    }],
+                    source_info: SourceInfo::new(2, 1, 5, 1),
+                },
+            })
+        );
+
+        let mut reader = Reader::init("```         \nline1\nline2\nline3\n```");
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "         ".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 13),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 13, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "line1\nline2\nline3\n".to_string(),
+                        encoded: "line1\nline2\nline3\n".to_string(),
+                    }],
+                    source_info: SourceInfo::new(2, 1, 5, 1),
+                },
+            })
         );
     }
 
     #[test]
-    fn test_base64_multiline_string_type_with_padding() {
-        let mut reader = Reader::init("base64      \nxxxx");
+    fn test_multiline_string_json() {
+        let mut reader = Reader::init("```json\nline1\nline2\nline3\n```");
         assert_eq!(
-            base64_lang(&mut reader).unwrap(),
-            Lang {
-                value: Some(LangValue::Base64),
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::Json(Text {
                 space: Whitespace {
-                    value: String::from("      "),
-                    source_info: SourceInfo::new(1, 7, 1, 13),
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 8, 1, 8),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 13, 2, 1)
-                }
-            }
+                    source_info: SourceInfo::new(1, 8, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "line1\nline2\nline3\n".to_string(),
+                        encoded: "line1\nline2\nline3\n".to_string(),
+                    }],
+                    source_info: SourceInfo::new(2, 1, 5, 1),
+                },
+            })
         );
     }
 
     #[test]
-    fn test_multiline_string_ok() {
-        let datas = [
-            (
-                "```\nline1\nline2\nline3\n```",
-                None,
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```         \nline1\nline2\nline3\n```",
-                None,
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```base64\nline1\nline2\nline3\n```",
-                Some(LangValue::Base64),
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```hex\nline1\nline2\nline3\n```",
-                Some(LangValue::Hex),
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```json\nline1\nline2\nline3\n```",
-                Some(LangValue::Json),
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```graphql\nline1\nline2\nline3\n```",
-                Some(LangValue::GraphQl),
-                "line1\nline2\nline3\n",
-            ),
-            (
-                "```graphql     \nline1\nline2\nline3\n```",
-                Some(LangValue::GraphQl),
-                "line1\nline2\nline3\n",
-            ),
-        ];
+    fn test_multiline_string_graphql() {
+        let mut reader = Reader::init("```graphql\nline1\nline2\nline3\n```");
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::GraphQl(GraphQl {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 11, 1, 11),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 11, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "line1\nline2\nline3\n".to_string(),
+                        encoded: "line1\nline2\nline3\n".to_string(),
+                    }],
+                    source_info: SourceInfo::new(2, 1, 5, 1),
+                },
+                variables: None,
+            })
+        );
 
-        for (text, lang, value) in datas.iter() {
-            let mut reader = Reader::init(text);
-            let multiline = multiline_string(&mut reader).unwrap();
-            assert_eq!(multiline.lang.unwrap().value, *lang);
-            assert_eq!(multiline.value.elements[0].to_string(), value.to_string())
-        }
+        let mut reader = Reader::init("```graphql      \nline1\nline2\nline3\n```");
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::GraphQl(GraphQl {
+                space: Whitespace {
+                    value: "      ".to_string(),
+                    source_info: SourceInfo::new(1, 11, 1, 17),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 17, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "line1\nline2\nline3\n".to_string(),
+                        encoded: "line1\nline2\nline3\n".to_string(),
+                    }],
+                    source_info: SourceInfo::new(2, 1, 5, 1),
+                },
+                variables: None,
+            })
+        );
     }
 
     #[test]
@@ -290,59 +295,50 @@ mod tests {
         let mut reader = Reader::init("``````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: None,
-                value: Template {
-                    quotes: false,
-                    elements: vec![],
-                    source_info: SourceInfo::new(1, 4, 1, 4),
-                },
-            }
+            MultilineString::TextOneline(Template {
+                quotes: false,
+                elements: vec![],
+                source_info: SourceInfo::new(1, 4, 1, 4),
+            })
         );
 
         let mut reader = Reader::init("```\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: Some(Lang {
-                    value: None,
-                    space: Whitespace {
-                        value: "".to_string(),
-                        source_info: SourceInfo::new(1, 4, 1, 4)
-                    },
-                    newline: Whitespace {
-                        value: "\n".to_string(),
-                        source_info: SourceInfo::new(1, 4, 2, 1)
-                    }
-                }),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
                 value: Template {
                     quotes: false,
                     elements: vec![],
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
-            }
+            })
         );
         let mut reader = Reader::init("```\r\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: Some(Lang {
-                    value: None,
-                    space: Whitespace {
-                        value: "".to_string(),
-                        source_info: SourceInfo::new(1, 4, 1, 4)
-                    },
-                    newline: Whitespace {
-                        value: "\r\n".to_string(),
-                        source_info: SourceInfo::new(1, 4, 2, 1)
-                    }
-                }),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
+                },
+                newline: Whitespace {
+                    value: "\r\n".to_string(),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
                 value: Template {
                     quotes: false,
                     elements: vec![],
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
-            }
+            })
         );
     }
 
@@ -351,17 +347,14 @@ mod tests {
         let mut reader = Reader::init("```Hello World!```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: None,
-                value: Template {
-                    quotes: false,
-                    elements: vec![TemplateElement::String {
-                        value: "Hello World!".to_string(),
-                        encoded: "Hello World!".to_string(),
-                    }],
-                    source_info: SourceInfo::new(1, 4, 1, 16),
-                },
-            }
+            MultilineString::TextOneline(Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "Hello World!".to_string(),
+                    encoded: "Hello World!".to_string(),
+                }],
+                source_info: SourceInfo::new(1, 4, 1, 16),
+            })
         );
     }
 
@@ -370,17 +363,14 @@ mod tests {
         let mut reader = Reader::init("```base64_inline```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: None,
-                value: Template {
-                    quotes: false,
-                    elements: vec![TemplateElement::String {
-                        value: "base64_inline".to_string(),
-                        encoded: "base64_inline".to_string(),
-                    }],
-                    source_info: SourceInfo::new(1, 4, 1, 17),
-                },
-            }
+            MultilineString::TextOneline(Template {
+                quotes: false,
+                elements: vec![TemplateElement::String {
+                    value: "base64_inline".to_string(),
+                    encoded: "base64_inline".to_string(),
+                }],
+                source_info: SourceInfo::new(1, 4, 1, 17),
+            })
         );
     }
 
@@ -389,18 +379,15 @@ mod tests {
         let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: Some(Lang {
-                    value: None,
-                    space: Whitespace {
-                        value: "".to_string(),
-                        source_info: SourceInfo::new(1, 4, 1, 4),
-                    },
-                    newline: Whitespace {
-                        value: "\n".to_string(),
-                        source_info: SourceInfo::new(1, 4, 2, 1),
-                    }
-                }),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
                 value: Template {
                     quotes: false,
                     elements: vec![TemplateElement::String {
@@ -409,29 +396,24 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(2, 1, 5, 1),
                 },
-            }
+            })
         );
     }
 
     #[test]
     fn test_multiline_string_one_empty_line() {
-        // one newline
-        // the value takes the value of the newline??
         let mut reader = Reader::init("```\n\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: Some(Lang {
-                    value: None,
-                    space: Whitespace {
-                        value: "".to_string(),
-                        source_info: SourceInfo::new(1, 4, 1, 4),
-                    },
-                    newline: Whitespace {
-                        value: "\n".to_string(),
-                        source_info: SourceInfo::new(1, 4, 2, 1),
-                    }
-                }),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
                 value: Template {
                     quotes: false,
                     elements: vec![TemplateElement::String {
@@ -440,25 +422,22 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(2, 1, 3, 1),
                 },
-            }
+            })
         );
 
-        // one cr
+        // One cr
         let mut reader = Reader::init("```\n\r\n````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString {
-                lang: Some(Lang {
-                    value: None,
-                    space: Whitespace {
-                        value: "".to_string(),
-                        source_info: SourceInfo::new(1, 4, 1, 4),
-                    },
-                    newline: Whitespace {
-                        value: "\n".to_string(),
-                        source_info: SourceInfo::new(1, 4, 2, 1),
-                    }
-                }),
+            MultilineString::Text(Text {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 4, 1, 4),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 4, 2, 1),
+                },
                 value: Template {
                     quotes: false,
                     elements: vec![TemplateElement::String {
@@ -467,7 +446,7 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(2, 1, 3, 1),
                 },
-            }
+            })
         );
     }
 
@@ -479,20 +458,15 @@ mod tests {
         assert_eq!(
             error.inner,
             ParseError::Expecting {
-                value: String::from("```")
+                value: "```".to_string()
             }
         );
         assert!(error.recoverable);
 
         let mut reader = Reader::init("```\nxxx");
         let error = multiline_string(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 2, column: 4 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: String::from("```")
-            }
-        );
+        assert_eq!(error.pos, Pos { line: 1, column: 4 });
+        assert_eq!(error.inner, ParseError::Multiline);
         assert!(!error.recoverable);
 
         let mut reader = Reader::init("```xxx");
@@ -501,7 +475,7 @@ mod tests {
         assert_eq!(
             error.inner,
             ParseError::Expecting {
-                value: String::from("```")
+                value: "```".to_string()
             }
         );
         assert!(!error.recoverable);

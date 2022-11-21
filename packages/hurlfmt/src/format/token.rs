@@ -164,7 +164,6 @@ impl Tokenizable for Bytes {
             Bytes::Xml { value } => {
                 tokens.push(Token::String(value.to_string()));
             }
-            //            Bytes::MultilineString { value: _ } => {}
             Bytes::MultilineString(value) => {
                 tokens.append(&mut value.tokenize());
             }
@@ -606,32 +605,24 @@ impl Tokenizable for PredicateValue {
 
 impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
+        let lang = match self {
+            MultilineString::TextOneline(_) => None,
+            MultilineString::Text(_) => None,
+            MultilineString::Json(_) => Some("json"),
+            MultilineString::Xml(_) => Some("xml"),
+            MultilineString::GraphQl(_) => Some("graphql"),
+        };
+
         let mut tokens: Vec<Token> = vec![Token::Keyword("```".to_string())];
-        if let Some(kind) = &self.lang {
-            tokens.append(&mut kind.tokenize())
+        if let Some(lang) = lang {
+            tokens.push(Token::Lang(lang.to_string()));
+            tokens.push(Token::Whitespace("\n".to_string()));
+        } else if let MultilineString::Text(..) = self {
+            tokens.push(Token::Whitespace("\n".to_string()));
         }
-        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.value().tokenize());
         tokens.push(Token::Keyword("```".to_string()));
         tokens
-    }
-}
-
-impl Tokenizable for Lang {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        if let Some(value) = &self.value {
-            tokens.append(&mut value.tokenize());
-        }
-        tokens.append(&mut self.space.tokenize());
-        tokens.append(&mut self.newline.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for LangValue {
-    fn tokenize(&self) -> Vec<Token> {
-        let token = Token::Lang(self.to_string());
-        vec![token]
     }
 }
 

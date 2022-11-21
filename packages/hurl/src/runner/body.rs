@@ -23,10 +23,10 @@ use hurl_core::ast::*;
 
 use super::core::{Error, RunnerError};
 use super::json::eval_json_value;
-use super::template::eval_template;
 use super::value::Value;
 use crate::http;
 use crate::http::ContextDir;
+use crate::runner::multiline::eval_multiline;
 
 pub fn eval_body(
     body: &Body,
@@ -42,9 +42,8 @@ pub fn eval_bytes(
     context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
     match bytes {
-        // Body::Text
-        Bytes::MultilineString(MultilineString { value, .. }) => {
-            let value = eval_template(value, variables)?;
+        Bytes::MultilineString(value) => {
+            let value = eval_multiline(value, variables)?;
             Ok(http::Body::Text(value))
         }
         Bytes::Xml { value, .. } => Ok(http::Body::Text(value.clone())),

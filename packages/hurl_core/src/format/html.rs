@@ -400,6 +400,7 @@ impl Htmlable for VariableOption {
         buffer
     }
 }
+
 impl Htmlable for VariableDefinition {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
@@ -626,6 +627,7 @@ impl Htmlable for QueryValue {
         buffer
     }
 }
+
 impl Htmlable for RegexValue {
     fn to_html(&self) -> String {
         match self {
@@ -860,20 +862,21 @@ impl Htmlable for PredicateValue {
 
 impl Htmlable for MultilineString {
     fn to_html(&self) -> String {
-        let mut buffer = "".to_string();
-        buffer.push_str("<span class=\"multiline\">");
-        let mut s = "```".to_string();
-        if let Some(lang) = &self.lang {
-            if let Some(lang_value) = &lang.value {
-                s.push_str(format!("{}", lang_value).as_str());
+        let lang = match self {
+            MultilineString::TextOneline(_) => {
+                let s = format!("```{value}```", value = self.value());
+                let buffer = multilines(&s);
+                return format!("<span class=\"multiline\">{}</span>", buffer);
             }
-            s.push('\n');
-        }
-        s.push_str(self.value.to_string().as_str());
-        s.push_str("```");
-        buffer.push_str(multilines(s).as_str());
-        buffer.push_str("</span>");
-        buffer
+            MultilineString::Text(_) => "",
+            MultilineString::Json(_) => "json",
+            MultilineString::Xml(_) => "xml",
+            MultilineString::GraphQl(_) => "graphql",
+        };
+
+        let s = format!("```{lang}\n{value}```", lang = lang, value = self.value());
+        let buffer = multilines(&s);
+        format!("<span class=\"multiline\">{}</span>", buffer)
     }
 }
 
@@ -904,12 +907,12 @@ impl Htmlable for Bytes {
 // you should probably define for XML value to be consistent with the other types
 fn xml_html(value: &str) -> String {
     let mut buffer = String::from("<span class=\"xml\">");
-    buffer.push_str(multilines(value.to_string()).as_str());
+    buffer.push_str(multilines(value).as_str());
     buffer.push_str("</span>");
     buffer
 }
 
-fn xml_escape(s: String) -> String {
+fn xml_escape(s: &str) -> String {
     s.replace('&', "&amp;")
         .replace('<', "&lt;")
         .replace('>', "&gt;")
@@ -919,7 +922,7 @@ fn xml_escape(s: String) -> String {
 impl Htmlable for JsonValue {
     fn to_html(&self) -> String {
         let mut buffer = String::from("<span class=\"json\">");
-        buffer.push_str(multilines(self.encoded()).as_str());
+        buffer.push_str(multilines(&self.encoded()).as_str());
         buffer.push_str("</span>");
         buffer
     }
@@ -951,7 +954,7 @@ impl Htmlable for LineTerminator {
 impl Htmlable for Comment {
     fn to_html(&self) -> String {
         let mut buffer = String::from("<span class=\"comment\">");
-        buffer.push_str(format!("#{}", xml_escape(self.value.clone())).as_str());
+        buffer.push_str(format!("#{}", xml_escape(&self.value)).as_str());
         buffer.push_str("</span>");
         buffer
     }
@@ -997,6 +1000,7 @@ impl Htmlable for Regex {
         format!("<span class=\"regex\">/{}/</span>", s)
     }
 }
+
 impl Htmlable for EncodedString {
     fn to_html(&self) -> String {
         format!("<span class=\"string\">{}</span>", self.encoded)
@@ -1013,7 +1017,7 @@ impl Htmlable for Template {
             };
             s.push_str(elem_str.as_str())
         }
-        xml_escape(s)
+        xml_escape(&s)
     }
 }
 
@@ -1065,11 +1069,11 @@ fn encode_html(s: String) -> String {
     s.replace('>', "&gt;").replace('<', "&lt;")
 }
 
-fn multilines(s: String) -> String {
+fn multilines(s: &str) -> String {
     regex::Regex::new(r"\n|\r\n")
         .unwrap()
-        .split(s.as_str())
-        .map(|l| format!("<span class=\"line\">{}</span>", xml_escape(l.to_string())))
+        .split(s)
+        .map(|l| format!("<span class=\"line\">{}</span>", xml_escape(l)))
         .collect::<Vec<String>>()
         .join("\n")
 }
@@ -1081,34 +1085,28 @@ mod tests {
     #[test]
     fn test_multiline_string() {
         // ``````
-        let multiline_string = MultilineString {
-            lang: None,
-            value: Template {
-                quotes: false,
-                elements: vec![TemplateElement::String {
-                    value: "".to_string(),
-                    encoded: "unused".to_string(),
-                }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
-        };
+        let multiline_string = MultilineString::TextOneline(Template {
+            quotes: false,
+            elements: vec![TemplateElement::String {
+                value: "".to_string(),
+                encoded: "unused".to_string(),
+            }],
+            source_info: SourceInfo::new(0, 0, 0, 0),
+        });
         assert_eq!(
             multiline_string.to_html(),
             "<span class=\"multiline\"><span class=\"line\">``````</span></span>".to_string()
         );
 
         // ```hello```
-        let multiline_string = MultilineString {
-            lang: None,
-            value: Template {
-                quotes: false,
-                elements: vec![TemplateElement::String {
-                    value: "hello".to_string(),
-                    encoded: "unused".to_string(),
-                }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
-            },
-        };
+        let multiline_string = MultilineString::TextOneline(Template {
+            quotes: false,
+            elements: vec![TemplateElement::String {
+                value: "hello".to_string(),
+                encoded: "unused".to_string(),
+            }],
+            source_info: SourceInfo::new(0, 0, 0, 0),
+        });
         assert_eq!(
             multiline_string.to_html(),
             "<span class=\"multiline\"><span class=\"line\">```hello```</span></span>".to_string()
@@ -1118,24 +1116,21 @@ mod tests {
         // line1
         // line2
         // ```
-        let multiline_string = MultilineString {
-            lang: Some(Lang {
-                value: None,
-                space: Whitespace {
-                    value: "".to_string(),
-                    source_info: SourceInfo {
-                        start: Pos { line: 1, column: 4 },
-                        end: Pos { line: 1, column: 4 },
-                    },
+        let multiline_string = MultilineString::Text(Text {
+            space: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo {
+                    start: Pos { line: 1, column: 4 },
+                    end: Pos { line: 1, column: 4 },
                 },
-                newline: Whitespace {
-                    value: "\n".to_string(),
-                    source_info: SourceInfo {
-                        start: Pos { line: 1, column: 4 },
-                        end: Pos { line: 2, column: 1 },
-                    },
+            },
+            newline: Whitespace {
+                value: "\n".to_string(),
+                source_info: SourceInfo {
+                    start: Pos { line: 1, column: 4 },
+                    end: Pos { line: 2, column: 1 },
                 },
-            }),
+            },
             value: Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
@@ -1144,7 +1139,7 @@ mod tests {
                 }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
-        };
+        });
         assert_eq!(
             multiline_string.to_html(),
             "<span class=\"multiline\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
@@ -1154,16 +1149,16 @@ mod tests {
     #[test]
     fn test_multilines() {
         assert_eq!(
-            multilines("{\n   \"id\": 1\n}".to_string()),
+            multilines("{\n   \"id\": 1\n}"),
             "<span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span>"
         );
         assert_eq!(
-            multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>".to_string()),
+            multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>"),
             "<span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span>"
         );
 
         assert_eq!(
-            multilines("Hello\n".to_string()),
+            multilines("Hello\n"),
             "<span class=\"line\">Hello</span>\n<span class=\"line\"></span>"
         );
     }
@@ -1221,9 +1216,9 @@ mod tests {
 
     #[test]
     fn test_xml_escape() {
-        assert_eq!(xml_escape("hello".to_string()), "hello");
+        assert_eq!(xml_escape("hello"), "hello");
         assert_eq!(
-            xml_escape("<?xml version=\"1.0\"?>".to_string()),
+            xml_escape("<?xml version=\"1.0\"?>"),
             "&lt;?xml version=\"1.0\"?&gt;"
         );
     }

@@ -128,19 +128,6 @@ impl fmt::Display for CookieAttribute {
     }
 }
 
-impl fmt::Display for LangValue {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = match self {
-            LangValue::Base64 => "base64",
-            LangValue::Hex => "hex",
-            LangValue::Json => "json",
-            LangValue::Xml => "xml",
-            LangValue::GraphQl => "graphql",
-        };
-        write!(f, "{}", s)
-    }
-}
-
 impl fmt::Display for Hex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(

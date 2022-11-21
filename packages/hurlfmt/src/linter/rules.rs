@@ -519,9 +519,49 @@ impl Lintable<MultilineString> for MultilineString {
     }
 
     fn lint(&self) -> MultilineString {
-        MultilineString {
-            lang: None,
-            value: self.value.lint(),
+        match self {
+            MultilineString::TextOneline(value) => MultilineString::TextOneline(value.lint()),
+            MultilineString::Text(value) => MultilineString::Text(value.lint()),
+            MultilineString::Json(value) => MultilineString::Json(value.lint()),
+            MultilineString::Xml(value) => MultilineString::Xml(value.lint()),
+            MultilineString::GraphQl(value) => MultilineString::GraphQl(value.lint()),
+        }
+    }
+}
+
+impl Lintable<Text> for Text {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> Text {
+        let space = empty_whitespace();
+        let newline = self.newline.clone();
+        let value = self.value.lint();
+        Text {
+            space,
+            newline,
+            value,
+        }
+    }
+}
+
+impl Lintable<GraphQl> for GraphQl {
+    fn errors(&self) -> Vec<Error> {
+        let errors = vec![];
+        errors
+    }
+
+    fn lint(&self) -> GraphQl {
+        let space = empty_whitespace();
+        let newline = self.newline.clone();
+        let value = self.value.lint();
+        GraphQl {
+            space,
+            newline,
+            value,
+            variables: None,
         }
     }
 }

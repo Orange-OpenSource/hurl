@@ -16,6 +16,7 @@
  *
  */
 use super::json;
+use crate::ast::JsonValue;
 
 ///
 /// Hurl AST
@@ -479,27 +480,41 @@ pub enum PredicateFuncValue {
 //
 // Primitives
 //
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MultilineString {
+    // FIXME: temporary type until we implement oneline as `foo` instead of ```foo```
+    TextOneline(Template),
+    Text(Text),
+    Json(Text),
+    Xml(Text),
+    GraphQl(GraphQl),
+}
+
+impl MultilineString {
+    pub fn value(&self) -> Template {
+        match self {
+            MultilineString::TextOneline(template) => template.clone(),
+            MultilineString::Text(text)
+            | MultilineString::Json(text)
+            | MultilineString::Xml(text) => text.value.clone(),
+            MultilineString::GraphQl(text) => text.value.clone(),
+        }
+    }
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct MultilineString {
-    pub lang: Option<Lang>,
+pub struct Text {
+    pub space: Whitespace,
+    pub newline: Whitespace,
     pub value: Template,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Lang {
-    pub value: Option<LangValue>,
+pub struct GraphQl {
     pub space: Whitespace,
     pub newline: Whitespace,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum LangValue {
-    Base64,
-    Hex,
-    Json,
-    Xml,
-    GraphQl,
+    pub value: Template,
+    pub variables: Option<JsonValue>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

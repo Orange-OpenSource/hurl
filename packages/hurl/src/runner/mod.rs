@@ -40,6 +40,7 @@ mod expr;
 mod filter;
 mod hurl_file;
 mod json;
+mod multiline;
 mod multipart;
 mod predicate;
 mod predicate_value;

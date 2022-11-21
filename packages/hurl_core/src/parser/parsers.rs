@@ -406,18 +406,15 @@ mod tests {
                     value: String::from(""),
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
-                value: Bytes::MultilineString(MultilineString {
-                    lang: Some(Lang {
-                        value: None,
-                        space: Whitespace {
-                            value: "".to_string(),
-                            source_info: SourceInfo::new(2, 4, 2, 4),
-                        },
-                        newline: Whitespace {
-                            source_info: SourceInfo::new(2, 4, 3, 1),
-                            value: "\n".to_string(),
-                        }
-                    }),
+                value: Bytes::MultilineString(MultilineString::Text(Text {
+                    space: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::new(2, 4, 2, 4),
+                    },
+                    newline: Whitespace {
+                        source_info: SourceInfo::new(2, 4, 3, 1),
+                        value: "\n".to_string(),
+                    },
                     value: Template {
                         elements: vec![TemplateElement::String {
                             value: String::from("Hello World!\n"),
@@ -425,8 +422,8 @@ mod tests {
                         }],
                         quotes: false,
                         source_info: SourceInfo::new(3, 1, 4, 1),
-                    },
-                }),
+                    }
+                })),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: "".to_string(),

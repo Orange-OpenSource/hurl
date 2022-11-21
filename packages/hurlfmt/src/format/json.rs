@@ -141,32 +141,36 @@ impl ToJson for Bytes {
                 ("type".to_string(), JValue::String("xml".to_string())),
                 ("value".to_string(), JValue::String(value.clone())),
             ]),
-            Bytes::MultilineString(value) => {
-                let lang = match &value.lang {
-                    // TODO: check these values. Mayve we want to have the same
-                    // export when using:
-                    //
-                    // ~~~
-                    // GET https://foo.com
-                    // ```base64
-                    // SGVsbG8gd29ybGQ=
-                    // ```
-                    //
-                    // or
-                    //
-                    // ~~~
-                    // GET https://foo.com
-                    // base64,SGVsbG8gd29ybGQ=;
-                    // ~~~
-                    None | Some(Lang { value: None, .. }) => "multiline-string".to_string(),
-                    Some(Lang {
-                        value: Some(lang_value),
-                        ..
-                    }) => lang_value.to_string(),
+            Bytes::MultilineString(multi) => {
+                // TODO: check these values. Maybe we want to have the same
+                // export when using:
+                //
+                // ~~~
+                // GET https://foo.com
+                // ```base64
+                // SGVsbG8gd29ybGQ=
+                // ```
+                //
+                // or
+                //
+                // ~~~
+                // GET https://foo.com
+                // base64,SGVsbG8gd29ybGQ=;
+                // ~~~
+                let lang = match multi {
+                    MultilineString::TextOneline(_) | MultilineString::Text(_) => {
+                        "multiline-string"
+                    }
+                    MultilineString::Json(_) => "json",
+                    MultilineString::Xml(_) => "xml",
+                    MultilineString::GraphQl(_) => "graphql",
                 };
                 JValue::Object(vec![
-                    ("type".to_string(), JValue::String(lang)),
-                    ("value".to_string(), JValue::String(value.value.to_string())),
+                    ("type".to_string(), JValue::String(lang.to_string())),
+                    (
+                        "value".to_string(),
+                        JValue::String(multi.value().to_string()),
+                    ),
                 ])
             }
         }
@@ -465,7 +469,7 @@ fn add_predicate_value(attributes: &mut Vec<(String, JValue)>, predicate_value: 
 fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<String>) {
     match predicate_value {
         PredicateValue::String(value) => (JValue::String(value.to_string()), None),
-        PredicateValue::MultilineString(value) => (JValue::String(value.value.to_string()), None),
+        PredicateValue::MultilineString(value) => (JValue::String(value.value().to_string()), None),
         PredicateValue::Integer(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
@@ -482,12 +486,6 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
         PredicateValue::Regex(value) => {
             (JValue::String(value.to_string()), Some("regex".to_string()))
         }
-    }
-}
-
-impl ToJson for MultilineString {
-    fn to_json(&self) -> JValue {
-        JValue::String(self.value.to_string())
     }
 }
 

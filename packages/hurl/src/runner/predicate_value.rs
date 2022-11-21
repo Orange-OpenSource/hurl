@@ -17,6 +17,7 @@
  */
 use std::collections::HashMap;
 
+use crate::runner::multiline::eval_multiline;
 use hurl_core::ast::*;
 
 use super::core::Error;
@@ -34,7 +35,7 @@ pub fn eval_predicate_value(
             Ok(Value::String(s))
         }
         PredicateValue::MultilineString(value) => {
-            let s = eval_template(&value.value, variables)?;
+            let s = eval_multiline(value, variables)?;
             Ok(Value::String(s))
         }
         PredicateValue::Integer(value) => Ok(Value::Integer(*value)),
