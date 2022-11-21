@@ -11,7 +11,7 @@ ARG docker_build_date
 ARG hurl_latest_version
 LABEL "org.opencontainers.image.source"="https://github.com/Orange-OpenSource/hurl"
 LABEL "org.opencontainers.image.description"="Hurl is a command line tool that runs HTTP requests defined in a simple plain text format"
-LABEL "org.opencontainers.image.licenses="Apache-2.0"
+LABEL "org.opencontainers.image.licenses"="Apache-2.0"
 LABEL "com.orange.hurl.created"="${docker_build_date}"
 LABEL "com.orange.hurl.authors"="Fabrice REIX, Jean Christophe AMIEL, Orange-OpenSource"
 LABEL "com.orange.hurl.url"="https://hurl.dev"
