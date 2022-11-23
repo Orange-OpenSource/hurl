@@ -605,23 +605,55 @@ impl Tokenizable for PredicateValue {
 
 impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
-        let lang = match self {
-            MultilineString::OneLineText(_) => None,
-            MultilineString::Text(_) => None,
-            MultilineString::Json(_) => Some("json"),
-            MultilineString::Xml(_) => Some("xml"),
-            MultilineString::GraphQl(_) => Some("graphql"),
-        };
-
         let mut tokens: Vec<Token> = vec![Token::Keyword("```".to_string())];
-        if let Some(lang) = lang {
-            tokens.push(Token::Lang(lang.to_string()));
-            tokens.push(Token::Whitespace("\n".to_string()));
-        } else if let MultilineString::Text(..) = self {
-            tokens.push(Token::Whitespace("\n".to_string()));
+        // FIXME: ugly if !let workaround, will be removed soon as
+        // OneLineText is temporary.
+        if let MultilineString::OneLineText(..) = self {
+        } else {
+            tokens.push(Token::Lang(self.lang().to_string()));
         }
-        tokens.append(&mut self.value().tokenize());
+        match self {
+            MultilineString::OneLineText(template) => tokens.append(&mut template.tokenize()),
+            MultilineString::Text(text)
+            | MultilineString::Json(text)
+            | MultilineString::Xml(text) => tokens.append(&mut text.tokenize()),
+            MultilineString::GraphQl(graphql) => tokens.append(&mut graphql.tokenize()),
+        }
         tokens.push(Token::Keyword("```".to_string()));
+        tokens
+    }
+}
+
+impl Tokenizable for Text {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(&mut self.space.tokenize());
+        tokens.append(&mut self.newline.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for GraphQl {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(&mut self.space.tokenize());
+        tokens.append(&mut self.newline.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        if let Some(vars) = &self.variables {
+            tokens.append(&mut vars.tokenize());
+        }
+        tokens
+    }
+}
+
+impl Tokenizable for GraphQlVariables {
+    fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.push(Token::String("variables".to_string()));
+        tokens.append(&mut self.space.tokenize());
+        tokens.append(&mut self.value.tokenize());
+        tokens.append(&mut self.whitespace.tokenize());
         tokens
     }
 }

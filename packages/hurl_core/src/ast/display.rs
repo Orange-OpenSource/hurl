@@ -144,6 +144,30 @@ impl fmt::Display for Regex {
     }
 }
 
+impl fmt::Display for MultilineString {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let body = match self {
+            MultilineString::OneLineText(template) => template.to_string(),
+            MultilineString::Text(text)
+            | MultilineString::Json(text)
+            | MultilineString::Xml(text) => text.value.to_string(),
+            MultilineString::GraphQl(graphql) => {
+                let var = match &graphql.variables {
+                    None => "".to_string(),
+                    Some(var) => {
+                        format!(
+                            "variables{}{}{}",
+                            var.space.value, var.value, var.whitespace.value
+                        )
+                    }
+                };
+                format!("{}{}", graphql.value, var)
+            }
+        };
+        write!(f, "{}", body)
+    }
+}
+
 impl PredicateFuncValue {
     pub fn name(&self) -> String {
         match self {

@@ -62,6 +62,7 @@ pub enum ParseError {
     UrlIllegalCharacter(char),
     InvalidOption,
     Multiline,
+    GraphQlVariables,
 }
 
 impl Error {

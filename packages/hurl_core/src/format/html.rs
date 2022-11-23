@@ -863,20 +863,17 @@ impl Htmlable for PredicateValue {
 impl Htmlable for MultilineString {
     fn to_html(&self) -> String {
         let lang = match self {
-            MultilineString::OneLineText(_) => {
-                let s = format!("```{value}```", value = self.value());
-                let buffer = multilines(&s);
-                return format!("<span class=\"multiline\">{}</span>", buffer);
+            MultilineString::OneLineText(_) => "".to_string(),
+            MultilineString::Text(_)
+            | MultilineString::Json(_)
+            | MultilineString::Xml(_)
+            | MultilineString::GraphQl(_) => {
+                format!("{}\n", self.lang())
             }
-            MultilineString::Text(_) => "",
-            MultilineString::Json(_) => "json",
-            MultilineString::Xml(_) => "xml",
-            MultilineString::GraphQl(_) => "graphql",
         };
-
-        let s = format!("```{lang}\n{value}```", lang = lang, value = self.value());
-        let buffer = multilines(&s);
-        format!("<span class=\"multiline\">{}</span>", buffer)
+        let body = format!("```{}{}```", lang, self);
+        let body = multilines(&body);
+        format!("<span class=\"multiline\">{}</span>", body)
     }
 }
 

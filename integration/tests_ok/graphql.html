@@ -1,0 +1,82 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># An unnamed simple query</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
+<span class="multiline"><span class="line">```graphql</span>
+<span class="line">{</span>
+<span class="line">  allFilms {</span>
+<span class="line">    films {</span>
+<span class="line">      title</span>
+<span class="line">      director</span>
+<span class="line">      releaseDate</span>
+<span class="line">    }</span>
+<span class="line">  }</span>
+<span class="line">}</span>
+<span class="line">```</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">6</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[0].title"</span> <span class="predicate-type">==</span> <span class="string">"A New Hope"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[0].director"</span> <span class="predicate-type">==</span> <span class="string">"George Lucas"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[0].releaseDate"</span> <span class="predicate-type">==</span> <span class="string">"1977-05-25"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[0].openingCrawl"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[1].title"</span> <span class="predicate-type">==</span> <span class="string">"The Empire Strikes Back"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[2].title"</span> <span class="predicate-type">==</span> <span class="string">"Return of the Jedi"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Full syntax for query</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
+<span class="multiline"><span class="line">```graphql</span>
+<span class="line">query Query {</span>
+<span class="line">  allFilms {</span>
+<span class="line">    films {</span>
+<span class="line">      title</span>
+<span class="line">      director</span>
+<span class="line">      releaseDate</span>
+<span class="line">    }</span>
+<span class="line">  }</span>
+<span class="line">}</span>
+<span class="line">```</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">6</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># Query with variables:</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
+<span class="multiline"><span class="line">```graphql</span>
+<span class="line">query Person($id: ID!) {</span>
+<span class="line">  person(id: $id) {</span>
+<span class="line">    name</span>
+<span class="line">  }</span>
+<span class="line">}</span>
+<span class="line"></span>
+<span class="line">variables {</span>
+<span class="line">  "id": "cGVvcGxlOjQ="</span>
+<span class="line">}</span>
+<span class="line">```</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.person.name"</span> <span class="predicate-type">==</span> <span class="string">"Darth Vader"</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># Hurl variables can also be used:</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
+<span class="line section-header">[Options]</span>
+<span class="line"><span class="string">variable</span><span>:</span> id<span>=</span>cGVvcGxlOjQ=</span>
+<span class="multiline"><span class="line">```graphql</span>
+<span class="line">query Person($id: ID!) {</span>
+<span class="line">  person(id: $id) {</span>
+<span class="line">    name</span>
+<span class="line">  }</span>
+<span class="line">}</span>
+<span class="line"></span>
+<span class="line">variables {</span>
+<span class="line">  "id": "{{id}}"</span>
+<span class="line">}</span>
+<span class="line">```</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.person.name"</span> <span class="predicate-type">==</span> <span class="string">"Darth Vader"</span></span>
+</span></span></code></pre>

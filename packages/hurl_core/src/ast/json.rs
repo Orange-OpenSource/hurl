@@ -20,10 +20,10 @@ use crate::ast::{Expr, TemplateElement};
 use core::fmt;
 
 ///
-/// This the AST for the JSON used within hurl
+/// This the AST for the JSON used within Hurl
 ///
 /// It is a superset of the standard json spec.
-/// Strings have been replaced by hurl template.
+/// Strings have been replaced by Hurl template.
 ///
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Value {

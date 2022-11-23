@@ -19,6 +19,7 @@ use super::combinators::*;
 use super::reader::Reader;
 use super::ParseResult;
 use crate::ast::*;
+use crate::parser::json::object_value;
 use crate::parser::primitives::*;
 use crate::parser::{template, Error, ParseError};
 
@@ -28,7 +29,24 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineSt
 
     match choice(&[json_text, xml_text, graphql, plain_text], reader) {
         Ok(multi) => Ok(multi),
-        Err(_) => {
+        Err(err) => {
+            // FIXME: how to parse
+            //
+            // ```graphql_inline```
+            //
+            // => this one is non recoverable but should be parsed as TextOneline
+            //
+            // ```graphql
+            // {
+            //   me
+            // }
+            // variables
+            // ```
+            //
+            // => this one is non recoverable should trigger an GraphQL variables error
+            if let ParseError::GraphQlVariables = err.inner {
+                return Err(err);
+            }
             reader.state = save;
             let value = oneline_string_value(reader)?;
             Ok(MultilineString::OneLineText(value))
@@ -62,13 +80,143 @@ fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     try_literal("graphql", reader)?;
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
-    let value = multiline_string_value(reader)?;
+
+    let mut chars = vec![];
+
+    let start = reader.state.pos.clone();
+    while !reader.remaining().starts_with("```") && !reader.is_eof() {
+        let pos = reader.state.pos.clone();
+        let c = reader.read().unwrap();
+        chars.push((c, c.to_string(), pos));
+        if c == '\n' {
+            let end = reader.state.pos.clone();
+            let variables = optional(graphql_variables, reader)?;
+            match variables {
+                None => continue,
+                Some(variables) => {
+                    literal("```", reader)?;
+
+                    let encoded_string = template::EncodedString {
+                        source_info: SourceInfo {
+                            start: start.clone(),
+                            end: end.clone(),
+                        },
+                        chars: chars.clone(),
+                    };
+
+                    let elements = template::templatize(encoded_string)?;
+                    let template = Template {
+                        quotes: false,
+                        elements,
+                        source_info: SourceInfo { start, end },
+                    };
+
+                    return Ok(MultilineString::GraphQl(GraphQl {
+                        space,
+                        newline,
+                        value: template,
+                        variables: Some(variables),
+                    }));
+                }
+            }
+        }
+    }
+    let end = reader.state.pos.clone();
+    literal("```", reader)?;
+
+    let encoded_string = template::EncodedString {
+        source_info: SourceInfo {
+            start: start.clone(),
+            end: end.clone(),
+        },
+        chars,
+    };
+
+    let elements = template::templatize(encoded_string)?;
+    let template = Template {
+        quotes: false,
+        elements,
+        source_info: SourceInfo { start, end },
+    };
+
     Ok(MultilineString::GraphQl(GraphQl {
         space,
         newline,
-        value,
+        value: template,
         variables: None,
     }))
+}
+
+fn whitespace(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
+    let start = reader.state.clone();
+    match reader.read() {
+        None => Err(Error {
+            pos: start.pos,
+            recoverable: true,
+            inner: ParseError::Space {},
+        }),
+        Some(c) => {
+            if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
+                Ok(Whitespace {
+                    value: c.to_string(),
+                    source_info: SourceInfo::new(
+                        start.pos.line,
+                        start.pos.column,
+                        reader.state.pos.line,
+                        reader.state.pos.column,
+                    ),
+                })
+            } else {
+                Err(Error {
+                    pos: start.pos,
+                    recoverable: true,
+                    inner: ParseError::Space {},
+                })
+            }
+        }
+    }
+}
+
+fn zero_or_more_whitespaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace> {
+    let start = reader.state.clone();
+    match zero_or_more(whitespace, reader) {
+        Ok(v) => {
+            let s = v.iter().map(|x| x.value.clone()).collect();
+            Ok(Whitespace {
+                value: s,
+                source_info: SourceInfo::new(
+                    start.pos.line,
+                    start.pos.column,
+                    reader.state.pos.line,
+                    reader.state.pos.column,
+                ),
+            })
+        }
+        Err(e) => Err(e),
+    }
+}
+
+fn graphql_variables(reader: &mut Reader) -> ParseResult<'static, GraphQlVariables> {
+    try_literal("variables", reader)?;
+    let space = zero_or_more_spaces(reader)?;
+    let start = reader.state.clone();
+    let object = object_value(reader);
+    let value = match object {
+        Ok(obj) => obj,
+        Err(_) => {
+            return Err(Error {
+                pos: start.pos,
+                recoverable: false,
+                inner: ParseError::GraphQlVariables,
+            });
+        }
+    };
+    let whitespace = zero_or_more_whitespaces(reader)?;
+    Ok(GraphQlVariables {
+        space,
+        value,
+        whitespace,
+    })
 }
 
 fn plain_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
@@ -152,7 +300,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_multiline_string_undefined() {
+    fn test_multiline_string_text() {
         let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
@@ -507,5 +655,144 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 8);
+    }
+
+    #[test]
+    fn test_multiline_string_graphql_with_variables() {
+        let mut reader = Reader::init(
+            r#"```graphql
+query Human($name: String!) {
+  human(name: $name) {
+    name
+    height(unit: FOOT)
+}
+
+variables {
+  "name": "Han Solo"
+}
+```"#,
+        );
+
+        assert_eq!(
+            multiline_string(&mut reader).unwrap(),
+            MultilineString::GraphQl(GraphQl {
+                space: Whitespace {
+                    value: "".to_string(),
+                    source_info: SourceInfo::new(1, 11, 1, 11),
+                },
+                newline: Whitespace {
+                    value: "\n".to_string(),
+                    source_info: SourceInfo::new(1, 11, 2, 1),
+                },
+                value: Template {
+                    quotes: false,
+                    elements: vec![TemplateElement::String {
+                        value: "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string(),
+                        encoded:
+                            "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string()
+                    }],
+                    source_info: SourceInfo::new(2, 1, 8, 1),
+                },
+                variables: Some(GraphQlVariables {
+                    space: Whitespace {
+                        value: " ".to_string(),
+                        source_info: SourceInfo::new(8, 10, 8, 11),
+                    },
+                    value: JsonValue::Object {
+                        space0: "\n  ".to_string(),
+                        elements: vec![JsonObjectElement {
+                            space0: "".to_string(),
+                            name: Template {
+                                quotes: true,
+                                elements: vec![
+                                    TemplateElement::String {
+                                        value: "name".to_string(),
+                                        encoded: "name".to_string()
+                                    }
+                                ],
+                                source_info: SourceInfo::new(9, 4, 9, 8)
+                            },
+                            space1: "".to_string(),
+                            space2: " ".to_string(),
+                            value: JsonValue::String(Template {
+                                quotes: true,
+                                elements: vec![
+                                    TemplateElement::String {
+                                        value: "Han Solo".to_string(),
+                                        encoded: "Han Solo".to_string()
+                                    }
+                                ],
+                                source_info: SourceInfo::new(9, 12, 9, 20)
+                            }),
+                            space3: "\n".to_string()
+                        }]
+                    },
+                    whitespace: Whitespace {
+                        value: "\n".to_string(),
+                        source_info: SourceInfo::new(10, 2, 11, 1)
+                    }
+                })
+            })
+        )
+    }
+
+    #[test]
+    fn test_multiline_string_graphql_with_variables_error() {
+        let mut reader = Reader::init(
+            r#"```graphql
+query Human($name: String!) {
+  human(name: $name) {
+    name
+    height(unit: FOOT)
+}
+
+variables
+```"#,
+        );
+
+        let error = multiline_string(&mut reader).err().unwrap();
+        assert_eq!(
+            error,
+            Error {
+                pos: Pos {
+                    line: 8,
+                    column: 10
+                },
+                recoverable: false,
+                inner: ParseError::GraphQlVariables
+            }
+        )
+    }
+
+    #[test]
+    fn test_multiline_string_graphql_with_variables_not_an_object() {
+        let mut reader = Reader::init(
+            r#"```graphql
+query Human($name: String!) {
+  human(name: $name) {
+    name
+    height(unit: FOOT)
+}
+
+variables [
+  "one",
+  "two",
+  "three"
+]
+```"#,
+        );
+
+        let error = multiline_string(&mut reader).err().unwrap();
+        assert_eq!(
+            error,
+            Error {
+                pos: Pos {
+                    line: 8,
+                    column: 11
+                },
+                recoverable: false,
+                inner: ParseError::GraphQlVariables
+            }
+        )
     }
 }

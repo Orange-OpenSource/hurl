@@ -58,7 +58,8 @@ impl Error for parser::Error {
             ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
             ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
-            ParseError::Multiline => "Parsing multine".to_string(),
+            ParseError::Multiline => "Parsing multiline".to_string(),
+            ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
             _ => format!("{:?}", self),
         }
     }
@@ -111,6 +112,7 @@ impl Error for parser::Error {
             }
             ParseError::UrlIllegalCharacter(c) => format!("illegal character <{}>", c),
             ParseError::Multiline => "the multiline is not valid".to_string(),
+            ParseError::GraphQlVariables => "GraphQL variables is not a valid JSON object".to_string(),
             _ => format!("{:?}", self),
 
         }

@@ -165,10 +165,7 @@ impl ToJson for Bytes {
                 };
                 JValue::Object(vec![
                     ("type".to_string(), JValue::String(lang.to_string())),
-                    (
-                        "value".to_string(),
-                        JValue::String(multi.value().to_string()),
-                    ),
+                    ("value".to_string(), JValue::String(multi.to_string())),
                 ])
             }
         }
@@ -186,6 +183,7 @@ impl ToJson for Base64 {
         ])
     }
 }
+
 impl ToJson for Hex {
     fn to_json(&self) -> JValue {
         JValue::Object(vec![

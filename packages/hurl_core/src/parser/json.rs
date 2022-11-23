@@ -286,7 +286,7 @@ fn list_element(reader: &mut Reader) -> ParseResult<'static, JsonListElement> {
     })
 }
 
-fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     try_literal("{", reader)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];

@@ -16,7 +16,6 @@
  *
  */
 use super::json;
-use crate::ast::JsonValue;
 
 ///
 /// Hurl AST
@@ -491,6 +490,15 @@ pub enum MultilineString {
 }
 
 impl MultilineString {
+    pub fn lang(&self) -> &'static str {
+        match self {
+            MultilineString::OneLineText(_) | MultilineString::Text(_) => "",
+            MultilineString::Json(_) => "json",
+            MultilineString::Xml(_) => "xml",
+            MultilineString::GraphQl(_) => "graphql",
+        }
+    }
+
     pub fn value(&self) -> Template {
         match self {
             MultilineString::OneLineText(template) => template.clone(),
@@ -514,7 +522,14 @@ pub struct GraphQl {
     pub space: Whitespace,
     pub newline: Whitespace,
     pub value: Template,
-    pub variables: Option<JsonValue>,
+    pub variables: Option<GraphQlVariables>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct GraphQlVariables {
+    pub space: Whitespace,
+    pub value: json::Value,
+    pub whitespace: Whitespace,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

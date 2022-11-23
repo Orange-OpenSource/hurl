@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use crate::runner::json::eval_json_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, Value};
-use hurl_core::ast::{GraphQl, MultilineString, Text};
+use hurl_core::ast::{MultilineString, Text};
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -36,9 +37,15 @@ pub fn eval_multiline(
             let s = eval_template(value, variables)?;
             Ok(s)
         }
-        MultilineString::GraphQl(GraphQl { value, .. }) => {
-            let query = eval_template(value, variables)?;
-            let body = json!({ "query": query.trim() });
+        MultilineString::GraphQl(graphql) => {
+            let query = eval_template(&graphql.value, variables)?;
+            let body = match &graphql.variables {
+                None => json!({ "query": query.trim()}),
+                Some(vars) => {
+                    let s = eval_json_value(&vars.value, variables)?;
+                    json!({ "query": query.trim(), "variables": s})
+                }
+            };
             Ok(body.to_string())
         }
     }
