@@ -18,7 +18,7 @@ def is_authorized(license: str) -> bool:
 
 
 def is_forbidden(license: str) -> bool:
-    for l in ["GNU"]:
+    for l in ["GPL"]:
         if l in license:
             return True
     return False
