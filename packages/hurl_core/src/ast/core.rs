@@ -483,7 +483,7 @@ pub enum PredicateFuncValue {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultilineString {
     // FIXME: temporary type until we implement oneline as `foo` instead of ```foo```
-    TextOneline(Template),
+    OneLineText(Template),
     Text(Text),
     Json(Text),
     Xml(Text),
@@ -493,7 +493,7 @@ pub enum MultilineString {
 impl MultilineString {
     pub fn value(&self) -> Template {
         match self {
-            MultilineString::TextOneline(template) => template.clone(),
+            MultilineString::OneLineText(template) => template.clone(),
             MultilineString::Text(text)
             | MultilineString::Json(text)
             | MultilineString::Xml(text) => text.value.clone(),

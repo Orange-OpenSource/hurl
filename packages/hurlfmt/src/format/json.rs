@@ -158,7 +158,7 @@ impl ToJson for Bytes {
                 // base64,SGVsbG8gd29ybGQ=;
                 // ~~~
                 let lang = match multi {
-                    MultilineString::TextOneline(_) | MultilineString::Text(_) => {
+                    MultilineString::OneLineText(_) | MultilineString::Text(_) => {
                         "multiline-string"
                     }
                     MultilineString::Json(_) => "json",

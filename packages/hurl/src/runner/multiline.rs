@@ -26,7 +26,7 @@ pub fn eval_multiline(
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
     match multiline {
-        MultilineString::TextOneline(value) => {
+        MultilineString::OneLineText(value) => {
             let s = eval_template(value, variables)?;
             Ok(s)
         }

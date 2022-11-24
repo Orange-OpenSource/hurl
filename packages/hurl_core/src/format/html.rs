@@ -863,7 +863,7 @@ impl Htmlable for PredicateValue {
 impl Htmlable for MultilineString {
     fn to_html(&self) -> String {
         let lang = match self {
-            MultilineString::TextOneline(_) => {
+            MultilineString::OneLineText(_) => {
                 let s = format!("```{value}```", value = self.value());
                 let buffer = multilines(&s);
                 return format!("<span class=\"multiline\">{}</span>", buffer);
@@ -1085,7 +1085,7 @@ mod tests {
     #[test]
     fn test_multiline_string() {
         // ``````
-        let multiline_string = MultilineString::TextOneline(Template {
+        let multiline_string = MultilineString::OneLineText(Template {
             quotes: false,
             elements: vec![TemplateElement::String {
                 value: "".to_string(),
@@ -1099,7 +1099,7 @@ mod tests {
         );
 
         // ```hello```
-        let multiline_string = MultilineString::TextOneline(Template {
+        let multiline_string = MultilineString::OneLineText(Template {
             quotes: false,
             elements: vec![TemplateElement::String {
                 value: "hello".to_string(),

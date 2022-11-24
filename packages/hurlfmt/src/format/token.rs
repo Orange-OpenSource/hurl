@@ -606,7 +606,7 @@ impl Tokenizable for PredicateValue {
 impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
         let lang = match self {
-            MultilineString::TextOneline(_) => None,
+            MultilineString::OneLineText(_) => None,
             MultilineString::Text(_) => None,
             MultilineString::Json(_) => Some("json"),
             MultilineString::Xml(_) => Some("xml"),

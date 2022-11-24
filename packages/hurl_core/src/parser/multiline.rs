@@ -31,7 +31,7 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineSt
         Err(_) => {
             reader.state = save;
             let value = oneline_string_value(reader)?;
-            Ok(MultilineString::TextOneline(value))
+            Ok(MultilineString::OneLineText(value))
         }
     }
 }
@@ -295,7 +295,7 @@ mod tests {
         let mut reader = Reader::init("``````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::TextOneline(Template {
+            MultilineString::OneLineText(Template {
                 quotes: false,
                 elements: vec![],
                 source_info: SourceInfo::new(1, 4, 1, 4),
@@ -347,7 +347,7 @@ mod tests {
         let mut reader = Reader::init("```Hello World!```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::TextOneline(Template {
+            MultilineString::OneLineText(Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
                     value: "Hello World!".to_string(),
@@ -363,7 +363,7 @@ mod tests {
         let mut reader = Reader::init("```base64_inline```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
-            MultilineString::TextOneline(Template {
+            MultilineString::OneLineText(Template {
                 quotes: false,
                 elements: vec![TemplateElement::String {
                     value: "base64_inline".to_string(),

@@ -520,7 +520,7 @@ impl Lintable<MultilineString> for MultilineString {
 
     fn lint(&self) -> MultilineString {
         match self {
-            MultilineString::TextOneline(value) => MultilineString::TextOneline(value.lint()),
+            MultilineString::OneLineText(value) => MultilineString::OneLineText(value.lint()),
             MultilineString::Text(value) => MultilineString::Text(value.lint()),
             MultilineString::Json(value) => MultilineString::Json(value.lint()),
             MultilineString::Xml(value) => MultilineString::Xml(value.lint()),
