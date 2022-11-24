@@ -125,7 +125,7 @@ HTTP 200
 # Different ways of testing body response:
 # with explicit asserts:
 [Asserts]
-body == "{\"query\":\"{\\n  hero {\\n    name\\n    # Queries can have comments!\\n    friends {\\n      name\\n    }\\n  }\\n}\\n\"}"
+body == "{\"query\":\"{\\n  hero {\\n    name\\n    # Queries can have comments!\\n    friends {\\n      name\\n    }\\n  }\\n}\"}"
 body == ```graphql
 {
   hero {

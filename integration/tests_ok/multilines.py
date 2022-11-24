@@ -46,7 +46,7 @@ def multilines_xml():
 
 @app.route("/multilines/graphql", methods=["POST"])
 def multilines_graphql():
-    expected_body = r'{"query":"{\n  hero {\n    name\n    # Queries can have comments!\n    friends {\n      name\n    }\n  }\n}\n"}'
+    expected_body = r'{"query":"{\n  hero {\n    name\n    # Queries can have comments!\n    friends {\n      name\n    }\n  }\n}"}'
     body_in = request.data.decode("utf-8")
     assert expected_body == body_in
     return expected_body

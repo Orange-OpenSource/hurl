@@ -103,13 +103,16 @@ pub fn eval_request(
     } else if !multipart.is_empty() {
         Some("multipart/form-data".to_string())
     } else if let Some(Body {
-        value: Bytes::Json { .. },
+        value:
+            Bytes::Json { .. }
+            | Bytes::MultilineString(MultilineString::GraphQl(..))
+            | Bytes::MultilineString(MultilineString::Json(..)),
         ..
     }) = request.body
     {
         Some("application/json".to_string())
     } else if let Some(Body {
-        value: Bytes::Xml { .. },
+        value: Bytes::Xml { .. } | Bytes::MultilineString(MultilineString::Xml(..)),
         ..
     }) = request.body
     {

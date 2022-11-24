@@ -38,7 +38,7 @@ pub fn eval_multiline(
         }
         MultilineString::GraphQl(GraphQl { value, .. }) => {
             let query = eval_template(value, variables)?;
-            let body = json!({ "query": query });
+            let body = json!({ "query": query.trim() });
             Ok(body.to_string())
         }
     }

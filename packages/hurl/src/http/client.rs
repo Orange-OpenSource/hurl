@@ -402,11 +402,17 @@ impl Client {
                 list.append(format!("Content-Type: {}", s).as_str())
                     .unwrap();
             } else {
-                list.append("Content-Type:").unwrap(); // remove header Content-Type
+                // We remove default Content-Type headers added by curl because we want
+                // to explicitly manage this header.
+                // For instance, with --data option, curl will send a 'Content-type: application/x-www-form-urlencoded'
+                // header.
+                list.append("Content-Type:").unwrap();
             }
         }
 
         if request.get_header_values("Expect").is_empty() {
+            // We remove default Expect headers added by curl because we want
+            // to explicitly manage this header.
             list.append("Expect:").unwrap(); // remove header Expect
         }
 
