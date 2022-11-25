@@ -37,7 +37,7 @@ jobs:
         options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
 
-    - name: Install Prerequisites
+    - name: Install prerequisites
       run: bin/check/install_prerequisites.sh
 
     - name: Rustfmt
@@ -57,6 +57,9 @@ jobs:
 
     - name: Check crates licence
       run: python3 bin/check/license.py
+
+    - name: Check hurl crate API changes
+      run: bin/check/compatibility.sh
 
     - name: Check CHANGELOG
       run: bin/check/changelog.sh

@@ -1,0 +1,11 @@
+[package]
+name = "hurl-sample"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+hurl = "1.8.0"
+hurl_core = "1.8.0"
+
