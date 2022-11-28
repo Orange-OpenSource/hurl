@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="18 / 18">100 %</abbr></p>
+                <abbr title="22 / 22">100 %</abbr></p>
         </div>
     </div>
 
@@ -323,7 +323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::template::eval_template;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::json::eval_json_value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -339,7 +339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::{Error, Value};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::template::eval_template;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::ast::{GraphQl, MultilineString, Text};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::{Error, Value};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -371,7 +371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use serde_json::json;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::ast::{MultilineString, Text};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -387,7 +387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use std::collections::HashMap;</pre>
+                <pre class="has-background-white py-0 px-2">use serde_json::json;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -403,7 +403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use std::collections::HashMap;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -413,13 +413,13 @@
                 <a href="#24">24</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn eval_multiline(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -430,12 +430,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    multiline: &amp;MultilineString,</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn eval_multiline(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -446,12 +446,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    variables: &amp;HashMap&lt;String, Value&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">    multiline: &amp;MultilineString,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -462,12 +462,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;String, Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    variables: &amp;HashMap&lt;String, Value&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -478,12 +478,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    match multiline {</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;String, Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -494,12 +494,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="273">
-                273
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        MultilineString::OneLineText(value) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    match multiline {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -515,7 +515,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let s = eval_template(value, variables)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">        MultilineString::OneLineText(value) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(s)</pre>
+                <pre class="has-background-success-light py-0 px-2">            let s = eval_template(value, variables)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -539,6 +539,22 @@
                 id="32"
                 role="cell">
                 <a href="#32">32</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="273">
+                273
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            Ok(s)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="33"
+                role="cell">
+                <a href="#33">33</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -552,9 +568,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="33"
+                id="34"
                 role="cell">
-                <a href="#33">33</a>
+                <a href="#34">34</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -564,22 +580,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        MultilineString::Text(Text { value, .. })</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="34"
-                role="cell">
-                <a href="#34">34</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        | MultilineString::Json(Text { value, .. })</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -595,7 +595,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        | MultilineString::Xml(Text { value, .. }) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        | MultilineString::Json(Text { value, .. })</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -606,12 +606,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="72">
-                72
+                role="cell" aria-label="18">
+                18
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let s = eval_template(value, variables)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">        | MultilineString::Xml(Text { value, .. }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -627,7 +627,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(s)</pre>
+                <pre class="has-background-success-light py-0 px-2">            let s = eval_template(value, variables)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -637,13 +637,13 @@
                 <a href="#38">38</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="72">
+                72
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            Ok(s)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -653,13 +653,13 @@
                 <a href="#39">39</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        MultilineString::GraphQl(GraphQl { value, .. }) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -670,12 +670,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                role="cell" aria-label="42">
+                42
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let query = eval_template(value, variables)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">        MultilineString::GraphQl(graphql) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -686,12 +686,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                role="cell" aria-label="42">
+                42
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let body = json!({ &quot;query&quot;: query.trim() });</pre>
+                <pre class="has-background-success-light py-0 px-2">            let query = eval_template(&amp;graphql.value, variables)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -702,8 +702,120 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="18">
-                18
+                role="cell" aria-label="42">
+                42
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            let body = match &amp;graphql.variables {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="43"
+                role="cell">
+                <a href="#43">43</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="30">
+                30
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                None =&gt; json!({ &quot;query&quot;: query.trim()}),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="44"
+                role="cell">
+                <a href="#44">44</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                Some(vars) =&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="45"
+                role="cell">
+                <a href="#45">45</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                    let s = eval_json_value(&amp;vars.value, variables)?;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="46"
+                role="cell">
+                <a href="#46">46</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                    json!({ &quot;query&quot;: query.trim(), &quot;variables&quot;: s})</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="47"
+                role="cell">
+                <a href="#47">47</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="48"
+                role="cell">
+                <a href="#48">48</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="49"
+                role="cell">
+                <a href="#49">49</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="42">
+                42
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -712,9 +824,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="43"
+                id="50"
                 role="cell">
-                <a href="#43">43</a>
+                <a href="#50">50</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -728,9 +840,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="44"
+                id="51"
                 role="cell">
-                <a href="#44">44</a>
+                <a href="#51">51</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -744,14 +856,14 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="45"
+                id="52"
                 role="cell">
-                <a href="#45">45</a>
+                <a href="#52">52</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="363">
-                363
+                role="cell" aria-label="387">
+                387
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
@@ -761,7 +873,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-11-27 08:24</p>
+                <p class="heading">Date: 2022-11-28 08:26</p>
             </div>
         </footer>
     </body>
