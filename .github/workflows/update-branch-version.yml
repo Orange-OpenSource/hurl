@@ -78,14 +78,6 @@ jobs:
         run: |
           ./bin/update_crates.sh
 
-      - name: Update packages manuals
-        run: |
-          version_doc="docs/installation.md"
-          old_version=$(grep "sudo dpkg -i" "${version_doc}" | cut --delimiter "_" --field 2 )
-          echo "old_version=${old_version}"
-          sed -i "s/${old_version}/${{ inputs.new_version }}/g" "${version_doc}"
-          grep "${{ inputs.new_version }}" "${version_doc}"
-
       - name: Update man
         run: |
           for package in hurl hurlfmt ; do
