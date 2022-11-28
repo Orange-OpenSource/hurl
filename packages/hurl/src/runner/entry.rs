@@ -217,6 +217,8 @@ impl From<&RunnerOptions> for ClientOptions {
     fn from(runner_options: &RunnerOptions) -> Self {
         ClientOptions {
             cacert_file: runner_options.cacert_file.clone(),
+            client_cert_file: runner_options.client_cert_file.clone(),
+            client_key_file: runner_options.client_key_file.clone(),
             follow_location: runner_options.follow_location,
             max_redirect: runner_options.max_redirect,
             cookie_input_file: runner_options.cookie_input_file.clone(),
@@ -299,6 +301,14 @@ pub fn get_entry_options(
                     EntryOption::CaCertificate(option) => {
                         runner_options.cacert_file = Some(option.filename.value.clone());
                         logger.debug(format!("cacert: {}", option.filename.value).as_str());
+                    }
+                    EntryOption::ClientCert(option) => {
+                        runner_options.client_cert_file = Some(option.filename.value.clone());
+                        logger.debug(format!("cert: {}", option.filename.value).as_str());
+                    }
+                    EntryOption::ClientKey(option) => {
+                        runner_options.client_key_file = Some(option.filename.value.clone());
+                        logger.debug(format!("key: {}", option.filename.value).as_str());
                     }
                     EntryOption::Compressed(option) => {
                         runner_options.compressed = option.value;

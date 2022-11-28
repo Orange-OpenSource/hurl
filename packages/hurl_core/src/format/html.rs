@@ -234,6 +234,8 @@ impl Htmlable for EntryOption {
     fn to_html(&self) -> String {
         match self {
             EntryOption::CaCertificate(option) => option.to_html(),
+            EntryOption::ClientCert(option) => option.to_html(),
+            EntryOption::ClientKey(option) => option.to_html(),
             EntryOption::Compressed(option) => option.to_html(),
             EntryOption::Insecure(option) => option.to_html(),
             EntryOption::FollowLocation(option) => option.to_html(),
@@ -289,6 +291,40 @@ impl Htmlable for CaCertificateOption {
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">cacert</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(self.filename.to_html().as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for ClientCertOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">cert</span>");
+        buffer.push_str(self.space1.to_html().as_str());
+        buffer.push_str("<span>:</span>");
+        buffer.push_str(self.space2.to_html().as_str());
+        buffer.push_str(self.filename.to_html().as_str());
+        buffer.push_str("</span>");
+        buffer.push_str(self.line_terminator0.to_html().as_str());
+        buffer
+    }
+}
+
+impl Htmlable for ClientKeyOption {
+    fn to_html(&self) -> String {
+        let mut buffer = String::from("");
+        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        buffer.push_str("<span class=\"line\">");
+        buffer.push_str(self.space0.to_html().as_str());
+        buffer.push_str("<span class=\"string\">key</span>");
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());

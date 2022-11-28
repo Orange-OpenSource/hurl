@@ -349,6 +349,8 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     choice(
         &[
             option_cacert,
+            option_cert,
+            option_key,
             option_compressed,
             option_insecure,
             option_follow_location,
@@ -384,6 +386,50 @@ fn option_cacert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     };
 
     Ok(EntryOption::CaCertificate(option))
+}
+
+fn option_cert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("cert", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let f = filename::parse(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = ClientCertOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        filename: f,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::ClientCert(option))
+}
+
+fn option_key(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("key", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let f = filename::parse(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = ClientKeyOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        filename: f,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::ClientKey(option))
 }
 
 fn option_compressed(reader: &mut Reader) -> ParseResult<'static, EntryOption> {

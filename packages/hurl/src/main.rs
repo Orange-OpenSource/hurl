@@ -108,6 +108,7 @@ fn execute(
             logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
             logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
             logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
+
             if let Some(n) = cli_options.max_redirect {
                 logger.debug(format!("    max redirect: {}", n).as_str());
             }

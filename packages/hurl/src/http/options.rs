@@ -20,6 +20,8 @@ use std::time::Duration;
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
     pub cacert_file: Option<String>,
+    pub client_cert_file: Option<String>,
+    pub client_key_file: Option<String>,
     pub follow_location: bool,
     pub max_redirect: Option<usize>,
     pub cookie_input_file: Option<String>,
@@ -45,6 +47,8 @@ impl Default for ClientOptions {
     fn default() -> Self {
         ClientOptions {
             cacert_file: None,
+            client_cert_file: None,
+            client_key_file: None,
             follow_location: false,
             max_redirect: Some(50),
             cookie_input_file: None,
@@ -69,6 +73,16 @@ impl ClientOptions {
         if let Some(ref cacert_file) = self.cacert_file {
             arguments.push("--cacert".to_string());
             arguments.push(cacert_file.clone());
+        }
+
+        if let Some(ref client_cert_file) = self.client_cert_file {
+            arguments.push("--cert".to_string());
+            arguments.push(client_cert_file.clone());
+        }
+
+        if let Some(ref client_key_file) = self.client_key_file {
+            arguments.push("--key".to_string());
+            arguments.push(client_key_file.clone());
         }
 
         if self.compressed {
@@ -130,6 +144,8 @@ mod tests {
         assert_eq!(
             ClientOptions {
                 cacert_file: None,
+                client_cert_file: None,
+                client_key_file: None,
                 follow_location: true,
                 max_redirect: Some(10),
                 cookie_input_file: Some("cookie_file".to_string()),

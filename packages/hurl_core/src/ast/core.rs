@@ -694,6 +694,8 @@ pub struct Variable {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum EntryOption {
     CaCertificate(CaCertificateOption),
+    ClientCert(ClientCertOption),
+    ClientKey(ClientKeyOption),
     Compressed(CompressedOption),
     Insecure(InsecureOption),
     FollowLocation(FollowLocationOption),
@@ -728,6 +730,26 @@ pub struct InsecureOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CaCertificateOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub filename: Filename,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClientCertOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub filename: Filename,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClientKeyOption {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub space1: Whitespace,

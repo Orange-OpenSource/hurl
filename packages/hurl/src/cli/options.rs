@@ -34,6 +34,8 @@ use crate::runner::Value;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
     pub cacert_file: Option<String>,
+    pub client_cert_file: Option<String>,
+    pub client_key_file: Option<String>,
     pub color: bool,
     pub compressed: bool,
     pub connect_timeout: Duration,
@@ -103,6 +105,21 @@ pub fn app(version: &str) -> Command {
                 .long("cacert")
                 .value_name("FILE")
                 .help("CA certificate to verify peer against (PEM format)")
+                .num_args(1)
+        )
+        .arg(
+            clap::Arg::new("client_cert_file")
+                .long("cert")
+                .value_name("FILE")
+                .help("Client certificate file and password")
+                .num_args(1)
+                .short('E')
+        )
+        .arg(
+            clap::Arg::new("client_key_file")
+                .long("key")
+                .value_name("FILE")
+                .help("Private key file name")
                 .num_args(1)
         )
         .arg(
@@ -378,6 +395,28 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
             }
         }
     };
+    let client_cert_file = match get::<String>(matches, "client_cert_file") {
+        None => None,
+        Some(filename) => {
+            if !Path::new(&filename).is_file() {
+                let message = format!("File {} does not exist", filename);
+                return Err(CliError { message });
+            } else {
+                Some(filename)
+            }
+        }
+    };
+    let client_key_file = match get::<String>(matches, "client_key_file") {
+        None => None,
+        Some(filename) => {
+            if !Path::new(&filename).is_file() {
+                let message = format!("File {} does not exist", filename);
+                return Err(CliError { message });
+            } else {
+                Some(filename)
+            }
+        }
+    };
     let color = output_color(matches);
     let compressed = has_flag(matches, "compressed");
     let connect_timeout = get::<u64>(matches, "connect_timeout").unwrap();
@@ -450,6 +489,8 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
 
     Ok(CliOptions {
         cacert_file,
+        client_cert_file,
+        client_key_file,
         color,
         compressed,
         connect_timeout,

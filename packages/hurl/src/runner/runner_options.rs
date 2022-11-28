@@ -26,6 +26,8 @@ use std::time::Duration;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
     pub cacert_file: Option<String>,
+    pub client_cert_file: Option<String>,
+    pub client_key_file: Option<String>,
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub context_dir: ContextDir,
@@ -54,6 +56,8 @@ impl Default for RunnerOptions {
     fn default() -> Self {
         RunnerOptions {
             cacert_file: None,
+            client_cert_file: None,
+            client_key_file: None,
             compressed: false,
             connect_timeout: Duration::from_secs(300),
             context_dir: Default::default(),
@@ -83,6 +87,8 @@ impl Default for RunnerOptions {
 impl RunnerOptions {
     pub fn from(filename: &str, current_dir: &Path, cli_options: &CliOptions) -> Self {
         let cacert_file = cli_options.cacert_file.clone();
+        let client_cert_file = cli_options.client_cert_file.clone();
+        let client_key_file = cli_options.client_key_file.clone();
         let follow_location = cli_options.follow_location;
         let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
             (true, true) => Some(Verbosity::VeryVerbose),
@@ -130,6 +136,8 @@ impl RunnerOptions {
         let very_verbose = cli_options.very_verbose;
         RunnerOptions {
             cacert_file,
+            client_cert_file,
+            client_key_file,
             compressed,
             connect_timeout,
             context_dir,

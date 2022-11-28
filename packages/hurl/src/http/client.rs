@@ -144,6 +144,16 @@ impl Client {
             self.handle.ssl_cert_type("PEM").unwrap();
         }
 
+        if let Some(client_cert_file) = options.client_cert_file.clone() {
+            self.handle.ssl_cert(client_cert_file).unwrap();
+            self.handle.ssl_cert_type("PEM").unwrap();
+        }
+
+        if let Some(client_key_file) = options.client_key_file.clone() {
+            self.handle.ssl_key(client_key_file).unwrap();
+            self.handle.ssl_cert_type("PEM").unwrap();
+        }
+
         if let Some(proxy) = options.proxy.clone() {
             self.handle.proxy(proxy.as_str()).unwrap();
         }
