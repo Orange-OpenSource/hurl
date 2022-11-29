@@ -32,7 +32,14 @@ Short description:
 <span class="grammar-symbol">|</span><span class="grammar-literal">CONNECT</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">OPTIONS</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">TRACE</span><br>
-<span class="grammar-symbol">|</span><span class="grammar-literal">PATCH</span></div></div>
+<span class="grammar-symbol">|</span><span class="grammar-literal">PATCH</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">LINK</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">UNLINK</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">PURGE</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">LOCK</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">UNLOCK</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">PROPFIND</span><br>
+<span class="grammar-symbol">|</span><span class="grammar-literal">VIEW</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="version">version</span><span class="grammar-usedby">(used by <a href="#response">response</a>)</span></div><div class="grammar-rule-expression">&nbsp;<span class="grammar-literal">HTTP/1.0</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/1.1</span><br>
 <span class="grammar-symbol">|</span><span class="grammar-literal">HTTP/2</span><br>
