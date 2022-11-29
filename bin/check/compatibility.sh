@@ -37,17 +37,15 @@ echo "hurl_core (SNAPSHOT) major=$hurl_core_snapshot_major ($hurl_core_snapshot_
 if [ "$hurl_sample_major" != "$hurl_snapshot_major" ] && [ "$hurl_core_sample_major" != "$hurl_core_snapshot_major" ];then
   echo "Major versions are different, no need to check crates compatibility"
   exit 0
-else
-  echo "Major versions are equal, check crates compatibility"
 fi
 
-
+echo "Major versions are equal, check crates compatibility"
 
 # Replace versions for our sample
 sed -i -- "s/hurl = \"[0-9.]*\"/hurl = { version = \"$hurl_snapshot_version\", path = \"..\/..\/packages\/hurl\" }/" contrib/sample/Cargo.toml
 sed -i -- "s/hurl_core = \"[0-9.]*\"/hurl_core = { version = \"$hurl_core_snapshot_version\", path = \"..\/..\/packages\/hurl_core\" }/" contrib/sample/Cargo.toml
 
-cd contrib/sample || exit
+cd contrib/sample
 cargo clean
 cargo update
 cargo build
