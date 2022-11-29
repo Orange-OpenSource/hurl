@@ -135,7 +135,7 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
     }
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric());
-    let available_methods = vec![
+    let available_methods = [
         ("GET", Method::Get),
         ("HEAD", Method::Head),
         ("POST", Method::Post),
@@ -145,9 +145,16 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
         ("OPTIONS", Method::Options),
         ("TRACE", Method::Trace),
         ("PATCH", Method::Patch),
+        ("LINK", Method::Link),
+        ("UNLINK", Method::Unlink),
+        ("PURGE", Method::Purge),
+        ("LOCK", Method::Lock),
+        ("UNLOCK", Method::Unlock),
+        ("PROPFIND", Method::Propfind),
+        ("VIEW", Method::View),
     ];
 
-    for (s, method) in available_methods {
+    for (s, method) in available_methods.into_iter() {
         if name == s {
             return Ok(method);
         }

@@ -173,6 +173,13 @@ fn eval_method(method: &Method) -> http::Method {
         Method::Options => http::Method::Options,
         Method::Trace => http::Method::Trace,
         Method::Patch => http::Method::Patch,
+        Method::Link => http::Method::Link,
+        Method::Unlink => http::Method::Unlink,
+        Method::Purge => http::Method::Purge,
+        Method::Lock => http::Method::Lock,
+        Method::Unlock => http::Method::Unlock,
+        Method::Propfind => http::Method::Propfind,
+        Method::View => http::Method::View,
     }
 }
 

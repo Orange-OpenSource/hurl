@@ -385,17 +385,9 @@ impl Client {
 
     /// Sets HTTP method.
     fn set_method(&mut self, method: &Method) {
-        match method {
-            Method::Get => self.handle.custom_request("GET").unwrap(),
-            Method::Post => self.handle.custom_request("POST").unwrap(),
-            Method::Put => self.handle.custom_request("PUT").unwrap(),
-            Method::Head => self.handle.custom_request("HEAD").unwrap(),
-            Method::Delete => self.handle.custom_request("DELETE").unwrap(),
-            Method::Connect => self.handle.custom_request("CONNECT").unwrap(),
-            Method::Options => self.handle.custom_request("OPTIONS").unwrap(),
-            Method::Trace => self.handle.custom_request("TRACE").unwrap(),
-            Method::Patch => self.handle.custom_request("PATCH").unwrap(),
-        }
+        self.handle
+            .custom_request(method.to_string().as_str())
+            .unwrap()
     }
 
     /// Sets HTTP headers.

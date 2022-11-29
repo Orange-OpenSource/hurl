@@ -5,7 +5,7 @@ if exists("b:current_syntax")
   finish
 endif
 
-syntax keyword method GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH nextgroup=url skipwhite
+syntax keyword method GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH LINK UNLINK PURGE LOCK UNLOCK PROPFIND VIEW nextgroup=url skipwhite
 syntax match url "\S\+" contained
 syntax match version "HTTP" nextgroup=status skipwhite
 syntax match version "HTTP/1\.0" nextgroup=status skipwhite

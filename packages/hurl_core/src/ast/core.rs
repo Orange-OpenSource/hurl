@@ -138,6 +138,13 @@ pub enum Method {
     Options,
     Trace,
     Patch,
+    Link,
+    Unlink,
+    Purge,
+    Lock,
+    Unlock,
+    Propfind,
+    View,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -1,0 +1,16 @@
+curl 'http://localhost:8000/methods/get'
+curl 'http://localhost:8000/methods/head' --head
+curl 'http://localhost:8000/methods/post' -X POST
+curl 'http://localhost:8000/methods/put' -X PUT
+curl 'http://localhost:8000/methods/delete' -X DELETE
+curl 'http://localhost:8000/methods/connect' -X CONNECT
+curl 'http://localhost:8000/methods/options' -X OPTIONS
+curl 'http://localhost:8000/methods/trace' -X TRACE
+curl 'http://localhost:8000/methods/patch' -X PATCH
+curl 'http://localhost:8000/methods/link' -X LINK
+curl 'http://localhost:8000/methods/unlink' -X UNLINK
+curl 'http://localhost:8000/methods/purge' -X PURGE
+curl 'http://localhost:8000/methods/lock' -X LOCK
+curl 'http://localhost:8000/methods/unlock' -X UNLOCK
+curl 'http://localhost:8000/methods/propfind' -X PROPFIND
+curl 'http://localhost:8000/methods/view' -X VIEW

@@ -30,6 +30,13 @@ impl fmt::Display for Method {
             Method::Options => "OPTIONS",
             Method::Trace => "TRACE",
             Method::Patch => "PATCH",
+            Method::Link => "LINK",
+            Method::Unlink => "UNLINK",
+            Method::Purge => "PURGE",
+            Method::Lock => "LOCK",
+            Method::Unlock => "UNLOCK",
+            Method::Propfind => "PROPFIND",
+            Method::View => "VIEW",
         };
         write!(f, "{}", s)
     }

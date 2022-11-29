@@ -126,12 +126,7 @@ impl Method {
                     vec!["-X".to_string(), "POST".to_string()]
                 }
             }
-            Method::Put => vec!["-X".to_string(), "PUT".to_string()],
-            Method::Delete => vec!["-X".to_string(), "DELETE".to_string()],
-            Method::Connect => vec!["-X".to_string(), "CONNECT".to_string()],
-            Method::Options => vec!["-X".to_string(), "OPTIONS".to_string()],
-            Method::Trace => vec!["-X".to_string(), "TRACE".to_string()],
-            Method::Patch => vec!["-X".to_string(), "PATCH".to_string()],
+            _ => vec!["-X".to_string(), self.to_string()],
         }
     }
 }

@@ -68,9 +68,9 @@ impl Error for parser::Error {
         match self.inner.clone() {
             ParseError::Method { name }
             => format!("the HTTP method is not valid. {}", did_you_mean(
-                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"],
+                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH", "LINK", "UNLINK", "PURGE", "LOCK", "UNLOCK", "PROPFIND", "VIEW"],
                 name.as_str(),
-                "Available HTTP Methods are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE or PATCH",
+                "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH, LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND or VIEW",
             )),
             ParseError::Version { .. } => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
             ParseError::Status { .. } => "HTTP status code is not valid".to_string(),
@@ -79,9 +79,9 @@ impl Error for parser::Error {
             ParseError::Space { .. } => "expecting a space".to_string(),
             ParseError::RequestSectionName { name }
             => format!("the section is not valid. {}", did_you_mean(
-                &["QueryStringParams", "FormParams", "MultipartFormData", "Cookies"],
+                &["QueryStringParams", "FormParams", "MultipartFormData", "Cookies", "Options"],
                 name.as_str(),
-                "Valid values are QueryStringParams, FormParams, MultipartFormData or Cookies",
+                "Valid values are QueryStringParams, FormParams, MultipartFormData, Cookies or Options",
             )),
             ParseError::ResponseSectionName { name }
             => format!("the section is not valid. {}", did_you_mean(
