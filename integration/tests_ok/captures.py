@@ -5,6 +5,7 @@ from flask import make_response, request
 @app.route("/captures")
 def captures():
     resp = make_response()
+    resp.data = "Hello world!"
     resp.headers["Header1"] = "value1"
     resp.headers["Header2"] = "Hello Bob!"
     return resp

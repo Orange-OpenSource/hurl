@@ -5,16 +5,21 @@ HTTP 200
 param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
 param3: header "header2" regex /Hello (.*)!/
+# With the next captures, we test that the captured variable
+# can be immediatlety used in the next captures + asserts
+data1: body
+data2: variable "data1"
 [Asserts]
 variable "param1" == "value1"
 variable "param2" == "Bob"
 variable "param3" == "Bob"
+variable "data2" == "Hello world!"
+
 
 GET http://localhost:8000/captures-check
 [QueryStringParams]
 param1: {{param1}}
 param2: {{param2}}
-
 HTTP 200
 
 
