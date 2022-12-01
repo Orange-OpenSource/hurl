@@ -281,14 +281,18 @@ fn eval_implicit_body_asserts(
     }
 }
 
+/// Evaluates captures from this HTTP `http_response`, given a set of `variables`.
 pub fn eval_captures(
     response: &Response,
     http_response: &http::Response,
-    variables: &HashMap<String, Value>,
+    variables: &mut HashMap<String, Value>,
 ) -> Result<Vec<CaptureResult>, Error> {
     let mut captures = vec![];
     for capture in response.captures().iter() {
         let capture_result = eval_capture(capture, variables, http_response)?;
+        // Update variables now so the captures set is ready in case
+        // the next captures reference this new variable.
+        variables.insert(capture_result.name.clone(), capture_result.value.clone());
         captures.push(capture_result);
     }
     Ok(captures)
@@ -388,12 +392,12 @@ mod tests {
 
     #[test]
     pub fn test_eval_captures() {
-        let variables = HashMap::new();
+        let mut variables = HashMap::new();
         assert_eq!(
             eval_captures(
                 &user_response(),
                 &http::xml_two_users_http_response(),
-                &variables,
+                &mut variables,
             )
             .unwrap(),
             vec![CaptureResult {

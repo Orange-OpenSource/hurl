@@ -161,10 +161,6 @@ pub fn run(
         },
     };
 
-    // Update variables now!
-    for c in captures.iter() {
-        variables.insert(c.name.clone(), c.value.clone());
-    }
     if !captures.is_empty() {
         logger.debug_important("Captures:");
         for c in captures.iter() {
