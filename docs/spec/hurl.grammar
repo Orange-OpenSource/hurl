@@ -319,7 +319,7 @@ key-string: (key-string-content | template)+
 
 key-string-content: (key-string-text | key-string-escaped-char)*
 
-key-string-text: ~[#:\n\\]+
+key-string-text: ~[#: \n\r\t\\]+
 
 key-string-escaped-char: "\\" ("#" | ":" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
 

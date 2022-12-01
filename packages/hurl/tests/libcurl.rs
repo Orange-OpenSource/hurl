@@ -260,6 +260,10 @@ fn test_querystring_params() {
                 name: "param4".to_string(),
                 value: "1,2,3".to_string(),
             },
+            Param {
+                name: "$top".to_string(),
+                value: "5".to_string(),
+            },
         ],
         form: vec![],
         multipart: vec![],
@@ -269,11 +273,11 @@ fn test_querystring_params() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3'".to_string()
+        "curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3&$top=5'".to_string()
     );
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
-    assert_eq!(request.url, "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".to_string());
+    assert_eq!(request.url, "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3&$top=5".to_string());
     assert_eq!(request.headers.len(), 3);
 
     assert_eq!(response.status, 200);

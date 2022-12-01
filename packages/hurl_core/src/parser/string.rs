@@ -97,19 +97,12 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                     match reader.read() {
                         None => break,
                         Some(c) => {
-                            if c.is_alphanumeric()
-                                || c == '_'
-                                || c == '-'
-                                || c == '.'
-                                || c == '['
-                                || c == ']'
-                                || c == '@'
-                            {
-                                value.push(c);
-                                encoded.push_str(reader.from(save.cursor).as_str())
-                            } else {
+                            if ['#', ':', ' ', '\n', '\r', '\n', '\t', '\\'].contains(&c) {
                                 reader.state = save;
                                 break;
+                            } else {
+                                value.push(c);
+                                encoded.push_str(reader.from(save.cursor).as_str())
                             }
                         }
                     }
@@ -451,6 +444,18 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 15);
+
+        let mut reader = Reader::init("$top:");
+        assert_eq!(
+            unquoted_string_key(&mut reader).unwrap(),
+            EncodedString {
+                value: "$top".to_string(),
+                encoded: "$top".to_string(),
+                quotes: false,
+                source_info: SourceInfo::new(1, 1, 1, 5),
+            }
+        );
+        assert_eq!(reader.state.cursor, 4);
     }
 
     #[test]
