@@ -24,6 +24,7 @@ use crate::http;
 use crate::runner::entry::get_entry_verbosity;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::Value;
+use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -127,6 +128,8 @@ pub fn run(
             "------------------------------------------------------------------------------",
         );
         logger.debug_important(format!("Executing entry {}", entry_index).as_str());
+
+        warn_deprecated(entry, logger);
 
         let options_result =
             entry::get_entry_options(entry, runner_options, &mut variables, logger);
@@ -247,4 +250,69 @@ fn is_success(entries: &[EntryResult]) -> bool {
         }
     }
     true
+}
+
+/// Logs deprecated syntax and provides alternatives.
+fn warn_deprecated(entry: &Entry, logger: &Logger) {
+    // HTTP/* is used instead of HTTP.
+    if let Some(response) = &entry.response {
+        let version = &response.version;
+        let source_info = &version.source_info;
+        let line = &source_info.start.line;
+        let column = &source_info.start.column;
+        if version.value == VersionAnyLegacy {
+            logger.warning(
+                format!(
+                    "{}:{}:{} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead",
+                    logger.filename, line, column
+                )
+                .as_str(),
+            );
+        }
+    }
+
+    // one line string with ```something``` syntax instead of `something`
+    if let Request {
+        body:
+            Some(Body {
+                value: Bytes::MultilineString(MultilineString::OneLineText(template)),
+                ..
+            }),
+        ..
+    } = &entry.request
+    {
+        let source_info = &template.source_info;
+        let line = &source_info.start.line;
+        let column = &source_info.start.column;
+        let template = template.to_string();
+        logger.warning(
+            format!(
+                "{}:{}:{} '```{}```' request body is deprecated, please use '`{}`' instead",
+                logger.filename, line, column, template, template
+            )
+            .as_str(),
+        );
+    }
+
+    if let Some(Response {
+        body:
+            Some(Body {
+                value: Bytes::MultilineString(MultilineString::OneLineText(template)),
+                ..
+            }),
+        ..
+    }) = &entry.response
+    {
+        let source_info = &template.source_info;
+        let line = &source_info.start.line;
+        let column = &source_info.start.column;
+        let template = template.to_string();
+        logger.warning(
+            format!(
+                "{}:{}:{} '```{}```' response body is deprecated, please use '`{}`' instead",
+                logger.filename, line, column, template, template
+            )
+            .as_str(),
+        );
+    }
 }

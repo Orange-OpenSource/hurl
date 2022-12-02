@@ -21,7 +21,6 @@ use std::time::Duration;
 use crate::cli::Logger;
 use crate::http;
 use crate::http::ClientOptions;
-use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 
 use super::core::*;
@@ -113,23 +112,6 @@ pub fn run(
             };
         }
     };
-
-    // We display some warning if HTTP/* is used instead of HTTP.
-    if let Some(response) = &entry.response {
-        let version = &response.version;
-        let source_info = &version.source_info;
-        let line = &source_info.start.line;
-        let column = &source_info.start.column;
-        if version.value == VersionAnyLegacy {
-            logger.warning(
-                format!(
-                    "{}:{}:{} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead",
-                    logger.filename, line, column
-                )
-                .as_str(),
-            );
-        }
-    }
 
     // We runs capture and asserts on the last HTTP request/response chains.
     let (_, http_response) = calls.last().unwrap();
