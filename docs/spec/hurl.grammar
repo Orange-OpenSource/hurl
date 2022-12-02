@@ -333,13 +333,13 @@ value-string-text: ~[#\n\\]+
 value-string-escaped-char: "\\" ("#" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
 
 
-oneline-string: "```" (oneline-string-content | template)* "```"
+oneline-string: "`" (oneline-string-content | template)* "`"
 
 oneline-string-content: (oneline-string-text | oneline-string-escaped-char)*
 
-oneline-string-text: ~[#\n\\] ~"```"
+oneline-string-text: ~[#\n\\] ~"`"
 
-oneline-string-escaped-char: "\\" ("#" | "\\" | "b" | "f" | "u" unicode-char )
+oneline-string-escaped-char: "\\" ("`" | "#" | "\\" | "b" | "f" | "u" unicode-char )
 
 
 multiline-string:
