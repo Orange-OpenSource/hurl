@@ -3,7 +3,7 @@
 GET http://localhost:8000/utf8_bom
 
 HTTP 200
-```Hello World!```
+`Hello World!`
 
 # We send the content of this file and get back the same
 # bytes from /mirror to test the presence of the BOM marker.

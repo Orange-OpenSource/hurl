@@ -1,7 +1,7 @@
 error: Decompression error
   --> tests_failed/assert_decompress.hurl:3:1
    |
- 3 | ```Hello World!```
+ 3 | `Hello World!`
    | ^ could not uncompress response with gzip
    |
 

@@ -3,7 +3,7 @@ GET http://localhost:8000/redirected
 HTTP 200
 [Asserts]
 url == "http://localhost:8000/redirected"
-```Redirected```
+`Redirected`
 
 
 # Absolute redirects
@@ -22,7 +22,7 @@ location: true
 HTTP 200
 [Asserts]
 url == "http://localhost:8000/redirected"
-```Redirected```
+`Redirected`
 
 
 # Relative redirects
@@ -42,4 +42,4 @@ location: true
 HTTP 200
 [Asserts]
 url == "http://localhost:8000/redirected"
-```Redirected```
+`Redirected`

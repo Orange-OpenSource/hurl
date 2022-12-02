@@ -11,6 +11,8 @@ Thanks to
 
 Enhancements:
 
+* Support new one line string [#1041](https://github.com/Orange-OpenSource/hurl/issues/1041)
+
 * Add filters for htmlEscape and htmlUnescape [#1038](https://github.com/Orange-OpenSource/hurl/issues/1038)
 
 * Add toInt filter [#1029](https://github.com/Orange-OpenSource/hurl/issues/1029)

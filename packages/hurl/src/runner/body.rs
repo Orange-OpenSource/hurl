@@ -27,6 +27,7 @@ use super::value::Value;
 use crate::http;
 use crate::http::ContextDir;
 use crate::runner::multiline::eval_multiline;
+use crate::runner::template::eval_template;
 
 pub fn eval_body(
     body: &Body,
@@ -42,6 +43,10 @@ pub fn eval_bytes(
     context_dir: &ContextDir,
 ) -> Result<http::Body, Error> {
     match bytes {
+        Bytes::OnelineString(value) => {
+            let value = eval_template(value, variables)?;
+            Ok(http::Body::Text(value))
+        }
         Bytes::MultilineString(value) => {
             let value = eval_multiline(value, variables)?;
             Ok(http::Body::Text(value))

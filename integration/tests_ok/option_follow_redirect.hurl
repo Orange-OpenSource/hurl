@@ -22,5 +22,5 @@ location: true
 HTTP 200
 [Asserts]
 header "Location" not exists
-```Followed redirect!```
+`Followed redirect!`
 

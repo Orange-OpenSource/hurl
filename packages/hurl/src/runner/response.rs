@@ -173,6 +173,28 @@ fn eval_implicit_body_asserts(
                 source_info: spec_body.space0.source_info.clone(),
             }
         }
+        Bytes::OnelineString(value) => {
+            let expected = match eval_template(value, variables) {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(e),
+            };
+            let actual = match http_response.text() {
+                Ok(s) => Ok(Value::String(s)),
+                Err(e) => Err(Error {
+                    source_info: SourceInfo {
+                        start: spec_body.space0.source_info.end.clone(),
+                        end: spec_body.space0.source_info.end.clone(),
+                    },
+                    inner: RunnerError::from(e),
+                    assert: true,
+                }),
+            };
+            AssertResult::Body {
+                actual,
+                expected,
+                source_info: value.source_info.clone(),
+            }
+        }
         Bytes::MultilineString(multi) => {
             let expected = match eval_multiline(multi, variables) {
                 Ok(s) => Ok(Value::String(s)),

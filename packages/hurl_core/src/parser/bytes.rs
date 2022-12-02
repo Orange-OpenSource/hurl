@@ -17,6 +17,7 @@
  */
 use crate::ast::*;
 use crate::parser::multiline::multiline_string;
+use crate::parser::string::backtick_template;
 
 use super::combinators::*;
 use super::json::parse as parse_json;
@@ -29,6 +30,7 @@ pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     choice(
         &[
             multiline_string_bytes,
+            string_bytes,
             json_bytes,
             xml_bytes,
             base64_bytes,
@@ -67,6 +69,10 @@ fn hex_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 
 pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     multiline_string(reader).map(Bytes::MultilineString)
+}
+
+fn string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+    backtick_template(reader).map(Bytes::OnelineString)
 }
 
 #[cfg(test)]
@@ -181,5 +187,22 @@ mod tests {
             json_bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Number("100".to_string()))
         );
+    }
+
+    #[test]
+    fn test_bytes_string() {
+        let mut reader = Reader::init("`foo`  ");
+        assert_eq!(
+            bytes(&mut reader).unwrap(),
+            Bytes::OnelineString(Template {
+                delimiter: Some('`'),
+                elements: vec![TemplateElement::String {
+                    value: "foo".to_string(),
+                    encoded: "foo".to_string()
+                }],
+                source_info: SourceInfo::new(1, 1, 1, 6)
+            })
+        );
+        assert_eq!(reader.state.cursor, 5);
     }
 }

@@ -607,6 +607,7 @@ impl Lintable<Bytes> for Bytes {
             Bytes::Base64(value) => Bytes::Base64(value.lint()),
             Bytes::Hex(value) => Bytes::Hex(value.lint()),
             Bytes::Json(value) => Bytes::Json(value.clone()),
+            Bytes::OnelineString(value) => Bytes::OnelineString(value.lint()),
             Bytes::MultilineString(value) => Bytes::MultilineString(value.lint()),
             Bytes::Xml(value) => Bytes::Xml(value.clone()),
         }

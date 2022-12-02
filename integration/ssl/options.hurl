@@ -3,7 +3,7 @@ GET https://localhost:8001/hello
 insecure: true
 
 HTTP 200
-```Hello World!```
+`Hello World!`
 
 
 GET https://localhost:8001/hello
@@ -13,7 +13,7 @@ insecure: false
 insecure: true
 
 HTTP 200
-```Hello World!```
+`Hello World!`
 
 
 GET https://localhost:8001/hello
@@ -21,4 +21,4 @@ GET https://localhost:8001/hello
 cacert: ssl/cert.pem        # with a custom certificate
 
 HTTP 200
-```Hello World!```
+`Hello World!`

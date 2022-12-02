@@ -627,6 +627,7 @@ pub enum Bytes {
     Json(json::Value),
     Xml(String),
     MultilineString(MultilineString),
+    OnelineString(Template),
     Base64(Base64),
     File(File),
     Hex(Hex),

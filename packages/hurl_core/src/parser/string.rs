@@ -134,7 +134,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
     })
 }
 
-// todo should return an EncodedString
+// TODO: should return an EncodedString
 // (decoding escape sequence)
 pub fn quoted_string(reader: &mut Reader) -> ParseResult<'static, String> {
     literal("\"", reader)?;
@@ -177,6 +177,49 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
         delimiter: Some('"'),
+        elements,
+        source_info: SourceInfo {
+            start,
+            end: reader.state.pos.clone(),
+        },
+    })
+}
+
+pub fn backtick_template(reader: &mut Reader) -> ParseResult<'static, Template> {
+    let delimiter = Some('`');
+    let start = reader.state.clone().pos;
+    let mut end = start.clone();
+    try_literal("`", reader)?;
+    let mut chars = vec![];
+    loop {
+        let pos = reader.state.pos.clone();
+        let save = reader.state.clone();
+        match any_char(vec!['`', '\n'], reader) {
+            Err(e) => {
+                if e.recoverable {
+                    reader.state = save;
+                    break;
+                } else {
+                    return Err(e);
+                }
+            }
+            Ok((c, s)) => {
+                chars.push((c, s, pos));
+                end = reader.state.clone().pos;
+            }
+        }
+    }
+    literal("`", reader)?;
+    let encoded_string = template::EncodedString {
+        source_info: SourceInfo {
+            start: start.clone(),
+            end,
+        },
+        chars,
+    };
+    let elements = template::templatize(encoded_string)?;
+    Ok(Template {
+        delimiter,
         elements,
         source_info: SourceInfo {
             start,
@@ -229,6 +272,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
     match reader.read() {
         Some('#') => Ok('#'),
         Some('"') => Ok('"'),
+        Some('`') => Ok('`'),
         Some('\\') => Ok('\\'),
         Some('/') => Ok('/'),
         Some('b') => Ok('\x08'),
@@ -291,18 +335,6 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 0);
-
-        // let mut reader = Reader::init(" hi");
-        // assert_eq!(
-        //     unquoted_template(&mut reader).unwrap(),
-        //     Template {
-        //         quotes: false,
-        //         elements: vec![],
-        //         source_info: SourceInfo::init(1, 1, 1, 1),
-        //     }
-        // );
-        //
-        // assert_eq!(reader.state.cursor, 0);
     }
 
     #[test]
@@ -607,6 +639,80 @@ mod tests {
         let mut reader = Reader::init("\"Hello\"");
         assert_eq!(quoted_string(&mut reader).unwrap(), "Hello");
         assert_eq!(reader.state.cursor, 7);
+    }
+
+    #[test]
+    fn test_backtick_template() {
+        let mut reader = Reader::init("``");
+        assert_eq!(
+            backtick_template(&mut reader).unwrap(),
+            Template {
+                delimiter: Some('`'),
+                elements: vec![],
+                source_info: SourceInfo::new(1, 1, 1, 3),
+            }
+        );
+        assert_eq!(reader.state.cursor, 2);
+
+        let mut reader = Reader::init("`foo#`");
+        assert_eq!(
+            backtick_template(&mut reader).unwrap(),
+            Template {
+                delimiter: Some('`'),
+                elements: vec![TemplateElement::String {
+                    value: "foo#".to_string(),
+                    encoded: "foo#".to_string(),
+                }],
+                source_info: SourceInfo::new(1, 1, 1, 7),
+            }
+        );
+        assert_eq!(reader.state.cursor, 6);
+
+        let mut reader = Reader::init("`{0}`");
+        assert_eq!(
+            backtick_template(&mut reader).unwrap(),
+            Template {
+                delimiter: Some('`'),
+                elements: vec![TemplateElement::String {
+                    value: "{0}".to_string(),
+                    encoded: "{0}".to_string(),
+                }],
+                source_info: SourceInfo::new(1, 1, 1, 6),
+            }
+        );
+        assert_eq!(reader.state.cursor, 5);
+    }
+
+    #[test]
+    fn test_backtick_template_with_backtick() {
+        // `\`hi\``
+        let mut reader = Reader::init("`\\`hi\\``");
+        assert_eq!(
+            backtick_template(&mut reader).unwrap(),
+            Template {
+                delimiter: Some('`'),
+                elements: vec![TemplateElement::String {
+                    value: "`hi`".to_string(),
+                    encoded: "\\`hi\\`".to_string()
+                }],
+                source_info: SourceInfo::new(1, 1, 1, 9),
+            }
+        );
+        assert_eq!(reader.state.cursor, 8);
+    }
+
+    #[test]
+    fn test_backtick_template_error_missing_closing_backtick() {
+        let mut reader = Reader::init("`not found");
+        let error = backtick_template(&mut reader).err().unwrap();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 11
+            }
+        );
+        assert!(!error.recoverable);
     }
 
     #[test]

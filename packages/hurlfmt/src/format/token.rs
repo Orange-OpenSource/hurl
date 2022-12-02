@@ -163,6 +163,7 @@ impl Tokenizable for Bytes {
             Bytes::Json(value) => tokens.append(&mut value.tokenize()),
             Bytes::Xml(value) => tokens.push(Token::String(value.to_string())),
             Bytes::MultilineString(value) => tokens.append(&mut value.tokenize()),
+            Bytes::OnelineString(value) => tokens.append(&mut value.tokenize()),
             Bytes::Base64(value) => tokens.append(&mut value.tokenize()),
             Bytes::Hex(value) => tokens.append(&mut value.tokenize()),
             Bytes::File(value) => tokens.append(&mut value.tokenize()),

@@ -14,7 +14,7 @@ body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
-```Hello World!```
+`Hello World!`
 
 GET http://localhost:8000/compressed/none
 [Options]
@@ -28,7 +28,7 @@ body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
-```Hello World!```
+`Hello World!`
 
 
 # Test base64 implicit body:
@@ -72,7 +72,7 @@ body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
-```Hello World!```
+`Hello World!`
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/gzip
@@ -115,7 +115,7 @@ body startsWith "Hello"
 bytes startsWith hex,48656c6c6f;
 sha256 == hex,7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069;
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
-```Hello World!```
+`Hello World!`
 
 # Test base64 implicit body:
 GET http://localhost:8000/compressed/zlib

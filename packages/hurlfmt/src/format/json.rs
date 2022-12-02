@@ -141,6 +141,10 @@ impl ToJson for Bytes {
                 ("type".to_string(), JValue::String("xml".to_string())),
                 ("value".to_string(), JValue::String(value.clone())),
             ]),
+            Bytes::OnelineString(value) => JValue::Object(vec![
+                ("type".to_string(), JValue::String("text".to_string())),
+                ("value".to_string(), JValue::String(value.to_string())),
+            ]),
             Bytes::MultilineString(multi) => {
                 // TODO: check these values. Maybe we want to have the same
                 // export when using:

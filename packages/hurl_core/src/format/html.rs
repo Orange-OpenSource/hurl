@@ -455,7 +455,7 @@ impl Htmlable for VariableValue {
             VariableValue::Bool(v) => format!("<span class=\"boolean\">{}</span>", v),
             VariableValue::Integer(v) => format!("<span class=\"number\">{}</span>", v),
             VariableValue::Float(v) => format!("<span class=\"number\">{}</span>", v),
-            VariableValue::String(t) => t.to_html(),
+            VariableValue::String(t) => format!("<span class=\"string\">{}</span>", t.to_html()),
         }
     }
 }
@@ -607,9 +607,8 @@ impl Htmlable for QueryValue {
             QueryValue::Header { space0, name } => {
                 buffer.push_str("<span class=\"query-type\">header</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", name.to_html()).as_str(),
-                );
+                buffer
+                    .push_str(format!("<span class=\"string\">{}</span>", name.to_html()).as_str());
             }
             QueryValue::Cookie { space0, expr } => {
                 buffer.push_str("<span class=\"query-type\">cookie</span>");
@@ -624,16 +623,14 @@ impl Htmlable for QueryValue {
             QueryValue::Xpath { space0, expr } => {
                 buffer.push_str("<span class=\"query-type\">xpath</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
-                );
+                buffer
+                    .push_str(format!("<span class=\"string\">{}</span>", expr.to_html()).as_str());
             }
             QueryValue::Jsonpath { space0, expr } => {
                 buffer.push_str("<span class=\"query-type\">jsonpath</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", expr.to_html()).as_str(),
-                );
+                buffer
+                    .push_str(format!("<span class=\"string\">{}</span>", expr.to_html()).as_str());
             }
             QueryValue::Regex { space0, value } => {
                 buffer.push_str("<span class=\"query-type\">regex</span>");
@@ -643,9 +640,8 @@ impl Htmlable for QueryValue {
             QueryValue::Variable { space0, name } => {
                 buffer.push_str("<span class=\"query-type\">variable</span>");
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(
-                    format!("<span class=\"string\">\"{}\"</span>", name.to_html()).as_str(),
-                );
+                buffer
+                    .push_str(format!("<span class=\"string\">{}</span>", name.to_html()).as_str());
             }
             QueryValue::Duration {} => {
                 buffer.push_str("<span class=\"query-type\">duration</span>");
@@ -668,7 +664,7 @@ impl Htmlable for RegexValue {
     fn to_html(&self) -> String {
         match self {
             RegexValue::Template(template) => {
-                format!("<span class=\"string\">\"{}\"</span>", template.to_html())
+                format!("<span class=\"string\">{}</span>", template.to_html())
             }
             RegexValue::Regex(regex) => regex.to_html(),
         }
@@ -832,7 +828,6 @@ impl Htmlable for PredicateFuncValue {
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(value.to_html().as_str());
             }
-
             PredicateFuncValue::Match { space0, value } => {
                 buffer.push_str(
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
@@ -879,7 +874,7 @@ impl Htmlable for PredicateValue {
     fn to_html(&self) -> String {
         match self {
             PredicateValue::String(value) => {
-                format!("<span class=\"string\">\"{}\"</span>", value.to_html())
+                format!("<span class=\"string\">{}</span>", value.to_html())
             }
             PredicateValue::MultilineString(value) => value.to_html(),
             PredicateValue::Integer(value) => format!("<span class=\"number\">{}</span>", value),
@@ -931,6 +926,10 @@ impl Htmlable for Bytes {
             Bytes::File(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::Hex(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::Json(value) => value.to_html(),
+            Bytes::OnelineString(value) => format!(
+                "<span class=\"line\"><span class=\"string\">{}</span></span>",
+                value.to_html()
+            ),
             Bytes::MultilineString(value) => value.to_html(),
             Bytes::Xml(value) => xml_html(value),
         }
@@ -1043,12 +1042,18 @@ impl Htmlable for EncodedString {
 impl Htmlable for Template {
     fn to_html(&self) -> String {
         let mut s = "".to_string();
+        if let Some(d) = self.delimiter {
+            s.push(d);
+        }
         for element in self.elements.clone() {
             let elem_str = match element {
                 TemplateElement::String { encoded, .. } => encoded,
                 TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
             };
             s.push_str(elem_str.as_str())
+        }
+        if let Some(d) = self.delimiter {
+            s.push(d);
         }
         xml_escape(&s)
     }

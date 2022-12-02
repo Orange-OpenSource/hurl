@@ -1,7 +1,7 @@
 GET http://localhost:8000/charset/default
 HTTP 200
 Content-Type: text/html; charset=utf-8
-```<p>Hello World!</p>```
+`<p>Hello World!</p>`
 
 GET http://localhost:8000/charset/uppercase
 HTTP 200

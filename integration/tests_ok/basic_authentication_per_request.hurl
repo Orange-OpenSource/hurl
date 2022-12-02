@@ -5,13 +5,13 @@
 # the '@' must be url-escaped
 GET http://bob%40email.com:secret@localhost:8000/basic-authentication-per-request
 HTTP 200
-```You are authenticated```
+`You are authenticated`
 
 # Header value can be computed with `echo -n 'bob@email.com:secret' | base64`
 GET http://localhost:8000/basic-authentication-per-request
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 HTTP 200
-```You are authenticated```
+`You are authenticated`
 
 # We can also use a BasicAuth section to specify user and password
 # without any base64 encoding.
@@ -22,4 +22,4 @@ GET http://localhost:8000/basic-authentication-per-request
 [BasicAuth]
 bob@email.com: secret
 HTTP 200
-```You are authenticated```
+`You are authenticated`
