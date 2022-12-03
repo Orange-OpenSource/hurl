@@ -418,6 +418,7 @@ filter:
   | count-filter
   | url-encode-filter
   | url-decode-filter
+  | to-int
 
 regex-filter: "regex" sp (quoted-string | regex)
 
@@ -426,6 +427,8 @@ count-filter: "count"
 url-encode-filter: "urlEncode"
 
 url-decode-filter: "urlDecode"
+
+to-int: "toInt"
 
 
 # Lexical Grammar

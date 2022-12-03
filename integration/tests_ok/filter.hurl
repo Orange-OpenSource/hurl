@@ -10,9 +10,13 @@ jsonpath "$.url" == "https://mozilla.org/?x=шеллы"
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
 jsonpath "$.encoded_url" urlDecode == "https://mozilla.org/?x=шеллы"
 variable "url" urlEncode urlDecode == "{{url}}"
+jsonpath "$.id" toInt == 123
+jsonpath "$.score" toInt == 1
 {
   "list": [1,2,3],
   "message": "Hello Bob!",
   "url": "https://mozilla.org/?x=шеллы",
-  "encoded_url": "https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+  "encoded_url": "https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B",
+  "id": "123",
+  "score": 1.6
 }

@@ -22,6 +22,7 @@ use percent_encoding::AsciiSet;
 use regex::Regex;
 use std::collections::HashMap;
 
+// TODO: indicated whether you running the filter in an assert / this produce an "assert" error
 pub fn eval_filters(
     filters: &Vec<Filter>,
     value: &Value,
@@ -46,6 +47,7 @@ fn eval_filter(
         FilterValue::Count {} => eval_count(value, &filter.source_info),
         FilterValue::UrlEncode { .. } => eval_url_encode(value, &filter.source_info),
         FilterValue::UrlDecode { .. } => eval_url_decode(value, &filter.source_info),
+        FilterValue::ToInt { .. } => eval_to_int(value, &filter.source_info),
     }
 }
 
@@ -146,6 +148,26 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_to_int(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+    match value {
+        Value::Integer(v) => Ok(Value::Integer(*v)),
+        Value::Float(v) => Ok(Value::Integer(*v as i64)),
+        Value::String(v) => match v.parse::<i64>() {
+            Ok(i) => Ok(Value::Integer(i)),
+            Err(_) => Err(Error {
+                source_info: source_info.clone(),
+                inner: RunnerError::FilterInvalidInput(value.display()),
+                assert: false,
+            }),
+        },
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v.display()),
             assert: false,
         }),
     }
@@ -319,6 +341,50 @@ pub mod tests {
             )
             .unwrap(),
             Value::String("https://mozilla.org/?x=шеллы".to_string())
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_to_int() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::ToInt {},
+        };
+        assert_eq!(
+            eval_filter(&filter, &Value::String("123".to_string()), &variables).unwrap(),
+            Value::Integer(123)
+        );
+        assert_eq!(
+            eval_filter(&filter, &Value::Integer(123), &variables).unwrap(),
+            Value::Integer(123)
+        );
+        assert_eq!(
+            eval_filter(&filter, &Value::Float(1.6), &variables).unwrap(),
+            Value::Integer(1)
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_to_int_error() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::ToInt {},
+        };
+        let err = eval_filter(&filter, &Value::String("123x".to_string()), &variables)
+            .err()
+            .unwrap();
+        assert_eq!(
+            err.inner,
+            RunnerError::FilterInvalidInput("string <123x>".to_string())
+        );
+        let err = eval_filter(&filter, &Value::Bool(true), &variables)
+            .err()
+            .unwrap();
+        assert_eq!(
+            err.inner,
+            RunnerError::FilterInvalidInput("bool <true>".to_string())
         );
     }
 }

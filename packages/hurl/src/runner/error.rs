@@ -162,7 +162,7 @@ impl Error for runner::Error {
                 "Missing value to apply the filter".to_string()
             }
             RunnerError::FilterInvalidInput(message) => {
-                format!("Invalid Filter Input <{}>", message)
+                format!("Invalid Filter Input:  {}", message)
             }
             RunnerError::FilterRegexNoCapture { .. } => "Capture not found".to_string(),
         }

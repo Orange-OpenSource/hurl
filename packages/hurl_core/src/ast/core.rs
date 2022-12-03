@@ -877,4 +877,5 @@ pub enum FilterValue {
     },
     UrlEncode {},
     UrlDecode {},
+    ToInt {},
 }
