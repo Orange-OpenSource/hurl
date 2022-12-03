@@ -57,7 +57,7 @@ fn string_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
 
 fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     try_literal("\"", reader)?;
-    let quotes = true;
+    let delimiter = Some('"');
     let mut chars = vec![];
     let start = reader.state.pos.clone();
     loop {
@@ -80,7 +80,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let elements = templatize(encoded_string)?;
 
     let template = Template {
-        quotes,
+        delimiter,
         elements,
         source_info: SourceInfo { start, end },
     };
@@ -423,7 +423,7 @@ mod tests {
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
         JsonValue::String(Template {
-            quotes: true,
+            delimiter: Some('"'),
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
@@ -458,7 +458,7 @@ mod tests {
         assert_eq!(
             string_value(&mut reader).unwrap(),
             JsonValue::String(Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![],
                 source_info: SourceInfo::new(1, 2, 1, 2),
             })
@@ -473,7 +473,7 @@ mod tests {
         assert_eq!(
             string_value(&mut reader).unwrap(),
             JsonValue::String(Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "{}".to_string(),
                     encoded: "{}".to_string(),
@@ -814,7 +814,7 @@ mod tests {
                 elements: vec![JsonObjectElement {
                     space0: "".to_string(),
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "a".to_string(),
                             encoded: "a".to_string()
@@ -859,7 +859,7 @@ mod tests {
             JsonObjectElement {
                 space0: "".to_string(),
                 name: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "a".to_string(),
                         encoded: "a".to_string()

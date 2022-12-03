@@ -126,7 +126,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
 
     reader.state = save;
     Ok(Template {
-        quotes: false,
+        delimiter: None,
         elements,
         source_info: SourceInfo {
             start: start.pos,
@@ -149,7 +149,7 @@ mod tests {
                     value: String::from("http://google.fr"),
                     encoded: String::from("http://google.fr"),
                 }],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(1, 1, 1, 17),
             }
         );
@@ -168,7 +168,7 @@ mod tests {
                         "http://localhost:8000/cookies/set-session-cookie2-valueA"
                     ),
                 }],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(1, 1, 1, 57),
             }
         );
@@ -205,8 +205,7 @@ mod tests {
                         encoded: String::from(".fr"),
                     },
                 ],
-                //encoded: None,
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(1, 1, 1, 19),
             }
         );

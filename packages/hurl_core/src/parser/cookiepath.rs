@@ -93,7 +93,7 @@ mod tests {
             cookiepath(&mut reader).unwrap(),
             CookiePath {
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
                         encoded: "cookie1".to_string(),
@@ -113,7 +113,7 @@ mod tests {
             cookiepath(&mut reader).unwrap(),
             CookiePath {
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "cookie1".to_string(),
                         encoded: "cookie1".to_string(),
@@ -143,7 +143,7 @@ mod tests {
             cookiepath(&mut reader).unwrap(),
             CookiePath {
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: String::from(""),

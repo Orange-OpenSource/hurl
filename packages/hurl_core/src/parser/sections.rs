@@ -771,7 +771,7 @@ mod tests {
                                 source_info: SourceInfo::new(2, 7, 2, 8),
                             },
                             name: Template {
-                                quotes: true,
+                                delimiter: Some('"'),
                                 elements: vec![TemplateElement::String {
                                     value: "Location".to_string(),
                                     encoded: "Location".to_string(),
@@ -799,7 +799,7 @@ mod tests {
                                     source_info: SourceInfo::new(2, 25, 2, 26),
                                 },
                                 value: PredicateValue::String(Template {
-                                    quotes: true,
+                                    delimiter: Some('"'),
                                     elements: vec![TemplateElement::String {
                                         value: "https://google.fr".to_string(),
                                         encoded: "https://google.fr".to_string(),
@@ -861,7 +861,7 @@ mod tests {
         assert_eq!(
             c.value,
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "Bar".to_string(),
                     encoded: "Bar".to_string(),
@@ -1073,7 +1073,7 @@ mod tests {
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::String(Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "toto".to_string(),
                     encoded: "toto".to_string(),
@@ -1088,7 +1088,7 @@ mod tests {
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::String(Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "123".to_string(),
                     encoded: "123".to_string(),
@@ -1219,7 +1219,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 12, 1, 13),
                     },
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),
@@ -1246,7 +1246,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 14, 1, 15),
                     },
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),
@@ -1311,7 +1311,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 7, 1, 8),
                     },
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),

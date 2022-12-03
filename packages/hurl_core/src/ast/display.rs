@@ -260,7 +260,7 @@ mod tests {
 
     fn hello_template() -> Template {
         Template {
-            quotes: false,
+            delimiter: None,
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
@@ -322,7 +322,7 @@ mod tests {
         assert_eq!(
             CookiePath {
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "LSID".to_string(),
                         encoded: "unused".to_string(),

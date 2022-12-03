@@ -106,7 +106,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
 
                     let elements = template::templatize(encoded_string)?;
                     let template = Template {
-                        quotes: false,
+                        delimiter: None,
                         elements,
                         source_info: SourceInfo { start, end },
                     };
@@ -134,7 +134,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
 
     let elements = template::templatize(encoded_string)?;
     let template = Template {
-        quotes: false,
+        delimiter: None,
         elements,
         source_info: SourceInfo { start, end },
     };
@@ -253,7 +253,7 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<'static, Template>
     let elements = template::templatize(encoded_string)?;
 
     Ok(Template {
-        quotes: false,
+        delimiter: None,
         elements,
         source_info: SourceInfo { start, end },
     })
@@ -289,7 +289,7 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
     let elements = template::templatize(encoded_string)?;
 
     Ok(Template {
-        quotes: false,
+        delimiter: None,
         elements,
         source_info: SourceInfo { start, end },
     })
@@ -314,7 +314,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -337,7 +337,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 13, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -363,7 +363,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 8, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -389,7 +389,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 11, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -413,7 +413,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 17, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -444,7 +444,7 @@ mod tests {
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![],
                 source_info: SourceInfo::new(1, 4, 1, 4),
             })
@@ -463,7 +463,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![],
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
@@ -482,7 +482,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![],
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
@@ -496,7 +496,7 @@ mod tests {
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "Hello World!".to_string(),
                     encoded: "Hello World!".to_string(),
@@ -512,7 +512,7 @@ mod tests {
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "base64_inline".to_string(),
                     encoded: "base64_inline".to_string(),
@@ -537,7 +537,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
@@ -563,7 +563,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
                         encoded: "\n".to_string(),
@@ -587,7 +587,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\r\n".to_string(),
                         encoded: "\r\n".to_string(),
@@ -635,7 +635,7 @@ mod tests {
         assert_eq!(
             multiline_string_value(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![],
                 source_info: SourceInfo::new(1, 1, 1, 1),
             }
@@ -646,7 +646,7 @@ mod tests {
         assert_eq!(
             multiline_string_value(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
@@ -685,7 +685,7 @@ variables {
                     source_info: SourceInfo::new(1, 11, 2, 1),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string(),
                         encoded:
@@ -703,7 +703,7 @@ variables {
                         elements: vec![JsonObjectElement {
                             space0: "".to_string(),
                             name: Template {
-                                quotes: true,
+                                delimiter: Some('"'),
                                 elements: vec![
                                     TemplateElement::String {
                                         value: "name".to_string(),
@@ -715,7 +715,7 @@ variables {
                             space1: "".to_string(),
                             space2: " ".to_string(),
                             value: JsonValue::String(Template {
-                                quotes: true,
+                                delimiter: Some('"'),
                                 elements: vec![
                                     TemplateElement::String {
                                         value: "Han Solo".to_string(),

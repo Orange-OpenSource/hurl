@@ -245,7 +245,7 @@ pub mod tests {
             value: FilterValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "Hello (.*)!".to_string(),
                         encoded: "Hello (.*)!".to_string(),
@@ -286,7 +286,7 @@ pub mod tests {
             value: FilterValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
                         encoded: "???".to_string(),

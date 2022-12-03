@@ -1120,7 +1120,7 @@ mod tests {
     fn test_multiline_string() {
         // ``````
         let multiline_string = MultilineString::OneLineText(Template {
-            quotes: false,
+            delimiter: None,
             elements: vec![TemplateElement::String {
                 value: "".to_string(),
                 encoded: "unused".to_string(),
@@ -1134,7 +1134,7 @@ mod tests {
 
         // ```hello```
         let multiline_string = MultilineString::OneLineText(Template {
-            quotes: false,
+            delimiter: None,
             elements: vec![TemplateElement::String {
                 value: "hello".to_string(),
                 encoded: "unused".to_string(),
@@ -1166,7 +1166,7 @@ mod tests {
                 },
             },
             value: Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "line1\nline2\n".to_string(),
                     encoded: "unused".to_string(),
@@ -1204,7 +1204,7 @@ mod tests {
             elements: vec![JsonObjectElement {
                 space0: "\n   ".to_string(),
                 name: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "id".to_string(),
                         encoded: "id".to_string(),
@@ -1226,7 +1226,7 @@ mod tests {
     #[test]
     fn test_json_encoded_newline() {
         let value = JsonValue::String(Template {
-            quotes: true,
+            delimiter: Some('"'),
             elements: vec![TemplateElement::String {
                 value: "\n".to_string(),
                 encoded: "\\n".to_string(),

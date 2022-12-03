@@ -221,7 +221,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 name: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Foo".to_string(),
                         encoded: "Foo".to_string(),
@@ -244,7 +244,7 @@ mod tests {
                 },
                 expr: CookiePath {
                     name: Template {
-                        quotes: false,
+                        delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Foo".to_string(),
                             encoded: "Foo".to_string(),
@@ -282,7 +282,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: String::from("normalize-space(//head/title)"),
                         encoded: String::from("normalize-space(//head/title)"),
@@ -296,7 +296,7 @@ mod tests {
         assert_eq!(xpath_query(&mut reader).unwrap(), QueryValue::Xpath {
             space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(1, 6, 1, 7) },
             expr: Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![
                     TemplateElement::String {
                         value: String::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
@@ -324,8 +324,7 @@ mod tests {
                         value: "$['statusCode']".to_string(),
                         encoded: "$['statusCode']".to_string(),
                     }],
-                    quotes: true,
-                    //delimiter: "\"".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 27),
                 },
             },
@@ -343,8 +342,7 @@ mod tests {
                         value: "$.success".to_string(),
                         encoded: "$.success".to_string(),
                     }],
-                    quotes: true,
-                    //delimiter: "\"".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 21),
                 },
             },

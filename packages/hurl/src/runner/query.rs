@@ -326,7 +326,7 @@ pub mod tests {
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
@@ -347,7 +347,7 @@ pub mod tests {
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "count(//user)".to_string(),
                         encoded: "count(//user)".to_string(),
@@ -368,7 +368,7 @@ pub mod tests {
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "//user".to_string(),
                         encoded: "/user".to_string(),
@@ -415,8 +415,7 @@ pub mod tests {
                         value: String::from("$.success"),
                         encoded: String::from("$.success"),
                     }],
-                    quotes: true,
-                    //delimiter: "".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 19),
                 },
             },
@@ -437,8 +436,7 @@ pub mod tests {
                         value: String::from("$.errors"),
                         encoded: String::from("$.errors"),
                     }],
-                    quotes: true,
-                    //   delimiter: "".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
@@ -459,8 +457,7 @@ pub mod tests {
                         value: String::from("$.duration"),
                         encoded: String::from("$.duration"),
                     }],
-                    quotes: true,
-                    //   delimiter: "".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 18),
                 },
             },
@@ -477,7 +474,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 value: RegexValue::Template(Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Hello ([a-zA-Z]+)!".to_string(),
                         encoded: "Hello ([a-zA-Z]+)!".to_string(),
@@ -498,7 +495,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 value: RegexValue::Template(Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
@@ -539,7 +536,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 name: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Custom".to_string(),
                         encoded: "Custom".to_string(),
@@ -569,7 +566,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 8),
                 },
                 name: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Content-Type".to_string(),
                         encoded: "Content-Type".to_string(),
@@ -614,7 +611,7 @@ pub mod tests {
                 space0: space.clone(),
                 expr: CookiePath {
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
@@ -639,7 +636,7 @@ pub mod tests {
                 space0: space.clone(),
                 expr: CookiePath {
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
@@ -668,7 +665,7 @@ pub mod tests {
                 space0: space.clone(),
                 expr: CookiePath {
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
@@ -697,7 +694,7 @@ pub mod tests {
                 space0: space.clone(),
                 expr: CookiePath {
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
@@ -863,7 +860,7 @@ pub mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "^^^".to_string(),
                         encoded: "^^^".to_string(),
@@ -917,7 +914,7 @@ pub mod tests {
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "normalize-space(/html/head/meta/@charset)".to_string(),
                         encoded: "normalize-space(/html/head/meta/@charset)".to_string(),
@@ -960,8 +957,7 @@ pub mod tests {
                         value: String::from("xxx"),
                         encoded: String::from("xxx"),
                     }],
-                    quotes: true,
-                    // delimiter: "".to_string(),
+                    delimiter: Some('"'),
                     source_info: SourceInfo::new(1, 10, 1, 13),
                 },
             },

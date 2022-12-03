@@ -68,10 +68,9 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> 
         },
         chars,
     };
-    let quotes = false;
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
-        quotes,
+        delimiter: None,
         elements,
         source_info: SourceInfo {
             start: start.pos,
@@ -145,7 +144,6 @@ pub fn quoted_string(reader: &mut Reader) -> ParseResult<'static, String> {
 }
 
 pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
-    let quotes = true;
     let start = reader.state.clone().pos;
     let mut end = start.clone();
     try_literal("\"", reader)?;
@@ -178,7 +176,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     };
     let elements = template::templatize(encoded_string)?;
     Ok(Template {
-        quotes,
+        delimiter: Some('"'),
         elements,
         source_info: SourceInfo {
             start,
@@ -287,7 +285,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![],
                 source_info: SourceInfo::new(1, 1, 1, 1),
             }
@@ -313,7 +311,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "a".to_string(),
                     encoded: "a".to_string(),
@@ -330,7 +328,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
                     encoded: "a\\u{23}".to_string(),
@@ -347,7 +345,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
                     encoded: "\"hi\"".to_string(),
@@ -364,7 +362,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![
                     TemplateElement::String {
                         value: "hello ".to_string(),
@@ -401,7 +399,7 @@ mod tests {
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello world".to_string(),
                     encoded: "hello world".to_string(),
@@ -532,7 +530,7 @@ mod tests {
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![],
                 source_info: SourceInfo::new(1, 1, 1, 3),
             }
@@ -543,7 +541,7 @@ mod tests {
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "a#".to_string(),
                     encoded: "a#".to_string(),
@@ -557,7 +555,7 @@ mod tests {
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "{0}".to_string(),
                     encoded: "{0}".to_string(),
@@ -575,7 +573,7 @@ mod tests {
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
-                quotes: true,
+                delimiter: Some('"'),
                 elements: vec![TemplateElement::String {
                     value: "\"hi\"".to_string(),
                     encoded: "\\\"hi\\\"".to_string()

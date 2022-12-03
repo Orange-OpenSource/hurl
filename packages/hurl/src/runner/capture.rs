@@ -181,7 +181,7 @@ pub mod tests {
                 value: QueryValue::Xpath {
                     space0: whitespace.clone(),
                     expr: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "//user".to_string(),
                             encoded: "//user".to_string(),

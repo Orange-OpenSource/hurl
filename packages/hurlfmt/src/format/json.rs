@@ -571,7 +571,7 @@ pub mod tests {
                 method: Method::Get,
                 space1: whitespace(),
                 url: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "http://example.com".to_string(),
                         encoded: "not_used".to_string(),
@@ -591,7 +591,7 @@ pub mod tests {
                     space1: whitespace(),
                     space2: whitespace(),
                     value: Template {
-                        quotes: false,
+                        delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "Bar".to_string(),
                             encoded: "unused".to_string(),
@@ -682,7 +682,7 @@ pub mod tests {
             value: QueryValue::Header {
                 space0: whitespace(),
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "Content-Length".to_string(),
                         encoded: "10".to_string(),

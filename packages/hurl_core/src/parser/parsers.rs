@@ -328,7 +328,7 @@ mod tests {
                     value: String::from("http://google.fr"),
                     encoded: String::from("http://google.fr"),
                 }],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(1, 5, 1, 21),
             },
             line_terminator0: LineTerminator {
@@ -366,7 +366,7 @@ mod tests {
                     value: String::from("http://google.fr"),
                     encoded: String::from("http://google.fr"),
                 }],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(1, 6, 1, 22),
             },
             line_terminator0: LineTerminator {
@@ -427,7 +427,7 @@ mod tests {
                             value: String::from("Hello World!\n"),
                             encoded: String::from("Hello World!\n"),
                         }],
-                        quotes: false,
+                        delimiter: None,
                         source_info: SourceInfo::new(3, 1, 4, 1),
                     }
                 })),
@@ -484,7 +484,7 @@ mod tests {
             r.body.unwrap().value,
             Bytes::Json {
                 value: JsonValue::String(Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Hello".to_string(),
                         encoded: "Hello".to_string(),

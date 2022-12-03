@@ -165,7 +165,7 @@ mod tests {
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"
         JsonValue::String(Template {
-            quotes: true,
+            delimiter: Some('"'),
             elements: vec![
                 TemplateElement::String {
                     value: "Hello ".to_string(),
@@ -200,7 +200,7 @@ mod tests {
             elements: vec![JsonObjectElement {
                 space0: "".to_string(),
                 name: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "firstName".to_string(),
                         encoded: "firstName".to_string(),
@@ -210,7 +210,7 @@ mod tests {
                 space1: "".to_string(),
                 space2: " ".to_string(),
                 value: JsonValue::String(Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "John".to_string(),
                         encoded: "John".to_string(),
@@ -304,7 +304,7 @@ mod tests {
         );
 
         let template = Template {
-            quotes: true,
+            delimiter: Some('"'),
             elements: vec![TemplateElement::String {
                 encoded: "Hi".to_string(),
                 value: "Hi".to_string(),
@@ -364,7 +364,7 @@ mod tests {
         assert_eq!(
             eval_json_value(
                 &JsonValue::String(Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
                         encoded: "\\n".to_string(),
@@ -384,7 +384,7 @@ mod tests {
         assert_eq!(
             eval_json_template(
                 &Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![TemplateElement::String {
                         value: "\n".to_string(),
                         encoded: "\\n".to_string(),
@@ -402,7 +402,7 @@ mod tests {
         assert_eq!(
             eval_json_template(
                 &Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![
                         TemplateElement::String {
                             value: "Hello ".to_string(),

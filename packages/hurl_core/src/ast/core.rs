@@ -556,7 +556,7 @@ pub struct File {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Template {
-    pub quotes: bool,
+    pub delimiter: Option<char>,
     pub elements: Vec<TemplateElement>,
     pub source_info: SourceInfo,
 }

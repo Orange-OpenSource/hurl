@@ -35,7 +35,7 @@ pub enum Token {
     Comment(String),
     Value(String),
     Colon(String),
-    Quote(String),
+    StringDelimiter(String),
     Boolean(String),
     Number(String),
     String(String),
@@ -605,7 +605,7 @@ impl Tokenizable for PredicateValue {
 
 impl Tokenizable for MultilineString {
     fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![Token::Keyword("```".to_string())];
+        let mut tokens: Vec<Token> = vec![Token::StringDelimiter("```".to_string())];
         // FIXME: ugly if !let workaround, will be removed soon as
         // OneLineText is temporary.
         if let MultilineString::OneLineText(..) = self {
@@ -619,7 +619,7 @@ impl Tokenizable for MultilineString {
             | MultilineString::Xml(text) => tokens.append(&mut text.tokenize()),
             MultilineString::GraphQl(graphql) => tokens.append(&mut graphql.tokenize()),
         }
-        tokens.push(Token::Keyword("```".to_string()));
+        tokens.push(Token::StringDelimiter("```".to_string()));
         tokens
     }
 }
@@ -662,14 +662,14 @@ impl Tokenizable for EncodedString {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         if self.quotes {
-            tokens.push(Token::Quote(
+            tokens.push(Token::StringDelimiter(
                 if self.clone().quotes { "\"" } else { "" }.to_string(),
             ));
         }
         tokens.push(Token::String(self.encoded.clone()));
 
         if self.quotes {
-            tokens.push(Token::Quote(
+            tokens.push(Token::StringDelimiter(
                 if self.clone().quotes { "\"" } else { "" }.to_string(),
             ));
         }
@@ -680,19 +680,14 @@ impl Tokenizable for EncodedString {
 impl Tokenizable for Template {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
-        if self.quotes {
-            tokens.push(Token::Quote(
-                if self.clone().quotes { "\"" } else { "" }.to_string(),
-            ));
+        if let Some(d) = self.delimiter {
+            tokens.push(Token::StringDelimiter(d.to_string()));
         }
         for element in self.elements.clone() {
             tokens.append(&mut element.tokenize());
         }
-
-        if self.quotes {
-            tokens.push(Token::Quote(
-                if self.clone().quotes { "\"" } else { "" }.to_string(),
-            ));
+        if let Some(d) = self.delimiter {
+            tokens.push(Token::StringDelimiter(d.to_string()));
         }
         tokens
     }
@@ -826,9 +821,9 @@ impl Tokenizable for JsonListElement {
 impl Tokenizable for JsonObjectElement {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![Token::Whitespace(self.space0.clone())];
-        tokens.push(Token::Quote("\"".to_string()));
+        tokens.push(Token::StringDelimiter("\"".to_string()));
         tokens.push(Token::String(self.name.to_string()));
-        tokens.push(Token::Quote("\"".to_string()));
+        tokens.push(Token::StringDelimiter("\"".to_string()));
         tokens.push(Token::Whitespace(self.space1.clone()));
         tokens.push(Token::CodeDelimiter(":".to_string()));
         tokens.push(Token::Whitespace(self.space2.clone()));

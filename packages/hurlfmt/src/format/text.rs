@@ -92,7 +92,7 @@ pub fn format_token(token: Token, color: bool) -> String {
                 value
             }
         }
-        Token::Quote(value) => {
+        Token::StringDelimiter(value) => {
             if color {
                 value.green().to_string()
             } else {

@@ -507,7 +507,7 @@ mod tests {
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
                 value: PredicateValue::String(Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
                         value: "Bob".to_string(),
                         encoded: "Bob".to_string(),

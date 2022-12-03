@@ -68,7 +68,7 @@ fn hello_request() -> Request {
         method: Method::Get,
         space1: whitespace.clone(),
         url: Template {
-            quotes: false,
+            delimiter: None,
             elements: vec![TemplateElement::String {
                 value: "http://localhost:8000/hello".to_string(),
                 encoded: "http://localhost:8000/hello".to_string(),
@@ -92,7 +92,7 @@ fn hello_request() -> Request {
             space1: whitespace.clone(),
             space2: whitespace,
             value: Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "test".to_string(),
                     encoded: "test".to_string(),

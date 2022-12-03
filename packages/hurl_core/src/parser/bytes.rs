@@ -130,7 +130,7 @@ mod tests {
             bytes(&mut reader).unwrap(),
             Bytes::Json {
                 value: JsonValue::String(Template {
-                    quotes: true,
+                    delimiter: Some('"'),
                     elements: vec![],
                     source_info: SourceInfo::new(1, 2, 1, 2),
                 })

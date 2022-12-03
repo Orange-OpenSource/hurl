@@ -223,7 +223,7 @@ mod tests {
                         encoded: String::from("/hello"),
                     },
                 ],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             line_terminator0: line_terminator,
@@ -267,7 +267,7 @@ mod tests {
                     value: String::from("http://localhost:8000/querystring-params"),
                     encoded: String::from("http://localhost:8000/querystring-params"),
                 }],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             line_terminator0: line_terminator.clone(),
@@ -285,7 +285,7 @@ mod tests {
                             source_info: SourceInfo::new(0, 0, 0, 0),
                         },
                         Template {
-                            quotes: false,
+                            delimiter: None,
                             elements: vec![TemplateElement::Expression(Expr {
                                 space0: whitespace(),
                                 variable: Variable {
@@ -305,7 +305,7 @@ mod tests {
                             source_info: SourceInfo::new(0, 0, 0, 0),
                         },
                         Template {
-                            quotes: false,
+                            delimiter: None,
                             elements: vec![TemplateElement::String {
                                 value: "a b".to_string(),
                                 encoded: "a b".to_string(),
@@ -385,7 +385,7 @@ mod tests {
                     value: String::from("http:///localhost"),
                     encoded: String::from("http://localhost"),
                 },],
-                quotes: false,
+                delimiter: None,
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             line_terminator0: line_terminator,
@@ -425,7 +425,7 @@ mod tests {
                         value: String::from("http:///localhost"),
                         encoded: String::from("http://localhost"),
                     },],
-                    quotes: false,
+                    delimiter: None,
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 line_terminator0: line_terminator,

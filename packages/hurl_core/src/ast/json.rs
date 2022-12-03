@@ -191,13 +191,13 @@ impl ObjectElement {
 impl Template {
     fn encoded(&self) -> String {
         let mut s = "".to_string();
-        if self.quotes {
-            s.push('"')
+        if let Some(d) = self.delimiter {
+            s.push(d)
         }
         let elements: Vec<String> = self.elements.iter().map(|e| e.encoded()).collect();
         s.push_str(elements.join("").as_str());
-        if self.quotes {
-            s.push('"')
+        if let Some(d) = self.delimiter {
+            s.push(d)
         }
         s
     }
@@ -241,7 +241,7 @@ mod tests {
         assert_eq!(
             "\"hello\"".to_string(),
             Value::String(Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::String {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
@@ -298,7 +298,7 @@ mod tests {
                 elements: vec![ObjectElement {
                     space0: " ".to_string(),
                     name: Template {
-                        quotes: true,
+                        delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
                             value: "id".to_string(),
                             encoded: "id".to_string(),
@@ -338,7 +338,7 @@ mod tests {
         );
         assert_eq!(
             Template {
-                quotes: false,
+                delimiter: None,
                 elements: vec![TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: "".to_string(),

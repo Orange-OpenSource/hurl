@@ -778,7 +778,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 value: Template {
-                    quotes: false,
+                    delimiter: None,
                     elements: vec![
                         TemplateElement::String {
                             value: "hello ".to_string(),

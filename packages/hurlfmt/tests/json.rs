@@ -63,7 +63,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
     prop_oneof![
         Just(JsonValue::String(Template {
             elements: vec![],
-            quotes: true,
+            delimiter: Some('"'),
             source_info: source_info.clone()
         })),
         Just(JsonValue::String(Template {
@@ -71,7 +71,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                 encoded: "Hello".to_string(),
                 value: "Hello".to_string(),
             }],
-            quotes: true,
+            delimiter: Some('"'),
             source_info: source_info.clone()
         })),
         Just(JsonValue::String(Template {
@@ -92,7 +92,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                     },
                 })
             ],
-            quotes: true,
+            delimiter: Some('"'),
             source_info
         })),
     ]
@@ -219,7 +219,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                             elements: vec![JsonObjectElement {
                                 space0: "".to_string(),
                                 name: Template {
-                                    quotes: false,
+                                    delimiter: None,
                                     elements: vec![TemplateElement::String {
                                         value: "key1".to_string(),
                                         encoded: "key1".to_string(),
@@ -250,7 +250,7 @@ fn format_token(token: Token) -> String {
         | Token::Boolean(s)
         | Token::String(s)
         | Token::Keyword(s)
-        | Token::Quote(s)
+        | Token::StringDelimiter(s)
         | Token::QueryType(s)
         | Token::CodeVariable(s)
         | Token::CodeDelimiter(s) => s,

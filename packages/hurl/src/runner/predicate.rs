@@ -1171,7 +1171,7 @@ mod tests {
         };
 
         let template = Template {
-            quotes: true,
+            delimiter: Some('"'),
             elements: vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: "".to_string(),
@@ -1567,7 +1567,7 @@ mod tests {
                 value: PredicateFuncValue::StartWith {
                     space0: whitespace(),
                     value: PredicateValue::String(Template {
-                        quotes: false,
+                        delimiter: None,
                         elements: vec![TemplateElement::String {
                             value: "toto".to_string(),
                             encoded: "toto".to_string(),
