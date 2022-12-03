@@ -198,6 +198,7 @@ Table of Contents
          * [macOS](#macos)
             * [Homebrew](#homebrew)
             * [MacPorts](#macports)
+         * [FreeBSD](#freebsd)
          * [Windows](#windows)
             * [Zip File](#zip-file)
             * [Installer](#installer)
@@ -883,6 +884,11 @@ $ brew install hurl
 $ sudo port install hurl
 ```
 
+### FreeBSD
+
+```shell
+$ sudo pkg install hurl
+```
 
 ### Windows
 

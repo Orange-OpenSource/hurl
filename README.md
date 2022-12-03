@@ -883,7 +883,8 @@ $ brew install hurl
 ```shell
 $ sudo port install hurl
 ```
-#### FreeBSD
+
+### FreeBSD
 
 ```shell
 $ sudo pkg install hurl
