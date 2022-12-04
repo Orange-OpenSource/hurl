@@ -2,20 +2,20 @@ error: Filter Error
   --> tests_failed/filter.hurl:4:17
    |
  4 | jsonpath "$.id" toInt == 123
-   |                 ^^^^^ Invalid Filter Input:  string <123x>
+   |                 ^^^^^ invalid filter input: string <123x>
    |
 
 error: Filter Error
   --> tests_failed/filter.hurl:5:21
    |
  5 | jsonpath "$.status" toInt == 0
-   |                     ^^^^^ Invalid Filter Input:  bool <true>
+   |                     ^^^^^ invalid filter input: bool <true>
    |
 
 error: Filter Error
   --> tests_failed/filter.hurl:6:22
    |
  6 | jsonpath "$.unknown" toInt == 1
-   |                      ^^^^^ Missing value to apply the filter
+   |                      ^^^^^ missing value to apply filter
    |
 

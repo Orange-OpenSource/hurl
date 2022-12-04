@@ -137,7 +137,7 @@ impl Error for runner::Error {
                 format!("actual:   {}\nexpected: {}{}", actual, expected, additional)
             }
             RunnerError::VariableNotDefined { name } => {
-                format!("You must set the variable {}", name)
+                format!("you must set the variable {}", name)
             }
             RunnerError::UnrenderableVariable { value } => {
                 format!("value {} can not be rendered", value)
@@ -158,13 +158,11 @@ impl Error for runner::Error {
                     path.to_str().unwrap()
                 )
             }
-            RunnerError::FilterMissingInput { .. } => {
-                "Missing value to apply the filter".to_string()
-            }
+            RunnerError::FilterMissingInput { .. } => "missing value to apply filter".to_string(),
             RunnerError::FilterInvalidInput(message) => {
-                format!("Invalid Filter Input:  {}", message)
+                format!("invalid filter input: {}", message)
             }
-            RunnerError::FilterRegexNoCapture { .. } => "Capture not found".to_string(),
+            RunnerError::FilterRegexNoCapture { .. } => "capture not found".to_string(),
         }
     }
 }
