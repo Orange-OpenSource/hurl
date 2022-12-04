@@ -1,6 +1,16 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/utf8_bom</span></span>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># This Hurl file begins with a BOM marker.</span>
+<span class="line"></span><span class="comment"># You can check it with 'hexdump -c bom.hurl'</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/utf8_bom</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="multiline"><span class="line">```Hello World!```</span></span>
-</span></span><span class="line"></span>
-</code></pre>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># We send the content of this file and get back the same</span>
+<span class="line"></span><span class="comment"># bytes from /mirror to test the presence of the BOM marker.</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/mirror</span></span>
+<span class="line">file,<span class="filename">bom.hurl</span>;</span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">startsWith</span> hex,<span class="hex">efbbbf</span>;</span>
+</span></span></code></pre>

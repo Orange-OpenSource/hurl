@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/utf8_bom"},"response":{"status":200,"body":{"type":"text","value":"Hello World!"}}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/utf8_bom"},"response":{"status":200,"body":{"type":"text","value":"Hello World!"}}},{"request":{"method":"POST","url":"http://localhost:8000/mirror","body":{"type":"file","filename":"bom.hurl"}},"response":{"status":200,"asserts":[{"query":{"type":"bytes"},"predicate":{"type":"start-with","value":"77u/","encoding":"base64"}}]}}]}
