@@ -420,6 +420,10 @@ url-encode-filter: "urlEncode"
 
 url-decode-filter: "urlDecode"
 
+html-encode-filter: "htmlEncode"
+
+html-decode-filter: "htmlDecode"
+
 
 # Lexical Grammar
 

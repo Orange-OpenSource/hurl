@@ -535,6 +535,12 @@ impl ToJson for FilterValue {
             FilterValue::UrlDecode { .. } => {
                 attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
             }
+            FilterValue::HtmlEncode { .. } => {
+                attributes.push(("type".to_string(), JValue::String("htmlEncode".to_string())));
+            }
+            FilterValue::HtmlDecode { .. } => {
+                attributes.push(("type".to_string(), JValue::String("htmlDecode".to_string())));
+            }
         }
         JValue::Object(attributes)
     }

@@ -54,6 +54,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
             regex_filter,
             url_encode_filter,
             url_decode_filter,
+            html_encode_filter,
+            html_decode_filter,
         ],
         reader,
     )
@@ -95,6 +97,16 @@ fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
 fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("urlDecode", reader)?;
     Ok(FilterValue::UrlDecode {})
+}
+
+fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("htmlEncode", reader)?;
+    Ok(FilterValue::HtmlEncode {})
+}
+
+fn html_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("htmlDecode", reader)?;
+    Ok(FilterValue::HtmlDecode {})
 }
 
 #[cfg(test)]

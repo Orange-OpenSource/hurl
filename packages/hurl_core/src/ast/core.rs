@@ -870,4 +870,6 @@ pub enum FilterValue {
     },
     UrlEncode {},
     UrlDecode {},
+    HtmlEncode {},
+    HtmlDecode {},
 }

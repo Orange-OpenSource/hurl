@@ -46,6 +46,8 @@ fn eval_filter(
         FilterValue::Count {} => eval_count(value, &filter.source_info),
         FilterValue::UrlEncode { .. } => eval_url_encode(value, &filter.source_info),
         FilterValue::UrlDecode { .. } => eval_url_decode(value, &filter.source_info),
+        FilterValue::HtmlEncode { .. } => eval_html_encode(value, &filter.source_info),
+        FilterValue::HtmlDecode { .. } => eval_html_decode(value, &filter.source_info),
     }
 }
 
@@ -142,6 +144,36 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
                     assert: false,
                 }),
             }
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_html_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+    match value {
+        Value::String(value) => {
+            let mut enco = String::from(value);
+            let encoded = html_escape::encode_text_to_string(value, &mut enco);
+            Ok(Value::String(encoded.to_string()))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+
+}
+
+fn eval_html_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+    match value {
+        Value::String(value) => {
+            let decoded = html_escape::decode_html_entities(value).to_string();
+            Ok(Value::String(decoded))
         }
         v => Err(Error {
             source_info: source_info.clone(),

@@ -1167,6 +1167,8 @@ impl Tokenizable for Filter {
             FilterValue::Count { .. } => vec![Token::FilterType(String::from("count"))],
             FilterValue::UrlEncode { .. } => vec![Token::FilterType(String::from("urlEncode"))],
             FilterValue::UrlDecode { .. } => vec![Token::FilterType(String::from("urlDecode"))],
+            FilterValue::HtmlEncode { .. } => vec![Token::FilterType(String::from("htmlEncode"))],
+            FilterValue::HtmlDecode { .. } => vec![Token::FilterType(String::from("htmlDecode"))],
         }
     }
 }

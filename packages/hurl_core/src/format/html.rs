@@ -1083,6 +1083,8 @@ impl Htmlable for FilterValue {
             }
             FilterValue::UrlEncode {} => "<span class=\"filter-type\">urlEncode</span>".to_string(),
             FilterValue::UrlDecode {} => "<span class=\"filter-type\">urlDecode</span>".to_string(),
+            FilterValue::HtmlEncode {} => "<span class=\"filter-type\">htmlEncode</span>".to_string(),
+            FilterValue::HtmlDecode {} => "<span class=\"filter-type\">htmlDecode</span>".to_string(),
         }
     }
 }
