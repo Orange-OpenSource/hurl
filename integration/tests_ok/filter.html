@@ -3,6 +3,7 @@
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line section-header">[Captures]</span>
 <span class="line"><span class="name">url</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.url"</span></span>
+<span class="line"><span class="name">html</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.html"</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="filter-type">regex</span> <span class="regex">/Hello (.*)!/</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
@@ -10,6 +11,10 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.url"</span> <span class="filter-type">urlEncode</span> <span class="predicate-type">==</span> <span class="string">"https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.encoded_url"</span> <span class="filter-type">urlDecode</span> <span class="predicate-type">==</span> <span class="string">"https://mozilla.org/?x=шеллы"</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"url"</span> <span class="filter-type">urlEncode</span> <span class="filter-type">urlDecode</span> <span class="predicate-type">==</span> <span class="string">"{{url}}"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.html"</span> <span class="predicate-type">==</span> <span class="string">"a &gt; b &amp;&amp; a &lt; c"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.html"</span> <span class="filter-type">htmlEscape</span> <span class="predicate-type">==</span> <span class="string">"a &amp;gt; b &amp;amp;&amp;amp; a &amp;lt; c"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.encoded_html"</span> <span class="filter-type">htmlUnescape</span> <span class="predicate-type">==</span> <span class="string">"a &gt; b &amp;&amp; a &lt; c"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"html"</span> <span class="filter-type">htmlEscape</span> <span class="filter-type">htmlUnescape</span> <span class="predicate-type">==</span> <span class="string">"{{html}}"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.id"</span> <span class="filter-type">toInt</span> <span class="predicate-type">==</span> <span class="number">123</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.score"</span> <span class="filter-type">toInt</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
 <span class="json"><span class="line">{</span>
@@ -17,6 +22,8 @@
 <span class="line">  "message": "Hello Bob!",</span>
 <span class="line">  "url": "https://mozilla.org/?x=шеллы",</span>
 <span class="line">  "encoded_url": "https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B",</span>
+<span class="line">  "html": "a &gt; b &amp;&amp; a &lt; c",</span>
+<span class="line">  "encoded_html": "a &amp;gt; b &amp;amp;&amp;amp; a &amp;lt; c",</span>
 <span class="line">  "id": "123",</span>
 <span class="line">  "score": 1.6</span>
 <span class="line">}</span></span>
