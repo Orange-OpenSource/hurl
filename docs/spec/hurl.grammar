@@ -428,8 +428,11 @@ url-encode-filter: "urlEncode"
 
 url-decode-filter: "urlDecode"
 
-to-int: "toInt"
+html-encode-filter: "htmlEscape"
 
+html-decode-filter: "htmlUnescape"
+
+to-int: "toInt"
 
 # Lexical Grammar
 
