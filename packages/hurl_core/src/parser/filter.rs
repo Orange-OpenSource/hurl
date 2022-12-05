@@ -54,6 +54,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
             regex_filter,
             url_encode_filter,
             url_decode_filter,
+            html_encode_filter,
+            html_decode_filter,
             to_int_filter,
         ],
         reader,
@@ -96,6 +98,16 @@ fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
 fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("urlDecode", reader)?;
     Ok(FilterValue::UrlDecode {})
+}
+
+fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("htmlEscape", reader)?;
+    Ok(FilterValue::HtmlEscape {})
+}
+
+fn html_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("htmlUnescape", reader)?;
+    Ok(FilterValue::HtmlUnescape {})
 }
 
 fn to_int_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {

@@ -1083,6 +1083,12 @@ impl Htmlable for FilterValue {
             }
             FilterValue::UrlEncode {} => "<span class=\"filter-type\">urlEncode</span>".to_string(),
             FilterValue::UrlDecode {} => "<span class=\"filter-type\">urlDecode</span>".to_string(),
+            FilterValue::HtmlEscape {} => {
+                "<span class=\"filter-type\">htmlEscape</span>".to_string()
+            }
+            FilterValue::HtmlUnescape {} => {
+                "<span class=\"filter-type\">htmlUnescape</span>".to_string()
+            }
             FilterValue::ToInt {} => "<span class=\"filter-type\">toInt</span>".to_string(),
         }
     }
