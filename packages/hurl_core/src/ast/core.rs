@@ -624,8 +624,8 @@ pub struct LineTerminator {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Bytes {
-    Json { value: json::Value },
-    Xml { value: String },
+    Json(json::Value),
+    Xml(String),
     MultilineString(MultilineString),
     Base64(Base64),
     File(File),

@@ -42,14 +42,14 @@ pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
 fn xml_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     match xml::parse(reader) {
         Err(e) => Err(e),
-        Ok(value) => Ok(Bytes::Xml { value }),
+        Ok(value) => Ok(Bytes::Xml(value)),
     }
 }
 
 fn json_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     match parse_json(reader) {
         Err(e) => Err(e),
-        Ok(value) => Ok(Bytes::Json { value }),
+        Ok(value) => Ok(Bytes::Json(value)),
     }
 }
 
@@ -79,62 +79,54 @@ mod tests {
         let mut reader = Reader::init("[1,2,3] ");
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Json {
-                value: JsonValue::List {
-                    space0: "".to_string(),
-                    elements: vec![
-                        JsonListElement {
-                            space0: "".to_string(),
-                            value: JsonValue::Number("1".to_string()),
-                            space1: "".to_string()
-                        },
-                        JsonListElement {
-                            space0: "".to_string(),
-                            value: JsonValue::Number("2".to_string()),
-                            space1: "".to_string()
-                        },
-                        JsonListElement {
-                            space0: "".to_string(),
-                            value: JsonValue::Number("3".to_string()),
-                            space1: "".to_string()
-                        },
-                    ],
-                }
-            }
+            Bytes::Json(JsonValue::List {
+                space0: "".to_string(),
+                elements: vec![
+                    JsonListElement {
+                        space0: "".to_string(),
+                        value: JsonValue::Number("1".to_string()),
+                        space1: "".to_string(),
+                    },
+                    JsonListElement {
+                        space0: "".to_string(),
+                        value: JsonValue::Number("2".to_string()),
+                        space1: "".to_string(),
+                    },
+                    JsonListElement {
+                        space0: "".to_string(),
+                        value: JsonValue::Number("3".to_string()),
+                        space1: "".to_string(),
+                    },
+                ],
+            })
         );
         assert_eq!(reader.state.cursor, 7);
 
         let mut reader = Reader::init("{ } ");
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Json {
-                value: JsonValue::Object {
-                    space0: " ".to_string(),
-                    elements: vec![],
-                }
-            }
+            Bytes::Json(JsonValue::Object {
+                space0: " ".to_string(),
+                elements: vec![],
+            })
         );
         assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::init("true");
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Json {
-                value: JsonValue::Boolean(true)
-            }
+            Bytes::Json(JsonValue::Boolean(true))
         );
         assert_eq!(reader.state.cursor, 4);
 
         let mut reader = Reader::init("\"\" x");
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Json {
-                value: JsonValue::String(Template {
-                    delimiter: Some('"'),
-                    elements: vec![],
-                    source_info: SourceInfo::new(1, 2, 1, 2),
-                })
-            }
+            Bytes::Json(JsonValue::String(Template {
+                delimiter: Some('"'),
+                elements: vec![],
+                source_info: SourceInfo::new(1, 2, 1, 2),
+            }))
         );
         assert_eq!(reader.state.cursor, 2);
     }
@@ -144,9 +136,7 @@ mod tests {
         let mut reader = Reader::init("<a/>");
         assert_eq!(
             bytes(&mut reader).unwrap(),
-            Bytes::Xml {
-                value: String::from("<a/>")
-            }
+            Bytes::Xml(String::from("<a/>"))
         );
     }
 
@@ -189,9 +179,7 @@ mod tests {
         let mut reader = Reader::init("100");
         assert_eq!(
             json_bytes(&mut reader).unwrap(),
-            Bytes::Json {
-                value: JsonValue::Number("100".to_string())
-            }
+            Bytes::Json(JsonValue::Number("100".to_string()))
         );
     }
 }

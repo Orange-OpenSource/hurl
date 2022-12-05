@@ -602,20 +602,13 @@ impl Lintable<Bytes> for Bytes {
     }
 
     fn lint(&self) -> Bytes {
-        //let space0 = Whitespace { value: String::from(""), source_info: SourceInfo::init(0, 0, 0, 0) };
-        //let value = self.value.lint();
-        //let line_terminator0 = self.clone().line_terminator0;
         match self {
             Bytes::File(value) => Bytes::File(value.lint()),
             Bytes::Base64(value) => Bytes::Base64(value.lint()),
             Bytes::Hex(value) => Bytes::Hex(value.lint()),
-            Bytes::Json { value } => Bytes::Json {
-                value: value.clone(),
-            },
+            Bytes::Json(value) => Bytes::Json(value.clone()),
             Bytes::MultilineString(value) => Bytes::MultilineString(value.lint()),
-            Bytes::Xml { value } => Bytes::Xml {
-                value: value.clone(),
-            },
+            Bytes::Xml(value) => Bytes::Xml(value.clone()),
         }
     }
 }

@@ -46,8 +46,8 @@ pub fn eval_bytes(
             let value = eval_multiline(value, variables)?;
             Ok(http::Body::Text(value))
         }
-        Bytes::Xml { value, .. } => Ok(http::Body::Text(value.clone())),
-        Bytes::Json { value, .. } => {
+        Bytes::Xml(value) => Ok(http::Body::Text(value.clone())),
+        Bytes::Json(value) => {
             let value = eval_json_value(value, variables)?;
             Ok(http::Body::Text(value))
         }

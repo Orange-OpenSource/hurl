@@ -930,9 +930,9 @@ impl Htmlable for Bytes {
             Bytes::Base64(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::File(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
             Bytes::Hex(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
-            Bytes::Json { value } => value.to_html(),
+            Bytes::Json(value) => value.to_html(),
             Bytes::MultilineString(value) => value.to_html(),
-            Bytes::Xml { value } => xml_html(value),
+            Bytes::Xml(value) => xml_html(value),
         }
     }
 }

@@ -133,11 +133,11 @@ impl ToJson for Bytes {
             Bytes::Base64(value) => value.to_json(),
             Bytes::Hex(value) => value.to_json(),
             Bytes::File(value) => value.to_json(),
-            Bytes::Json { value } => JValue::Object(vec![
+            Bytes::Json(value) => JValue::Object(vec![
                 ("type".to_string(), JValue::String("json".to_string())),
                 ("value".to_string(), value.to_json()),
             ]),
-            Bytes::Xml { value } => JValue::Object(vec![
+            Bytes::Xml(value) => JValue::Object(vec![
                 ("type".to_string(), JValue::String("xml".to_string())),
                 ("value".to_string(), JValue::String(value.clone())),
             ]),

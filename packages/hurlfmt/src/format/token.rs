@@ -160,22 +160,12 @@ impl Tokenizable for Bytes {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         match self {
-            Bytes::Json { value } => tokens.append(&mut value.tokenize()),
-            Bytes::Xml { value } => {
-                tokens.push(Token::String(value.to_string()));
-            }
-            Bytes::MultilineString(value) => {
-                tokens.append(&mut value.tokenize());
-            }
-            Bytes::Base64(value) => {
-                tokens.append(&mut value.tokenize());
-            }
-            Bytes::Hex(value) => {
-                tokens.append(&mut value.tokenize());
-            }
-            Bytes::File(value) => {
-                tokens.append(&mut value.tokenize());
-            }
+            Bytes::Json(value) => tokens.append(&mut value.tokenize()),
+            Bytes::Xml(value) => tokens.push(Token::String(value.to_string())),
+            Bytes::MultilineString(value) => tokens.append(&mut value.tokenize()),
+            Bytes::Base64(value) => tokens.append(&mut value.tokenize()),
+            Bytes::Hex(value) => tokens.append(&mut value.tokenize()),
+            Bytes::File(value) => tokens.append(&mut value.tokenize()),
         }
         tokens
     }

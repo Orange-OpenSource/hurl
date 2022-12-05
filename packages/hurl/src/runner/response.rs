@@ -124,14 +124,7 @@ pub fn eval_asserts(
     asserts
 }
 
-/// Check the body of an actual HTTP response against a spec body.
-///
-/// # Arguments
-///
-/// * `spec_body` - The spec HTTP response body
-/// * `variables` - A map of input variables
-/// * `http_response` - The actual HTTP response
-/// * `context_dir` - The context directory for files
+/// Check the body of an actual HTTP response against a spec body, given a set of variables.
 fn eval_implicit_body_asserts(
     spec_body: &Body,
     variables: &HashMap<String, Value>,
@@ -139,7 +132,7 @@ fn eval_implicit_body_asserts(
     context_dir: &ContextDir,
 ) -> AssertResult {
     match &spec_body.value {
-        Bytes::Json { value } => {
+        Bytes::Json(value) => {
             let expected = match eval_json_value(value, variables) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
@@ -161,7 +154,7 @@ fn eval_implicit_body_asserts(
                 source_info: spec_body.space0.source_info.clone(),
             }
         }
-        Bytes::Xml { value } => {
+        Bytes::Xml(value) => {
             let expected = Ok(Value::String(value.to_string()));
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
