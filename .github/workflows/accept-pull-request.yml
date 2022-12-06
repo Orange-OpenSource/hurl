@@ -31,7 +31,7 @@ jobs:
           pr_detail_file="pr_detail.json"
           gh api repos/"${OWNER}"/"${REPO}"/pulls/"${PR_NUMBER}" > "${pr_detail_file}"
           jq . "${pr_detail_file}"
-          echo ${{ github.event.issue.title }}
+          echo "github.event.issue.title: ${{ github.event.issue.title }}"
           HEAD_REPO_FULL_NAME=$(jq -rc .head.repo.full_name ${pr_detail_file})
           BASE_REPO_FULL_NAME=$(jq -rc .base.repo.full_name ${pr_detail_file})
           if [ "${HEAD_REPO_FULL_NAME}" = "${BASE_REPO_FULL_NAME}" ] ; then
