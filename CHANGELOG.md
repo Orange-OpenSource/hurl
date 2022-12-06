@@ -1,3 +1,35 @@
+[2.0.0 (2023-??-??)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.0)
+========================================================================================================================
+
+Thanks to
+[@ad8lmondy](https://github.com/ad8lmondy),
+[@jlecour](https://github.com/jlecour),
+[@ako](https://github.com/ako),
+[@jmoore34](https://github.com/jmoore34),
+[@devnoname120](https://github.com/devnoname120),
+[@dalejefferson-rnf](https://github.com/dalejefferson-rnf),
+
+Enhancements:
+
+* Add filters for htmlEncode and htmlDecode [#1038](https://github.com/Orange-OpenSource/hurl/issues/1038)
+
+* Add toInt filter [#1029](https://github.com/Orange-OpenSource/hurl/issues/1029)
+
+* Use HTTP instead of HTTP/* for any HTTP version match [#975](https://github.com/Orange-OpenSource/hurl/issues/975)
+
+* Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
+
+* Add support for GraphQL variables. [#504](https://github.com/Orange-OpenSource/hurl/issues/504)
+
+
+Bugs Fixed:
+
+* Fix variables update [#1037](https://github.com/Orange-OpenSource/hurl/issues/1037)
+
+* Fix querystring key parsing [#1027](https://github.com/Orange-OpenSource/hurl/issues/1027)
+
+
+
 [1.8.0 (2022-11-02)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.8.0)
 ========================================================================================================================
 
