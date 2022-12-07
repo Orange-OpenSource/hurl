@@ -64,6 +64,3 @@ jobs:
     - name: Check hurl crate API changes
       run: bin/check/compatibility.sh
 
-    - name: Check CHANGELOG
-      run: bin/check/changelog.sh
-
