@@ -11,7 +11,7 @@ Thanks to
 
 Enhancements:
 
-* Add filters for htmlEncode and htmlDecode [#1038](https://github.com/Orange-OpenSource/hurl/issues/1038)
+* Add filters for htmlEscape and htmlUnescape [#1038](https://github.com/Orange-OpenSource/hurl/issues/1038)
 
 * Add toInt filter [#1029](https://github.com/Orange-OpenSource/hurl/issues/1029)
 
@@ -19,7 +19,7 @@ Enhancements:
 
 * Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
 
-* Add support for GraphQL variables. [#504](https://github.com/Orange-OpenSource/hurl/issues/504)
+* Add GraphQL support [#504](https://github.com/Orange-OpenSource/hurl/issues/504)
 
 
 Bugs Fixed:
