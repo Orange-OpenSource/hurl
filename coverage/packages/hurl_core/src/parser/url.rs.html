@@ -2099,7 +2099,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        quotes: false,</pre>
+                <pre class="has-background-success-light py-0 px-2">        delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2467,7 +2467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                quotes: false,</pre>
+                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2771,7 +2771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                quotes: false,</pre>
+                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3363,7 +3363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F;encoded: None,</pre>
+                <pre class="has-background-white py-0 px-2">                delimiter: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3379,7 +3379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                quotes: false,</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(1, 1, 1, 19),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3395,7 +3395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(1, 1, 1, 19),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3411,7 +3411,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3427,7 +3427,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.state.cursor, 18);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3443,7 +3443,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.state.cursor, 18);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3459,7 +3459,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3475,7 +3475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3491,7 +3491,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_url_error_variable() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3507,7 +3507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_url_error_variable() {</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;http:&#x2F;&#x2F;{{host&gt;}}.fr&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3523,7 +3523,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;http:&#x2F;&#x2F;{{host&gt;}}.fr&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3539,7 +3539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3555,7 +3555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            error.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3571,7 +3571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.pos,</pre>
+                <pre class="has-background-white py-0 px-2">            Pos {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3587,7 +3587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Pos {</pre>
+                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3603,7 +3603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
+                <pre class="has-background-white py-0 px-2">                column: 14,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3619,7 +3619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                column: 14,</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3635,7 +3635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3651,7 +3651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3667,7 +3667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3683,7 +3683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">            ParseError::Expecting {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3699,7 +3699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ParseError::Expecting {</pre>
+                <pre class="has-background-white py-0 px-2">                value: String::from(&quot;}}&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3715,7 +3715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: String::from(&quot;}}&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3731,7 +3731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3747,7 +3747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!error.recoverable);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3763,7 +3763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!error.recoverable);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.state.cursor, 14);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3779,7 +3779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(reader.state.cursor, 14);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3795,7 +3795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3811,7 +3811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3827,7 +3827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_url_error_missing_delimiter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3843,7 +3843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_url_error_missing_delimiter() {</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;http:&#x2F;&#x2F;{{host&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3859,7 +3859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;http:&#x2F;&#x2F;{{host&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3875,7 +3875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3891,7 +3891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            error.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3907,7 +3907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.pos,</pre>
+                <pre class="has-background-white py-0 px-2">            Pos {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3923,7 +3923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Pos {</pre>
+                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3939,7 +3939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                line: 1,</pre>
+                <pre class="has-background-white py-0 px-2">                column: 14,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3955,7 +3955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                column: 14,</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3971,7 +3971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3987,7 +3987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4003,7 +4003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4019,7 +4019,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error.inner,</pre>
+                <pre class="has-background-white py-0 px-2">            ParseError::Expecting {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4035,7 +4035,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ParseError::Expecting {</pre>
+                <pre class="has-background-white py-0 px-2">                value: String::from(&quot;}}&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4051,7 +4051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: String::from(&quot;}}&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4067,7 +4067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4083,7 +4083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(!error.recoverable);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4099,7 +4099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(!error.recoverable);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4115,7 +4115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4131,7 +4131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4147,7 +4147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_url_error_empty() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4163,7 +4163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_url_error_empty() {</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot; # eol&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4179,7 +4179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot; # eol&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4195,7 +4195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = url(&amp;mut reader).err().unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.pos, Pos { line: 1, column: 1 });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4211,7 +4211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.pos, Pos { line: 1, column: 1 });</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::UrlIllegalCharacter(&#x27; &#x27;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4227,7 +4227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(error.inner, ParseError::UrlIllegalCharacter(&#x27; &#x27;));</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4243,7 +4243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4259,7 +4259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4275,7 +4275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_valid_urls() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4291,7 +4291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_valid_urls() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; from official url_test.go file</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4307,7 +4307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; from official url_test.go file</pre>
+                <pre class="has-background-white py-0 px-2">        let valid_urls = [</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4323,7 +4323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let valid_urls = [</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4339,7 +4339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4355,7 +4355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;file%20one%26two&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4371,7 +4371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;file%20one%26two&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;#file%20one%26two&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4387,7 +4387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;#file%20one%26two&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4403,7 +4403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?foo=bar?&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4419,7 +4419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?foo=bar?&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4435,7 +4435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go%20language&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4451,7 +4451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go%20language&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;a%20b?q=c+d&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4467,7 +4467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;a%20b?q=c+d&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:www.google.com&#x2F;?q=go+language&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4499,7 +4499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:www.google.com&#x2F;?q=go+language&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:%2f%2fwww.google.com&#x2F;?q=go+language&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4515,7 +4515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:%2f%2fwww.google.com&#x2F;?q=go+language&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;user:password@google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4547,7 +4547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;user:password@google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j@ne:password@google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4563,7 +4563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j@ne:password@google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j%40ne:password@google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4579,7 +4579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j%40ne:password@google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;jane:p@ssword@google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4595,7 +4595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;jane:p@ssword@google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j@ne:password@google.com&#x2F;p@th?q=@go&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4611,7 +4611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j@ne:password@google.com&#x2F;p@th?q=@go&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j%40ne:password@google.com&#x2F;p@th?q=@go&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4627,7 +4627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;j%40ne:password@google.com&#x2F;p@th?q=@go&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4643,7 +4643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo&amp;bar&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4675,7 +4675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo&amp;bar&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo%26bar&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4707,7 +4707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;www.google.com&#x2F;?q=go+language#foo%26bar&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;%3Fam:pa%3Fsword@google.com&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4723,7 +4723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;%3Fam:pa%3Fsword@google.com&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.1&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4739,7 +4739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.1&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.1:8080&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4755,7 +4755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.1:8080&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1]&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4771,7 +4771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1]&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1]:8080&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4787,7 +4787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1]:8080&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en0]&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4803,7 +4803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en0]&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en0]:8080&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4819,7 +4819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en0]:8080&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25%65%6e%301-._~]&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4835,7 +4835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25%65%6e%301-._~]&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en01-._~]&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4851,7 +4851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25en01-._~]&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25%65%6e%301-._~]:8080&#x2F;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4867,7 +4867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[fe80::1%25%65%6e%301-._~]:8080&#x2F;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;rest.rsc.io&#x2F;foo%2fbar&#x2F;baz%2Fquux?alt=media&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4883,7 +4883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;rest.rsc.io&#x2F;foo%2fbar&#x2F;baz%2Fquux?alt=media&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;host&#x2F;!$&amp;&#x27;()*+,;=:@[hello]&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4899,7 +4899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;host&#x2F;!$&amp;&#x27;()*+,;=:@[hello]&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;example.com&#x2F;oid&#x2F;[order_id]&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4915,7 +4915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;example.com&#x2F;oid&#x2F;[order_id]&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.2:8080&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4931,7 +4931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.2:8080&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.2:&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4947,7 +4947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;192.168.0.2:&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;2b01:e34:ef40:7730:8e70:5aff:fefe:edac:8080&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4963,7 +4963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;2b01:e34:ef40:7730:8e70:5aff:fefe:edac:8080&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;2b01:e34:ef40:7730:8e70:5aff:fefe:edac:&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4979,7 +4979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;2b01:e34:ef40:7730:8e70:5aff:fefe:edac:&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[2b01:e34:ef40:7730:8e70:5aff:fefe:edac]:8080&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4995,7 +4995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[2b01:e34:ef40:7730:8e70:5aff:fefe:edac]:8080&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[2b01:e34:ef40:7730:8e70:5aff:fefe:edac]:&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5011,7 +5011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;[2b01:e34:ef40:7730:8e70:5aff:fefe:edac]:&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.世界.com&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5027,7 +5027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.世界.com&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%E4%B8%96%E7%95%8C.com&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5043,7 +5043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%E4%B8%96%E7%95%8C.com&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%e4%b8%96%e7%95%8c.com&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5059,7 +5059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%e4%b8%96%e7%95%8c.com&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%E4%B8%96%E7%95%8C.com&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5091,7 +5091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;hello.%E4%B8%96%E7%95%8C.com&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;example.com&#x2F;&#x2F;foo&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5107,7 +5107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;http:&#x2F;&#x2F;example.com&#x2F;&#x2F;foo&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">        ];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5123,7 +5123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        ];</pre>
+                <pre class="has-background-white py-0 px-2">        for s in valid_urls {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5139,7 +5139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        for s in valid_urls {</pre>
+                <pre class="has-background-white py-0 px-2">            &#x2F;&#x2F;eprintln!(&quot;{}&quot;, s);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5155,7 +5155,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &#x2F;&#x2F;eprintln!(&quot;{}&quot;, s);</pre>
+                <pre class="has-background-white py-0 px-2">            let mut reader = Reader::init(s);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5171,7 +5171,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            let mut reader = Reader::init(s);</pre>
+                <pre class="has-background-white py-0 px-2">            assert!(url(&amp;mut reader).is_ok());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5187,7 +5187,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert!(url(&amp;mut reader).is_ok());</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5203,7 +5203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5219,29 +5219,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="325"
-                role="cell">
-                <a href="#325">325</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-12-06 08:25</p>
+                <p class="heading">Date: 2022-12-07 08:25</p>
             </div>
         </footer>
     </body>
