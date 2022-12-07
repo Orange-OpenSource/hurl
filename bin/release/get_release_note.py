@@ -93,9 +93,10 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
                         saved_pull.tags.append(tag)
                 saved_pull.issues.append(issue.number)
             else:
-                pull.tags = issue.tags
-                pull.issues.append(issue.number)
-                pulls[pull.url] = pull
+                if pull.url.startswith("/Orange-OpenSource/hurl"):
+                    pull.tags = issue.tags
+                    pull.issues.append(issue.number)
+                    pulls[pull.url] = pull
 
     return list(pulls.values())
 

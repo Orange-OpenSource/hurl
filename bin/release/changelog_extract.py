@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# cat CHANGELOG.md | bin/release/changelog_extract.py 1.8.0
+# bin/release/changelog_extract.py 1.8.0
 import sys
 
 
-def extract(version):
+def extract(changelog_file, version):
     print_line = False
-    for line in sys.stdin.readlines():
+    for line in open(changelog_file).readlines():
         if "CHANGELOG" in line and line.startswith("["):
             if line[1:].startswith(version):
                 print_line = True
@@ -18,11 +18,11 @@ def extract(version):
 def main():
     if len(sys.argv) < 2:
         print("usage:")
-        print("  cat CHANGELOG.md | bin/release/changelog_extract.py 1.8.0")
+        print("  bin/release/changelog_extract.py 1.8.0")
         sys.exit(1)
 
     version = sys.argv[1]
-    extract(version)
+    extract("CHANGELOG.md", version)
 
 
 if __name__ == "__main__":
