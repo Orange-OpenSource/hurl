@@ -56,6 +56,7 @@ pub struct CliOptions {
     pub output: Option<String>,
     pub output_type: OutputType,
     pub proxy: Option<String>,
+    pub resolves: Vec<String>,
     pub retry: bool,
     pub retry_interval: Duration,
     pub retry_max_count: Option<usize>,
@@ -301,6 +302,15 @@ pub fn app(version: &str) -> Command {
                 .action(ArgAction::SetTrue)
         )
         .arg(
+            clap::Arg::new("resolve")
+                .long("resolve")
+                .value_name("HOST:PORT:ADDR")
+                .help("Provide a custom address for a specific host and port pair")
+                .action(ArgAction::Append)
+                .number_of_values(1)
+                .num_args(1)
+        )
+        .arg(
             clap::Arg::new("retry_interval")
                 .long("retry-interval")
                 .value_name("MILLISECONDS")
@@ -470,6 +480,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         OutputType::ResponseBody
     };
     let proxy = get::<String>(matches, "proxy");
+    let resolves = get_strings(matches, "resolve").unwrap_or_default();
     let retry = has_flag(matches, "retry");
     let retry_interval = get::<u64>(matches, "retry_interval").unwrap();
     let retry_interval = Duration::from_millis(retry_interval);
@@ -511,6 +522,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         output,
         output_type,
         proxy,
+        resolves,
         retry,
         retry_interval,
         retry_max_count,
@@ -626,11 +638,12 @@ fn match_glob_files(matches: &ArgMatches) -> Result<Vec<String>, CliError> {
     Ok(filenames)
 }
 
-/// Returns a optional value of type `T` from the command line `matches` given the option `name`.
+/// Returns an optional value of type `T` from the command line `matches` given the option `name`.
 fn get<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, name: &str) -> Option<T> {
     matches.get_one::<T>(name).cloned()
 }
 
+/// Returns an optional list of `String` from the command line `matches` given the option `name`.
 pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)

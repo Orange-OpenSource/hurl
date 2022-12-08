@@ -41,6 +41,7 @@ pub struct RunnerOptions {
     pub post_entry: Option<fn() -> bool>,
     pub pre_entry: Option<fn(Entry) -> bool>,
     pub proxy: Option<String>,
+    pub resolves: Vec<String>,
     pub retry: bool,
     pub retry_interval: Duration,
     pub retry_max_count: Option<usize>,
@@ -71,6 +72,7 @@ impl Default for RunnerOptions {
             post_entry: None,
             pre_entry: None,
             proxy: None,
+            resolves: vec![],
             retry: false,
             retry_interval: Duration::from_millis(1000),
             retry_max_count: Some(10),
@@ -129,6 +131,7 @@ impl RunnerOptions {
         };
         let fail_fast = cli_options.fail_fast;
         let to_entry = cli_options.to_entry;
+        let resolves = cli_options.resolves.clone();
         let retry = cli_options.retry;
         let retry_interval = cli_options.retry_interval;
         let retry_max_count = cli_options.retry_max_count;
@@ -151,6 +154,7 @@ impl RunnerOptions {
             post_entry,
             pre_entry,
             proxy,
+            resolves,
             retry,
             retry_interval,
             retry_max_count,

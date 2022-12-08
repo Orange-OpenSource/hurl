@@ -31,6 +31,7 @@ use super::response::*;
 use super::{Header, HttpError, Verbosity};
 use crate::cli::Logger;
 use crate::http::ContextDir;
+use curl::easy::List;
 use std::str::FromStr;
 use url::Url;
 
@@ -62,14 +63,8 @@ impl Client {
         }
     }
 
-    /// Executes an HTTP request, optionally follows redirection and returns a
+    /// Executes an HTTP request `request_spec`, optionally follows redirection and returns a
     /// list of pair of [`Request`], [`Response`].
-    ///
-    /// # Arguments
-    ///
-    /// * `request_spec` - A request specification
-    /// * `options`- Options for this execution
-    /// * `logger`- A logger
     pub fn execute_with_redirect(
         &mut self,
         request_spec: &RequestSpec,
@@ -117,14 +112,8 @@ impl Client {
         Ok(calls)
     }
 
-    /// Executes an HTTP request, without following redirection and returns a
+    /// Executes an HTTP request `request_spec`, without following redirection and returns a
     /// pair of [`Request`], [`Response`].
-    ///
-    /// # Arguments
-    ///
-    /// * `request_spec` - A request specification
-    /// * `options`- Options for this execution
-    /// * `logger`- A logger
     pub fn execute(
         &mut self,
         request_spec: &RequestSpec,
@@ -137,6 +126,12 @@ impl Client {
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
         // way to get access to the outgoing headers.
         self.handle.verbose(true).unwrap();
+
+        if !options.resolves.is_empty() {
+            let resolves = to_list(&options.resolves);
+            self.handle.resolve(resolves).unwrap();
+        }
+
         self.handle.ssl_verify_host(!options.insecure).unwrap();
         self.handle.ssl_verify_peer(!options.insecure).unwrap();
         if let Some(cacert_file) = options.cacert_file.clone() {
@@ -708,6 +703,12 @@ pub fn decode_header(data: &[u8]) -> Option<String> {
             }
         },
     }
+}
+
+fn to_list(items: &[String]) -> List {
+    let mut list = List::new();
+    items.iter().for_each(|l| list.append(l).unwrap());
+    list
 }
 
 #[cfg(test)]

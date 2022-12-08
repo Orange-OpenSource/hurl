@@ -207,6 +207,7 @@ impl From<&RunnerOptions> for ClientOptions {
                 Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
             }),
             insecure: runner_options.insecure,
+            resolves: runner_options.resolves.clone(),
             retry_max_count: runner_options.retry_max_count,
             timeout: runner_options.timeout,
             connect_timeout: runner_options.connect_timeout,

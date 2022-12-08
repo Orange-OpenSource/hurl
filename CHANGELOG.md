@@ -9,6 +9,7 @@ Thanks to
 [@devnoname120](https://github.com/devnoname120),
 [@dalejefferson-rnf](https://github.com/dalejefferson-rnf),
 
+
 Enhancements:
 
 * Support new one line string [#1041](https://github.com/Orange-OpenSource/hurl/issues/1041)
@@ -23,13 +24,14 @@ Enhancements:
 
 * Add GraphQL support [#504](https://github.com/Orange-OpenSource/hurl/issues/504)
 
+* Add --resolve option [#379](https://github.com/Orange-OpenSource/hurl/issues/379)
+
 
 Bugs Fixed:
 
 * Fix variables update [#1037](https://github.com/Orange-OpenSource/hurl/issues/1037)
 
 * Fix querystring key parsing [#1027](https://github.com/Orange-OpenSource/hurl/issues/1027)
-
 
 
 [1.8.0 (2022-11-02)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.8.0)

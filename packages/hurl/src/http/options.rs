@@ -29,6 +29,7 @@ pub struct ClientOptions {
     pub no_proxy: Option<String>,
     pub verbosity: Option<Verbosity>,
     pub insecure: bool,
+    pub resolves: Vec<String>,
     pub retry_max_count: Option<usize>,
     pub timeout: Duration,
     pub connect_timeout: Duration,
@@ -56,6 +57,7 @@ impl Default for ClientOptions {
             no_proxy: None,
             verbosity: None,
             insecure: false,
+            resolves: vec![],
             retry_max_count: Some(10),
             timeout: Duration::from_secs(300),
             connect_timeout: Duration::from_secs(300),
@@ -117,6 +119,10 @@ impl ClientOptions {
             arguments.push("--proxy".to_string());
             arguments.push(format!("'{}'", proxy));
         }
+        for resolve in self.resolves.iter() {
+            arguments.push("--resolve".to_string());
+            arguments.push(resolve.clone());
+        }
         if self.timeout != ClientOptions::default().timeout {
             arguments.push("--timeout".to_string());
             arguments.push(self.timeout.as_secs().to_string());
@@ -153,6 +159,10 @@ mod tests {
                 no_proxy: None,
                 verbosity: None,
                 insecure: true,
+                resolves: vec![
+                    "foo.com:80:192.168.0.1".to_string(),
+                    "bar.com:443:127.0.0.1".to_string()
+                ],
                 retry_max_count: Some(10),
                 timeout: Duration::from_secs(10),
                 connect_timeout: Duration::from_secs(20),
@@ -173,6 +183,10 @@ mod tests {
                 "10".to_string(),
                 "--proxy".to_string(),
                 "'localhost:3128'".to_string(),
+                "--resolve".to_string(),
+                "foo.com:80:192.168.0.1".to_string(),
+                "--resolve".to_string(),
+                "bar.com:443:127.0.0.1".to_string(),
                 "--timeout".to_string(),
                 "10".to_string(),
                 "--user".to_string(),
