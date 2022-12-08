@@ -210,6 +210,9 @@ jobs:
         with:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
+      - name: Check CHANGELOG
+        run: bin/check/changelog.sh
+
       - name: Update version
         run: |
           hurl_packages="hurl_core hurl hurlfmt"
