@@ -1,2 +1,2 @@
-curl 'https://localhost:8001/hello' --cacert ssl/cert.pem
-curl 'https://localhost:8001/hello' --cacert ssl/cert.pem
+curl --cacert ssl/cert.pem 'https://localhost:8001/hello'
+curl --cacert ssl/cert.pem 'https://localhost:8001/hello'

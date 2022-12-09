@@ -69,6 +69,7 @@ impl Default for ClientOptions {
 }
 
 impl ClientOptions {
+    /// Returns the list of options for the curl command line equivalent to this [`ClientOptions`].
     pub fn curl_args(&self) -> Vec<String> {
         let mut arguments = vec![];
 

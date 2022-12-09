@@ -1,1 +1,1 @@
-curl 'http://localhost:8000/basic-authentication' --user 'bob@email.com:secret'
+curl --user 'bob@email.com:secret' 'http://localhost:8000/basic-authentication'

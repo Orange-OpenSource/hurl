@@ -1,16 +1,16 @@
 curl 'http://localhost:8000/methods/get'
-curl 'http://localhost:8000/methods/head' --head
-curl 'http://localhost:8000/methods/post' -X POST
-curl 'http://localhost:8000/methods/put' -X PUT
-curl 'http://localhost:8000/methods/delete' -X DELETE
-curl 'http://localhost:8000/methods/connect' -X CONNECT
-curl 'http://localhost:8000/methods/options' -X OPTIONS
-curl 'http://localhost:8000/methods/trace' -X TRACE
-curl 'http://localhost:8000/methods/patch' -X PATCH
-curl 'http://localhost:8000/methods/link' -X LINK
-curl 'http://localhost:8000/methods/unlink' -X UNLINK
-curl 'http://localhost:8000/methods/purge' -X PURGE
-curl 'http://localhost:8000/methods/lock' -X LOCK
-curl 'http://localhost:8000/methods/unlock' -X UNLOCK
-curl 'http://localhost:8000/methods/propfind' -X PROPFIND
-curl 'http://localhost:8000/methods/view' -X VIEW
+curl --head 'http://localhost:8000/methods/head'
+curl -X POST 'http://localhost:8000/methods/post'
+curl -X PUT 'http://localhost:8000/methods/put'
+curl -X DELETE 'http://localhost:8000/methods/delete'
+curl -X CONNECT 'http://localhost:8000/methods/connect'
+curl -X OPTIONS 'http://localhost:8000/methods/options'
+curl -X TRACE 'http://localhost:8000/methods/trace'
+curl -X PATCH 'http://localhost:8000/methods/patch'
+curl -X LINK 'http://localhost:8000/methods/link'
+curl -X UNLINK 'http://localhost:8000/methods/unlink'
+curl -X PURGE 'http://localhost:8000/methods/purge'
+curl -X LOCK 'http://localhost:8000/methods/lock'
+curl -X UNLOCK 'http://localhost:8000/methods/unlock'
+curl -X PROPFIND 'http://localhost:8000/methods/propfind'
+curl -X VIEW 'http://localhost:8000/methods/view'

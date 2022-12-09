@@ -25,24 +25,7 @@ impl RequestSpec {
     /// Returns this request as curl arguments.
     /// It does not contain the requests cookies (they will be accessed from the client)
     pub fn curl_args(&self, context_dir: &ContextDir) -> Vec<String> {
-        let querystring = if self.querystring.is_empty() {
-            "".to_string()
-        } else {
-            let params = self
-                .querystring
-                .iter()
-                .map(|p| p.curl_arg_escape())
-                .collect::<Vec<String>>();
-            params.join("&")
-        };
-        let url = if querystring.as_str() == "" {
-            self.url.to_string()
-        } else if self.url.to_string().contains('?') {
-            format!("{}&{}", self.url, querystring)
-        } else {
-            format!("{}?{}", self.url, querystring)
-        };
-        let mut arguments = vec![format!("'{}'", url)];
+        let mut arguments = vec![];
 
         let data =
             !self.multipart.is_empty() || !self.form.is_empty() || !self.body.bytes().is_empty();
@@ -96,6 +79,26 @@ impl RequestSpec {
             arguments.push("--data".to_string());
             arguments.push(self.body.curl_arg(context_dir));
         }
+
+        let querystring = if self.querystring.is_empty() {
+            "".to_string()
+        } else {
+            let params = self
+                .querystring
+                .iter()
+                .map(|p| p.curl_arg_escape())
+                .collect::<Vec<String>>();
+            params.join("&")
+        };
+        let url = if querystring.as_str() == "" {
+            self.url.to_string()
+        } else if self.url.to_string().contains('?') {
+            format!("{}&{}", self.url, querystring)
+        } else {
+            format!("{}?{}", self.url, querystring)
+        };
+        arguments.push(format!("'{}'", url));
+
         arguments
     }
 }
@@ -330,11 +333,11 @@ pub mod tests {
         assert_eq!(
             custom_http_request().curl_args(context_dir),
             vec![
-                "'http://localhost/custom'".to_string(),
                 "-H".to_string(),
                 "'User-Agent: iPhone'".to_string(),
                 "-H".to_string(),
                 "'Foo: Bar'".to_string(),
+                "'http://localhost/custom'".to_string(),
             ]
         );
         assert_eq!(
@@ -346,13 +349,13 @@ pub mod tests {
         assert_eq!(
             form_http_request().curl_args(context_dir),
             vec![
-                "'http://localhost/form-params'".to_string(),
                 "-H".to_string(),
                 "'Content-Type: application/x-www-form-urlencoded'".to_string(),
                 "--data".to_string(),
                 "'param1=value1'".to_string(),
                 "--data".to_string(),
                 "'param2=a%20b'".to_string(),
+                "'http://localhost/form-params'".to_string(),
             ]
         );
     }

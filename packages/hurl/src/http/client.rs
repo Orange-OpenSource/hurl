@@ -593,6 +593,10 @@ impl Client {
         let mut arguments = vec!["curl".to_string()];
         arguments.append(&mut request_spec.curl_args(context_dir));
 
+        // We extract the last part of the arguments (the url) to insert it
+        // after all the options
+        let url = arguments.pop().unwrap();
+
         let cookies = all_cookies(&self.get_cookie_storage(), request_spec);
         if !cookies.is_empty() {
             arguments.push("--cookie".to_string());
@@ -606,6 +610,7 @@ impl Client {
             ));
         }
         arguments.append(&mut options.curl_args());
+        arguments.push(url);
         arguments.join(" ")
     }
 }
@@ -705,6 +710,7 @@ pub fn decode_header(data: &[u8]) -> Option<String> {
     }
 }
 
+/// Converts a list of [`String`] to a libcurl's list of strings.
 fn to_list(items: &[String]) -> List {
     let mut list = List::new();
     items.iter().for_each(|l| list.append(l).unwrap());

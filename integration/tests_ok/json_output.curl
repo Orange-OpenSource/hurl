@@ -1,6 +1,6 @@
 curl 'http://localhost:8000/hello'
 curl 'http://localhost:8000/cookies/set-session-cookie2-valueA'
-curl 'http://localhost:8000/follow-redirect' --cookie 'cookie2=valueA'
-curl 'http://localhost:8000/follow-redirect' --cookie 'cookie2=valueA' -L
-curl 'http://localhost:8000/captures' --cookie 'cookie2=valueA'
-curl 'http://localhost:8000/assert-json' --cookie 'cookie2=valueA'
+curl --cookie 'cookie2=valueA' 'http://localhost:8000/follow-redirect'
+curl --cookie 'cookie2=valueA' -L 'http://localhost:8000/follow-redirect'
+curl --cookie 'cookie2=valueA' 'http://localhost:8000/captures'
+curl --cookie 'cookie2=valueA' 'http://localhost:8000/assert-json'

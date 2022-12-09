@@ -1,4 +1,4 @@
-curl 'https://localhost:8001/hello' --insecure
-curl 'https://localhost:8001/hello' --insecure
-curl 'https://localhost:8001/hello' --cacert ssl/cert.pem
+curl --insecure 'https://localhost:8001/hello'
+curl --insecure 'https://localhost:8001/hello'
+curl --cacert ssl/cert.pem 'https://localhost:8001/hello'
 

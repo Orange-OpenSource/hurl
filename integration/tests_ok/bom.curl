@@ -1,2 +1,2 @@
 curl 'http://localhost:8000/utf8_bom'
-curl 'http://localhost:8000/mirror' -H 'Content-Type:' --data '@tests_ok/bom.hurl'
+curl -H 'Content-Type:' --data '@tests_ok/bom.hurl' 'http://localhost:8000/mirror'
