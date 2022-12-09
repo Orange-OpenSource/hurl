@@ -14,7 +14,7 @@ We like to discuss things before implementation and want to be sure that:
 
 ## Pull Requests
 
-- Commits have to be signed.
+- All Git commits are required to be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification). For a single commit, use `git commit -S --amend` and force push the branch.
 - All tests must be green before merge.
 - Hurl git history is linear, so we ask to rebase your PR before final merge. 
 
