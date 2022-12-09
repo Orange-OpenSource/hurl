@@ -24,17 +24,17 @@ use xmltree::{Element, XMLNode};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
     id: String,
+    name: String,
     time_in_ms: u128,
     failures: Vec<String>,
     errors: Vec<String>,
 }
 
 impl Testcase {
-    ///
-    /// create an XML Junit <testcase> from an Hurl result
-    ///
+    /// Creates an XML Junit <testcase> from an Hurl result.
     pub fn from_hurl_result(hurl_result: &HurlResult, content: &str) -> Testcase {
         let id = hurl_result.filename.clone();
+        let name = hurl_result.filename.clone();
         let time_in_ms = hurl_result.time_in_ms;
         let mut failures = vec![];
         let mut errors = vec![];
@@ -49,17 +49,19 @@ impl Testcase {
         }
         Testcase {
             id,
+            name,
             time_in_ms,
             failures,
             errors,
         }
     }
 
-    // Serialize to XML
-    pub fn to_xml(&self) -> xmltree::Element {
+    /// Serializes this testcase to XML.
+    pub fn to_xml(&self) -> Element {
         let name = "testcase".to_string();
         let mut attributes = indexmap::map::IndexMap::new();
         attributes.insert("id".to_string(), self.id.clone());
+        attributes.insert("name".to_string(), self.name.clone());
         let time_in_seconds = format!("{:.3}", self.time_in_ms as f64 / 1000.0);
         attributes.insert("time".to_string(), time_in_seconds);
 
@@ -121,7 +123,7 @@ mod test {
             .unwrap();
         assert_eq!(
             std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230" />"#
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
         );
     }
 
@@ -158,7 +160,7 @@ HTTP/1.0 200
             .unwrap();
         assert_eq!(
             std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><failure>Assert status code
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
   --> test.hurl:2:10
    |
  2 | HTTP/1.0 200
@@ -199,7 +201,7 @@ HTTP/1.0 200
             .unwrap();
         assert_eq!(
             std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" time="0.230"><error>HTTP connection
+            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
   --> test.hurl:1:5
    |
  1 | GET http://unknown

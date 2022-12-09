@@ -12,6 +12,8 @@ Thanks to
 
 Enhancements:
 
+* Add name attribute to JUnit report [#1078](https://github.com/Orange-OpenSource/hurl/issues/1078)
+
 * Support new one line string [#1041](https://github.com/Orange-OpenSource/hurl/issues/1041)
 
 * Add filters for htmlEscape and htmlUnescape [#1038](https://github.com/Orange-OpenSource/hurl/issues/1038)

@@ -16,43 +16,45 @@
  *
  */
 
-//
-// XML JUnit report
-//
-// It does not really seem to be used nowadays
-// The link below seems the most "official" spec
-// https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format
-//
-// One Hurl file will result into one junit <testcase>.
-// The <testcase> can include <error> (for Runtime error) or <failure> (for Assert Error)
-// Each hurl execution will generate its own <testsuite> within the root <testsuites>.
-//
-// Example:
-//
-// $ cat test.xml | xmllint --format -
-// <?xml version="1.0"?>
-// <testsuites>
-//   <testsuite>
-//     <testcase id="tests/hello.hurl" time="0.029"/>
-//     <testcase id="tests/error_assert_status.hurl" time="0.008">
-//       <failure>Assert Status
-//   --&gt; tests/error_assert_status.hurl:2:10
-//    |
-//  2 | HTTP/1.0 200
-//    |          ^^^ actual value is &lt;404&gt;
-//    |</failure>
-//     </testcase>
-//     <testcase id="tests/error_body_json.hurl" time="0.000">
-//       <error>Undefined Variable
-//   --&gt; tests/error_body_json.hurl:3:18
-//    |
-//  3 |     "success": {{success}}
-//    |                  ^^^^^^^ You must set the variable success
-//    |</error>
-//     </testcase>
-//   </testsuite>
-// </testsuites>
-//
+//!
+//! XML JUnit report
+//!
+//! The link below seems the most "official" spec
+//! https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format
+//!
+//! One Hurl file will result into one junit <testcase>.
+//!
+//! The <testcase> can include <error> (for Runtime error) or <failure> (for Assert Error)
+//! Each hurl execution will generate its own <testsuite> within the root <testsuites>.
+//!
+//! Example:
+//!
+//! ```shell
+//! $ cat test.xml | xmllint --format -
+//! <?xml version="1.0"?>
+//! <testsuites>
+//!   <testsuite>
+//!     <testcase id="tests/hello.hurl" name="tests/hello.hurl" time="0.029"/>
+//!     <testcase id="tests/error_assert_status.hurl" name="tests/error_assert_status.hurl" time="0.008">
+//!       <failure>Assert Status
+//!   --&gt; tests/error_assert_status.hurl:2:10
+//!    |
+//!  2 | HTTP/1.0 200
+//!    |          ^^^ actual value is &lt;404&gt;
+//!    |</failure>
+//!     </testcase>
+//!     <testcase id="tests/error_body_json.hurl" time="0.000">
+//!       <error>Undefined Variable
+//!   --&gt; tests/error_body_json.hurl:3:18
+//!    |
+//!  3 |     "success": {{success}}
+//!    |                  ^^^^^^^ You must set the variable success
+//!    |</error>
+//!     </testcase>
+//!   </testsuite>
+//! </testsuites>
+//! ```
+//!
 
 use std::fs::File;
 
