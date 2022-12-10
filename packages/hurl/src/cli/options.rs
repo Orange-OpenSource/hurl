@@ -37,6 +37,7 @@ pub struct CliOptions {
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
     pub color: bool,
+    pub connects_to: Vec<String>,
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub cookie_input_file: Option<String>,
@@ -143,6 +144,15 @@ pub fn app(version: &str) -> Command {
                 .help("Maximum time allowed for connection")
                 .default_value(default_connect_timeout.to_string())
                 .value_parser(value_parser!(u64))
+                .num_args(1)
+        )
+        .arg(
+            clap::Arg::new("connect_to")
+                .long("connect-to")
+                .value_name("HOST1:PORT1:HOST2:PORT2")
+                .help("For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead")
+                .action(ArgAction::Append)
+                .number_of_values(1)
                 .num_args(1)
         )
         .arg(
@@ -296,12 +306,6 @@ pub fn app(version: &str) -> Command {
                 .num_args(1)
         )
         .arg(
-            clap::Arg::new("retry")
-                .long("retry")
-                .help("Retry requests on errors")
-                .action(ArgAction::SetTrue)
-        )
-        .arg(
             clap::Arg::new("resolve")
                 .long("resolve")
                 .value_name("HOST:PORT:ADDR")
@@ -309,6 +313,12 @@ pub fn app(version: &str) -> Command {
                 .action(ArgAction::Append)
                 .number_of_values(1)
                 .num_args(1)
+        )
+        .arg(
+            clap::Arg::new("retry")
+                .long("retry")
+                .help("Retry requests on errors")
+                .action(ArgAction::SetTrue)
         )
         .arg(
             clap::Arg::new("retry_interval")
@@ -431,6 +441,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let compressed = has_flag(matches, "compressed");
     let connect_timeout = get::<u64>(matches, "connect_timeout").unwrap();
     let connect_timeout = Duration::from_secs(connect_timeout);
+    let connects_to = get_strings(matches, "connect_to").unwrap_or_default();
     let cookie_input_file = get::<String>(matches, "cookies_input_file");
     let cookie_output_file = get::<String>(matches, "cookies_output_file");
     let fail_fast = !has_flag(matches, "fail_at_end");
@@ -505,6 +516,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         color,
         compressed,
         connect_timeout,
+        connects_to,
         cookie_input_file,
         cookie_output_file,
         fail_fast,

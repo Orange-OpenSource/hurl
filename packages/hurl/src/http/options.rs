@@ -22,6 +22,7 @@ pub struct ClientOptions {
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
+    pub connects_to: Vec<String>,
     pub follow_location: bool,
     pub max_redirect: Option<usize>,
     pub cookie_input_file: Option<String>,
@@ -50,6 +51,7 @@ impl Default for ClientOptions {
             cacert_file: None,
             client_cert_file: None,
             client_key_file: None,
+            connects_to: vec![],
             follow_location: false,
             max_redirect: Some(50),
             cookie_input_file: None,
@@ -77,31 +79,29 @@ impl ClientOptions {
             arguments.push("--cacert".to_string());
             arguments.push(cacert_file.clone());
         }
-
         if let Some(ref client_cert_file) = self.client_cert_file {
             arguments.push("--cert".to_string());
             arguments.push(client_cert_file.clone());
         }
-
         if let Some(ref client_key_file) = self.client_key_file {
             arguments.push("--key".to_string());
             arguments.push(client_key_file.clone());
         }
-
         if self.compressed {
             arguments.push("--compressed".to_string());
         }
-
         if self.connect_timeout != ClientOptions::default().connect_timeout {
             arguments.push("--connect-timeout".to_string());
             arguments.push(self.connect_timeout.as_secs().to_string());
         }
-
+        for connect in self.connects_to.iter() {
+            arguments.push("--connect-to".to_string());
+            arguments.push(connect.clone());
+        }
         if let Some(ref cookie_file) = self.cookie_input_file {
             arguments.push("--cookie".to_string());
             arguments.push(cookie_file.clone());
         }
-
         if self.insecure {
             arguments.push("--insecure".to_string());
         }
@@ -153,6 +153,7 @@ mod tests {
                 cacert_file: None,
                 client_cert_file: None,
                 client_key_file: None,
+                connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
                 follow_location: true,
                 max_redirect: Some(10),
                 cookie_input_file: Some("cookie_file".to_string()),
@@ -176,6 +177,8 @@ mod tests {
                 "--compressed".to_string(),
                 "--connect-timeout".to_string(),
                 "20".to_string(),
+                "--connect-to".to_string(),
+                "example.com:443:host-47.example.com:443".to_string(),
                 "--cookie".to_string(),
                 "cookie_file".to_string(),
                 "--insecure".to_string(),

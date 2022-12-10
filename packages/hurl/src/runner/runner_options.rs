@@ -30,6 +30,7 @@ pub struct RunnerOptions {
     pub client_key_file: Option<String>,
     pub compressed: bool,
     pub connect_timeout: Duration,
+    pub connects_to: Vec<String>,
     pub context_dir: ContextDir,
     pub cookie_input_file: Option<String>,
     pub fail_fast: bool,
@@ -61,6 +62,7 @@ impl Default for RunnerOptions {
             client_key_file: None,
             compressed: false,
             connect_timeout: Duration::from_secs(300),
+            connects_to: vec![],
             context_dir: Default::default(),
             cookie_input_file: None,
             fail_fast: false,
@@ -91,6 +93,7 @@ impl RunnerOptions {
         let cacert_file = cli_options.cacert_file.clone();
         let client_cert_file = cli_options.client_cert_file.clone();
         let client_key_file = cli_options.client_key_file.clone();
+        let connects_to = cli_options.connects_to.clone();
         let follow_location = cli_options.follow_location;
         let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
             (true, true) => Some(Verbosity::VeryVerbose),
@@ -143,6 +146,7 @@ impl RunnerOptions {
             client_key_file,
             compressed,
             connect_timeout,
+            connects_to,
             context_dir,
             cookie_input_file,
             fail_fast,

@@ -226,6 +226,7 @@ impl From<&RunnerOptions> for ClientOptions {
             cacert_file: runner_options.cacert_file.clone(),
             client_cert_file: runner_options.client_cert_file.clone(),
             client_key_file: runner_options.client_key_file.clone(),
+            connects_to: runner_options.connects_to.clone(),
             follow_location: runner_options.follow_location,
             max_redirect: runner_options.max_redirect,
             cookie_input_file: runner_options.cookie_input_file.clone(),

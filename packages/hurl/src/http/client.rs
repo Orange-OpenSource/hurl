@@ -127,28 +127,28 @@ impl Client {
         // way to get access to the outgoing headers.
         self.handle.verbose(true).unwrap();
 
+        if !options.connects_to.is_empty() {
+            let connects = to_list(&options.connects_to);
+            self.handle.connect_to(connects).unwrap();
+        }
         if !options.resolves.is_empty() {
             let resolves = to_list(&options.resolves);
             self.handle.resolve(resolves).unwrap();
         }
-
         self.handle.ssl_verify_host(!options.insecure).unwrap();
         self.handle.ssl_verify_peer(!options.insecure).unwrap();
         if let Some(cacert_file) = options.cacert_file.clone() {
             self.handle.cainfo(cacert_file).unwrap();
             self.handle.ssl_cert_type("PEM").unwrap();
         }
-
         if let Some(client_cert_file) = options.client_cert_file.clone() {
             self.handle.ssl_cert(client_cert_file).unwrap();
             self.handle.ssl_cert_type("PEM").unwrap();
         }
-
         if let Some(client_key_file) = options.client_key_file.clone() {
             self.handle.ssl_key(client_key_file).unwrap();
             self.handle.ssl_cert_type("PEM").unwrap();
         }
-
         if let Some(proxy) = options.proxy.clone() {
             self.handle.proxy(proxy.as_str()).unwrap();
         }
