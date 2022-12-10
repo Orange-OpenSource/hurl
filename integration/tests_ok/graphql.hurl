@@ -23,6 +23,16 @@ jsonpath "$.data.allFilms.films[1].title" == "The Empire Strikes Back"
 jsonpath "$.data.allFilms.films[2].title" == "Return of the Jedi"
 
 
+# Equivalent syntax by posting a JSON body
+POST http://localhost:8000/graphql
+Content-Type: application/json
+{"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}
+
+HTTP 200
+[Asserts]
+jsonpath "$.data.allFilms.films" count == 6
+
+
 # Full syntax for query
 POST http://localhost:8000/graphql
 ```graphql
@@ -40,6 +50,7 @@ query Query {
 HTTP 200
 [Asserts]
 jsonpath "$.data.allFilms.films" count == 6
+
 
 # Query with variables:
 POST http://localhost:8000/graphql

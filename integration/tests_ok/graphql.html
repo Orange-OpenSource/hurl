@@ -23,6 +23,16 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films[2].title"</span> <span class="predicate-type">==</span> <span class="string">"Return of the Jedi"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
+<span class="line"></span><span class="comment"># Equivalent syntax by posting a JSON body</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">application/json</span></span>
+<span class="json"><span class="line">{"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line section-header">[Asserts]</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">6</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
 <span class="line"></span><span class="comment"># Full syntax for query</span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
 <span class="multiline"><span class="line">```graphql</span>
@@ -41,6 +51,7 @@
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.data.allFilms.films"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">6</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
 <span class="line"></span><span class="comment"># Query with variables:</span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
 <span class="multiline"><span class="line">```graphql</span>
