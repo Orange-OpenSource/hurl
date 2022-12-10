@@ -8,11 +8,14 @@ Thanks to
 [@jmoore34](https://github.com/jmoore34),
 [@devnoname120](https://github.com/devnoname120),
 [@dalejefferson-rnf](https://github.com/dalejefferson-rnf),
+[@dnsmichi](https://github.com/dnsmichi),
 
 
 Enhancements:
 
 * Add name attribute to JUnit report [#1078](https://github.com/Orange-OpenSource/hurl/issues/1078)
+
+* Check HTTP version and status first, then other asserts. [#1072](https://github.com/Orange-OpenSource/hurl/issues/1072)
 
 * Support new one line string [#1041](https://github.com/Orange-OpenSource/hurl/issues/1041)
 

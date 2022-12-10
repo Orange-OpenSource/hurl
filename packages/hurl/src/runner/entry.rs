@@ -29,6 +29,7 @@ use super::request::eval_request;
 use super::response::{eval_asserts, eval_captures};
 use super::value::Value;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
+use crate::runner::response::eval_version_status_asserts;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::template::eval_template;
 
@@ -124,7 +125,32 @@ pub fn run(
         .collect();
     let time_in_ms = calls.iter().map(|c| c.response.duration.as_millis()).sum();
 
-    // Compute captures
+    // We proceed asserts and captures in this order:
+    // 1. first, check implicit assert on status and version. If KO, test is failed
+    // 2. then, we compute captures, we might need them in asserts
+    // 3. finally, run the remaining asserts
+    let mut all_asserts = vec![];
+
+    if !runner_options.ignore_asserts {
+        if let Some(response_spec) = &entry.response {
+            let mut asserts = eval_version_status_asserts(response_spec, http_response);
+            let errors = asserts_to_errors(&asserts);
+            if !errors.is_empty() {
+                logger.debug("");
+                return EntryResult {
+                    entry_index,
+                    calls,
+                    captures: vec![],
+                    asserts,
+                    errors,
+                    time_in_ms,
+                    compressed: client_options.compressed,
+                };
+            }
+            all_asserts.append(&mut asserts);
+        }
+    };
+
     let captures = match &entry.response {
         None => vec![],
         Some(response_spec) => match eval_captures(response_spec, http_response, variables) {
@@ -134,7 +160,7 @@ pub fn run(
                     entry_index,
                     calls,
                     captures: vec![],
-                    asserts: vec![],
+                    asserts: all_asserts,
                     errors: vec![e],
                     time_in_ms,
                     compressed: client_options.compressed,
@@ -152,21 +178,34 @@ pub fn run(
     logger.debug("");
 
     // Compute asserts
-    let asserts = if runner_options.ignore_asserts {
-        vec![]
-    } else {
-        match &entry.response {
-            None => vec![],
-            Some(response_spec) => eval_asserts(
+    if !runner_options.ignore_asserts {
+        if let Some(response_spec) = &entry.response {
+            let mut asserts = eval_asserts(
                 response_spec,
                 variables,
                 http_response,
                 &runner_options.context_dir,
-            ),
+            );
+            all_asserts.append(&mut asserts);
         }
     };
 
-    let errors = asserts
+    let errors = asserts_to_errors(&all_asserts);
+
+    EntryResult {
+        entry_index,
+        calls,
+        captures,
+        asserts: all_asserts,
+        errors,
+        time_in_ms,
+        compressed: client_options.compressed,
+    }
+}
+
+/// Converts a list of [`AssertResult`] to a list of [`Error`].
+fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<Error> {
+    asserts
         .iter()
         .filter_map(|assert| assert.error())
         .map(
@@ -178,17 +217,7 @@ pub fn run(
                 assert: true,
             },
         )
-        .collect();
-
-    EntryResult {
-        entry_index,
-        calls,
-        captures,
-        asserts,
-        errors,
-        time_in_ms,
-        compressed: client_options.compressed,
-    }
+        .collect()
 }
 
 impl From<&RunnerOptions> for ClientOptions {

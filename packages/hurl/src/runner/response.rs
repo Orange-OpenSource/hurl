@@ -30,12 +30,11 @@ use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
 
-/// Returns a list of assert results, given a set of `variables`, an actual `http_response` and a spec `response`.
-pub fn eval_asserts(
+/// Returns a list of assert results on the response status code and HTTP version,
+/// given a set of `variables`, an actual `http_response` and a spec `response`.
+pub fn eval_version_status_asserts(
     response: &Response,
-    variables: &HashMap<String, Value>,
     http_response: &http::Response,
-    context_dir: &ContextDir,
 ) -> Vec<AssertResult> {
     let mut asserts = vec![];
 
@@ -54,6 +53,20 @@ pub fn eval_asserts(
             source_info: status.source_info.clone(),
         });
     }
+    asserts
+}
+
+/// Returns a list of assert results, given a set of `variables`, an actual `http_response` and a spec `response`.
+///
+/// Asserts on status and version and not run in this function, there are run with `eval_version_status_asserts`
+/// as they're semantically stronger.
+pub fn eval_asserts(
+    response: &Response,
+    variables: &HashMap<String, Value>,
+    http_response: &http::Response,
+    context_dir: &ContextDir,
+) -> Vec<AssertResult> {
+    let mut asserts = vec![];
 
     for header in response.headers.iter() {
         match eval_template(&header.value, variables) {
@@ -377,6 +390,26 @@ mod tests {
                 &http::xml_two_users_http_response(),
                 &context_dir,
             ),
+            vec![AssertResult::Explicit {
+                actual: Ok(Some(Value::Nodeset(2))),
+                source_info: SourceInfo::new(1, 14, 1, 27),
+                predicate_result: Some(Err(Error {
+                    source_info: SourceInfo::new(1, 0, 1, 0),
+                    inner: RunnerError::AssertFailure {
+                        actual: "2".to_string(),
+                        expected: "3".to_string(),
+                        type_mismatch: false,
+                    },
+                    assert: true,
+                })),
+            },]
+        );
+    }
+
+    #[test]
+    pub fn test_eval_version_status_asserts() {
+        assert_eq!(
+            eval_version_status_asserts(&user_response(), &http::xml_two_users_http_response(),),
             vec![
                 AssertResult::Version {
                     actual: String::from("HTTP/1.0"),
@@ -387,19 +420,6 @@ mod tests {
                     actual: 200,
                     expected: 200,
                     source_info: SourceInfo::new(2, 10, 2, 13),
-                },
-                AssertResult::Explicit {
-                    actual: Ok(Some(Value::Nodeset(2))),
-                    source_info: SourceInfo::new(1, 14, 1, 27),
-                    predicate_result: Some(Err(Error {
-                        source_info: SourceInfo::new(1, 0, 1, 0),
-                        inner: RunnerError::AssertFailure {
-                            actual: "2".to_string(),
-                            expected: "3".to_string(),
-                            type_mismatch: false,
-                        },
-                        assert: true,
-                    })),
                 },
             ]
         );
