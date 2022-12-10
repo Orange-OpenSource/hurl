@@ -319,7 +319,7 @@ key-string: (key-string-content | template)+
 
 key-string-content: (key-string-text | key-string-escaped-char)*
 
-key-string-text: ~[#: \n\r\t\\]+
+key-string-text: (alphanum | "_" | "-" | "." | "[" | "]" | "@" | "$") +
 
 key-string-escaped-char: "\\" ("#" | ":" | "\\" | "\b" | "\f" | "\n" | "\r" | "\t" | "\u" unicode-char )
 
@@ -418,7 +418,9 @@ filter:
   | count-filter
   | url-encode-filter
   | url-decode-filter
-  | to-int
+  | html-encode-filter
+  | html-decode-filter
+  | to-int-filter
 
 regex-filter: "regex" sp (quoted-string | regex)
 
@@ -432,13 +434,15 @@ html-encode-filter: "htmlEscape"
 
 html-decode-filter: "htmlUnescape"
 
-to-int: "toInt"
+to-int-filter: "toInt"
 
 # Lexical Grammar
 
 boolean: "true" | "false"
 
 null: "null"
+
+alphanum: [A-Za-z0-9]
 
 integer: digit+
 
