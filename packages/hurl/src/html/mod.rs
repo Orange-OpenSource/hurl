@@ -15,13 +15,9 @@
  * limitations under the License.
  *
  */
-#![cfg_attr(feature = "strict", deny(warnings))]
+mod entities;
+mod escape;
+mod unescape;
 
-pub mod cli;
-pub mod html;
-pub mod http;
-pub mod json;
-pub mod jsonpath;
-pub mod report;
-pub mod runner;
-pub mod util;
+pub use self::escape::html_escape;
+pub use self::unescape::html_unescape;

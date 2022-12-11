@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::html;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};
 use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo};
@@ -158,9 +159,8 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
 fn eval_html_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
-            let mut enco = String::from(value);
-            let encoded = html_escape::encode_text_to_string(value, &mut enco);
-            Ok(Value::String(encoded.to_string()))
+            let encoded = html::html_escape(value);
+            Ok(Value::String(encoded))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -173,7 +173,7 @@ fn eval_html_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Er
 fn eval_html_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
-            let decoded = html_escape::decode_html_entities(value).to_string();
+            let decoded = html::html_unescape(value);
             Ok(Value::String(decoded))
         }
         v => Err(Error {
@@ -417,5 +417,55 @@ pub mod tests {
             err.inner,
             RunnerError::FilterInvalidInput("bool <true>".to_string())
         );
+    }
+
+    #[test]
+    pub fn eval_filter_html_escape() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::HtmlEscape,
+        };
+
+        let tests = vec![
+            ("foo", "foo"),
+            ("<tag>", "&lt;tag&gt;"),
+            ("foo & bar", "foo &amp; bar"),
+            (
+                "string with double quote: \"baz\"",
+                "string with double quote: &quot;baz&quot;",
+            ),
+        ];
+        for (input, output) in tests.iter() {
+            assert_eq!(
+                eval_filter(&filter, &Value::String(input.to_string()), &variables).unwrap(),
+                Value::String(output.to_string())
+            );
+        }
+    }
+
+    #[test]
+    pub fn eval_filter_html_unescape() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::HtmlUnescape,
+        };
+
+        let tests = vec![
+            ("foo", "foo"),
+            ("&lt;tag&gt;", "<tag>"),
+            ("foo &amp; bar", "foo & bar"),
+            (
+                "string with double quote: &quot;baz&quot;",
+                "string with double quote: \"baz\"",
+            ),
+        ];
+        for (input, output) in tests.iter() {
+            assert_eq!(
+                eval_filter(&filter, &Value::String(input.to_string()), &variables).unwrap(),
+                Value::String(output.to_string())
+            );
+        }
     }
 }

@@ -1,9 +1,4 @@
-from app import app
-
-
-@app.route("/filter")
-def filter():
-    return """{
+{
   "list": [1,2,3],
   "message": "Hello Bob!",
   "url": "https://mozilla.org/?x=шеллы",
@@ -16,4 +11,4 @@ def filter():
   ],
   "id": "123",
   "score": 1.6
-}"""
+}
