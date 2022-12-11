@@ -28,10 +28,10 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.sh")
 
-# Check *sh error handling at line 2
+# Check *sh error handling at first uncommented line
 echo "------------------------------------------------------------------------------------------"
 while read -r script ; do
-    if [ "$(head -2 "$script" | tail -1 | grep -c "set -Eeuo pipefail" || true)" -eq 0 ] ; then
+    if [ "$(grep -Ev "^$|^#" "$script" | head -1 | grep -c "set -Eeuo pipefail" || true)" -eq 0 ] ; then
         echo "Missing [set -Eeuo pipefail] in ${color_red}${script}${color_reset}"
         ((errors_count++))
     else

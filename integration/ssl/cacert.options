@@ -1,2 +1,2 @@
 --cacert
-ssl/cert.pem
+ssl/ca/cert.pem

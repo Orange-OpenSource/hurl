@@ -23,10 +23,15 @@ if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8000) {powershell write-host -foregroundcolor Green "server is up"} else {powershell write-host -foregroundcolor Red "server is down" ; exit 1}
 
-Start-Process powershell -WindowStyle Hidden { python ssl/server.py 2>&1 > server-ssl.log }
+Start-Process powershell -WindowStyle Hidden { python ssl/server.py 8001 ssl/server/cert.selfsigned.pem false 2>&1 > server-ssl-selfsigned.log }
 if ($LASTEXITCODE) { Throw }
 sleep 5
-if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8001) {powershell write-host -foregroundcolor Green "server-ssl up"} else {powershell write-host -foregroundcolor Red "server-ssl is down" ; exit 1}
+if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8001) {powershell write-host -foregroundcolor Green "server-ssl-selfsigned up"} else {powershell write-host -foregroundcolor Red "server-ssl-selfsigned is down" ; exit 1}
+
+Start-Process powershell -WindowStyle Hidden { python ssl/server.py 8002 ssl/server/cert.pem false 2>&1 > server-ssl-signedbyca.log }
+if ($LASTEXITCODE) { Throw }
+sleep 5
+if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8002) {powershell write-host -foregroundcolor Green "server-ssl-signedbyca up"} else {powershell write-host -foregroundcolor Red "server-ssl-signedbyca is down" ; exit 1}
 
 cd $actual_dir
 

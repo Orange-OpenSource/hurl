@@ -307,7 +307,5 @@ jobs:
       with:
         name: tests-win64-${{ matrix.rust }}-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          integration/*.log
 

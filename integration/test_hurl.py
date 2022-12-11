@@ -54,6 +54,12 @@ def test(hurl_file: str):
     else:
         curl_file = hurl_file.replace(".hurl", ".curl")
 
+    os_allow_failure_file = hurl_file.replace(".hurl", "." + get_os() + ".allowfailure")
+    if os.path.exists(os_allow_failure_file):
+        allow_failure_file = os_allow_failure_file
+    else:
+        allow_failure_file = hurl_file.replace(".hurl", ".allowfailure")
+
     profile_file = hurl_file.replace(".hurl", ".profile")
 
     options = []
@@ -91,7 +97,11 @@ def test(hurl_file: str):
         stderr = decode_string(result.stderr).strip()
         if stderr != "":
             print(stderr)
-        sys.exit(1)
+        if os.path.exists(allow_failure_file):
+            print(">>> allow failure")
+            sys.exit(0)
+        else:
+            sys.exit(1)
 
     # stdout
     f = hurl_file.replace(".hurl", ".out")
