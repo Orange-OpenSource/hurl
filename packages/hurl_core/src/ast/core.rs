@@ -871,14 +871,14 @@ pub struct Filter {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FilterValue {
-    Count {},
+    Count,
     Regex {
         space0: Whitespace,
         value: RegexValue,
     },
-    UrlEncode {},
-    UrlDecode {},
-    HtmlEscape {},
-    HtmlUnescape {},
-    ToInt {},
+    UrlEncode,
+    UrlDecode,
+    HtmlEscape,
+    HtmlUnescape,
+    ToInt,
 }

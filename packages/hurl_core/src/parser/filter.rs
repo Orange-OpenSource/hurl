@@ -80,7 +80,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
 
 fn count_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("count", reader)?;
-    Ok(FilterValue::Count {})
+    Ok(FilterValue::Count)
 }
 
 fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
@@ -92,27 +92,27 @@ fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
 
 fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("urlEncode", reader)?;
-    Ok(FilterValue::UrlEncode {})
+    Ok(FilterValue::UrlEncode)
 }
 
 fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("urlDecode", reader)?;
-    Ok(FilterValue::UrlDecode {})
+    Ok(FilterValue::UrlDecode)
 }
 
 fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("htmlEscape", reader)?;
-    Ok(FilterValue::HtmlEscape {})
+    Ok(FilterValue::HtmlEscape)
 }
 
 fn html_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("htmlUnescape", reader)?;
-    Ok(FilterValue::HtmlUnescape {})
+    Ok(FilterValue::HtmlUnescape)
 }
 
 fn to_int_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("toInt", reader)?;
-    Ok(FilterValue::ToInt {})
+    Ok(FilterValue::ToInt)
 }
 
 #[cfg(test)]
@@ -129,7 +129,7 @@ mod tests {
             filter(&mut reader).unwrap(),
             Filter {
                 source_info: SourceInfo::new(1, 1, 1, 6),
-                value: FilterValue::Count {},
+                value: FilterValue::Count,
             }
         );
     }

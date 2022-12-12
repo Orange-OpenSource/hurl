@@ -530,25 +530,25 @@ impl ToJson for FilterValue {
                 attributes.push(("type".to_string(), JValue::String("regex".to_string())));
                 attributes.push(("expr".to_string(), value.to_json()));
             }
-            FilterValue::Count { .. } => {
+            FilterValue::Count => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
-            FilterValue::UrlEncode { .. } => {
+            FilterValue::UrlEncode => {
                 attributes.push(("type".to_string(), JValue::String("urlEncode".to_string())));
             }
-            FilterValue::UrlDecode { .. } => {
+            FilterValue::UrlDecode => {
                 attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
             }
-            FilterValue::HtmlEscape { .. } => {
+            FilterValue::HtmlEscape => {
                 attributes.push(("type".to_string(), JValue::String("htmlEscape".to_string())));
             }
-            FilterValue::HtmlUnescape { .. } => {
+            FilterValue::HtmlUnescape => {
                 attributes.push((
                     "type".to_string(),
                     JValue::String("htmlUnescape".to_string()),
                 ));
             }
-            FilterValue::ToInt { .. } => {
+            FilterValue::ToInt => {
                 attributes.push(("type".to_string(), JValue::String("toInt".to_string())));
             }
         }

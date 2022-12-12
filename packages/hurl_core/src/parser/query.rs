@@ -368,7 +368,7 @@ mod tests {
                 },
                 Filter {
                     source_info: SourceInfo::new(1, 6, 1, 15),
-                    value: FilterValue::UrlDecode {},
+                    value: FilterValue::UrlDecode,
                 }
             )]
         );

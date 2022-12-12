@@ -44,12 +44,12 @@ fn eval_filter(
         FilterValue::Regex {
             value: regex_value, ..
         } => eval_regex(value, regex_value, variables, &filter.source_info),
-        FilterValue::Count {} => eval_count(value, &filter.source_info),
-        FilterValue::UrlEncode { .. } => eval_url_encode(value, &filter.source_info),
-        FilterValue::UrlDecode { .. } => eval_url_decode(value, &filter.source_info),
-        FilterValue::HtmlEscape { .. } => eval_html_encode(value, &filter.source_info),
-        FilterValue::HtmlUnescape { .. } => eval_html_decode(value, &filter.source_info),
-        FilterValue::ToInt { .. } => eval_to_int(value, &filter.source_info),
+        FilterValue::Count => eval_count(value, &filter.source_info),
+        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info),
+        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info),
+        FilterValue::HtmlEscape => eval_html_encode(value, &filter.source_info),
+        FilterValue::HtmlUnescape => eval_html_decode(value, &filter.source_info),
+        FilterValue::ToInt => eval_to_int(value, &filter.source_info),
     }
 }
 
@@ -212,7 +212,7 @@ pub mod tests {
     pub fn filter_count() -> Filter {
         Filter {
             source_info: SourceInfo::new(1, 1, 1, 6),
-            value: FilterValue::Count {},
+            value: FilterValue::Count,
         }
     }
 
@@ -342,7 +342,7 @@ pub mod tests {
         let variables = HashMap::new();
         let filter = Filter {
             source_info: SourceInfo::new(0, 0, 0, 0),
-            value: FilterValue::UrlEncode {},
+            value: FilterValue::UrlEncode,
         };
         assert_eq!(
             eval_filter(
@@ -362,7 +362,7 @@ pub mod tests {
         let variables = HashMap::new();
         let filter = Filter {
             source_info: SourceInfo::new(0, 0, 0, 0),
-            value: FilterValue::UrlDecode {},
+            value: FilterValue::UrlDecode,
         };
         assert_eq!(
             eval_filter(
@@ -380,7 +380,7 @@ pub mod tests {
         let variables = HashMap::new();
         let filter = Filter {
             source_info: SourceInfo::new(1, 1, 1, 1),
-            value: FilterValue::ToInt {},
+            value: FilterValue::ToInt,
         };
         assert_eq!(
             eval_filter(&filter, &Value::String("123".to_string()), &variables).unwrap(),
@@ -401,7 +401,7 @@ pub mod tests {
         let variables = HashMap::new();
         let filter = Filter {
             source_info: SourceInfo::new(1, 1, 1, 1),
-            value: FilterValue::ToInt {},
+            value: FilterValue::ToInt,
         };
         let err = eval_filter(&filter, &Value::String("123x".to_string()), &variables)
             .err()

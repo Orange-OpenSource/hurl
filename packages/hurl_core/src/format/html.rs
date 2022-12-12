@@ -1078,7 +1078,7 @@ impl Htmlable for Filter {
 impl Htmlable for FilterValue {
     fn to_html(&self) -> String {
         match self {
-            FilterValue::Count {} => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
             FilterValue::Regex { space0, value } => {
                 let mut buffer = "".to_string();
                 buffer.push_str("<span class=\"filter-type\">regex</span>");
@@ -1086,15 +1086,13 @@ impl Htmlable for FilterValue {
                 buffer.push_str(value.to_html().as_str());
                 buffer
             }
-            FilterValue::UrlEncode {} => "<span class=\"filter-type\">urlEncode</span>".to_string(),
-            FilterValue::UrlDecode {} => "<span class=\"filter-type\">urlDecode</span>".to_string(),
-            FilterValue::HtmlEscape {} => {
-                "<span class=\"filter-type\">htmlEscape</span>".to_string()
-            }
-            FilterValue::HtmlUnescape {} => {
+            FilterValue::UrlEncode => "<span class=\"filter-type\">urlEncode</span>".to_string(),
+            FilterValue::UrlDecode => "<span class=\"filter-type\">urlDecode</span>".to_string(),
+            FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
+            FilterValue::HtmlUnescape => {
                 "<span class=\"filter-type\">htmlUnescape</span>".to_string()
             }
-            FilterValue::ToInt {} => "<span class=\"filter-type\">toInt</span>".to_string(),
+            FilterValue::ToInt => "<span class=\"filter-type\">toInt</span>".to_string(),
         }
     }
 }
