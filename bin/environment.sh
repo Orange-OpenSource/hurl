@@ -1,4 +1,6 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
+
 uname -a
 python3 -V
+

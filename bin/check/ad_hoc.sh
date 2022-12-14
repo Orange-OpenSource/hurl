@@ -1,5 +1,9 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
+
+color_red=$(echo -e "\033[1;31m")
+color_reset=$(echo -e "\033[0m")
+errors_count=0
 
 # Check that Rust source files contains Orange Copyright
 find packages -name "*.rs" | while read -r rust_file; do
@@ -8,5 +12,4 @@ find packages -name "*.rs" | while read -r rust_file; do
 	exit 1
     fi
 done
-
 

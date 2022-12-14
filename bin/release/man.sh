@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 rm -rf target/man
 mkdir -p target/man
@@ -8,5 +8,4 @@ bin/release/gen_manpage.py docs/manual/hurlfmt.md > target/man/hurlfmt.1
 
 gzip -n -9 target/man/hurl.1
 gzip -n -9 target/man/hurlfmt.1
-
 

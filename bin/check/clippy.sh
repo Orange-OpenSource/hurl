@@ -1,4 +1,5 @@
 #!/bin/bash
-cargo clippy -- -D warnings
+set -Eeuo pipefail
 
+cargo clippy -- -D warnings
 

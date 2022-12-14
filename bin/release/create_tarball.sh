@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -u
+set -Eeuo pipefail
 
 os="$1"
 package_dir="target/tarball/hurl-$VERSION"

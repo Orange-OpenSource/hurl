@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
-black --check .
+set -Eeuo pipefail
 
+black --check .
 

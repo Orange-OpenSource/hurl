@@ -1,4 +1,6 @@
 #!/bin/bash
+set -Eeuo pipefail
+
 # Add ad-hoc tests that can't be easily added in tests_ok/ nor tests_failed/
 
 function assert_equals() {
@@ -29,3 +31,4 @@ echo "Check hurlfmt --color"
 actual=$(echo 'GET http://localhost:8000/hello' | hurlfmt --color)
 expected="[33mGET[0m [32mhttp://localhost:8000/hello[0m"
 assert_equals "$actual" "$expected"
+

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
-set -x
+set -Eeuo pipefail
 
 time hurl tests/hello_1000.hurl
+

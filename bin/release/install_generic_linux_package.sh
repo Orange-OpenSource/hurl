@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 echo "----- install generic linux package -----"
 
@@ -12,3 +12,4 @@ tar xvf "${generic_linux_package}" -C "${install_dir}" --strip-components=1
 # Return PATH var to parent shell
 echo "Run this if you want to use fresh builded hurl package:"
 echo "  export PATH=${install_dir}:$PATH"
+

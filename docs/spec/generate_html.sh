@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -o pipefail
+set -Eeuo pipefail
 
 # Check version
 # A specific version defines both the grammar format and the HTML output
@@ -16,3 +15,4 @@ cat <<END >hurl.grammar.html
 <link rel="stylesheet" type="text/css" href="style.css">
 END
 grammar <hurl.grammar >>hurl.grammar.html
+

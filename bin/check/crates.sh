@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
-bin/update_crates.sh --check
+set -Eeuo pipefail
 
+bin/update_crates.sh --check
 

@@ -1,3 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
+
 xmllint --noout integration/tests_*/*.html
+

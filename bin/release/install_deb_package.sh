@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 echo "----- install deb package -----"
 
@@ -14,3 +14,4 @@ dpkg -x "${deb_package}" "${install_dir}"
 package_dir="${install_dir}/usr/bin"
 echo "Run this if you want to use fresh builded hurl package:"
 echo "  export PATH=$package_dir:$PATH"
+

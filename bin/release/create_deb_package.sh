@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
-set -u
+set -Eeuo pipefail
+
 sudo rm -rf target/debian
 mkdir target/debian
 mkdir -p target/debian/usr/bin target/debian/DEBIAN

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
 
 echo "----- Bench suite -----"
 
@@ -16,3 +16,4 @@ python3 server.py >server.log 2>&1 &
 sleep 5
 netstat -anpe | grep 8000
 ./run.sh
+

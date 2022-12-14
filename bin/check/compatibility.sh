@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
 
 get_sample_crate_version() {
   crate="$1"
@@ -50,3 +50,4 @@ cargo clean
 cargo update
 cargo build
 cargo run -- hello.hurl
+

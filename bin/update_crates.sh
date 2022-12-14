@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -Eeuo pipefail
+
 # init exit workflow
-set -o errexit
-set -o pipefail
 
 # init colors
 color_red=$(echo -ne "\033[1;31m")
@@ -131,3 +131,4 @@ main() {
 
 # run
 main "$@"
+

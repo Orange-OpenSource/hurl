@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 echo "----- integration tests -----"
 
@@ -16,3 +16,4 @@ cd integration || exit
 ./test_html_output.py tests_ok/*.html tests_failed/*.html
 ./ad_hoc.sh
 ./report.py
+
