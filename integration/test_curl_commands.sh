@@ -1,15 +1,15 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*'|sort | while read -r f; do
-    echo "** $f"
-    grep -v '^$' <"$f" | grep -v '^#' | while read -r line;  do
-        echo "$line"
-        cmd="$line --no-progress-meter --output /dev/null --fail"
-        echo "$cmd" | bash  || (echo ">>> Error <<<<" && exit 1)
-    done
+while read -r test_file ; do
+    echo "** ${test_file}"
+    while read -r line;  do
+        echo "${line}"
+        cmd="${line} --no-progress-meter --output /dev/null --fail"
+        echo "${cmd}" | bash  || (echo ">>> Error <<<<" && exit 1)
+    done < <( (grep -v '^$' "${test_file}" || true) | (grep -v '^#' || true) )
     echo
-done
+done < <( find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*' | sort )
 
 echo "all curl commands have been run with success!"
 

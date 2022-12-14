@@ -13,7 +13,7 @@ function assert_equals() {
 }
 
 echo "Check file not found error"
-actual=$(hurl does_not_exist.hurl 2>&1)
+actual=$(hurl does_not_exist.hurl 2>&1 || true)
 expected="error: hurl: cannot access 'does_not_exist.hurl': No such file or directory"
 assert_equals "$actual" "$expected"
 

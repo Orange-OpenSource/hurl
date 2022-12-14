@@ -22,7 +22,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
@@ -35,14 +34,12 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
         repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
-
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -77,19 +74,18 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v3
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-
     - name: Install package and tests integ
       uses: addnab/docker-run-action@v3
       with:
         image: debian
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
         run: |
+          set -e
           echo "::group::Install system prerequisites"
           bin/install_prerequisites_docker_ubuntu.sh
           echo "::endgroup::"
@@ -115,6 +111,7 @@ jobs:
           integration/mitmdump.log
           integration/server.log
           integration/server-ssl.log
+
   test-generic-linux-docker-archlinux-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
@@ -123,19 +120,21 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v3
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-
     - name: Install package and tests integ
       uses: addnab/docker-run-action@v3
       with:
         image: archlinux
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
         run: |
+          set -e
+          pacman-key --init
+          pacman -Syy --noconfirm
+          pacman -Sy --noconfirm bash
           echo "::group::Install system prerequisites"
           bin/install_prerequisites_docker_archlinux.sh
           echo "::endgroup::"
@@ -161,6 +160,7 @@ jobs:
           integration/mitmdump.log
           integration/server.log
           integration/server-ssl.log
+
   test-generic-linux-docker-fedora-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
@@ -169,19 +169,19 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Retrieve release-generic-linux-x64-artifacts
       uses: actions/download-artifact@v3
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
-
     - name: Install package and tests integ
       uses: addnab/docker-run-action@v3
       with:
         image: fedora
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
         run: |
+          set -e
+          yum install -y bash
           echo "::group::Install system prerequisites"
           bin/install_prerequisites_docker_fedora.sh
           echo "::endgroup::"
@@ -207,6 +207,7 @@ jobs:
           integration/mitmdump.log
           integration/server.log
           integration/server-ssl.log
+
   package-deb-x64:
     runs-on: ubuntu-18.04
     steps:
@@ -214,14 +215,12 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
         bin/install_rust_latest.sh
     - name: Environment
       run: bin/environment.sh
-
     - name: Build
       run: |
         bin/release/release.sh
@@ -230,14 +229,12 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
         repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
-
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -271,15 +268,12 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Install Rust
       run: bin/install_rust_latest.sh
-
     - name: Install Python 3.8
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-
     - name: Build
       run: |
         bin/release/release.sh
@@ -323,27 +317,22 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-
     - name: Cache
       uses: actions/cache@v3
       with:
         path: C:\vcpkg\installed
         key: ${{ runner.os }}-release-windows-x64-${{ github.sha }}
         restore-keys: ${{ runner.os }}-release-windows-x64-
-
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         override: true
         profile: minimal
-
     - name: Environment
       run: .\bin\environment.ps1
-
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
-
     - name: Build and test integ
       run: |
         .\bin\release\release.ps1
@@ -351,7 +340,6 @@ jobs:
         .\bin\test\test_integ.ps1
     - name: Create windows64 Zip package
       run: .\bin\release\create_windows64_zip_package.ps1
-
     - name: Install win64 zip and test integ
       run: |
         .\bin\release\install_windows64_zip_package.ps1
@@ -359,7 +347,6 @@ jobs:
         .\bin\test\test_integ.ps1
     - name: Create windows64 installer
       run: .\bin\release\create_windows64_installer.ps1
-
     - name: Install win64 installer and test integ
       run: |
         .\bin\release\install_windows64_installer.ps1
