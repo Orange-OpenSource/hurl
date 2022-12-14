@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -Eeuo pipefail
+
 # init exit workflow
 
 # init colors
