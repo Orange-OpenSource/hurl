@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
 find ./tests_ok ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*'|sort | while read -r f; do
     echo "** $f"
     grep -v '^$' <"$f" | grep -v '^#' | while read -r line;  do

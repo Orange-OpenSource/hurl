@@ -1,5 +1,5 @@
-#!/bin/sh
-set -eu
+#!/bin/bash
+set -Eeuo pipefail
 
 echo "----- Bench suite -----"
 

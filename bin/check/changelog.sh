@@ -1,6 +1,6 @@
 #!/bin/bash
+set -Eeuo pipefail
 # Check that issues in CHANGELOG are up-to-to-date
-set -eu
 
 version=$(head -1 <CHANGELOG.md| cut -d" " -f1 | cut -d'[' -f2)
 changelog=$(bin/release/changelog_extract.py "$version" | grep '^\* ')

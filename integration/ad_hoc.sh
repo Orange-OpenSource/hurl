@@ -1,4 +1,5 @@
 #!/bin/bash
+set -Eeuo pipefail
 # Add ad-hoc tests that can't be easily added in tests_ok/ nor tests_failed/
 
 function assert_equals() {

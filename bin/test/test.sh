@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -Eeuo pipefail
 
 "$(dirname "$0")"/test_prerequisites.sh
 "$(dirname "$0")"/test_unit.sh

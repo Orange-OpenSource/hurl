@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -Eeuo pipefail
 
 docker_file="$1"
 version="2.12.0"

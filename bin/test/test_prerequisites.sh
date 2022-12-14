@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -Eeuo pipefail
 echo "----- install servers prerequisites -----"
 pip3 install --requirement bin/requirements-frozen.txt
 echo "----- start servers -----"

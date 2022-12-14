@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -Eeuo pipefail
 
 PATH="$HOME"/.cargo/bin:$PATH
 export PATH

@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -Eeuo pipefail
 
 echo "----- integration tests -----"
 

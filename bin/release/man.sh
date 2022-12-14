@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/bash
+set -Eeuo pipefail
 
 rm -rf target/man
 mkdir -p target/man

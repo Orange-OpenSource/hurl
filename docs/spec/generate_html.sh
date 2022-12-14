@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -o pipefail
+set -Eeuo pipefail
 
 # Check version
 # A specific version defines both the grammar format and the HTML output
