@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 echo "----- install prerequisite packages -----"
 apk update --quiet

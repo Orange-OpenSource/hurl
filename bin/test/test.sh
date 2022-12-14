@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 "$(dirname "$0")"/test_prerequisites.sh

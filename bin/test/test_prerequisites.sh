@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 echo "----- install servers prerequisites -----"
 pip3 install --requirement bin/requirements-frozen.txt

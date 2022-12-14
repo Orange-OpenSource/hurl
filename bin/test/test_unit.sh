@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 echo "----- unit tests  -----"
 PATH="$HOME"/.cargo/bin:$PATH
