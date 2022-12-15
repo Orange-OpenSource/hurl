@@ -169,7 +169,7 @@ quiz
 Locally, our test suite is now fully functional. As Hurl is very fast, we can use
 it to ensure that new developments don't have regression. Our next step is to run
 the integration tests automatically in a CI/CD pipeline. As an example, we're going
-to create a [GitHub Action].
+to create a [GitHub Action]. You can also see how to integrate your tests in [GitLab CI/CD here].
 
 ## Running Tests with GitHub Action
 
@@ -252,6 +252,11 @@ Finally, you can check on GitHub that our action is running:
     <img class="dark-img u-drop-shadow u-border" src="/docs/assets/img/github-action-dark.png" width="100%" alt="GitHub Action"/>
 </p>
 
+## Running Tests with GitLab CI/CD
+
+If you use [GitLab CI/CD], you can check [this detailed tutorial] on how to continuously run your Hurl test suite.
+
+
 ## Tests Report
 
 TBD
@@ -265,6 +270,8 @@ Now, we can add more Hurl tests and start developing new features with confidenc
 [`integration/basic.hurl`]: https://raw.githubusercontent.com/jcamiel/quiz/master/integration/basic.hurl
 [`integration/create-quiz.hurl`]: https://raw.githubusercontent.com/jcamiel/quiz/master/integration/create-quiz.hurl
 [GitHub Actions]: https://github.com/features/actions
-[GitHub Action]: https://github.com/features/actions
 [GitLab CI/CD pipelines]: https://docs.gitlab.com/ee/ci/pipelines/
 [`bin/integration.sh`]: https://github.com/jcamiel/quiz/blob/master/bin/integration.sh
+[GitLab CI/CD here]: https://about.gitlab.com/blog/2022/12/14/how-to-continously-test-web-apps-apis-with-hurl-and-gitlab-ci-cd/
+[GitLab CI/CD]: https://about.gitlab.com/why-gitlab/
+[this detailed tutorial]: https://about.gitlab.com/blog/2022/12/14/how-to-continously-test-web-apps-apis-with-hurl-and-gitlab-ci-cd/
