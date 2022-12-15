@@ -136,11 +136,8 @@ jobs:
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
           set -e
-          pacman-key --init
-          pacman -Syy --noconfirm
-          pacman -Sy --noconfirm bash
           echo "::group::Install Prerequisites"
-          bin/install_prerequisites_archlinux.sh
+          bin/install_prerequisites_docker_archlinux.sh
           echo "::endgroup::"
           echo "::group::Environment"
           bin/environment.sh
@@ -175,9 +172,8 @@ jobs:
         options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
           set -e
-          yum install -y bash
           echo "::group::Install Prerequisites"
-          bin/install_prerequisites_fedora.sh
+          bin/install_prerequisites_docker_fedora.sh
           echo "::endgroup::"
           echo "::group::Environment"
           bin/environment.sh
