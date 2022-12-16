@@ -46,7 +46,7 @@ use super::entry;
 /// use hurl::http;
 /// use hurl::http::ContextDir;
 /// use hurl::runner;
-/// use hurl::runner::Value;
+/// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl";
@@ -61,10 +61,10 @@ use super::entry;
 /// let logger = Logger::new(false, false, filename, s);
 ///
 /// // Define runner options
-/// let runner_options = runner::RunnerOptions {
-///   very_verbose: true,
-///   ..runner::RunnerOptions::default()
-/// };
+/// let runner_options = RunnerOptionsBuilder::new()
+///     .follow_location(true)
+///     .verbosity(Some(Verbosity::Verbose))
+///     .build();
 ///
 /// // set variables
 /// let mut variables = HashMap::default();

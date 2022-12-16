@@ -27,7 +27,7 @@ pub use self::core::{
     AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult, RunnerError, Verbosity,
 };
 pub use self::hurl_file::run;
-pub use self::runner_options::RunnerOptions;
+pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::Value;
 
 mod assert;

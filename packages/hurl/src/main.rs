@@ -131,8 +131,9 @@ fn execute(
                 );
             }
             let variables = cli_options.variables.clone();
+            let cookie_input_file = cli_options.cookie_input_file.clone();
             let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
-            let mut client = http::Client::new(runner_options.cookie_input_file.clone());
+            let mut client = http::Client::new(cookie_input_file);
             let result = runner::run(
                 &hurl_file,
                 filename,
