@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Install packages
-yum install -y python38 procps gcc libxml2-devel openssl-devel libcurl-devel
+yum install -y python38 procps gcc libxml2-devel openssl-devel libcurl-devel nc
 alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 0
 alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 alternatives --set python3 /usr/bin/python3.8
