@@ -79,7 +79,7 @@ pub fn eval_file(filename: &Filename, context_dir: &ContextDir) -> Result<Vec<u8
         });
     }
     let resolved_file = context_dir.get_path(&file);
-    match std::fs::read(&resolved_file) {
+    match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
         Err(_) => Err(Error {
             source_info: filename.source_info.clone(),

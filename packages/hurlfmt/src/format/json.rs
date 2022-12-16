@@ -475,11 +475,11 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
         PredicateValue::Null {} => (JValue::Null, None),
         PredicateValue::Hex(value) => (
-            JValue::String(base64::encode(&value.value)),
+            JValue::String(base64::encode(value.value)),
             Some("base64".to_string()),
         ),
         PredicateValue::Base64(value) => (
-            JValue::String(base64::encode(&value.value)),
+            JValue::String(base64::encode(value.value)),
             Some("base64".to_string()),
         ),
         PredicateValue::Expression(value) => (JValue::String(value.to_string()), None),

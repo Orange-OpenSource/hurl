@@ -149,11 +149,7 @@ fn levenshtein_distance(s1: &str, s2: &str) -> usize {
         cmp::min(v1, cmp::min(v2, v3))
     }
     fn delta(x: char, y: char) -> usize {
-        if x == y {
-            0
-        } else {
-            1
-        }
+        usize::from(x != y)
     }
 
     let mut column: Vec<usize> = (0..=v1.len()).collect();

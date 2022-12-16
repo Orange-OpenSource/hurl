@@ -403,6 +403,8 @@ pub fn app(version: &str) -> Command {
 }
 
 /// Parses command line options `matches`.
+// FIXME: disallow this clippy warning because of https://github.com/rust-lang/rust-clippy/issues/9766
+#[allow(clippy::manual_filter)]
 pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
     let cacert_file = match get::<String>(matches, "cacert_file") {
         None => None,

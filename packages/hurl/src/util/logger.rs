@@ -457,7 +457,7 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     } else {
         let line = lines.get(line_number - 1).unwrap();
         let width = if error.source_info().end.column > column_number {
-            (error.source_info().end.column - column_number) as usize
+            error.source_info().end.column - column_number
         } else {
             0
         };

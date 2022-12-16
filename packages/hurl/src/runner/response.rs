@@ -49,7 +49,7 @@ pub fn eval_version_status_asserts(
     if let StatusValue::Specific(v) = status.value {
         asserts.push(AssertResult::Status {
             actual: http_response.status as u64,
-            expected: v as u64,
+            expected: v,
             source_info: status.source_info.clone(),
         });
     }

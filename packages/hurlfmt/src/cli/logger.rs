@@ -145,7 +145,7 @@ fn log_error(
         }
     } else {
         let line = lines.get(error.source_info().start.line - 1).unwrap();
-        let width = (error.source_info().end.column - error.source_info().start.column) as usize;
+        let width = error.source_info().end.column - error.source_info().start.column;
 
         let mut tab_shift = 0;
         for (i, c) in line.chars().enumerate() {
