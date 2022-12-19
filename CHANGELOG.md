@@ -6,12 +6,15 @@ Thanks to
 [@jlecour](https://github.com/jlecour),
 [@ako](https://github.com/ako),
 [@jmoore34](https://github.com/jmoore34),
+[@robjtede](https://github.com/robjtede),
 [@devnoname120](https://github.com/devnoname120),
 [@dalejefferson-rnf](https://github.com/dalejefferson-rnf),
 [@dnsmichi](https://github.com/dnsmichi),
 
 
 Enhancements:
+
+* Add connect-to option [#1079](https://github.com/Orange-OpenSource/hurl/issues/1079)
 
 * Add name attribute to JUnit report [#1078](https://github.com/Orange-OpenSource/hurl/issues/1078)
 
@@ -24,6 +27,8 @@ Enhancements:
 * Add toInt filter [#1029](https://github.com/Orange-OpenSource/hurl/issues/1029)
 
 * Use HTTP instead of HTTP/* for any HTTP version match [#975](https://github.com/Orange-OpenSource/hurl/issues/975)
+
+* Add RunnerOptionsBuilder to create instance of RunnerOptions. [#972](https://github.com/Orange-OpenSource/hurl/issues/972)
 
 * Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
 
