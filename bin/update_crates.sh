@@ -84,7 +84,7 @@ which_is_the_newest_version() {
 main() {
     # init vars
     crates_api_root_url="https://crates.io/api/v1/crates"
-    arg="$1"
+    arg="${1:-}"
     check_args "${arg}"
     updated_count=0
 
