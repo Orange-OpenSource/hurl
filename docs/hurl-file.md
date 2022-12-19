@@ -20,7 +20,7 @@ a documentation for HTTP based workflows so it can be useful to be very descript
 GET https://www.sample.net
 x-app: MY_APP  # Add a dummy header
 
-HTTP/1.1 302   # Check that we have a redirection
+HTTP 302       # Check that we have a redirection
 [Asserts]
 header "Location" exists
 header "Location" contains "login"  # Check that we are redirected to the login page
@@ -37,8 +37,7 @@ String can include the following special characters:
 ```hurl
 GET https://example.org/api
 
-HTTP/1.1 200
-
+HTTP 200
 # The following assert are equivalent:
 [Asserts]
 jsonpath "$.slideshow.title" == "A beautiful ✈!"
@@ -51,7 +50,7 @@ In the following example:
 ```hurl
 GET https://example.org/api
 x-token: BEEF \#STEACK # Some comment
-HTTP/1.1 200
+HTTP 200
 ```
 
 We're sending a header `x-token` with value `BEEF #STEACK`

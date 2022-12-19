@@ -2,23 +2,22 @@
 
 ## Captures
 
-Captures are optional values captured from the HTTP response, in a named variable. Captures can be the
-response status code, part of or the entire the body, and response headers.
+Captures are optional values that are __extracted from the HTTP response__ and stored in a named variable.
+These captures may be the response status code, part of or the entire the body, and response headers.
 
-Captured variables are available through a run session; each new value of a given variable overrides the last value.
+Captured variables can be accessed through a run session; each new value of a given variable overrides the last value.
 
-Captures allow using data from one request in another request, when working with
-[CSRF tokens] for instance. Variables can also be initialized at the start of the
-session, by passing [variable values], or can be used in [templates].
+Captures can be useful for using data from one request in another request, such as when working with [CSRF tokens].
+Variables in a Hurl file can be created from captures or [injected into the session].
 
 ```hurl
-# An example to show how to pass a CSRF token from one request
-# to another:
+# An example to show how to pass a CSRF token
+# from one request to another:
 
 # First GET request to get CSRF token value:
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 # Capture the CSRF token value from html body.
 [Captures]
 csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
@@ -27,7 +26,7 @@ csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 POST https://acmecorp.net/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 ```
 
 Structure of a capture:
@@ -40,13 +39,15 @@ Structure of a capture:
  </div>
 </div>
 
-A capture consists of a variable name, followed by `:` and a query. The captures
+A capture consists of a variable name, followed by `:` and a query. Captures
 section starts with `[Captures]`.
 
 
 ### Query
 
-Query can be of the following type:
+Queries are used to extract data from an HTTP response.
+
+A query can be of the following type:
 
 - [`status`](#status-capture)
 - [`header`](#header-capture)
@@ -60,6 +61,7 @@ Query can be of the following type:
 - [`variable`](#variable-capture)
 - [`duration`](#duration-capture)
 
+Extracted data can then be further refined using [filters].
 
 ### Status capture
 
@@ -69,7 +71,7 @@ keyword `status`.
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 my_status: status
 ```
@@ -85,7 +87,7 @@ POST https://example.org/login
 user: toto
 password: 12345678
 
-HTTP/1.1 302
+HTTP 302
 [Captures]
 next_url: header "Location"
 ```
@@ -100,7 +102,7 @@ GET https://example.org/redirecting
 [Options]
 location: true
 
-HTTP/* 200
+HTTP 200
 [Captures]
 landing_url: url
 ```
@@ -114,7 +116,7 @@ and a cookie name.
 ```hurl
 GET https://example.org/cookies/set
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 session-id: cookie "LSID"
 ```
@@ -126,7 +128,7 @@ Cookie attributes value can also be captured by using the following format:
 ```hurl
 GET https://example.org/cookies/set
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 value1: cookie "LSID"
 value2: cookie "LSID[Value]"     # Equivalent to the previous capture
@@ -147,7 +149,7 @@ Capture the entire body (decoded as text) from the received HTTP response
 ```hurl
 GET https://example.org/home
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 my_body: body
 ```
@@ -159,7 +161,7 @@ Capture the entire body (as a raw bytestream) from the received HTTP response
 ```hurl
 GET https://example.org/data.bin
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 my_data: bytes
 ```
@@ -174,14 +176,14 @@ Currently, only XPath 1.0 expression can be used.
 GET https://example.org/home
 
 # Capture the identifier from the dom node <div id="pet0">5646eaf23</div
-HTTP/1.1 200
+HTTP 200
 [Captures]
 ped-id: xpath "normalize-space(//div[@id='pet0'])"
 
 # Open the captured page.
 GET https://example.org/home/pets/{{pet-id}}
 
-HTTP/1.1 200
+HTTP 200
 ```
 
 XPath captures are not limited to node values (like string, or boolean); any
@@ -190,7 +192,8 @@ valid XPath can be captured and asserted with variable asserts.
 ```hurl
 # Test that the XML endpoint return 200 pets
 GET https://example.org/api/pets
-HTTP/* 200
+
+HTTP 200
 [Captures]
 pets: xpath "//pets"
 [Asserts]
@@ -208,7 +211,7 @@ POST https://example.org/api/contact
 token: {{token}}
 email: toto@rookie.net
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 contact-id: jsonpath "$['id']"
 ```
@@ -241,7 +244,7 @@ We can capture the following paths:
 ```hurl
 GET https://example.org/captures-json
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 an_object:  jsonpath "$['an_object']"
 a_list:     jsonpath "$['a_list']"
@@ -261,16 +264,17 @@ Capture a regex pattern from the HTTP received body, decoded as text.
 ```hurl
 GET https://example.org/helloworld
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
-id_a: regex "id_a:([0-9]+)!"
-id_b: regex "id_b:(\\d+)!"
-name: regex "Hello ([a-zA-Z]+)!"
+id_a: regex "id_a:([0-9]+)"
+id_b: regex "id_b:(\\d+)"   # pattern using double quote 
+id_c: regex /id_c:(\d+)/    # pattern using forward slash
+name: regex "Hello ([a-zA-Z]+)"
 ```
 
-Pattern of the regex query must have at least one capture group, otherwise the
-capture will fail. Metacharacters beginning with a backslash in the pattern
-(like `\d`, `\s`) must be escaped: `regex "(\\d+)!"` will capture one or more digit.
+The regex pattern must have at least one capture group, otherwise the
+capture will fail. When the pattern is a double-quoted string, metacharacters beginning with a backslash in the pattern
+(like `\d`, `\s`) must be escaped; literal pattern enclosed by `/` can also be used to avoid metacharacters escaping. 
 
 
 ### Variable capture
@@ -280,10 +284,10 @@ Capture the value of a variable into another.
 ```hurl
 GET https://example.org/helloworld
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 in: body
-name: variable "in" regex "Hello ([a-zA-Z]+)!"
+name: variable "in"
 ```
 
 ### Duration capture
@@ -293,56 +297,14 @@ Capture the response time of the request in ms.
 ```hurl
 GET https://example.org/helloworld
 
-HTTP/1.0 200
+HTTP 200
 [Captures]
 duration_in_ms: duration
-
 ```
-
-## Filters
-
-Optionally, query can be refined using filters `count` and `regex`.
-
-<div class="schema-container u-font-size-0 u-font-size-1-sm u-font-size-3-md">
- <div class="schema">
-   <span class="schema-token schema-color-1">my_var<span class="schema-label">variable</span></span>
-   <span> : </span>
-   <span class="schema-token schema-color-2">xpath "string(//h1)"<span class="schema-label">query</span></span>
-   <span class="schema-token">regex "(\\d+)"<span class="schema-label">filter (optional)</span></span>
- </div>
-</div>
-
-### Count filter
-
-Returns the count of a collection.
-
-```hurl
-GET https://pets.org/cats/cutest
-
-HTTP/1.0 200
-[Captures]
-cats_size: jsonpath "$.cats" count
-```
-
-### Regex filter
-
-```hurl
-GET https://pets.org/cats/cutest
-
-HTTP/1.0 200
-# Cat name are structured like this `meow + id`: for instance `meow123456` 
-[Captures]
-id: jsonpath "$.cats[0].name" regex "meow(\\d+)"
-```
-
-Pattern of the regex filter must have at least one capture group, otherwise the
-capture will fail. Metacharacters beginning with a backslash in the pattern
-(like `\d`, `\s`) must be escaped: `regex "(\\d+)!"` will capture one or more digit.
 
 
 [CSRF tokens]: https://en.wikipedia.org/wiki/Cross-site_request_forgery
-[variable values]: /docs/manual.md#variable
-[templates]: /docs/templates.md
+[injected into the session]: /docs/templates.md#injecting-variables
 [`Set-Cookie`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
 [XPath]: https://en.wikipedia.org/wiki/XPath
 [JSONPath]: https://goessner.net/articles/JsonPath/
@@ -350,3 +312,4 @@ capture will fail. Metacharacters beginning with a backslash in the pattern
 [Javascript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [options]: /docs/request.md#options
 [`--location` option]: /docs/manual.md#location
+[filters]: /docs/filters.md

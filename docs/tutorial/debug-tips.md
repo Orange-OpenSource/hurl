@@ -239,7 +239,7 @@ offset: 0
 size: 20
 sort: oldest
 
-HTTP/1.1 200
+HTTP 200
 # ...
 ```
 
@@ -357,18 +357,19 @@ In this mode, headers of the last entry are displayed:
 
 ```shell
 $ hurl -i basic.hurl
-HTTP/1.1 200
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Sun, 06 Jun 2021 15:11:31 GMT
+[1;32mHTTP/1.1 200
+[0m[1;36mSet-Cookie[0m: JSESSIONID=76984131F0D0821C4A8D5CB3FC27CD3B; Path=/; HttpOnly
+[1;36mX-Content-Type-Options[0m: nosniff
+[1;36mX-XSS-Protection[0m: 1; mode=block
+[1;36mCache-Control[0m: no-cache, no-store, max-age=0, must-revalidate
+[1;36mPragma[0m: no-cache
+[1;36mExpires[0m: 0
+[1;36mX-Frame-Options[0m: DENY
+[1;36mContent-Type[0m: application/json
+[1;36mTransfer-Encoding[0m: chunked
+[1;36mDate[0m: Fri, 13 Jan 2023 12:49:47 GMT
 
-[{"id":"c0d80047-4fbe-4d45-a005-91b5c7018b34","created":"1995-12-17T03:24:00Z"....
+{"status":"RUNNING","reportedDate":"2023-01-13T13:49:47+01:00","healthy":true,"operationId":3183000623}
 ```
 
 If you want to inspect any entry other than the last one, you can run your test to a
@@ -376,40 +377,50 @@ given entry with the [`--to-entry` option], starting at index 1:
 
 ```shell
 $ hurl -i --to-entry 2 basic.hurl
-HTTP/1.1 404
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: text/html;charset=UTF-8
-Content-Language: en-US
-Transfer-Encoding: chunked
-Date: Sun, 06 Jun 2021 15:14:20 GMT
+[1;32mHTTP/1.1 404
+[0m[1;36mVary[0m: Origin
+[1;36mVary[0m: Access-Control-Request-Method
+[1;36mVary[0m: Access-Control-Request-Headers
+[1;36mX-Content-Type-Options[0m: nosniff
+[1;36mX-XSS-Protection[0m: 1; mode=block
+[1;36mCache-Control[0m: no-cache, no-store, max-age=0, must-revalidate
+[1;36mPragma[0m: no-cache
+[1;36mExpires[0m: 0
+[1;36mX-Frame-Options[0m: DENY
+[1;36mContent-Type[0m: text/html;charset=UTF-8
+[1;36mContent-Language[0m: en-FR
+[1;36mTransfer-Encoding[0m: chunked
+[1;36mDate[0m: Fri, 13 Jan 2023 12:50:52 GMT
 
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error 404 - Quiz</title>
     <link rel="stylesheet" href="/style.css">
     <!--<script src="script.js"></script>-->
 </head>
 <body>
 <div>
-    <img class="logo" src="/quiz.svg" alt="Quiz logo">
+    <a href="/"><img class="logo-img" src="/quiz.svg" alt="Quiz logo"></a>
 </div>
+<div class="main">
+    
 <h1>Error 404, Page not Found!</h1>
 
 <a href="/">Quiz Home</a>
 
 
+</div>
+<footer>
+    <div class="footer">
+        <div class="footer-body">a game by <a href="https://hurl.dev">Hurl&RightArrowLeftArrow; Team</a></div>
+    </div>
+</footer>
 </body>
 </html>
+
 ```
 
 ## Using a Proxy

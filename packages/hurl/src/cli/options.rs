@@ -112,16 +112,16 @@ pub fn app(version: &str) -> Command {
         )
         .arg(
             clap::Arg::new("client_cert_file")
+                .short('E')
                 .long("cert")
-                .value_name("FILE")
+                .value_name("CERTIFICATE[:PASSWORD]")
                 .help("Client certificate file and password")
                 .num_args(1)
-                .short('E')
         )
         .arg(
             clap::Arg::new("client_key_file")
                 .long("key")
-                .value_name("FILE")
+                .value_name("KEY")
                 .help("Private key file name")
                 .num_args(1)
         )
@@ -343,7 +343,7 @@ pub fn app(version: &str) -> Command {
         .arg(
             clap::Arg::new("ssl_no_revoke")
                 .long("ssl-no-revoke")
-                .help("(Schannel) This option tells curl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
+                .help("(Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
                 .action(ArgAction::SetTrue)
         )
         .arg(

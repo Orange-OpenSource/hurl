@@ -127,7 +127,7 @@ the response and, at least, check that the HTTP response status code is [`200 OK
 
 ```hurl
 GET http://localhost:8080
-HTTP/1.1 200
+HTTP 200
 ```
 
 4. Execute `basic.hurl`:
@@ -173,7 +173,7 @@ Duration:        7 ms
 
 ```hurl
 GET http://localhost:8080
-HTTP/1.1 500
+HTTP 500
 ```
 
 7. Save and execute it:
@@ -204,7 +204,7 @@ Duration:        13 ms
 # Our first Hurl file, just checking
 # that our server is up and running.
 GET http://localhost:8080
-HTTP/1.1 200
+HTTP 200
 ```
 
 ## Recap

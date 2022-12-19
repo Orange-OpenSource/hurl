@@ -1,32 +1,60 @@
 # Asserting Response
 
-## Version - Status
+## Asserts
+
+Asserts are used to test various properties of an HTTP response. Asserts can be implicits (such as version, status, 
+headers) or explicit within an `[Asserts]` section.
+
+
+```hurl
+GET https://api/example.org/cats
+
+HTTP 200
+Content-Type: application/json; charset=utf-8      # Implicit assert on Content-Type Hedaer
+[Asserts]                                          # Explicit asserts section 
+bytes count == 120
+header "Content-Type" contains "utf-8"
+jsonpath "$.cats" count == 49
+jsonpath "$.cats[0].name" == "Felix"
+jsonpath "$.cats[0].lives" == 9
+```
+
+## Implicit asserts
+
+### Version - Status
 
 Expected protocol version and status code of the HTTP response.
 
 Protocol version is one of `HTTP/1.0`, `HTTP/1.1`, `HTTP/2` or
-`HTTP/*`; `HTTP/*` describes any version. Note that there are no status text following the status code.
+`HTTP`; `HTTP` describes any version. Note that there are no status text following the status code.
 
 ```hurl
 GET https://example.org/404.html
-
-HTTP/1.1 404
+HTTP 404
 ```
 
-Wildcard keywords (`HTTP/*`, `*`) can be used to disable tests on protocol version and status:
+Wildcard keywords `HTTP` and `*` can be used to disable tests on protocol version and status:
 
 ```hurl
 GET https://example.org/api/pets
 
-HTTP/1.0 *
+HTTP *
 # Check that response status code is > 400 and <= 500
 [Asserts]
 status > 400
 status <= 500
 ```
 
+While `HTTP/1.0`, `HTTP/1.1` and `HTTP/2` explicitly check HTTP version:
 
-## Headers
+```hurl
+# Check that our server responds with HTTP/2
+GET https://example.org/api/pets
+HTTP/2 200 
+```
+
+
+### Headers
 
 Optional list of the expected HTTP response headers that must be in the received response.
 
@@ -43,7 +71,7 @@ POST https://example.org/login
 user: toto
 password: 12345678
 
-HTTP/1.1 302
+HTTP 302
 Location: https://example.org/home
 ```
 
@@ -71,7 +99,7 @@ You can either test the two header values:
 GET https://example.org/index.html
 Host: example.net
 
-HTTP/1.0 200
+HTTP 200
 Set-Cookie: theme=light
 Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 ```
@@ -82,7 +110,7 @@ Or only one:
 GET https://example.org/index.html 
 Host: example.net
 
-HTTP/1.0 200
+HTTP 200
 Set-Cookie: theme=light
 ```
 
@@ -91,9 +119,9 @@ if you want to test header value with [predicates] (like `startsWith`, `contains
 you can use the explicit [header assert].
 
 
-## Asserts
+## Explicit asserts
 
-Optional list of assertions on the HTTP response. Assertions can describe checks
+Optional list of assertions on the HTTP response within an `[Asserts]` section. Assertions can describe checks
 on status code, on the received body (or part of it) and on response headers.
 
 Structure of an assert:
@@ -132,31 +160,33 @@ is shared with [captures], and can be one of :
 - [`variable`](#variable-assert)
 - [`duration`](#duration-assert)
 
-Queries, as in captures, can be refined with subqueries. [`count`] subquery can be used
-with various predicates to add tests on collections sizes.
+Queries are used to extract data from the HTTP response. Queries, in asserts and in captures, can be refined with [filters], like 
+[`count`][count] to add tests on collections sizes.
 
 
 ### Predicates
 
-Predicates consist of a predicate function, and a predicate value. Predicate functions are:
+Predicates consist of a predicate function and a predicate value. Predicate functions are:
 
-- `==` (`equals`): check equality of query and predicate value
-- `!=`: check that query and predicate value are different
-- `>` (`greaterThan`): check that query number is greater than predicate value
-- `>=` (`greaterThanOrEquals`): check that query number is greater than or equal to the predicate value
-- `<` (`lessThan`): check that query number is less than that predicate value
-- `<=` (`lessThanOrEquals`): check that query number is less than or equal to the predicate value
-- `startsWith`: check that query starts with the predicate value (query can return a string or a binary content)
-- `endsWith`: check that query ends with the predicate value (query can return a string or a binary content)
-- `contains`: check that query contains the predicate value (query can return a string or a binary content)
-- `includes`: check that query collections includes the predicate value
-- `matches`: check that query string matches the regex pattern described by the predicate value
-- `exists`: check that query returns a value
-- `isInteger`: check that query returns an integer
-- `isFloat`: check that query returns a float
-- `isBoolean`: check that query returns a boolean
-- `isString`: check that query returns a string
-- `isCollection`: check that query returns a collection
+| Predicate          | Description                                                                         | Example                                                                               | 
+|--------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| __`==`__           | Query and predicate value are equals                                                | `jsonpath "$.book" == "Dune"`                                                         |
+| __`!=`__           | Query and predicate value are different                                             | `jsonpath "$.color" != "red"`                                                         |
+| __`>`__            | Query number is greater than predicate value                                        | `jsonpath "$.year" > 1978`                                                            |
+| __`>=`__           | Query number is greater than or equal to the predicate value                        | `jsonpath "$.year" >= 1978`                                                           |
+| __`<`__            | Query number is less than that predicate value                                      | `jsonpath "$.year" < 1978`                                                            |
+| __`<=`__           | Query number is less than or equal to the predicate value                           | `jsonpath "$.year" <= 1978`                                                           |
+| __`startsWith`__   | Query starts with the predicate value<br>Value is string or a binary content        | `jsonpath "$.movie" startsWith "The"`<br><br>`bytes startsWith hex,efbbbf;`           |
+| __`endsWith`__     | Query ends with the predicate value<br>Value is string or a binary content          | `jsonpath "$.movie" endsWith "Back"`<br><br>`bytes endsWith hex,ab23456;`             |
+| __`contains`__     | Query contains the predicate value<br>Value is string or a binary content           | `jsonpath "$.movie" contains "Empire"`<br><br>`bytes contains hex,beef;`              |
+| __`includes`__     | Query collections includes the predicate value                                      | `jsonpath "$.nooks" includes "Dune"`                                                  |
+| __`matches`__      | Part of the query string matches the regex pattern described by the predicate value | `jsonpath "$.release" matches "\\d{4}"`<br><br>`jsonpath "$.release" matches /\d{4}/` |
+| __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
+| __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
+| __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
+| __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.suceeded" isBoolean`                                                     |
+| __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
+| __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
 
 
 Each predicate can be negated by prefixing it with `not` (for instance, `not contains` or `not exists`)
@@ -170,7 +200,7 @@ Each predicate can be negated by prefixing it with `not` (for instance, `not con
 </div>
 
 
-A predicate values is typed, and can be a string, a boolean, a number, a bytestream, `null` or a collection. Note that
+A predicate value is typed, and can be a string, a boolean, a number, a bytestream, `null` or a collection. Note that
 `"true"` is a string, whereas `true` is a boolean.
 
 For instance, to test the presence of a h1 node in an HTML response, the following assert can be used:
@@ -178,7 +208,7 @@ For instance, to test the presence of a h1 node in an HTML response, the followi
 ```hurl
 GET https://example.org/home
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "boolean(count(//h1))" == true
 xpath "//h1" exists # Equivalent but simpler
@@ -201,7 +231,7 @@ The following assert will check the value of the `data-visible` attribute:
 ```hurl
 GET https://example.org/home
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//article/@data-visible)" == "true"
 ```
@@ -209,14 +239,14 @@ xpath "string(//article/@data-visible)" == "true"
 In this case, the XPath query `string(//article/@data-visible)` returns a string, so the predicate value must be a
 string.
 
-The predicate function `equals` can work with string, number or boolean while `matches`, `startWith` and `contains` work
-only on string. If a query returns a number, a `contains` predicate will raise a runner error.
+The predicate function `equals` can be used with string, numbers or booleans; `startWith` and `contains` can only
+be used with strings and bytes, while `matches` only works on string. If a query returns a number, using a `matches` predicate will cause a runner error.
 
 ```hurl
 # A really well tested web page...
 GET https://example.org/home
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 header "Content-Type" contains "text/html"
 header "Last-Modified" == "Wed, 21 Oct 2015 07:28:00 GMT"
@@ -234,22 +264,23 @@ function and value.
 ```hurl
 GET https://example.org
 
-HTTP/1.1 *
+HTTP *
 [Asserts]
 status < 300
 ```
 
 ### Header assert
 
-Check the value of a received HTTP response header. Header assert consists of the keyword `header` followed by a predicate
-function and value.
+Check the value of a received HTTP response header. Header assert consists of the keyword `header` followed by the value
+of the header, a predicate function and a predicate value.
 
 ```hurl
 GET https://example.org
 
-HTTP/1.1 302
+HTTP 302
 [Asserts]
 header "Location" contains "www.example.net"
+header "Last-Modified" matches /\d{2} [a-z-A-Z]{3} \d{4}/
 ```
 
 If there are multiple headers with the same name, the header assert returns a collection, so `count`, `includes` can be
@@ -261,7 +292,7 @@ Let's say we have this request and response:
 > GET /hello HTTP/1.1
 > Host: example.org
 > Accept: */*
-> User-Agent: hurl/1.8.0-SNAPSHOT
+> User-Agent: hurl/2.0.0-SNAPSHOT
 >
 * Response: (received 12 bytes in 11 ms)
 *
@@ -279,7 +310,7 @@ One can use explicit header asserts:
 ```hurl
 GET https://example.org/hello
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 header "Vary" count == 2
 header "Vary" includes "User-Agent"
@@ -291,7 +322,7 @@ Or implicit header asserts:
 ```hurl
 GET https://example.org/hello
 
-HTTP/* 200
+HTTP 200
 Vary: User-Agent
 Vary: Content-Type
 ```
@@ -306,7 +337,7 @@ GET https://example.org/redirecting
 [Options]
 location: true
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 url == "https://example.org/redirected"
 ```
@@ -325,7 +356,7 @@ Cookie attributes value can be checked by using the following format:
 ```hurl
 GET http://localhost:8000/cookies/set
 
-HTTP/1.0 200
+HTTP 200
 
 # Explicit check of Set-Cookie header value. If the attributes are
 # not in this exact order, this assert will fail. 
@@ -361,12 +392,10 @@ value. The encoding used to decode the body is based on the `charset` value in t
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 body contains "<h1>Welcome!</h1>"
 ```
-
-> Precise the encoding used to decode the text body.
 
 ### Bytes assert
 
@@ -376,9 +405,11 @@ consists of the keyword `bytes` followed by a predicate function and value.
 ```hurl
 GET https://example.org/data.bin
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 bytes startsWith hex,efbbbf;
+bytes count == 12424
+header "Content-Length" == "12424"
 ```
 
 ### XPath assert
@@ -418,9 +449,8 @@ With Hurl, we can write multiple XPath asserts describing the DOM content:
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 Content-Type: text/html; charset=UTF-8
-
 [Asserts]
 xpath "string(/html/head/title)" contains "Example" # Check title
 xpath "count(//p)" == 2                             # Check the number of <p>
@@ -446,7 +476,7 @@ This XML response can be tested with the following Hurl file:
 ```hurl
 GET http://localhost:8000/assert-xpath
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 
 xpath "string(//bk:book/bk:title)" == "Cheaper by the Dozen"
@@ -467,7 +497,7 @@ namespaces.
 ### JSONPath assert
 
 Check the value of a [JSONPath] query on the received HTTP body decoded as a JSON
-document. Body assert consists of the keyword `jsonpath` followed by a predicate
+document. JSONPath assert consists of the keyword `jsonpath` followed by a predicate
 function and value.
 
 Let's say we want to check this JSON response:
@@ -501,7 +531,7 @@ With Hurl, we can write multiple JSONPath asserts describing the DOM content:
 ```hurl
 GET http://httpbin.org/json
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 jsonpath "$.slideshow.author" == "Yours Truly"
 jsonpath "$.slideshow.slides[0].title" contains "Wonder"
@@ -520,7 +550,7 @@ the readability:
 ```hurl
 GET https://sample.org/hello
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 # Predicate value with matches predicate:
 jsonpath "$.date" matches "^\\d{4}-\\d{2}-\\d{2}$"
@@ -537,10 +567,18 @@ Check that the HTTP received body, decoded as text, matches a regex pattern.
 ```hurl
 GET https://sample.org/hello
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
-regex "^\\d{4}-\\d{2}-\\d{2}$" == "2018-12-31"
+regex "^(\\d{4}-\\d{2}-\\d{2})$" == "2018-12-31"
+# Same assert as previous using regex literals
+regex /^(\d{4}-\d{2}-\d{2})$/ == "2018-12-31"
 ```
+
+The regex pattern must have at least one capture group, otherwise the
+assert will fail. The assertion is done on the captured group value. When the regex pattern is a double-quoted string, 
+metacharacters beginning with a backslash in the pattern (like `\d`, `\s`) must be escaped; literal pattern enclosed by
+`/` can also be used to avoid metacharacters escaping.
+
 
 ### SHA-256 assert
 
@@ -549,7 +587,7 @@ Check response body [SHA-256] hash.
 ```hurl
 GET https://example.org/data.tar.gz
 
-HTTP/* *
+HTTP 200
 [Asserts]
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
@@ -561,7 +599,7 @@ Check response body [MD5] hash.
 ```hurl
 GET https://example.org/data.tar.gz
 
-HTTP/* *
+HTTP 200
 [Asserts]
 md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```
@@ -572,7 +610,8 @@ md5 == hex,ed076287532e86365e841e92bfc50d8c;
 ```hurl
 # Test that the XML endpoint return 200 pets 
 GET https://example.org/api/pets
-HTTP/* 200
+
+HTTP 200
 [Captures]
 pets: xpath "//pets"
 [Asserts]
@@ -586,36 +625,10 @@ Check the total duration (sending plus receiving time) of the HTTP transaction.
 ```hurl
 GET https://sample.org/helloworld
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 duration < 1000   # Check that response time is less than one second
 ```
-
-## Filters
-
-Optionally, asserts can be refined using filters `count` and `regex`.
-
-### Count filter
-
-```hurl
-GET https://pets.org/cats/cutest
-
-HTTP/1.0 200
-[Asserts]
-jsonpath "$.cats" count == 12
-```
-
-### Regex filter
-
-```hurl
-GET https://pets.org/cats/cutest
-
-HTTP/1.0 200
-# Cat name are structured like this `meow + id`: for instance `meow123456` 
-[Asserts]
-jsonpath "$.cats[0].name" regex /meow(\d+)/ == "123456"
-```
-
 
 ## Body
 
@@ -634,7 +647,7 @@ the body byte content to check.
 # Get a doggy thing:
 GET https://example.org/api/dogs/{{dog-id}}
 
-HTTP/1.1 200
+HTTP 200
 {
     "id": 0,
     "name": "Frieda",
@@ -645,12 +658,32 @@ HTTP/1.1 200
 }
 ```
 
+JSON response body can be seen as syntactic sugar of [multiline string body] with `json` identifier:
+
+~~~hurl
+# Get a doggy thing:
+GET https://example.org/api/dogs/{{dog-id}}
+
+HTTP 200
+```json
+{
+    "id": 0,
+    "name": "Frieda",
+    "picture": "images/scottish-terrier.jpeg",
+    "age": 3,
+    "breed": "Scottish Terrier",
+    "location": "Lisco, Alabama"
+}
+```
+~~~
+
+
 ### XML body
 
 ~~~hurl
 GET https://example.org/api/catalog
 
-HTTP/1.1 200
+HTTP 200
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog>
    <book id="bk101">
@@ -664,12 +697,34 @@ HTTP/1.1 200
 </catalog>
 ~~~
 
+XML response body can be seen as syntactic sugar of [multiline string body] with `xml` identifier:
+
+~~~hurl
+GET https://example.org/api/catalog
+
+HTTP 200
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+   <book id="bk101">
+      <author>Gambardella, Matthew</author>
+      <title>XML Developer's Guide</title>
+      <genre>Computer</genre>
+      <price>44.95</price>
+      <publish_date>2000-10-01</publish_date>
+      <description>An in-depth look at creating applications with XML.</description>
+   </book>
+</catalog>
+```
+~~~
+
+
 ### Multiline string body
 
 ~~~hurl
 GET https://example.org/models
 
-HTTP/1.1 200
+HTTP 200
 ```
 Year,Make,Model,Description,Price
 1997,Ford,E350,"ac, abs, moon",3000.00
@@ -689,41 +744,28 @@ line3
 ```
 ~~~
 
-is evaluated as "line1\nline2\nline3\n".
+#### Oneline string body
 
+For text based response body that do not contain newlines, one can use oneline string, started and ending with <code>&#96;</code>.
 
-To construct an empty string :
+~~~hurl
+POST https://example.org/helloworld
 
-~~~
-```
-```
-~~~
-
-or
-
-~~~
-``````
+HTTP 200
+`Hello world!`
 ~~~
 
-
-Finally, multiline can be used without any newline:
-
-~~~
-```line``` 
-~~~
-
-is evaluated as "line".
 
 ### Base64 body
 
-Base64 body assert starts with `base64,` and end with `;`. MIME's Base64 encoding
+Base64 response body assert starts with `base64,` and end with `;`. MIME's Base64 encoding
 is supported (newlines and white spaces may be present anywhere but are to be
 ignored on decoding), and `=` padding characters might be added.
 
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 base64,TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIG
 FkaXBpc2NpbmcgZWxpdC4gSW4gbWFsZXN1YWRhLCBuaXNsIHZlbCBkaWN0dW0g
 aGVuZHJlcml0LCBlc3QganVzdG8gYmliZW5kdW0gbWV0dXMsIG5lYyBydXRydW
@@ -738,7 +780,7 @@ can be used. File body starts with `file,` and ends with `;``
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 file,data.bin;
 ```
 
@@ -760,9 +802,11 @@ of all file nodes.
 [XML]: https://en.wikipedia.org/wiki/XML
 [Base64]: https://en.wikipedia.org/wiki/Base64
 [`--file-root` option]: /docs/manual.md#file-root
-[`count`]: /docs/capturing-response.md#count-subquery
 [Javascript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [MD5]: https://en.wikipedia.org/wiki/MD5
 [SHA-256]: https://en.wikipedia.org/wiki/SHA-2
 [options]: /docs/request.md#options
 [`--location` option]: /docs/manual.md#location
+[multiline string body]: #multiline-string-body
+[filters]: /docs/filters.md
+[count]: /docs/filters.md#count

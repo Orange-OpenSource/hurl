@@ -8,7 +8,7 @@ value from an HTTP response in the next entries, you can capture this value in a
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
@@ -16,7 +16,7 @@ csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 POST https://acmecorp.net/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 ```
 
 In this example, we capture the value of the [CSRF token] from the body of the first response, and inject it
@@ -24,12 +24,15 @@ as a header in the next POST request.
 
 ```hurl
 GET https://example.org/api/index
-HTTP/* 200
+
+HTTP 200
 [Captures]
 index: body
 
+
 GET https://example.org/api/status
-HTTP/* 200
+
+HTTP 200
 [Asserts]
 jsonpath "$.errors[{{index}}].id" == "error"
 ```
@@ -45,7 +48,8 @@ templates can be rendered differently. Let's say we have captured an integer val
 
 ```hurl
 GET https://sample/counter
-HTTP/* 200
+
+HTTP 200
 [Captures]
 count: jsonpath "$.results[0]"
 ```
@@ -54,7 +58,8 @@ The following entry:
 
 ```hurl
 GET https://sample/counter/{{count}} 
-HTTP/* 200
+
+HTTP 200
 [Asserts]
 jsonpath "$.id" == "{{count}}"
 ```
@@ -62,8 +67,9 @@ jsonpath "$.id" == "{{count}}"
 will be rendered at runtime to:
 
 ```hurl
-GET https://sample/counter/458 
-HTTP/* 200
+GET https://sample/counter/458
+ 
+HTTP 200
 [Asserts]
 jsonpath "$.id" == "458"
 ```
@@ -74,7 +80,8 @@ On the other hand, the following assert:
 
 ```hurl
 GET https://sample/counter/{{count}} 
-HTTP/* 200
+
+HTTP 200
 [Asserts]
 jsonpath "$.index" == {{count}}
 ```
@@ -83,7 +90,8 @@ will be rendered at runtime to:
 
 ```hurl
 GET https://sample/counter/458 
-HTTP/* 200
+
+HTTP 200
 [Asserts]
 jsonpath "$.index" == 458
 ```
@@ -105,15 +113,16 @@ Variables can also be injected in a Hurl file:
 - by using [`--variable` option]
 - by using [`--variables-file` option]
 - by defining environment variables, for instance `HURL_foo=bar`
+- by defining variables in an [`[Options]` section][options]
 
 Lets' see how to inject variables, given this `test.hurl`:
 
 ```hurl
 GET https://{{host}}/{{id}}/status
-HTTP/1.1 304
+HTTP 304
 
 GET https://{{host}}/health
-HTTP/1.1 200
+HTTP 200
 ```
 
 ### `variable` option
@@ -142,14 +151,28 @@ id=1234
 
 ### Environment variable
 
-Finally, we can use environment variables in the form of `HURL_name=value`:
+We can use environment variables in the form of `HURL_name=value`:
 
 ```shell
 $ export HURL_host=example.net
 $ export HURL_id=1234 
 $ hurl test.hurl
-``` 
+```
 
+### Options sections
+
+We can define variables in `[Options]` section. Variables defined in a section are available for the next requests.
+
+```hurl
+GET https://{{host}}/{{id}}/status
+[Options]
+variable: host=example.net
+variable: id=1234
+HTTP 304
+
+GET https://{{host}}/health
+HTTP 200
+```
 
 
 ## Templating Body
@@ -194,3 +217,4 @@ Resulting in a PUT request with the following JSON body:
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
 [multiline string body]: /docs/request.md#multiline-string-body
+[options]: /docs/request.md#options

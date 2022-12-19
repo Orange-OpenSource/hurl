@@ -55,7 +55,7 @@ question2: 4edc1fdb
 question3: 37b9eff3
 question4: 0fec576c
 
-HTTP/1.1 302
+HTTP 302
 ```
 
 > When sending form data with a Form parameters section, you don't need to set the
@@ -67,10 +67,10 @@ HTTP/1.1 302
 $ hurl --test create-quiz.hurl
 [1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
 [1;31merror[0m: [1mAssert status code[0m
-  [1;34m-->[0m create-quiz.hurl:10:10
+  [1;34m-->[0m create-quiz.hurl:6:10
    [1;34m|[0m
-[1;34m10[0m [1;34m|[0m HTTP/1.1 302
-   [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <403>[0m
+[1;34m10[0m [1;34m|[0m HTTP 302
+   [1;34m|[0m      [1;31m^^^[0m [1;31mactual value is <403>[0m
    [1;34m|[0m
 
 [1mcreate-quiz.hurl[0m: [1;31mFailure[0m (1 request(s) in 5 ms)
@@ -122,7 +122,7 @@ So, let's go!
 # the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery)
 GET http://localhost:8080/new-quiz
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 ```
@@ -146,9 +146,10 @@ Now that we have captured the CSRF token value, we can inject it in the POST req
 # the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery):
 GET http://localhost:8080/new-quiz
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
+
 
 # Create a new quiz, using the captured CSRF token:
 POST http://localhost:8080/new-quiz
@@ -160,8 +161,7 @@ question2: 4edc1fdb
 question3: 37b9eff3
 question4: 0fec576c
 _csrf: {{csrf_token}}
-
-HTTP/1.1 302
+HTTP 302
 ```
 
 3. Run `create-quiz.hurl` and verify everything is ok:
@@ -207,7 +207,7 @@ question3: 37b9eff3
 question4: 0fec576c
 _csrf: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 [Captures]
 detail_url: header "Location"
 ```
@@ -232,7 +232,7 @@ question3: 37b9eff3
 question4: 0fec576c
 _csrf: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 [Captures]
 detail_url: header "Location"
 [Asserts]
@@ -250,7 +250,7 @@ header "Location" matches "/quiz/detail/[a-f0-9]{8}"
 
 # Open the newly created quiz detail page:
 GET {{detail_url}}
-HTTP/1.1 200
+HTTP 200
 ```
 
 4. Run `create-quiz.hurl` and verify everything is ok:
@@ -267,7 +267,7 @@ Duration:        46 ms
 ```
 
 
-> You can force Hurl to follow redirection by using [`-L / --location` option].
+> You can force Hurl to follow redirection by using [`-L / --location` option] or using an [`[Options]` section][options].
 > In this case, asserts and captures will be run against the last redirection step.
 
 
@@ -280,9 +280,10 @@ So, our test file `create-quiz.hurl` is now:
 # the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery)
 GET http://localhost:8080/new-quiz
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
+
 
 # Create a new quiz, using the captured CSRF token.
 POST http://localhost:8080/new-quiz
@@ -295,15 +296,16 @@ question3: 37b9eff3
 question4: 0fec576c
 _csrf: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 [Captures]
 detail_url: header "Location"
 [Asserts]
 header "Location" matches "/quiz/detail/[a-f0-9]{8}"
 
+
 # Open the newly created quiz detail page:
 GET {{detail_url}}
-HTTP/1.1 200
+HTTP 200
 ```
 
 We have seen how to [capture response data] in a variable and use it in others request.
@@ -327,3 +329,4 @@ of a redirection.
 [`Location`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
 [`-L / --location` option]: /docs/manual.md#location
 [capture response data]:  /docs/capturing-response.md
+[options]: /docs/request.md#options

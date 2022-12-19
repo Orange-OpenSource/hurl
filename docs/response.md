@@ -15,7 +15,7 @@ in the following entries.
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT
 [Asserts]
 xpath "normalize-space(//head/title)" startsWith "Welcome"
@@ -28,7 +28,7 @@ xpath "//li" count == 18
   <div class="hurl-structure">
     <div class="hurl-structure-col-0">
         <div class="hurl-part-0">
-            HTTP/1.1 *
+            HTTP *
         </div>
         <div class=" hurl-part-1">
             content-length: 206<br>accept-ranges: bytes<br>user-agent: Test

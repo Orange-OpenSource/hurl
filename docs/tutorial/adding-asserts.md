@@ -6,18 +6,12 @@ Our basic Hurl file is now:
 # Our first Hurl file, just checking
 # that our server is up and running.
 GET http://localhost:8080
-
-HTTP/1.1 200
+HTTP 200
 ```
 
 Currently, we're just checking that our home page is responding with a `200 OK` HTTP status code.
 But we also want to check the _content_ of our home page, to ensure that everything is ok. To check the response
 of an HTTP request with Hurl, we have to _describe_ tests that the response content must pass.
-
-> We're already implicitly asserting the response with the line\
-> `HTTP/1.1 200`\
-> On one hand, we are checking that the HTTP protocol version is 1.1; on the other hand, we are checking
-> that the HTTP status response code is 200.
 
 To do so, we're going to use [asserts].
 
@@ -48,7 +42,7 @@ going to use the [XPath expression] `string(//head/title)`.
 # that our server is up and running.
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 ```
@@ -75,7 +69,7 @@ There is no error so everything is good!
 # that our server is up and running.
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quaz!"
 ```
@@ -123,7 +117,7 @@ with `count`:
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 xpath "//button" count == 2
@@ -135,7 +129,7 @@ xpath "//button" count == 2
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 xpath "//button" count == 2
@@ -172,7 +166,7 @@ As our endpoint is serving UTF-8 encoded HTML content, we can check the value of
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 xpath "//button" count == 2
@@ -197,7 +191,7 @@ while the explicit one allows you to use other [predicates] (like `contains`, `s
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 # Implicitly testing response headers:
 Content-Type: text/html;charset=UTF-8
 [Asserts]
@@ -223,7 +217,7 @@ So to test it, we can modify our Hurl file with another header assert.
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 xpath "//button" count == 2
@@ -250,7 +244,7 @@ So to test that our server is responding with a `HttpOnly` session cookie, we ca
 # Checking our home page:
 GET http://localhost:8080
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "string(//head/title)" == "Welcome to Quiz!"
 xpath "//button" count == 2

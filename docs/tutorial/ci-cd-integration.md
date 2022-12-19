@@ -77,7 +77,7 @@ really ready to accept incoming HTTP requests.
 
 To do so, we can test our health API. With a function `wait_for_url`,
 we use Hurl to check a given URL to return a `200 OK`. We loop on this function
-until the check succeeds. Once the test has succeeded, we stop the container.
+until the check succeeds with [`--retry`] Hurl option. Once the test has succeeded, we stop the container.
 
 5. Modify `bin/integration.sh` to wait for the application to be ready:
 
@@ -86,24 +86,13 @@ until the check succeeds. Once the test has succeeded, we stop the container.
 set -eu
 
 wait_for_url () {
-    echo "Testing $1"
-    max_in_s=$2
-    delay_in_s=1
-    total_in_s=0
-    while [ $total_in_s -le "$max_in_s" ]
-    do
-        echo "Wait ${total_in_s}s"
-        if (echo -e "GET $1\nHTTP/* 200" | hurl > /dev/null 2>&1;) then
-            return 0
-        fi
-        total_in_s=$(( total_in_s +  delay_in_s))
-        sleep $delay_in_s
-    done
-    return 1
+    echo "Testing $1..."
+    echo -e "GET $1\nHTTP 200" | hurl --retry --retry-max-count "$2" > /dev/null;
+    return 0
 }
 
 echo "Starting Quiz container"
-docker run --name quiz --rm --detach --publish 8080:8080 ghcr.io/jcamiel/quiz:latest
+docker run --rm --detach --publish 8080:8080 --name quiz ghcr.io/jcamiel/quiz:latest
 
 echo "Starting Quiz instance to be ready"
 wait_for_url 'http://localhost:8080' 60
@@ -275,3 +264,4 @@ Now, we can add more Hurl tests and start developing new features with confidenc
 [GitLab CI/CD here]: https://about.gitlab.com/blog/2022/12/14/how-to-continously-test-web-apps-apis-with-hurl-and-gitlab-ci-cd/
 [GitLab CI/CD]: https://about.gitlab.com/why-gitlab/
 [this detailed tutorial]: https://about.gitlab.com/blog/2022/12/14/how-to-continously-test-web-apps-apis-with-hurl-and-gitlab-ci-cd/
+[`--retry`]: /docs/manual.md#retry

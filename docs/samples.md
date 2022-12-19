@@ -137,15 +137,11 @@ file,data.json;
 
 [Doc](/docs/request.md#file-body)
 
-### Templating a JSON / XML Body
+### Templating a JSON Body
 
-Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
-Besides, you can use templates in [multiline string body] with variables to send a JSON or XML body:
-
-~~~hurl
+```hurl
 PUT https://example.org/api/hits
 Content-Type: application/json
-```
 {
     "key0": "{{a_string}}",
     "key1": {{a_bool}},
@@ -153,7 +149,6 @@ Content-Type: application/json
     "key3": {{a_number}}
 }
 ```
-~~~
 
 Variables can be initialized via command line:
 
@@ -176,7 +171,66 @@ Resulting in a PUT request with the following JSON body:
 }
 ```
 
+[Doc](/docs/templates.md)
+
+### Templating a XML Body
+
+Using templates with [XML body] is not currently supported in Hurl. You can use templates in
+[XML multiline string body] with variables to send a variable XML body:
+
+~~~hurl
+POST https://example.org/echo/post/xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Request>
+    <Login>{{login}}</Login>
+    <Password>{{password}}</Password>
+</Request>
+```
+~~~
+
 [Doc](/docs/request.md#multiline-string-body)
+
+### Using GraphQL Query
+
+A simple GraphQL query:
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+{
+  human(id: "1000") {
+    name
+    height(unit: FOOT)
+  }
+}
+```
+~~~
+
+A GraphQL query with variables:
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+query Hero($episode: Episode, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+    }
+  }
+}
+
+variables {
+  "episode": "JEDI",
+  "withFriends": false
+}
+```
+~~~
+
+GraphQL queries can also use [Hurl templates].
+
+[Doc](/docs/request.md#graphql-body)
 
 ## Testing Response
 
@@ -187,7 +241,7 @@ Use implicit response asserts to test header values:
 ```hurl
 GET https://example.org/index.html
 
-HTTP/1.0 200
+HTTP 200
 Set-Cookie: theme=light
 Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 ```
@@ -200,7 +254,7 @@ Or use explicit response asserts with [predicates]:
 ```hurl
 GET https://example.org
 
-HTTP/1.1 302
+HTTP 302
 [Asserts]
 header "Location" contains "www.example.net"
 ```
@@ -216,7 +270,7 @@ Asserting JSON body response (node values, collection count etc...) with [JSONPa
 GET https://example.org/order
 screencapability: low
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 jsonpath "$.validated" == true
 jsonpath "$.userInfo.firstName" == "Franck"
@@ -236,7 +290,7 @@ Testing status code:
 ```hurl
 GET https://example.org/order/435
 
-HTTP/1.1 200
+HTTP 200
 ```
 
 [Doc](/docs/asserting-response.md#version-status)
@@ -245,7 +299,7 @@ HTTP/1.1 200
 GET https://example.org/order/435
 
 # Testing status code is in a 200-300 range
-HTTP/1.1 *
+HTTP *
 [Asserts]
 status >= 200
 status < 300
@@ -259,7 +313,7 @@ status < 300
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 Content-Type: text/html; charset=UTF-8
 
 [Asserts]
@@ -278,7 +332,7 @@ xpath "string(//div[1])" matches /Hello.*/
 ```hurl
 GET http://myserver.com/home
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 cookie "JSESSIONID" == "8400BAFE2F66443613DC38AE3D9D6239"
 cookie "JSESSIONID[Value]" == "8400BAFE2F66443613DC38AE3D9D6239"
@@ -308,6 +362,17 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 ## Others
 
+### HTTP Version
+
+Testing HTTP version (1.0, 1.1 or 2):
+
+```hurl
+GET https://example.org/order/435
+HTTP/2 200
+```
+
+[Doc](/docs/asserting-response.md#version-status)
+
 ### Polling and Retry
 
 Retry request on any errors (asserts, captures, status code, runtime etc...):
@@ -316,7 +381,7 @@ Retry request on any errors (asserts, captures, status code, runtime etc...):
 # Create a new job
 POST https://api.example.org/jobs
 
-HTTP/* 201
+HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
 [Asserts]
@@ -328,7 +393,7 @@ GET https://api.example.org/jobs/{{job_id}}
 [Options]
 retry: true
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
 ```
@@ -342,7 +407,7 @@ jsonpath "$.state" == "COMPLETED"
 ```hurl
 GET https://sample.org/helloworld
 
-HTTP/* *
+HTTP *
 [Asserts]
 duration < 1000   # Check that response time is less than one second
 ```
@@ -365,7 +430,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
   </soap:Body>
 </soap:Envelope>
 
-HTTP/1.1 200
+HTTP 200
 ```
 
 [Doc](/docs/request.md#xml-body)
@@ -375,14 +440,14 @@ HTTP/1.1 200
 ```hurl
 GET https://example.org
 
-HTTP/* 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
 POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
-HTTP/* 302
+HTTP 302
 ```
 
 [Doc](/docs/capturing-response.md#xpath-capture)
@@ -392,7 +457,7 @@ HTTP/* 302
 ```hurl
 GET https://example.org/data.bin
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 bytes startsWith hex,efbbbf;
 ```
@@ -402,7 +467,7 @@ bytes startsWith hex,efbbbf;
 
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
-[multiline string body]: /docs/request.md#multiline-string-body
+[XML multiline string body]: /docs/request.md#multiline-string-body
 [predicates]: /docs/asserting-response.md#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
@@ -413,3 +478,4 @@ bytes startsWith hex,efbbbf;
 [curl]: https://curl.se
 [entry]: /docs/entry.md
 [`--test` option]: /docs/manual.md#test
+[Hurl templates]: /docs/templates.md

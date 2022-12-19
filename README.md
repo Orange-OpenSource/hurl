@@ -12,21 +12,24 @@
 Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
 
 It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very
-versatile: it can be used for <b>fetching data</b>, <b>testing HTTP</b> sessions and testing <b>XML / JSON APIs</b>.
+versatile: it can be used for both <b>fetching data</b> and <b>testing HTTP</b> sessions.
+
+Hurl makes it easy to work with <b>HTML</b> content, <b>REST / SOAP / GraphQL</b> APIs, or any other <b>XML / JSON</b> based APIs. 
 
 ```hurl
 # Get home:
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
+
 
 # Do login!
 POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
-HTTP/1.1 302
+HTTP 302
 ```
 
 Chaining multiple requests is easy:
@@ -55,7 +58,7 @@ POST https://example.org/api/tests
     "evaluate": true
 }
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 header "X-Frame-Options" == "SAMEORIGIN"
 jsonpath "$.status" == "RUNNING"    # Check the status code
@@ -68,12 +71,27 @@ jsonpath "$.id" matches /\d{4}/     # Check the format of the id
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 xpath "normalize-space(//head/title)" == "Hello world!"
 ```
 
-and even SOAP APIs
+<b>GraphQL</b> 
+
+~~~hurl
+POST https://example.org/graphql
+```graphql
+{
+  human(id: "1000") {
+    name
+    height(unit: FOOT)
+  }
+}
+```
+HTTP 200
+~~~
+
+and even <b>SOAP APIs</b>
 
 ```hurl
 POST https://example.org/InStock
@@ -88,8 +106,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
     </m:GetStockPrice>
   </soap:Body>
 </soap:Envelope>
-
-HTTP/1.1 200
+HTTP 200
 ```
 
 Hurl can also be used to performance test HTTP endpoints:
@@ -97,7 +114,7 @@ Hurl can also be used to performance test HTTP endpoints:
 ```hurl
 GET https://example.org/api/v1/pets
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 duration < 1000  # Duration in ms
 ```
@@ -107,7 +124,7 @@ And response bytes
 ```hurl
 GET https://example.org/data.tar.gz
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
@@ -138,7 +155,7 @@ POST https://hurl.dev/api/feedback
   "name": "John Doe",
   "feedback": "Hurl is awesome !"
 }
-HTTP/1.1 200
+HTTP 200
 ```
 
 # Resources
@@ -164,7 +181,9 @@ Table of Contents
          * [Sending HTML Form Data](#sending-html-form-data)
          * [Sending Multipart Form Data](#sending-multipart-form-data)
          * [Posting a JSON Body](#posting-a-json-body)
-         * [Templating a JSON / XML Body](#templating-a-json--xml-body)
+         * [Templating a JSON Body](#templating-a-json-body)
+         * [Templating a XML Body](#templating-a-xml-body)
+         * [Using GraphQL Query](#using-graphql-query)
       * [Testing Response](#testing-response)
          * [Testing Response Headers](#testing-response-headers)
          * [Testing REST APIs](#testing-rest-apis)
@@ -172,6 +191,7 @@ Table of Contents
          * [Testing Set-Cookie Attributes](#testing-set-cookie-attributes)
          * [Testing Bytes Content](#testing-bytes-content)
       * [Others](#others)
+         * [HTTP Version](#http-version)
          * [Polling and Retry](#polling-and-retry)
          * [Testing Endpoint Performance](#testing-endpoint-performance)
          * [Using SOAP APIs](#using-soap-apis)
@@ -354,15 +374,11 @@ file,data.json;
 
 [Doc](https://hurl.dev/docs/request.html#file-body)
 
-### Templating a JSON / XML Body
+### Templating a JSON Body
 
-Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
-Besides, you can use templates in [multiline string body] with variables to send a JSON or XML body:
-
-~~~hurl
+```hurl
 PUT https://example.org/api/hits
 Content-Type: application/json
-```
 {
     "key0": "{{a_string}}",
     "key1": {{a_bool}},
@@ -370,7 +386,6 @@ Content-Type: application/json
     "key3": {{a_number}}
 }
 ```
-~~~
 
 Variables can be initialized via command line:
 
@@ -393,7 +408,66 @@ Resulting in a PUT request with the following JSON body:
 }
 ```
 
+[Doc](https://hurl.dev/docs/templates.html)
+
+### Templating a XML Body
+
+Using templates with [XML body] is not currently supported in Hurl. You can use templates in
+[XML multiline string body] with variables to send a variable XML body:
+
+~~~hurl
+POST https://example.org/echo/post/xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Request>
+    <Login>{{login}}</Login>
+    <Password>{{password}}</Password>
+</Request>
+```
+~~~
+
 [Doc](https://hurl.dev/docs/request.html#multiline-string-body)
+
+### Using GraphQL Query
+
+A simple GraphQL query:
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+{
+  human(id: "1000") {
+    name
+    height(unit: FOOT)
+  }
+}
+```
+~~~
+
+A GraphQL query with variables:
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+query Hero($episode: Episode, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+    }
+  }
+}
+
+variables {
+  "episode": "JEDI",
+  "withFriends": false
+}
+```
+~~~
+
+GraphQL queries can also use [Hurl templates].
+
+[Doc](https://hurl.dev/docs/request.html#graphql-body)
 
 ## Testing Response
 
@@ -404,7 +478,7 @@ Use implicit response asserts to test header values:
 ```hurl
 GET https://example.org/index.html
 
-HTTP/1.0 200
+HTTP 200
 Set-Cookie: theme=light
 Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 ```
@@ -417,7 +491,7 @@ Or use explicit response asserts with [predicates]:
 ```hurl
 GET https://example.org
 
-HTTP/1.1 302
+HTTP 302
 [Asserts]
 header "Location" contains "www.example.net"
 ```
@@ -433,7 +507,7 @@ Asserting JSON body response (node values, collection count etc...) with [JSONPa
 GET https://example.org/order
 screencapability: low
 
-HTTP/1.1 200
+HTTP 200
 [Asserts]
 jsonpath "$.validated" == true
 jsonpath "$.userInfo.firstName" == "Franck"
@@ -453,7 +527,7 @@ Testing status code:
 ```hurl
 GET https://example.org/order/435
 
-HTTP/1.1 200
+HTTP 200
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#version-status)
@@ -462,7 +536,7 @@ HTTP/1.1 200
 GET https://example.org/order/435
 
 # Testing status code is in a 200-300 range
-HTTP/1.1 *
+HTTP *
 [Asserts]
 status >= 200
 status < 300
@@ -476,7 +550,7 @@ status < 300
 ```hurl
 GET https://example.org
 
-HTTP/1.1 200
+HTTP 200
 Content-Type: text/html; charset=UTF-8
 
 [Asserts]
@@ -495,7 +569,7 @@ xpath "string(//div[1])" matches /Hello.*/
 ```hurl
 GET http://myserver.com/home
 
-HTTP/1.0 200
+HTTP 200
 [Asserts]
 cookie "JSESSIONID" == "8400BAFE2F66443613DC38AE3D9D6239"
 cookie "JSESSIONID[Value]" == "8400BAFE2F66443613DC38AE3D9D6239"
@@ -525,6 +599,17 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 ## Others
 
+### HTTP Version
+
+Testing HTTP version (1.0, 1.1 or 2):
+
+```hurl
+GET https://example.org/order/435
+HTTP/2 200
+```
+
+[Doc](https://hurl.dev/docs/asserting-response.html#version-status)
+
 ### Polling and Retry
 
 Retry request on any errors (asserts, captures, status code, runtime etc...):
@@ -533,7 +618,7 @@ Retry request on any errors (asserts, captures, status code, runtime etc...):
 # Create a new job
 POST https://api.example.org/jobs
 
-HTTP/* 201
+HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
 [Asserts]
@@ -545,7 +630,7 @@ GET https://api.example.org/jobs/{{job_id}}
 [Options]
 retry: true
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
 ```
@@ -559,7 +644,7 @@ jsonpath "$.state" == "COMPLETED"
 ```hurl
 GET https://sample.org/helloworld
 
-HTTP/* *
+HTTP *
 [Asserts]
 duration < 1000   # Check that response time is less than one second
 ```
@@ -582,7 +667,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
   </soap:Body>
 </soap:Envelope>
 
-HTTP/1.1 200
+HTTP 200
 ```
 
 [Doc](https://hurl.dev/docs/request.html#xml-body)
@@ -592,14 +677,14 @@ HTTP/1.1 200
 ```hurl
 GET https://example.org
 
-HTTP/* 200
+HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
 POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
 
-HTTP/* 302
+HTTP 302
 ```
 
 [Doc](https://hurl.dev/docs/capturing-response.html#xpath-capture)
@@ -609,7 +694,7 @@ HTTP/* 302
 ```hurl
 GET https://example.org/data.bin
 
-HTTP/* 200
+HTTP 200
 [Asserts]
 bytes startsWith hex,efbbbf;
 ```
@@ -631,9 +716,9 @@ hurl - run and test HTTP requests.
 
 ## Description
 
-**Hurl** is an HTTP client that performs HTTP requests defined in a simple plain text format.
+**Hurl** is a command line tool that runs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
+It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very versatile, it can be used for fetching data and testing HTTP sessions: HTML content, REST / SOAP / GraphQL APIs, or any other XML / JSON based APIs.
 
 ```shell
 $ hurl session.hurl
@@ -690,11 +775,11 @@ GET http:/example.org/endpoint2
 
 A value from an HTTP response can be-reused for successive HTTP requests.
 
-A typical example occurs with csrf tokens.
+A typical example occurs with CSRF tokens.
 
 ```hurl
 GET https://example.org
-HTTP/1.1 200
+HTTP 200
 # Capture the CSRF token value from html body.
 [Captures]
 csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
@@ -708,28 +793,28 @@ More information on captures can be found here [https://hurl.dev/docs/capturing-
 
 ### Asserts
 
-The HTTP response defined in the Hurl session are used to make asserts.
+The HTTP response defined in the Hurl file are used to make asserts. Responses are optional.
 
-At the minimum, the response includes the asserts on the HTTP version and status code.
+At the minimum, response includes assert on the HTTP status code.
 
 ```hurl
-GET http:/google.com
-HTTP/1.1 301
+GET http:/example.org
+HTTP 301
 ```
 
 It can also include asserts on the response headers
 
 ```hurl
-GET http:/google.com
-HTTP/1.1 301
-Location: http://www.google.com
+GET http:/example.org
+HTTP 301
+Location: http://www.example.org
 ```
 
 Explicit asserts can be included by combining a query and a predicate
 
 ```hurl
-GET http:/google.com
-HTTP/1.1 301
+GET http:/example.org
+HTTP 301
 [Asserts]
 xpath "string(//title)" == "301 Moved"
 ```
@@ -753,56 +838,61 @@ $ hurl --location foo.hurl
 will follow redirection for each entry in `foo.hurl`. You can also define an option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
 ```hurl
-GET https://google.com
-HTTP/* 301
+GET https://example.org
+HTTP 301
 
-GET https://google.com
+GET https://example.org
 [Options]
 location: true
-HTTP/* 200
+HTTP 200
 ```
 
 will follow a redirection only for the second entry.
 
-Option | Description
- --- | --- 
-<a href="#cacert" id="cacert"><code>--cacert</code></a> | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br/>Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.<br/>
-<a href="#color" id="color"><code>--color</code></a> | Colorize Output.<br/>
-<a href="#compressed" id="compressed"><code>--compressed</code></a> | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.<br/>
-<a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;SECONDS&gt;</code></a> | Maximum time in seconds that you allow Hurl's connection to take.<br/><br/>See also [`-m, --max-time`](#max-time) option.<br/>
-<a href="#cookie" id="cookie"><code>-b, --cookie &lt;FILE&gt;</code></a> | Read cookies from FILE (using the Netscape cookie file format).<br/><br/>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br/>
-<a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;FILE&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br/>The file will be written using the Netscape cookie file format.<br/><br/>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br/>
-<a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br/>By default, Hurl exits after an assert error in the HTTP response.<br/><br/>Note that this option does not affect the behavior with multiple input Hurl files.<br/><br/>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br/>
-<a href="#file-root" id="file-root"><code>--file-root &lt;DIR&gt;</code></a> | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br/>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br/>
-<a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br/>
-<a href="#glob" id="glob"><code>--glob &lt;GLOB&gt;</code></a> | Specify input files that match the given glob pattern.<br/><br/>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br/>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br/>
-<a href="#include" id="include"><code>-i, --include</code></a> | Include the HTTP headers in the output (last entry).<br/>
-<a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a> | Ignore all asserts defined in the Hurl file.<br/>
-<a href="#insecure" id="insecure"><code>-k, --insecure</code></a> | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.<br/>
-<a href="#interactive" id="interactive"><code>--interactive</code></a> | Stop between requests.<br/>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br/>
-<a href="#json" id="json"><code>--json</code></a> | Output each hurl file result to JSON. The format is very closed to HAR format. <br/>
-<a href="#max-redirs" id="max-redirs"><code>--max-redirs &lt;NUM&gt;</code></a> | Set maximum number of redirection-followings allowed<br/>By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.<br/>
-<a href="#max-time" id="max-time"><code>-m, --max-time &lt;SECONDS&gt;</code></a> | Maximum time in seconds that you allow a request/response to take. This is the standard timeout.<br/><br/>See also [`--connect-timeout`](#connect-timeout) option.<br/>
-<a href="#no-color" id="no-color"><code>--no-color</code></a> | Do not colorize output.<br/>
-<a href="#no-output" id="no-output"><code>--no-output</code></a> | Suppress output. By default, Hurl outputs the body of the last response.<br/>
-<a href="#noproxy" id="noproxy"><code>--noproxy &lt;HOST(S)&gt;</code></a> | Comma-separated list of hosts which do not use a proxy.<br/>Override value from Environment variable no_proxy.<br/>
-<a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a> | Write output to FILE instead of stdout.<br/>
-<a href="#proxy" id="proxy"><code>-x, --proxy [protocol://]host[:port]</code></a> | Use the specified proxy.<br/>
-<a href="#report-junit" id="report-junit"><code>--report-junit &lt;FILE&gt;</code></a> | Generate JUnit File.<br/><br/>If the FILE report already exists, it will be updated with the new test results.<br/>
-<a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a> | Generate HTML report in DIR.<br/><br/>If the HTML report already exists, it will be updated with the new test results.<br/>
-<a href="#retry" id="retry"><code>--retry</code></a> | Retry requests if any error occurs (asserts, captures, runtimes etc...).<br/>
-<a href="#retry-interval" id="retry-interval"><code>--retry-interval &lt;MILLISECONDS&gt;</code></a> | Duration in milliseconds between each retry. Default is 1000 ms.<br/>
-<a href="#retry-max-count" id="retry-max-count"><code>--retry-max-count &lt;NUM&gt;</code></a> | Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.<br/>
-<a href="#test" id="test"><code>--test</code></a> | Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.<br/>
-<a href="#to-entry" id="to-entry"><code>--to-entry &lt;ENTRY_NUMBER&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br/>Ignore the remaining of the file. It is useful for debugging a session.<br/>
-<a href="#user" id="user"><code>-u, --user &lt;USER:PASSWORD&gt;</code></a> | Add basic Authentication header to each request.<br/>
-<a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a> | Specify the User-Agent string to send to the HTTP server.<br/>
-<a href="#variable" id="variable"><code>--variable &lt;NAME=VALUE&gt;</code></a> | Define variable (name/value) to be used in Hurl templates.<br/>
-<a href="#variables-file" id="variables-file"><code>--variables-file &lt;FILE&gt;</code></a> | Set properties file in which your define your variables.<br/><br/>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br/><br/>Note that defining a variable twice produces an error.<br/>
-<a href="#verbose" id="verbose"><code>-v, --verbose</code></a> | Turn on verbose output on standard error stream.<br/>Useful for debugging.<br/><br/>A line starting with '>' means data sent by Hurl.<br/>A line staring with '<' means data received by Hurl.<br/>A line starting with '*' means additional info provided by Hurl.<br/><br/>If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.<br/>
-<a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a> | Turn on more verbose output on standard error stream.<br/><br/>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.<br/>
-<a href="#help" id="help"><code>-h, --help</code></a> | Usage help. This lists all current command line options with a short description.<br/>
-<a href="#version" id="version"><code>-V, --version</code></a> | Prints version information<br/>
+| Option                                                                                               | Description                                                                                                                                                                                                                                                                                                                                                                                        |
+|------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="#cacert" id="cacert"><code>--cacert &lt;FILE&gt;</code></a>                                 | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br>Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.<br>                                                                                                                                          |
+| <a href="#cert" id="cert"><code>-E, --cert &lt;CERTIFICATE[:PASSWORD]&gt;</code></a>                 | Client certificate file and password.<br><br>See also [`--key`](#key).<br>                                                                                                                                                                                                                                                                                                                         |
+| <a href="#color" id="color"><code>--color</code></a>                                                 | Colorize Output.<br>                                                                                                                                                                                                                                                                                                                                                                               |
+| <a href="#compressed" id="compressed"><code>--compressed</code></a>                                  | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.<br>                                                                                                                                                                                                                                                                          |
+| <a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;SECONDS&gt;</code></a>   | Maximum time in seconds that you allow Hurl's connection to take.<br><br>See also [`-m, --max-time`](#max-time).<br>                                                                                                                                                                                                                                                                               |
+| <a href="#connect-to" id="connect-to"><code>--connect-to &lt;HOST1:PORT1:HOST2:PORT2&gt;</code></a>  | For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.<br><br>See also [`--resolve`](#resolve).<br>                                                                                                                                                                                                                 |
+| <a href="#cookie" id="cookie"><code>-b, --cookie &lt;FILE&gt;</code></a>                             | Read cookies from FILE (using the Netscape cookie file format).<br><br>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br>                                                                                                                                                                                                        |
+| <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;FILE&gt;</code></a>                 | Write cookies to FILE after running the session (only for one session).<br>The file will be written using the Netscape cookie file format.<br><br>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br>                                                                                                                                     |
+| <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a>                               | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br>By default, Hurl exits after an assert error in the HTTP response.<br><br>Note that this option does not affect the behavior with multiple input Hurl files.<br><br>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br> |
+| <a href="#file-root" id="file-root"><code>--file-root &lt;DIR&gt;</code></a>                         | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br>                                                                                                                                                           |
+| <a href="#location" id="location"><code>-L, --location</code></a>                                    | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br>                                                                                                                                                                                                                                                                                       |
+| <a href="#glob" id="glob"><code>--glob &lt;GLOB&gt;</code></a>                                       | Specify input files that match the given glob pattern.<br><br>Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. <br>However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.<br>                                                                 |
+| <a href="#include" id="include"><code>-i, --include</code></a>                                       | Include the HTTP headers in the output (last entry).<br>                                                                                                                                                                                                                                                                                                                                           |
+| <a href="#ignore-asserts" id="ignore-asserts"><code>--ignore-asserts</code></a>                      | Ignore all asserts defined in the Hurl file.<br>                                                                                                                                                                                                                                                                                                                                                   |
+| <a href="#insecure" id="insecure"><code>-k, --insecure</code></a>                                    | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.<br>                                                                                                                                                                                                                                                                                                        |
+| <a href="#interactive" id="interactive"><code>--interactive</code></a>                               | Stop between requests.<br>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br>                                                                                                                                                                                                                                                                                 |
+| <a href="#json" id="json"><code>--json</code></a>                                                    | Output each hurl file result to JSON. The format is very closed to HAR format. <br>                                                                                                                                                                                                                                                                                                                |
+| <a href="#key" id="key"><code>--key &lt;KEY&gt;</code></a>                                           | Private key file name.<br>                                                                                                                                                                                                                                                                                                                                                                         |
+| <a href="#max-redirs" id="max-redirs"><code>--max-redirs &lt;NUM&gt;</code></a>                      | Set maximum number of redirection-followings allowed<br>By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.<br>                                                                                                                                                                                                                                           |
+| <a href="#max-time" id="max-time"><code>-m, --max-time &lt;SECONDS&gt;</code></a>                    | Maximum time in seconds that you allow a request/response to take. This is the standard timeout.<br><br>See also [`--connect-timeout`](#connect-timeout).<br>                                                                                                                                                                                                                                      |
+| <a href="#no-color" id="no-color"><code>--no-color</code></a>                                        | Do not colorize output.<br>                                                                                                                                                                                                                                                                                                                                                                        |
+| <a href="#no-output" id="no-output"><code>--no-output</code></a>                                     | Suppress output. By default, Hurl outputs the body of the last response.<br>                                                                                                                                                                                                                                                                                                                       |
+| <a href="#noproxy" id="noproxy"><code>--noproxy &lt;HOST(S)&gt;</code></a>                           | Comma-separated list of hosts which do not use a proxy.<br>Override value from Environment variable no_proxy.<br>                                                                                                                                                                                                                                                                                  |
+| <a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a>                             | Write output to FILE instead of stdout.<br>                                                                                                                                                                                                                                                                                                                                                        |
+| <a href="#proxy" id="proxy"><code>-x, --proxy &lt;[PROTOCOL://]HOST[:PORT]&gt;</code></a>            | Use the specified proxy.<br>                                                                                                                                                                                                                                                                                                                                                                       |
+| <a href="#report-junit" id="report-junit"><code>--report-junit &lt;FILE&gt;</code></a>               | Generate JUnit File.<br><br>If the FILE report already exists, it will be updated with the new test results.<br>                                                                                                                                                                                                                                                                                   |
+| <a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a>                   | Generate HTML report in DIR.<br><br>If the HTML report already exists, it will be updated with the new test results.<br>                                                                                                                                                                                                                                                                           |
+| <a href="#resolve" id="resolve"><code>--resolve &lt;HOST:PORT:ADDR&gt;</code></a>                    | Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.<br>                                                                                                                   |
+| <a href="#retry" id="retry"><code>--retry</code></a>                                                 | Retry requests if any error occurs (asserts, captures, runtimes etc...).<br>                                                                                                                                                                                                                                                                                                                       |
+| <a href="#retry-interval" id="retry-interval"><code>--retry-interval &lt;MILLISECONDS&gt;</code></a> | Duration in milliseconds between each retry. Default is 1000 ms.<br>                                                                                                                                                                                                                                                                                                                               |
+| <a href="#retry-max-count" id="retry-max-count"><code>--retry-max-count &lt;NUM&gt;</code></a>       | Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.<br>                                                                                                                                                                                                                                                                                                          |
+| <a href="#ssl-no-revoke" id="ssl-no-revoke"><code>--ssl-no-revoke</code></a>                         | (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.<br>                                                                                                                                                                                                                     |
+| <a href="#test" id="test"><code>--test</code></a>                                                    | Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.<br>                                                                                                                                                                                                       |
+| <a href="#to-entry" id="to-entry"><code>--to-entry &lt;ENTRY_NUMBER&gt;</code></a>                   | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br>Ignore the remaining of the file. It is useful for debugging a session.<br>                                                                                                                                                                                                                                                                  |
+| <a href="#user" id="user"><code>-u, --user &lt;USER:PASSWORD&gt;</code></a>                          | Add basic Authentication header to each request.<br>                                                                                                                                                                                                                                                                                                                                               |
+| <a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a>                 | Specify the User-Agent string to send to the HTTP server.<br>                                                                                                                                                                                                                                                                                                                                      |
+| <a href="#variable" id="variable"><code>--variable &lt;NAME=VALUE&gt;</code></a>                     | Define variable (name/value) to be used in Hurl templates.<br>                                                                                                                                                                                                                                                                                                                                     |
+| <a href="#variables-file" id="variables-file"><code>--variables-file &lt;FILE&gt;</code></a>         | Set properties file in which your define your variables.<br><br>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br><br>Note that defining a variable twice produces an error.<br>                                                                                                                                                                         |
+| <a href="#verbose" id="verbose"><code>-v, --verbose</code></a>                                       | Turn on verbose output on standard error stream.<br>Useful for debugging.<br><br>A line starting with '>' means data sent by Hurl.<br>A line staring with '<' means data received by Hurl.<br>A line starting with '*' means additional info provided by Hurl.<br><br>If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.<br>         |
+| <a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a>                            | Turn on more verbose output on standard error stream.<br><br>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.<br>                                                                                                                                      |
+| <a href="#help" id="help"><code>-h, --help</code></a>                                                | Usage help. This lists all current command line options with a short description.<br>                                                                                                                                                                                                                                                                                                              |
+| <a href="#version" id="version"><code>-V, --version</code></a>                                       | Prints version information<br>                                                                                                                                                                                                                                                                                                                                                                     |
 
 ## Environment
 
@@ -810,23 +900,23 @@ Environment variables can only be specified in lowercase.
 
 Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
 
-Variable | Description
- --- | --- 
-`http_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTP.<br/>
-`https_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTPS.<br/>
-`all_proxy [protocol://]<host>[:port]` | Sets the proxy server to use if no protocol-specific proxy is set.<br/>
-`no_proxy <comma-separated list of hosts>` | List of host names that shouldn't go through any proxy.<br/>
-`HURL_name value` | Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.<br/>
-`NO_COLOR` | When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).<br/>
+| Variable                                   | Description                                                                                                                                                      |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `http_proxy [protocol://]<host>[:port]`    | Sets the proxy server to use for HTTP.<br>                                                                                                                       |
+| `https_proxy [protocol://]<host>[:port]`   | Sets the proxy server to use for HTTPS.<br>                                                                                                                      |
+| `all_proxy [protocol://]<host>[:port]`     | Sets the proxy server to use if no protocol-specific proxy is set.<br>                                                                                           |
+| `no_proxy <comma-separated list of hosts>` | List of host names that shouldn't go through any proxy.<br>                                                                                                      |
+| `HURL_name value`                          | Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.<br> |
+| `NO_COLOR`                                 | When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).<br>                                                               |
 
 ## Exit Codes
 
-Value | Description
- --- | --- 
-`1` | Failed to parse command-line options.<br/>
-`2` | Input File Parsing Error.<br/>
-`3` | Runtime error (such as failure to connect to host).<br/>
-`4` | Assert Error.<br/>
+| Value | Description                                             |
+|-------|---------------------------------------------------------|
+| `1`   | Failed to parse command-line options.<br>               |
+| `2`   | Input File Parsing Error.<br>                           |
+| `3`   | Runtime error (such as failure to connect to host).<br> |
+| `4`   | Assert Error.<br>                                       |
 
 ## WWW
 
@@ -843,12 +933,12 @@ curl(1)  hurlfmt(1)
 
 ### Linux
 
-Precompiled binary is available at [hurl-1.8.0-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-2.0.0-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-1.8.0:$PATH
+$ curl -sL https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-2.0.0:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -856,8 +946,8 @@ $ export PATH=$INSTALL_DIR/hurl-1.8.0:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl_1.8.0_amd64.deb
-$ sudo apt update && apt install ./hurl_1.8.0_amd64.deb
+$ curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl_2.0.0_amd64.deb
+$ sudo apt update && apt install ./hurl_2.0.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
@@ -870,7 +960,7 @@ $ sudo apt update && apt install ./hurl_1.8.0_amd64.deb
 
 ### macOS
 
-Precompiled binary is available at [hurl-1.8.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-1.8.0-arm64-macos.tar.gz] for ARM CPUS.
+Precompiled binary is available at [hurl-2.0.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-2.0.0-arm64-macos.tar.gz] for ARM CPUS.
 
 #### Homebrew
 
@@ -894,11 +984,11 @@ $ sudo pkg install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-1.8.0-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-2.0.0-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-1.8.0-win64-installer.exe] is also available.
+An installer [hurl-2.0.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -1011,7 +1101,7 @@ Please follow the [contrib on Windows section].
 [libcurl]: https://curl.se/libcurl/
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
-[multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
+[XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
 [predicates]: https://hurl.dev/docs/asserting-response.html#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
@@ -1022,12 +1112,13 @@ Please follow the [contrib on Windows section].
 [curl]: https://curl.se
 [entry]: https://hurl.dev/docs/entry.html
 [`--test` option]: https://hurl.dev/docs/manual.html#test
+[Hurl templates]: https://hurl.dev/docs/templates.html
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-1.8.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-win64.zip
-[hurl-1.8.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-win64-installer.exe
-[hurl-1.8.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-x86_64-macos.tar.gz
-[hurl-1.8.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-arm64-macos.tar.gz
-[hurl-1.8.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/1.8.0/hurl-1.8.0-x86_64-linux.tar.gz
+[hurl-2.0.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-win64.zip
+[hurl-2.0.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-win64-installer.exe
+[hurl-2.0.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-x86_64-macos.tar.gz
+[hurl-2.0.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-arm64-macos.tar.gz
+[hurl-2.0.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/2.0.0/hurl-2.0.0-x86_64-linux.tar.gz
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install

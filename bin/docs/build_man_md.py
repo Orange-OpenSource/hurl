@@ -45,7 +45,7 @@ def process_table(doc: MarkdownDoc, nodes: List[Node], col_name: str) -> None:
 
     new_nodes = [
         Whitespace(content="\n"),
-        Paragraph(content=f"{col_name} | Description\n --- | --- \n"),
+        Paragraph(content=f"| {col_name} | Description |\n| --- | --- |\n"),
     ]
 
     h3s = [n for n in nodes if isinstance(n, Header)]
@@ -78,9 +78,9 @@ def process_table(doc: MarkdownDoc, nodes: List[Node], col_name: str) -> None:
         paragraphs = doc.slice(first_p, next_node)
         paragraphs_contents = [p.content for p in paragraphs if p.content]
         description = "".join(paragraphs_contents)
-        description = description.replace("\n", "<br/>")
+        description = description.replace("\n", "<br>")
 
-        new_node = Paragraph(content=f"{name} | {description}\n")
+        new_node = Paragraph(content=f"| {name} | {description} |\n")
         new_nodes.append(new_node)
 
     # Delete all previous options:

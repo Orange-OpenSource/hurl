@@ -4,8 +4,8 @@
 
 Request describes an HTTP request: a mandatory [method] and [URL], followed by optional [headers].
 
-Then, [query parameters], [form parameters], [multipart form data], [cookies] and
-[basic authentication] can be used to configure the HTTP request.
+Then, [query parameters], [form parameters], [multipart form data], [cookies], [basic authentication] and [options]
+can be used to configure the HTTP request.
 
 Finally, an optional [body] can be used to configure the HTTP request body.
 
@@ -116,7 +116,7 @@ order: newest
 ```
 
 The last optional part of a request configuration is the request [body]. Request body must be the last parameter of a request
-(after [headers] and request sections). Like headers, [body] have no explicit marker:
+(after [headers] and request sections). Like headers, body have no explicit marker:
 
 ```hurl
 POST https://example.org/api/dogs?id=4567
@@ -131,7 +131,7 @@ User-Agent: My User Agent
 ### Method
 
 Mandatory HTTP request method, one of `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`,
-`TRACE`, `PATCH`.
+`TRACE`, `PATCH`, `LINK`, `UNLINK`, `PURGE`, `LOCK`, `UNLOCK`, `PROPFIND`, `VIEW`.
 
 ### URL
 
@@ -173,7 +173,7 @@ Connection: keep-alive
 > Headers directly follow URL, without any section name, contrary to query parameters, form parameters
 > or cookies
 
-Note that header usually don't start with double quotes. If the header value starts with double quotes, the double
+Note that a header usually doesn't start with double quotes. If a header value starts with double quotes, double
 quotes will be part of the header value:
 
 ```hurl
@@ -223,7 +223,7 @@ number: 33611223344
 ```
 
 Form parameters section can be seen as syntactic sugar over body section (values in form parameters section
-are not URL encoded.). A [multiline string body] could be used instead of a forms parameters section.
+are not URL encoded.). A [oneline string body] could be used instead of a forms parameters section.
 
 ~~~hurl
 # Run a POST request with form parameters section:
@@ -235,9 +235,7 @@ key1: value1
 # Run the same POST request with a body section:
 POST https://example.org/test
 Content-Type: application/x-www-form-urlencoded
-```
-name=John%20Doe&key1=value1
-```
+`name=John%20Doe&key1=value1`
 ~~~
 
 When both [body section] and form parameters section are present, only the body section is taken into account.
@@ -342,8 +340,9 @@ Optional HTTP body request.
 
 If the body of the request is a [JSON] string or a [XML] string, the value can be
 directly inserted without any modification. For a text based body that is not JSON nor XML,
-one can use multiline string that starts with <code>&#96;&#96;&#96;</code> and ends
-with <code>&#96;&#96;&#96;</code>.
+one can use [multiline string body] that starts with <code>&#96;&#96;&#96;</code> and ends
+with <code>&#96;&#96;&#96;</code>. Multiline string body support "language hint" and can be used
+to create [GraphQL queries].
 
 For a precise byte control of the request body, [Base64] encoded string, [hexadecimal string]
 or [included file] can be used to describe exactly the body byte content.
@@ -354,7 +353,7 @@ The body section must be the last section of the request configuration.
 
 #### JSON body
 
-JSON body is used to set a literal JSON as the request body.
+JSON request body is used to set a literal JSON as the request body.
 
 ```hurl
 # Create a new doggy thing with JSON body:
@@ -369,11 +368,43 @@ POST https://example.org/api/dogs
 }
 ```
 
-When using JSON body, the content type `application/json` is automatically set.
+JSON request body can be [templatized with variables]:
+
+```hurl
+# Create a new catty thing with JSON body:
+POST https://example.org/api/cats
+{
+    "id": 42,
+    "lives": {{ lives_count }},
+    "name": "{{ name }}"
+}
+```
+
+
+When using JSON request body, the content type `application/json` is automatically set.
+
+JSON request body can be seen as syntactic sugar of [multiline string body] with `json` identifier:
+
+~~~hurl
+# Create a new doggy thing with JSON body:
+POST https://example.org/api/dogs
+```json
+{
+    "id": 0,
+    "name": "Frieda",
+    "picture": "images/scottish-terrier.jpeg",
+    "age": 3,
+    "breed": "Scottish Terrier",
+    "location": "Lisco, Alabama"
+}
+```
+~~~
+
+
 
 #### XML body
 
-XML body is used to set a literal XML as the request body.
+XML request body is used to set a literal XML as the request body.
 
 ~~~hurl
 # Create a new soapy thing XML body:
@@ -392,9 +423,88 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 </soap:Envelope>
 ~~~
 
+XML request body can be seen as syntactic sugar of [multiline string body] with `xml` identifier:
+
+~~~hurl
+# Create a new soapy thing XML body:
+POST https://example.org/InStock
+Content-Type: application/soap+xml; charset=utf-8
+Content-Length: 299
+SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:m="http://example.net">
+  <soap:Header></soap:Header>
+  <soap:Body>
+    <m:GetStockPrice>
+      <m:StockName>GOOG</m:StockName>
+    </m:GetStockPrice>
+  </soap:Body>
+</soap:Envelope>
+```
+~~~
+
+> Contrary to JSON body, the succint syntax of XML body can not use variables. If you need to use variables in your
+> XML body, use a simple [multiline string body] with variables.
+
+#### GraphQL query
+
+GraphQL query uses [multiline string body] with `graphql` identifier:
+
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+{
+  human(id: "1000") {
+    name
+    height(unit: FOOT)
+  }
+}
+```
+~~~
+
+GraphQL query body can use [GraphQL variables]:
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+query Hero($episode: Episode, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+    }
+  }
+}
+
+variables {
+  "episode": "JEDI",
+  "withFriends": false
+}
+```
+~~~
+
+GraphQL query, as every multiline string body, can use Hurl variables.
+
+~~~hurl
+POST https://example.org/starwars/graphql
+```graphql
+{
+  human(id: "{{human_id}}") {
+    name
+    height(unit: FOOT)
+  }
+}
+```
+~~~
+
+> Hurl variables and GraphQL variables can be mixed in the same body.
+
+
 #### Multiline string body
 
-For text based body that are not JSON nor XML, one can used multiline string, started and ending with
+For text based body that are not JSON nor XML, one can use multiline string, started and ending with
 <code>&#96;&#96;&#96;</code>.
 
 ~~~hurl
@@ -420,28 +530,28 @@ line3
 
 is evaluated as "line1\nline2\nline3\n".
 
+Multiline string body can use language identifier, like `json`, `xml` or `graphql`. Depending on the language identifier,
+an additional 'Content-Type' request header is sent, and the real body (bytes sent over the wire) can be different from the 
+raw multiline text.
 
-To construct an empty string:
-
-~~~
+~~~hurl
+POST https://example.org/api/dogs
+```json
+{
+    "id": 0,
+    "name": "Frieda",
+}
 ```
-```
 ~~~
 
-or
+#### Oneline string body
 
+For text based body that do not contain newlines, one can use oneline string, started and ending with <code>&#96;</code>.
+
+~~~hurl
+POST https://example.org/helloworld
+`Hello world!`
 ~~~
-``````
-~~~
-
-
-Finally, multiline string can be used without any newline:
-
-~~~
-```line``` 
-~~~
-
-is evaluated as "line".
 
 
 #### Base64 body
@@ -504,9 +614,14 @@ compressed: true        # request a compressed response
 insecure: true          # allows insecure SSL connections and transfers
 location: true          # follow redirection for this request
 max-redirs: 10          # maximum number of redirections
+variable: country=Italy # define variable country
+variable: planet=Earth  # define variable planet
 verbose: true           # allow verbose output
 very-verbose: true      # allow more verbose output    
 ```
+
+> Variable defined in an `[Options]` section are defined also for the next entries. This is 
+> the exception, all other options are defined only for the current request.
 
 [method]: #method
 [URL]: #url
@@ -521,6 +636,7 @@ very-verbose: true      # allow more verbose output
 [query parameters section]: #query-parameters
 [HTML form]: https://developer.mozilla.org/en-US/docs/Learn/Forms
 [multiline string body]: #multiline-string-body
+[oneline string body]: #oneline-string-body
 [body section]: #body
 [multipart/form-data on MDN]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
 [`--file-root` option]: /docs/manual.md#file-root
@@ -536,4 +652,8 @@ very-verbose: true      # allow more verbose output
 [`--location`]: /docs/manual.md#location
 [`--verbose`]: /docs/manual.md#verbose
 [`--insecure`]: /docs/manual.md#insecure
+[templatized with variables]: /docs/templates.md#templating-body
+[GraphQL queries]: #graphql-query
+[GraphQL variables]: https://graphql.org/learn/queries/#variables
+[options]: #options
 
