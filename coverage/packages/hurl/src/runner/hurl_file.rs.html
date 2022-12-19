@@ -819,7 +819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; use hurl::runner::Value;</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1059,7 +1059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; let runner_options = runner::RunnerOptions {</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; let runner_options = RunnerOptionsBuilder::new()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1075,7 +1075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;   very_verbose: true,</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;     .follow_location(true)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1091,7 +1091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;   ..runner::RunnerOptions::default()</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;     .verbosity(Some(Verbosity::Verbose))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1107,7 +1107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; };</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;     .build();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5129,7 +5129,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2022-12-18 08:10</p>
+                <p class="heading">Date: 2022-12-19 08:10</p>
             </div>
         </footer>
     </body>
