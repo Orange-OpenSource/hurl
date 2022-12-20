@@ -4,7 +4,7 @@ set -Eeuo pipefail
 echo "----- unit tests  -----"
 PATH="$HOME"/.cargo/bin:$PATH
 export PATH
-cargo test --release --features strict --tests
+cargo test --release
 
 # Return PATH var to parent shell
 package_dir="$(cd target/release ; pwd)"
