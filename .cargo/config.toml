@@ -1,0 +1,5 @@
+# On platforms with musl, we desactivate static linking
+# with CRT: on Alpine for instance, we must compile Hurl with this flag
+# in order to produce a valid binary (mainly because of curl crate)
+[target.'cfg(target_env = "musl")']
+rustflags = ["-Ctarget-feature=-crt-static"]

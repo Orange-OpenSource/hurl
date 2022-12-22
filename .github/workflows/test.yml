@@ -205,7 +205,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: alpine
-        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --env RUSTFLAGS=-Ctarget-feature=-crt-static
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always
         run: |
           set -e
           apk update --quiet
