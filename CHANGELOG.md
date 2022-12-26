@@ -14,11 +14,13 @@ Thanks to
 
 Enhancements:
 
+* Add client cert/key to command line args and options [#1129](https://github.com/Orange-OpenSource/hurl/issues/1129)
+
 * Add connect-to option [#1079](https://github.com/Orange-OpenSource/hurl/issues/1079)
 
 * Add name attribute to JUnit report [#1078](https://github.com/Orange-OpenSource/hurl/issues/1078)
 
-* Check HTTP version and status first, then other asserts. [#1072](https://github.com/Orange-OpenSource/hurl/issues/1072)
+* Check HTTP version and status first, then other asserts [#1072](https://github.com/Orange-OpenSource/hurl/issues/1072)
 
 * Support new one line string [#1041](https://github.com/Orange-OpenSource/hurl/issues/1041)
 
@@ -28,7 +30,7 @@ Enhancements:
 
 * Use HTTP instead of HTTP/* for any HTTP version match [#975](https://github.com/Orange-OpenSource/hurl/issues/975)
 
-* Add RunnerOptionsBuilder to create instance of RunnerOptions. [#972](https://github.com/Orange-OpenSource/hurl/issues/972)
+* Add RunnerOptionsBuilder to create instance of RunnerOptions [#972](https://github.com/Orange-OpenSource/hurl/issues/972)
 
 * Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
 
@@ -36,13 +38,13 @@ Enhancements:
 
 * Add --resolve option [#379](https://github.com/Orange-OpenSource/hurl/issues/379)
 
-
 Bugs Fixed:
+
+* Fix cargo test --doc on Alpine [#1124](https://github.com/Orange-OpenSource/hurl/issues/1124)
 
 * Fix variables update [#1037](https://github.com/Orange-OpenSource/hurl/issues/1037)
 
 * Fix querystring key parsing [#1027](https://github.com/Orange-OpenSource/hurl/issues/1027)
-
 
 [1.8.0 (2022-11-02)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.8.0)
 ========================================================================================================================
