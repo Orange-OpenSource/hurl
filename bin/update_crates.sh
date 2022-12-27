@@ -150,7 +150,7 @@ main() {
         echo -e "\n--------------------------------------------------------"
         echo -e "### Crates updates for *Cargo.lock*\n"
         cargo update --color always -vv 2>&1 |
-            grep -v "crates.io index" |
+            (grep -v "crates.io index" || true) |
                 tr -s ' ' |
                     sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
                         sed "s/ Updating //g" |
