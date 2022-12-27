@@ -1,9 +1,8 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-# init exit workflow
-
 # init colors
+color_grey=$(echo -ne "\033[0;30m")
 color_red=$(echo -ne "\033[1;31m")
 color_green=$(echo -ne "\033[1;32m")
 color_yellow=$(echo -ne "\033[1;33m")
@@ -33,12 +32,12 @@ convert_toml_crates_to_key_value() {
     # convert toml crates to key value
     sed -n "/dependencies\]/,/^$/p" "${toml_file}" |
         grep --extended-regexp --invert-match "^\[|path|^$" |
-        cut --delimiter ',' --field 1 |
-        sed "s/version//g" |
-        tr -d '"{=' |
-        tr -d "'" |
-        tr -s ' ' |
-        sort
+            cut --delimiter ',' --field 1 |
+                sed "s/version//g" |
+                    tr -d '"{=' |
+                        tr -d "'" |
+                            tr -s ' ' |
+                                sort
 }
 
 get_crate_latest_version() {
@@ -47,9 +46,38 @@ get_crate_latest_version() {
 
     # get crate latest version
     crate_object=$(curl -kLs "${crate_url}" || true)
-    crate_max_stable_version=$(echo "${crate_object}" | (jq -r .crate.max_stable_version || true))
+    crate_max_stable_version=$(echo "${crate_object}" | (jq -r .crate.max_stable_version 2>/dev/null || true))
     last_version=$(echo "${crate_max_stable_version}" | (grep --extended-regexp "^[0-9].*.[0-9].*.[0-9]$" || true))
     echo "${last_version}"
+}
+
+get_crate_github_release_body(){
+    # init args
+    crate_url="$1"
+    crate_release="$2"
+
+    # get crate github repository
+    crate_object=$(curl -kLs "${crate_url}" || true)
+    crate_repository=$(echo "${crate_object}" | (jq -r .crate.repository 2>/dev/null || true))
+    github_repository=$(echo "${crate_repository}" | (grep --extended-regexp "^https://github.com" || true))
+
+    # get github release body
+    if [ -n "${github_repository}" ] ; then
+        owner_repo=$(echo "${github_repository}" | cut --delimiter "/" --field 4-)
+        tag_name=$(curl -kLs --header "Accept: application/vnd.github+json" https://api.github.com/repos/"${owner_repo}"/git/refs/tags | (jq -r .[].ref 2>/dev/null || true) | (grep "${crate_release}$" || true) | cut --delimiter "/" --field 3)
+        release_body=$( (curl -kLs --header "Accept: application/vnd.github+json" https://api.github.com/repos/"${owner_repo}"/releases/tags/"${tag_name}" || true) | (jq -r .body 2>/dev/null || 
+true) )
+    else
+        release_body="null"
+    fi
+
+    # display release infos
+    echo -e "\n        ${color_grey}${crate_repository}${color_reset}\n"
+    if [ -n "${release_body}" ] && [ "${release_body}" != "null" ] ; then
+        echo -n "${color_grey}"
+        echo "${release_body}" | tr -s ' ' | sed 's/```//g' | sed "s/^-//g" | sed "s/^/        /g"
+        echo -e "${color_reset}\n"
+    fi
 }
 
 update_crate_version_in_toml() {
@@ -91,7 +119,8 @@ main() {
     # update toml
     for package in packages/*; do
         toml_file="${package}/Cargo.toml"
-        echo -e "\n=> crates updates for ${toml_file}\n"
+        echo -e "\n--------------------------------------------------------"
+        echo -e "### Crates updates for *${toml_file}*\n"
         while read -r crate actual_version; do
             crate_url="${crates_api_root_url}/${crate}"
             last_version=$(get_crate_latest_version "${crate_url}")
@@ -99,7 +128,7 @@ main() {
                 echo "${color_red}runtime error${color_reset}, i could not get last version from ${crate_url}"
                 return 1
             fi
-            echo -n "  ${crate} ${actual_version}: "
+            echo -n "- ${crate} ${actual_version} "
             newest_version=$(which_is_the_newest_version "${last_version}" "${actual_version}")
             if [ "${newest_version}" == "${actual_version}" ]; then
                 echo "${color_green}newest${color_reset}"
@@ -109,16 +138,31 @@ main() {
                     updated_count=$((updated_count + 1))
                 else
                     update_crate_version_in_toml "${crate}" "${actual_version}" "${last_version}" "${toml_file}"
+                    get_crate_github_release_body "${crate_url}" "${last_version}"
                 fi
             fi
         done < <(convert_toml_crates_to_key_value "${toml_file}")
     done
-    wait
 
     # update lock
     if [ "${arg}" != "--check" ]; then
-        echo -e "\n=> crates updates for Cargo.lock\n"
-        cargo update --color always -vv
+        updated_lock_file="/tmp/updated_locks.list"
+        echo -e "\n--------------------------------------------------------"
+        echo -e "### Crates updates for *Cargo.lock*\n"
+        cargo update --color always -vv 2>&1 |
+            grep -v "crates.io index" |
+                tr -s ' ' |
+                    sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
+                        sed "s/ Updating //g" |
+                            sed "s/->//g" > "${updated_lock_file}"
+        while read -r crate actual_version last_version ; do
+            formated_actual_version=$(echo "${actual_version}" | grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]")
+            formated_last_version=$(echo "${last_version}" | grep --only-matching --extended-regexp "[0-9].*.[0-9].*.[0-9]")
+            crate_url="${crates_api_root_url}/${crate}"
+            echo "- ${crate} ${formated_actual_version} ${color_blue}updated to ${formated_last_version}${color_reset}"
+            get_crate_github_release_body "${crate_url}" "${last_version}"
+
+        done < "${updated_lock_file}"
         echo -e "\n"
     fi
 
