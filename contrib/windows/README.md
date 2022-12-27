@@ -26,7 +26,7 @@ $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";c:\vcpkg"
 Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-vcpkg install libxml2:x64-windows curl:x64-windows
+vcpkg install libxml2:x64-windows curl[openssl]:x64-windows
 vcpkg integrate install
 Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
 $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")
@@ -45,9 +45,9 @@ git.exe clone https://github.com/Orange-OpenSource/hurl
 ```powershell
 cd c:\hurl
 cargo build --release --verbose
-New-Item -ItemType "Directory" -Path "c:\hurl\target" -Name "win-package"
-Get-ChildItem -Path "c:\hurl\target\release" -Recurse -Include *.dll -File | Copy-Item -Destination "c:\hurl\target\win-package"
-Get-ChildItem -Path "c:\hurl\target\release" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "c:\hurl\target\win-package"
+New-Item -ItemType "Directory" -Path c:\hurl\target -Name "win-package"
+Get-ChildItem -Path c:\hurl\target\release\build -Recurse -Include *.dll -File | Copy-Item -Destination "c:\hurl\target\win-package"
+Get-ChildItem -Path c:\hurl\target\release -Recurse -Include hurl*.exe -File | Copy-Item -Destination "c:\hurl\target\win-package"
 ((c:\hurl\target\win-package\hurl.exe --version) -Split " ")[1] > c:\hurl\target\win-package\version.txt
 $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";c:\hurl\target\win-package"
@@ -116,7 +116,7 @@ Get-ChildItem -Path *.dll, *hurl.exe, *hurlfmt.exe, *.txt, ../../*.md  -Exclude 
 ```powershell
 cd c:\hurl
 Get-Command Expand-Archive
-Expand-Archive -Path '.\bin\windows\EnVar_plugin.zip' -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
+Expand-Archive -Path .\bin\windows\EnVar_plugin.zip -DestinationPath 'C:\Program Files (x86)\NSIS' -Verbose
 cd c:\hurl\target\win-package
 $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";C:\Program Files (x86)\NSIS\Bin"

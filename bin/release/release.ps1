@@ -10,8 +10,8 @@ cargo build --release --verbose --locked
 $release_dir="$project_root_path\target\release"
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
-Get-ChildItem -Path "$release_dir" -Recurse -Include *.dll -File | Copy-Item -Destination "$package_dir"
-Get-ChildItem -Path "$release_dir" -Recurse -Include hurl*.exe -File | Copy-Item -Destination "$package_dir"
+Get-ChildItem -Path $release_dir\build -Recurse -Include *.dll -File | Copy-Item -Destination "$package_dir"
+Get-ChildItem -Path $release_dir -Recurse -Include hurl*.exe -File | Copy-Item -Destination "$package_dir"
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
 
