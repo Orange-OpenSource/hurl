@@ -46,7 +46,7 @@ git.exe clone https://github.com/Orange-OpenSource/hurl
 cd c:\hurl
 cargo build --release --verbose
 New-Item -ItemType "Directory" -Path c:\hurl\target -Name "win-package"
-Get-ChildItem -Path c:\hurl\target\release\build -Recurse -Include *.dll -File | Copy-Item -Destination "c:\hurl\target\win-package"
+Get-ChildItem -Path c:\hurl\target\release -Recurse -Include *.dll -File | Copy-Item -Destination "c:\hurl\target\win-package"
 Get-ChildItem -Path c:\hurl\target\release -Recurse -Include hurl*.exe -File | Copy-Item -Destination "c:\hurl\target\win-package"
 ((c:\hurl\target\win-package\hurl.exe --version) -Split " ")[1] > c:\hurl\target\win-package\version.txt
 $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path

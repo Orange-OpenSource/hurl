@@ -48,7 +48,6 @@ termion = "2.0.1"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
-openssl = "0.10.45"
 
 [build-dependencies]
 cc = "1.0.78"

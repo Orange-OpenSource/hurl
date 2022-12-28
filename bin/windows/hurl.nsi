@@ -119,21 +119,6 @@ SectionGroup "dlls"
     SetOutPath $INSTDIR
     File "libcurl.dll"
   SectionEnd
-  Section "libssl-3-x64.dll"
-    SectionIn RO
-    SetOutPath $INSTDIR
-    File "libssl-3-x64.dll"
-  SectionEnd
-  Section "libcrypto-3-x64.dll"
-    SectionIn RO
-    SetOutPath $INSTDIR
-    File "libcrypto-3-x64.dll"
-  SectionEnd
-  Section "legacy.dll"
-    SectionIn RO
-    SetOutPath $INSTDIR
-    File "legacy.dll"
-  SectionEnd
 SectionGroupEnd
 
 SectionGroup "txt"
