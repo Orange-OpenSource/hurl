@@ -804,7 +804,9 @@ fn test_error_ssl() {
         url,
     } = error
     {
-        assert_eq!(code, 60);
+        // libcurl on linux and mac exists with 60
+        // libcurl with openssl3 feature builded by vcpkg on x64-windows exists with 35
+        assert!(code == 60 || code == 35);
         let descriptions = [
             // Windows 2000 github runner messages:
             "schannel: SEC_E_UNTRUSTED_ROOT (0x80090325) - The certificate chain was issued by an authority that is not trusted.".to_string(),
@@ -814,8 +816,14 @@ fn test_error_ssl() {
             "SSL certificate problem: self signed certificate".to_string(),
             // Unix-like, after OpenSSL 3.0.0
             "SSL certificate problem: self-signed certificate".to_string(),
+            // unknown SSL protocol error in connection (curl[openssl3]:x64-windows)
+            "error:16000069:STORE routines::unregistered scheme".to_string(),
         ];
-        assert!(descriptions.contains(&description));
+        assert!(
+            descriptions.contains(&description),
+            "actual description is {}",
+            description
+        );
         assert_eq!(url, "https://localhost:8001/hello");
     }
 }
