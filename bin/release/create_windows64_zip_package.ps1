@@ -1,3 +1,6 @@
+Set-StrictMode -Version latest
+$ErrorActionPreference = 'Stop'
+
 powershell write-host -foregroundcolor Cyan "----- create windows64 zip package -----"
 
 $actual_dir=(Get-Location).Path

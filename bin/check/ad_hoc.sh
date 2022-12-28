@@ -32,6 +32,19 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.sh")
 
+# Check *PS1 error handling at line 2
+echo "------------------------------------------------------------------------------------------"
+while read -r script ; do
+    if [ "$(head -1 "$script" | grep -c "Set-StrictMode -Version latest" || true)" -eq 0 ] ; then
+        echo "Missing [Set-StrictMode -Version latest] in first line of ${color_red}${script}${color_reset}"
+        ((errors_count++))
+    fi
+    if [ "$(head -2 "$script" | tail -1 | grep -c "\$ErrorActionPreference = 'Stop'" || true)" -eq 0 ] ; then
+        echo "Missing [\$ErrorActionPreference = 'Stop'] in second line of ${color_red}${script}${color_reset}"
+        ((errors_count++))
+    fi
+done < <(find . -type f -name "*.PS1")
+
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then
     exit 1

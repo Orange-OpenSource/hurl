@@ -1,3 +1,6 @@
+Set-StrictMode -Version latest
+$ErrorActionPreference = 'Stop'
+
 powershell write-host -foregroundcolor Cyan "----- build release -----"
 
 $actual_dir=(Get-Location).Path
@@ -5,6 +8,7 @@ $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
 
 # build
 cargo build --release --verbose --locked
+if ($LASTEXITCODE) { Throw }
 
 # create final package
 $release_dir="$project_root_path\target\release"
@@ -25,6 +29,8 @@ sleep 10
 (Get-Command hurl).Path
 (Get-Command hurlfmt).Path
 hurl --version
+if ($LASTEXITCODE) { Throw }
 hurlfmt --version
+if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir

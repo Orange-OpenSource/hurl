@@ -1,4 +1,5 @@
-﻿$ErrorActionPreference = 'Stop';
+﻿Set-StrictMode -Version latest
+$ErrorActionPreference = 'Stop';
 $SoftwareName  = 'hurl'
 
 $HashArguments = @{
