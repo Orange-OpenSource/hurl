@@ -10,17 +10,39 @@ You just have to follow each chapter sequentially until you get a windows instal
 
 # Build requirements
 
+Install vs_buildtools
+
 ```powershell
 cd c:\
 Invoke-WebRequest -UseBasicParsing https://aka.ms/vs/17/release/vs_buildtools.exe  -Outfile vs_buildtools.exe
 Start-Process -Wait -PassThru -FilePath .\vs_buildtools.exe -ArgumentList "--addProductLang", "En-us", "--add", "Microsoft.VisualStudio.Workload.VCTools", "--includeRecommended", "--passive", "--norestart", "--nocache", "--wait"
+```
+
+Install chocolatey
+
+```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-choco install --confirm --no-progress git nsis winlibs-llvm-free nsis
+```
+
+Install git, llvm, nsis and python3
+
+```powershell
+choco install --confirm --no-progress git winlibs-llvm-free nsis
 choco install --confirm --no-progress python3 --version "3.8.0"
+```
+
+Install rust
+
+```powershell
 Invoke-WebRequest -UseBasicParsing -OutFile "c:\rustup-init.exe" "https://static.rust-lang.org/rustup/dist/i686-pc-windows-gnu/rustup-init.exe"
 c:\rustup-init.exe -y  --default-toolchain stable-x86_64-pc-windows-msvc
 Set-ItemProperty -Path HKCU:\Environment -Name RUST_BACKTRACE -Value "full"
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+```
+
+Install vcpkg
+
+```powershell
 git.exe config --global core.autocrlf false
 git.exe config --global core.eol lf
 git.exe clone https://github.com/microsoft/vcpkg
@@ -29,6 +51,11 @@ $oldpath = Get-ItemProperty -Path HKCU:\Environment -Name Path
 $newpath = $oldpath.Path += ";c:\vcpkg"
 Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+```
+
+Install build libs requirement
+
+```powershell
 vcpkg install libxml2:x64-windows curl:x64-windows
 vcpkg integrate install
 Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
