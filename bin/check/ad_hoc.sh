@@ -9,11 +9,11 @@ errors_count=0
 # Check *.rs Orange Copyright
 echo "------------------------------------------------------------------------------------------"
 while read -r rust_file ; do
-    if [ "$(grep -c "Copyright (C) 2022 Orange" "$rust_file" || true)" -eq 0 ] ; then
-        echo "Missing [Copyright (C) 2022 Orange] in ${color_red}${rust_file}${color_reset}"
+    if [ "$(grep -c "Copyright (C) 2023 Orange" "$rust_file" || true)" -eq 0 ] ; then
+        echo "Missing [Copyright (C) 2023 Orange] in ${color_red}${rust_file}${color_reset}"
         ((errors_count++))
     else
-        echo "[Copyright (C) 2022 Orange] is present in ${color_green}${rust_file}${color_reset}"
+        echo "[Copyright (C) 2023 Orange] is present in ${color_green}${rust_file}${color_reset}"
     fi
 done < <(find packages -type f -name "*.rs")
 
