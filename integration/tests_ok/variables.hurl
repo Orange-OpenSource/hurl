@@ -12,8 +12,10 @@ Female: {{female}}
 Id: {{my-id}}
 A_Null: {{a_null}}
 Country: {{country}}
+Planet: {{planet}}
 [Options]
 variable: country=Italy
+variable: planet=The Earth
 {
   "name": "{{name}}",
   "age": {{age}},
@@ -21,7 +23,8 @@ variable: country=Italy
   "female": {{female}},
   "id": "{{my-id}}",
   "a_null": {{a_null}},
-  "country": "{{country}}"
+  "country": "{{country}}",
+  "planet": "{{planet}}"
 }
 
 HTTP 200
@@ -33,3 +36,16 @@ variable "height" == 1.70
 variable "a_null" == null
 variable "my-id" == "123"
 variable "country" == "Italy"
+variable "planet" == "The Earth"
+
+
+# `country` and `planet` variable are still available
+# for the next entries, even if they've been defined in the
+# previous `[Options]` request section.
+GET http://localhost:8000/variable/country
+HTTP 200
+`{{country}}`
+
+GET http://localhost:8000/variable/planet
+HTTP 200
+`{{planet}}`

@@ -13,6 +13,7 @@ def variables():
     assert request.headers["Height"] == "1.7"
     assert request.headers["A_null"] == "null"
     assert request.headers["Country"] == "Italy"
+    assert request.headers["Planet"] == "The Earth"
 
     s = request.data.decode("utf-8")
     data = json.loads(s)
@@ -23,4 +24,15 @@ def variables():
     assert data["height"] == 1.7
     assert data["a_null"] is None
     assert data["country"] == "Italy"
+    assert data["planet"] == "The Earth"
     return ""
+
+
+@app.route("/variable/country")
+def country():
+    return "Italy"
+
+
+@app.route("/variable/planet")
+def planet():
+    return "The Earth"
