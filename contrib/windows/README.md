@@ -29,6 +29,7 @@ Install git, llvm, nsis and python3
 ```powershell
 choco install --confirm --no-progress git winlibs-llvm-free nsis
 choco install --confirm --no-progress python3 --version "3.8.0"
+python -m pip install --upgrade pip --quiet
 ```
 
 Install rust
