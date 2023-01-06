@@ -19,3 +19,9 @@ error: Filter Error
    |                      ^^^^^ missing value to apply filter
    |
 
+error: Filter Error
+  --> tests_failed/filter.hurl:7:19
+   |
+ 7 | jsonpath "$.list" nth 5 == 3
+   |                   ^^^^^ invalid filter input: Out of bound - size is 3
+   |

@@ -1143,19 +1143,43 @@ impl Tokenizable for VeryVerboseOption {
 impl Tokenizable for Filter {
     fn tokenize(&self) -> Vec<Token> {
         match self.value.clone() {
+            FilterValue::Count => vec![Token::FilterType(String::from("count"))],
+            FilterValue::HtmlEscape => vec![Token::FilterType(String::from("htmlEscape"))],
+            FilterValue::HtmlUnescape => {
+                vec![Token::FilterType(String::from("htmlUnescape"))]
+            }
+            FilterValue::Nth { space0, n } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("nth"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.push(Token::Number(n.to_string()));
+                tokens
+            }
             FilterValue::Regex { space0, value } => {
-                let mut tokens: Vec<Token> = vec![];
-                tokens.push(Token::FilterType(String::from("regex")));
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("regex"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
                 tokens
             }
-            FilterValue::Count => vec![Token::FilterType(String::from("count"))],
+            FilterValue::Replace {
+                space0,
+                old_value,
+                space1,
+                new_value,
+            } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("replace"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut old_value.tokenize());
+                tokens.append(&mut space1.tokenize());
+                tokens.append(&mut new_value.tokenize());
+                tokens
+            }
             FilterValue::UrlEncode => vec![Token::FilterType(String::from("urlEncode"))],
             FilterValue::UrlDecode => vec![Token::FilterType(String::from("urlDecode"))],
-            FilterValue::HtmlEscape => vec![Token::FilterType(String::from("htmlEscape"))],
-            FilterValue::HtmlUnescape => {
-                vec![Token::FilterType(String::from("htmlUnescape"))]
+            FilterValue::Split { space0, sep } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("split"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut sep.tokenize());
+                tokens
             }
             FilterValue::ToInt => vec![Token::FilterType(String::from("toInt"))],
         }

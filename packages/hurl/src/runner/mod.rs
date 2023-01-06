@@ -45,6 +45,7 @@ mod multipart;
 mod predicate;
 mod predicate_value;
 mod query;
+mod regex;
 mod request;
 mod response;
 mod runner_options;

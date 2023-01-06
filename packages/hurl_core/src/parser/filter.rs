@@ -17,8 +17,9 @@
  */
 use crate::ast::{Filter, FilterValue, SourceInfo, Whitespace};
 use crate::parser::combinators::choice;
-use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
+use crate::parser::primitives::{natural, one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
+use crate::parser::string::quoted_template;
 use crate::parser::{Error, ParseError, ParseResult, Reader};
 
 pub fn filters(reader: &mut Reader) -> ParseResult<'static, Vec<(Whitespace, Filter)>> {
@@ -51,12 +52,15 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     let value = choice(
         &[
             count_filter,
-            regex_filter,
-            url_encode_filter,
-            url_decode_filter,
-            html_encode_filter,
             html_decode_filter,
+            html_encode_filter,
+            nth_filter,
+            regex_filter,
+            replace_filter,
+            split_filter,
             to_int_filter,
+            url_decode_filter,
+            url_encode_filter,
         ],
         reader,
     )
@@ -83,23 +87,6 @@ fn count_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     Ok(FilterValue::Count)
 }
 
-fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
-    try_literal("regex", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
-    let value = regex_value(reader)?;
-    Ok(FilterValue::Regex { space0, value })
-}
-
-fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
-    try_literal("urlEncode", reader)?;
-    Ok(FilterValue::UrlEncode)
-}
-
-fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
-    try_literal("urlDecode", reader)?;
-    Ok(FilterValue::UrlDecode)
-}
-
 fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("htmlEscape", reader)?;
     Ok(FilterValue::HtmlEscape)
@@ -110,9 +97,54 @@ fn html_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> 
     Ok(FilterValue::HtmlUnescape)
 }
 
+fn nth_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("nth", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let n = natural(reader)?;
+    Ok(FilterValue::Nth { space0, n })
+}
+
+fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("regex", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let value = regex_value(reader)?;
+    Ok(FilterValue::Regex { space0, value })
+}
+
+fn replace_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("replace", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let old_value = regex_value(reader)?;
+    let space1 = one_or_more_spaces(reader)?;
+    let new_value = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    Ok(FilterValue::Replace {
+        space0,
+        old_value,
+        space1,
+        new_value,
+    })
+}
+
+fn split_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("split", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let sep = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    Ok(FilterValue::Split { space0, sep })
+}
+
 fn to_int_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("toInt", reader)?;
     Ok(FilterValue::ToInt)
+}
+
+fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("urlEncode", reader)?;
+    Ok(FilterValue::UrlEncode)
+}
+
+fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("urlDecode", reader)?;
+    Ok(FilterValue::UrlDecode)
 }
 
 #[cfg(test)]

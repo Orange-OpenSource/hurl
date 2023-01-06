@@ -15,13 +15,16 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
+
+use percent_encoding::AsciiSet;
+
+use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
+
 use crate::html;
+use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};
-use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo};
-use percent_encoding::AsciiSet;
-use regex::Regex;
-use std::collections::HashMap;
 
 // TODO: indicated whether you running the filter in an assert / this produce an "assert" error
 pub fn eval_filters(
@@ -42,15 +45,22 @@ fn eval_filter(
     variables: &HashMap<String, Value>,
 ) -> Result<Value, Error> {
     match &filter.value {
+        FilterValue::Count => eval_count(value, &filter.source_info),
+        FilterValue::HtmlEscape => eval_html_escape(value, &filter.source_info),
+        FilterValue::HtmlUnescape => eval_html_unescape(value, &filter.source_info),
         FilterValue::Regex {
             value: regex_value, ..
         } => eval_regex(value, regex_value, variables, &filter.source_info),
-        FilterValue::Count => eval_count(value, &filter.source_info),
-        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info),
-        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info),
-        FilterValue::HtmlEscape => eval_html_encode(value, &filter.source_info),
-        FilterValue::HtmlUnescape => eval_html_decode(value, &filter.source_info),
+        FilterValue::Nth { n, .. } => eval_nth(value, &filter.source_info, *n),
+        FilterValue::Replace {
+            old_value,
+            new_value,
+            ..
+        } => eval_replace(value, variables, &filter.source_info, old_value, new_value),
+        FilterValue::Split { sep, .. } => eval_split(value, variables, &filter.source_info, sep),
         FilterValue::ToInt => eval_to_int(value, &filter.source_info),
+        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info),
+        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info),
     }
 }
 
@@ -60,23 +70,7 @@ fn eval_regex(
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
 ) -> Result<Value, Error> {
-    let re = match regex_value {
-        RegexValue::Template(t) => {
-            let value = eval_template(t, variables)?;
-            match Regex::new(value.as_str()) {
-                Ok(re) => re,
-                Err(_) => {
-                    return Err(Error {
-                        source_info: t.source_info.clone(),
-                        inner: RunnerError::InvalidRegex(),
-                        assert: false,
-                    });
-                }
-            }
-        }
-        RegexValue::Regex(re) => re.inner.clone(),
-    };
-
+    let re = eval_regex_value(regex_value, variables)?;
     match value {
         Value::String(s) => match re.captures(s.as_str()) {
             Some(captures) => match captures.get(1) {
@@ -156,7 +150,28 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
     }
 }
 
-fn eval_html_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_nth(value: &Value, source_info: &SourceInfo, n: u64) -> Result<Value, Error> {
+    match value {
+        Value::List(values) => match values.get(n as usize) {
+            None => Err(Error {
+                source_info: source_info.clone(),
+                inner: RunnerError::FilterInvalidInput(format!(
+                    "Out of bound - size is {}",
+                    values.len()
+                )),
+                assert: false,
+            }),
+            Some(value) => Ok(value.clone()),
+        },
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v.display()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_html_escape(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             let encoded = html::html_escape(value);
@@ -170,7 +185,7 @@ fn eval_html_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Er
     }
 }
 
-fn eval_html_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_html_unescape(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             let decoded = html::html_unescape(value);
@@ -179,6 +194,51 @@ fn eval_html_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Er
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_replace(
+    value: &Value,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    old_value: &RegexValue,
+    new_value: &Template,
+) -> Result<Value, Error> {
+    match value {
+        Value::String(v) => {
+            let re = eval_regex_value(old_value, variables)?;
+            let new_value = eval_template(new_value, variables)?;
+            let s = re.replace_all(v, new_value).to_string();
+            Ok(Value::String(s))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v.display()),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_split(
+    value: &Value,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    sep: &Template,
+) -> Result<Value, Error> {
+    match value {
+        Value::String(s) => {
+            let sep = eval_template(sep, variables)?;
+            let values = s
+                .split(&sep)
+                .map(|v| Value::String(v.to_string()))
+                .collect();
+            Ok(Value::List(values))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v.display()),
             assert: false,
         }),
     }
@@ -206,8 +266,9 @@ fn eval_to_int(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> 
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+
+    use super::*;
 
     pub fn filter_count() -> Filter {
         Filter {
@@ -467,5 +528,119 @@ pub mod tests {
                 Value::String(output.to_string())
             );
         }
+    }
+
+    #[test]
+    pub fn eval_filter_nth() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::Nth {
+                n: 2,
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+            },
+        };
+
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::List(vec![
+                    Value::Integer(0),
+                    Value::Integer(1),
+                    Value::Integer(2),
+                    Value::Integer(3)
+                ]),
+                &variables
+            )
+            .unwrap(),
+            Value::Integer(2)
+        );
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::List(vec![Value::Integer(0), Value::Integer(1)]),
+                &variables
+            )
+            .err()
+            .unwrap(),
+            Error {
+                source_info: SourceInfo::new(1, 1, 1, 1),
+                inner: RunnerError::FilterInvalidInput("Out of bound - size is 2".to_string()),
+                assert: false
+            }
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_replace() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::Replace {
+                old_value: RegexValue::Template(Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "\\s+".to_string(),
+                        encoded: ",".to_string(),
+                    }],
+                    source_info: SourceInfo::new(1, 7, 1, 20),
+                }),
+                new_value: Template {
+                    delimiter: Some('"'),
+                    elements: vec![TemplateElement::String {
+                        value: ",".to_string(),
+                        encoded: ",".to_string(),
+                    }],
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+                space1: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+            },
+        };
+
+        assert_eq!(
+            eval_filter(&filter, &Value::String("1 2\t3  4".to_string()), &variables).unwrap(),
+            Value::String("1,2,3,4".to_string())
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_split() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::Split {
+                sep: Template {
+                    delimiter: Some('"'),
+                    elements: vec![TemplateElement::String {
+                        value: ",".to_string(),
+                        encoded: ",".to_string(),
+                    }],
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+            },
+        };
+
+        assert_eq!(
+            eval_filter(&filter, &Value::String("1,2,3".to_string()), &variables).unwrap(),
+            Value::List(vec![
+                Value::String("1".to_string()),
+                Value::String("2".to_string()),
+                Value::String("3".to_string()),
+            ])
+        );
     }
 }

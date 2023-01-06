@@ -16,8 +16,9 @@
  *
  */
 
-use super::serialize_json::*;
 use hurl_core::ast::*;
+
+use super::serialize_json::*;
 
 pub fn format(hurl_file: HurlFile) -> String {
     hurl_file.to_json().format()
@@ -526,18 +527,12 @@ impl ToJson for FilterValue {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![];
         match self {
-            FilterValue::Regex { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
-                attributes.push(("expr".to_string(), value.to_json()));
-            }
             FilterValue::Count => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
-            FilterValue::UrlEncode => {
-                attributes.push(("type".to_string(), JValue::String("urlEncode".to_string())));
-            }
-            FilterValue::UrlDecode => {
-                attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
+            FilterValue::Nth { n, .. } => {
+                attributes.push(("type".to_string(), JValue::String("nth".to_string())));
+                attributes.push(("n".to_string(), JValue::Number(n.to_string())));
             }
             FilterValue::HtmlEscape => {
                 attributes.push(("type".to_string(), JValue::String("htmlEscape".to_string())));
@@ -547,6 +542,32 @@ impl ToJson for FilterValue {
                     "type".to_string(),
                     JValue::String("htmlUnescape".to_string()),
                 ));
+            }
+            FilterValue::Regex { value, .. } => {
+                attributes.push(("type".to_string(), JValue::String("regex".to_string())));
+                attributes.push(("expr".to_string(), value.to_json()));
+            }
+            FilterValue::Replace {
+                old_value,
+                new_value,
+                ..
+            } => {
+                attributes.push(("type".to_string(), JValue::String("replace".to_string())));
+                attributes.push(("old_value".to_string(), old_value.to_json()));
+                attributes.push((
+                    "new_value".to_string(),
+                    JValue::String(new_value.to_string()),
+                ));
+            }
+            FilterValue::UrlEncode => {
+                attributes.push(("type".to_string(), JValue::String("urlEncode".to_string())));
+            }
+            FilterValue::UrlDecode => {
+                attributes.push(("type".to_string(), JValue::String("urlDecode".to_string())));
+            }
+            FilterValue::Split { sep, .. } => {
+                attributes.push(("type".to_string(), JValue::String("split".to_string())));
+                attributes.push(("sep".to_string(), JValue::String(sep.to_string())));
             }
             FilterValue::ToInt => {
                 attributes.push(("type".to_string(), JValue::String("toInt".to_string())));

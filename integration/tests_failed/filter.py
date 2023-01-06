@@ -7,7 +7,8 @@ def error_filter():
     return Response(
         """{
           "id":"123x",
-          "status": true
+          "status": true,
+          "list": [1,2,3]
 }
 """,
         mimetype="application/json",

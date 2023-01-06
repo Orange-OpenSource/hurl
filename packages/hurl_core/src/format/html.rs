@@ -1079,6 +1079,16 @@ impl Htmlable for FilterValue {
     fn to_html(&self) -> String {
         match self {
             FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
+            FilterValue::HtmlUnescape => {
+                "<span class=\"filter-type\">htmlUnescape</span>".to_string()
+            }
+            FilterValue::Nth { space0, n: value } => {
+                let mut buffer = "<span class=\"filter-type\">nth</span>".to_string();
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(&value.to_string());
+                buffer
+            }
             FilterValue::Regex { space0, value } => {
                 let mut buffer = "".to_string();
                 buffer.push_str("<span class=\"filter-type\">regex</span>");
@@ -1086,13 +1096,28 @@ impl Htmlable for FilterValue {
                 buffer.push_str(value.to_html().as_str());
                 buffer
             }
-            FilterValue::UrlEncode => "<span class=\"filter-type\">urlEncode</span>".to_string(),
-            FilterValue::UrlDecode => "<span class=\"filter-type\">urlDecode</span>".to_string(),
-            FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
-            FilterValue::HtmlUnescape => {
-                "<span class=\"filter-type\">htmlUnescape</span>".to_string()
+            FilterValue::Replace {
+                space0,
+                old_value,
+                space1,
+                new_value,
+            } => {
+                let mut buffer = "<span class=\"filter-type\">replace</span>".to_string();
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(old_value.to_html().as_str());
+                buffer.push_str(space1.to_html().as_str());
+                buffer.push_str(new_value.to_html().as_str());
+                buffer
+            }
+            FilterValue::Split { space0, sep } => {
+                let mut buffer = "<span class=\"filter-type\">split</span>".to_string();
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(sep.to_html().as_str());
+                buffer
             }
             FilterValue::ToInt => "<span class=\"filter-type\">toInt</span>".to_string(),
+            FilterValue::UrlDecode => "<span class=\"filter-type\">urlDecode</span>".to_string(),
+            FilterValue::UrlEncode => "<span class=\"filter-type\">urlEncode</span>".to_string(),
         }
     }
 }

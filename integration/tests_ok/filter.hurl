@@ -6,6 +6,7 @@ url: jsonpath "$.url"
 text: jsonpath "$.text"
 [Asserts]
 jsonpath "$.list" count == 3
+jsonpath "$.list" nth 1 == 2
 jsonpath "$.message" regex /Hello (.*)!/ == "Bob"
 jsonpath "$.url" == "https://mozilla.org/?x=шеллы"
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
@@ -19,6 +20,8 @@ jsonpath "$.escaped_html[2]" htmlUnescape == "A foo"
 variable "text" htmlEscape htmlUnescape == "{{text}}"
 jsonpath "$.id" toInt == 123
 jsonpath "$.score" toInt == 1
+jsonpath "$.ips" split ", " count == 3
+jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 {
   "list": [1,2,3],
   "message": "Hello Bob!",
@@ -31,5 +34,6 @@ jsonpath "$.score" toInt == 1
     "&#65 foo"
   ],
   "id": "123",
-  "score": 1.6
+  "score": 1.6,
+  "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10"
 }

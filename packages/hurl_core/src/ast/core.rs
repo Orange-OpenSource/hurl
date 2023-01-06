@@ -872,13 +872,27 @@ pub struct Filter {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FilterValue {
     Count,
+    HtmlEscape,
+    HtmlUnescape,
+    Nth {
+        space0: Whitespace,
+        n: u64,
+    },
     Regex {
         space0: Whitespace,
         value: RegexValue,
     },
-    UrlEncode,
-    UrlDecode,
-    HtmlEscape,
-    HtmlUnescape,
+    Replace {
+        space0: Whitespace,
+        old_value: RegexValue,
+        space1: Whitespace,
+        new_value: Template,
+    },
+    Split {
+        space0: Whitespace,
+        sep: Template,
+    },
     ToInt,
+    UrlDecode,
+    UrlEncode,
 }
