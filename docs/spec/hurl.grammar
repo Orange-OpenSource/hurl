@@ -414,27 +414,37 @@ variable-name: [A-Za-z] [A-Za-z_-0-9]*
 # Filter
 
 filter:
-    regex-filter
-  | count-filter
-  | url-encode-filter
-  | url-decode-filter
-  | html-encode-filter
-  | html-decode-filter
+    count-filter
+  | html-escape-filter
+  | html-unescape-filter
+  | nth-filter
+  | regex-filter
+  | replace-filter
+  | split-filter
   | to-int-filter
-
-regex-filter: "regex" sp (quoted-string | regex)
+  | url-decode-filter
+  | url-encode-filter
 
 count-filter: "count"
 
-url-encode-filter: "urlEncode"
+html-escape-filter: "htmlEscape"
+
+html-unescape-filter: "htmlUnescape"
+
+nth-filter: "nth" sp integer
+
+regex-filter: "regex" sp (quoted-string | regex)
+
+replace-filter: "replace" sp (quoted-string | regex) sp quoted-string
+
+split-filter: "split" sp quoted-string
+
+to-int-filter: "toInt"
 
 url-decode-filter: "urlDecode"
 
-html-encode-filter: "htmlEscape"
+url-encode-filter: "urlEncode"
 
-html-decode-filter: "htmlUnescape"
-
-to-int-filter: "toInt"
 
 # Lexical Grammar
 
