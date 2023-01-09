@@ -17,6 +17,8 @@
  */
 
 use crate::runner::Value;
+use base64::engine::general_purpose;
+use base64::Engine;
 
 impl Value {
     pub fn to_json(&self) -> serde_json::Value {
@@ -47,7 +49,7 @@ impl Value {
                 serde_json::Value::Object(map)
             }
             Value::Bytes(v) => {
-                let encoded = base64::encode(v);
+                let encoded = general_purpose::STANDARD.encode(v);
                 serde_json::Value::String(encoded)
             }
             Value::Null => serde_json::Value::Null,

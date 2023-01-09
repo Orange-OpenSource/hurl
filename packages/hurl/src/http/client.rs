@@ -31,6 +31,8 @@ use super::response::*;
 use super::{Header, HttpError, Verbosity};
 use crate::cli::Logger;
 use crate::http::ContextDir;
+use base64::engine::general_purpose;
+use base64::Engine;
 use curl::easy::List;
 use std::str::FromStr;
 use url::Url;
@@ -423,7 +425,8 @@ impl Client {
         }
 
         if let Some(ref user) = options.user {
-            let authorization = base64::encode(user.as_bytes());
+            let user = user.as_bytes();
+            let authorization = general_purpose::STANDARD.encode(user);
             if request.get_header_values("Authorization").is_empty() {
                 list.append(format!("Authorization: Basic {}", authorization).as_str())
                     .unwrap();

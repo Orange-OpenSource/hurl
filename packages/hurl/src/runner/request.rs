@@ -16,6 +16,8 @@
  *
  */
 
+use base64::engine::general_purpose;
+use base64::Engine;
 use std::collections::HashMap;
 #[allow(unused)]
 use std::io::prelude::*;
@@ -52,8 +54,8 @@ pub fn eval_request(
     if let Some(kv) = &request.basic_auth() {
         let value = eval_template(&kv.value, variables)?;
         let user_password = format!("{}:{}", kv.key.value, value);
-        let authorization = base64::encode(user_password.as_bytes());
-
+        let user_password = user_password.as_bytes();
+        let authorization = general_purpose::STANDARD.encode(user_password);
         let name = "Authorization".to_string();
         let value = format!("Basic {}", authorization);
         let header = http::Header { name, value };

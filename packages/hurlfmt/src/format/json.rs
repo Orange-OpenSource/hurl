@@ -16,6 +16,9 @@
  *
  */
 
+use base64::engine::general_purpose;
+use base64::Engine;
+
 use hurl_core::ast::*;
 
 use super::serialize_json::*;
@@ -179,24 +182,20 @@ impl ToJson for Bytes {
 
 impl ToJson for Base64 {
     fn to_json(&self) -> JValue {
+        let value = general_purpose::STANDARD.encode(&self.value);
         JValue::Object(vec![
             ("encoding".to_string(), JValue::String("base64".to_string())),
-            (
-                "value".to_string(),
-                JValue::String(base64::encode(&self.value)),
-            ),
+            ("value".to_string(), JValue::String(value)),
         ])
     }
 }
 
 impl ToJson for Hex {
     fn to_json(&self) -> JValue {
+        let value = general_purpose::STANDARD.encode(&self.value);
         JValue::Object(vec![
             ("encoding".to_string(), JValue::String("base64".to_string())),
-            (
-                "value".to_string(),
-                JValue::String(base64::encode(&self.value)),
-            ),
+            ("value".to_string(), JValue::String(value)),
         ])
     }
 }
@@ -475,14 +474,14 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
         PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
         PredicateValue::Null {} => (JValue::Null, None),
-        PredicateValue::Hex(value) => (
-            JValue::String(base64::encode(value.value)),
-            Some("base64".to_string()),
-        ),
-        PredicateValue::Base64(value) => (
-            JValue::String(base64::encode(value.value)),
-            Some("base64".to_string()),
-        ),
+        PredicateValue::Hex(value) => {
+            let base64_string = general_purpose::STANDARD.encode(value.value);
+            (JValue::String(base64_string), Some("base64".to_string()))
+        }
+        PredicateValue::Base64(value) => {
+            let base64_string = general_purpose::STANDARD.encode(value.value);
+            (JValue::String(base64_string), Some("base64".to_string()))
+        }
         PredicateValue::Expression(value) => (JValue::String(value.to_string()), None),
         PredicateValue::Regex(value) => {
             (JValue::String(value.to_string()), Some("regex".to_string()))
