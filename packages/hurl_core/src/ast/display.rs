@@ -79,7 +79,7 @@ impl fmt::Display for StatusValue {
 impl fmt::Display for Template {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buffer = String::from("");
-        for element in self.elements.clone() {
+        for element in self.elements.iter() {
             buffer.push_str(element.to_string().as_str());
         }
         write!(f, "{}", buffer)
@@ -111,7 +111,7 @@ impl fmt::Display for Expr {
 impl fmt::Display for CookiePath {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = self.name.to_string();
-        if let Some(attribute) = self.attribute.clone() {
+        if let Some(attribute) = &self.attribute {
             let s = format!("[{}]", attribute);
             buf.push_str(s.as_str());
         }
