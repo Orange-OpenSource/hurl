@@ -33,5 +33,10 @@ if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8002) {powershell write-host -foregroundcolor Green "server-ssl-signedbyca up"} else {powershell write-host -foregroundcolor Red "server-ssl-signedbyca is down" ; exit 1}
 
+Start-Process powershell -WindowStyle Hidden { python ssl/server.py 8003 ssl/server/cert.pem true 2>&1 > server-ssl-client-authent.log }
+if ($LASTEXITCODE) { Throw }
+sleep 5
+if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8003) {powershell write-host -foregroundcolor Green "server-ssl-client-authent up"} else {powershell write-host -foregroundcolor Red "server-ssl-client-authent is down" ; exit 1}
+
 cd $actual_dir
 
