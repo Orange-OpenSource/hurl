@@ -6,7 +6,7 @@
 <span class="line"><span class="name">text</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.text"</span></span>
 <span class="line section-header">[Asserts]</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="filter-type">nth</span> 1 <span class="predicate-type">==</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="filter-type">nth</span> <span class="number">1</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="filter-type">regex</span> <span class="regex">/Hello (.*)!/</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.url"</span> <span class="predicate-type">==</span> <span class="string">"https://mozilla.org/?x=шеллы"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.url"</span> <span class="filter-type">urlEncode</span> <span class="predicate-type">==</span> <span class="string">"https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"</span></span>

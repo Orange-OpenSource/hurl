@@ -56,10 +56,10 @@ impl Htmlable for HurlFile {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         buffer.push_str("<pre><code class=\"language-hurl\">");
-        for entry in self.clone().entries {
+        for entry in self.entries.iter() {
             buffer.push_str(entry.to_html().as_str());
         }
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("</code></pre>");
         buffer
     }
@@ -70,7 +70,7 @@ impl Htmlable for Entry {
         let mut buffer = String::from("");
         buffer.push_str("<span class=\"hurl-entry\">");
         buffer.push_str(self.request.to_html().as_str());
-        if let Some(response) = self.clone().response {
+        if let Some(response) = &self.response {
             buffer.push_str(response.to_html().as_str());
         }
         buffer.push_str("</span>");
@@ -82,7 +82,7 @@ impl Htmlable for Request {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         buffer.push_str("<span class=\"request\">");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
 
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
@@ -92,13 +92,13 @@ impl Htmlable for Request {
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
 
-        for header in self.headers.clone() {
+        for header in self.headers.iter() {
             buffer.push_str(header.to_html().as_str());
         }
-        for section in self.sections.clone() {
+        for section in self.sections.iter() {
             buffer.push_str(section.to_html().as_str());
         }
-        if let Some(body) = self.body.clone() {
+        if let Some(body) = &self.body {
             buffer.push_str(body.to_html().as_str());
         }
         buffer.push_str("</span>");
@@ -110,7 +110,7 @@ impl Htmlable for Response {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         buffer.push_str("<span class=\"response\">");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.version.to_html().as_str());
@@ -118,13 +118,13 @@ impl Htmlable for Response {
         buffer.push_str(self.status.to_html().as_str());
         buffer.push_str("</span>");
         buffer.push_str(self.line_terminator0.to_html().as_str());
-        for header in self.headers.clone() {
+        for header in self.headers.iter() {
             buffer.push_str(header.to_html().as_str());
         }
-        for section in self.sections.clone() {
+        for section in self.sections.iter() {
             buffer.push_str(section.to_html().as_str());
         }
-        if let Some(body) = self.body.clone() {
+        if let Some(body) = &self.body {
             buffer.push_str(body.to_html().as_str());
         }
         buffer.push_str("</span>");
@@ -153,7 +153,7 @@ impl Htmlable for Status {
 impl Htmlable for Section {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(
             format!(
@@ -216,7 +216,7 @@ impl Htmlable for SectionValue {
 impl Htmlable for KeyValue {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(format!("<span class=\"string\">{}</span>", self.key.encoded).as_str());
@@ -253,7 +253,7 @@ impl Htmlable for EntryOption {
 impl Htmlable for CompressedOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">compressed</span>");
@@ -270,7 +270,7 @@ impl Htmlable for CompressedOption {
 impl Htmlable for InsecureOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">insecure</span>");
@@ -287,7 +287,7 @@ impl Htmlable for InsecureOption {
 impl Htmlable for CaCertificateOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">cacert</span>");
@@ -304,7 +304,7 @@ impl Htmlable for CaCertificateOption {
 impl Htmlable for ClientCertOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">cert</span>");
@@ -321,7 +321,7 @@ impl Htmlable for ClientCertOption {
 impl Htmlable for ClientKeyOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">key</span>");
@@ -338,7 +338,7 @@ impl Htmlable for ClientKeyOption {
 impl Htmlable for FollowLocationOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">location</span>");
@@ -355,7 +355,7 @@ impl Htmlable for FollowLocationOption {
 impl Htmlable for MaxRedirectOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">max-redirs</span>");
@@ -372,7 +372,7 @@ impl Htmlable for MaxRedirectOption {
 impl Htmlable for RetryOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">retry</span>");
@@ -389,7 +389,7 @@ impl Htmlable for RetryOption {
 impl Htmlable for RetryIntervalOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">retry-interval</span>");
@@ -406,7 +406,7 @@ impl Htmlable for RetryIntervalOption {
 impl Htmlable for RetryMaxCountOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">retry-max-count</span>");
@@ -423,7 +423,7 @@ impl Htmlable for RetryMaxCountOption {
 impl Htmlable for VariableOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">variable</span>");
@@ -463,7 +463,7 @@ impl Htmlable for VariableValue {
 impl Htmlable for VerboseOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">verbose</span>");
@@ -480,7 +480,7 @@ impl Htmlable for VerboseOption {
 impl Htmlable for VeryVerboseOption {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str("<span class=\"string\">very-verbose</span>");
@@ -506,7 +506,7 @@ impl Htmlable for MultipartParam {
 impl Htmlable for FileParam {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(format!("<span class=\"string\">{}</span>", self.key.to_html()).as_str());
@@ -531,7 +531,7 @@ impl Htmlable for FileValue {
         buffer.push_str(self.space1.to_html().as_str());
         buffer.push(';');
         buffer.push_str(self.space2.to_html().as_str());
-        if let Some(content_type) = self.content_type.clone() {
+        if let Some(content_type) = &self.content_type {
             buffer.push_str(format!("<span class=\"string\">{}</span>", content_type).as_str());
         }
         buffer
@@ -551,7 +551,7 @@ impl Htmlable for Filename {
 impl Htmlable for Cookie {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer
@@ -569,7 +569,7 @@ impl Htmlable for Cookie {
 impl Htmlable for Capture {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer
@@ -578,7 +578,7 @@ impl Htmlable for Capture {
         buffer.push_str("<span>:</span>");
         buffer.push_str(self.space2.to_html().as_str());
         buffer.push_str(self.query.to_html().as_str());
-        for (space, filter) in self.clone().filters {
+        for (space, filter) in self.filters.iter() {
             buffer.push_str(space.to_html().as_str());
             buffer.push_str(filter.to_html().as_str());
         }
@@ -590,7 +590,7 @@ impl Htmlable for Capture {
 
 impl Htmlable for Query {
     fn to_html(&self) -> String {
-        self.value.clone().to_html()
+        self.value.to_html()
     }
 }
 
@@ -675,7 +675,7 @@ impl Htmlable for CookiePath {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         buffer.push_str(self.name.to_html().as_str());
-        if let Some(attribute) = self.attribute.clone() {
+        if let Some(attribute) = &self.attribute {
             buffer.push('[');
             buffer.push_str(attribute.to_html().as_str());
             buffer.push(']');
@@ -697,11 +697,11 @@ impl Htmlable for CookieAttribute {
 impl Htmlable for Assert {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str("<span class=\"line\">");
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.query.to_html().as_str());
-        for (space, filter) in self.clone().filters {
+        for (space, filter) in self.filters.iter() {
             buffer.push_str(space.to_html().as_str());
             buffer.push_str(filter.to_html().as_str());
         }
@@ -878,9 +878,7 @@ impl Htmlable for PredicateValue {
             }
             PredicateValue::MultilineString(value) => value.to_html(),
             PredicateValue::Integer(value) => format!("<span class=\"number\">{}</span>", value),
-            PredicateValue::Float(value) => {
-                format!("<span class=\"number\">{}</span>", value)
-            }
+            PredicateValue::Float(value) => format!("<span class=\"number\">{}</span>", value),
             PredicateValue::Bool(value) => format!("<span class=\"boolean\">{}</span>", value),
             PredicateValue::Hex(value) => value.to_html(),
             PredicateValue::Base64(value) => value.to_html(),
@@ -911,7 +909,7 @@ impl Htmlable for MultilineString {
 impl Htmlable for Body {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, self.line_terminators.clone());
+        add_line_terminators(&mut buffer, &self.line_terminators);
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(self.value.to_html().as_str());
         buffer.push_str(self.line_terminator0.to_html().as_str());
@@ -975,7 +973,7 @@ impl Htmlable for LineTerminator {
     fn to_html(&self) -> String {
         let mut buffer = String::from("");
         buffer.push_str(self.space0.to_html().as_str());
-        if let Some(v) = self.clone().comment {
+        if let Some(v) = &self.comment {
             buffer.push_str(v.to_html().as_str());
         }
         buffer.push_str(self.newline.value.as_str());
@@ -1045,9 +1043,9 @@ impl Htmlable for Template {
         if let Some(d) = self.delimiter {
             s.push(d);
         }
-        for element in self.elements.clone() {
+        for element in self.elements.iter() {
             let elem_str = match element {
-                TemplateElement::String { encoded, .. } => encoded,
+                TemplateElement::String { encoded, .. } => encoded.to_string(),
                 TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
             };
             s.push_str(elem_str.as_str())
@@ -1086,7 +1084,7 @@ impl Htmlable for FilterValue {
             FilterValue::Nth { space0, n: value } => {
                 let mut buffer = "<span class=\"filter-type\">nth</span>".to_string();
                 buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(&value.to_string());
+                buffer.push_str(format!("<span class=\"number\">{}</span>", value).as_str());
                 buffer
             }
             FilterValue::Regex { space0, value } => {
@@ -1122,7 +1120,7 @@ impl Htmlable for FilterValue {
     }
 }
 
-fn add_line_terminators(buffer: &mut String, line_terminators: Vec<LineTerminator>) {
+fn add_line_terminators(buffer: &mut String, line_terminators: &[LineTerminator]) {
     for line_terminator in line_terminators {
         buffer.push_str("<span class=\"line\">");
         if line_terminator.newline.value.is_empty() {
