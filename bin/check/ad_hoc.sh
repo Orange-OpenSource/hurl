@@ -56,6 +56,23 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.ps1")
 
+# Check allowfailure tests flags expiration
+echo "------------------------------------------------------------------------------------------"
+max_expiration_in_days=60
+actual_timestamp=$(date +%s)
+while read -r file ; do
+    file_touch_relative_age=$(git log -1 --format="%cr" -- "${file}")
+    file_touch_timestamp=$(git log -1 --format="%ct" -- "${file}")
+    max_expiration_in_seconds=$((max_expiration_in_days*24*60*60))
+    file_age_in_seconds=$((actual_timestamp - file_touch_timestamp))
+    if [ "${file_age_in_seconds}" -gt "${max_expiration_in_seconds}" ] ; then
+        echo "${file} was created ${file_touch_relative_age}, ${color_red}it is older than the ${max_expiration_in_days} days allowed${color_reset}, please fix the according test and remove this flag"
+        ((errors_count++))
+    else
+        echo "${file} was created ${file_touch_relative_age}, ${color_green}it is younger than the ${max_expiration_in_days} days allowed${color_reset}"
+    fi
+done < <(find ./integration -name "*.allowfailure")
+
 # Control errors count
 if [ "${errors_count}" -gt 0 ] ; then
     exit 1
