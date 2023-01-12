@@ -33,7 +33,7 @@ use hurl::report::canonicalize_filename;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
 use hurl::runner::{HurlResult, RunnerError};
-use hurl::util::logger::BaseLogger;
+use hurl::util::logger::{BaseLogger, LoggerBuilder};
 use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
@@ -250,7 +250,14 @@ fn main() {
         } else {
             None
         };
-        let logger = Logger::new(color, verbose, filename, &content);
+        let mut builder = LoggerBuilder::new();
+        let logger = builder
+            .color(color)
+            .verbose(verbose)
+            .filename(filename)
+            .content(&content)
+            .build()
+            .unwrap();
 
         let hurl_result = execute(
             filename,

@@ -81,31 +81,74 @@ impl BaseLogger {
 /// rich error for parsing and runtime errors. As the rich errors can display user content,
 /// this logger should have access to the content of the file being run.
 pub struct Logger<'a> {
-    pub info: fn(&str),
-    pub debug: fn(&str),
-    pub debug_curl: fn(&str),
-    pub debug_error: fn(&str, &str, &dyn Error),
-    pub debug_header_in: fn(&str, &str),
-    pub debug_header_out: fn(&str, &str),
-    pub debug_important: fn(&str),
-    pub debug_method_version_out: fn(&str),
-    pub debug_status_version_in: fn(&str),
-    pub warning: fn(&str),
-    pub error: fn(&str),
-    pub error_rich: fn(&str, &str, &dyn Error),
-    pub capture: fn(&str, &Value),
-    pub test_running: fn(&str, usize, usize),
-    pub test_completed: fn(result: &HurlResult),
-    pub color: bool,
-    pub verbose: bool,
-    pub filename: &'a str,
-    pub content: &'a str,
+    info: fn(&str),
+    debug: fn(&str),
+    debug_curl: fn(&str),
+    debug_error: fn(&str, &str, &dyn Error),
+    debug_header_in: fn(&str, &str),
+    debug_header_out: fn(&str, &str),
+    debug_important: fn(&str),
+    debug_method_version_out: fn(&str),
+    debug_status_version_in: fn(&str),
+    warning: fn(&str),
+    error: fn(&str),
+    error_rich: fn(&str, &str, &dyn Error),
+    capture: fn(&str, &Value),
+    test_running: fn(&str, usize, usize),
+    test_completed: fn(result: &HurlResult),
+    pub(crate) color: bool,
+    pub(crate) filename: &'a str,
+    pub(crate) content: &'a str,
 }
 
-impl<'a> Logger<'a> {
+#[derive(Default)]
+pub struct LoggerBuilder<'a> {
+    color: bool,
+    verbose: bool,
+    filename: Option<&'a str>,
+    content: Option<&'a str>,
+}
+
+impl<'a> LoggerBuilder<'a> {
+    /// Returns a new Logger builder with a default values.
+    pub fn new() -> Self {
+        LoggerBuilder::default()
+    }
+
+    /// Sets color usage.
+    pub fn color(&mut self, color: bool) -> &mut Self {
+        self.color = color;
+        self
+    }
+
+    /// Sets verbose logger.
+    pub fn verbose(&mut self, verbose: bool) -> &mut Self {
+        self.verbose = verbose;
+        self
+    }
+
+    /// Sets the filename used to display error, warning etc...
+    pub fn filename(&mut self, filename: &'a str) -> &mut Self {
+        self.filename = Some(filename);
+        self
+    }
+
+    /// Sets the content used to display error, warning etc...
+    pub fn content(&mut self, content: &'a str) -> &mut Self {
+        self.content = Some(content);
+        self
+    }
+
     /// Creates a new logger.
-    pub fn new(color: bool, verbose: bool, filename: &'a str, content: &'a str) -> Logger<'a> {
-        match (color, verbose) {
+    pub fn build(&self) -> Result<Logger, &'static str> {
+        if self.filename.is_none() {
+            return Err("filename is not set");
+        }
+        if self.content.is_none() {
+            return Err("content is not set");
+        }
+
+        let logger = match (self.color, self.verbose) {
             (true, true) => Logger {
                 info: log_info,
                 debug: log_debug,
@@ -122,10 +165,9 @@ impl<'a> Logger<'a> {
                 capture: log_capture,
                 test_running: log_test_running,
                 test_completed: log_test_completed,
-                color,
-                verbose,
-                filename,
-                content,
+                color: self.color,
+                filename: self.filename.unwrap(),
+                content: self.content.unwrap(),
             },
             (false, true) => Logger {
                 info: log_info,
@@ -143,10 +185,9 @@ impl<'a> Logger<'a> {
                 capture: log_capture_no_color,
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
-                color,
-                verbose,
-                filename,
-                content,
+                color: self.color,
+                filename: self.filename.unwrap(),
+                content: self.content.unwrap(),
             },
             (true, false) => Logger {
                 info: log_info,
@@ -164,10 +205,9 @@ impl<'a> Logger<'a> {
                 capture: |_, _| {},
                 test_running: log_test_running,
                 test_completed: log_test_completed,
-                color,
-                verbose,
-                filename,
-                content,
+                color: self.color,
+                filename: self.filename.unwrap(),
+                content: self.content.unwrap(),
             },
             (false, false) => Logger {
                 info: log_info,
@@ -185,14 +225,16 @@ impl<'a> Logger<'a> {
                 capture: |_, _| {},
                 test_running: log_test_running_no_color,
                 test_completed: log_test_completed_no_color,
-                color,
-                verbose,
-                filename,
-                content,
+                color: self.color,
+                filename: self.filename.unwrap(),
+                content: self.content.unwrap(),
             },
-        }
+        };
+        Ok(logger)
     }
+}
 
+impl<'a> Logger<'a> {
     pub fn info(&self, message: &str) {
         (self.info)(message)
     }

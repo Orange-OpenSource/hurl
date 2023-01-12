@@ -19,10 +19,10 @@
 use std::collections::HashMap;
 
 use hurl::cli;
-use hurl::cli::Logger;
 use hurl::http;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
+use hurl::util::logger::LoggerBuilder;
 use hurl_core::ast::*;
 use hurl_core::parser;
 
@@ -34,7 +34,13 @@ fn test_hurl_file() {
     let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
     let variables = HashMap::new();
     let mut client = http::Client::new(None);
-    let logger = Logger::new(false, false, filename, &content);
+    let mut builder = LoggerBuilder::new();
+    let logger = builder
+        .filename(filename)
+        .content(&content)
+        .build()
+        .unwrap();
+
     let runner_options = RunnerOptions::default();
     let _hurl_log = runner::run(
         &hurl_file,
@@ -116,7 +122,12 @@ fn test_hello() {
     // been built from a text content.
     let content = "";
     let filename = "filename";
-    let logger = Logger::new(false, false, filename, content);
+    let mut builder = LoggerBuilder::new();
+    let logger = builder
+        .filename(filename)
+        .content(&content)
+        .build()
+        .unwrap();
 
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },

@@ -24,6 +24,7 @@ use crate::http;
 use crate::runner::entry::get_entry_verbosity;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::Value;
+use crate::util::logger::LoggerBuilder;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 
@@ -47,6 +48,7 @@ use super::entry;
 /// use hurl::http::ContextDir;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
+/// use hurl::util::logger::LoggerBuilder;
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl";
@@ -58,7 +60,8 @@ use super::entry;
 ///
 /// // Create an HTTP client
 /// let mut client = http::Client::new(None);
-/// let logger = Logger::new(false, false, filename, s);
+/// let mut builder = LoggerBuilder::new();
+/// let logger = builder.filename(filename).content(s).build().unwrap();
 ///
 /// // Define runner options
 /// let runner_options = RunnerOptionsBuilder::new()
@@ -110,12 +113,14 @@ pub fn run(
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
         let entry_verbosity = get_entry_verbosity(entry, &runner_options.verbosity);
-        let logger = &Logger::new(
-            logger.color,
-            entry_verbosity.is_some(),
-            logger.filename,
-            logger.content,
-        );
+        let mut builder = LoggerBuilder::new();
+        let logger = builder
+            .color(logger.color)
+            .verbose(entry_verbosity.is_some())
+            .filename(logger.filename)
+            .content(logger.content)
+            .build()
+            .unwrap();
 
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
@@ -129,10 +134,10 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {}", entry_index).as_str());
 
-        warn_deprecated(entry, logger);
+        warn_deprecated(entry, &logger);
 
         let options_result =
-            entry::get_entry_options(entry, runner_options, &mut variables, logger);
+            entry::get_entry_options(entry, runner_options, &mut variables, &logger);
         let entry_result = match &options_result {
             Ok(options) => entry::run(
                 entry,
@@ -140,7 +145,7 @@ pub fn run(
                 http_client,
                 &mut variables,
                 options,
-                logger,
+                &logger,
             ),
             Err(error) => EntryResult {
                 entry_index,
