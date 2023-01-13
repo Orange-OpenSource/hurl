@@ -61,6 +61,7 @@ pub struct CliOptions {
     pub retry: bool,
     pub retry_interval: Duration,
     pub retry_max_count: Option<usize>,
+    pub ssl_no_revoke: bool,
     pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
@@ -340,6 +341,12 @@ pub fn app(version: &str) -> Command {
                 .num_args(1)
         )
         .arg(
+            clap::Arg::new("ssl_no_revoke")
+                .long("ssl-no-revoke")
+                .help("(Schannel) This option tells curl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
+                .action(ArgAction::SetTrue)
+        )
+        .arg(
             clap::Arg::new("test")
                 .long("test")
                 .help("Activate test mode")
@@ -502,6 +509,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         r if r == -1 => None,
         r => Some(r as usize),
     };
+    let ssl_no_revoke = has_flag(matches, "ssl_no_revoke");
     let timeout = get::<u64>(matches, "max_time").unwrap();
     let timeout = Duration::from_secs(timeout);
     let to_entry = get::<u32>(matches, "to_entry").map(|x| x as usize);
@@ -540,6 +548,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         retry,
         retry_interval,
         retry_max_count,
+        ssl_no_revoke,
         test,
         timeout,
         to_entry,

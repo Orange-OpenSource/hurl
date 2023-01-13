@@ -239,6 +239,7 @@ impl From<&RunnerOptions> for ClientOptions {
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
             retry_max_count: runner_options.retry_max_count,
+            ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
             connect_timeout: runner_options.connect_timeout,
             user: runner_options.user.clone(),

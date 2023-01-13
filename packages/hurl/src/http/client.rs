@@ -33,7 +33,7 @@ use crate::cli::Logger;
 use crate::http::ContextDir;
 use base64::engine::general_purpose;
 use base64::Engine;
-use curl::easy::List;
+use curl::easy::{List, SslOpt};
 use std::str::FromStr;
 use url::Url;
 
@@ -161,6 +161,8 @@ impl Client {
         self.handle
             .connect_timeout(options.connect_timeout)
             .unwrap();
+
+        self.set_ssl_options(options.ssl_no_revoke);
 
         let url = self.generate_url(&request_spec.url, &request_spec.querystring);
         self.handle.url(url.as_str()).unwrap();
@@ -492,6 +494,13 @@ impl Client {
             self.handle.post(true).unwrap();
             self.handle.post_field_size(data.len() as u64).unwrap();
         }
+    }
+
+    /// Sets SSL options
+    fn set_ssl_options(&mut self, no_revoke: bool) {
+        let mut ssl_opt = SslOpt::new();
+        ssl_opt.no_revoke(no_revoke);
+        self.handle.ssl_options(&ssl_opt).unwrap();
     }
 
     /// URL encodes parameters.

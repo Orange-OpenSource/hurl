@@ -299,6 +299,7 @@ impl RunnerOptionsBuilder {
             retry: self.retry,
             retry_interval: self.retry_interval,
             retry_max_count: self.retry_max_count,
+            ssl_no_revoke: false,
             timeout: self.timeout,
             to_entry: self.to_entry,
             user: self.user.clone(),
@@ -331,6 +332,7 @@ pub struct RunnerOptions {
     pub(crate) retry: bool,
     pub(crate) retry_interval: Duration,
     pub(crate) retry_max_count: Option<usize>,
+    pub(crate) ssl_no_revoke: bool,
     pub(crate) timeout: Duration,
     pub(crate) to_entry: Option<usize>,
     pub(crate) user: Option<String>,
@@ -395,6 +397,7 @@ impl RunnerOptions {
         let retry_interval = cli_options.retry_interval;
         let retry_max_count = cli_options.retry_max_count;
         let ignore_asserts = cli_options.ignore_asserts;
+        let ssl_no_revoke = cli_options.ssl_no_revoke;
 
         RunnerOptions {
             cacert_file,
@@ -418,6 +421,7 @@ impl RunnerOptions {
             retry,
             retry_interval,
             retry_max_count,
+            ssl_no_revoke,
             timeout,
             to_entry,
             user,
