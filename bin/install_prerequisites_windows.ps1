@@ -3,6 +3,9 @@ $ErrorActionPreference = 'Stop'
 
 powershell write-host -foregroundcolor Cyan "----- install system prerequisites -----"
 
+# update vcpkg install
+git -C ((Get-command vcpkg).Source | Split-Path) pull
+
 # install libxml and libcurl[openssl]
 $vcpkg_dir=(Get-command vcpkg).Source
 
@@ -21,4 +24,3 @@ if ($LASTEXITCODE) { Throw }
 # update pip
 python -m pip install --upgrade pip --quiet
 if ($LASTEXITCODE) { Throw }
-
