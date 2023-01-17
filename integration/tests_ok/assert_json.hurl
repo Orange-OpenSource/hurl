@@ -53,6 +53,9 @@ jsonpath "$.tags[0]" > "te"
 jsonpath "$.tags[0]" < "testabc"
 jsonpath "$.tags[0]" <= "test"
 jsonpath "$.tags[0]" > "{{foo}}"
+jsonpath "$.profile-id" == "123abc"
+jsonpath "$['profile-id']" == "123abc"
+
 
 
 {
@@ -62,7 +65,8 @@ jsonpath "$.tags[0]" > "{{foo}}"
   "warnings": [],
   "duration": 1.5,
   "tags": ["test"],
-  "nullable": null
+  "nullable": null,
+  "profile-id": "123abc"
 }
 
 GET http://localhost:8000/assert-json/index

@@ -12,7 +12,8 @@ def assert_json():
   "warnings": [],
   "duration": 1.5,
   "tags": ["test"],
-  "nullable": null
+  "nullable": null,
+  "profile-id": "123abc"
 }""",
         mimetype="application/json",
     )

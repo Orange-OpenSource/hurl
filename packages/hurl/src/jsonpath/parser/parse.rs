@@ -160,11 +160,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
 }
 
 fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
-    let end_delim = if reader.try_literal("['") {
-        "']".to_string()
-    } else if reader.try_literal(".") {
-        "".to_string()
-    } else {
+    if !reader.try_literal(".") {
         return Err(Error {
             pos: reader.state.pos.clone(),
             recoverable: true,
@@ -174,7 +170,7 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
         });
     };
 
-    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
+    let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if s.is_empty() {
         return Err(Error {
             pos: reader.state.pos.clone(),
@@ -184,10 +180,6 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
             },
         });
     }
-    if !end_delim.is_empty() {
-        literal(end_delim.as_str(), reader)?;
-    }
-
     Ok(Selector::NameChild(s))
 }
 
@@ -332,6 +324,18 @@ mod tests {
             expected_query
         );
         assert_eq!(query(&mut Reader::init("$.key")).unwrap(), expected_query);
+
+        let expected_query = Query {
+            selectors: vec![Selector::NameChild("profile-id".to_string())],
+        };
+        assert_eq!(
+            query(&mut Reader::init("$['profile-id']")).unwrap(),
+            expected_query
+        );
+        assert_eq!(
+            query(&mut Reader::init("$.profile-id")).unwrap(),
+            expected_query
+        );
 
         let expected_query = Query {
             selectors: vec![
