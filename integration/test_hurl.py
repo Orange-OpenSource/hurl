@@ -99,7 +99,7 @@ def test(hurl_file: str):
             print(stderr)
         if os.path.exists(allow_failure_file):
             print(">>> allow failure")
-            sys.exit(0)
+            return
         else:
             sys.exit(1)
 
