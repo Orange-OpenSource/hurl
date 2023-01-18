@@ -46,7 +46,7 @@ pub fn eval_capture(
         }
         Some(value) => {
             let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
-            eval_filters(&filters, &value, variables)?
+            eval_filters(&filters, &value, variables, false)?
         }
     };
     Ok(CaptureResult {

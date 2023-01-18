@@ -1,0 +1,7 @@
+error: Filter Error
+  --> tests_failed/filter_in_capture.hurl:4:21
+   |
+ 4 | id: jsonpath "$.id" toInt
+   |                     ^^^^^ invalid filter input: string <123x>
+   |
+

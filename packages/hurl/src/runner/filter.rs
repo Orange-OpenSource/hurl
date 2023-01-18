@@ -26,15 +26,17 @@ use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};
 
-// TODO: indicated whether you running the filter in an assert / this produce an "assert" error
+/// Apply successive `filters` to an input `value`.
+/// Specify whether they are executed  `in_assert` or not.
 pub fn eval_filters(
     filters: &Vec<Filter>,
     value: &Value,
     variables: &HashMap<String, Value>,
+    in_assert: bool,
 ) -> Result<Value, Error> {
     let mut value = value.clone();
     for filter in filters {
-        value = eval_filter(filter, &value, variables)?;
+        value = eval_filter(filter, &value, variables, in_assert)?;
     }
     Ok(value)
 }
@@ -43,24 +45,40 @@ fn eval_filter(
     filter: &Filter,
     value: &Value,
     variables: &HashMap<String, Value>,
+    in_assert: bool,
 ) -> Result<Value, Error> {
     match &filter.value {
-        FilterValue::Count => eval_count(value, &filter.source_info),
-        FilterValue::HtmlEscape => eval_html_escape(value, &filter.source_info),
-        FilterValue::HtmlUnescape => eval_html_unescape(value, &filter.source_info),
+        FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
+        FilterValue::HtmlEscape => eval_html_escape(value, &filter.source_info, in_assert),
+        FilterValue::HtmlUnescape => eval_html_unescape(value, &filter.source_info, in_assert),
         FilterValue::Regex {
             value: regex_value, ..
-        } => eval_regex(value, regex_value, variables, &filter.source_info),
-        FilterValue::Nth { n, .. } => eval_nth(value, &filter.source_info, *n),
+        } => eval_regex(
+            value,
+            regex_value,
+            variables,
+            &filter.source_info,
+            in_assert,
+        ),
+        FilterValue::Nth { n, .. } => eval_nth(value, &filter.source_info, in_assert, *n),
         FilterValue::Replace {
             old_value,
             new_value,
             ..
-        } => eval_replace(value, variables, &filter.source_info, old_value, new_value),
-        FilterValue::Split { sep, .. } => eval_split(value, variables, &filter.source_info, sep),
-        FilterValue::ToInt => eval_to_int(value, &filter.source_info),
-        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info),
-        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info),
+        } => eval_replace(
+            value,
+            variables,
+            &filter.source_info,
+            in_assert,
+            old_value,
+            new_value,
+        ),
+        FilterValue::Split { sep, .. } => {
+            eval_split(value, variables, &filter.source_info, in_assert, sep)
+        }
+        FilterValue::ToInt => eval_to_int(value, &filter.source_info, in_assert),
+        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info, in_assert),
+        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info, in_assert),
     }
 }
 
@@ -69,6 +87,7 @@ fn eval_regex(
     regex_value: &RegexValue,
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
+    assert: bool,
 ) -> Result<Value, Error> {
     let re = eval_regex_value(regex_value, variables)?;
     match value {
@@ -78,24 +97,24 @@ fn eval_regex(
                 None => Err(Error {
                     source_info: source_info.clone(),
                     inner: RunnerError::FilterRegexNoCapture {},
-                    assert: false,
+                    assert,
                 }),
             },
             None => Err(Error {
                 source_info: source_info.clone(),
                 inner: RunnerError::FilterRegexNoCapture {},
-                assert: false,
+                assert,
             }),
         },
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_count(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::List(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
@@ -103,14 +122,14 @@ fn eval_count(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-// does not encopde "/"
+// does not encode "/"
 // like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
-fn eval_url_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_url_encode(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
@@ -125,12 +144,12 @@ fn eval_url_encode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_url_decode(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
@@ -138,19 +157,19 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo) -> Result<Value, Err
                 Err(_) => Err(Error {
                     source_info: source_info.clone(),
                     inner: RunnerError::FilterInvalidInput("Invalid UTF8 stream".to_string()),
-                    assert: false,
+                    assert,
                 }),
             }
         }
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_nth(value: &Value, source_info: &SourceInfo, n: u64) -> Result<Value, Error> {
+fn eval_nth(value: &Value, source_info: &SourceInfo, assert: bool, n: u64) -> Result<Value, Error> {
     match value {
         Value::List(values) => match values.get(n as usize) {
             None => Err(Error {
@@ -159,19 +178,19 @@ fn eval_nth(value: &Value, source_info: &SourceInfo, n: u64) -> Result<Value, Er
                     "Out of bound - size is {}",
                     values.len()
                 )),
-                assert: false,
+                assert,
             }),
             Some(value) => Ok(value.clone()),
         },
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v.display()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_html_escape(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_html_escape(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             let encoded = html::html_escape(value);
@@ -180,12 +199,16 @@ fn eval_html_escape(value: &Value, source_info: &SourceInfo) -> Result<Value, Er
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_html_unescape(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_html_unescape(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
     match value {
         Value::String(value) => {
             let decoded = html::html_unescape(value);
@@ -194,7 +217,7 @@ fn eval_html_unescape(value: &Value, source_info: &SourceInfo) -> Result<Value, 
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
-            assert: false,
+            assert,
         }),
     }
 }
@@ -203,6 +226,7 @@ fn eval_replace(
     value: &Value,
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
+    assert: bool,
     old_value: &RegexValue,
     new_value: &Template,
 ) -> Result<Value, Error> {
@@ -216,7 +240,7 @@ fn eval_replace(
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v.display()),
-            assert: false,
+            assert,
         }),
     }
 }
@@ -225,6 +249,7 @@ fn eval_split(
     value: &Value,
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
+    assert: bool,
     sep: &Template,
 ) -> Result<Value, Error> {
     match value {
@@ -239,12 +264,12 @@ fn eval_split(
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v.display()),
-            assert: false,
+            assert,
         }),
     }
 }
 
-fn eval_to_int(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> {
+fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::Integer(v) => Ok(Value::Integer(*v)),
         Value::Float(v) => Ok(Value::Integer(*v as i64)),
@@ -253,13 +278,13 @@ fn eval_to_int(value: &Value, source_info: &SourceInfo) -> Result<Value, Error> 
             Err(_) => Err(Error {
                 source_info: source_info.clone(),
                 inner: RunnerError::FilterInvalidInput(value.display()),
-                assert: false,
+                assert,
             }),
         },
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v.display()),
-            assert: false,
+            assert,
         }),
     }
 }
@@ -290,6 +315,7 @@ pub mod tests {
                     Value::Integer(2),
                 ]),
                 &variables,
+                false,
             )
             .unwrap(),
             Value::Integer(3)
@@ -309,12 +335,13 @@ pub mod tests {
                     Value::Integer(2),
                 ]),
                 &variables,
+                false,
             )
             .unwrap(),
             Value::Integer(3)
         );
 
-        let error = eval_filter(&filter_count(), &Value::Bool(true), &variables)
+        let error = eval_filter(&filter_count(), &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 6));
@@ -351,12 +378,13 @@ pub mod tests {
                 &filter,
                 &Value::String("Hello Bob!".to_string()),
                 &variables,
+                false,
             )
             .unwrap(),
             Value::String("Bob".to_string())
         );
 
-        let error = eval_filter(&filter, &Value::Bool(true), &variables)
+        let error = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));
@@ -391,6 +419,7 @@ pub mod tests {
             &filter,
             &Value::String("Hello Bob!".to_string()),
             &variables,
+            false,
         )
         .err()
         .unwrap();
@@ -410,6 +439,7 @@ pub mod tests {
                 &filter,
                 &Value::String("https://mozilla.org/?x=шеллы".to_string()),
                 &variables,
+                false,
             )
             .unwrap(),
             Value::String(
@@ -430,6 +460,7 @@ pub mod tests {
                 &filter,
                 &Value::String("https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()),
                 &variables,
+                false,
             )
             .unwrap(),
             Value::String("https://mozilla.org/?x=шеллы".to_string())
@@ -444,15 +475,21 @@ pub mod tests {
             value: FilterValue::ToInt,
         };
         assert_eq!(
-            eval_filter(&filter, &Value::String("123".to_string()), &variables).unwrap(),
+            eval_filter(
+                &filter,
+                &Value::String("123".to_string()),
+                &variables,
+                false
+            )
+            .unwrap(),
             Value::Integer(123)
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Integer(123), &variables).unwrap(),
+            eval_filter(&filter, &Value::Integer(123), &variables, false).unwrap(),
             Value::Integer(123)
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Float(1.6), &variables).unwrap(),
+            eval_filter(&filter, &Value::Float(1.6), &variables, false).unwrap(),
             Value::Integer(1)
         );
     }
@@ -464,14 +501,19 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 1),
             value: FilterValue::ToInt,
         };
-        let err = eval_filter(&filter, &Value::String("123x".to_string()), &variables)
-            .err()
-            .unwrap();
+        let err = eval_filter(
+            &filter,
+            &Value::String("123x".to_string()),
+            &variables,
+            false,
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             err.inner,
             RunnerError::FilterInvalidInput("string <123x>".to_string())
         );
-        let err = eval_filter(&filter, &Value::Bool(true), &variables)
+        let err = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
         assert_eq!(
@@ -499,7 +541,13 @@ pub mod tests {
         ];
         for (input, output) in tests.iter() {
             assert_eq!(
-                eval_filter(&filter, &Value::String(input.to_string()), &variables).unwrap(),
+                eval_filter(
+                    &filter,
+                    &Value::String(input.to_string()),
+                    &variables,
+                    false
+                )
+                .unwrap(),
                 Value::String(output.to_string())
             );
         }
@@ -524,7 +572,13 @@ pub mod tests {
         ];
         for (input, output) in tests.iter() {
             assert_eq!(
-                eval_filter(&filter, &Value::String(input.to_string()), &variables).unwrap(),
+                eval_filter(
+                    &filter,
+                    &Value::String(input.to_string()),
+                    &variables,
+                    false
+                )
+                .unwrap(),
                 Value::String(output.to_string())
             );
         }
@@ -553,7 +607,8 @@ pub mod tests {
                     Value::Integer(2),
                     Value::Integer(3)
                 ]),
-                &variables
+                &variables,
+                false
             )
             .unwrap(),
             Value::Integer(2)
@@ -562,7 +617,8 @@ pub mod tests {
             eval_filter(
                 &filter,
                 &Value::List(vec![Value::Integer(0), Value::Integer(1)]),
-                &variables
+                &variables,
+                false
             )
             .err()
             .unwrap(),
@@ -608,7 +664,13 @@ pub mod tests {
         };
 
         assert_eq!(
-            eval_filter(&filter, &Value::String("1 2\t3  4".to_string()), &variables).unwrap(),
+            eval_filter(
+                &filter,
+                &Value::String("1 2\t3  4".to_string()),
+                &variables,
+                false
+            )
+            .unwrap(),
             Value::String("1,2,3,4".to_string())
         );
     }
@@ -635,7 +697,13 @@ pub mod tests {
         };
 
         assert_eq!(
-            eval_filter(&filter, &Value::String("1,2,3".to_string()), &variables).unwrap(),
+            eval_filter(
+                &filter,
+                &Value::String("1,2,3".to_string()),
+                &variables,
+                false
+            )
+            .unwrap(),
             Value::List(vec![
                 Value::String("1".to_string()),
                 Value::String("2".to_string()),
