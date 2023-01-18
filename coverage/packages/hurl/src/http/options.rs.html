@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="86 / 88">97.73 %</abbr></p>
+                <abbr title="87 / 89">97.75 %</abbr></p>
         </div>
     </div>
 
@@ -435,7 +435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub connects_to: Vec&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub compressed: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -451,7 +451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub follow_location: bool,</pre>
+                <pre class="has-background-white py-0 px-2">    pub connect_timeout: Duration,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub max_redirect: Option&lt;usize&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub connects_to: Vec&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -499,7 +499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub proxy: Option&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub follow_location: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -515,7 +515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub no_proxy: Option&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub insecure: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub verbosity: Option&lt;Verbosity&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub max_redirect: Option&lt;usize&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -547,7 +547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub insecure: bool,</pre>
+                <pre class="has-background-white py-0 px-2">    pub no_proxy: Option&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -563,7 +563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub resolves: Vec&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub proxy: Option&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -579,7 +579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub retry_max_count: Option&lt;usize&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub resolves: Vec&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -595,7 +595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub timeout: Duration,</pre>
+                <pre class="has-background-white py-0 px-2">    pub retry_max_count: Option&lt;usize&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -611,7 +611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub connect_timeout: Duration,</pre>
+                <pre class="has-background-white py-0 px-2">    pub ssl_no_revoke: bool,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -627,7 +627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub user: Option&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub timeout: Duration,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -643,7 +643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub user_agent: Option&lt;String&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub user: Option&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -659,7 +659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub compressed: bool,</pre>
+                <pre class="has-background-white py-0 px-2">    pub user_agent: Option&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -675,7 +675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    pub verbosity: Option&lt;Verbosity&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -691,7 +691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -701,13 +701,13 @@
                 <a href="#42">42</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="780">
-                780
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -717,13 +717,13 @@
                 <a href="#43">43</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="780">
+                780
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum Verbosity {</pre>
+                <pre class="has-background-success-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -739,7 +739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    Verbose,</pre>
+                <pre class="has-background-white py-0 px-2">pub enum Verbosity {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -755,7 +755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    VeryVerbose,</pre>
+                <pre class="has-background-white py-0 px-2">    Verbose,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -771,7 +771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    VeryVerbose,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -787,7 +787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -803,7 +803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Default for ClientOptions {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -813,13 +813,13 @@
                 <a href="#49">49</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="5874">
-                5874
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn default() -&gt; Self {</pre>
+                <pre class="has-background-white py-0 px-2">impl Default for ClientOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -835,7 +835,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        ClientOptions {</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn default() -&gt; Self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -851,7 +851,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            cacert_file: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">        ClientOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -867,7 +867,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            client_cert_file: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            cacert_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -883,7 +883,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            client_key_file: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            client_cert_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -899,7 +899,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            connects_to: vec![],</pre>
+                <pre class="has-background-success-light py-0 px-2">            client_key_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -915,7 +915,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            follow_location: false,</pre>
+                <pre class="has-background-success-light py-0 px-2">            compressed: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -931,7 +931,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            max_redirect: Some(50),</pre>
+                <pre class="has-background-success-light py-0 px-2">            connect_timeout: Duration::from_secs(300),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -947,7 +947,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            cookie_input_file: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            connects_to: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -963,7 +963,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            proxy: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            cookie_input_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -979,7 +979,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            no_proxy: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            follow_location: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -995,7 +995,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            verbosity: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            insecure: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1011,7 +1011,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            insecure: false,</pre>
+                <pre class="has-background-success-light py-0 px-2">            max_redirect: Some(50),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1027,7 +1027,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            resolves: vec![],</pre>
+                <pre class="has-background-success-light py-0 px-2">            no_proxy: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1043,7 +1043,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            retry_max_count: Some(10),</pre>
+                <pre class="has-background-success-light py-0 px-2">            proxy: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1059,7 +1059,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            timeout: Duration::from_secs(300),</pre>
+                <pre class="has-background-success-light py-0 px-2">            resolves: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1075,7 +1075,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            connect_timeout: Duration::from_secs(300),</pre>
+                <pre class="has-background-success-light py-0 px-2">            retry_max_count: Some(10),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1091,7 +1091,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            user: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            ssl_no_revoke: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1107,7 +1107,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            user_agent: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            timeout: Duration::from_secs(300),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1123,7 +1123,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            compressed: false,</pre>
+                <pre class="has-background-success-light py-0 px-2">            user: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1139,7 +1139,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            user_agent: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1155,7 +1155,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
+                <pre class="has-background-success-light py-0 px-2">            verbosity: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1165,13 +1165,13 @@
                 <a href="#71">71</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="5874">
+                5874
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1181,13 +1181,13 @@
                 <a href="#72">72</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="5874">
+                5874
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1203,7 +1203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl ClientOptions {</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1219,7 +1219,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns the list of options for the curl command line equivalent to this [`ClientOptions`].</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1229,13 +1229,13 @@
                 <a href="#75">75</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1689">
-                1689
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn curl_args(&amp;self) -&gt; Vec&lt;String&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">impl ClientOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1245,13 +1245,13 @@
                 <a href="#76">76</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1689">
-                1689
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut arguments = vec![];</pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns the list of options for the curl command line equivalent to this [`ClientOptions`].</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1261,13 +1261,13 @@
                 <a href="#77">77</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1689">
+                1689
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn curl_args(&amp;self) -&gt; Vec&lt;String&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1283,7 +1283,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(ref cacert_file) = self.cacert_file {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut arguments = vec![];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1291,6 +1291,38 @@
                 id="79"
                 role="cell">
                 <a href="#79">79</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="80"
+                role="cell">
+                <a href="#80">80</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1689">
+                1689
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        if let Some(ref cacert_file) = self.cacert_file {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="81"
+                role="cell">
+                <a href="#81">81</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1304,9 +1336,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="80"
+                id="82"
                 role="cell">
-                <a href="#80">80</a>
+                <a href="#82">82</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1320,9 +1352,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="81"
+                id="83"
                 role="cell">
-                <a href="#81">81</a>
+                <a href="#83">83</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1336,9 +1368,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="82"
+                id="84"
                 role="cell">
-                <a href="#82">82</a>
+                <a href="#84">84</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1352,9 +1384,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="83"
+                id="85"
                 role="cell">
-                <a href="#83">83</a>
+                <a href="#85">85</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1368,9 +1400,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="84"
+                id="86"
                 role="cell">
-                <a href="#84">84</a>
+                <a href="#86">86</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1384,9 +1416,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="85"
+                id="87"
                 role="cell">
-                <a href="#85">85</a>
+                <a href="#87">87</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1400,9 +1432,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="86"
+                id="88"
                 role="cell">
-                <a href="#86">86</a>
+                <a href="#88">88</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1416,9 +1448,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="87"
+                id="89"
                 role="cell">
-                <a href="#87">87</a>
+                <a href="#89">89</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1432,9 +1464,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="88"
+                id="90"
                 role="cell">
-                <a href="#88">88</a>
+                <a href="#90">90</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1448,9 +1480,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="89"
+                id="91"
                 role="cell">
-                <a href="#89">89</a>
+                <a href="#91">91</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1464,9 +1496,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="90"
+                id="92"
                 role="cell">
-                <a href="#90">90</a>
+                <a href="#92">92</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1480,9 +1512,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="91"
+                id="93"
                 role="cell">
-                <a href="#91">91</a>
+                <a href="#93">93</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1496,9 +1528,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="92"
+                id="94"
                 role="cell">
-                <a href="#92">92</a>
+                <a href="#94">94</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1512,9 +1544,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="93"
+                id="95"
                 role="cell">
-                <a href="#93">93</a>
+                <a href="#95">95</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1528,9 +1560,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="94"
+                id="96"
                 role="cell">
-                <a href="#94">94</a>
+                <a href="#96">96</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1544,9 +1576,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="95"
+                id="97"
                 role="cell">
-                <a href="#95">95</a>
+                <a href="#97">97</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1560,9 +1592,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="96"
+                id="98"
                 role="cell">
-                <a href="#96">96</a>
+                <a href="#98">98</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1576,9 +1608,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="97"
+                id="99"
                 role="cell">
-                <a href="#97">97</a>
+                <a href="#99">99</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1588,38 +1620,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        for connect in self.connects_to.iter() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="98"
-                role="cell">
-                <a href="#98">98</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="54">
-                54
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--connect-to&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="99"
-                role="cell">
-                <a href="#99">99</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="54">
-                54
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(connect.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1635,7 +1635,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--connect-to&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1643,6 +1643,38 @@
                 id="101"
                 role="cell">
                 <a href="#101">101</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="54">
+                54
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(connect.clone());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="102"
+                role="cell">
+                <a href="#102">102</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="54">
+                54
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="103"
+                role="cell">
+                <a href="#103">103</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1656,9 +1688,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="102"
+                id="104"
                 role="cell">
-                <a href="#102">102</a>
+                <a href="#104">104</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1672,9 +1704,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="103"
+                id="105"
                 role="cell">
-                <a href="#103">103</a>
+                <a href="#105">105</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1688,9 +1720,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="104"
+                id="106"
                 role="cell">
-                <a href="#104">104</a>
+                <a href="#106">106</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1704,9 +1736,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="105"
+                id="107"
                 role="cell">
-                <a href="#105">105</a>
+                <a href="#107">107</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1720,9 +1752,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="106"
+                id="108"
                 role="cell">
-                <a href="#106">106</a>
+                <a href="#108">108</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1736,9 +1768,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="107"
+                id="109"
                 role="cell">
-                <a href="#107">107</a>
+                <a href="#109">109</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1752,9 +1784,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="108"
+                id="110"
                 role="cell">
-                <a href="#108">108</a>
+                <a href="#110">110</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1768,9 +1800,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="109"
+                id="111"
                 role="cell">
-                <a href="#109">109</a>
+                <a href="#111">111</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1784,9 +1816,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="110"
+                id="112"
                 role="cell">
-                <a href="#110">110</a>
+                <a href="#112">112</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1800,9 +1832,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="111"
+                id="113"
                 role="cell">
-                <a href="#111">111</a>
+                <a href="#113">113</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1812,38 +1844,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        if self.max_redirect != ClientOptions::default().max_redirect {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="112"
-                role="cell">
-                <a href="#112">112</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let max_redirect = match self.max_redirect {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="113"
-                role="cell">
-                <a href="#113">113</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                None =&gt; -1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1859,7 +1859,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Some(n) =&gt; n as i32,</pre>
+                <pre class="has-background-success-light py-0 px-2">            let max_redirect = match self.max_redirect {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1869,13 +1869,13 @@
                 <a href="#115">115</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            };</pre>
+                <pre class="has-background-danger-light py-0 px-2">                None =&gt; -1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1891,7 +1891,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--max-redirs&quot;.to_string());</pre>
+                <pre class="has-background-success-light py-0 px-2">                Some(n) =&gt; n as i32,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1899,6 +1899,38 @@
                 id="117"
                 role="cell">
                 <a href="#117">117</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">            };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="118"
+                role="cell">
+                <a href="#118">118</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--max-redirs&quot;.to_string());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="119"
+                role="cell">
+                <a href="#119">119</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1912,9 +1944,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="118"
+                id="120"
                 role="cell">
-                <a href="#118">118</a>
+                <a href="#120">120</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1928,9 +1960,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="119"
+                id="121"
                 role="cell">
-                <a href="#119">119</a>
+                <a href="#121">121</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1944,9 +1976,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="120"
+                id="122"
                 role="cell">
-                <a href="#120">120</a>
+                <a href="#122">122</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1960,9 +1992,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="121"
+                id="123"
                 role="cell">
-                <a href="#121">121</a>
+                <a href="#123">123</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1976,9 +2008,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="122"
+                id="124"
                 role="cell">
-                <a href="#122">122</a>
+                <a href="#124">124</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1992,9 +2024,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="123"
+                id="125"
                 role="cell">
-                <a href="#123">123</a>
+                <a href="#125">125</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2004,38 +2036,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">        for resolve in self.resolves.iter() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="124"
-                role="cell">
-                <a href="#124">124</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="54">
-                54
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--resolve&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="125"
-                role="cell">
-                <a href="#125">125</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="54">
-                54
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            arguments.push(resolve.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2051,7 +2051,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(&quot;--resolve&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2059,6 +2059,38 @@
                 id="127"
                 role="cell">
                 <a href="#127">127</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="54">
+                54
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            arguments.push(resolve.clone());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="128"
+                role="cell">
+                <a href="#128">128</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="54">
+                54
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="129"
+                role="cell">
+                <a href="#129">129</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2072,9 +2104,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="128"
+                id="130"
                 role="cell">
-                <a href="#128">128</a>
+                <a href="#130">130</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2088,9 +2120,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="129"
+                id="131"
                 role="cell">
-                <a href="#129">129</a>
+                <a href="#131">131</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2104,9 +2136,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="130"
+                id="132"
                 role="cell">
-                <a href="#130">130</a>
+                <a href="#132">132</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2120,9 +2152,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="131"
+                id="133"
                 role="cell">
-                <a href="#131">131</a>
+                <a href="#133">133</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2136,9 +2168,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="132"
+                id="134"
                 role="cell">
-                <a href="#132">132</a>
+                <a href="#134">134</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2152,9 +2184,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="133"
+                id="135"
                 role="cell">
-                <a href="#133">133</a>
+                <a href="#135">135</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2168,9 +2200,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="134"
+                id="136"
                 role="cell">
-                <a href="#134">134</a>
+                <a href="#136">136</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2184,9 +2216,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="135"
+                id="137"
                 role="cell">
-                <a href="#135">135</a>
+                <a href="#137">137</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2200,9 +2232,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="136"
+                id="138"
                 role="cell">
-                <a href="#136">136</a>
+                <a href="#138">138</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2216,9 +2248,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="137"
+                id="139"
                 role="cell">
-                <a href="#137">137</a>
+                <a href="#139">139</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2232,9 +2264,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="138"
+                id="140"
                 role="cell">
-                <a href="#138">138</a>
+                <a href="#140">140</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2248,9 +2280,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="139"
+                id="141"
                 role="cell">
-                <a href="#139">139</a>
+                <a href="#141">141</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2264,9 +2296,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="140"
+                id="142"
                 role="cell">
-                <a href="#140">140</a>
+                <a href="#142">142</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -2276,38 +2308,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="141"
-                role="cell">
-                <a href="#141">141</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="142"
-                role="cell">
-                <a href="#142">142</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2323,7 +2323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2339,7 +2339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod tests {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2355,7 +2355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2371,7 +2371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">mod tests {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2387,7 +2387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2403,7 +2403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_curl_args() {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2419,7 +2419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert!(ClientOptions::default().curl_args().is_empty());</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2435,7 +2435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_curl_args() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2451,7 +2451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        assert!(ClientOptions::default().curl_args().is_empty());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2467,7 +2467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ClientOptions {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2483,7 +2483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                cacert_file: None,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2499,7 +2499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                client_cert_file: None,</pre>
+                <pre class="has-background-white py-0 px-2">            ClientOptions {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2515,7 +2515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                client_key_file: None,</pre>
+                <pre class="has-background-white py-0 px-2">                cacert_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2531,7 +2531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                connects_to: vec![&quot;example.com:443:host-47.example.com:443&quot;.to_string()],</pre>
+                <pre class="has-background-white py-0 px-2">                client_cert_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2547,7 +2547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                follow_location: true,</pre>
+                <pre class="has-background-white py-0 px-2">                client_key_file: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2563,7 +2563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                max_redirect: Some(10),</pre>
+                <pre class="has-background-white py-0 px-2">                connects_to: vec![&quot;example.com:443:host-47.example.com:443&quot;.to_string()],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2579,7 +2579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                cookie_input_file: Some(&quot;cookie_file&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                follow_location: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2595,7 +2595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                proxy: Some(&quot;localhost:3128&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                max_redirect: Some(10),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2611,7 +2611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                no_proxy: None,</pre>
+                <pre class="has-background-white py-0 px-2">                cookie_input_file: Some(&quot;cookie_file&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2627,7 +2627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                verbosity: None,</pre>
+                <pre class="has-background-white py-0 px-2">                proxy: Some(&quot;localhost:3128&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2643,7 +2643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                insecure: true,</pre>
+                <pre class="has-background-white py-0 px-2">                no_proxy: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2659,7 +2659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                resolves: vec![</pre>
+                <pre class="has-background-white py-0 px-2">                verbosity: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2675,7 +2675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;foo.com:80:192.168.0.1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                insecure: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2691,7 +2691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    &quot;bar.com:443:127.0.0.1&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">                resolves: vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2707,7 +2707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                ],</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;foo.com:80:192.168.0.1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2723,7 +2723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                retry_max_count: Some(10),</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;bar.com:443:127.0.0.1&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2739,7 +2739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                timeout: Duration::from_secs(10),</pre>
+                <pre class="has-background-white py-0 px-2">                ],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2755,7 +2755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                connect_timeout: Duration::from_secs(20),</pre>
+                <pre class="has-background-white py-0 px-2">                retry_max_count: Some(10),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2771,7 +2771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                user: Some(&quot;user:password&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                ssl_no_revoke: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2787,7 +2787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                user_agent: Some(&quot;my-useragent&quot;.to_string()),</pre>
+                <pre class="has-background-white py-0 px-2">                timeout: Duration::from_secs(10),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2803,7 +2803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                compressed: true,</pre>
+                <pre class="has-background-white py-0 px-2">                connect_timeout: Duration::from_secs(20),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2819,7 +2819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">                user: Some(&quot;user:password&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2835,7 +2835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .curl_args(),</pre>
+                <pre class="has-background-white py-0 px-2">                user_agent: Some(&quot;my-useragent&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2851,7 +2851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            [</pre>
+                <pre class="has-background-white py-0 px-2">                compressed: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2867,7 +2867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--compressed&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2883,7 +2883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--connect-timeout&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            .curl_args(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2899,7 +2899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;20&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            [</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2915,7 +2915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--connect-to&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--compressed&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2931,7 +2931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;example.com:443:host-47.example.com:443&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--connect-timeout&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2947,7 +2947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--cookie&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;20&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2963,7 +2963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;cookie_file&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--connect-to&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2979,7 +2979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--insecure&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;example.com:443:host-47.example.com:443&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2995,7 +2995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;-L&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--cookie&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3011,7 +3011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--max-redirs&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;cookie_file&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3027,7 +3027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;10&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--insecure&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3043,7 +3043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--proxy&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;-L&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3059,7 +3059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;&#x27;localhost:3128&#x27;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--max-redirs&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3075,7 +3075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--resolve&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;10&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3091,7 +3091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;foo.com:80:192.168.0.1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--proxy&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3107,7 +3107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--resolve&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;&#x27;localhost:3128&#x27;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3123,7 +3123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;bar.com:443:127.0.0.1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--resolve&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3139,7 +3139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--timeout&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;foo.com:80:192.168.0.1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3155,7 +3155,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;10&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--resolve&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3171,7 +3171,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--user&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;bar.com:443:127.0.0.1&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3187,7 +3187,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;&#x27;user:password&#x27;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--timeout&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3203,7 +3203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;--user-agent&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;10&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3219,7 +3219,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;&#x27;my-useragent&#x27;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--user&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3235,7 +3235,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ]</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;&#x27;user:password&#x27;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3251,7 +3251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;--user-agent&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3267,7 +3267,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;&#x27;my-useragent&#x27;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3283,13 +3283,61 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">            ]</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="204"
+                role="cell">
+                <a href="#204">204</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="205"
+                role="cell">
+                <a href="#205">205</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="206"
+                role="cell">
+                <a href="#206">206</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-01-17 08:10</p>
+                <p class="heading">Date: 2023-01-18 08:10</p>
             </div>
         </footer>
     </body>
