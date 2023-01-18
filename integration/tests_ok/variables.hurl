@@ -13,6 +13,7 @@ Id: {{my-id}}
 A_Null: {{a_null}}
 Country: {{country}}
 Planet: {{planet}}
+Galaxy: {{galaxy}}
 [Options]
 variable: country=Italy
 variable: planet=The Earth
@@ -24,7 +25,8 @@ variable: planet=The Earth
   "id": "{{my-id}}",
   "a_null": {{a_null}},
   "country": "{{country}}",
-  "planet": "{{planet}}"
+  "planet": "{{planet}}",
+  "galaxy": "{{galaxy}}"
 }
 
 HTTP 200
@@ -37,6 +39,7 @@ variable "a_null" == null
 variable "my-id" == "123"
 variable "country" == "Italy"
 variable "planet" == "The Earth"
+variable "galaxy" == "Milky Way"
 
 
 # `country` and `planet` variable are still available

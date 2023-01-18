@@ -392,6 +392,7 @@ pub fn app(version: &str) -> Command {
                 .long("variables-file")
                 .value_name("FILE")
                 .help("Define a properties file in which you define your variables")
+                .action(ArgAction::Append)
                 .num_args(1)
         )
         .arg(
@@ -588,31 +589,37 @@ fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, CliError> {
         }
     }
 
-    if let Some(filename) = get::<String>(matches, "variables_file") {
-        let path = Path::new(&filename);
-        if !path.exists() {
-            return Err(CliError {
-                message: format!("Properties file {} does not exist", path.display()),
-            });
-        }
-
-        let file = File::open(path).unwrap();
-        let reader = BufReader::new(file);
-        for (index, line) in reader.lines().enumerate() {
-            let line = match line {
-                Ok(s) => s,
-                Err(_) => {
-                    return Err(CliError {
-                        message: format!("Can not parse line {} of {}", index + 1, path.display()),
-                    });
-                }
-            };
-            let line = line.trim();
-            if line.starts_with('#') || line.is_empty() {
-                continue;
+    if let Some(filenames) = get_strings(matches, "variables_file") {
+        for f in filenames.iter() {
+            let path = Path::new(&f);
+            if !path.exists() {
+                return Err(CliError {
+                    message: format!("Properties file {} does not exist", path.display()),
+                });
             }
-            let (name, value) = cli::parse_variable(line)?;
-            variables.insert(name.to_string(), value);
+
+            let file = File::open(path).unwrap();
+            let reader = BufReader::new(file);
+            for (index, line) in reader.lines().enumerate() {
+                let line = match line {
+                    Ok(s) => s,
+                    Err(_) => {
+                        return Err(CliError {
+                            message: format!(
+                                "Can not parse line {} of {}",
+                                index + 1,
+                                path.display()
+                            ),
+                        });
+                    }
+                };
+                let line = line.trim();
+                if line.starts_with('#') || line.is_empty() {
+                    continue;
+                }
+                let (name, value) = cli::parse_variable(line)?;
+                variables.insert(name.to_string(), value);
+            }
         }
     }
 

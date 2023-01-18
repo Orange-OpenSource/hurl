@@ -14,6 +14,7 @@ def variables():
     assert request.headers["A_null"] == "null"
     assert request.headers["Country"] == "Italy"
     assert request.headers["Planet"] == "The Earth"
+    assert request.headers["Galaxy"] == "Milky Way"
 
     s = request.data.decode("utf-8")
     data = json.loads(s)
@@ -25,6 +26,7 @@ def variables():
     assert data["a_null"] is None
     assert data["country"] == "Italy"
     assert data["planet"] == "The Earth"
+    assert data["galaxy"] == "Milky Way"
     return ""
 
 

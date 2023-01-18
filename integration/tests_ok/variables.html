@@ -13,6 +13,7 @@
 <span class="line"><span class="string">A_Null</span><span>:</span> <span class="string">{{a_null}}</span></span>
 <span class="line"><span class="string">Country</span><span>:</span> <span class="string">{{country}}</span></span>
 <span class="line"><span class="string">Planet</span><span>:</span> <span class="string">{{planet}}</span></span>
+<span class="line"><span class="string">Galaxy</span><span>:</span> <span class="string">{{galaxy}}</span></span>
 <span class="line section-header">[Options]</span>
 <span class="line"><span class="string">variable</span><span>:</span> country<span>=</span><span class="string">Italy</span></span>
 <span class="line"><span class="string">variable</span><span>:</span> planet<span>=</span><span class="string">The Earth</span></span>
@@ -24,7 +25,8 @@
 <span class="line">  "id": "{{my-id}}",</span>
 <span class="line">  "a_null": {{a_null}},</span>
 <span class="line">  "country": "{{country}}",</span>
-<span class="line">  "planet": "{{planet}}"</span>
+<span class="line">  "planet": "{{planet}}",</span>
+<span class="line">  "galaxy": "{{galaxy}}"</span>
 <span class="line">}</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
@@ -37,6 +39,7 @@
 <span class="line"><span class="query-type">variable</span> <span class="string">"my-id"</span> <span class="predicate-type">==</span> <span class="string">"123"</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"country"</span> <span class="predicate-type">==</span> <span class="string">"Italy"</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"planet"</span> <span class="predicate-type">==</span> <span class="string">"The Earth"</span></span>
+<span class="line"><span class="query-type">variable</span> <span class="string">"galaxy"</span> <span class="predicate-type">==</span> <span class="string">"Milky Way"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
 <span class="line"></span><span class="comment"># `country` and `planet` variable are still available</span>
