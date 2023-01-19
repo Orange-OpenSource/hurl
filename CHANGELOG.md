@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@imsVLC](https://github.com/imsVLC),
 [@ad8lmondy](https://github.com/ad8lmondy),
 [@jlecour](https://github.com/jlecour),
 [@ako](https://github.com/ako),
@@ -34,11 +35,15 @@ Enhancements:
 
 * Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
 
+* Accept multiple --variables-file options [#532](https://github.com/Orange-OpenSource/hurl/issues/532)
+
 * Add GraphQL support [#504](https://github.com/Orange-OpenSource/hurl/issues/504)
 
 * Add --resolve option [#379](https://github.com/Orange-OpenSource/hurl/issues/379)
 
 Bugs Fixed:
+
+* Support '-' in JSONPath dot notation [#1174](https://github.com/Orange-OpenSource/hurl/issues/1174)
 
 * Fix cargo test --doc on Alpine [#1124](https://github.com/Orange-OpenSource/hurl/issues/1124)
 
