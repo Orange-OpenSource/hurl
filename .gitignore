@@ -9,4 +9,3 @@ target/
 build/
 node_modules/
 **/npm/bin/
-integration/*.log
