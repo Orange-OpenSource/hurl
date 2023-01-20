@@ -15,6 +15,8 @@ Thanks to
 
 Enhancements:
 
+* Add option ssl-no-revoke [#1163](https://github.com/Orange-OpenSource/hurl/issues/1163)
+
 * Add client cert/key to command line args and options [#1129](https://github.com/Orange-OpenSource/hurl/issues/1129)
 
 * Add connect-to option [#1079](https://github.com/Orange-OpenSource/hurl/issues/1079)
