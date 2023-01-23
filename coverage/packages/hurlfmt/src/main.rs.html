@@ -3907,7 +3907,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let output = if output.ends_with(&#x27;\n&#x27;) {</pre>
+                <pre class="has-background-success-light py-0 px-2">                let output = if !output.ends_with(&#x27;\n&#x27;) &amp;&amp; !cli::has_flag(&amp;matches, &quot;no_format&quot;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3918,12 +3918,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="357">
-                357
+                role="cell" aria-label="684">
+                684
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    output</pre>
+                <pre class="has-background-success-light py-0 px-2">                    format!(&quot;{}\n&quot;, output)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3950,12 +3950,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="684">
-                684
+                role="cell" aria-label="357">
+                357
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    format!(&quot;{}\n&quot;, output)</pre>
+                <pre class="has-background-success-light py-0 px-2">                    output</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4457,7 +4457,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-01-22 08:09</p>
+                <p class="heading">Date: 2023-01-23 08:09</p>
             </div>
         </footer>
     </body>
