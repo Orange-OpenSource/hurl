@@ -108,9 +108,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   test-generic-linux-docker-archlinux-x64:
     needs: package-generic-linux-x64
@@ -154,9 +152,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   test-generic-linux-docker-fedora-x64:
     needs: package-generic-linux-x64
@@ -200,9 +196,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   package-deb-x64:
     runs-on: ubuntu-18.04
@@ -353,6 +347,7 @@ jobs:
       with:
         name: release-windows-x64-artifacts
         path: |
+          .\**\*.log
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*-win64.zip
 
