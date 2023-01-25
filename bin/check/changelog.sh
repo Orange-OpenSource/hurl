@@ -5,8 +5,7 @@ set -Eeuo pipefail
 version=$(head -1 <CHANGELOG.md| cut -d" " -f1 | cut -d'[' -f2)
 echo "version=$version"
 changelog=$(bin/release/changelog_extract.py "$version" | grep '^\* ')
-echo "get_release_note.py"
-issues=$(bin/release/get_release_note.py "$version" 2>/dev/null | grep '^\* ')
+issues=$(bin/release/get_release_note.py "$version" | grep '^\* ')
 
 if [ "$changelog" != "$issues" ];  then
     echo "Diff in issues in CHANGELOG"
