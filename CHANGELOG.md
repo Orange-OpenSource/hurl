@@ -43,11 +43,14 @@ Enhancements:
 
 * Add --resolve option [#379](https://github.com/Orange-OpenSource/hurl/issues/379)
 
+
 Bugs Fixed:
 
 * Support '-' in JSONPath dot notation [#1174](https://github.com/Orange-OpenSource/hurl/issues/1174)
 
 * Fix cargo test --doc on Alpine [#1124](https://github.com/Orange-OpenSource/hurl/issues/1124)
+
+* Do not add newline at eof with --no-format option [#1058](https://github.com/Orange-OpenSource/hurl/issues/1058)
 
 * Fix variables update [#1037](https://github.com/Orange-OpenSource/hurl/issues/1037)
 
