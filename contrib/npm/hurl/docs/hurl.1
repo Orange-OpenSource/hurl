@@ -1,4 +1,4 @@
-.TH hurl 1 "07 Nov 2022" "hurl 1.8.0" " Hurl Manual"
+.TH hurl 1 "25 Jan 2023" "hurl 2.0.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -13,9 +13,9 @@ hurl - run and test HTTP requests.
 .SH DESCRIPTION
 
 .B Hurl
-is an HTTP client that performs HTTP requests defined in a simple plain text format.
+is a command line tool that runs HTTP requests defined in a simple plain text format.
 
-Hurl is very versatile. It enables chaining HTTP requests, capturing values from HTTP responses, and making assertions.
+It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very versatile, it can be used for fetching data and testing HTTP sessions: HTML content, REST / SOAP / GraphQL APIs, or any other XML / JSON based APIs.
 
     $ hurl session.hurl
 
@@ -62,10 +62,10 @@ It consists of one or several HTTP requests
 
 A value from an HTTP response can be-reused for successive HTTP requests.
 
-A typical example occurs with csrf tokens.
+A typical example occurs with CSRF tokens.
 
     GET https://example.org
-    HTTP/1.1 200
+    HTTP 200
     # Capture the CSRF token value from html body.
     [Captures]
     csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
@@ -78,23 +78,23 @@ More information on captures can be found here \fIhttps://hurl.dev/docs/capturin
 
 .IP "Asserts"
 
-The HTTP response defined in the Hurl session are used to make asserts.
+The HTTP response defined in the Hurl file are used to make asserts. Responses are optional.
 
-At the minimum, the response includes the asserts on the HTTP version and status code.
+At the minimum, response includes assert on the HTTP status code.
 
-    GET http:/google.com
-    HTTP/1.1 301
+    GET http:/example.org
+    HTTP 301
 
 It can also include asserts on the response headers
 
-    GET http:/google.com
-    HTTP/1.1 301
-    Location: http://www.google.com
+    GET http:/example.org
+    HTTP 301
+    Location: http://www.example.org
 
 Explicit asserts can be included by combining a query and a predicate
 
-    GET http:/google.com
-    HTTP/1.1 301
+    GET http:/example.org
+    HTTP 301
     [Asserts]
     xpath "string(//title)" == "301 Moved"
 
@@ -114,20 +114,26 @@ For instance:
 
 will follow redirection for each entry in `foo.hurl`. You can also define an option only for a particular entry with an `[Options]` section. For instance, this Hurl file:
 
-    GET https://google.com
-    HTTP/* 301
+    GET https://example.org
+    HTTP 301
 
-    GET https://google.com
+    GET https://example.org
     [Options]
     location: true
-    HTTP/* 200
+    HTTP 200
 
 will follow a redirection only for the second entry.
 
-.IP "--cacert "
+.IP "--cacert <FILE> "
 
 Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
 Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.
+
+.IP "-E, --cert <CERTIFICATE[:PASSWORD]> "
+
+Client certificate file and password.
+
+See also \fI--key\fP.
 
 .IP "--color "
 
@@ -141,7 +147,13 @@ Request a compressed response using one of the algorithms br, gzip, deflate and 
 
 Maximum time in seconds that you allow Hurl's connection to take.
 
-See also \fI-m, --max-time\fP option.
+See also \fI-m, --max-time\fP.
+
+.IP "--connect-to <HOST1:PORT1:HOST2:PORT2> "
+
+For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.
+
+See also \fI--resolve\fP.
 
 .IP "-b, --cookie <FILE> "
 
@@ -202,6 +214,10 @@ This is similar to a break point, You can then continue (Press C) or quit (Press
 
 Output each hurl file result to JSON. The format is very closed to HAR format. 
 
+.IP "--key <KEY> "
+
+Private key file name.
+
 .IP "--max-redirs <NUM> "
 
 Set maximum number of redirection-followings allowed
@@ -211,7 +227,7 @@ By default, the limit is set to 50 redirections. Set this option to -1 to make i
 
 Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
 
-See also \fI--connect-timeout\fP option.
+See also \fI--connect-timeout\fP.
 
 .IP "--no-color "
 
@@ -230,7 +246,7 @@ Override value from Environment variable no_proxy.
 
 Write output to FILE instead of stdout.
 
-.IP "-x, --proxy [protocol://]host[:port] "
+.IP "-x, --proxy <[PROTOCOL://]HOST[:PORT]> "
 
 Use the specified proxy.
 
@@ -246,6 +262,10 @@ Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
 
+.IP "--resolve <HOST:PORT:ADDR>  <HOST:PORT:ADDR>"
+
+Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
+
 .IP "--retry "
 
 Retry requests if any error occurs (asserts, captures, runtimes etc...).
@@ -257,6 +277,10 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 .IP "--retry-max-count <NUM> "
 
 Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.
+
+.IP "--ssl-no-revoke "
+
+(Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
 .IP "--test "
 
