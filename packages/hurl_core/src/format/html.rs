@@ -859,6 +859,11 @@ impl Htmlable for PredicateFuncValue {
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
                 );
             }
+            PredicateFuncValue::IsEmpty {} => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+            }
         }
         buffer
     }

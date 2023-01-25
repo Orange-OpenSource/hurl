@@ -486,6 +486,7 @@ impl Lintable<PredicateFuncValue> for PredicateFuncValue {
             PredicateFuncValue::IsString {} => PredicateFuncValue::IsString {},
             PredicateFuncValue::IsCollection {} => PredicateFuncValue::IsCollection {},
             PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {},
+            PredicateFuncValue::IsEmpty {} => PredicateFuncValue::IsEmpty {},
         }
     }
 }

@@ -232,6 +232,7 @@ fn expected(
         PredicateFuncValue::IsString {} => Ok("string".to_string()),
         PredicateFuncValue::IsCollection {} => Ok("collection".to_string()),
         PredicateFuncValue::Exist {} => Ok("something".to_string()),
+        PredicateFuncValue::IsEmpty {} => Ok("empty".to_string()),
     }
 }
 
@@ -495,6 +496,40 @@ fn eval_something(
                 actual: value.display(),
                 expected: "something".to_string(),
                 type_mismatch: false,
+            }),
+        },
+
+        // empty
+        PredicateFuncValue::IsEmpty {} => match value {
+            Value::List(values) => Ok(AssertResult {
+                success: values.len() as i64 == 0,
+                actual: values.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::String(data) => Ok(AssertResult {
+                success: data.len() as i64 == 0,
+                actual: data.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Nodeset(nodeset) => Ok(AssertResult {
+                success: *nodeset as i64 == 0,
+                actual: nodeset.to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Bytes(data) => Ok(AssertResult {
+                success: data.len() as i64 == 0,
+                actual: data.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            _ => Ok(AssertResult {
+                success: false,
+                actual: value.display(),
+                expected: "count equals to 0".to_string(),
+                type_mismatch: true,
             }),
         },
         _ => panic!(),
@@ -1464,6 +1499,44 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "3");
         assert_eq!(assert_result.expected.as_str(), "1");
+    }
+
+    #[test]
+    fn test_predicate_is_empty_are_false() {
+        let variables = HashMap::new();
+        let assert_result = eval_something(
+            &PredicateFunc {
+                value: PredicateFuncValue::IsEmpty {},
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            &variables,
+            &Value::List(vec![Value::Integer(1)]),
+        )
+        .unwrap();
+
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "1");
+        assert_eq!(assert_result.expected.as_str(), "0");
+    }
+
+    #[test]
+    fn test_predicate_is_empty_are_true() {
+        let variables = HashMap::new();
+        let assert_result = eval_something(
+            &PredicateFunc {
+                value: PredicateFuncValue::IsEmpty {},
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            &variables,
+            &Value::List(vec![]),
+        )
+        .unwrap();
+
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "0");
+        assert_eq!(assert_result.expected.as_str(), "0");
     }
 
     #[test]
