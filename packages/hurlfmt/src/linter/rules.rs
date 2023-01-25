@@ -400,6 +400,7 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
         PredicateFuncValue::IsString {} => PredicateFuncValue::IsString {},
         PredicateFuncValue::IsCollection {} => PredicateFuncValue::IsCollection {},
         PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {},
+        PredicateFuncValue::IsEmpty {} => PredicateFuncValue::IsEmpty {},
     }
 }
 

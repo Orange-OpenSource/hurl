@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-xpath"},"response":{"status":200,"asserts":[{"query":{"type":"xpath","expr":"strong(//head/title)"},"predicate":{"type":"equal","value":"Welcome to Quiz!"}}]}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-assert-xpath"},"response":{"status":200,"asserts":[{"query":{"type":"xpath","expr":"strong(//head/title)"},"predicate":{"type":"equal","value":"Welcome to Quiz!"}},{"query":{"type":"xpath","expr":"strong(//head/title)"},"predicate":{"type":"isEmpty"}}]}}]}
