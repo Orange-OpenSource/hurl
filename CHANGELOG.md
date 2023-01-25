@@ -1,4 +1,4 @@
-[2.0.0 (2023-??-??)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.0)
+[2.0.0 (2023-01-25)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.0)
 ========================================================================================================================
 
 Thanks to
@@ -53,6 +53,7 @@ Bugs Fixed:
 
 * Fix querystring key parsing [#1027](https://github.com/Orange-OpenSource/hurl/issues/1027)
 
+
 [1.8.0 (2022-11-02)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.8.0)
 ========================================================================================================================
 
@@ -84,7 +85,6 @@ Bugs Fixed:
 * Fix HTTP HEAD [#903](https://github.com/Orange-OpenSource/hurl/issues/903)
 
 * Fix relative redirect [#875](https://github.com/Orange-OpenSource/hurl/issues/875)
-
 
 
 [1.7.0 (2022-09-13)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.7.0)
@@ -198,7 +198,6 @@ Bugs Fixes:
 * Report error on missing closing quote for quoted String [#403](https://github.com/Orange-OpenSource/hurl/issues/403)
 
 
-
 [1.5.0 (2021-12-09)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.5.0)
 ========================================================================================================================
 
@@ -239,7 +238,6 @@ Bugs Fixes:
 * Fix Decimal float values [#363](https://github.com/Orange-OpenSource/hurl/issues/363)
 
 * Fix build for ARM [#334](https://github.com/Orange-OpenSource/hurl/issues/334)
-
 
 
 [1.4.0 (2021-10-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.4.0)
@@ -372,7 +370,6 @@ Bugs Fixes:
 * Reading body file is too slow [#144](https://github.com/Orange-OpenSource/hurl/issues/144)
 
 
-
 [1.1.0 (2021-02-07)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.1.0)
 ========================================================================================================================
 
@@ -406,7 +403,6 @@ Bugs Fixes:
 * Input Cookie file [#124](https://github.com/Orange-OpenSource/hurl/issues/124)
 
 
-
 [1.0.0 (2020-12-18)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#1.0.0)
 ========================================================================================================================
 
@@ -432,9 +428,6 @@ Bugs Fixes:
 * Valid Jsonpath query is not parsed [#93](https://github.com/Orange-OpenSource/hurl/issues/93)
 
 
-
-
-
 [0.99.14 (2020-11-17)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#0.99.14)
 ========================================================================================================================
 
@@ -456,10 +449,6 @@ Bugs Fixes:
 * MultipartFormData is not present in json export [#63](https://github.com/Orange-OpenSource/hurl/issues/63)
 
 * Hurl usage doesn't end with newline  [#60](https://github.com/Orange-OpenSource/hurl/issues/60)
-
-
-
-
 
 
 [0.99.13 (2020-10-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#0.99.13)
