@@ -211,7 +211,9 @@ jobs:
           ref: ${{ needs.set-context.outputs.release_branch }}
 
       - name: Check CHANGELOG
-        run: bin/check/changelog.sh
+        run: |
+          pip install beautifulsoup4
+          bin/check/changelog.sh
 
       - name: Update version
         run: |
