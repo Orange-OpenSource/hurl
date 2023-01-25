@@ -34,6 +34,22 @@ pub struct RequestSpec {
     pub content_type: Option<String>,
 }
 
+impl Default for RequestSpec {
+    fn default() -> Self {
+        RequestSpec {
+            method: Method::Get,
+            url: "".to_string(),
+            headers: vec![],
+            querystring: vec![],
+            form: vec![],
+            multipart: vec![],
+            cookies: vec![],
+            body: Body::Binary(vec![]),
+            content_type: None,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Method {
     Get,
@@ -112,15 +128,15 @@ impl fmt::Display for Method {
             Method::Propfind => "PROPFIND",
             Method::View => "VIEW",
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 
 impl fmt::Display for MultipartParam {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            MultipartParam::Param(param) => write!(f, "{}", param),
-            MultipartParam::FileParam(param) => write!(f, "{}", param),
+            MultipartParam::Param(param) => write!(f, "{param}"),
+            MultipartParam::FileParam(param) => write!(f, "{param}"),
         }
     }
 }
@@ -143,13 +159,7 @@ pub mod tests {
         RequestSpec {
             method: Method::Get,
             url: "http://localhost:8000/hello".to_string(),
-            querystring: vec![],
-            headers: vec![],
-            cookies: vec![],
-            body: Body::Binary(vec![]),
-            multipart: vec![],
-            form: vec![],
-            content_type: None,
+            ..Default::default()
         }
     }
 
@@ -157,16 +167,9 @@ pub mod tests {
         RequestSpec {
             method: Method::Get,
             url: "http://localhost/custom".to_string(),
-            querystring: vec![],
             headers: vec![
-                Header {
-                    name: String::from("User-Agent"),
-                    value: String::from("iPhone"),
-                },
-                Header {
-                    name: String::from("Foo"),
-                    value: String::from("Bar"),
-                },
+                Header::new("User-Agent", "iPhone"),
+                Header::new("Foo", "Bar"),
             ],
             cookies: vec![
                 RequestCookie {
@@ -178,10 +181,7 @@ pub mod tests {
                     value: String::from("abc123"),
                 },
             ],
-            body: Body::Binary(vec![]),
-            multipart: vec![],
-            form: vec![],
-            content_type: None,
+            ..Default::default()
         }
     }
 
@@ -199,12 +199,7 @@ pub mod tests {
                     value: String::from("a b"),
                 },
             ],
-            headers: vec![],
-            cookies: vec![],
-            body: Body::Binary(vec![]),
-            multipart: vec![],
-            form: vec![],
-            content_type: None,
+            ..Default::default()
         }
     }
 
@@ -212,14 +207,10 @@ pub mod tests {
         RequestSpec {
             method: Method::Post,
             url: "http://localhost/form-params".to_string(),
-            querystring: vec![],
-            headers: vec![Header {
-                name: String::from("Content-Type"),
-                value: String::from("application/x-www-form-urlencoded"),
-            }],
-            cookies: vec![],
-            body: Body::Binary(vec![]),
-            multipart: vec![],
+            headers: vec![Header::new(
+                "Content-Type",
+                "application/x-www-form-urlencoded",
+            )],
             form: vec![
                 Param {
                     name: String::from("param1"),
@@ -231,6 +222,7 @@ pub mod tests {
                 },
             ],
             content_type: Some("multipart/form-data".to_string()),
+            ..Default::default()
         }
     }
 }

@@ -50,9 +50,7 @@ fn format_standalone(hurl_file: HurlFile) -> String {
 {body}
     </body>
 </html>
-"#,
-        css = css,
-        body = body
+"#
     )
 }
 
@@ -138,7 +136,7 @@ impl Htmlable for Response {
 
 impl Htmlable for Method {
     fn to_html(&self) -> String {
-        format!("<span class=\"method\">{}</span>", self)
+        format!("<span class=\"method\">{self}</span>")
     }
 }
 
@@ -861,6 +859,11 @@ impl Htmlable for PredicateFuncValue {
                     format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
                 );
             }
+            PredicateFuncValue::IsEmpty {} => {
+                buffer.push_str(
+                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
+                );
+            }
         }
         buffer
     }
@@ -894,9 +897,9 @@ impl Htmlable for MultilineString {
                 format!("{}\n", self.lang())
             }
         };
-        let body = format!("```{}{}```", lang, self);
+        let body = format!("```{lang}{self}```");
         let body = multilines(&body);
-        format!("<span class=\"multiline\">{}</span>", body)
+        format!("<span class=\"multiline\">{body}</span>")
     }
 }
 
@@ -929,25 +932,25 @@ impl Htmlable for Bytes {
 
 impl Htmlable for String {
     fn to_html(&self) -> String {
-        format!("<span class=\"string\">{}</span>", self)
+        format!("<span class=\"string\">{self}</span>")
     }
 }
 
 impl Htmlable for &str {
     fn to_html(&self) -> String {
-        format!("<span class=\"string\">{}</span>", self)
+        format!("<span class=\"string\">{self}</span>")
     }
 }
 
 impl Htmlable for bool {
     fn to_html(&self) -> String {
-        format!("<span class=\"boolean\">{}</span>", self)
+        format!("<span class=\"boolean\">{self}</span>")
     }
 }
 
 impl Htmlable for u64 {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
@@ -959,13 +962,13 @@ impl Htmlable for Float {
 
 impl Htmlable for i64 {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
 impl Htmlable for usize {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
@@ -1062,7 +1065,7 @@ impl Htmlable for Hex {
 impl Htmlable for Regex {
     fn to_html(&self) -> String {
         let s = str::replace(self.inner.as_str(), "/", "\\/");
-        format!("<span class=\"regex\">/{}/</span>", s)
+        format!("<span class=\"regex\">/{s}/</span>")
     }
 }
 
@@ -1087,7 +1090,7 @@ impl Template {
         for element in self.elements.iter() {
             let elem_str = match element {
                 TemplateElement::String { encoded, .. } => encoded.to_string(),
-                TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
+                TemplateElement::Expression(expr) => format!("{{{{{expr}}}}}"),
             };
             s.push_str(elem_str.as_str())
         }
@@ -1123,6 +1126,12 @@ impl Htmlable for FilterValue {
     fn to_html(&self) -> String {
         match self {
             FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::Format { space0, fmt } => {
+                let mut buffer = "<span class=\"filter-type\">format</span>".to_string();
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(fmt.to_html().as_str());
+                buffer
+            }
             FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
             FilterValue::HtmlUnescape => {
                 "<span class=\"filter-type\">htmlUnescape</span>".to_string()
@@ -1157,6 +1166,13 @@ impl Htmlable for FilterValue {
                 let mut buffer = "<span class=\"filter-type\">split</span>".to_string();
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(sep.to_html().as_str());
+                buffer
+            }
+            FilterValue::ToDate { space0, fmt } => {
+                let mut buffer = "".to_string();
+                buffer.push_str("<span class=\"filter-type\">toDate</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(fmt.to_html().as_str());
                 buffer
             }
             FilterValue::ToInt => "<span class=\"filter-type\">toInt</span>".to_string(),

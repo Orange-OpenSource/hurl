@@ -44,9 +44,9 @@ pub fn eval_request(
     // Headers
     let mut headers: Vec<http::Header> = vec![];
     for header in &request.headers {
-        let name = header.key.value.clone();
+        let name = &header.key.value;
         let value = eval_template(&header.value, variables)?;
-        let header = http::Header { name, value };
+        let header = http::Header::new(name, &value);
         headers.push(header);
     }
 
@@ -56,9 +56,8 @@ pub fn eval_request(
         let user_password = format!("{}:{}", kv.key.value, value);
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
-        let name = "Authorization".to_string();
-        let value = format!("Basic {}", authorization);
-        let header = http::Header { name, value };
+        let value = format!("Basic {authorization}");
+        let header = http::Header::new("Authorization", &value);
         headers.push(header);
     }
 

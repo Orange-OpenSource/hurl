@@ -22,28 +22,19 @@ use std::time::Duration;
 use hurl::http::*;
 use hurl::util::logger::LoggerBuilder;
 
-pub fn new_header(name: &str, value: &str) -> Header {
-    Header {
-        name: name.to_string(),
-        value: value.to_string(),
-    }
-}
-
 fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {
-        method: Method::Get,
         url: url.to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     }
 }
 
-// region basic
+fn redirect_count(calls: &[(Request, Response)]) -> usize {
+    calls
+        .iter()
+        .filter(|(_, resp)| resp.status >= 300 && resp.status < 399)
+        .count()
+}
 
 #[test]
 fn test_hello() {
@@ -88,10 +79,6 @@ fn test_hello() {
     assert_eq!(response.get_header_values("Date").len(), 1);
 }
 
-// endregion
-
-// region http method
-
 #[test]
 fn test_put() {
     let options = ClientOptions::default();
@@ -102,17 +89,11 @@ fn test_put() {
     let request_spec = RequestSpec {
         method: Method::Put,
         url: "http://localhost:8000/put".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -X PUT 'http://localhost:8000/put'".to_string()
+        "curl --request PUT 'http://localhost:8000/put'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -155,16 +136,11 @@ fn test_patch() {
                 value: "\"e0023aa4e\"".to_string(),
             },
         ],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -X PATCH -H 'Host: www.example.com' -H 'Content-Type: application/example' -H 'If-Match: \"e0023aa4e\"' 'http://localhost:8000/patch/file.txt'".to_string()
+        "curl --request PATCH --header 'Host: www.example.com' --header 'Content-Type: application/example' --header 'If-Match: \"e0023aa4e\"' 'http://localhost:8000/patch/file.txt'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -186,10 +162,6 @@ fn test_patch() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region headers
-
 #[test]
 fn test_custom_headers() {
     let options = ClientOptions::default();
@@ -202,23 +174,18 @@ fn test_custom_headers() {
         method: Method::Get,
         url: "http://localhost:8000/custom-headers".to_string(),
         headers: vec![
-            new_header("Fruit", "Raspberry"),
-            new_header("Fruit", "Apple"),
-            new_header("Fruit", "Banana"),
-            new_header("Fruit", "Grape"),
-            new_header("Color", "Green"),
+            Header::new("Fruit", "Raspberry"),
+            Header::new("Fruit", "Apple"),
+            Header::new("Fruit", "Banana"),
+            Header::new("Fruit", "Grape"),
+            Header::new("Color", "Green"),
         ],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert!(options.curl_args().is_empty());
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Fruit: Raspberry' -H 'Fruit: Apple' -H 'Fruit: Banana' -H 'Fruit: Grape' -H 'Color: Green' 'http://localhost:8000/custom-headers'".to_string()
+        "curl --header 'Fruit: Raspberry' --header 'Fruit: Apple' --header 'Fruit: Banana' --header 'Fruit: Grape' --header 'Color: Green' 'http://localhost:8000/custom-headers'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -235,10 +202,6 @@ fn test_custom_headers() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region querystrings
-
 #[test]
 fn test_querystring_params() {
     let options = ClientOptions::default();
@@ -250,7 +213,6 @@ fn test_querystring_params() {
     let request_spec = RequestSpec {
         method: Method::Get,
         url: "http://localhost:8000/querystring-params".to_string(),
-        headers: vec![],
         querystring: vec![
             Param {
                 name: "param1".to_string(),
@@ -273,11 +235,7 @@ fn test_querystring_params() {
                 value: "5".to_string(),
             },
         ],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
@@ -292,10 +250,6 @@ fn test_querystring_params() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region form params
-
 #[test]
 fn test_form_params() {
     let options = ClientOptions::default();
@@ -307,8 +261,6 @@ fn test_form_params() {
     let request_spec = RequestSpec {
         method: Method::Post,
         url: "http://localhost:8000/form-params".to_string(),
-        headers: vec![],
-        querystring: vec![],
         form: vec![
             Param {
                 name: "param1".to_string(),
@@ -335,10 +287,8 @@ fn test_form_params() {
                 value: "1".to_string(),
             },
         ],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
         content_type: Some("application/x-www-form-urlencoded".to_string()),
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
@@ -366,10 +316,6 @@ fn test_form_params() {
     assert_eq!(response.body, b"Hello World!".to_vec());
 }
 
-// endregion
-
-// region redirect
-
 #[test]
 fn test_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
@@ -395,7 +341,6 @@ fn test_redirect() {
         response.url,
         "http://localhost:8000/redirect-absolute".to_string()
     );
-    assert_eq!(client.redirect_count, 0);
 }
 
 #[test]
@@ -410,10 +355,10 @@ fn test_follow_location() {
     };
     let context_dir = ContextDir::default();
     let mut client = Client::new(None);
-    assert_eq!(options.curl_args(), vec!["-L".to_string()]);
+    assert_eq!(options.curl_args(), vec!["--location".to_string()]);
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L 'http://localhost:8000/redirect-absolute'".to_string()
+        "curl --location 'http://localhost:8000/redirect-absolute'".to_string()
     );
 
     let calls = client
@@ -448,17 +393,14 @@ fn test_follow_location() {
         "http://localhost:8000/redirected".to_string()
     );
 
-    assert_eq!(client.redirect_count, 1);
-
-    // make sure that the redirect count is reset to 0
     let request = default_get_request("http://localhost:8000/hello");
     let calls = client
         .execute_with_redirect(&request, &options, &logger)
         .unwrap();
+    assert_eq!(calls.len(), 1);
     let (_, response) = calls.get(0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
-    assert_eq!(client.redirect_count, 0);
 }
 
 #[test]
@@ -476,7 +418,7 @@ fn test_max_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect/15");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L --max-redirs 10 'http://localhost:8000/redirect/15'".to_string()
+        "curl --location --max-redirs 10 'http://localhost:8000/redirect/15'".to_string()
     );
     let error = client
         .execute_with_redirect(&request_spec, &options, &logger)
@@ -487,7 +429,7 @@ fn test_max_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect/8");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L --max-redirs 10 'http://localhost:8000/redirect/8'".to_string()
+        "curl --location --max-redirs 10 'http://localhost:8000/redirect/8'".to_string()
     );
     let calls = client
         .execute_with_redirect(&request_spec, &options, &logger)
@@ -495,12 +437,8 @@ fn test_max_redirect() {
     let (request, response) = calls.last().unwrap();
     assert_eq!(request.url, "http://localhost:8000/redirect/0".to_string());
     assert_eq!(response.status, 200);
-    assert_eq!(client.redirect_count, 8);
+    assert_eq!(redirect_count(&calls), 8);
 }
-
-// endregion
-
-// region multipart
 
 #[test]
 fn test_multipart_form_data() {
@@ -513,9 +451,6 @@ fn test_multipart_form_data() {
     let request_spec = RequestSpec {
         method: Method::Post,
         url: "http://localhost:8000/multipart-form-data".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
         multipart: vec![
             MultipartParam::Param(Param {
                 name: "key1".to_string(),
@@ -540,13 +475,12 @@ fn test_multipart_form_data() {
                 content_type: "text/html".to_string(),
             }),
         ],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
         content_type: Some("multipart/form-data".to_string()),
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -F 'key1=value1' -F 'upload1=@data.txt;type=text/plain' -F 'upload2=@data.html;type=text/html' -F 'upload3=@data.txt;type=text/html' 'http://localhost:8000/multipart-form-data'".to_string()
+        "curl --form 'key1=value1' --form 'upload1=@data.txt;type=text/plain' --form 'upload2=@data.html;type=text/html' --form 'upload3=@data.txt;type=text/html' 'http://localhost:8000/multipart-form-data'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -564,10 +498,6 @@ fn test_multipart_form_data() {
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
 }
-
-// endregion
-
-// region http body
 
 #[test]
 fn test_post_bytes() {
@@ -590,7 +520,7 @@ fn test_post_bytes() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21' 'http://localhost:8000/post-base64'".to_string()
+        "curl --header 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21' 'http://localhost:8000/post-base64'".to_string()
     );
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
@@ -601,8 +531,6 @@ fn test_post_bytes() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 }
-
-// endregion
 
 #[test]
 fn test_expect() {
@@ -628,7 +556,7 @@ fn test_expect() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Expect: 100-continue' -H 'Content-Type:' --data 'data' 'http://localhost:8000/expect'".to_string()
+        "curl --header 'Expect: 100-continue' --header 'Content-Type:' --data 'data' 'http://localhost:8000/expect'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -652,17 +580,7 @@ fn test_basic_authentication() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = RequestSpec {
-        method: Method::Get,
-        url: "http://localhost:8000/basic-authentication".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
-    };
+    let request_spec = default_get_request("http://localhost:8000/basic-authentication");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --user 'bob@email.com:secret' 'http://localhost:8000/basic-authentication'"
@@ -679,17 +597,8 @@ fn test_basic_authentication() {
 
     let options = ClientOptions::default();
     let mut client = Client::new(None);
-    let request_spec = RequestSpec {
-        method: Method::Get,
-        url: "http://bob%40email.com:secret@localhost:8000/basic-authentication".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
-    };
+    let request_spec =
+        default_get_request("http://bob%40email.com:secret@localhost:8000/basic-authentication");
     assert_eq!(
         request_spec.curl_args(&ContextDir::default()),
         vec!["'http://bob%40email.com:secret@localhost:8000/basic-authentication'".to_string()]
@@ -718,8 +627,6 @@ fn test_cacert() {
     let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
-
-// region error
 
 #[test]
 fn test_error_could_not_resolve_host() {
@@ -785,7 +692,7 @@ fn test_error_fail_to_connect() {
     } = error
     {
         assert_eq!(code, 7);
-        eprintln!("description={}", description);
+        eprintln!("description={description}");
         assert!(description.starts_with("Failed to connect to localhost port 9999"));
         assert_eq!(url, "http://localhost:8000/hello");
     }
@@ -854,8 +761,7 @@ fn test_error_ssl() {
         ];
         assert!(
             descriptions.contains(&description),
-            "actual description is {}",
-            description
+            "actual description is {description}"
         );
         assert_eq!(url, "https://localhost:8001/hello");
     }
@@ -898,18 +804,7 @@ fn test_accept_encoding() {
     let mut client = Client::new(None);
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
-
-    let request_spec = RequestSpec {
-        method: Method::Get,
-        url: "http://localhost:8000/compressed/gzip".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
-    };
+    let request_spec = default_get_request("http://localhost:8000/compressed/gzip");
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Accept-Encoding".to_string(),
@@ -949,7 +844,7 @@ fn test_connect_timeout() {
         url,
     } = error
     {
-        eprintln!("description={}", description);
+        eprintln!("description={description}");
         // TODO: remove the 7 / "Couldn't connect to server" case
         // On Linux/Windows libcurl version, the correct error message
         // is 28 / "Connection timeout" | "Connection timed out"
@@ -965,9 +860,6 @@ fn test_connect_timeout() {
         assert_eq!(url, "http://10.0.0.0");
     }
 }
-// endregion
-
-// region cookie
 
 #[test]
 fn test_cookie() {
@@ -980,16 +872,11 @@ fn test_cookie() {
     let request_spec = RequestSpec {
         method: Method::Get,
         url: "http://localhost:8000/cookies/set-request-cookie1-valueA".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
         cookies: vec![RequestCookie {
             name: "cookie1".to_string(),
             value: "valueA".to_string(),
         }],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
@@ -1007,18 +894,9 @@ fn test_cookie() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 
-    let request_spec = RequestSpec {
-        method: Method::Get,
-        url: "http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
-    };
-    let (_request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session");
+    let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
 
@@ -1033,10 +911,6 @@ fn test_multiple_request_cookies() {
     let request_spec = RequestSpec {
         method: Method::Get,
         url: "http://localhost:8000/cookies/set-multiple-request-cookies".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
         cookies: vec![
             RequestCookie {
                 name: "user1".to_string(),
@@ -1051,8 +925,7 @@ fn test_multiple_request_cookies() {
                 value: "Bruce".to_string(),
             },
         ],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
@@ -1143,10 +1016,6 @@ fn test_cookie_file() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region proxy
-
 #[test]
 fn test_proxy() {
     // mitmproxy listening on port 8888
@@ -1168,8 +1037,6 @@ fn test_proxy() {
     assert_eq!(request.url, "http://localhost:8000/proxy");
     assert_eq!(response.status, 200);
 }
-
-// endregion
 
 #[test]
 fn test_insecure() {
@@ -1206,13 +1073,7 @@ fn test_head() {
     let request_spec = RequestSpec {
         method: Method::Head,
         url: "http://localhost:8000/head".to_string(),
-        headers: vec![],
-        querystring: vec![],
-        form: vec![],
-        multipart: vec![],
-        cookies: vec![],
-        body: Body::Binary(vec![]),
-        content_type: None,
+        ..Default::default()
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
@@ -1239,9 +1100,9 @@ fn test_version() {
     let curl_version = std::str::from_utf8(&output.stdout).unwrap();
     let index = curl_version.find("libcurl").expect("libcurl substring");
     let expected_version = &curl_version[index..];
-    eprintln!("{:?}", expected_version);
+    eprintln!("{expected_version:?}");
     let versions = libcurl_version_info();
-    eprintln!("{:?}", versions);
+    eprintln!("{versions:?}");
 }
 
 // This test function can be used to reproduce bug

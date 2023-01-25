@@ -24,6 +24,7 @@ impl Value {
     pub fn to_json(&self) -> serde_json::Value {
         match self {
             Value::Bool(v) => serde_json::Value::Bool(*v),
+            Value::Date(v) => serde_json::Value::String(v.to_string()),
             Value::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),
             Value::Float(f) => serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap()),
             Value::String(s) => serde_json::Value::String(s.clone()),

@@ -24,33 +24,45 @@ use super::core::{Error, RunnerError};
 use super::value::Value;
 use crate::runner::template::eval_expression;
 
+/// Evaluates a JSON value to a string given a set of `variables`.
+/// If `keep_whitespace` is true, whitespace is preserved from the JSonValue, otherwise
+/// it is trimmed.
 pub fn eval_json_value(
     json_value: &JsonValue,
     variables: &HashMap<String, Value>,
+    keep_whitespace: bool,
 ) -> Result<String, Error> {
     match json_value {
         JsonValue::Null {} => Ok("null".to_string()),
         JsonValue::Number(s) => Ok(s.clone()),
         JsonValue::String(template) => {
             let s = eval_json_template(template, variables)?;
-            Ok(format!("\"{}\"", s))
+            Ok(format!("\"{s}\""))
         }
         JsonValue::Boolean(v) => Ok(v.to_string()),
         JsonValue::List { space0, elements } => {
             let mut elems_string = vec![];
             for element in elements {
-                let s = eval_json_list_element(element, variables)?;
+                let s = eval_json_list_element(element, variables, keep_whitespace)?;
                 elems_string.push(s);
             }
-            Ok(format!("[{}{}]", space0, elems_string.join(",")))
+            if keep_whitespace {
+                Ok(format!("[{}{}]", space0, elems_string.join(",")))
+            } else {
+                Ok(format!("[{}]", elems_string.join(",")))
+            }
         }
         JsonValue::Object { space0, elements } => {
             let mut elems_string = vec![];
             for element in elements {
-                let s = eval_json_object_element(element, variables)?;
+                let s = eval_json_object_element(element, variables, keep_whitespace)?;
                 elems_string.push(s);
             }
-            Ok(format!("{{{}{}}}", space0, elems_string.join(",")))
+            if keep_whitespace {
+                Ok(format!("{{{}{}}}", space0, elems_string.join(",")))
+            } else {
+                Ok(format!("{{{}}}", elems_string.join(",")))
+            }
         }
         JsonValue::Expression(exp) => {
             let s = eval_expression(exp, variables)?;
@@ -79,38 +91,47 @@ pub fn eval_json_value(
     }
 }
 
-pub fn eval_json_list_element(
+/// Evaluates a JSON list to a string given a set of `variables`.
+/// If `keep_whitespace` is true, whitespace is preserved from the JSonValue, otherwise
+/// it is trimmed.
+fn eval_json_list_element(
     element: &JsonListElement,
     variables: &HashMap<String, Value>,
+    keep_whitespace: bool,
 ) -> Result<String, Error> {
-    let s = eval_json_value(&element.value, variables)?;
-    Ok(format!("{}{}{}", element.space0, s, element.space1))
+    let s = eval_json_value(&element.value, variables, keep_whitespace)?;
+    if keep_whitespace {
+        Ok(format!("{}{}{}", element.space0, s, element.space1))
+    } else {
+        Ok(s)
+    }
 }
 
-pub fn eval_json_object_element(
+/// Renders a JSON object to a string given a set of `variables`.
+/// If `keep_whitespace` is true, whitespace is preserved from the JSonValue, otherwise
+/// it is trimmed.
+fn eval_json_object_element(
     element: &JsonObjectElement,
     variables: &HashMap<String, Value>,
+    keep_whitespace: bool,
 ) -> Result<String, Error> {
-    let value = eval_json_value(&element.value, variables)?;
-    Ok(format!(
-        "{}\"{}\"{}:{}{}{}",
-        element.space0, element.name, element.space1, element.space2, value, element.space3
-    ))
+    let value = eval_json_value(&element.value, variables, keep_whitespace)?;
+    if keep_whitespace {
+        Ok(format!(
+            "{}\"{}\"{}:{}{}{}",
+            element.space0, element.name, element.space1, element.space2, value, element.space3
+        ))
+    } else {
+        Ok(format!("\"{}\":{}", element.name, value))
+    }
 }
 
-/// Eval a JSON template to a valid JSON string
-/// The variable are replaced by their value and encoded into JSON
-///
-/// # Arguments
-///
-/// * `template` - An Hurl Template
-/// * `variables` - A map of input variables
+/// Evaluates a JSON template to a string given a set of `variables`
 ///
 /// # Example
 ///
 /// The template "Hello {{quote}}" with variable quote="
 /// will be evaluated to the JSON String "Hello \""
-///
 pub fn eval_json_template(
     template: &Template,
     variables: &HashMap<String, Value>,
@@ -227,19 +248,19 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
-            eval_json_value(&JsonValue::Null {}, &variables).unwrap(),
+            eval_json_value(&JsonValue::Null {}, &variables, true).unwrap(),
             "null".to_string()
         );
         assert_eq!(
-            eval_json_value(&JsonValue::Number("3.14".to_string()), &variables).unwrap(),
+            eval_json_value(&JsonValue::Number("3.14".to_string()), &variables, true).unwrap(),
             "3.14".to_string()
         );
         assert_eq!(
-            eval_json_value(&JsonValue::Boolean(false), &variables).unwrap(),
+            eval_json_value(&JsonValue::Boolean(false), &variables, true).unwrap(),
             "false".to_string()
         );
         assert_eq!(
-            eval_json_value(&json_hello_world_value(), &variables).unwrap(),
+            eval_json_value(&json_hello_world_value(), &variables, true).unwrap(),
             "\"Hello\\u0020Bob!\"".to_string()
         );
     }
@@ -247,7 +268,7 @@ mod tests {
     #[test]
     fn test_error() {
         let variables = HashMap::new();
-        let error = eval_json_value(&json_hello_world_value(), &variables)
+        let error = eval_json_value(&json_hello_world_value(), &variables, true)
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 15, 1, 19));
@@ -270,6 +291,7 @@ mod tests {
                     elements: vec![],
                 },
                 &variables,
+                true,
             )
             .unwrap(),
             "[]".to_string()
@@ -298,6 +320,7 @@ mod tests {
                     ],
                 },
                 &variables,
+                true
             )
             .unwrap(),
             "[1, -2, 3.0]".to_string()
@@ -329,6 +352,7 @@ mod tests {
                     ],
                 },
                 &variables,
+                true
             )
             .unwrap(),
             "[\"Hi\", \"Hello\\u0020Bob!\"]".to_string()
@@ -345,12 +369,13 @@ mod tests {
                     elements: vec![],
                 },
                 &variables,
+                true
             )
             .unwrap(),
             "{}".to_string()
         );
         assert_eq!(
-            eval_json_value(&json_person_value(), &variables).unwrap(),
+            eval_json_value(&json_person_value(), &variables, true).unwrap(),
             r#"{
     "firstName": "John"
 }"#
@@ -372,6 +397,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 }),
                 &variables,
+                true
             )
             .unwrap(),
             "\"\\n\"".to_string()
@@ -438,5 +464,14 @@ mod tests {
         assert_eq!(encode_json_string("a"), "a");
         assert_eq!(encode_json_string("\""), "\\\"");
         assert_eq!(encode_json_string("\\"), "\\\\");
+    }
+
+    #[test]
+    fn test_not_preserving_spaces() {
+        let variables = HashMap::new();
+        assert_eq!(
+            eval_json_value(&json_person_value(), &variables, false).unwrap(),
+            r#"{"firstName":"John"}"#.to_string()
+        );
     }
 }

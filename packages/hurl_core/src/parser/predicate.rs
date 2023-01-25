@@ -90,6 +90,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
             string_predicate,
             collection_predicate,
             exist_predicate,
+            is_empty_predicate,
         ],
         reader,
     ) {
@@ -357,6 +358,11 @@ fn collection_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFu
 fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("exists", reader)?;
     Ok(PredicateFuncValue::Exist {})
+}
+
+fn is_empty_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+    try_literal("isEmpty", reader)?;
+    Ok(PredicateFuncValue::IsEmpty {})
 }
 
 #[cfg(test)]

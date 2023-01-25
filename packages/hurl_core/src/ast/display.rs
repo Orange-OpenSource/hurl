@@ -38,7 +38,7 @@ impl fmt::Display for Method {
             Method::Propfind => "PROPFIND",
             Method::View => "VIEW",
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -57,7 +57,7 @@ impl fmt::Display for VersionValue {
             VersionValue::VersionAny => "HTTP",
             VersionValue::VersionAnyLegacy => "HTTP/*",
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -71,7 +71,7 @@ impl fmt::Display for StatusValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             StatusValue::Any => write!(f, "*"),
-            StatusValue::Specific(v) => write!(f, "{}", v),
+            StatusValue::Specific(v) => write!(f, "{v}"),
         }
     }
 }
@@ -82,7 +82,7 @@ impl fmt::Display for Template {
         for element in self.elements.iter() {
             buffer.push_str(element.to_string().as_str());
         }
-        write!(f, "{}", buffer)
+        write!(f, "{buffer}")
     }
 }
 
@@ -90,9 +90,9 @@ impl fmt::Display for TemplateElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
             TemplateElement::String { value, .. } => value.clone(),
-            TemplateElement::Expression(value) => format!("{{{{{}}}}}", value),
+            TemplateElement::Expression(value) => format!("{{{{{value}}}}}"),
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -112,10 +112,10 @@ impl fmt::Display for CookiePath {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = self.name.to_string();
         if let Some(attribute) = &self.attribute {
-            let s = format!("[{}]", attribute);
+            let s = format!("[{attribute}]");
             buf.push_str(s.as_str());
         }
-        write!(f, "{}", buf)
+        write!(f, "{buf}")
     }
 }
 
@@ -131,7 +131,7 @@ impl fmt::Display for CookieAttribute {
             CookieAttributeName::HttpOnly(_) => "HttpOnly",
             CookieAttributeName::SameSite(_) => "SameSite",
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -171,7 +171,7 @@ impl fmt::Display for MultilineString {
                 format!("{}{}", graphql.value, var)
             }
         };
-        write!(f, "{}", body)
+        write!(f, "{body}")
     }
 }
 
@@ -232,6 +232,7 @@ impl PredicateFuncValue {
             PredicateFuncValue::IsString { .. } => "isString".to_string(),
             PredicateFuncValue::IsCollection { .. } => "isCollection".to_string(),
             PredicateFuncValue::Exist { .. } => "exists".to_string(),
+            PredicateFuncValue::IsEmpty { .. } => "isEmpty".to_string(),
         }
     }
 }

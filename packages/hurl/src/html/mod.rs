@@ -19,5 +19,5 @@ mod entities;
 mod escape;
 mod unescape;
 
-pub use self::escape::html_escape;
-pub use self::unescape::html_unescape;
+pub use escape::html_escape;
+pub use unescape::html_unescape;

@@ -95,18 +95,9 @@ lazy_static! {
 /// HTML 5 named character references defined in html.entities.html5.
 ///
 /// The code is adapted from the Python standard library:
-/// https://github.com/python/cpython/blob/main/Lib/html/__init__.py
+/// <https://github.com/python/cpython/blob/main/Lib/html/__init__.py>
 ///
-/// See MDN decoder tool: https://mothereff.in/html-entities
-///
-/// # Examples
-///
-/// ```
-/// use hurl::html;
-///
-/// let output = html::html_unescape("Foo &#xA9; bar &#x1D306; baz &#x2603; qux");
-/// assert_eq!(output, "Foo © bar 𝌆 baz ☃ qux")
-/// ```
+/// See MDN decoder tool: <https://mothereff.in/html-entities>
 pub fn html_unescape(text: &str) -> String {
     return if text.chars().any(|c| c == '&') {
         CHAR_REF
@@ -171,13 +162,13 @@ mod tests {
         }
 
         fn check_num(num: usize, expected: &str) {
-            let text = format!("&#{}", num);
+            let text = format!("&#{num}");
             check(&text, expected);
-            let text = format!("&#{};", num);
+            let text = format!("&#{num};");
             check(&text, expected);
-            let text = format!("&#x{:x}", num);
+            let text = format!("&#x{num:x}");
             check(&text, expected);
-            let text = format!("&#x{:x};", num);
+            let text = format!("&#x{num:x};");
             check(&text, expected);
         }
 
@@ -218,9 +209,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#{}", num), &format!("{}", char));
-            check(&format!("&#{} ", num), &format!("{} ", char));
-            check(&format!("&#{}X", num), &format!("{}X", char));
+            check(&format!("&#{num}"), &format!("{char}"));
+            check(&format!("&#{num} "), &format!("{char} "));
+            check(&format!("&#{num}X"), &format!("{char}X"));
         }
 
         // Format &#0001234 (without ending semi-colon)
@@ -234,9 +225,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#{:07}", num), &format!("{}", char));
-            check(&format!("&#{:07} ", num), &format!("{} ", char));
-            check(&format!("&#{:07}X", num), &format!("{}X", char));
+            check(&format!("&#{num:07}"), &format!("{char}"));
+            check(&format!("&#{num:07} "), &format!("{char} "));
+            check(&format!("&#{num:07}X"), &format!("{char}X"));
         }
 
         // Format &#1234;
@@ -250,9 +241,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#{};", num), &format!("{}", char));
-            check(&format!("&#{}; ", num), &format!("{} ", char));
-            check(&format!("&#{};X", num), &format!("{}X", char));
+            check(&format!("&#{num};"), &format!("{char}"));
+            check(&format!("&#{num}; "), &format!("{char} "));
+            check(&format!("&#{num};X"), &format!("{char}X"));
         }
 
         // Format &#0001234;
@@ -266,9 +257,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#{:07};", num), &format!("{}", char));
-            check(&format!("&#{:07}; ", num), &format!("{} ", char));
-            check(&format!("&#{:07};X", num), &format!("{}X", char));
+            check(&format!("&#{num:07};"), &format!("{char}"));
+            check(&format!("&#{num:07}; "), &format!("{char} "));
+            check(&format!("&#{num:07};X"), &format!("{char}X"));
         }
 
         // Format &#x1abc
@@ -282,9 +273,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:x}", num), &format!("{}", char));
-            check(&format!("&#x{:x} ", num), &format!("{} ", char));
-            check(&format!("&#x{:x}X", num), &format!("{}X", char));
+            check(&format!("&#x{num:x}"), &format!("{char}"));
+            check(&format!("&#x{num:x} "), &format!("{char} "));
+            check(&format!("&#x{num:x}X"), &format!("{char}X"));
         }
 
         // Format &#x001abc
@@ -298,9 +289,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:06x}", num), &format!("{}", char));
-            check(&format!("&#x{:06x} ", num), &format!("{} ", char));
-            check(&format!("&#x{:06x}X", num), &format!("{}X", char));
+            check(&format!("&#x{num:06x}"), &format!("{char}"));
+            check(&format!("&#x{num:06x} "), &format!("{char} "));
+            check(&format!("&#x{num:06x}X"), &format!("{char}X"));
         }
 
         // Format &#x1abc;
@@ -314,9 +305,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:x};", num), &format!("{}", char));
-            check(&format!("&#x{:x}; ", num), &format!("{} ", char));
-            check(&format!("&#x{:x};X", num), &format!("{}X", char));
+            check(&format!("&#x{num:x};"), &format!("{char}"));
+            check(&format!("&#x{num:x}; "), &format!("{char} "));
+            check(&format!("&#x{num:x};X"), &format!("{char}X"));
         }
 
         // Format &#x001abc;
@@ -330,9 +321,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:06x};", num), &format!("{}", char));
-            check(&format!("&#x{:06x}; ", num), &format!("{} ", char));
-            check(&format!("&#x{:06x};X", num), &format!("{}X", char));
+            check(&format!("&#x{num:06x};"), &format!("{char}"));
+            check(&format!("&#x{num:06x}; "), &format!("{char} "));
+            check(&format!("&#x{num:06x};X"), &format!("{char}X"));
         }
 
         // Format &#x1ABC
@@ -346,9 +337,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:X}", num), &format!("{}", char));
-            check(&format!("&#x{:X} ", num), &format!("{} ", char));
-            check(&format!("&#x{:X}X", num), &format!("{}X", char));
+            check(&format!("&#x{num:X}"), &format!("{char}"));
+            check(&format!("&#x{num:X} "), &format!("{char} "));
+            check(&format!("&#x{num:X}X"), &format!("{char}X"));
         }
 
         // Format &#x001ABC
@@ -362,9 +353,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:06X}", num), &format!("{}", char));
-            check(&format!("&#x{:06X} ", num), &format!("{} ", char));
-            check(&format!("&#x{:06X}X", num), &format!("{}X", char));
+            check(&format!("&#x{num:06X}"), &format!("{char}"));
+            check(&format!("&#x{num:06X} "), &format!("{char} "));
+            check(&format!("&#x{num:06X}X"), &format!("{char}X"));
         }
 
         // Format &#x1ABC;
@@ -378,9 +369,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:X};", num), &format!("{}", char));
-            check(&format!("&#x{:X}; ", num), &format!("{} ", char));
-            check(&format!("&#x{:X};X", num), &format!("{}X", char));
+            check(&format!("&#x{num:X};"), &format!("{char}"));
+            check(&format!("&#x{num:X}; "), &format!("{char} "));
+            check(&format!("&#x{num:X};X"), &format!("{char}X"));
         }
 
         // Format &#x001ABC;
@@ -394,9 +385,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#x{:06X};", num), &format!("{}", char));
-            check(&format!("&#x{:06X}; ", num), &format!("{} ", char));
-            check(&format!("&#x{:06X};X", num), &format!("{}X", char));
+            check(&format!("&#x{num:06X};"), &format!("{char}"));
+            check(&format!("&#x{num:06X}; "), &format!("{char} "));
+            check(&format!("&#x{num:06X};X"), &format!("{char}X"));
         }
 
         // Format &#X1abc;
@@ -410,9 +401,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#X{:x};", num), &format!("{}", char));
-            check(&format!("&#X{:x}; ", num), &format!("{} ", char));
-            check(&format!("&#X{:x};X", num), &format!("{}X", char));
+            check(&format!("&#X{num:x};"), &format!("{char}"));
+            check(&format!("&#X{num:x}; "), &format!("{char} "));
+            check(&format!("&#X{num:x};X"), &format!("{char}X"));
         }
 
         // Format &#X001abc;
@@ -426,9 +417,9 @@ mod tests {
         ]
         .iter()
         {
-            check(&format!("&#X{:06x};", num), &format!("{}", char));
-            check(&format!("&#X{:06x}; ", num), &format!("{} ", char));
-            check(&format!("&#X{:06x};X", num), &format!("{}X", char));
+            check(&format!("&#X{num:06x};"), &format!("{char}"));
+            check(&format!("&#X{num:06x}; "), &format!("{char} "));
+            check(&format!("&#X{num:06x};X"), &format!("{char}X"));
         }
 
         // Check invalid code points
@@ -466,7 +457,7 @@ mod tests {
         // Check triple adjacent charrefs
         for e in ["&quot", "&#34", "&#x22", "&#X22"] {
             // check(&e.repeat(3), "\"\"\"");
-            check(&format!("{};", e).repeat(3), "\"\"\"")
+            check(&format!("{e};").repeat(3), "\"\"\"")
         }
 
         // Check that the case is respected

@@ -17,9 +17,11 @@
  */
 
 use super::{header, Header};
+use crate::http::certificate::Certificate;
 use core::fmt;
 use std::time::Duration;
 
+/// Represents an HTTP response.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub version: Version,
@@ -28,6 +30,22 @@ pub struct Response {
     pub body: Vec<u8>,
     pub duration: Duration,
     pub url: String,
+    /// The end-user certificate, in the response certificate chain
+    pub certificate: Option<Certificate>,
+}
+
+impl Default for Response {
+    fn default() -> Self {
+        Response {
+            version: Version::Http10,
+            status: 200,
+            headers: vec![],
+            body: vec![],
+            duration: Default::default(),
+            url: "".to_string(),
+            certificate: None,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -44,7 +62,7 @@ impl fmt::Display for Version {
             Version::Http11 => "HTTP/1.1",
             Version::Http2 => "HTTP/2",
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 
@@ -68,53 +86,30 @@ pub mod tests {
 
     pub fn hello_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(String::from("Hello World!")),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn html_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: String::from("Content-Type"),
-                value: String::from("text/html; charset=utf-8"),
-            }],
+            headers: vec![Header::new("Content-Type", "text/html; charset=utf-8")],
             body: String::into_bytes(String::from(
                 "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
             )),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn xml_invalid_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -122,24 +117,15 @@ xxx
 "#
                 .to_string(),
             ),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn xml_two_users_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -151,24 +137,15 @@ xxx
 "#
                 .to_string(),
             ),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn xml_three_users_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -181,16 +158,12 @@ xxx
 "#
                 .to_string(),
             ),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn json_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 0,
-            headers: vec![],
             body: String::into_bytes(
                 r#"
 {
@@ -204,43 +177,26 @@ xxx
 "#
                 .to_string(),
             ),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     pub fn bytes_http_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("application/octet-stream"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("1"),
-                },
+                Header::new("Content-Type", "application/octet-stream"),
+                Header::new("Content-Length", "1"),
             ],
             body: vec![255],
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     #[test]
     fn get_header_values() {
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Length".to_string(),
-                value: "12".to_string(),
-            }],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
+            headers: vec![Header::new("Content-Length", "12")],
+            ..Default::default()
         };
         assert_eq!(
             response.get_header_values("Content-Length"),

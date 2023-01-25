@@ -128,8 +128,12 @@ def check_count(expected_count: int):
 
 
 def main():
-    shutil.rmtree("build", ignore_errors=True)
-    os.mkdir("build")
+    os.makedirs("build", exist_ok=True)
+    shutil.rmtree("build/html", ignore_errors=True)
+    report_files = ["build/tests.json", "build/tests.xml"]
+    for report_file in report_files:
+        if os.path.isfile(report_file):
+            os.remove(report_file)
 
     try:
         count = exec_hurl_files()

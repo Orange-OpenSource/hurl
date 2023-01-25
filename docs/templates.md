@@ -12,10 +12,10 @@ HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
+
 # Do the login !
 POST https://acmecorp.net/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
-
 HTTP 302
 ```
 
@@ -139,7 +139,7 @@ $ hurl --variable host=example.net --variable id=1234 test.hurl
 We can also define all injected variables in a file:
 
 ```shell
-$ hurl --variables-files vars.env test.hurl
+$ hurl --variables-file vars.env test.hurl
 ``` 
 
 where `vars.env` is

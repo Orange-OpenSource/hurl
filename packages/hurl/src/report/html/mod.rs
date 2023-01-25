@@ -16,9 +16,11 @@
  *
  */
 
+//! HTML report
+
 use crate::cli::CliError;
-use crate::report::canonicalize_filename;
 use crate::runner::HurlResult;
+use crate::util::path;
 use chrono::{DateTime, Local};
 use std::io::Write;
 use std::path::Path;
@@ -34,12 +36,15 @@ struct HTMLResult {
     pub success: bool,
 }
 
-pub fn write_html_report(dir_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
+/// Creates and HTML report for this list of [`HurlResult`] at `dir_path`/index.html.
+///
+/// If the report already exists, results are merged.
+pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(), CliError> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
-    for result in hurl_results {
+    for result in hurl_results.iter() {
         let html_result = HTMLResult {
-            filename: canonicalize_filename(&result.filename),
+            filename: path::canonicalize_filename(&result.filename),
             time_in_ms: result.time_in_ms,
             success: result.success,
         };
@@ -48,7 +53,7 @@ pub fn write_html_report(dir_path: &Path, hurl_results: &[HurlResult]) -> Result
     let now: DateTime<Local> = Local::now();
     let s = create_html_index(&now.to_rfc2822(), &results);
 
-    let file_path = dir_path.join("index.html");
+    let file_path = index_path;
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
             return Err(CliError {
@@ -168,13 +173,7 @@ fn create_html_index(now: &str, hurl_results: &[HTMLResult]) -> String {
         </table>
     </body>
 </html>
-"#,
-        now = now,
-        count_total = count_total,
-        count_success = count_success,
-        percentage_success = percentage_success,
-        count_failure = count_failure,
-        percentage_failure = percentage_failure
+"#
     )
 }
 
@@ -194,11 +193,7 @@ fn create_html_table_row(result: &HTMLResult) -> String {
     <td>{status}</td>
     <td>{duration_in_s}</td>
 </tr>
-"#,
-        status = status,
-        duration_in_ms = duration_in_ms,
-        filename = filename,
-        duration_in_s = duration_in_s
+"#
     )
 }
 

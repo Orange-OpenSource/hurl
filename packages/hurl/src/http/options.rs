@@ -108,7 +108,7 @@ impl ClientOptions {
             arguments.push("--insecure".to_string());
         }
         if self.follow_location {
-            arguments.push("-L".to_string());
+            arguments.push("--location".to_string());
         }
         if self.max_redirect != ClientOptions::default().max_redirect {
             let max_redirect = match self.max_redirect {
@@ -120,7 +120,7 @@ impl ClientOptions {
         }
         if let Some(ref proxy) = self.proxy {
             arguments.push("--proxy".to_string());
-            arguments.push(format!("'{}'", proxy));
+            arguments.push(format!("'{proxy}'"));
         }
         for resolve in self.resolves.iter() {
             arguments.push("--resolve".to_string());
@@ -132,11 +132,11 @@ impl ClientOptions {
         }
         if let Some(ref user) = self.user {
             arguments.push("--user".to_string());
-            arguments.push(format!("'{}'", user));
+            arguments.push(format!("'{user}'"));
         }
         if let Some(ref user_agent) = self.user_agent {
             arguments.push("--user-agent".to_string());
-            arguments.push(format!("'{}'", user_agent));
+            arguments.push(format!("'{user_agent}'"));
         }
         arguments
     }
@@ -185,7 +185,7 @@ mod tests {
                 "--cookie".to_string(),
                 "cookie_file".to_string(),
                 "--insecure".to_string(),
-                "-L".to_string(),
+                "--location".to_string(),
                 "--max-redirs".to_string(),
                 "10".to_string(),
                 "--proxy".to_string(),

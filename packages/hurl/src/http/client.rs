@@ -37,13 +37,14 @@ use curl::easy::{List, SslOpt};
 use std::str::FromStr;
 use url::Url;
 
+/// Defines an HTTP client to execute HTTP requests.
+///
+/// Most of the methods are delegated to libcurl functions, while some
+/// features are implemented "by hand" (like retry, redirection etc...)
 #[derive(Debug)]
 pub struct Client {
-    pub handle: Box<easy::Easy>,
-    pub redirect_count: usize,
-    // Unfortunately, follow-location feature from libcurl can not be used
-    // libcurl returns a single list of headers for the 2 responses
-    // Hurl needs to keep everything.
+    /// The handle to libcurl binding
+    handle: Box<easy::Easy>,
 }
 
 impl Client {
@@ -61,7 +62,6 @@ impl Client {
 
         Client {
             handle: Box::new(h),
-            redirect_count: 0,
         }
     }
 
@@ -76,40 +76,34 @@ impl Client {
         let mut calls = vec![];
 
         let mut request_spec = request_spec.clone();
-        self.redirect_count = 0;
+
+        // Unfortunately, follow-location feature from libcurl can not be used
+        // libcurl returns a single list of headers for the 2 responses
+        // Hurl needs to keep everything.
+        let mut redirect_count = 0;
         loop {
             let (request, response) = self.execute(&request_spec, options, logger)?;
-            calls.push((request.clone(), response.clone()));
-            if !options.follow_location {
-                break;
-            }
-
             let base_url = request.base_url()?;
-            if let Some(url) = self.get_follow_location(&response, &base_url) {
-                logger.debug("");
-                logger.debug(format!("=> Redirect to {}", url).as_str());
-                logger.debug("");
-                request_spec = RequestSpec {
-                    method: Method::Get,
-                    url,
-                    headers: vec![],
-                    querystring: vec![],
-                    form: vec![],
-                    multipart: vec![],
-                    cookies: vec![],
-                    body: Body::Binary(vec![]),
-                    content_type: None,
-                };
-
-                self.redirect_count += 1;
-                if let Some(max_redirect) = options.max_redirect {
-                    if self.redirect_count > max_redirect {
-                        return Err(HttpError::TooManyRedirect);
-                    }
-                }
-            } else {
+            let redirect_url = self.get_follow_location(&response, &base_url);
+            calls.push((request, response));
+            if !options.follow_location || redirect_url.is_none() {
                 break;
             }
+            let redirect_url = redirect_url.unwrap();
+            logger.debug("");
+            logger.debug(format!("=> Redirect to {redirect_url}").as_str());
+            logger.debug("");
+            redirect_count += 1;
+            if let Some(max_redirect) = options.max_redirect {
+                if redirect_count > max_redirect {
+                    return Err(HttpError::TooManyRedirect);
+                }
+            }
+            request_spec = RequestSpec {
+                method: Method::Get,
+                url: redirect_url,
+                ..Default::default()
+            };
         }
         Ok(calls)
     }
@@ -208,9 +202,7 @@ impl Client {
                     // Return all request headers (not one by one)
                     easy::InfoType::HeaderOut => {
                         let mut lines = split_lines(data);
-                        if verbose {
-                            logger.method_version_out(&lines[0]);
-                        }
+                        logger.debug_method_version_out(&lines[0]);
 
                         // Extracts request headers from libcurl debug info.
                         lines.pop().unwrap(); // Remove last empty line.
@@ -319,6 +311,7 @@ impl Client {
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
         let length = response_body.len();
+        let certificate = None;
         self.handle.reset();
 
         let request = Request {
@@ -334,6 +327,7 @@ impl Client {
             body: response_body,
             duration,
             url,
+            certificate,
         };
 
         if verbose {
@@ -373,12 +367,12 @@ impl Client {
             let url = if url.ends_with('?') {
                 url.to_string()
             } else if url.contains('?') {
-                format!("{}&", url)
+                format!("{url}&")
             } else {
-                format!("{}?", url)
+                format!("{url}?")
             };
             let s = self.url_encode_params(params);
-            format!("{}{}", url, s)
+            format!("{url}{s}")
         }
     }
 
@@ -400,8 +394,7 @@ impl Client {
 
         if request.get_header_values("Content-Type").is_empty() {
             if let Some(ref s) = request.content_type {
-                list.append(format!("Content-Type: {}", s).as_str())
-                    .unwrap();
+                list.append(format!("Content-Type: {s}").as_str()).unwrap();
             } else {
                 // We remove default Content-Type headers added by curl because we want
                 // to explicitly manage this header.
@@ -422,7 +415,7 @@ impl Client {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
             };
-            list.append(format!("User-Agent: {}", user_agent).as_str())
+            list.append(format!("User-Agent: {user_agent}").as_str())
                 .unwrap();
         }
 
@@ -430,7 +423,7 @@ impl Client {
             let user = user.as_bytes();
             let authorization = general_purpose::STANDARD.encode(user);
             if request.get_header_values("Authorization").is_empty() {
-                list.append(format!("Authorization: Basic {}", authorization).as_str())
+                list.append(format!("Authorization: Basic {authorization}").as_str())
                     .unwrap();
             }
         }
@@ -571,7 +564,7 @@ impl Client {
             if let Ok(cookie) = Cookie::from_str(line) {
                 cookies.push(cookie);
             } else {
-                eprintln!("warning: line <{}> can not be parsed as cookie", line);
+                eprintln!("warning: line <{line}> can not be parsed as cookie");
             }
         }
         cookies
@@ -580,7 +573,7 @@ impl Client {
     /// Adds a cookie to the cookie jar.
     pub fn add_cookie(&mut self, cookie: &Cookie, options: &ClientOptions) {
         if options.verbosity.is_some() {
-            eprintln!("* add to cookie store: {}", cookie);
+            eprintln!("* add to cookie store: {cookie}");
         }
         self.handle
             .cookie_list(cookie.to_string().as_str())
@@ -630,7 +623,7 @@ impl Client {
 /// Returns the redirect url.
 fn get_redirect_url(location: &str, base_url: &str) -> String {
     if location.starts_with('/') {
-        format!("{}{}", base_url, location)
+        format!("{base_url}{location}")
     } else {
         location.to_string()
     }
@@ -679,10 +672,7 @@ impl Header {
         match line.find(':') {
             Some(index) => {
                 let (name, value) = line.split_at(index);
-                Some(Header {
-                    name: name.to_string().trim().to_string(),
-                    value: value[1..].to_string().trim().to_string(),
-                })
+                Some(Header::new(name.trim(), value[1..].trim()))
             }
             None => None,
         }
@@ -715,7 +705,7 @@ pub fn decode_header(data: &[u8]) -> Option<String> {
         Err(_) => match ISO_8859_1.decode(data, DecoderTrap::Strict) {
             Ok(s) => Some(s),
             Err(_) => {
-                println!("Error decoding header both UTF-8 and ISO-8859-1 {:?}", data);
+                println!("Error decoding header both UTF-8 and ISO-8859-1 {data:?}");
                 None
             }
         },
@@ -737,17 +727,11 @@ mod tests {
     fn test_parse_header() {
         assert_eq!(
             Header::parse("Foo: Bar\r\n").unwrap(),
-            Header {
-                name: "Foo".to_string(),
-                value: "Bar".to_string(),
-            }
+            Header::new("Foo", "Bar")
         );
         assert_eq!(
             Header::parse("Location: http://localhost:8000/redirected\r\n").unwrap(),
-            Header {
-                name: "Location".to_string(),
-                value: "http://localhost:8000/redirected".to_string(),
-            }
+            Header::new("Location", "http://localhost:8000/redirected")
         );
         assert!(Header::parse("Foo").is_none());
     }

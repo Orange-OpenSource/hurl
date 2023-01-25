@@ -18,10 +18,11 @@
 #![cfg_attr(feature = "strict", deny(warnings))]
 
 pub mod cli;
-pub mod html;
+mod html;
 pub mod http;
-pub mod json;
-pub mod jsonpath;
+mod json;
+mod jsonpath;
+pub mod output;
 pub mod report;
 pub mod runner;
 pub mod util;

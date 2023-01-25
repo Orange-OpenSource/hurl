@@ -23,6 +23,11 @@ use crate::http::{
 use crate::runner::{AssertResult, Call, CaptureResult, EntryResult, HurlResult};
 
 impl HurlResult {
+    /// Serializes an [`HurlResult`] to a JSON representation.
+    ///
+    /// Note: `content` is passed to this method to save asserts and
+    /// errors messages (with lines and columns). This parameter will be removed
+    /// soon and the original content will be accessible through the [`HurlResult`] instance.
     pub fn to_json(&self, content: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(

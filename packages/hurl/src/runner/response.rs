@@ -105,7 +105,7 @@ pub fn eval_asserts(
                         "[{}]",
                         actuals
                             .iter()
-                            .map(|v| format!("\"{}\"", v))
+                            .map(|v| format!("\"{v}\""))
                             .collect::<Vec<String>>()
                             .join(", ")
                     );
@@ -146,7 +146,7 @@ fn eval_implicit_body_asserts(
 ) -> AssertResult {
     match &spec_body.value {
         Bytes::Json(value) => {
-            let expected = match eval_json_value(value, variables) {
+            let expected = match eval_json_value(value, variables, true) {
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(e),
             };

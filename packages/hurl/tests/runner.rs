@@ -123,11 +123,7 @@ fn test_hello() {
     let content = "";
     let filename = "filename";
     let mut builder = LoggerBuilder::new();
-    let logger = builder
-        .filename(filename)
-        .content(&content)
-        .build()
-        .unwrap();
+    let logger = builder.filename(filename).content(content).build().unwrap();
 
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },

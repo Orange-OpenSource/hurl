@@ -46,7 +46,7 @@ pub struct Param {
 impl fmt::Display for Cookie {
     /// Formats this cookie using Netscape cookie format.
     ///
-    /// http://www.cookiecentral.com/faq/#3.5
+    /// <http://www.cookiecentral.com/faq/#3.5>
     ///
     /// > The layout of Netscape's cookies.txt file is such that each line contains one name-value
     /// > pair. An example cookies.txt file may have an entry that looks like this:

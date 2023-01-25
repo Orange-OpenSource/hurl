@@ -60,7 +60,7 @@ impl Error for parser::Error {
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             ParseError::Multiline => "Parsing multiline".to_string(),
             ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
-            _ => format!("{:?}", self),
+            _ => format!("{self:?}"),
         }
     }
 
@@ -75,7 +75,7 @@ impl Error for parser::Error {
             ParseError::Version { .. } => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
             ParseError::Status { .. } => "HTTP status code is not valid".to_string(),
             ParseError::Filename { .. } => "expecting a filename".to_string(),
-            ParseError::Expecting { value } => format!("expecting '{}'", value),
+            ParseError::Expecting { value } => format!("expecting '{value}'"),
             ParseError::Space { .. } => "expecting a space".to_string(),
             ParseError::RequestSectionName { name }
             => format!("the section is not valid. {}", did_you_mean(
@@ -95,7 +95,7 @@ impl Error for parser::Error {
             ParseError::Json { .. } => "JSON error".to_string(),
             ParseError::Predicate { .. } => "expecting a predicate".to_string(),
             ParseError::PredicateValue { .. } => "invalid predicate value".to_string(),
-            ParseError::RegexExpr { message } => format!("invalid Regex expression: {}", message),
+            ParseError::RegexExpr { message } => format!("invalid Regex expression: {message}"),
             ParseError::DuplicateSection { .. } => "the section is already defined".to_string(),
             ParseError::RequestSection { .. } => {
                 "this is not a valid section for a request".to_string()
@@ -110,10 +110,10 @@ impl Error for parser::Error {
             ParseError::OddNumberOfHexDigits { .. } => {
                 "expecting an even number of hex digits".to_string()
             }
-            ParseError::UrlIllegalCharacter(c) => format!("illegal character <{}>", c),
+            ParseError::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
             ParseError::Multiline => "the multiline is not valid".to_string(),
             ParseError::GraphQlVariables => "GraphQL variables is not a valid JSON object".to_string(),
-            _ => format!("{:?}", self),
+            _ => format!("{self:?}"),
 
         }
     }
@@ -121,7 +121,7 @@ impl Error for parser::Error {
 
 fn did_you_mean(valid_values: &[&str], actual: &str, default: &str) -> String {
     if let Some(suggest) = suggestion(valid_values, actual) {
-        format!("Did you mean {}?", suggest)
+        format!("Did you mean {suggest}?")
     } else {
         default.to_string()
     }

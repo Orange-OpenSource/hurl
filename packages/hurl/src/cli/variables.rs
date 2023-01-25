@@ -22,7 +22,7 @@ use crate::runner::Value;
 pub fn parse(s: &str) -> Result<(String, Value), CliError> {
     match s.find('=') {
         None => Err(CliError {
-            message: format!("Missing value for variable {}!", s),
+            message: format!("Missing value for variable {s}!"),
         }),
         Some(index) => {
             let (name, value) = s.split_at(index);

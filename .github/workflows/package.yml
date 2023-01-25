@@ -37,7 +37,7 @@ jobs:
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
-        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
     - name: Test integ
@@ -108,9 +108,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   test-generic-linux-docker-archlinux-x64:
     needs: package-generic-linux-x64
@@ -154,9 +152,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   test-generic-linux-docker-fedora-x64:
     needs: package-generic-linux-x64
@@ -200,9 +196,7 @@ jobs:
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
         path: |
-          integration/mitmdump.log
-          integration/server.log
-          integration/server-ssl.log
+          ./**/*.log
 
   package-deb-x64:
     runs-on: ubuntu-18.04
@@ -228,7 +222,7 @@ jobs:
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
-        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
     - name: Test integ
@@ -348,6 +342,12 @@ jobs:
         .\bin\release\install_windows64_installer.ps1
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
+    - name: Archive logs artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: log-windows-x64-artifacts
+        path: |
+          .\**\*.log
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:

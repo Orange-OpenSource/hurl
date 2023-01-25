@@ -14,7 +14,7 @@
 * POST http://localhost:8000/jobs
 *
 * Request can be run with the following curl command:
-* curl -X POST 'http://localhost:8000/jobs'
+* curl --request POST 'http://localhost:8000/jobs'
 *
 > POST /jobs HTTP/1.1
 > Host: localhost:8000
@@ -222,7 +222,7 @@
 * DELETE http://localhost:8000/jobs/~~~
 *
 * Request can be run with the following curl command:
-* curl -X DELETE 'http://localhost:8000/jobs/~~~'
+* curl --request DELETE 'http://localhost:8000/jobs/~~~'
 *
 > DELETE /jobs/~~~ HTTP/1.1
 > Host: localhost:8000

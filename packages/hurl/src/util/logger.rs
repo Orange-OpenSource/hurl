@@ -24,56 +24,44 @@ use std::cmp::max;
 /// A simple logger to log app related event (start, high levels error, etc...).
 /// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
 pub struct BaseLogger {
-    pub info: fn(&str),
-    pub debug: fn(&str),
-    pub warning: fn(&str),
-    pub error: fn(&str),
+    pub color: bool,
+    pub verbose: bool,
 }
 
 impl BaseLogger {
     pub fn new(color: bool, verbose: bool) -> BaseLogger {
-        match (color, verbose) {
-            (true, true) => BaseLogger {
-                info: log_info,
-                debug: log_debug,
-                warning: log_warning,
-                error: log_error,
-            },
-            (false, true) => BaseLogger {
-                info: log_info,
-                debug: log_debug_no_color,
-                warning: log_warning_no_color,
-                error: log_error_no_color,
-            },
-            (true, false) => BaseLogger {
-                info: log_info,
-                debug: |_| {},
-                warning: log_warning,
-                error: log_error,
-            },
-            (false, false) => BaseLogger {
-                info: log_info,
-                debug: |_| {},
-                warning: log_warning_no_color,
-                error: log_error_no_color,
-            },
-        }
+        BaseLogger { color, verbose }
     }
 
     pub fn info(&self, message: &str) {
-        (self.info)(message)
+        log_info(message)
     }
 
     pub fn debug(&self, message: &str) {
-        (self.debug)(message)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug(message)
+        } else {
+            log_debug_no_color(message)
+        }
     }
 
     pub fn warning(&self, message: &str) {
-        (self.warning)(message)
+        if self.color {
+            log_warning(message)
+        } else {
+            log_warning_no_color(message)
+        }
     }
 
     pub fn error(&self, message: &str) {
-        (self.error)(message)
+        if self.color {
+            log_error(message)
+        } else {
+            log_error_no_color(message)
+        }
     }
 }
 
@@ -81,22 +69,10 @@ impl BaseLogger {
 /// rich error for parsing and runtime errors. As the rich errors can display user content,
 /// this logger should have access to the content of the file being run.
 pub struct Logger<'a> {
-    info: fn(&str),
-    debug: fn(&str),
-    debug_curl: fn(&str),
-    debug_error: fn(&str, &str, &dyn Error),
-    debug_header_in: fn(&str, &str),
-    debug_header_out: fn(&str, &str),
-    debug_important: fn(&str),
-    debug_method_version_out: fn(&str),
-    debug_status_version_in: fn(&str),
-    warning: fn(&str),
-    error: fn(&str),
-    error_rich: fn(&str, &str, &dyn Error),
-    capture: fn(&str, &Value),
-    test_running: fn(&str, usize, usize),
-    test_completed: fn(result: &HurlResult),
     pub(crate) color: bool,
+    pub(crate) verbose: bool,
+    pub(crate) progress_bar: bool,
+    pub(crate) test: bool,
     pub(crate) filename: &'a str,
     pub(crate) content: &'a str,
 }
@@ -105,6 +81,8 @@ pub struct Logger<'a> {
 pub struct LoggerBuilder<'a> {
     color: bool,
     verbose: bool,
+    progress_bar: bool,
+    test: bool,
     filename: Option<&'a str>,
     content: Option<&'a str>,
 }
@@ -139,6 +117,18 @@ impl<'a> LoggerBuilder<'a> {
         self
     }
 
+    /// Sets progress bar.
+    pub fn progress_bar(&mut self, progress_bar: bool) -> &mut Self {
+        self.progress_bar = progress_bar;
+        self
+    }
+
+    /// Sets test.
+    pub fn test(&mut self, test: bool) -> &mut Self {
+        self.test = test;
+        self
+    }
+
     /// Creates a new logger.
     pub fn build(&self) -> Result<Logger, &'static str> {
         if self.filename.is_none() {
@@ -148,156 +138,187 @@ impl<'a> LoggerBuilder<'a> {
             return Err("content is not set");
         }
 
-        let logger = match (self.color, self.verbose) {
-            (true, true) => Logger {
-                info: log_info,
-                debug: log_debug,
-                debug_curl: log_debug_curl,
-                debug_error: log_debug_error,
-                debug_header_in: log_debug_header_in,
-                debug_header_out: log_debug_header_out,
-                debug_important: log_debug_important,
-                debug_method_version_out: log_debug_method_version_out,
-                debug_status_version_in: log_debug_status_version_in,
-                warning: log_warning,
-                error: log_error,
-                error_rich: log_error_rich,
-                capture: log_capture,
-                test_running: log_test_running,
-                test_completed: log_test_completed,
-                color: self.color,
-                filename: self.filename.unwrap(),
-                content: self.content.unwrap(),
-            },
-            (false, true) => Logger {
-                info: log_info,
-                debug: log_debug_no_color,
-                debug_curl: log_debug_curl_no_color,
-                debug_error: log_debug_error_no_color,
-                debug_header_in: log_debug_header_in_no_color,
-                debug_header_out: log_debug_header_out_no_color,
-                debug_important: log_debug_no_color,
-                debug_method_version_out: log_debug_method_version_out_no_color,
-                debug_status_version_in: log_debug_status_version_in_no_color,
-                warning: log_warning_no_color,
-                error: log_error_no_color,
-                error_rich: log_error_rich_no_color,
-                capture: log_capture_no_color,
-                test_running: log_test_running_no_color,
-                test_completed: log_test_completed_no_color,
-                color: self.color,
-                filename: self.filename.unwrap(),
-                content: self.content.unwrap(),
-            },
-            (true, false) => Logger {
-                info: log_info,
-                debug: |_| {},
-                debug_curl: |_| {},
-                debug_error: |_, _, _| {},
-                debug_header_in: |_, _| {},
-                debug_header_out: |_, _| {},
-                debug_important: |_| {},
-                debug_method_version_out: |_| {},
-                debug_status_version_in: |_| {},
-                warning: log_warning,
-                error: log_error,
-                error_rich: log_error_rich,
-                capture: |_, _| {},
-                test_running: log_test_running,
-                test_completed: log_test_completed,
-                color: self.color,
-                filename: self.filename.unwrap(),
-                content: self.content.unwrap(),
-            },
-            (false, false) => Logger {
-                info: log_info,
-                debug: |_| {},
-                debug_curl: |_| {},
-                debug_error: |_, _, _| {},
-                debug_header_in: |_, _| {},
-                debug_header_out: |_, _| {},
-                debug_important: |_| {},
-                debug_method_version_out: |_| {},
-                debug_status_version_in: |_| {},
-                warning: log_warning_no_color,
-                error: log_error_no_color,
-                error_rich: log_error_rich_no_color,
-                capture: |_, _| {},
-                test_running: log_test_running_no_color,
-                test_completed: log_test_completed_no_color,
-                color: self.color,
-                filename: self.filename.unwrap(),
-                content: self.content.unwrap(),
-            },
-        };
-        Ok(logger)
+        Ok(Logger {
+            color: self.color,
+            verbose: self.verbose,
+            progress_bar: self.progress_bar,
+            test: self.test,
+            filename: self.filename.unwrap(),
+            content: self.content.unwrap(),
+        })
     }
 }
 
 impl<'a> Logger<'a> {
     pub fn info(&self, message: &str) {
-        (self.info)(message)
+        log_info(message)
     }
 
     pub fn debug(&self, message: &str) {
-        (self.debug)(message)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug(message)
+        } else {
+            log_debug_no_color(message)
+        }
     }
 
     pub fn debug_curl(&self, message: &str) {
-        (self.debug_curl)(message)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_curl(message)
+        } else {
+            log_debug_curl_no_color(message)
+        }
     }
 
     pub fn debug_error(&self, error: &dyn Error) {
-        (self.debug_error)(self.filename, self.content, error)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_error(self.filename, self.content, error)
+        } else {
+            log_debug_error_no_color(self.filename, self.content, error)
+        }
     }
 
     pub fn debug_header_in(&self, name: &str, value: &str) {
-        (self.debug_header_in)(name, value)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_header_in(name, value)
+        } else {
+            log_debug_header_in_no_color(name, value)
+        }
     }
 
     pub fn debug_header_out(&self, name: &str, value: &str) {
-        (self.debug_header_out)(name, value)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_header_out(name, value)
+        } else {
+            log_debug_header_out_no_color(name, value)
+        }
     }
 
     pub fn debug_important(&self, message: &str) {
-        (self.debug_important)(message)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_important(message)
+        } else {
+            log_debug_no_color(message)
+        }
     }
 
     pub fn debug_status_version_in(&self, line: &str) {
-        (self.debug_status_version_in)(line)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_status_version_in(line)
+        } else {
+            log_debug_status_version_in_no_color(line)
+        }
     }
 
     pub fn warning(&self, message: &str) {
-        (self.warning)(message)
+        if self.color {
+            log_warning(message)
+        } else {
+            log_warning_no_color(message)
+        }
     }
 
     pub fn error(&self, message: &str) {
-        (self.error)(message)
+        if self.color {
+            log_error(message)
+        } else {
+            log_error_no_color(message)
+        }
     }
 
     pub fn error_rich(&self, error: &dyn Error) {
-        (self.error_rich)(self.filename, self.content, error)
+        if self.color {
+            log_error_rich(self.filename, self.content, error)
+        } else {
+            log_error_rich_no_color(self.filename, self.content, error)
+        }
     }
 
-    pub fn method_version_out(&self, line: &str) {
-        (self.debug_method_version_out)(line)
+    pub fn debug_method_version_out(&self, line: &str) {
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_debug_method_version_out(line)
+        } else {
+            log_debug_method_version_out_no_color(line)
+        }
     }
 
     pub fn capture(&self, name: &str, value: &Value) {
-        (self.capture)(name, value)
+        if !self.verbose {
+            return;
+        }
+        if self.color {
+            log_capture(name, value)
+        } else {
+            log_capture_no_color(name, value)
+        }
     }
 
     pub fn test_running(&self, current: usize, total: usize) {
-        (self.test_running)(self.filename, current, total)
+        if !self.test {
+            return;
+        }
+        if self.color {
+            log_test_running(self.filename, current, total)
+        } else {
+            log_test_running_no_color(self.filename, current, total)
+        }
+    }
+
+    pub fn test_progress(&self, entry_index: usize, count: usize) {
+        if !self.progress_bar {
+            return;
+        }
+        log_test_progress(entry_index, count)
     }
 
     pub fn test_completed(&self, result: &HurlResult) {
-        (self.test_completed)(result)
+        if !self.test {
+            return;
+        }
+        if self.color {
+            log_test_completed(result)
+        } else {
+            log_test_completed_no_color(result)
+        }
+    }
+
+    pub fn test_erase_line(&self) {
+        if !self.progress_bar {
+            return;
+        }
+        // This is the "EL - Erase in Line" sequence. It clears from the cursor
+        // to the end of line.
+        // https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_sequences
+        eprint!("\x1B[K");
     }
 }
 
 fn log_info(message: &str) {
-    eprintln!("{}", message);
+    eprintln!("{message}");
 }
 
 fn log_debug(message: &str) {
@@ -312,7 +333,7 @@ fn log_debug_no_color(message: &str) {
     if message.is_empty() {
         eprintln!("*");
     } else {
-        eprintln!("* {}", message);
+        eprintln!("* {message}");
     }
 }
 
@@ -328,7 +349,7 @@ fn log_debug_curl_no_color(message: &str) {
     if message.is_empty() {
         eprintln!("**");
     } else {
-        eprintln!("** {}", message);
+        eprintln!("** {message}");
     }
 }
 
@@ -357,7 +378,7 @@ fn log_debug_header_in(name: &str, value: &str) {
 }
 
 fn log_debug_header_in_no_color(name: &str, value: &str) {
-    eprintln!("< {}: {}", name, value)
+    eprintln!("< {name}: {value}")
 }
 
 fn log_debug_header_out(name: &str, value: &str) {
@@ -365,7 +386,7 @@ fn log_debug_header_out(name: &str, value: &str) {
 }
 
 fn log_debug_header_out_no_color(name: &str, value: &str) {
-    eprintln!("> {}: {}", name, value)
+    eprintln!("> {name}: {value}")
 }
 
 fn log_debug_method_version_out(line: &str) {
@@ -373,7 +394,7 @@ fn log_debug_method_version_out(line: &str) {
 }
 
 fn log_debug_method_version_out_no_color(line: &str) {
-    eprintln!("> {}", line)
+    eprintln!("> {line}")
 }
 
 fn log_debug_status_version_in(line: &str) {
@@ -381,7 +402,7 @@ fn log_debug_status_version_in(line: &str) {
 }
 
 fn log_debug_status_version_in_no_color(line: &str) {
-    eprintln!("< {}", line)
+    eprintln!("< {line}")
 }
 
 fn log_warning(message: &str) {
@@ -389,7 +410,7 @@ fn log_warning(message: &str) {
 }
 
 fn log_warning_no_color(message: &str) {
-    eprintln!("warning: {}", message);
+    eprintln!("warning: {message}");
 }
 
 fn log_error(message: &str) {
@@ -397,7 +418,7 @@ fn log_error(message: &str) {
 }
 
 fn log_error_no_color(message: &str) {
-    eprintln!("error: {}", message);
+    eprintln!("error: {message}");
 }
 
 fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
@@ -415,7 +436,7 @@ fn log_capture(name: &str, value: &Value) {
 }
 
 fn log_capture_no_color(name: &str, value: &Value) {
-    eprintln!("* {}: {}", name, value)
+    eprintln!("* {name}: {value}")
 }
 
 fn log_test_running(filename: &str, current: usize, total: usize) {
@@ -429,7 +450,27 @@ fn log_test_running(filename: &str, current: usize, total: usize) {
 }
 
 fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
-    eprintln!("{}: Running [{}/{}]", filename, current, total)
+    eprintln!("{filename}: Running [{current}/{total}]")
+}
+
+fn log_test_progress(entry_index: usize, count: usize) {
+    let progress = progress_string(entry_index, count);
+    eprint!(" {progress}\r");
+}
+
+/// Returns the progress string with the current entry at `entry_index`.
+fn progress_string(entry_index: usize, count: usize) -> String {
+    const WIDTH: usize = 24;
+    // We report the number of entries already processed.
+    let progress = (entry_index - 1) as f64 / count as f64;
+    let col = (progress * WIDTH as f64) as usize;
+    let completed = if col > 0 {
+        "=".repeat(col)
+    } else {
+        "".to_string()
+    };
+    let void = " ".repeat(WIDTH - col - 1);
+    format!("[{completed}>{void}] {entry_index}/{count}")
 }
 
 fn log_test_completed(result: &HurlResult) {
@@ -539,18 +580,14 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     };
 
     let width = line_number_size;
-    let mut line_number = format!(
-        "{line_number:>width$}",
-        line_number = line_number,
-        width = width
-    );
+    let mut line_number = format!("{line_number:>width$}");
     if colored {
         line_number = line_number.blue().bold().to_string();
     }
     let line = if line.is_empty() {
         line
     } else {
-        format!(" {}", line)
+        format!(" {line}")
     };
 
     format!(
@@ -577,7 +614,7 @@ fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
             if colored {
                 format!("{}{}", prefix, line.red().bold())
             } else {
-                format!("{}{}", prefix, line)
+                format!("{prefix}{line}")
             }
         })
         .collect::<Vec<String>>()
@@ -706,5 +743,25 @@ HTTP/1.0 200
 >
    |"#
         )
+    }
+
+    #[rustfmt::skip]
+    #[test]
+    fn test_progress_string() {
+        // Progress strings with 20 entries:
+        assert_eq!(progress_string(1,  20), "[>                       ] 1/20");
+        assert_eq!(progress_string(2,  20), "[=>                      ] 2/20");
+        assert_eq!(progress_string(5,  20), "[====>                   ] 5/20");
+        assert_eq!(progress_string(10, 20), "[==========>             ] 10/20");
+        assert_eq!(progress_string(15, 20), "[================>       ] 15/20");
+        assert_eq!(progress_string(20, 20), "[======================> ] 20/20");
+
+        // Progress strings with 3 entries:
+        assert_eq!(progress_string(1, 3), "[>                       ] 1/3");
+        assert_eq!(progress_string(2, 3), "[========>               ] 2/3");
+        assert_eq!(progress_string(3, 3), "[================>       ] 3/3");
+
+        // Progress strings with 1 entries:
+        assert_eq!(progress_string(1, 1), "[>                       ] 1/1");
     }
 }

@@ -45,21 +45,21 @@ impl RequestSpec {
                 if content_type.as_str() != "application/x-www-form-urlencoded"
                     && content_type.as_str() != "multipart/form-data"
                 {
-                    arguments.push("-H".to_string());
-                    arguments.push(format!("'Content-Type: {}'", content_type));
+                    arguments.push("--header".to_string());
+                    arguments.push(format!("'Content-Type: {content_type}'"));
                 }
             } else if !self.body.bytes().is_empty() {
                 match self.body.clone() {
                     Body::Text(_) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type:'".to_string())
                     }
                     Body::Binary(_) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type: application/octet-stream'".to_string())
                     }
                     Body::File(_, _) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type:'".to_string())
                     }
                 }
@@ -71,7 +71,7 @@ impl RequestSpec {
             arguments.push(format!("'{}'", param.curl_arg_escape()));
         }
         for param in self.multipart.clone() {
-            arguments.push("-F".to_string());
+            arguments.push("--form".to_string());
             arguments.push(format!("'{}'", param.curl_arg(context_dir)));
         }
 
@@ -97,14 +97,14 @@ impl RequestSpec {
         } else {
             format!("{}?{}", self.url, querystring)
         };
-        arguments.push(format!("'{}'", url));
+        arguments.push(format!("'{url}'"));
 
         arguments
     }
 }
 
 fn encode_byte(b: u8) -> String {
-    format!("\\x{:02x}", b)
+    format!("\\x{b:02x}")
 }
 
 fn encode_bytes(b: Vec<u8>) -> String {
@@ -116,7 +116,7 @@ impl Method {
         match self {
             Method::Get => {
                 if data {
-                    vec!["-X".to_string(), "GET".to_string()]
+                    vec!["--request".to_string(), "GET".to_string()]
                 } else {
                     vec![]
                 }
@@ -126,10 +126,10 @@ impl Method {
                 if data {
                     vec![]
                 } else {
-                    vec!["-X".to_string(), "POST".to_string()]
+                    vec!["--request".to_string(), "POST".to_string()]
                 }
             }
-            _ => vec!["-X".to_string(), self.to_string()],
+            _ => vec!["--request".to_string(), self.to_string()],
         }
     }
 }
@@ -139,23 +139,23 @@ impl Header {
         let name = self.name.clone();
         let value = self.value.clone();
         vec![
-            "-H".to_string(),
-            encode_shell_string(format!("{}: {}", name, value).as_str()),
+            "--header".to_string(),
+            encode_shell_string(format!("{name}: {value}").as_str()),
         ]
     }
 }
 
 impl Param {
     pub fn curl_arg_escape(&self) -> String {
-        let name = self.name.clone();
-        let value = escape_url(self.value.clone());
-        format!("{}={}", name, value)
+        let name = &self.name;
+        let value = escape_url(&self.value);
+        format!("{name}={value}")
     }
 
     pub fn curl_arg(&self) -> String {
-        let name = self.name.clone();
-        let value = self.value.clone();
-        format!("{}={}", name, value)
+        let name = &self.name;
+        let value = &self.value;
+        format!("{name}={value}")
     }
 }
 
@@ -171,7 +171,7 @@ impl MultipartParam {
             }) => {
                 let path = context_dir.get_path(filename);
                 let value = format!("@{};type={}", path.to_str().unwrap(), content_type);
-                format!("{}={}", name, value)
+                format!("{name}={value}")
             }
         }
     }
@@ -190,7 +190,7 @@ impl Body {
     }
 }
 
-fn escape_url(s: String) -> String {
+fn escape_url(s: &str) -> String {
     percent_encoding::percent_encode(s.as_bytes(), percent_encoding::NON_ALPHANUMERIC).to_string()
 }
 
@@ -198,9 +198,9 @@ fn encode_shell_string(s: &str) -> String {
     // $'...' form will be used to encode escaped sequence
     if escape_mode(s) {
         let escaped = escape_string(s);
-        format!("$'{}'", escaped)
+        format!("$'{escaped}'")
     } else {
-        format!("'{}'", s)
+        format!("'{s}'")
     }
 }
 
@@ -248,42 +248,37 @@ pub mod tests {
         assert!(Method::Get.curl_args(false).is_empty());
         assert_eq!(
             Method::Get.curl_args(true),
-            vec!["-X".to_string(), "GET".to_string()]
+            vec!["--request".to_string(), "GET".to_string()]
         );
 
         assert_eq!(
             Method::Post.curl_args(false),
-            vec!["-X".to_string(), "POST".to_string()]
+            vec!["--request".to_string(), "POST".to_string()]
         );
         assert!(Method::Post.curl_args(true).is_empty());
 
         assert_eq!(
             Method::Put.curl_args(false),
-            vec!["-X".to_string(), "PUT".to_string()]
+            vec!["--request".to_string(), "PUT".to_string()]
         );
         assert_eq!(
             Method::Put.curl_args(true),
-            vec!["-X".to_string(), "PUT".to_string()]
+            vec!["--request".to_string(), "PUT".to_string()]
         );
     }
 
     #[test]
     fn header_curl_args() {
         assert_eq!(
-            Header {
-                name: "Host".to_string(),
-                value: "example.com".to_string(),
-            }
-            .curl_args(),
-            vec!["-H".to_string(), "'Host: example.com'".to_string()]
+            Header::new("Host", "example.com").curl_args(),
+            vec!["--header".to_string(), "'Host: example.com'".to_string()]
         );
         assert_eq!(
-            Header {
-                name: "If-Match".to_string(),
-                value: "\"e0023aa4e\"".to_string(),
-            }
-            .curl_args(),
-            vec!["-H".to_string(), "'If-Match: \"e0023aa4e\"'".to_string()]
+            Header::new("If-Match", "\"e0023aa4e\"").curl_args(),
+            vec![
+                "--header".to_string(),
+                "'If-Match: \"e0023aa4e\"'".to_string()
+            ]
         );
     }
 
@@ -333,9 +328,9 @@ pub mod tests {
         assert_eq!(
             custom_http_request().curl_args(context_dir),
             vec![
-                "-H".to_string(),
+                "--header".to_string(),
                 "'User-Agent: iPhone'".to_string(),
-                "-H".to_string(),
+                "--header".to_string(),
                 "'Foo: Bar'".to_string(),
                 "'http://localhost/custom'".to_string(),
             ]
@@ -349,7 +344,7 @@ pub mod tests {
         assert_eq!(
             form_http_request().curl_args(context_dir),
             vec![
-                "-H".to_string(),
+                "--header".to_string(),
                 "'Content-Type: application/x-www-form-urlencoded'".to_string(),
                 "--data".to_string(),
                 "'param1=value1'".to_string(),

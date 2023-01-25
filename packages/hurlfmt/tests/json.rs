@@ -254,7 +254,7 @@ fn format_token(token: Token) -> String {
         | Token::QueryType(s)
         | Token::CodeVariable(s)
         | Token::CodeDelimiter(s) => s,
-        _ => panic!("invalid token {:?}", token),
+        _ => panic!("invalid token {token:?}"),
     }
 }
 
@@ -276,7 +276,7 @@ fn test_echo() {
         .run(&value(), |value| {
             //eprintln!("value={:#?}", value);
             let s = format_value(value);
-            eprintln!("s={}", s);
+            eprintln!("s={s}");
             let mut reader = Reader::init(s.as_str());
             let parsed_value = parse_json(&mut reader).unwrap();
             assert_eq!(format_value(parsed_value), s);

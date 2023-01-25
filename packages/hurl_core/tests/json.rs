@@ -30,7 +30,7 @@ fn debug() {
 #[test]
 fn test_echo() {
     for file in json_files() {
-        eprintln!("{}", file);
+        eprintln!("{file}");
         let content = read_content(file);
         let value = parse_json(content.to_string()).unwrap();
         assert_eq!(value.encoded(), content);

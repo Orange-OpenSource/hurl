@@ -156,7 +156,7 @@ See also [`--key`](#key).
 
 ### --color {#color}
 
-Colorize Output.
+Colorize debug output (the HTTP response output is not colorized). 
 
 ### --compressed {#compressed}
 
@@ -362,15 +362,15 @@ Environment variables can only be specified in lowercase.
 
 Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
 
-### http_proxy [protocol://]<host>[:port]
+### http_proxy [PROTOCOL://]<HOST>[:PORT]
 
 Sets the proxy server to use for HTTP.
 
-### https_proxy [protocol://]<host>[:port]
+### https_proxy [PROTOCOL://]<HOST>[:PORT]
 
 Sets the proxy server to use for HTTPS.
 
-### all_proxy [protocol://]<host>[:port]
+### all_proxy [PROTOCOL://]<HOST>[:PORT]
 
 Sets the proxy server to use if no protocol-specific proxy is set.
 

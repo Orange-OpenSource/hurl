@@ -145,7 +145,7 @@ fn main() {
         println!();
         process::exit(1);
     } else if filename != "-" && !Path::new(&filename).exists() {
-        eprintln!("Input file {} does not exit!", filename);
+        eprintln!("Input file {filename} does not exit!");
         process::exit(1);
     };
 
@@ -168,7 +168,7 @@ fn main() {
         if let Err(e) = io::stdin().read_to_string(&mut contents) {
             log_error_message(
                 false,
-                format!("Input stream can not be read - {}", e).as_str(),
+                format!("Input stream can not be read - {e}").as_str(),
             );
             process::exit(2);
         }
@@ -233,14 +233,14 @@ fn main() {
                         let standalone = cli::has_flag(&matches, "standalone");
                         hurl_core::format::format_html(hurl_file, standalone)
                     }
-                    "ast" => format!("{:#?}", hurl_file),
+                    "ast" => format!("{hurl_file:#?}"),
                     _ => {
                         eprintln!("Invalid output option - expecting text, html or json");
                         process::exit(1);
                     }
                 };
                 let output = if !output.ends_with('\n') && !cli::has_flag(&matches, "no_format") {
-                    format!("{}\n", output)
+                    format!("{output}\n")
                 } else {
                     output
                 };

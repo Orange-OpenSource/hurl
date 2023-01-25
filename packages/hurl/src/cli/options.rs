@@ -418,7 +418,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         None => None,
         Some(filename) => {
             if !Path::new(&filename).is_file() {
-                let message = format!("File {} does not exist", filename);
+                let message = format!("File {filename} does not exist");
                 return Err(CliError { message });
             } else {
                 Some(filename)
@@ -429,7 +429,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         None => None,
         Some(filename) => {
             if !Path::new(&filename).is_file() {
-                let message = format!("File {} does not exist", filename);
+                let message = format!("File {filename} does not exist");
                 return Err(CliError { message });
             } else {
                 Some(filename)
@@ -440,7 +440,7 @@ pub fn parse_options(matches: &ArgMatches) -> Result<CliOptions, CliError> {
         None => None,
         Some(filename) => {
             if !Path::new(&filename).is_file() {
-                let message = format!("File {} does not exist", filename);
+                let message = format!("File {filename} does not exist");
                 return Err(CliError { message });
             } else {
                 Some(filename)

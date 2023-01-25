@@ -18,6 +18,7 @@
 
 use core::fmt;
 
+/// Represents an HTTP header
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Header {
     pub name: String,
@@ -27,6 +28,15 @@ pub struct Header {
 impl fmt::Display for Header {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}: {}", self.name, self.value)
+    }
+}
+
+impl Header {
+    pub fn new(name: &str, value: &str) -> Self {
+        Header {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
     }
 }
 

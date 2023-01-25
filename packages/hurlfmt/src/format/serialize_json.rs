@@ -45,7 +45,7 @@ impl JValue {
                     .map(|e| e.clone().format())
                     .collect::<Vec<String>>()
                     .join(",");
-                format!("[{}]", s)
+                format!("[{s}]")
             }
             JValue::Object(key_values) => {
                 let s = key_values
@@ -53,7 +53,7 @@ impl JValue {
                     .map(|(k, v)| format!("\"{}\":{}", k, v.clone().format()))
                     .collect::<Vec<String>>()
                     .join(",");
-                format!("{{{}}}", s)
+                format!("{{{s}}}")
             }
         }
     }

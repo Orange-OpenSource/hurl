@@ -17,14 +17,14 @@
  */
 use std::fmt;
 
+/// System types used in Hurl.
 ///
-/// Type system used in hurl
-/// Values are used by queries, captures, asserts and predicates
-///
+/// Values are used by queries, captures, asserts and predicates.
 #[derive(Clone, Debug)]
 pub enum Value {
     Bool(bool),
     Bytes(Vec<u8>),
+    Date(chrono::DateTime<chrono::Utc>),
     Float(f64),
     Integer(i64),
     List(Vec<Value>),
@@ -50,6 +50,7 @@ impl PartialEq for Value {
             (Value::Object(v1), Value::Object(v2)) => v1 == v2,
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
+            (Value::Date(v1), Value::Date(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -62,6 +63,7 @@ impl fmt::Display for Value {
         let value = match self {
             Value::Integer(x) => x.to_string(),
             Value::Bool(x) => x.to_string(),
+            Value::Date(v) => v.to_string(),
             Value::Float(f) => format_float(*f),
             Value::String(x) => x.clone(),
             Value::List(values) => {
@@ -69,22 +71,22 @@ impl fmt::Display for Value {
                 format!("[{}]", values.join(","))
             }
             Value::Object(_) => "Object()".to_string(),
-            Value::Nodeset(x) => format!("Nodeset{:?}", x),
+            Value::Nodeset(x) => format!("Nodeset{x:?}"),
             Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Null => "null".to_string(),
             Value::Unit => "Unit".to_string(),
             Value::Regex(x) => {
                 let s = str::replace(x.as_str(), "/", "\\/");
-                format!("/{}/", s)
+                format!("/{s}/")
             }
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 
 fn format_float(value: f64) -> String {
     if value.fract() < f64::EPSILON {
-        format!("{}.0", value)
+        format!("{value}.0")
     } else {
         value.to_string()
     }
@@ -95,6 +97,7 @@ impl Value {
         match self {
             Value::Integer(_) => "integer".to_string(),
             Value::Bool(_) => "boolean".to_string(),
+            Value::Date(_) => "date".to_string(),
             Value::Float(_) => "float".to_string(),
             Value::String(_) => "string".to_string(),
             Value::List(_) => "list".to_string(),

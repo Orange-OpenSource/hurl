@@ -122,7 +122,7 @@ def test(hurl_file: str):
         expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
         actual_lines = actual.split("\n")
         if len(actual_lines) != len(expected_pattern_lines):
-            print(">>> error in stderr / mismatch in number of lines")
+            print(">>> error in stdout / mismatch in number of lines")
             print(
                 f"actual: {len(actual_lines)} lines\nexpected: {len(expected_lines)} lines"
             )

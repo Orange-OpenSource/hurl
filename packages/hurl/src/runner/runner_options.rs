@@ -159,7 +159,7 @@ impl RunnerOptionsBuilder {
 
     /// Sets follow redirect.
     ///
-    /// To limit the amount of redirects to follow use [`max_redirect`]
+    /// To limit the amount of redirects to follow use [`self.max_redirect()`]
     pub fn follow_location(&mut self, follow_location: bool) -> &mut Self {
         self.follow_location = follow_location;
         self

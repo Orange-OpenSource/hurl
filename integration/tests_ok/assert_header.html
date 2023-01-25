@@ -9,6 +9,8 @@
 <span class="line"><span class="query-type">header</span> <span class="string">"Content-Type"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">header</span> <span class="string">"Header1"</span> <span class="predicate-type">==</span> <span class="string">"value1"</span></span>
 <span class="line"><span class="query-type">header</span> <span class="string">"ETag"</span> <span class="predicate-type">==</span> <span class="string">"\"33a64df551425fcc55e4d42a148795d9f25f89d4\""</span></span>
+<span class="line"><span class="query-type">header</span> <span class="string">"Expires"</span> <span class="predicate-type">==</span> <span class="string">"Wed, 21 Oct 2015 07:28:00 GMT"</span></span>
+<span class="line"><span class="query-type">header</span> <span class="string">"Expires"</span> <span class="filter-type">toDate</span> <span class="string">"%a, %d %b %Y %H:%M:%S GMT"</span> <span class="filter-type">format</span> <span class="string">"%Y"</span> <span class="predicate-type">==</span> <span class="string">"2015"</span></span>
 <span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 <span class="line"><span class="query-type">header</span> <span class="string">"Set-Cookie"</span> <span class="predicate-type">includes</span> <span class="string">"cookie1=value1; Path=/"</span></span>

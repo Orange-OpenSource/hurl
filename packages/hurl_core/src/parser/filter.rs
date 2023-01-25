@@ -52,6 +52,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     let value = choice(
         &[
             count_filter,
+            format_filter,
             html_decode_filter,
             html_encode_filter,
             nth_filter,
@@ -59,6 +60,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
             replace_filter,
             split_filter,
             to_int_filter,
+            to_date_filter,
             url_decode_filter,
             url_encode_filter,
         ],
@@ -85,6 +87,13 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
 fn count_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("count", reader)?;
     Ok(FilterValue::Count)
+}
+
+fn format_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("format", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let fmt = quoted_template(reader)?;
+    Ok(FilterValue::Format { space0, fmt })
 }
 
 fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
@@ -130,6 +139,13 @@ fn split_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     let space0 = one_or_more_spaces(reader)?;
     let sep = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(FilterValue::Split { space0, sep })
+}
+
+fn to_date_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("toDate", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let fmt = quoted_template(reader)?;
+    Ok(FilterValue::ToDate { space0, fmt })
 }
 
 fn to_int_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {

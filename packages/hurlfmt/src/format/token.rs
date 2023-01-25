@@ -572,6 +572,9 @@ impl Tokenizable for PredicateFuncValue {
             PredicateFuncValue::Exist {} => {
                 tokens.push(Token::PredicateType(self.name()));
             }
+            PredicateFuncValue::IsEmpty {} => {
+                tokens.push(Token::PredicateType(self.name()));
+            }
         }
         tokens
     }
@@ -713,7 +716,7 @@ impl Tokenizable for Expr {
 impl Tokenizable for Regex {
     fn tokenize(&self) -> Vec<Token> {
         let s = str::replace(self.inner.as_str(), "/", "\\/");
-        vec![Token::String(format!("/{}/", s))]
+        vec![Token::String(format!("/{s}/"))]
     }
 }
 
@@ -1144,6 +1147,12 @@ impl Tokenizable for Filter {
     fn tokenize(&self) -> Vec<Token> {
         match self.value.clone() {
             FilterValue::Count => vec![Token::FilterType(String::from("count"))],
+            FilterValue::Format { space0, fmt } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("format"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut fmt.tokenize());
+                tokens
+            }
             FilterValue::HtmlEscape => vec![Token::FilterType(String::from("htmlEscape"))],
             FilterValue::HtmlUnescape => {
                 vec![Token::FilterType(String::from("htmlUnescape"))]
@@ -1179,6 +1188,12 @@ impl Tokenizable for Filter {
                 let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("split"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut sep.tokenize());
+                tokens
+            }
+            FilterValue::ToDate { space0, fmt } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("toDate"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut fmt.tokenize());
                 tokens
             }
             FilterValue::ToInt => vec![Token::FilterType(String::from("toInt"))],

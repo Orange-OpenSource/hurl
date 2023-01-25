@@ -14,7 +14,7 @@
 * GET http://localhost:8000/very-verbose/redirect
 *
 * Request can be run with the following curl command:
-* curl -L 'http://localhost:8000/very-verbose/redirect'
+* curl --location 'http://localhost:8000/very-verbose/redirect'
 *
 **   Trying 127.0.0.1:8000...
 ** Connected to localhost (127.0.0.1) port 8000 (#0)
@@ -85,7 +85,7 @@
 * GET http://localhost:8000/very-verbose/encoding/latin1
 *
 * Request can be run with the following curl command:
-* curl -L 'http://localhost:8000/very-verbose/encoding/latin1'
+* curl --location 'http://localhost:8000/very-verbose/encoding/latin1'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...
@@ -123,7 +123,7 @@
 * Implicit content-type=application/json
 *
 * Request can be run with the following curl command:
-* curl -H 'Accept-Encoding: brotli' -H 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' -L 'http://localhost:8000/very-verbose/compressed/brotli'
+* curl --header 'Accept-Encoding: brotli' --header 'Content-Type: application/json' --data $'{\n    "foo": "bar",\n    "baz": true\n}' --location 'http://localhost:8000/very-verbose/compressed/brotli'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...
@@ -166,7 +166,7 @@
 * GET http://localhost:8000/very-verbose/cat
 *
 * Request can be run with the following curl command:
-* curl -L 'http://localhost:8000/very-verbose/cat'
+* curl --location 'http://localhost:8000/very-verbose/cat'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...
@@ -205,7 +205,7 @@
 * Implicit content-type=multipart/form-data
 *
 * Request can be run with the following curl command:
-* curl -F 'cat=@tests_ok~cat.jpg;type=image/jpeg' -L 'http://localhost:8000/very-verbose/update-cat'
+* curl --form 'cat=@tests_ok~cat.jpg;type=image/jpeg' --location 'http://localhost:8000/very-verbose/update-cat'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...
@@ -244,7 +244,7 @@
 * x-foo: bar
 *
 * Request can be run with the following curl command:
-* curl -H 'x-foo: bar' -L 'http://localhost:8000/very-verbose/done'
+* curl --header 'x-foo: bar' --location 'http://localhost:8000/very-verbose/done'
 *
 ** Hostname localhost was found in DNS cache
 **   Trying 127.0.0.1:8000...

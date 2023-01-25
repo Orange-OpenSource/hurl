@@ -56,7 +56,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, usize> {
             },
         });
     }
-    Ok(format!("{}{}", first_digit, s).parse().unwrap())
+    Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
 pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
@@ -89,7 +89,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<'static, Number> {
                 },
             });
         }
-        format!("{:0<18}", s).parse().unwrap()
+        format!("{s:0<18}").parse().unwrap()
     } else {
         0
     };
@@ -169,7 +169,7 @@ pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
     };
     let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_');
     whitespace(reader);
-    Ok(format!("{}{}", first_char, s))
+    Ok(format!("{first_char}{s}"))
 }
 
 // key1.key2.key3

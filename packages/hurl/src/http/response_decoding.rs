@@ -198,7 +198,7 @@ fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    use crate::http::{Header, Response, Version};
+    use crate::http::{Header, Response};
 
     #[test]
     fn test_parse_content_encoding() {
@@ -216,26 +216,12 @@ pub mod tests {
 
     #[test]
     fn test_content_encoding() {
-        let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
-        };
+        let response = Response::default();
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "xx".to_string(),
-            }],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
+            headers: vec![Header::new("Content-Encoding", "xx")],
+            ..Default::default()
         };
         assert_eq!(
             response.content_encoding().err().unwrap(),
@@ -245,15 +231,8 @@ pub mod tests {
         );
 
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br".to_string(),
-            }],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
+            headers: vec![Header::new("Content-Encoding", "br")],
+            ..Default::default()
         };
         assert_eq!(
             response.content_encoding().unwrap(),
@@ -264,15 +243,8 @@ pub mod tests {
     #[test]
     fn test_multiple_content_encoding() {
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br, identity".to_string(),
-            }],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
+            headers: vec![Header::new("Content-Encoding", "br, identity")],
+            ..Default::default()
         };
         assert_eq!(
             response.content_encoding().unwrap(),
@@ -283,44 +255,28 @@ pub mod tests {
     #[test]
     fn test_uncompress_body() {
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br")],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
             ],
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br, identity".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br, identity")],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
             ],
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
         let response = Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![],
             body: b"Hello World!".to_vec(),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
     }
@@ -372,40 +328,27 @@ pub mod tests {
 
     fn hello_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![],
             body: b"Hello World!".to_vec(),
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     fn utf8_encoding_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Type".to_string(),
-                value: "text/plain; charset=utf-8".to_string(),
-            }],
+            headers: vec![Header::new("Content-Type", "text/plain; charset=utf-8")],
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
     fn latin1_encoding_response() -> Response {
         Response {
-            version: Version::Http10,
-            status: 200,
-            headers: vec![Header {
-                name: "Content-Type".to_string(),
-                value: "text/plain; charset=ISO-8859-1".to_string(),
-            }],
+            headers: vec![Header::new(
+                "Content-Type",
+                "text/plain; charset=ISO-8859-1",
+            )],
             body: vec![0x63, 0x61, 0x66, 0xe9],
-            duration: Default::default(),
-            url: "".to_string(),
+            ..Default::default()
         }
     }
 
@@ -458,15 +401,9 @@ pub mod tests {
     pub fn test_invalid_charset() {
         assert_eq!(
             Response {
-                version: Version::Http10,
-                status: 200,
-                headers: vec![Header {
-                    name: "Content-Type".to_string(),
-                    value: "test/plain; charset=xxx".to_string()
-                }],
+                headers: vec![Header::new("Content-Type", "test/plain; charset=xxx"),],
                 body: b"Hello World!".to_vec(),
-                duration: Default::default(),
-                url: "".to_string()
+                ..Default::default()
             }
             .character_encoding()
             .err()
@@ -481,12 +418,8 @@ pub mod tests {
     pub fn test_invalid_decoding() {
         assert_eq!(
             Response {
-                version: Version::Http10,
-                status: 200,
-                headers: vec![],
                 body: vec![0x63, 0x61, 0x66, 0xe9],
-                duration: Default::default(),
-                url: "".to_string()
+                ..Default::default()
             }
             .text()
             .err()
@@ -498,15 +431,12 @@ pub mod tests {
 
         assert_eq!(
             Response {
-                version: Version::Http10,
-                status: 200,
-                headers: vec![Header {
-                    name: "Content-Type".to_string(),
-                    value: "text/plain; charset=ISO-8859-1".to_string()
-                }],
+                headers: vec![Header::new(
+                    "Content-Type",
+                    "text/plain; charset=ISO-8859-1"
+                ),],
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
-                duration: Default::default(),
-                url: "".to_string()
+                ..Default::default()
             }
             .text()
             .unwrap(),

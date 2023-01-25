@@ -93,9 +93,10 @@ struct AssertResult {
 impl Value {
     pub fn display(&self) -> String {
         match self {
-            Value::Bool(v) => format!("bool <{}>", v),
-            Value::Integer(v) => format!("int <{}>", v),
-            Value::String(v) => format!("string <{}>", v),
+            Value::Bool(v) => format!("bool <{v}>"),
+            Value::Date(v) => format!("date <{v}>"),
+            Value::Integer(v) => format!("int <{v}>"),
+            Value::String(v) => format!("string <{v}>"),
             Value::Float(f) => format!("float <{}>", format_float(*f)),
             Value::List(values) => format!(
                 "[{}]",
@@ -105,7 +106,7 @@ impl Value {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
-            Value::Nodeset(n) => format!("nodeset of size <{}>", n),
+            Value::Nodeset(n) => format!("nodeset of size <{n}>"),
             Value::Object(_) => "object".to_string(),
             Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Null => "null".to_string(),
@@ -137,24 +138,25 @@ fn eval_predicate_func(
 impl Value {
     pub fn expected(&self) -> String {
         match self {
-            Value::Bool(value) => format!("bool <{}>", value),
+            Value::Bool(value) => format!("bool <{value}>"),
             Value::Bytes(values) => format!("list of size {}", values.len()),
+            Value::Date(value) => format!("date <{value}>"),
             Value::Float(f) => format!("float <{}>", format_float(*f)),
-            Value::Integer(value) => format!("integer <{}>", value),
+            Value::Integer(value) => format!("integer <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),
-            Value::Nodeset(size) => format!("list of size {}", size),
+            Value::Nodeset(size) => format!("list of size {size}"),
             Value::Null => "null".to_string(),
             Value::Object(values) => format!("list of size {}", values.len()),
-            Value::String(value) => format!("string <{}>", value),
+            Value::String(value) => format!("string <{value}>"),
             Value::Unit => "something".to_string(),
-            Value::Regex(value) => format!("regex <{}>", value),
+            Value::Regex(value) => format!("regex <{value}>"),
         }
     }
 }
 
 fn format_float(value: f64) -> String {
     if value.fract() < f64::EPSILON {
-        format!("{}.0", value)
+        format!("{value}.0")
     } else {
         value.to_string()
     }
@@ -194,25 +196,25 @@ fn expected(
             } else {
                 panic!();
             };
-            Ok(format!("count equals to <{}>", expected))
+            Ok(format!("count equals to <{expected}>"))
         }
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => {
             let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("starts with string <{}>", expected))
+            Ok(format!("starts with string <{expected}>"))
         }
         PredicateFuncValue::EndWith {
             value: expected, ..
         } => {
             let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("ends with string <{}>", expected))
+            Ok(format!("ends with string <{expected}>"))
         }
         PredicateFuncValue::Contain {
             value: expected, ..
         } => {
             let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("contains string <{}>", expected))
+            Ok(format!("contains string <{expected}>"))
         }
         PredicateFuncValue::Include { value, .. } => {
             let value = eval_predicate_value(value, variables)?;
@@ -222,7 +224,7 @@ fn expected(
             value: expected, ..
         } => {
             let expected = eval_predicate_value_template(expected, variables)?;
-            Ok(format!("matches regex <{}>", expected))
+            Ok(format!("matches regex <{expected}>"))
         }
         PredicateFuncValue::IsInteger {} => Ok("integer".to_string()),
         PredicateFuncValue::IsFloat {} => Ok("float".to_string()),
@@ -230,6 +232,7 @@ fn expected(
         PredicateFuncValue::IsString {} => Ok("string".to_string()),
         PredicateFuncValue::IsCollection {} => Ok("collection".to_string()),
         PredicateFuncValue::Exist {} => Ok("something".to_string()),
+        PredicateFuncValue::IsEmpty {} => Ok("empty".to_string()),
     }
 }
 
@@ -314,7 +317,7 @@ fn eval_something(
             _ => Ok(AssertResult {
                 success: false,
                 actual: value.display(),
-                expected: format!("count equals to <{}>", expected_value),
+                expected: format!("count equals to <{expected_value}>"),
                 type_mismatch: true,
             }),
         },
@@ -433,13 +436,13 @@ fn eval_something(
                 Value::String(actual) => Ok(AssertResult {
                     success: regex.is_match(actual.as_str()),
                     actual: value.display(),
-                    expected: format!("matches regex <{}>", regex),
+                    expected: format!("matches regex <{regex}>"),
                     type_mismatch: false,
                 }),
                 _ => Ok(AssertResult {
                     success: false,
                     actual: value.display(),
-                    expected: format!("matches regex <{}>", regex),
+                    expected: format!("matches regex <{regex}>"),
                     type_mismatch: true,
                 }),
             }
@@ -493,6 +496,40 @@ fn eval_something(
                 actual: value.display(),
                 expected: "something".to_string(),
                 type_mismatch: false,
+            }),
+        },
+
+        // empty
+        PredicateFuncValue::IsEmpty {} => match value {
+            Value::List(values) => Ok(AssertResult {
+                success: values.len() as i64 == 0,
+                actual: values.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::String(data) => Ok(AssertResult {
+                success: data.len() as i64 == 0,
+                actual: data.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Nodeset(nodeset) => Ok(AssertResult {
+                success: *nodeset as i64 == 0,
+                actual: nodeset.to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            Value::Bytes(data) => Ok(AssertResult {
+                success: data.len() as i64 == 0,
+                actual: data.len().to_string(),
+                expected: 0.to_string(),
+                type_mismatch: false,
+            }),
+            _ => Ok(AssertResult {
+                success: false,
+                actual: value.display(),
+                expected: "count equals to 0".to_string(),
+                type_mismatch: true,
             }),
         },
         _ => panic!(),
@@ -1462,6 +1499,44 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "3");
         assert_eq!(assert_result.expected.as_str(), "1");
+    }
+
+    #[test]
+    fn test_predicate_is_empty_are_false() {
+        let variables = HashMap::new();
+        let assert_result = eval_something(
+            &PredicateFunc {
+                value: PredicateFuncValue::IsEmpty {},
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            &variables,
+            &Value::List(vec![Value::Integer(1)]),
+        )
+        .unwrap();
+
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "1");
+        assert_eq!(assert_result.expected.as_str(), "0");
+    }
+
+    #[test]
+    fn test_predicate_is_empty_are_true() {
+        let variables = HashMap::new();
+        let assert_result = eval_something(
+            &PredicateFunc {
+                value: PredicateFuncValue::IsEmpty {},
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            &variables,
+            &Value::List(vec![]),
+        )
+        .unwrap();
+
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "0");
+        assert_eq!(assert_result.expected.as_str(), "0");
     }
 
     #[test]

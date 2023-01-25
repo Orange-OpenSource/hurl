@@ -481,6 +481,7 @@ pub enum PredicateFuncValue {
     IsString {},
     IsCollection {},
     Exist {},
+    IsEmpty {},
 }
 
 //
@@ -873,6 +874,10 @@ pub struct Filter {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FilterValue {
     Count,
+    Format {
+        space0: Whitespace,
+        fmt: Template,
+    },
     HtmlEscape,
     HtmlUnescape,
     Nth {
@@ -892,6 +897,10 @@ pub enum FilterValue {
     Split {
         space0: Whitespace,
         sep: Template,
+    },
+    ToDate {
+        space0: Whitespace,
+        fmt: Template,
     },
     ToInt,
     UrlDecode,
