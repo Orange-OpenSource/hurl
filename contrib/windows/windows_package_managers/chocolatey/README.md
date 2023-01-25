@@ -11,7 +11,7 @@ Update *.nuspec and tools/*.ps1 files with new version and sum values, then exec
 choco pack
 choco install hurl -s .
 hurl --version
-echo "https://GET google.fr" | hurl --location
+echo "GET https://google.fr" | hurl --location
 ```
 
 and finally push package to official chocolatey repository
