@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>hurl</id>
-    <version>{version}</version>
+    <version>${hurl_latest_version}</version>
     <title>Hurl</title>
     <authors>Fabrice REIX, Jean Christophe AMIEL, Orange-OpenSource</authors>
     <owners>Orange-OpenSource</owners>
@@ -16,14 +16,19 @@
     <bugTrackerUrl>https://github.com/Orange-OpenSource/hurl/issues</bugTrackerUrl>
     <tags>hurl curl http https cli http-client testing-tool integration-tool automation-tool api-testing cross-platform</tags>
     <summary>Hurl is a command line tool that runs HTTP requests defined in a simple plain text format</summary>
-    <description><![CDATA[
+    <description>
+        <![CDATA[
 Hurl is a command line tool that runs HTTP requests defined in a simple plain text format.
 It can perform requests, capture values and evaluate queries on headers and body response.
 Hurl is very versatile: it can be used for both fetching data and testing HTTP sessions.
-]]></description>
-    <releaseNotes><![CDATA[
-{changelog}
-]]></releaseNotes>
+        ]]>
+    </description>
+    <releaseNotes>
+        <![CDATA[
+https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md 
+        ]]>
+
+    </releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
