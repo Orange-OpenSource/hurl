@@ -297,7 +297,7 @@ impl<'a> Logger<'a> {
 }
 
 fn log_info(message: &str) {
-    eprintln!("{}", message);
+    eprintln!("{message}");
 }
 
 fn log_debug(message: &str) {
@@ -312,7 +312,7 @@ fn log_debug_no_color(message: &str) {
     if message.is_empty() {
         eprintln!("*");
     } else {
-        eprintln!("* {}", message);
+        eprintln!("* {message}");
     }
 }
 
@@ -328,7 +328,7 @@ fn log_debug_curl_no_color(message: &str) {
     if message.is_empty() {
         eprintln!("**");
     } else {
-        eprintln!("** {}", message);
+        eprintln!("** {message}");
     }
 }
 
@@ -357,7 +357,7 @@ fn log_debug_header_in(name: &str, value: &str) {
 }
 
 fn log_debug_header_in_no_color(name: &str, value: &str) {
-    eprintln!("< {}: {}", name, value)
+    eprintln!("< {name}: {value}")
 }
 
 fn log_debug_header_out(name: &str, value: &str) {
@@ -365,7 +365,7 @@ fn log_debug_header_out(name: &str, value: &str) {
 }
 
 fn log_debug_header_out_no_color(name: &str, value: &str) {
-    eprintln!("> {}: {}", name, value)
+    eprintln!("> {name}: {value}")
 }
 
 fn log_debug_method_version_out(line: &str) {
@@ -373,7 +373,7 @@ fn log_debug_method_version_out(line: &str) {
 }
 
 fn log_debug_method_version_out_no_color(line: &str) {
-    eprintln!("> {}", line)
+    eprintln!("> {line}")
 }
 
 fn log_debug_status_version_in(line: &str) {
@@ -381,7 +381,7 @@ fn log_debug_status_version_in(line: &str) {
 }
 
 fn log_debug_status_version_in_no_color(line: &str) {
-    eprintln!("< {}", line)
+    eprintln!("< {line}")
 }
 
 fn log_warning(message: &str) {
@@ -389,7 +389,7 @@ fn log_warning(message: &str) {
 }
 
 fn log_warning_no_color(message: &str) {
-    eprintln!("warning: {}", message);
+    eprintln!("warning: {message}");
 }
 
 fn log_error(message: &str) {
@@ -397,7 +397,7 @@ fn log_error(message: &str) {
 }
 
 fn log_error_no_color(message: &str) {
-    eprintln!("error: {}", message);
+    eprintln!("error: {message}");
 }
 
 fn log_error_rich(filename: &str, content: &str, error: &dyn Error) {
@@ -415,7 +415,7 @@ fn log_capture(name: &str, value: &Value) {
 }
 
 fn log_capture_no_color(name: &str, value: &Value) {
-    eprintln!("* {}: {}", name, value)
+    eprintln!("* {name}: {value}")
 }
 
 fn log_test_running(filename: &str, current: usize, total: usize) {
@@ -429,7 +429,7 @@ fn log_test_running(filename: &str, current: usize, total: usize) {
 }
 
 fn log_test_running_no_color(filename: &str, current: usize, total: usize) {
-    eprintln!("{}: Running [{}/{}]", filename, current, total)
+    eprintln!("{filename}: Running [{current}/{total}]")
 }
 
 fn log_test_completed(result: &HurlResult) {
@@ -539,18 +539,14 @@ fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool)
     };
 
     let width = line_number_size;
-    let mut line_number = format!(
-        "{line_number:>width$}",
-        line_number = line_number,
-        width = width
-    );
+    let mut line_number = format!("{line_number:>width$}");
     if colored {
         line_number = line_number.blue().bold().to_string();
     }
     let line = if line.is_empty() {
         line
     } else {
-        format!(" {}", line)
+        format!(" {line}")
     };
 
     format!(
@@ -577,7 +573,7 @@ fn add_line_prefix(s: &str, prefix: &str, colored: bool) -> String {
             if colored {
                 format!("{}{}", prefix, line.red().bold())
             } else {
-                format!("{}{}", prefix, line)
+                format!("{prefix}{line}")
             }
         })
         .collect::<Vec<String>>()

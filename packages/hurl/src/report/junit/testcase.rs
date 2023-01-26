@@ -117,7 +117,7 @@ mod test {
 
         let mut buffer = Vec::new();
         let content = "";
-        Testcase::from_hurl_result(&hurl_result, &content)
+        Testcase::from_hurl_result(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -154,7 +154,7 @@ HTTP/1.0 200
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, &content)
+        Testcase::from_hurl_result(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();

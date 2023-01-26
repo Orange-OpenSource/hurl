@@ -505,7 +505,7 @@ impl ToJson for JsonValue {
                     .map(|elem| (elem.name.to_string(), elem.value.to_json()))
                     .collect(),
             ),
-            JsonValue::Expression(exp) => JValue::String(format!("{{{{{}}}}}", exp)),
+            JsonValue::Expression(exp) => JValue::String(format!("{{{{{exp}}}}}")),
         }
     }
 }

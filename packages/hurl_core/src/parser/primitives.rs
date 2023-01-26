@@ -226,7 +226,7 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<'sta
                         pos: start.pos,
                         recoverable: true,
                         inner: ParseError::Expecting {
-                            value: format!("<{}> or <{}>", s1, s2),
+                            value: format!("<{s1}> or <{s2}>"),
                         },
                     })
                 }
@@ -453,7 +453,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
             },
         });
     }
-    Ok(format!("{}{}", first_digit, s).parse().unwrap())
+    Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
 pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
@@ -496,7 +496,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
             },
         });
     }
-    let value = format!("{}{}.{}", sign, nat, s).parse().unwrap();
+    let value = format!("{sign}{nat}.{s}").parse().unwrap();
     let encoded = reader.from(start);
     Ok(Float { value, encoded })
 }

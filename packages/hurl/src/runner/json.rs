@@ -33,7 +33,7 @@ pub fn eval_json_value(
         JsonValue::Number(s) => Ok(s.clone()),
         JsonValue::String(template) => {
             let s = eval_json_template(template, variables)?;
-            Ok(format!("\"{}\"", s))
+            Ok(format!("\"{s}\""))
         }
         JsonValue::Boolean(v) => Ok(v.to_string()),
         JsonValue::List { space0, elements } => {

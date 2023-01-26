@@ -120,7 +120,7 @@ impl ClientOptions {
         }
         if let Some(ref proxy) = self.proxy {
             arguments.push("--proxy".to_string());
-            arguments.push(format!("'{}'", proxy));
+            arguments.push(format!("'{proxy}'"));
         }
         for resolve in self.resolves.iter() {
             arguments.push("--resolve".to_string());
@@ -132,11 +132,11 @@ impl ClientOptions {
         }
         if let Some(ref user) = self.user {
             arguments.push("--user".to_string());
-            arguments.push(format!("'{}'", user));
+            arguments.push(format!("'{user}'"));
         }
         if let Some(ref user_agent) = self.user_agent {
             arguments.push("--user-agent".to_string());
-            arguments.push(format!("'{}'", user_agent));
+            arguments.push(format!("'{user_agent}'"));
         }
         arguments
     }

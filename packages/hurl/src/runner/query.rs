@@ -115,7 +115,7 @@ pub fn eval_query(
                             assert: false,
                         }),
                         Err(xpath::XpathError::Unsupported {}) => {
-                            panic!("Unsupported xpath {}", value); // good usecase for panic - I could nmot reporduce this usecase myself
+                            panic!("Unsupported xpath {value}"); // good usecase for panic - I could nmot reporduce this usecase myself
                         }
                     }
                 }
@@ -623,9 +623,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response.clone())
-                .unwrap()
-                .unwrap(),
+            eval_query(&query, &variables, &response).unwrap().unwrap(),
             Value::String("DQAAAKEaem_vYg".to_string())
         );
 
@@ -652,9 +650,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response.clone())
-                .unwrap()
-                .unwrap(),
+            eval_query(&query, &variables, &response).unwrap().unwrap(),
             Value::String("/accounts".to_string())
         );
 
@@ -681,9 +677,7 @@ pub mod tests {
             },
         };
         assert_eq!(
-            eval_query(&query, &variables, &response.clone())
-                .unwrap()
-                .unwrap(),
+            eval_query(&query, &variables, &response).unwrap().unwrap(),
             Value::Unit
         );
 

@@ -785,7 +785,7 @@ fn test_error_fail_to_connect() {
     } = error
     {
         assert_eq!(code, 7);
-        eprintln!("description={}", description);
+        eprintln!("description={description}");
         assert!(description.starts_with("Failed to connect to localhost port 9999"));
         assert_eq!(url, "http://localhost:8000/hello");
     }
@@ -854,8 +854,7 @@ fn test_error_ssl() {
         ];
         assert!(
             descriptions.contains(&description),
-            "actual description is {}",
-            description
+            "actual description is {description}"
         );
         assert_eq!(url, "https://localhost:8001/hello");
     }
@@ -949,7 +948,7 @@ fn test_connect_timeout() {
         url,
     } = error
     {
-        eprintln!("description={}", description);
+        eprintln!("description={description}");
         // TODO: remove the 7 / "Couldn't connect to server" case
         // On Linux/Windows libcurl version, the correct error message
         // is 28 / "Connection timeout" | "Connection timed out"
@@ -1239,9 +1238,9 @@ fn test_version() {
     let curl_version = std::str::from_utf8(&output.stdout).unwrap();
     let index = curl_version.find("libcurl").expect("libcurl substring");
     let expected_version = &curl_version[index..];
-    eprintln!("{:?}", expected_version);
+    eprintln!("{expected_version:?}");
     let versions = libcurl_version_info();
-    eprintln!("{:?}", versions);
+    eprintln!("{versions:?}");
 }
 
 // This test function can be used to reproduce bug

@@ -110,19 +110,19 @@ fn execute(
             logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
 
             if let Some(n) = cli_options.max_redirect {
-                logger.debug(format!("    max redirect: {}", n).as_str());
+                logger.debug(format!("    max redirect: {n}").as_str());
             }
             if let Some(proxy) = &cli_options.proxy {
-                logger.debug(format!("    proxy: {}", proxy).as_str());
+                logger.debug(format!("    proxy: {proxy}").as_str());
             }
             logger.debug(format!("    retry: {}", cli_options.retry).as_str());
             if let Some(n) = cli_options.retry_max_count {
-                logger.debug(format!("    retry max count: {}", n).as_str());
+                logger.debug(format!("    retry max count: {n}").as_str());
             }
             if !cli_options.variables.is_empty() {
                 logger.debug_important("Variables:");
                 for (name, value) in cli_options.variables.clone() {
-                    logger.debug(format!("    {}: {}", name, value).as_str());
+                    logger.debug(format!("    {name}: {value}").as_str());
                 }
             }
             if let Some(to_entry) = cli_options.to_entry {
@@ -233,10 +233,7 @@ fn main() {
 
     for (current, filename) in filenames.iter().enumerate() {
         if filename != "-" && !Path::new(filename).exists() {
-            let message = format!(
-                "hurl: cannot access '{}': No such file or directory",
-                filename
-            );
+            let message = format!("hurl: cannot access '{filename}': No such file or directory");
             exit_with_error(&message, EXIT_ERROR_PARSING, &base_logger);
         }
         let content = cli::read_to_string(filename);
@@ -317,16 +314,16 @@ fn main() {
                 let source = if filename.as_str() == "-" {
                     "".to_string()
                 } else {
-                    format!("for file {}", filename).to_string()
+                    format!("for file {filename}").to_string()
                 };
-                logger.warning(format!("No entry have been executed {}", source).as_str());
+                logger.warning(format!("No entry have been executed {source}").as_str());
             };
         }
 
         if matches!(cli_options.output_type, OutputType::Json) {
             let json_result = hurl_result.to_json(&content);
             let serialized = serde_json::to_string(&json_result).unwrap();
-            let s = format!("{}\n", serialized);
+            let s = format!("{serialized}\n");
             let result = write_output(&s.into_bytes(), &cli_options.output);
             unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
         }
@@ -337,7 +334,7 @@ fn main() {
     }
 
     if let Some(filename) = cli_options.junit_file.clone() {
-        base_logger.debug(format!("Writing Junit report to {}", filename).as_str());
+        base_logger.debug(format!("Writing Junit report to {filename}").as_str());
         let result = report::create_junit_report(filename, testcases);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
@@ -392,7 +389,7 @@ fn exit_code(hurl_results: &[HurlResult]) -> i32 {
 
 fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
     let relative_input_file = canonicalize_filename(input_file);
-    let absolute_input_file = dir_path.join(format!("{}.html", relative_input_file));
+    let absolute_input_file = dir_path.join(format!("{relative_input_file}.html"));
 
     let parent = absolute_input_file.parent().expect("a parent");
     std::fs::create_dir_all(parent).unwrap();
@@ -499,7 +496,7 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     let mut s =
         "--------------------------------------------------------------------------------\n"
             .to_string();
-    s.push_str(format!("Executed files:  {}\n", total).as_str());
+    s.push_str(format!("Executed files:  {total}\n").as_str());
     s.push_str(
         format!(
             "Succeeded files: {} ({:.1}%)\n",
@@ -516,7 +513,7 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
         )
         .as_str(),
     );
-    s.push_str(format!("Duration:        {} ms\n", duration).as_str());
+    s.push_str(format!("Duration:        {duration} ms\n").as_str());
     s
 }
 

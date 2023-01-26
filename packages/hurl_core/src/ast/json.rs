@@ -76,9 +76,9 @@ pub struct ObjectElement {
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s = match self {
-            Value::Expression(expr) => format!("{{{{{}}}}}", expr),
+            Value::Expression(expr) => format!("{{{{{expr}}}}}"),
             Value::Number(s) => s.to_string(),
-            Value::String(template) => format!("\"{}\"", template),
+            Value::String(template) => format!("\"{template}\""),
             Value::Boolean(value) => {
                 if *value {
                     "true".to_string()
@@ -102,7 +102,7 @@ impl fmt::Display for Value {
             }
             Value::Null { .. } => "null".to_string(),
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -112,7 +112,7 @@ impl fmt::Display for ListElement {
         s.push_str(self.space0.as_str());
         s.push_str(self.value.to_string().as_str());
         s.push_str(self.space1.as_str());
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
@@ -128,14 +128,14 @@ impl fmt::Display for ObjectElement {
         s.push_str(self.space2.as_str());
         s.push_str(self.value.to_string().as_str());
         s.push_str(self.space3.as_str());
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
 impl Value {
     pub fn encoded(&self) -> String {
         match self {
-            Value::Expression(expr) => format!("{{{{{}}}}}", expr),
+            Value::Expression(expr) => format!("{{{{{expr}}}}}"),
             Value::Number(s) => s.to_string(),
             Value::String(template) => template.encoded(),
             Value::Boolean(value) => {
@@ -207,7 +207,7 @@ impl TemplateElement {
     fn encoded(&self) -> String {
         match self {
             TemplateElement::String { encoded, .. } => encoded.to_string(),
-            TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
+            TemplateElement::Expression(expr) => format!("{{{{{expr}}}}}"),
         }
     }
 }

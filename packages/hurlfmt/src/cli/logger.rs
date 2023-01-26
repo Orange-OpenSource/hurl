@@ -51,7 +51,7 @@ pub fn make_logger_linter_error(
 }
 
 pub fn log_info(message: &str) {
-    eprintln!("{}", message);
+    eprintln!("{message}");
 }
 
 fn log_error_message(color: bool, warning: bool, message: &str) {
@@ -61,7 +61,7 @@ fn log_error_message(color: bool, warning: bool, message: &str) {
         (true, true) => "warning".yellow().bold().to_string(),
         (true, false) => "error".red().bold().to_string(),
     };
-    eprintln!("{}: {}", log_type, message);
+    eprintln!("{log_type}: {message}");
 }
 
 fn log_verbose(verbose: bool, message: &str) {
@@ -69,7 +69,7 @@ fn log_verbose(verbose: bool, message: &str) {
         if message.is_empty() {
             eprintln!("*");
         } else {
-            eprintln!("* {}", message);
+            eprintln!("* {message}");
         }
     }
 }
@@ -123,7 +123,7 @@ fn log_error(
         line = if line.is_empty() {
             line
         } else {
-            format!(" {}", line)
+            format!(" {line}")
         }
     );
 

@@ -46,7 +46,7 @@ impl RequestSpec {
                     && content_type.as_str() != "multipart/form-data"
                 {
                     arguments.push("-H".to_string());
-                    arguments.push(format!("'Content-Type: {}'", content_type));
+                    arguments.push(format!("'Content-Type: {content_type}'"));
                 }
             } else if !self.body.bytes().is_empty() {
                 match self.body.clone() {
@@ -97,14 +97,14 @@ impl RequestSpec {
         } else {
             format!("{}?{}", self.url, querystring)
         };
-        arguments.push(format!("'{}'", url));
+        arguments.push(format!("'{url}'"));
 
         arguments
     }
 }
 
 fn encode_byte(b: u8) -> String {
-    format!("\\x{:02x}", b)
+    format!("\\x{b:02x}")
 }
 
 fn encode_bytes(b: Vec<u8>) -> String {
@@ -140,22 +140,22 @@ impl Header {
         let value = self.value.clone();
         vec![
             "-H".to_string(),
-            encode_shell_string(format!("{}: {}", name, value).as_str()),
+            encode_shell_string(format!("{name}: {value}").as_str()),
         ]
     }
 }
 
 impl Param {
     pub fn curl_arg_escape(&self) -> String {
-        let name = self.name.clone();
-        let value = escape_url(self.value.clone());
-        format!("{}={}", name, value)
+        let name = &self.name;
+        let value = escape_url(&self.value);
+        format!("{name}={value}")
     }
 
     pub fn curl_arg(&self) -> String {
-        let name = self.name.clone();
-        let value = self.value.clone();
-        format!("{}={}", name, value)
+        let name = &self.name;
+        let value = &self.value;
+        format!("{name}={value}")
     }
 }
 
@@ -171,7 +171,7 @@ impl MultipartParam {
             }) => {
                 let path = context_dir.get_path(filename);
                 let value = format!("@{};type={}", path.to_str().unwrap(), content_type);
-                format!("{}={}", name, value)
+                format!("{name}={value}")
             }
         }
     }
@@ -190,7 +190,7 @@ impl Body {
     }
 }
 
-fn escape_url(s: String) -> String {
+fn escape_url(s: &str) -> String {
     percent_encoding::percent_encode(s.as_bytes(), percent_encoding::NON_ALPHANUMERIC).to_string()
 }
 
@@ -198,9 +198,9 @@ fn encode_shell_string(s: &str) -> String {
     // $'...' form will be used to encode escaped sequence
     if escape_mode(s) {
         let escaped = escape_string(s);
-        format!("$'{}'", escaped)
+        format!("$'{escaped}'")
     } else {
-        format!("'{}'", s)
+        format!("'{s}'")
     }
 }
 

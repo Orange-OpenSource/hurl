@@ -206,7 +206,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
                     },
                 });
             } else {
-                format!(".{}", digits)
+                format!(".{digits}")
             }
         }
         Err(_) => "".to_string(),
@@ -222,14 +222,13 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
             },
         };
         let exponent_digits = reader.read_while(|c| c.is_ascii_digit());
-        format!("e{}{}", exponent_sign, exponent_digits)
+        format!("e{exponent_sign}{exponent_digits}")
     } else {
         "".to_string()
     };
 
     Ok(JsonValue::Number(format!(
-        "{}{}{}{}",
-        sign, integer, fraction, exponent
+        "{sign}{integer}{fraction}{exponent}"
     )))
 }
 

@@ -36,39 +36,39 @@ pub fn libcurl_version_info() -> CurlVersionInfo {
         libraries.push(s.to_string());
     }
     if let Some(s) = version.libz_version() {
-        libraries.push(format!("zlib/{}", s));
+        libraries.push(format!("zlib/{s}"));
     }
     if let Some(s) = version.brotli_version() {
-        libraries.push(format!("brotli/{}", s));
+        libraries.push(format!("brotli/{s}"));
     }
     if let Some(s) = version.zstd_version() {
-        libraries.push(format!("zstd/{}", s));
+        libraries.push(format!("zstd/{s}"));
     }
     if let Some(s) = version.ares_version() {
-        libraries.push(format!("c-ares/{}", s));
+        libraries.push(format!("c-ares/{s}"));
     }
     if let Some(s) = version.libidn_version() {
-        libraries.push(format!("libidn2/{}", s));
+        libraries.push(format!("libidn2/{s}"));
     }
     if let Some(s) = version.iconv_version_num() {
         if s != 0 {
-            libraries.push(format!("iconv/{}", s));
+            libraries.push(format!("iconv/{s}"));
         }
     }
     if let Some(s) = version.libssh_version() {
         libraries.push(s.to_string());
     }
     if let Some(s) = version.nghttp2_version() {
-        libraries.push(format!("nghttp2/{}", s));
+        libraries.push(format!("nghttp2/{s}"));
     }
     if let Some(s) = version.quic_version() {
-        libraries.push(format!("quic/{}", s));
+        libraries.push(format!("quic/{s}"));
     }
     if let Some(s) = version.hyper_version() {
-        libraries.push(format!("hyper/{}", s));
+        libraries.push(format!("hyper/{s}"));
     }
     if let Some(s) = version.gsasl_version() {
-        libraries.push(format!("libgsal/{}", s));
+        libraries.push(format!("libgsal/{s}"));
     }
 
     // FIXME: some flags are not present in crates curl-rust.

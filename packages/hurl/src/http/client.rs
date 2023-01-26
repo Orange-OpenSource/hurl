@@ -87,7 +87,7 @@ impl Client {
             let base_url = request.base_url()?;
             if let Some(url) = self.get_follow_location(&response, &base_url) {
                 logger.debug("");
-                logger.debug(format!("=> Redirect to {}", url).as_str());
+                logger.debug(format!("=> Redirect to {url}").as_str());
                 logger.debug("");
                 request_spec = RequestSpec {
                     method: Method::Get,
@@ -373,12 +373,12 @@ impl Client {
             let url = if url.ends_with('?') {
                 url.to_string()
             } else if url.contains('?') {
-                format!("{}&", url)
+                format!("{url}&")
             } else {
-                format!("{}?", url)
+                format!("{url}?")
             };
             let s = self.url_encode_params(params);
-            format!("{}{}", url, s)
+            format!("{url}{s}")
         }
     }
 
@@ -400,8 +400,7 @@ impl Client {
 
         if request.get_header_values("Content-Type").is_empty() {
             if let Some(ref s) = request.content_type {
-                list.append(format!("Content-Type: {}", s).as_str())
-                    .unwrap();
+                list.append(format!("Content-Type: {s}").as_str()).unwrap();
             } else {
                 // We remove default Content-Type headers added by curl because we want
                 // to explicitly manage this header.
@@ -422,7 +421,7 @@ impl Client {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
             };
-            list.append(format!("User-Agent: {}", user_agent).as_str())
+            list.append(format!("User-Agent: {user_agent}").as_str())
                 .unwrap();
         }
 
@@ -430,7 +429,7 @@ impl Client {
             let user = user.as_bytes();
             let authorization = general_purpose::STANDARD.encode(user);
             if request.get_header_values("Authorization").is_empty() {
-                list.append(format!("Authorization: Basic {}", authorization).as_str())
+                list.append(format!("Authorization: Basic {authorization}").as_str())
                     .unwrap();
             }
         }
@@ -571,7 +570,7 @@ impl Client {
             if let Ok(cookie) = Cookie::from_str(line) {
                 cookies.push(cookie);
             } else {
-                eprintln!("warning: line <{}> can not be parsed as cookie", line);
+                eprintln!("warning: line <{line}> can not be parsed as cookie");
             }
         }
         cookies
@@ -580,7 +579,7 @@ impl Client {
     /// Adds a cookie to the cookie jar.
     pub fn add_cookie(&mut self, cookie: &Cookie, options: &ClientOptions) {
         if options.verbosity.is_some() {
-            eprintln!("* add to cookie store: {}", cookie);
+            eprintln!("* add to cookie store: {cookie}");
         }
         self.handle
             .cookie_list(cookie.to_string().as_str())
@@ -630,7 +629,7 @@ impl Client {
 /// Returns the redirect url.
 fn get_redirect_url(location: &str, base_url: &str) -> String {
     if location.starts_with('/') {
-        format!("{}{}", base_url, location)
+        format!("{base_url}{location}")
     } else {
         location.to_string()
     }
@@ -715,7 +714,7 @@ pub fn decode_header(data: &[u8]) -> Option<String> {
         Err(_) => match ISO_8859_1.decode(data, DecoderTrap::Strict) {
             Ok(s) => Some(s),
             Err(_) => {
-                println!("Error decoding header both UTF-8 and ISO-8859-1 {:?}", data);
+                println!("Error decoding header both UTF-8 and ISO-8859-1 {data:?}");
                 None
             }
         },

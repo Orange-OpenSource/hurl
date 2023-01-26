@@ -41,7 +41,7 @@ pub struct CliError {
 impl From<Box<dyn Error>> for CliError {
     fn from(e: Box<dyn Error>) -> Self {
         Self {
-            message: format!("{:?}", e),
+            message: format!("{e:?}"),
         }
     }
 }
@@ -57,7 +57,7 @@ impl From<&str> for CliError {
 impl From<String> for CliError {
     fn from(e: String) -> Self {
         Self {
-            message: format!("{:?}", e),
+            message: format!("{e:?}"),
         }
     }
 }

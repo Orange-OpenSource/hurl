@@ -74,7 +74,7 @@ impl Request {
             url.scheme(),
             url.host().unwrap(),
             if let Some(port) = url.port() {
-                format!(":{}", port)
+                format!(":{port}")
             } else {
                 "".to_string()
             }

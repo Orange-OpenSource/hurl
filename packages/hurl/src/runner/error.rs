@@ -71,25 +71,25 @@ impl Error for runner::Error {
 
     fn fixme(&self) -> String {
         match &self.inner {
-            RunnerError::InvalidUrl(url) => format!("invalid URL <{}>", url),
+            RunnerError::InvalidUrl(url) => format!("invalid URL <{url}>"),
             RunnerError::TemplateVariableNotDefined { name } => {
-                format!("you must set the variable {}", name)
+                format!("you must set the variable {name}")
             }
             RunnerError::HttpConnection { message, .. } => message.to_string(),
             RunnerError::CouldNotResolveProxyName => "could not resolve proxy name".to_string(),
-            RunnerError::CouldNotResolveHost(host) => format!("could not resolve host <{}>", host),
+            RunnerError::CouldNotResolveHost(host) => format!("could not resolve host <{host}>"),
             RunnerError::FailToConnect => "fail to connect".to_string(),
             RunnerError::Timeout => "timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "too many redirect".to_string(),
             RunnerError::CouldNotParseResponse => "could not parse response".to_string(),
             RunnerError::SslCertificate(description) => description.clone(),
-            RunnerError::AssertVersion { actual, .. } => format!("actual value is <{}>", actual),
-            RunnerError::AssertStatus { actual, .. } => format!("actual value is <{}>", actual),
+            RunnerError::AssertVersion { actual, .. } => format!("actual value is <{actual}>"),
+            RunnerError::AssertStatus { actual, .. } => format!("actual value is <{actual}>"),
             RunnerError::PredicateValue(value) => {
-                format!("actual value is <{}>", value)
+                format!("actual value is <{value}>")
             }
             RunnerError::InvalidRegex {} => "regex expression is not valid".to_string(),
-            RunnerError::FileReadAccess { value } => format!("file {} can not be read", value),
+            RunnerError::FileReadAccess { value } => format!("file {value} can not be read"),
             RunnerError::QueryInvalidXml { .. } => {
                 "the HTTP response is not a valid XML".to_string()
             }
@@ -103,25 +103,25 @@ impl Error for runner::Error {
                 "the XPath expression is not valid".to_string()
             }
             RunnerError::AssertHeaderValueError { actual } => {
-                format!("actual value is <{}>", actual)
+                format!("actual value is <{actual}>")
             }
             RunnerError::AssertBodyValueError { actual, .. } => {
-                format!("actual value is <{}>", actual)
+                format!("actual value is <{actual}>")
             }
             RunnerError::QueryInvalidJson { .. } => {
                 "the HTTP response is not a valid JSON".to_string()
             }
             RunnerError::QueryInvalidJsonpathExpression { value } => {
-                format!("the JSONPath expression '{}' is not valid", value)
+                format!("the JSONPath expression '{value}' is not valid")
             }
             RunnerError::PredicateType { .. } => {
                 "predicate type inconsistent with value return by query".to_string()
             }
             RunnerError::InvalidDecoding { charset } => {
-                format!("the body can not be decoded with charset '{}'", charset)
+                format!("the body can not be decoded with charset '{charset}'")
             }
             RunnerError::InvalidCharset { charset } => {
-                format!("the charset '{}' is not valid", charset)
+                format!("the charset '{charset}' is not valid")
             }
             RunnerError::AssertFailure {
                 actual,
@@ -134,23 +134,23 @@ impl Error for runner::Error {
                 } else {
                     ""
                 };
-                format!("actual:   {}\nexpected: {}{}", actual, expected, additional)
+                format!("actual:   {actual}\nexpected: {expected}{additional}")
             }
             RunnerError::VariableNotDefined { name } => {
-                format!("you must set the variable {}", name)
+                format!("you must set the variable {name}")
             }
             RunnerError::UnrenderableVariable { value } => {
-                format!("value {} can not be rendered", value)
+                format!("value {value} can not be rendered")
             }
             RunnerError::NoQueryResult { .. } => "The query didn't return any result".to_string(),
             RunnerError::UnsupportedContentEncoding(algorithm) => {
-                format!("compression {} is not supported", algorithm)
+                format!("compression {algorithm} is not supported")
             }
             RunnerError::CouldNotUncompressResponse(algorithm) => {
-                format!("could not uncompress response with {}", algorithm)
+                format!("could not uncompress response with {algorithm}")
             }
             RunnerError::InvalidJson { value } => {
-                format!("actual value is <{}>", value)
+                format!("actual value is <{value}>")
             }
             RunnerError::UnauthorizedFileAccess { path } => {
                 format!(
@@ -160,7 +160,7 @@ impl Error for runner::Error {
             }
             RunnerError::FilterMissingInput { .. } => "missing value to apply filter".to_string(),
             RunnerError::FilterInvalidInput(message) => {
-                format!("invalid filter input: {}", message)
+                format!("invalid filter input: {message}")
             }
             RunnerError::FilterRegexNoCapture { .. } => "capture not found".to_string(),
         }
@@ -182,7 +182,7 @@ impl From<HttpError> for RunnerError {
                 description,
                 url,
             } => RunnerError::HttpConnection {
-                message: format!("({}) {}", code, description),
+                message: format!("({code}) {description}"),
                 url,
             },
             HttpError::StatuslineIsMissing { url } => RunnerError::HttpConnection {

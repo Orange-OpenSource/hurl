@@ -105,7 +105,7 @@ pub fn eval_asserts(
                         "[{}]",
                         actuals
                             .iter()
-                            .map(|v| format!("\"{}\"", v))
+                            .map(|v| format!("\"{v}\""))
                             .collect::<Vec<String>>()
                             .join(", ")
                     );

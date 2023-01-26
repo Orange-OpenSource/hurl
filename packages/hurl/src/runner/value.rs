@@ -69,22 +69,22 @@ impl fmt::Display for Value {
                 format!("[{}]", values.join(","))
             }
             Value::Object(_) => "Object()".to_string(),
-            Value::Nodeset(x) => format!("Nodeset{:?}", x),
+            Value::Nodeset(x) => format!("Nodeset{x:?}"),
             Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Null => "null".to_string(),
             Value::Unit => "Unit".to_string(),
             Value::Regex(x) => {
                 let s = str::replace(x.as_str(), "/", "\\/");
-                format!("/{}/", s)
+                format!("/{s}/")
             }
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 
 fn format_float(value: f64) -> String {
     if value.fract() < f64::EPSILON {
-        format!("{}.0", value)
+        format!("{value}.0")
     } else {
         value.to_string()
     }

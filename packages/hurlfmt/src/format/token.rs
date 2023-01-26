@@ -713,7 +713,7 @@ impl Tokenizable for Expr {
 impl Tokenizable for Regex {
     fn tokenize(&self) -> Vec<Token> {
         let s = str::replace(self.inner.as_str(), "/", "\\/");
-        vec![Token::String(format!("/{}/", s))]
+        vec![Token::String(format!("/{s}/"))]
     }
 }
 

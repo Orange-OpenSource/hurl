@@ -132,7 +132,7 @@ pub fn run(
         logger.debug_important(
             "------------------------------------------------------------------------------",
         );
-        logger.debug_important(format!("Executing entry {}", entry_index).as_str());
+        logger.debug_important(format!("Executing entry {entry_index}").as_str());
 
         warn_deprecated(entry, &logger);
 
@@ -204,11 +204,7 @@ pub fn run(
             let delay = retry_interval.as_millis();
             logger.debug("");
             logger.debug_important(
-                format!(
-                    "Retry entry {} (x{} pause {} ms)",
-                    entry_index, retry_count, delay
-                )
-                .as_str(),
+                format!("Retry entry {entry_index} (x{retry_count} pause {delay} ms)").as_str(),
             );
             retry_count += 1;
             thread::sleep(retry_interval);

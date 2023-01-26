@@ -112,15 +112,15 @@ impl fmt::Display for Method {
             Method::Propfind => "PROPFIND",
             Method::View => "VIEW",
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 
 impl fmt::Display for MultipartParam {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            MultipartParam::Param(param) => write!(f, "{}", param),
-            MultipartParam::FileParam(param) => write!(f, "{}", param),
+            MultipartParam::Param(param) => write!(f, "{param}"),
+            MultipartParam::FileParam(param) => write!(f, "{param}"),
         }
     }
 }

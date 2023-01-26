@@ -50,9 +50,7 @@ fn format_standalone(hurl_file: HurlFile) -> String {
 {body}
     </body>
 </html>
-"#,
-        css = css,
-        body = body
+"#
     )
 }
 
@@ -138,7 +136,7 @@ impl Htmlable for Response {
 
 impl Htmlable for Method {
     fn to_html(&self) -> String {
-        format!("<span class=\"method\">{}</span>", self)
+        format!("<span class=\"method\">{self}</span>")
     }
 }
 
@@ -894,9 +892,9 @@ impl Htmlable for MultilineString {
                 format!("{}\n", self.lang())
             }
         };
-        let body = format!("```{}{}```", lang, self);
+        let body = format!("```{lang}{self}```");
         let body = multilines(&body);
-        format!("<span class=\"multiline\">{}</span>", body)
+        format!("<span class=\"multiline\">{body}</span>")
     }
 }
 
@@ -929,25 +927,25 @@ impl Htmlable for Bytes {
 
 impl Htmlable for String {
     fn to_html(&self) -> String {
-        format!("<span class=\"string\">{}</span>", self)
+        format!("<span class=\"string\">{self}</span>")
     }
 }
 
 impl Htmlable for &str {
     fn to_html(&self) -> String {
-        format!("<span class=\"string\">{}</span>", self)
+        format!("<span class=\"string\">{self}</span>")
     }
 }
 
 impl Htmlable for bool {
     fn to_html(&self) -> String {
-        format!("<span class=\"boolean\">{}</span>", self)
+        format!("<span class=\"boolean\">{self}</span>")
     }
 }
 
 impl Htmlable for u64 {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
@@ -959,13 +957,13 @@ impl Htmlable for Float {
 
 impl Htmlable for i64 {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
 impl Htmlable for usize {
     fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self)
+        format!("<span class=\"number\">{self}</span>")
     }
 }
 
@@ -1062,7 +1060,7 @@ impl Htmlable for Hex {
 impl Htmlable for Regex {
     fn to_html(&self) -> String {
         let s = str::replace(self.inner.as_str(), "/", "\\/");
-        format!("<span class=\"regex\">/{}/</span>", s)
+        format!("<span class=\"regex\">/{s}/</span>")
     }
 }
 
@@ -1087,7 +1085,7 @@ impl Template {
         for element in self.elements.iter() {
             let elem_str = match element {
                 TemplateElement::String { encoded, .. } => encoded.to_string(),
-                TemplateElement::Expression(expr) => format!("{{{{{}}}}}", expr),
+                TemplateElement::Expression(expr) => format!("{{{{{expr}}}}}"),
             };
             s.push_str(elem_str.as_str())
         }

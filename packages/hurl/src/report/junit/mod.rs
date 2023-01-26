@@ -101,14 +101,14 @@ pub fn create_report(filename: String, testcases: Vec<Testcase>) -> Result<(), C
         Ok(f) => f,
         Err(e) => {
             return Err(CliError {
-                message: format!("Failed to produce junit report: {:?}", e),
+                message: format!("Failed to produce junit report: {e:?}"),
             });
         }
     };
     match report.write(file) {
         Ok(_) => Ok(()),
         Err(e) => Err(CliError {
-            message: format!("Failed to produce junit report: {:?}", e),
+            message: format!("Failed to produce junit report: {e:?}"),
         }),
     }
 }

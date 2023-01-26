@@ -168,13 +168,7 @@ fn create_html_index(now: &str, hurl_results: &[HTMLResult]) -> String {
         </table>
     </body>
 </html>
-"#,
-        now = now,
-        count_total = count_total,
-        count_success = count_success,
-        percentage_success = percentage_success,
-        count_failure = count_failure,
-        percentage_failure = percentage_failure
+"#
     )
 }
 
@@ -194,11 +188,7 @@ fn create_html_table_row(result: &HTMLResult) -> String {
     <td>{status}</td>
     <td>{duration_in_s}</td>
 </tr>
-"#,
-        status = status,
-        duration_in_ms = duration_in_ms,
-        filename = filename,
-        duration_in_s = duration_in_s
+"#
     )
 }
 

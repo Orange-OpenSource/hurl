@@ -44,7 +44,7 @@ impl fmt::Display for Version {
             Version::Http11 => "HTTP/1.1",
             Version::Http2 => "HTTP/2",
         };
-        write!(f, "{}", value)
+        write!(f, "{value}")
     }
 }
 

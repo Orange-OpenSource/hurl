@@ -68,7 +68,7 @@ pub fn run(
         if let Ok(cookie) = http::Cookie::from_str(s.as_str()) {
             http_client.add_cookie(&cookie, &client_options);
         } else {
-            logger.warning(format!("Cookie string can not be parsed: '{}'", s).as_str());
+            logger.warning(format!("Cookie string can not be parsed: '{s}'").as_str());
         }
     }
     if cookie_storage_clear(&entry.request) {
@@ -282,7 +282,7 @@ fn log_request_spec(request: &http::RequestSpec, logger: &Logger) {
     }
     if let Some(s) = &request.content_type {
         logger.debug("");
-        logger.debug(format!("Implicit content-type={}", s).as_str());
+        logger.debug(format!("Implicit content-type={s}").as_str());
     }
     logger.debug("");
 }
