@@ -100,6 +100,52 @@ Hurl has two main functionalities on top of [curl]:
 
    With its [asserts], responses can be easily tested.
 
+Hurl benefits from the features of the `libcurl` against it is linked. You can check `libcurl` version with `hurl --version`.
+
+For instance on macOS:
+
+```shell
+$ hurl --version
+hurl 2.0.0 libcurl/7.79.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.11 nghttp2/1.45.1
+Features (libcurl):  alt-svc AsynchDNS HSTS HTTP2 IPv6 Largefile libz NTLM NTLM_WB SPNEGO SSL UnixSockets
+Features (built-in): brotli
+```
+
+You can also check which `libcurl` is used.
+
+On macOS:
+
+```shell
+$ which hurl
+/opt/homebrew/bin/hurl
+$ otool -L /opt/homebrew/bin/hurl:
+	/usr/lib/libxml2.2.dylib (compatibility version 10.0.0, current version 10.9.0)
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 1858.112.0)
+	/usr/lib/libcurl.4.dylib (compatibility version 7.0.0, current version 9.0.0)
+	/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1311.100.3)
+```
+
+On Linux:
+
+```shell
+$ which hurl
+/root/.cargo/bin/hurl
+$ ldd /root/.cargo/bin/hurl
+ldd /root/.cargo/bin/hurl
+	linux-vdso.so.1 (0x0000ffff8656a000)
+	libxml2.so.2 => /usr/lib/aarch64-linux-gnu/libxml2.so.2 (0x0000ffff85fe8000)
+	libcurl.so.4 => /usr/lib/aarch64-linux-gnu/libcurl.so.4 (0x0000ffff85f45000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff85f21000)
+	...
+	libkeyutils.so.1 => /lib/aarch64-linux-gnu/libkeyutils.so.1 (0x0000ffff82ed5000)
+	libffi.so.7 => /usr/lib/aarch64-linux-gnu/libffi.so.7 (0x0000ffff82ebc000)
+```
+
+Note that some Hurl features are dependent on `libcurl` capacities: for instance, if your `libcurl` doesn't support
+HTTP/2 Hurl won't be able to send HTTP/2 request. 
+
+
 ### Why shouldn't I use Hurl?
 
 If you need a GUI. Currently, Hurl does not offer a GUI version (like [Postman]). While we
@@ -203,6 +249,8 @@ $ export HURL_tomorrow=$(date '+%y%m%d' -d"+1days")
 $ hurl test.hurl
 ```
 
+You can also use [filters] to process HTTP responses in asserts and captures.
+
 ## macOS
 
 ### How can I use a custom libcurl (from Homebrew by instance)?
@@ -232,18 +280,6 @@ and some certificates has expired. To solve this problem:
 1. Edit `/etc/ssl/cert.pem` and remove the expired certificate (for instance, the `DST Root CA X3` has expired)
 2. Use a recent curl (installed with Homebrew) and [configure Hurl to use it].
 
-### Hurl warning on Big Sur: Closing connection 0
-
-In Big Sur, the system version of libcurl (7.64.1), has a bug that [erroneously
-displays `* Closing connection 0` on `stderr`]. To fix Hurl not to output this
-warning, one can link Hurl to a newer version of libcurl.
-
-For instance, to use the latest libcurl with Homebrew:
-
-```shell
-$ brew install curl
-$ sudo install_name_tool -change /usr/lib/libcurl.4.dylib /usr/local/opt/curl/lib/libcurl.4.dylib /usr/local/bin/hurl
-```
 
 [curl]: https://curl.haxx.se
 [other eminent tools]: https://git.wiki.kernel.org/index.php/GitFaq#Why_the_.27Git.27_name.3F
@@ -256,4 +292,4 @@ $ sudo install_name_tool -change /usr/lib/libcurl.4.dylib /usr/local/opt/curl/li
 [asserts]: /docs/asserting-response.md
 [configure Hurl to use it]: #how-can-i-use-a-custom-libcurl-from-homebrew-by-instance
 [Homebrew]: https://brew.sh
-[erroneously displays `* Closing connection 0` on `stderr`]: https://github.com/curl/curl/issues/3891
+[filters]: /docs/filters.md
