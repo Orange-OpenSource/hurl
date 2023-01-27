@@ -2819,7 +2819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#{}&quot;, num);</pre>
+                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#{num}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2851,7 +2851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#{};&quot;, num);</pre>
+                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#{num};&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2883,7 +2883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#x{:x}&quot;, num);</pre>
+                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#x{num:x}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2915,7 +2915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#x{:x};&quot;, num);</pre>
+                <pre class="has-background-white py-0 px-2">            let text = format!(&quot;&amp;#x{num:x};&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3571,7 +3571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3587,7 +3587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3603,7 +3603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3827,7 +3827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3843,7 +3843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3859,7 +3859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4083,7 +4083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4099,7 +4099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4115,7 +4115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4339,7 +4339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4355,7 +4355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4371,7 +4371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{:07};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#{num:07};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4595,7 +4595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4611,7 +4611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4627,7 +4627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4851,7 +4851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4867,7 +4867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4883,7 +4883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5107,7 +5107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5123,7 +5123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5139,7 +5139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:x};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:x};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5363,7 +5363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5379,7 +5379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5395,7 +5395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06x};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06x};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5619,7 +5619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5635,7 +5635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5651,7 +5651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5875,7 +5875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X}&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X}&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5891,7 +5891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X} &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X} &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5907,7 +5907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X}X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X}X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6131,7 +6131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6147,7 +6147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6163,7 +6163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:X};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:X};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6387,7 +6387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6403,7 +6403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6419,7 +6419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{:06X};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#x{num:06X};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6643,7 +6643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:x};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:x};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6659,7 +6659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:x}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:x}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6675,7 +6675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:x};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:x};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6899,7 +6899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:06x};&quot;, num), &amp;format!(&quot;{}&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:06x};&quot;), &amp;format!(&quot;{char}&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6915,7 +6915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:06x}; &quot;, num), &amp;format!(&quot;{} &quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:06x}; &quot;), &amp;format!(&quot;{char} &quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6931,7 +6931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{:06x};X&quot;, num), &amp;format!(&quot;{}X&quot;, char));</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;&amp;#X{num:06x};X&quot;), &amp;format!(&quot;{char}X&quot;));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7539,7 +7539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;{};&quot;, e).repeat(3), &quot;\&quot;\&quot;\&quot;&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            check(&amp;format!(&quot;{e};&quot;).repeat(3), &quot;\&quot;\&quot;\&quot;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8217,7 +8217,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-01-26 08:09</p>
+                <p class="heading">Date: 2023-01-27 08:10</p>
             </div>
         </footer>
     </body>

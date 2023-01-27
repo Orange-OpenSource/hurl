@@ -1571,7 +1571,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Bool(v) =&gt; format!(&quot;bool &lt;{}&gt;&quot;, v),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::Bool(v) =&gt; format!(&quot;bool &lt;{v}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1587,7 +1587,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Integer(v) =&gt; format!(&quot;int &lt;{}&gt;&quot;, v),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::Integer(v) =&gt; format!(&quot;int &lt;{v}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1603,7 +1603,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::String(v) =&gt; format!(&quot;string &lt;{}&gt;&quot;, v),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::String(v) =&gt; format!(&quot;string &lt;{v}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1763,7 +1763,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Nodeset(n) =&gt; format!(&quot;nodeset of size &lt;{}&gt;&quot;, n),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::Nodeset(n) =&gt; format!(&quot;nodeset of size &lt;{n}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2275,7 +2275,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Bool(value) =&gt; format!(&quot;bool &lt;{}&gt;&quot;, value),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::Bool(value) =&gt; format!(&quot;bool &lt;{value}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2323,7 +2323,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Integer(value) =&gt; format!(&quot;integer &lt;{}&gt;&quot;, value),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Value::Integer(value) =&gt; format!(&quot;integer &lt;{value}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2355,7 +2355,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Nodeset(size) =&gt; format!(&quot;list of size {}&quot;, size),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Value::Nodeset(size) =&gt; format!(&quot;list of size {size}&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2403,7 +2403,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::String(value) =&gt; format!(&quot;string &lt;{}&gt;&quot;, value),</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::String(value) =&gt; format!(&quot;string &lt;{value}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2435,7 +2435,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Regex(value) =&gt; format!(&quot;regex &lt;{}&gt;&quot;, value),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Value::Regex(value) =&gt; format!(&quot;regex &lt;{value}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2547,7 +2547,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        format!(&quot;{}.0&quot;, value)</pre>
+                <pre class="has-background-success-light py-0 px-2">        format!(&quot;{value}.0&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3187,7 +3187,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;count equals to &lt;{}&gt;&quot;, expected))</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;count equals to &lt;{expected}&gt;&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3283,7 +3283,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;starts with string &lt;{}&gt;&quot;, expected))</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;starts with string &lt;{expected}&gt;&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3379,7 +3379,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;ends with string &lt;{}&gt;&quot;, expected))</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;ends with string &lt;{expected}&gt;&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3475,7 +3475,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;contains string &lt;{}&gt;&quot;, expected))</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Ok(format!(&quot;contains string &lt;{expected}&gt;&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3635,7 +3635,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(format!(&quot;matches regex &lt;{}&gt;&quot;, expected))</pre>
+                <pre class="has-background-success-light py-0 px-2">            Ok(format!(&quot;matches regex &lt;{expected}&gt;&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5107,7 +5107,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                expected: format!(&quot;count equals to &lt;{}&gt;&quot;, expected_value),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                expected: format!(&quot;count equals to &lt;{expected_value}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7011,7 +7011,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    expected: format!(&quot;matches regex &lt;{}&gt;&quot;, regex),</pre>
+                <pre class="has-background-success-light py-0 px-2">                    expected: format!(&quot;matches regex &lt;{regex}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7107,7 +7107,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    expected: format!(&quot;matches regex &lt;{}&gt;&quot;, regex),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    expected: format!(&quot;matches regex &lt;{regex}&gt;&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -26649,7 +26649,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-01-26 08:09</p>
+                <p class="heading">Date: 2023-01-27 08:10</p>
             </div>
         </footer>
     </body>
