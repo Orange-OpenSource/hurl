@@ -149,7 +149,7 @@ will follow a redirection only for the second entry.
 | --- | --- |
 | <a href="#cacert" id="cacert"><code>--cacert &lt;FILE&gt;</code></a> | Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.<br>Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.<br> |
 | <a href="#cert" id="cert"><code>-E, --cert &lt;CERTIFICATE[:PASSWORD]&gt;</code></a> | Client certificate file and password.<br><br>See also [`--key`](#key).<br> |
-| <a href="#color" id="color"><code>--color</code></a> | Colorize Output.<br> |
+| <a href="#color" id="color"><code>--color</code></a> | Colorize debug output (the HTTP response output is not colorized). <br> |
 | <a href="#compressed" id="compressed"><code>--compressed</code></a> | Request a compressed response using one of the algorithms br, gzip, deflate and automatically decompress the content.<br> |
 | <a href="#connect-timeout" id="connect-timeout"><code>--connect-timeout &lt;SECONDS&gt;</code></a> | Maximum time in seconds that you allow Hurl's connection to take.<br><br>See also [`-m, --max-time`](#max-time).<br> |
 | <a href="#connect-to" id="connect-to"><code>--connect-to &lt;HOST1:PORT1:HOST2:PORT2&gt;</code></a> | For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.<br><br>See also [`--resolve`](#resolve).<br> |
@@ -198,9 +198,9 @@ Using an environment variable to set the proxy has the same effect as using the 
 
 | Variable | Description |
 | --- | --- |
-| `http_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTP.<br> |
-| `https_proxy [protocol://]<host>[:port]` | Sets the proxy server to use for HTTPS.<br> |
-| `all_proxy [protocol://]<host>[:port]` | Sets the proxy server to use if no protocol-specific proxy is set.<br> |
+| `http_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use for HTTP.<br> |
+| `https_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use for HTTPS.<br> |
+| `all_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use if no protocol-specific proxy is set.<br> |
 | `no_proxy <comma-separated list of hosts>` | List of host names that shouldn't go through any proxy.<br> |
 | `HURL_name value` | Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.<br> |
 | `NO_COLOR` | When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).<br> |
