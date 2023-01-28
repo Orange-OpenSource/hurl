@@ -352,7 +352,7 @@ Check the SHA-256 response body hash:
 ```hurl
 GET https://example.org/data.tar.gz
 
-HTTP/* *
+HTTP 200
 [Asserts]
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
@@ -444,9 +444,9 @@ HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
 
+
 POST https://example.org/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
-
 HTTP 302
 ```
 

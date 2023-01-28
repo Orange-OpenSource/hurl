@@ -22,10 +22,10 @@ HTTP 200
 [Captures]
 csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 
+
 # Do the login !
 POST https://acmecorp.net/login?user=toto&password=1234
 X-CSRF-TOKEN: {{csrf_token}}
-
 HTTP 302
 ```
 
