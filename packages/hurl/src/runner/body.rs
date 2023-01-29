@@ -53,7 +53,7 @@ pub fn eval_bytes(
         }
         Bytes::Xml(value) => Ok(http::Body::Text(value.clone())),
         Bytes::Json(value) => {
-            let value = eval_json_value(value, variables)?;
+            let value = eval_json_value(value, variables, true)?;
             Ok(http::Body::Text(value))
         }
         Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value.clone())),
