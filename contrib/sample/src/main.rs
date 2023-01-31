@@ -16,9 +16,9 @@
  *
  */
 
-use hurl::cli::Logger;
 use hurl::http::{ContextDir, Header, Request, Response};
-use hurl::runner::{AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult};
+use hurl::runner::{AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult, Verbosity};
+use hurl::util::logger::LoggerBuilder;
 use hurl::{http, runner};
 use hurl_core::parser;
 use std::collections::HashMap;
@@ -45,34 +45,41 @@ fn main() {
 
     // Create an HTTP client
     let mut client = http::Client::new(None);
-    let logger = Logger::new(false, false, file_path, &contents);
+
+    let mut logger_builder = LoggerBuilder::new();
+    let logger = logger_builder
+        .color(false)
+        .verbose(false)
+        .filename(file_path)
+        .content(&contents)
+        .build()
+        .unwrap();
 
     // Define runner options
-    let runner_options = runner::RunnerOptions {
-        cacert_file: None,
-        compressed: false,
-        connect_timeout: Duration::from_secs(300),
-        context_dir: ContextDir::default(),
-        cookie_input_file: None,
-        fail_fast: false,
-        follow_location: false,
-        ignore_asserts: false,
-        insecure: false,
-        max_redirect: None,
-        no_proxy: None,
-        post_entry: None,
-        pre_entry: None,
-        proxy: None,
-        retry: false,
-        retry_interval: Duration::from_secs(1),
-        retry_max_count: Some(10),
-        timeout: Duration::from_secs(300),
-        to_entry: None,
-        user: None,
-        user_agent: None,
-        verbosity: None,
-        very_verbose: true,
-    };
+    let runner_options = runner::RunnerOptionsBuilder::new()
+        .cacert_file(None)
+        .compressed(false)
+        .connect_timeout(Duration::from_secs(300))
+        .context_dir(&ContextDir::default())
+        .cookie_input_file(None)
+        .fail_fast(false)
+        .follow_location(false)
+        .ignore_asserts(false)
+        .insecure(false)
+        .max_redirect(None)
+        .no_proxy(None)
+        .post_entry(None)
+        .pre_entry(None)
+        .proxy(None)
+        .retry(false)
+        .retry_interval(Duration::from_secs(1))
+        .retry_max_count(Some(10))
+        .timeout(Duration::from_secs(300))
+        .to_entry(None)
+        .user(None)
+        .user_agent(None)
+        .verbosity(Some(Verbosity::VeryVerbose))
+        .build();
 
     // Set variables
     let variables = HashMap::default();
