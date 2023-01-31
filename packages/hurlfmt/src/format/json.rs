@@ -529,6 +529,10 @@ impl ToJson for FilterValue {
             FilterValue::Count => {
                 attributes.push(("type".to_string(), JValue::String("count".to_string())));
             }
+            FilterValue::Format { fmt, .. } => {
+                attributes.push(("type".to_string(), JValue::String("format".to_string())));
+                attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
+            }
             FilterValue::Nth { n, .. } => {
                 attributes.push(("type".to_string(), JValue::String("nth".to_string())));
                 attributes.push(("n".to_string(), JValue::Number(n.to_string())));
@@ -567,6 +571,10 @@ impl ToJson for FilterValue {
             FilterValue::Split { sep, .. } => {
                 attributes.push(("type".to_string(), JValue::String("split".to_string())));
                 attributes.push(("sep".to_string(), JValue::String(sep.to_string())));
+            }
+            FilterValue::ToDate { fmt, .. } => {
+                attributes.push(("type".to_string(), JValue::String("toDate".to_string())));
+                attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
             FilterValue::ToInt => {
                 attributes.push(("type".to_string(), JValue::String("toInt".to_string())));

@@ -1144,6 +1144,12 @@ impl Tokenizable for Filter {
     fn tokenize(&self) -> Vec<Token> {
         match self.value.clone() {
             FilterValue::Count => vec![Token::FilterType(String::from("count"))],
+            FilterValue::Format { space0, fmt } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("format"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut fmt.tokenize());
+                tokens
+            }
             FilterValue::HtmlEscape => vec![Token::FilterType(String::from("htmlEscape"))],
             FilterValue::HtmlUnescape => {
                 vec![Token::FilterType(String::from("htmlUnescape"))]
@@ -1179,6 +1185,12 @@ impl Tokenizable for Filter {
                 let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("split"))];
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut sep.tokenize());
+                tokens
+            }
+            FilterValue::ToDate { space0, fmt } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("toDate"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut fmt.tokenize());
                 tokens
             }
             FilterValue::ToInt => vec![Token::FilterType(String::from("toInt"))],

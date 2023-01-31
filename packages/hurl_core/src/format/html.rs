@@ -1121,6 +1121,12 @@ impl Htmlable for FilterValue {
     fn to_html(&self) -> String {
         match self {
             FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::Format { space0, fmt } => {
+                let mut buffer = "<span class=\"filter-type\">format</span>".to_string();
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(fmt.to_html().as_str());
+                buffer
+            }
             FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
             FilterValue::HtmlUnescape => {
                 "<span class=\"filter-type\">htmlUnescape</span>".to_string()
@@ -1155,6 +1161,13 @@ impl Htmlable for FilterValue {
                 let mut buffer = "<span class=\"filter-type\">split</span>".to_string();
                 buffer.push_str(space0.to_html().as_str());
                 buffer.push_str(sep.to_html().as_str());
+                buffer
+            }
+            FilterValue::ToDate { space0, fmt } => {
+                let mut buffer = "".to_string();
+                buffer.push_str("<span class=\"filter-type\">toDate</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(fmt.to_html().as_str());
                 buffer
             }
             FilterValue::ToInt => "<span class=\"filter-type\">toInt</span>".to_string(),

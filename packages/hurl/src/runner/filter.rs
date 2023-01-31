@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use chrono::NaiveDateTime;
 use std::collections::HashMap;
 
 use percent_encoding::AsciiSet;
@@ -49,6 +50,9 @@ fn eval_filter(
 ) -> Result<Value, Error> {
     match &filter.value {
         FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
+        FilterValue::Format { fmt, .. } => {
+            eval_format(value, fmt, variables, &filter.source_info, in_assert)
+        }
         FilterValue::HtmlEscape => eval_html_escape(value, &filter.source_info, in_assert),
         FilterValue::HtmlUnescape => eval_html_unescape(value, &filter.source_info, in_assert),
         FilterValue::Regex {
@@ -75,6 +79,9 @@ fn eval_filter(
         ),
         FilterValue::Split { sep, .. } => {
             eval_split(value, variables, &filter.source_info, in_assert, sep)
+        }
+        FilterValue::ToDate { fmt, .. } => {
+            eval_to_date(value, fmt, variables, &filter.source_info, in_assert)
         }
         FilterValue::ToInt => eval_to_int(value, &filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info, in_assert),
@@ -119,6 +126,28 @@ fn eval_count(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<V
         Value::List(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Nodeset(size) => Ok(Value::Integer(*size as i64)),
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+fn eval_format(
+    value: &Value,
+    fmt: &Template,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
+    let fmt = eval_template(fmt, variables)?;
+
+    match value {
+        Value::Date(value) => {
+            let formatted = format!("{}", value.format(fmt.as_str()));
+            Ok(Value::String(formatted))
+        }
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -269,6 +298,32 @@ fn eval_split(
     }
 }
 
+fn eval_to_date(
+    value: &Value,
+    fmt: &Template,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
+    let fmt = eval_template(fmt, variables)?;
+
+    match value {
+        Value::String(v) => match NaiveDateTime::parse_from_str(v, fmt.as_str()) {
+            Ok(v) => Ok(Value::Date(v.and_local_timezone(chrono::Utc).unwrap())),
+            Err(_) => Err(Error {
+                source_info: source_info.clone(),
+                inner: RunnerError::FilterInvalidInput(value.display()),
+                assert,
+            }),
+        },
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v.display()),
+            assert,
+        }),
+    }
+}
+
 fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
     match value {
         Value::Integer(v) => Ok(Value::Integer(*v)),
@@ -291,9 +346,10 @@ fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
-
     use super::*;
+    use chrono::offset::Utc;
+    use chrono::prelude::*;
+    use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
 
     pub fn filter_count() -> Filter {
         Filter {
@@ -348,6 +404,42 @@ pub mod tests {
         assert_eq!(
             error.inner,
             RunnerError::FilterInvalidInput("boolean".to_string())
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_format() {
+        // let naivedatetime_utc = NaiveDate::from_ymd_opt(2000, 1, 12).unwrap().and_hms_opt(2, 0, 0).unwrap();
+        //let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+
+        let variables = HashMap::new();
+        let whitespace = Whitespace {
+            value: String::from(""),
+            source_info: SourceInfo::new(0, 0, 0, 0),
+        };
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 20),
+            value: FilterValue::Format {
+                space0: whitespace,
+                fmt: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "%d/%m/%Y %H:%M".to_string(),
+                        encoded: "%d/%m/%Y %H:%M".to_string(),
+                    }],
+                    source_info: SourceInfo::new(1, 7, 1, 20),
+                },
+            },
+        };
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::Date(Utc.with_ymd_and_hms(2017, 04, 02, 12, 50, 32).unwrap()),
+                &variables,
+                false,
+            )
+            .unwrap(),
+            Value::String("02/04/2017 12:50".to_string())
         );
     }
 
@@ -709,6 +801,79 @@ pub mod tests {
                 Value::String("2".to_string()),
                 Value::String("3".to_string()),
             ])
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_to_date() {
+        let variables = HashMap::new();
+
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::ToDate {
+                fmt: Template {
+                    delimiter: Some('"'),
+                    elements: vec![TemplateElement::String {
+                        value: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
+                        encoded: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
+                    }],
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+            },
+        };
+
+        let naivedatetime_utc = NaiveDate::from_ymd_opt(1983, 4, 13)
+            .unwrap()
+            .and_hms_micro_opt(12, 9, 14, 274000)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("1983 Apr 13 12:09:14.274 +0000".to_string()),
+                &variables,
+                false
+            )
+            .unwrap(),
+            Value::Date(datetime_utc)
+        );
+
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::ToDate {
+                fmt: Template {
+                    delimiter: Some('"'),
+                    elements: vec![TemplateElement::String {
+                        value: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
+                        encoded: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
+                    }],
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
+                },
+            },
+        };
+
+        let naivedatetime_utc = NaiveDate::from_ymd_opt(2015, 10, 21)
+            .unwrap()
+            .and_hms_opt(7, 28, 0)
+            .unwrap();
+        let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+        assert_eq!(
+            eval_filter(
+                &filter,
+                &Value::String("Wed, 21 Oct 2015 07:28:00 GMT".to_string()),
+                &variables,
+                false
+            )
+            .unwrap(),
+            Value::Date(datetime_utc)
         );
     }
 }

@@ -25,3 +25,11 @@ error: Filter Error
  7 | jsonpath "$.list" nth 5 == 3
    |                   ^^^^^ invalid filter input: Out of bound - size is 3
    |
+
+error: Filter Error
+  --> tests_failed/filter.hurl:8:17
+   |
+ 8 | jsonpath "$.id" toDate "%a, %d %b %Y %H:%M:%S GMT" == "unused"
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid filter input: string <123x>
+   |
+

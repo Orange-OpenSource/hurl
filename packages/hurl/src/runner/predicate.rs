@@ -94,6 +94,7 @@ impl Value {
     pub fn display(&self) -> String {
         match self {
             Value::Bool(v) => format!("bool <{v}>"),
+            Value::Date(v) => format!("date <{v}>"),
             Value::Integer(v) => format!("int <{v}>"),
             Value::String(v) => format!("string <{v}>"),
             Value::Float(f) => format!("float <{}>", format_float(*f)),
@@ -139,6 +140,7 @@ impl Value {
         match self {
             Value::Bool(value) => format!("bool <{value}>"),
             Value::Bytes(values) => format!("list of size {}", values.len()),
+            Value::Date(value) => format!("date <{value}>"),
             Value::Float(f) => format!("float <{}>", format_float(*f)),
             Value::Integer(value) => format!("integer <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),

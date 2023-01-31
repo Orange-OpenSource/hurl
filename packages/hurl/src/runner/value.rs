@@ -25,6 +25,7 @@ use std::fmt;
 pub enum Value {
     Bool(bool),
     Bytes(Vec<u8>),
+    Date(chrono::DateTime<chrono::Utc>),
     Float(f64),
     Integer(i64),
     List(Vec<Value>),
@@ -50,6 +51,7 @@ impl PartialEq for Value {
             (Value::Object(v1), Value::Object(v2)) => v1 == v2,
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
+            (Value::Date(v1), Value::Date(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -62,6 +64,7 @@ impl fmt::Display for Value {
         let value = match self {
             Value::Integer(x) => x.to_string(),
             Value::Bool(x) => x.to_string(),
+            Value::Date(v) => v.to_string(),
             Value::Float(f) => format_float(*f),
             Value::String(x) => x.clone(),
             Value::List(values) => {
@@ -95,6 +98,7 @@ impl Value {
         match self {
             Value::Integer(_) => "integer".to_string(),
             Value::Bool(_) => "boolean".to_string(),
+            Value::Date(_) => "date".to_string(),
             Value::Float(_) => "float".to_string(),
             Value::String(_) => "string".to_string(),
             Value::List(_) => "list".to_string(),

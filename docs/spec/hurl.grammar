@@ -415,17 +415,21 @@ variable-name: [A-Za-z] [A-Za-z_-0-9]*
 
 filter:
     count-filter
+  | format-filter
   | html-escape-filter
   | html-unescape-filter
   | nth-filter
   | regex-filter
   | replace-filter
   | split-filter
+  | to-date-filter
   | to-int-filter
   | url-decode-filter
   | url-encode-filter
 
 count-filter: "count"
+
+format-filter: "format"
 
 html-escape-filter: "htmlEscape"
 
@@ -438,6 +442,8 @@ regex-filter: "regex" sp (quoted-string | regex)
 replace-filter: "replace" sp (quoted-string | regex) sp quoted-string
 
 split-filter: "split" sp quoted-string
+
+to-date-filter: "toDate"
 
 to-int-filter: "toInt"
 
