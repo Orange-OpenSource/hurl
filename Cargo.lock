@@ -497,7 +497,7 @@ checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
 name = "hurl"
-version = "2.1.0-SNAPSHOT"
+version = "2.0.1-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
@@ -531,7 +531,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "2.1.0-SNAPSHOT"
+version = "2.0.1-SNAPSHOT"
 dependencies = [
  "float-cmp",
  "regex",
@@ -540,7 +540,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "2.1.0-SNAPSHOT"
+version = "2.0.1-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
