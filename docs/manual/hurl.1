@@ -1,4 +1,4 @@
-.TH hurl 1 "27 Jan 2023" "hurl 2.1.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "01 Feb 2023" "hurl 2.0.1" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -69,7 +69,6 @@ A typical example occurs with CSRF tokens.
     # Capture the CSRF token value from html body.
     [Captures]
     csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
-
 
     # Do the login !
     POST https://example.org/login?user=toto&password=1234
