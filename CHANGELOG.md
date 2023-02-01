@@ -1,3 +1,15 @@
+[2.0.1 (2023-02-01)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.1)
+========================================================================================================================
+
+Thanks to
+[@softprops](https://github.com/softprops),
+
+
+Bugs Fixed:
+
+* Fix GraphQL query with variables to HTTP body request [#1218](https://github.com/Orange-OpenSource/hurl/issues/1218)
+
+
 [2.0.0 (2023-01-25)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.0)
 ========================================================================================================================
 
