@@ -342,12 +342,17 @@ jobs:
         .\bin\release\install_windows64_installer.ps1
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
+    - name: Archive logs artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: log-windows-x64-artifacts
+        path: |
+          .\**\*.log
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
         name: release-windows-x64-artifacts
         path: |
-          .\**\*.log
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*-win64.zip
 
