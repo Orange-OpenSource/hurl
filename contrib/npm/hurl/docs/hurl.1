@@ -1,4 +1,4 @@
-.TH hurl 1 "25 Jan 2023" "hurl 2.0.0" " Hurl Manual"
+.TH hurl 1 "02 Feb 2023" "hurl 2.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -70,7 +70,6 @@ A typical example occurs with CSRF tokens.
     [Captures]
     csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
 
-
     # Do the login !
     POST https://example.org/login?user=toto&password=1234
     X-CSRF-TOKEN: {{csrf_token}}
@@ -138,7 +137,7 @@ See also \fI--key\fP.
 
 .IP "--color "
 
-Colorize Output.
+Colorize debug output (the HTTP response output is not colorized). 
 
 .IP "--compressed "
 
@@ -344,15 +343,15 @@ Environment variables can only be specified in lowercase.
 
 Using an environment variable to set the proxy has the same effect as using the \fI-x, --proxy\fP option.
 
-.IP "http_proxy [protocol://]<host>[:port]"
+.IP "http_proxy [PROTOCOL://]<HOST>[:PORT]"
 
 Sets the proxy server to use for HTTP.
 
-.IP "https_proxy [protocol://]<host>[:port]"
+.IP "https_proxy [PROTOCOL://]<HOST>[:PORT]"
 
 Sets the proxy server to use for HTTPS.
 
-.IP "all_proxy [protocol://]<host>[:port]"
+.IP "all_proxy [PROTOCOL://]<HOST>[:PORT]"
 
 Sets the proxy server to use if no protocol-specific proxy is set.
 
