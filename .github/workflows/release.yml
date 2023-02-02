@@ -237,14 +237,14 @@ jobs:
         run: |
           ./bin/update_crates.sh
 
-      - name: Update packages manuals
+      - name: Update installation doc
         run: |
           # TODO: create a dedicated check script
-          #version_doc="docs/installation.md"
-          #old_version=$(grep "sudo dpkg -i" "${version_doc}" | cut --delimiter "_" --field 2 )
-          #echo "old_version=${old_version}"
-          #sed -i "s/${old_version}/${{ needs.set-context.outputs.release_version }}/g" "${version_doc}"
-          # grep "${{ needs.set-context.outputs.release_version }}" "${version_doc}"
+          version_doc="docs/installation.md"
+          old_version=$(grep "apt install" "${version_doc}" | grep "hurl" | cut --delimiter '/' --field 2- | cut --delimiter '_' --field 2)
+          echo "old_version=${old_version}"
+          sed -i "s/${old_version}/${{ needs.set-context.outputs.release_version }}/g" "${version_doc}"
+          grep "${{ needs.set-context.outputs.release_version }}" "${version_doc}"
 
       - name: Update man
         run: |
