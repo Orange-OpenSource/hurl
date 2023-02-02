@@ -72,7 +72,7 @@ SectionGroup "executables"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLUpdateInfo" "https://github.com/Orange-OpenSource/hurl/releases"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "URLInfoAbout" "https://github.com/Orange-OpenSource/hurl"
-    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "HelpLink" "https://www.hurl.dev"
+    WriteRegStr HKLM "${UNINSTALLPANELKEY}" "HelpLink" "https://hurl.dev"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "RegCompany" "Orange-OpenSource"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "Readme" "$INSTDIR\README.md"
     WriteRegStr HKLM "${UNINSTALLPANELKEY}" "NoModify" 1
