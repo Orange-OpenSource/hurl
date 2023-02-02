@@ -65,14 +65,14 @@ And Hurl:
 
 POST http://myhost.com/v1/cats
 { "name": "Billie" }
-HTTP/* 201
+HTTP 201
 [Captures]
 cat_id: jsonpath "$.id"
 [Asserts]
 jsonpath "$.name" == "Billie"
 
 GET http://myshost.com/v1/cats/{{cat_id}}
-HTTP/* 200
+HTTP 200
 ```
 
 A key point of Hurl is to work on the HTTP domain. In particular, there is no Javascript runtime, Hurl works on the
