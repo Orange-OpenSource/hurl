@@ -22,6 +22,7 @@ pub mod html;
 pub mod http;
 pub mod json;
 pub mod jsonpath;
+pub mod output;
 pub mod report;
 pub mod runner;
 pub mod util;

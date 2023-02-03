@@ -17,31 +17,24 @@
  */
 
 use std::io::prelude::*;
-use std::io::{self};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::Instant;
 
 use atty::Stream;
+use clap::Command;
 use colored::*;
 
-use hurl::cli;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
-use hurl::http::Response;
 use hurl::report;
 use hurl::report::canonicalize_filename;
 use hurl::runner;
+use hurl::runner::HurlResult;
 use hurl::runner::RunnerOptions;
-use hurl::runner::{HurlResult, RunnerError};
 use hurl::util::logger::{BaseLogger, LoggerBuilder};
-use hurl_core::ast::{HurlFile, Pos, SourceInfo};
-use hurl_core::error::Error;
+use hurl::{cli, output};
+use hurl_core::ast::HurlFile;
 use hurl_core::parser;
-
-#[cfg(target_family = "unix")]
-pub fn init_colored() {
-    control::set_override(true);
-}
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -50,100 +43,10 @@ const EXIT_ERROR_RUNTIME: i32 = 3;
 const EXIT_ERROR_ASSERT: i32 = 4;
 const EXIT_ERROR_UNDEFINED: i32 = 127;
 
-#[cfg(target_family = "windows")]
-pub fn init_colored() {
-    colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
-}
-
-#[cfg(target_family = "unix")]
-pub fn write_bytes(buf: &[u8]) -> Result<(), CliError> {
-    let stdout = io::stdout();
-    let mut handle = stdout.lock();
-    handle.write_all(buf).map_err(|_| CliError {
-        message: "Error writing output".to_string(),
-    })
-}
-
-#[cfg(target_family = "windows")]
-pub fn write_bytes(buf: &[u8]) -> Result<(), CliError> {
-    if atty::is(Stream::Stdout) {
-        println!("{}", String::from_utf8_lossy(buf));
-        Ok(())
-    } else {
-        let stdout = io::stdout();
-        let mut handle = stdout.lock();
-        handle.write_all(buf).map_err(|_| CliError {
-            message: "Error writing output".to_string(),
-        })
-    }
-}
-
-/// Runs a Hurl format `content` originated form the file `filename` and returns a result.
-fn execute(
-    hurl_file: &HurlFile,
-    filename: &str,
-    current_dir: &Path,
-    cli_options: &CliOptions,
-    logger: &Logger,
-) -> HurlResult {
-    logger.debug_important("Options:");
-    logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
-    logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
-    logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
-
-    if let Some(n) = cli_options.max_redirect {
-        logger.debug(format!("    max redirect: {n}").as_str());
-    }
-    if let Some(proxy) = &cli_options.proxy {
-        logger.debug(format!("    proxy: {proxy}").as_str());
-    }
-    logger.debug(format!("    retry: {}", cli_options.retry).as_str());
-    if let Some(n) = cli_options.retry_max_count {
-        logger.debug(format!("    retry max count: {n}").as_str());
-    }
-    if !cli_options.variables.is_empty() {
-        logger.debug_important("Variables:");
-        for (name, value) in cli_options.variables.clone() {
-            logger.debug(format!("    {name}: {value}").as_str());
-        }
-    }
-    if let Some(to_entry) = cli_options.to_entry {
-        logger.debug(
-            format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str(),
-        );
-    }
-    let variables = cli_options.variables.clone();
-    let cookie_input_file = cli_options.cookie_input_file.clone();
-    let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
-    let mut client = http::Client::new(cookie_input_file);
-    runner::run(
-        hurl_file,
-        filename,
-        &mut client,
-        &runner_options,
-        &variables,
-        logger,
-    )
-}
-
-/// Unwraps a `result` or exit with message.
-fn unwrap_or_exit<T>(result: Result<T, CliError>, code: i32, logger: &BaseLogger) -> T {
-    match result {
-        Ok(v) => v,
-        Err(e) => exit_with_error(&e.message, code, logger),
-    }
-}
-
-/// Prints an error message and exits the current process with an exit code.
-fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
-    if !message.is_empty() {
-        logger.error(message);
-    }
-    std::process::exit(code);
-}
 /// Executes Hurl entry point.
 fn main() {
+    init_colored();
+
     let libcurl_version = http::libcurl_version_info();
     let version_info = format!(
         "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
@@ -153,62 +56,44 @@ fn main() {
     );
     let mut app = cli::app(&version_info);
     let matches = app.clone().get_matches();
-    init_colored();
 
+    // We create a basic logger that can just display info, warning or error generic messages.
+    // We'll use a more advanced logger for rich error report when running Hurl files.
     let verbose = cli::has_flag(&matches, "verbose")
         || cli::has_flag(&matches, "very_verbose")
         || cli::has_flag(&matches, "interactive");
     let color = cli::output_color(&matches);
     let base_logger = BaseLogger::new(color, verbose);
+
     let cli_options = cli::parse_options(&matches);
     let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
 
-    let mut filenames = vec![];
-    if let Some(values) = cli::get_strings(&matches, "FILE") {
-        for value in values {
-            filenames.push(value.to_string());
-        }
-    };
-    for filename in &cli_options.glob_files {
-        filenames.push(filename.to_string());
+    // We aggregate the input files from the positional arguments and the glob
+    // options. If we've no file input (either from the standard input or from
+    // the command line arguments), we just print help and exit.
+    let files = cli::get_strings(&matches, "FILE");
+    let glob_files = &cli_options.glob_files;
+    let filenames = get_input_files(&files, glob_files, &mut app, &base_logger);
+
+    if cli_options.cookie_output_file.is_some() && filenames.len() > 1 {
+        exit_with_error(
+            "Only save cookies for a unique session",
+            EXIT_ERROR_UNDEFINED,
+            &base_logger,
+        );
     }
 
-    if filenames.is_empty() && atty::is(Stream::Stdin) {
-        let error = if app.print_help().is_err() {
-            "Panic during printing help"
-        } else {
-            ""
-        };
-        exit_with_error(error, EXIT_ERROR_COMMANDLINE, &base_logger);
-    } else if filenames.is_empty() {
-        filenames.push("-".to_string());
-    }
-
-    let current_dir = match std::env::current_dir() {
-        Ok(c) => c,
-        Err(error) => {
-            exit_with_error(
-                error.to_string().as_str(),
-                EXIT_ERROR_UNDEFINED,
-                &base_logger,
-            );
-        }
-    };
+    let current_dir = std::env::current_dir();
+    let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
-    let cookies_output_file = match cli_options.cookie_output_file.clone() {
-        None => None,
-        Some(filename) => {
-            let result = cookies_output_file(&filename, filenames.len());
-            let filename = unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-            Some(filename)
-        }
-    };
 
     let start = Instant::now();
     let mut hurl_results = vec![];
     let mut testcases = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
+        // We check the input file existence and check that we can read its contents.
+        // Once the preconditions succeed, we can parse the Hurl file, and run it.
         if filename != "-" && !Path::new(filename).exists() {
             let message = format!("hurl: cannot access '{filename}': No such file or directory");
             exit_with_error(&message, EXIT_ERROR_PARSING, &base_logger);
@@ -216,6 +101,8 @@ fn main() {
         let content = cli::read_to_string(filename);
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
+        // Our rich logger is using the Hurl filename and content to be able to report error
+        // with file content (line number, etc...)
         let mut builder = LoggerBuilder::new();
         let logger = builder
             .color(color)
@@ -224,99 +111,58 @@ fn main() {
             .content(&content)
             .build()
             .unwrap();
+
         if cli_options.test {
             let total = filenames.len();
             logger.test_running(current + 1, total);
         }
 
+        // We try to parse the text file to an HurlFile instance.
         let hurl_file = parser::parse_hurl_file(&content);
         if let Err(e) = hurl_file {
             logger.error_rich(&e);
             std::process::exit(EXIT_ERROR_PARSING);
         }
-        let hurl_file = hurl_file.unwrap();
 
-        let hurl_result = execute(
-            &hurl_file,
-            filename,
-            current_dir,
-            &cli_options,
-            &logger,
-        );
-        hurl_results.push(hurl_result.clone());
+        // Now, we have a syntactically correct HurlFile instance, we can run it.
+        let hurl_file = hurl_file.unwrap();
+        let hurl_result = execute(&hurl_file, filename, current_dir, &cli_options, &logger);
+        let success = hurl_result.success;
 
         if cli_options.test {
             logger.test_completed(&hurl_result);
         }
 
-        if matches!(cli_options.output_type, OutputType::ResponseBody)
-            && hurl_result.success
+        // We can output the result, either the raw body or a structured JSON representation.
+        let output_body = success
             && !cli_options.interactive
-        {
-            // By default, we output the body response bytes of the last entry
-            if let Some(entry_result) = hurl_result.entries.last() {
-                if let Some(call) = entry_result.calls.last() {
-                    let response = &call.response;
-                    let mut output = vec![];
-
-                    // If include options is set, we output the HTTP response headers
-                    // with status and version (to mimic curl outputs)
-                    if cli_options.include {
-                        let text = get_status_line_headers(response, color);
-                        output.append(&mut text.into_bytes());
-                    }
-                    let mut body = if entry_result.compressed {
-                        match response.uncompress_body() {
-                            Ok(bytes) => bytes,
-                            Err(e) => {
-                                // FIXME: we convert to a runner::Error to be able to use fixme
-                                // method. Can we do otherwise (without creating an artificial
-                                // error a first character).
-                                let error = runner::Error {
-                                    source_info: SourceInfo {
-                                        start: Pos { line: 0, column: 0 },
-                                        end: Pos { line: 0, column: 0 },
-                                    },
-                                    inner: RunnerError::from(e),
-                                    assert: false,
-                                };
-                                let message = error.fixme();
-                                exit_with_error(&message, EXIT_ERROR_RUNTIME, &base_logger);
-                            }
-                        }
-                    } else {
-                        response.body.clone()
-                    };
-                    output.append(&mut body);
-                    let result = write_output(&output, &cli_options.output);
-                    unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-                } else {
-                    logger.info("No response has been received");
-                }
-            } else {
-                let source = if filename.as_str() == "-" {
-                    "".to_string()
-                } else {
-                    format!("for file {filename}").to_string()
-                };
-                logger.warning(format!("No entry have been executed {source}").as_str());
-            };
+            && matches!(cli_options.output_type, OutputType::ResponseBody);
+        if output_body {
+            let include_headers = cli_options.include;
+            let result = output::write_body(
+                &hurl_result,
+                include_headers,
+                color,
+                &cli_options.output,
+                &logger,
+            );
+            unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
         if matches!(cli_options.output_type, OutputType::Json) {
-            let json_result = hurl_result.to_json(&content);
-            let serialized = serde_json::to_string(&json_result).unwrap();
-            let s = format!("{serialized}\n");
-            let result = write_output(&s.into_bytes(), &cli_options.output);
-            unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
+            let result = output::write_json(&hurl_result, &content, &cli_options.output);
+            unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
+
         if cli_options.junit_file.is_some() {
             let testcase = report::Testcase::from_hurl_result(&hurl_result, &content);
             testcases.push(testcase);
         }
+
+        hurl_results.push(hurl_result);
     }
 
-    if let Some(filename) = cli_options.junit_file.clone() {
+    if let Some(filename) = cli_options.junit_file {
         base_logger.debug(format!("Writing Junit report to {filename}").as_str());
         let result = report::create_junit_report(filename, testcases);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
@@ -333,9 +179,10 @@ fn main() {
         }
     }
 
-    if let Some(file_path) = cookies_output_file {
-        base_logger.debug(format!("Writing cookies to {}", file_path.display()).as_str());
-        let result = write_cookies_file(&file_path, &hurl_results);
+    if let Some(cookie_output_file) = cli_options.cookie_output_file {
+        base_logger.debug(format!("Writing cookies to {cookie_output_file}").as_str());
+        let path = Path::new(&cookie_output_file);
+        let result = write_cookies_file(path, &hurl_results);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
@@ -346,6 +193,89 @@ fn main() {
     }
 
     std::process::exit(exit_code(&hurl_results));
+}
+
+/// Runs a Hurl format `content` originated form the file `filename` and returns a result.
+fn execute(
+    hurl_file: &HurlFile,
+    filename: &str,
+    current_dir: &Path,
+    cli_options: &CliOptions,
+    logger: &Logger,
+) -> HurlResult {
+    log_run_info(hurl_file, cli_options, logger);
+
+    let variables = &cli_options.variables;
+    let cookie_input_file = cli_options.cookie_input_file.clone();
+    let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
+    let mut client = http::Client::new(cookie_input_file);
+
+    runner::run(
+        hurl_file,
+        filename,
+        &mut client,
+        &runner_options,
+        variables,
+        logger,
+    )
+}
+
+/// Logs various debug information at the start of `hurl_file` run.
+fn log_run_info(hurl_file: &HurlFile, cli_options: &CliOptions, logger: &Logger) {
+    logger.debug_important("Options:");
+    logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
+    logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
+    logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
+    if let Some(n) = cli_options.max_redirect {
+        logger.debug(format!("    max redirect: {n}").as_str());
+    }
+    if let Some(proxy) = &cli_options.proxy {
+        logger.debug(format!("    proxy: {proxy}").as_str());
+    }
+    logger.debug(format!("    retry: {}", cli_options.retry).as_str());
+    if let Some(n) = cli_options.retry_max_count {
+        logger.debug(format!("    retry max count: {n}").as_str());
+    }
+    if !cli_options.variables.is_empty() {
+        logger.debug_important("Variables:");
+        for (name, value) in cli_options.variables.iter() {
+            logger.debug(format!("    {name}: {value}").as_str());
+        }
+    }
+    if let Some(to_entry) = cli_options.to_entry {
+        logger
+            .debug(format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str());
+    }
+}
+
+#[cfg(target_family = "unix")]
+pub fn init_colored() {
+    control::set_override(true);
+}
+
+#[cfg(target_family = "windows")]
+pub fn init_colored() {
+    colored::control::set_override(true);
+    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
+}
+
+/// Unwraps a `result` or exit with message.
+fn unwrap_or_exit<T, E>(result: Result<T, E>, code: i32, logger: &BaseLogger) -> T
+where
+    E: std::fmt::Display,
+{
+    match result {
+        Ok(v) => v,
+        Err(e) => exit_with_error(&e.to_string(), code, logger),
+    }
+}
+
+/// Prints an error message and exits the current process with an exit code.
+fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
+    if !message.is_empty() {
+        logger.error(message);
+    }
+    std::process::exit(code);
 }
 
 /// Returns an exit code for a list of HurlResult.
@@ -368,6 +298,37 @@ fn exit_code(hurl_results: &[HurlResult]) -> i32 {
     } else {
         EXIT_OK
     }
+}
+
+/// Returns the input files from the positional arguments and the glob options.
+fn get_input_files(
+    files: &Option<Vec<String>>,
+    glob_files: &[String],
+    app: &mut Command,
+    logger: &BaseLogger,
+) -> Vec<String> {
+    let mut filenames = vec![];
+    if let Some(values) = files {
+        for value in values {
+            filenames.push(value.to_string());
+        }
+    };
+    for filename in glob_files {
+        filenames.push(filename.to_string());
+    }
+    if filenames.is_empty() {
+        if atty::is(Stream::Stdin) {
+            let error = if app.print_help().is_err() {
+                "Panic during printing help"
+            } else {
+                ""
+            };
+            exit_with_error(error, EXIT_ERROR_COMMANDLINE, logger);
+        } else {
+            filenames.push("-".to_string());
+        }
+    }
+    filenames
 }
 
 fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
@@ -403,37 +364,6 @@ fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
         });
     }
     Ok(())
-}
-
-fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), CliError> {
-    match filename {
-        None => write_bytes(bytes.as_slice()),
-        Some(filename) => {
-            let path = Path::new(filename.as_str());
-            let mut file = match std::fs::File::create(path) {
-                Err(why) => {
-                    return Err(CliError {
-                        message: format!("Issue writing to {}: {:?}", path.display(), why),
-                    });
-                }
-                Ok(file) => file,
-            };
-            file.write_all(bytes.as_slice())
-                .expect("writing bytes to file");
-            Ok(())
-        }
-    }
-}
-
-fn cookies_output_file(filename: &str, n: usize) -> Result<PathBuf, CliError> {
-    if n > 1 {
-        Err(CliError {
-            message: "Only save cookies for a unique session".to_string(),
-        })
-    } else {
-        let path = Path::new(&filename);
-        Ok(path.to_path_buf())
-    }
 }
 
 fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
@@ -498,26 +428,4 @@ fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
     );
     s.push_str(format!("Duration:        {duration} ms\n").as_str());
     s
-}
-
-/// Returns status, version and HTTP headers from an HTTP `response`.
-fn get_status_line_headers(response: &Response, color: bool) -> String {
-    let mut str = String::new();
-    let status_line = format!("{} {}\n", response.version, response.status);
-    let status_line = if color {
-        format!("{}", status_line.green().bold())
-    } else {
-        status_line
-    };
-    str.push_str(&status_line);
-    for header in response.headers.iter() {
-        let header_line = if color {
-            format!("{}: {}\n", header.name.cyan().bold(), header.value)
-        } else {
-            format!("{}: {}\n", header.name, header.value)
-        };
-        str.push_str(&header_line);
-    }
-    str.push('\n');
-    str
 }

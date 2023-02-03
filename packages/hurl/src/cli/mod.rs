@@ -17,6 +17,7 @@
  */
 
 use std::error::Error;
+use std::fmt;
 
 pub use self::fs::read_to_string;
 pub use self::options::app;
@@ -59,5 +60,11 @@ impl From<String> for CliError {
         Self {
             message: format!("{e:?}"),
         }
+    }
+}
+
+impl fmt::Display for CliError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.message)
     }
 }
