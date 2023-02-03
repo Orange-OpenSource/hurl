@@ -34,7 +34,7 @@ use hurl::runner;
 use hurl::runner::RunnerOptions;
 use hurl::runner::{HurlResult, RunnerError};
 use hurl::util::logger::{BaseLogger, LoggerBuilder};
-use hurl_core::ast::{Pos, SourceInfo};
+use hurl_core::ast::{HurlFile, Pos, SourceInfo};
 use hurl_core::error::Error;
 use hurl_core::parser;
 
@@ -79,75 +79,52 @@ pub fn write_bytes(buf: &[u8]) -> Result<(), CliError> {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct Progress {
-    pub current: usize,
-    pub total: usize,
-}
-
 /// Runs a Hurl format `content` originated form the file `filename` and returns a result.
 fn execute(
+    hurl_file: &HurlFile,
     filename: &str,
-    content: &str,
     current_dir: &Path,
     cli_options: &CliOptions,
-    progress: &Option<Progress>,
     logger: &Logger,
 ) -> HurlResult {
-    if let Some(Progress { current, total }) = progress {
-        logger.test_running(current + 1, *total);
+    logger.debug_important("Options:");
+    logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
+    logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
+    logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
+
+    if let Some(n) = cli_options.max_redirect {
+        logger.debug(format!("    max redirect: {n}").as_str());
     }
-
-    match parser::parse_hurl_file(content) {
-        Err(e) => {
-            logger.error_rich(&e);
-            std::process::exit(EXIT_ERROR_PARSING);
-        }
-        Ok(hurl_file) => {
-            logger.debug_important("Options:");
-            logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
-            logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
-            logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
-
-            if let Some(n) = cli_options.max_redirect {
-                logger.debug(format!("    max redirect: {n}").as_str());
-            }
-            if let Some(proxy) = &cli_options.proxy {
-                logger.debug(format!("    proxy: {proxy}").as_str());
-            }
-            logger.debug(format!("    retry: {}", cli_options.retry).as_str());
-            if let Some(n) = cli_options.retry_max_count {
-                logger.debug(format!("    retry max count: {n}").as_str());
-            }
-            if !cli_options.variables.is_empty() {
-                logger.debug_important("Variables:");
-                for (name, value) in cli_options.variables.clone() {
-                    logger.debug(format!("    {name}: {value}").as_str());
-                }
-            }
-            if let Some(to_entry) = cli_options.to_entry {
-                logger.debug(
-                    format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str(),
-                );
-            }
-            let variables = cli_options.variables.clone();
-            let cookie_input_file = cli_options.cookie_input_file.clone();
-            let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
-            let mut client = http::Client::new(cookie_input_file);
-            let result = runner::run(
-                &hurl_file,
-                filename,
-                &mut client,
-                &runner_options,
-                &variables,
-                logger,
-            );
-            if cli_options.test {
-                logger.test_completed(&result);
-            }
-            result
+    if let Some(proxy) = &cli_options.proxy {
+        logger.debug(format!("    proxy: {proxy}").as_str());
+    }
+    logger.debug(format!("    retry: {}", cli_options.retry).as_str());
+    if let Some(n) = cli_options.retry_max_count {
+        logger.debug(format!("    retry max count: {n}").as_str());
+    }
+    if !cli_options.variables.is_empty() {
+        logger.debug_important("Variables:");
+        for (name, value) in cli_options.variables.clone() {
+            logger.debug(format!("    {name}: {value}").as_str());
         }
     }
+    if let Some(to_entry) = cli_options.to_entry {
+        logger.debug(
+            format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str(),
+        );
+    }
+    let variables = cli_options.variables.clone();
+    let cookie_input_file = cli_options.cookie_input_file.clone();
+    let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
+    let mut client = http::Client::new(cookie_input_file);
+    runner::run(
+        hurl_file,
+        filename,
+        &mut client,
+        &runner_options,
+        &variables,
+        logger,
+    )
 }
 
 /// Unwraps a `result` or exit with message.
@@ -239,14 +216,6 @@ fn main() {
         let content = cli::read_to_string(filename);
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
-        let progress = if cli_options.test {
-            Some(Progress {
-                current,
-                total: filenames.len(),
-            })
-        } else {
-            None
-        };
         let mut builder = LoggerBuilder::new();
         let logger = builder
             .color(color)
@@ -255,16 +224,30 @@ fn main() {
             .content(&content)
             .build()
             .unwrap();
+        if cli_options.test {
+            let total = filenames.len();
+            logger.test_running(current + 1, total);
+        }
+
+        let hurl_file = parser::parse_hurl_file(&content);
+        if let Err(e) = hurl_file {
+            logger.error_rich(&e);
+            std::process::exit(EXIT_ERROR_PARSING);
+        }
+        let hurl_file = hurl_file.unwrap();
 
         let hurl_result = execute(
+            &hurl_file,
             filename,
-            &content,
             current_dir,
             &cli_options,
-            &progress,
             &logger,
         );
         hurl_results.push(hurl_result.clone());
+
+        if cli_options.test {
+            logger.test_completed(&hurl_result);
+        }
 
         if matches!(cli_options.output_type, OutputType::ResponseBody)
             && hurl_result.success
