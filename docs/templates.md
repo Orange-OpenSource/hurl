@@ -139,7 +139,7 @@ $ hurl --variable host=example.net --variable id=1234 test.hurl
 We can also define all injected variables in a file:
 
 ```shell
-$ hurl --variables-files vars.env test.hurl
+$ hurl --variables-file vars.env test.hurl
 ``` 
 
 where `vars.env` is
