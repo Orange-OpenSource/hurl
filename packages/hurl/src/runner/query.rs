@@ -259,7 +259,13 @@ pub fn eval_cookie_attribute_name(
 ) -> Option<Value> {
     match cookie_attribute_name {
         CookieAttributeName::Value(_) => Some(Value::String(cookie.value)),
-        CookieAttributeName::Expires(_) => cookie.expires().map(Value::String),
+        CookieAttributeName::Expires(_) => {
+            let s = cookie.expires().unwrap();
+            match chrono::DateTime::parse_from_rfc2822(s.as_str()) {
+                Ok(v) => Some(Value::Date(v.with_timezone(&chrono::Utc))),
+                Err(_) => todo!(),
+            }
+        }
         CookieAttributeName::MaxAge(_) => cookie.max_age().map(Value::Integer),
         CookieAttributeName::Domain(_) => cookie.domain().map(Value::String),
         CookieAttributeName::Path(_) => cookie.path().map(Value::String),
@@ -760,7 +766,11 @@ pub mod tests {
                 cookie.clone(),
             )
             .unwrap(),
-            Value::String("Wed, 13 Jan 2021 22:23:01 GMT".to_string())
+            Value::Date(
+                chrono::DateTime::parse_from_rfc2822("Wed, 13 Jan 2021 22:23:01 GMT")
+                    .unwrap()
+                    .with_timezone(&chrono::Utc)
+            ),
         );
         assert_eq!(
             eval_cookie_attribute_name(
