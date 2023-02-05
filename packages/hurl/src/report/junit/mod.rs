@@ -66,7 +66,7 @@ use crate::cli::CliError;
 
 mod testcase;
 
-pub fn create_report(filename: String, testcases: Vec<Testcase>) -> Result<(), CliError> {
+pub fn create_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
     let mut testsuites = vec![];
 
     let path = std::path::Path::new(&filename);
@@ -113,7 +113,7 @@ pub fn create_report(filename: String, testcases: Vec<Testcase>) -> Result<(), C
     }
 }
 
-fn create_testsuite(testcases: Vec<Testcase>) -> XMLNode {
+fn create_testsuite(testcases: &[Testcase]) -> XMLNode {
     let children = testcases
         .iter()
         .map(|t| XMLNode::Element(t.to_xml()))

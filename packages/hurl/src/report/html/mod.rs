@@ -34,10 +34,10 @@ struct HTMLResult {
     pub success: bool,
 }
 
-pub fn write_html_report(dir_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
+pub fn write_html_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(), CliError> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
-    for result in hurl_results {
+    for result in hurl_results.iter() {
         let html_result = HTMLResult {
             filename: canonicalize_filename(&result.filename),
             time_in_ms: result.time_in_ms,
@@ -48,7 +48,7 @@ pub fn write_html_report(dir_path: &Path, hurl_results: &[HurlResult]) -> Result
     let now: DateTime<Local> = Local::now();
     let s = create_html_index(&now.to_rfc2822(), &results);
 
-    let file_path = dir_path.join("index.html");
+    let file_path = index_path;
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
             return Err(CliError {

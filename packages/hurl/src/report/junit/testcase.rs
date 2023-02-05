@@ -32,7 +32,7 @@ pub struct Testcase {
 
 impl Testcase {
     /// Creates an XML Junit <testcase> from an Hurl result.
-    pub fn from_hurl_result(hurl_result: &HurlResult, content: &str) -> Testcase {
+    pub fn from(hurl_result: &HurlResult, content: &str) -> Testcase {
         let id = hurl_result.filename.clone();
         let name = hurl_result.filename.clone();
         let time_in_ms = hurl_result.time_in_ms;
@@ -117,7 +117,7 @@ mod test {
 
         let mut buffer = Vec::new();
         let content = "";
-        Testcase::from_hurl_result(&hurl_result, content)
+        Testcase::from(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -154,7 +154,7 @@ HTTP/1.0 200
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, content)
+        Testcase::from(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -195,7 +195,7 @@ HTTP/1.0 200
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from_hurl_result(&hurl_result, content)
+        Testcase::from(&hurl_result, content)
             .to_xml()
             .write(&mut buffer)
             .unwrap();

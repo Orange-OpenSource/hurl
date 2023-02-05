@@ -43,6 +43,11 @@ const EXIT_ERROR_RUNTIME: i32 = 3;
 const EXIT_ERROR_ASSERT: i32 = 4;
 const EXIT_ERROR_UNDEFINED: i32 = 127;
 
+struct Run {
+    content: String,
+    result: HurlResult,
+}
+
 /// Executes Hurl entry point.
 fn main() {
     init_colored();
@@ -88,8 +93,7 @@ fn main() {
     let current_dir = current_dir.as_path();
 
     let start = Instant::now();
-    let mut hurl_results = vec![];
-    let mut testcases = vec![];
+    let mut runs = vec![];
 
     for (current, filename) in filenames.iter().enumerate() {
         // We check the input file existence and check that we can read its contents.
@@ -154,45 +158,38 @@ fn main() {
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
-        if cli_options.junit_file.is_some() {
-            let testcase = report::Testcase::from_hurl_result(&hurl_result, &content);
-            testcases.push(testcase);
-        }
-
-        hurl_results.push(hurl_result);
+        let run = Run {
+            content,
+            result: hurl_result,
+        };
+        runs.push(run);
     }
 
     if let Some(filename) = cli_options.junit_file {
-        base_logger.debug(format!("Writing Junit report to {filename}").as_str());
-        let result = report::create_junit_report(filename, testcases);
+        base_logger.debug(format!("Writing JUnit report to {filename}").as_str());
+        let result = create_junit_report(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
-    if let Some(dir_path) = cli_options.html_dir {
-        base_logger.debug(format!("Writing html report to {}", dir_path.display()).as_str());
-        let result = report::write_html_report(&dir_path, &hurl_results);
+    if let Some(dir) = cli_options.html_dir {
+        base_logger.debug(format!("Writing HTML report to {}", dir.display()).as_str());
+        let result = create_html_report(&runs, &dir);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-
-        for filename in filenames {
-            let result = format_html(filename.as_str(), &dir_path);
-            unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
-        }
     }
 
-    if let Some(cookie_output_file) = cli_options.cookie_output_file {
-        base_logger.debug(format!("Writing cookies to {cookie_output_file}").as_str());
-        let path = Path::new(&cookie_output_file);
-        let result = write_cookies_file(path, &hurl_results);
+    if let Some(filename) = cli_options.cookie_output_file {
+        base_logger.debug(format!("Writing cookies to {filename}").as_str());
+        let result = create_cookies_file(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
     if cli_options.test {
         let duration = start.elapsed().as_millis();
-        let summary = get_summary(duration, &hurl_results);
+        let summary = get_summary(duration, &runs);
         base_logger.info(summary.as_str());
     }
 
-    std::process::exit(exit_code(&hurl_results));
+    std::process::exit(exit_code(&runs));
 }
 
 /// Runs a Hurl format `content` originated form the file `filename` and returns a result.
@@ -278,12 +275,35 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
     std::process::exit(code);
 }
 
+/// Create a JUnit report for this run.
+fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
+    let mut testcases = vec![];
+    for run in runs.iter() {
+        let hurl_result = &run.result;
+        let content = &run.content;
+        let testcase = report::Testcase::from(hurl_result, content);
+        testcases.push(testcase);
+    }
+    report::create_junit_report(filename, &testcases)
+}
+
+/// Create an HTML report for this run.
+fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), CliError> {
+    let hurl_results = runs.iter().map(|it| &it.result).collect::<Vec<_>>();
+    report::write_html_report(dir_path, &hurl_results)?;
+    for run in runs.iter() {
+        let filename = &run.result.filename;
+        format_html(filename, dir_path)?;
+    }
+    Ok(())
+}
+
 /// Returns an exit code for a list of HurlResult.
-fn exit_code(hurl_results: &[HurlResult]) -> i32 {
+fn exit_code(runs: &[Run]) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
-    for hurl_result in hurl_results {
-        let errors = hurl_result.errors();
+    for run in runs.iter() {
+        let errors = run.result.errors();
         if errors.is_empty() {
         } else if errors.iter().filter(|e| !e.assert).count() == 0 {
             count_errors_assert += 1;
@@ -366,11 +386,11 @@ fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
     Ok(())
 }
 
-fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(), CliError> {
-    let mut file = match std::fs::File::create(file_path) {
+fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), CliError> {
+    let mut file = match std::fs::File::create(filename) {
         Err(why) => {
             return Err(CliError {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+                message: format!("Issue writing to {filename}: {why:?}"),
             });
         }
         Ok(file) => file,
@@ -380,14 +400,14 @@ fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(
 
 "#
     .to_string();
-    match hurl_results.first() {
+    match runs.first() {
         None => {
             return Err(CliError {
                 message: "Issue fetching results".to_string(),
             });
         }
-        Some(result) => {
-            for cookie in result.cookies.clone() {
+        Some(run) => {
+            for cookie in run.result.cookies.clone() {
                 s.push_str(cookie.to_string().as_str());
                 s.push('\n');
             }
@@ -396,15 +416,15 @@ fn write_cookies_file(file_path: &Path, hurl_results: &[HurlResult]) -> Result<(
 
     if let Err(why) = file.write_all(s.as_bytes()) {
         return Err(CliError {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
+            message: format!("Issue writing to {filename}: {why:?}"),
         });
     }
     Ok(())
 }
 
-fn get_summary(duration: u128, hurl_results: &[HurlResult]) -> String {
-    let total = hurl_results.len();
-    let success = hurl_results.iter().filter(|r| r.success).count();
+fn get_summary(duration: u128, runs: &[Run]) -> String {
+    let total = runs.len();
+    let success = runs.iter().filter(|r| r.result.success).count();
     let failed = total - success;
     let mut s =
         "--------------------------------------------------------------------------------\n"
