@@ -22,7 +22,7 @@ hurl_core = { version = "2.1.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.7.1"
 
 [dev-dependencies]
-proptest = "1.0.0"
+proptest = "1.1.0"
 
 
 
