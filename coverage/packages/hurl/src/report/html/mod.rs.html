@@ -627,7 +627,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn write_html_report(dir_path: &amp;Path, hurl_results: &amp;[HurlResult]) -&gt; Result&lt;(), CliError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn write_html_report(dir_path: &amp;Path, hurl_results: &amp;[&amp;HurlResult]) -&gt; Result&lt;(), CliError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -670,12 +670,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="693">
-                693
+                role="cell" aria-label="351">
+                351
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    for result in hurl_results {</pre>
+                <pre class="has-background-success-light py-0 px-2">    for result in hurl_results.iter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -851,7 +851,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let file_path = dir_path.join(&quot;index.html&quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let file_path = index_path;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3961,7 +3961,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-02-05 08:11</p>
+                <p class="heading">Date: 2023-02-06 08:10</p>
             </div>
         </footer>
     </body>
