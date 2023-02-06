@@ -37,7 +37,7 @@ jobs:
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
-        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
     - name: Test integ
@@ -222,7 +222,7 @@ jobs:
     - name: Install Curl 7.68
       uses: myci-actions/add-deb-repo@10
       with:
-        repo: deb http://azure.archive.ubuntu.com/ubuntu/ focal main restricted
+        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
         repo-name: focal
         install: curl
     - name: Test integ
