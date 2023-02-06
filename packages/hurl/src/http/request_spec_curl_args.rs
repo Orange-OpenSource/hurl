@@ -45,21 +45,21 @@ impl RequestSpec {
                 if content_type.as_str() != "application/x-www-form-urlencoded"
                     && content_type.as_str() != "multipart/form-data"
                 {
-                    arguments.push("-H".to_string());
+                    arguments.push("--header".to_string());
                     arguments.push(format!("'Content-Type: {content_type}'"));
                 }
             } else if !self.body.bytes().is_empty() {
                 match self.body.clone() {
                     Body::Text(_) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type:'".to_string())
                     }
                     Body::Binary(_) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type: application/octet-stream'".to_string())
                     }
                     Body::File(_, _) => {
-                        arguments.push("-H".to_string());
+                        arguments.push("--header".to_string());
                         arguments.push("'Content-Type:'".to_string())
                     }
                 }
@@ -71,7 +71,7 @@ impl RequestSpec {
             arguments.push(format!("'{}'", param.curl_arg_escape()));
         }
         for param in self.multipart.clone() {
-            arguments.push("-F".to_string());
+            arguments.push("--form".to_string());
             arguments.push(format!("'{}'", param.curl_arg(context_dir)));
         }
 
@@ -116,7 +116,7 @@ impl Method {
         match self {
             Method::Get => {
                 if data {
-                    vec!["-X".to_string(), "GET".to_string()]
+                    vec!["--request".to_string(), "GET".to_string()]
                 } else {
                     vec![]
                 }
@@ -126,10 +126,10 @@ impl Method {
                 if data {
                     vec![]
                 } else {
-                    vec!["-X".to_string(), "POST".to_string()]
+                    vec!["--request".to_string(), "POST".to_string()]
                 }
             }
-            _ => vec!["-X".to_string(), self.to_string()],
+            _ => vec!["--request".to_string(), self.to_string()],
         }
     }
 }
@@ -139,7 +139,7 @@ impl Header {
         let name = self.name.clone();
         let value = self.value.clone();
         vec![
-            "-H".to_string(),
+            "--header".to_string(),
             encode_shell_string(format!("{name}: {value}").as_str()),
         ]
     }
@@ -248,22 +248,22 @@ pub mod tests {
         assert!(Method::Get.curl_args(false).is_empty());
         assert_eq!(
             Method::Get.curl_args(true),
-            vec!["-X".to_string(), "GET".to_string()]
+            vec!["--request".to_string(), "GET".to_string()]
         );
 
         assert_eq!(
             Method::Post.curl_args(false),
-            vec!["-X".to_string(), "POST".to_string()]
+            vec!["--request".to_string(), "POST".to_string()]
         );
         assert!(Method::Post.curl_args(true).is_empty());
 
         assert_eq!(
             Method::Put.curl_args(false),
-            vec!["-X".to_string(), "PUT".to_string()]
+            vec!["--request".to_string(), "PUT".to_string()]
         );
         assert_eq!(
             Method::Put.curl_args(true),
-            vec!["-X".to_string(), "PUT".to_string()]
+            vec!["--request".to_string(), "PUT".to_string()]
         );
     }
 
@@ -275,7 +275,7 @@ pub mod tests {
                 value: "example.com".to_string(),
             }
             .curl_args(),
-            vec!["-H".to_string(), "'Host: example.com'".to_string()]
+            vec!["--header".to_string(), "'Host: example.com'".to_string()]
         );
         assert_eq!(
             Header {
@@ -283,7 +283,10 @@ pub mod tests {
                 value: "\"e0023aa4e\"".to_string(),
             }
             .curl_args(),
-            vec!["-H".to_string(), "'If-Match: \"e0023aa4e\"'".to_string()]
+            vec![
+                "--header".to_string(),
+                "'If-Match: \"e0023aa4e\"'".to_string()
+            ]
         );
     }
 
@@ -333,9 +336,9 @@ pub mod tests {
         assert_eq!(
             custom_http_request().curl_args(context_dir),
             vec![
-                "-H".to_string(),
+                "--header".to_string(),
                 "'User-Agent: iPhone'".to_string(),
-                "-H".to_string(),
+                "--header".to_string(),
                 "'Foo: Bar'".to_string(),
                 "'http://localhost/custom'".to_string(),
             ]
@@ -349,7 +352,7 @@ pub mod tests {
         assert_eq!(
             form_http_request().curl_args(context_dir),
             vec![
-                "-H".to_string(),
+                "--header".to_string(),
                 "'Content-Type: application/x-www-form-urlencoded'".to_string(),
                 "--data".to_string(),
                 "'param1=value1'".to_string(),

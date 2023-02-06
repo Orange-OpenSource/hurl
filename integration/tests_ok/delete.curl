@@ -1,2 +1,2 @@
-curl -X DELETE 'http://localhost:8000/delete'
+curl --request DELETE 'http://localhost:8000/delete'
 

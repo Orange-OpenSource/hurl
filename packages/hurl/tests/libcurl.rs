@@ -112,7 +112,7 @@ fn test_put() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -X PUT 'http://localhost:8000/put'".to_string()
+        "curl --request PUT 'http://localhost:8000/put'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -164,7 +164,7 @@ fn test_patch() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -X PATCH -H 'Host: www.example.com' -H 'Content-Type: application/example' -H 'If-Match: \"e0023aa4e\"' 'http://localhost:8000/patch/file.txt'".to_string()
+        "curl --request PATCH --header 'Host: www.example.com' --header 'Content-Type: application/example' --header 'If-Match: \"e0023aa4e\"' 'http://localhost:8000/patch/file.txt'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -218,7 +218,7 @@ fn test_custom_headers() {
     assert!(options.curl_args().is_empty());
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Fruit: Raspberry' -H 'Fruit: Apple' -H 'Fruit: Banana' -H 'Fruit: Grape' -H 'Color: Green' 'http://localhost:8000/custom-headers'".to_string()
+        "curl --header 'Fruit: Raspberry' --header 'Fruit: Apple' --header 'Fruit: Banana' --header 'Fruit: Grape' --header 'Color: Green' 'http://localhost:8000/custom-headers'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -410,10 +410,10 @@ fn test_follow_location() {
     };
     let context_dir = ContextDir::default();
     let mut client = Client::new(None);
-    assert_eq!(options.curl_args(), vec!["-L".to_string()]);
+    assert_eq!(options.curl_args(), vec!["--location".to_string()]);
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L 'http://localhost:8000/redirect-absolute'".to_string()
+        "curl --location 'http://localhost:8000/redirect-absolute'".to_string()
     );
 
     let calls = client
@@ -476,7 +476,7 @@ fn test_max_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect/15");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L --max-redirs 10 'http://localhost:8000/redirect/15'".to_string()
+        "curl --location --max-redirs 10 'http://localhost:8000/redirect/15'".to_string()
     );
     let error = client
         .execute_with_redirect(&request_spec, &options, &logger)
@@ -487,7 +487,7 @@ fn test_max_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect/8");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -L --max-redirs 10 'http://localhost:8000/redirect/8'".to_string()
+        "curl --location --max-redirs 10 'http://localhost:8000/redirect/8'".to_string()
     );
     let calls = client
         .execute_with_redirect(&request_spec, &options, &logger)
@@ -546,7 +546,7 @@ fn test_multipart_form_data() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -F 'key1=value1' -F 'upload1=@data.txt;type=text/plain' -F 'upload2=@data.html;type=text/html' -F 'upload3=@data.txt;type=text/html' 'http://localhost:8000/multipart-form-data'".to_string()
+        "curl --form 'key1=value1' --form 'upload1=@data.txt;type=text/plain' --form 'upload2=@data.html;type=text/html' --form 'upload3=@data.txt;type=text/html' 'http://localhost:8000/multipart-form-data'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
@@ -590,7 +590,7 @@ fn test_post_bytes() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21' 'http://localhost:8000/post-base64'".to_string()
+        "curl --header 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21' 'http://localhost:8000/post-base64'".to_string()
     );
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
@@ -628,7 +628,7 @@ fn test_expect() {
     };
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl -H 'Expect: 100-continue' -H 'Content-Type:' --data 'data' 'http://localhost:8000/expect'".to_string()
+        "curl --header 'Expect: 100-continue' --header 'Content-Type:' --data 'data' 'http://localhost:8000/expect'".to_string()
     );
 
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();

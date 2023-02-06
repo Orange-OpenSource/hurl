@@ -108,7 +108,7 @@ impl ClientOptions {
             arguments.push("--insecure".to_string());
         }
         if self.follow_location {
-            arguments.push("-L".to_string());
+            arguments.push("--location".to_string());
         }
         if self.max_redirect != ClientOptions::default().max_redirect {
             let max_redirect = match self.max_redirect {
@@ -185,7 +185,7 @@ mod tests {
                 "--cookie".to_string(),
                 "cookie_file".to_string(),
                 "--insecure".to_string(),
-                "-L".to_string(),
+                "--location".to_string(),
                 "--max-redirs".to_string(),
                 "10".to_string(),
                 "--proxy".to_string(),
