@@ -117,6 +117,8 @@ pub fn run(
         let logger = builder
             .color(logger.color)
             .verbose(entry_verbosity.is_some())
+            .test(logger.test)
+            .progress_bar(entry_verbosity.is_none() && logger.progress_bar)
             .filename(logger.filename)
             .content(logger.content)
             .build()
@@ -135,6 +137,8 @@ pub fn run(
         logger.debug_important(format!("Executing entry {entry_index}").as_str());
 
         warn_deprecated(entry, &logger);
+
+        logger.test_progress(entry_index, n);
 
         let options_result =
             entry::get_entry_options(entry, runner_options, &mut variables, &logger);
@@ -185,13 +189,14 @@ pub fn run(
         // If we're going to retry the entry, we log error only in verbose. Otherwise,
         // we log error on stderr.
         for e in &entry_result.errors {
+            logger.test_erase_line();
             if retry {
                 logger.debug_error(e);
             } else {
                 logger.error_rich(e);
             }
         }
-        entries.push(entry_result.clone());
+        entries.push(entry_result);
 
         if let Some(post_entry) = runner_options.post_entry {
             let exit = post_entry();
@@ -218,6 +223,8 @@ pub fn run(
         entry_index += 1;
         retry_count = 1;
     }
+
+    logger.test_erase_line();
 
     let time_in_ms = start.elapsed().as_millis();
     let cookies = http_client.get_cookie_storage();

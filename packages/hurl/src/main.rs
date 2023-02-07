@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::env;
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
@@ -87,7 +88,8 @@ fn main() {
         );
     }
 
-    let current_dir = std::env::current_dir();
+    let progress_bar = cli_options.test && !verbose && !is_ci() && atty::is(Stream::Stderr);
+    let current_dir = env::current_dir();
     let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
 
@@ -110,15 +112,15 @@ fn main() {
         let logger = builder
             .color(color)
             .verbose(verbose)
+            .test(cli_options.test)
+            .progress_bar(progress_bar)
             .filename(filename)
             .content(&content)
             .build()
             .unwrap();
 
-        if cli_options.test {
-            let total = filenames.len();
-            logger.test_running(current + 1, total);
-        }
+        let total = filenames.len();
+        logger.test_running(current + 1, total);
 
         // We try to parse the text file to an HurlFile instance.
         let hurl_file = parser::parse_hurl_file(&content);
@@ -132,9 +134,7 @@ fn main() {
         let hurl_result = execute(&hurl_file, filename, current_dir, &cli_options, &logger);
         let success = hurl_result.success;
 
-        if cli_options.test {
-            logger.test_completed(&hurl_result);
-        }
+        logger.test_completed(&hurl_result);
 
         // We can output the result, either the raw body or a structured JSON representation.
         let output_body = success
@@ -447,4 +447,10 @@ fn get_summary(duration: u128, runs: &[Run]) -> String {
     );
     s.push_str(format!("Duration:        {duration} ms\n").as_str());
     s
+}
+
+/// Whether or not this running in a Continuous Integration environment.
+/// Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
+fn is_ci() -> bool {
+    env::var("CI").is_ok() || env::var("TF_BUILD").is_ok()
 }

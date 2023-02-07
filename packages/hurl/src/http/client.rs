@@ -208,9 +208,7 @@ impl Client {
                     // Return all request headers (not one by one)
                     easy::InfoType::HeaderOut => {
                         let mut lines = split_lines(data);
-                        if verbose {
-                            logger.method_version_out(&lines[0]);
-                        }
+                        logger.debug_method_version_out(&lines[0]);
 
                         // Extracts request headers from libcurl debug info.
                         lines.pop().unwrap(); // Remove last empty line.
