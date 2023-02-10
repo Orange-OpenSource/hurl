@@ -20,9 +20,9 @@ use std::collections::HashMap;
 
 use percent_encoding::AsciiSet;
 
+use crate::html;
 use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
 
-use crate::html;
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};

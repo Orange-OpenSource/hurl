@@ -98,15 +98,6 @@ lazy_static! {
 /// <https://github.com/python/cpython/blob/main/Lib/html/__init__.py>
 ///
 /// See MDN decoder tool: <https://mothereff.in/html-entities>
-///
-/// # Examples
-///
-/// ```
-/// use hurl::html;
-///
-/// let output = html::html_unescape("Foo &#xA9; bar &#x1D306; baz &#x2603; qux");
-/// assert_eq!(output, "Foo © bar 𝌆 baz ☃ qux")
-/// ```
 pub fn html_unescape(text: &str) -> String {
     return if text.chars().any(|c| c == '&') {
         CHAR_REF

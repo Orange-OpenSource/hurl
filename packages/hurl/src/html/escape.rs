@@ -20,15 +20,6 @@
 ///
 /// Both double quote (") and single quote (') characters are also
 /// translated.
-///
-/// # Examples
-///
-/// ```
-/// use hurl::html;
-///
-/// let output = html::html_escape("<foo>");
-/// assert_eq!(output, "&lt;foo&gt;")
-/// ```
 pub fn html_escape(text: &str) -> String {
     let mut output = String::new();
     for c in text.chars() {
@@ -49,7 +40,7 @@ mod tests {
     use super::html_escape;
 
     #[test]
-    pub fn eval_html_escape() {
+    fn eval_html_escape() {
         let tests = vec![
             ("foo", "foo"),
             ("<tag>", "&lt;tag&gt;"),

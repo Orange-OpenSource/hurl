@@ -18,7 +18,7 @@
 #![cfg_attr(feature = "strict", deny(warnings))]
 
 pub mod cli;
-pub mod html;
+mod html;
 pub mod http;
 pub mod json;
 pub mod jsonpath;
