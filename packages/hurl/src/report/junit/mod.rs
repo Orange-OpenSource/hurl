@@ -20,14 +20,14 @@
 //! XML JUnit report
 //!
 //! The link below seems the most "official" spec
-//! https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format
+//! <https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format>
 //!
-//! One Hurl file will result into one junit <testcase>.
+//! One Hurl file will result into one JUnit &lt;testcase&gt;.
 //!
-//! The <testcase> can include <error> (for Runtime error) or <failure> (for Assert Error)
-//! Each hurl execution will generate its own <testsuite> within the root <testsuites>.
+//! The &lt;testcase&gt; can include &lt;error&gt; (for runtime error) or &lt;failure&gt; (for assert error)
+//! Each Hurl execution will generate its own &lt;testsuite&gt; within the root &lt;testsuites>.
 //!
-//! Example:
+//! # Example:
 //!
 //! ```shell
 //! $ cat test.xml | xmllint --format -

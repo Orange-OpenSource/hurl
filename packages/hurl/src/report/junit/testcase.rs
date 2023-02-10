@@ -31,7 +31,7 @@ pub struct Testcase {
 }
 
 impl Testcase {
-    /// Creates an XML Junit <testcase> from an Hurl result.
+    /// Creates an XML Junit &lt;testcase&gt; from an Hurl result.
     pub fn from(hurl_result: &HurlResult, content: &str) -> Testcase {
         let id = hurl_result.filename.clone();
         let name = hurl_result.filename.clone();

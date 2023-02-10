@@ -46,7 +46,7 @@ impl Request {
 
     /// Returns a list of request headers cookie.
     ///
-    /// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie
+    /// see <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie>
     pub fn cookies(&self) -> Vec<RequestCookie> {
         self.headers
             .iter()

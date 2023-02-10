@@ -42,7 +42,7 @@ pub struct CookieAttribute {
 impl ResponseCookie {
     /// Parses value from Set-Cookie header into a `ResponseCookie`.
     ///
-    /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
+    /// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>
     pub fn parse(s: String) -> Option<ResponseCookie> {
         if let Some(index) = s.find('=') {
             let (name, remaining) = s.split_at(index);

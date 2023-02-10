@@ -27,8 +27,8 @@ pub struct CurlVersionInfo {
 /// Returns the libraries and features of libcurl.
 ///
 /// Output should be similar to `curl --version`
-/// - https://github.com/curl/curl/blob/master/lib/version.c
-/// - https://github.com/curl/curl/blob/master/src/tool_help.c
+/// - <https://github.com/curl/curl/blob/master/lib/version.c>
+/// - <https://github.com/curl/curl/blob/master/src/tool_help.c>
 pub fn libcurl_version_info() -> CurlVersionInfo {
     let version = curl::Version::get();
     let mut libraries = vec![format!("libcurl/{}", version.version())];

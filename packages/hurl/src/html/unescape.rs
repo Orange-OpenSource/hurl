@@ -95,9 +95,9 @@ lazy_static! {
 /// HTML 5 named character references defined in html.entities.html5.
 ///
 /// The code is adapted from the Python standard library:
-/// https://github.com/python/cpython/blob/main/Lib/html/__init__.py
+/// <https://github.com/python/cpython/blob/main/Lib/html/__init__.py>
 ///
-/// See MDN decoder tool: https://mothereff.in/html-entities
+/// See MDN decoder tool: <https://mothereff.in/html-entities>
 ///
 /// # Examples
 ///
