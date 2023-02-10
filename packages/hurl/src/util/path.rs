@@ -33,8 +33,8 @@ pub fn is_descendant(path: &Path, ancestor: &Path) -> bool {
 /// Contrary to the methods [`std::fs::canonicalize`] on [`Path`], this function doesn't require
 /// the final path to exist.
 ///
-/// Borrowed from https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/paths.rs
-fn normalize_path(path: &Path) -> PathBuf {
+/// Borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/paths.rs>
+pub fn normalize_path(path: &Path) -> PathBuf {
     let mut components = path.components().peekable();
     let mut ret = if let Some(c @ Component::Prefix(..)) = components.peek().cloned() {
         components.next();
@@ -59,6 +59,14 @@ fn normalize_path(path: &Path) -> PathBuf {
         }
     }
     ret
+}
+
+/// Returns the canonical fullname relative to / (technically a relative path)
+/// The function will panic if the input file does not exist
+pub fn canonicalize_filename(input_file: &str) -> String {
+    let relative_input_file = Path::new(input_file).canonicalize().expect("existing file");
+    let relative_input_file = relative_input_file.to_string_lossy();
+    relative_input_file.trim_start_matches('/').to_string()
 }
 
 #[cfg(test)]

@@ -17,7 +17,7 @@
  */
 
 //!
-//! XML JUnit report
+//! JUnit XML report.
 //!
 //! The link below seems the most "official" spec
 //! <https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format>
@@ -66,7 +66,7 @@ use crate::cli::CliError;
 
 mod testcase;
 
-pub fn create_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
+pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
     let mut testsuites = vec![];
 
     let path = std::path::Path::new(&filename);
