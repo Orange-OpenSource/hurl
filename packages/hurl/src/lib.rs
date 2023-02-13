@@ -20,8 +20,8 @@
 pub mod cli;
 mod html;
 pub mod http;
-pub mod json;
-pub mod jsonpath;
+mod json;
+mod jsonpath;
 pub mod output;
 pub mod report;
 pub mod runner;

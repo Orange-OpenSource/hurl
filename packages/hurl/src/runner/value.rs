@@ -17,10 +17,9 @@
  */
 use std::fmt;
 
+/// System types used in Hurl.
 ///
-/// Type system used in hurl
-/// Values are used by queries, captures, asserts and predicates
-///
+/// Values are used by queries, captures, asserts and predicates.
 #[derive(Clone, Debug)]
 pub enum Value {
     Bool(bool),

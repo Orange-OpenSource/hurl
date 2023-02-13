@@ -16,7 +16,11 @@
  *
  */
 
-use hurl::jsonpath;
+//! Integration tests for jsonpath module.
+//! These tests are not located at the root of the project, like Rust integration tests
+//! are usually located since we do not want to expose the jsonpath module to our public API.
+
+use crate::jsonpath;
 use serde_json::json;
 use std::fs::read_to_string;
 
@@ -154,7 +158,7 @@ fn book3_value() -> serde_json::Value {
 fn test_bookstore_path() {
     // examples from https://goessner.net/articles/JsonPath/
 
-    //the authors of all books in the store
+    // the authors of all books in the store
     let expr = jsonpath::parse("$.store.book[*].author").unwrap();
     assert_eq!(
         expr.eval(bookstore_value()),
