@@ -102,13 +102,7 @@ impl Client {
             request_spec = RequestSpec {
                 method: Method::Get,
                 url: redirect_url,
-                headers: vec![],
-                querystring: vec![],
-                form: vec![],
-                multipart: vec![],
-                cookies: vec![],
-                body: Body::Binary(vec![]),
-                content_type: None,
+                ..Default::default()
             };
         }
         Ok(calls)
