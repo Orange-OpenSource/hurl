@@ -29,7 +29,7 @@ fn new_header(name: &str, value: &str) -> Header {
     }
 }
 
-fn default_get_(url: &str) -> RequestSpec {
+fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {
         url: url.to_string(),
         ..Default::default()
@@ -51,7 +51,7 @@ fn test_hello() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/hello");
+    let request_spec = default_get_request("http://localhost:8000/hello");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl 'http://localhost:8000/hello'".to_string()
@@ -314,7 +314,7 @@ fn test_form_params() {
     assert!(response.body.is_empty());
 
     // make sure you can reuse client for other request
-    let request = default_get_("http://localhost:8000/hello");
+    let request = default_get_request("http://localhost:8000/hello");
     let (request, response) = client.execute(&request, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/hello".to_string());
@@ -325,7 +325,7 @@ fn test_form_params() {
 
 #[test]
 fn test_redirect() {
-    let request_spec = default_get_("http://localhost:8000/redirect-absolute");
+    let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
@@ -352,7 +352,7 @@ fn test_redirect() {
 
 #[test]
 fn test_follow_location() {
-    let request_spec = default_get_("http://localhost:8000/redirect-absolute");
+    let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
@@ -400,7 +400,7 @@ fn test_follow_location() {
         "http://localhost:8000/redirected".to_string()
     );
 
-    let request = default_get_("http://localhost:8000/hello");
+    let request = default_get_request("http://localhost:8000/hello");
     let calls = client
         .execute_with_redirect(&request, &options, &logger)
         .unwrap();
@@ -422,7 +422,7 @@ fn test_max_redirect() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/redirect/15");
+    let request_spec = default_get_request("http://localhost:8000/redirect/15");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --location --max-redirs 10 'http://localhost:8000/redirect/15'".to_string()
@@ -433,7 +433,7 @@ fn test_max_redirect() {
         .unwrap();
     assert_eq!(error, HttpError::TooManyRedirect);
 
-    let request_spec = default_get_("http://localhost:8000/redirect/8");
+    let request_spec = default_get_request("http://localhost:8000/redirect/8");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --location --max-redirs 10 'http://localhost:8000/redirect/8'".to_string()
@@ -499,7 +499,7 @@ fn test_multipart_form_data() {
     assert!(response.body.is_empty());
 
     // make sure you can reuse client for other request
-    let request_spec = default_get_("http://localhost:8000/hello");
+    let request_spec = default_get_request("http://localhost:8000/hello");
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(response.status, 200);
@@ -587,7 +587,7 @@ fn test_basic_authentication() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/basic-authentication");
+    let request_spec = default_get_request("http://localhost:8000/basic-authentication");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --user 'bob@email.com:secret' 'http://localhost:8000/basic-authentication'"
@@ -605,7 +605,7 @@ fn test_basic_authentication() {
     let options = ClientOptions::default();
     let mut client = Client::new(None);
     let request_spec =
-        default_get_("http://bob%40email.com:secret@localhost:8000/basic-authentication");
+        default_get_request("http://bob%40email.com:secret@localhost:8000/basic-authentication");
     assert_eq!(
         request_spec.curl_args(&ContextDir::default()),
         vec!["'http://bob%40email.com:secret@localhost:8000/basic-authentication'".to_string()]
@@ -630,7 +630,7 @@ fn test_cacert() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("https://localhost:8001/hello");
+    let request_spec = default_get_request("https://localhost:8001/hello");
     let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
@@ -642,7 +642,7 @@ fn test_error_could_not_resolve_host() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://unknown");
+    let request_spec = default_get_request("http://unknown");
     let error = client
         .execute(&request_spec, &options, &logger)
         .err()
@@ -667,7 +667,7 @@ fn test_error_fail_to_connect() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:9999");
+    let request_spec = default_get_request("http://localhost:9999");
     let error = client
         .execute(&request_spec, &options, &logger)
         .err()
@@ -689,7 +689,7 @@ fn test_error_fail_to_connect() {
         ..Default::default()
     };
     let mut client = Client::new(None);
-    let request = default_get_("http://localhost:8000/hello");
+    let request = default_get_request("http://localhost:8000/hello");
     let error = client.execute(&request, &options, &logger).err().unwrap();
     assert!(matches!(error, HttpError::Libcurl { .. }));
     if let HttpError::Libcurl {
@@ -715,7 +715,7 @@ fn test_error_could_not_resolve_proxy_name() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/hello");
+    let request_spec = default_get_request("http://localhost:8000/hello");
     let error = client
         .execute(&request_spec, &options, &logger)
         .err()
@@ -740,7 +740,7 @@ fn test_error_ssl() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("https://localhost:8001/hello");
+    let request_spec = default_get_request("https://localhost:8001/hello");
     let error = client
         .execute(&request_spec, &options, &logger)
         .err()
@@ -784,7 +784,7 @@ fn test_timeout() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/timeout");
+    let request_spec = default_get_request("http://localhost:8000/timeout");
     let error = client
         .execute(&request_spec, &options, &logger)
         .err()
@@ -811,7 +811,7 @@ fn test_accept_encoding() {
     let mut client = Client::new(None);
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
-    let request_spec = default_get_("http://localhost:8000/compressed/gzip");
+    let request_spec = default_get_request("http://localhost:8000/compressed/gzip");
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Accept-Encoding".to_string(),
@@ -835,7 +835,7 @@ fn test_connect_timeout() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://10.0.0.0");
+    let request_spec = default_get_request("http://10.0.0.0");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --connect-timeout 1 'http://10.0.0.0'".to_string()
@@ -902,13 +902,13 @@ fn test_cookie() {
     assert!(response.body.is_empty());
 
     let request_spec =
-        default_get_("http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session");
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session");
     let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
 
 #[test]
-fn test_multiple__cookies() {
+fn test_multiple_request_cookies() {
     let options = ClientOptions::default();
     let context_dir = ContextDir::default();
     let mut client = Client::new(None);
@@ -955,7 +955,8 @@ fn test_cookie_storage() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/cookies/set-session-cookie2-valueA");
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA");
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(
         request.url,
@@ -979,7 +980,8 @@ fn test_cookie_storage() {
         }
     );
 
-    let request_spec = default_get_("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
     let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
@@ -1000,7 +1002,8 @@ fn test_cookie_file() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
+    let request_spec =
+        default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --cookie tests/cookies.txt 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA'".to_string()
@@ -1032,7 +1035,7 @@ fn test_proxy() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
 
-    let request_spec = default_get_("http://localhost:8000/proxy");
+    let request_spec = default_get_request("http://localhost:8000/proxy");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --proxy 'localhost:8888' 'http://localhost:8000/proxy'".to_string()
@@ -1053,7 +1056,7 @@ fn test_insecure() {
     let mut builder = LoggerBuilder::new();
     let logger = builder.filename("").content("").build().unwrap();
     assert_eq!(options.curl_args(), vec!["--insecure".to_string()]);
-    let request_spec = default_get_("https://localhost:8001/hello");
+    let request_spec = default_get_request("https://localhost:8001/hello");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --insecure 'https://localhost:8001/hello'".to_string()
