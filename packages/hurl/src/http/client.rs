@@ -83,37 +83,33 @@ impl Client {
         let mut redirect_count = 0;
         loop {
             let (request, response) = self.execute(&request_spec, options, logger)?;
-            calls.push((request.clone(), response.clone()));
-            if !options.follow_location {
-                break;
-            }
-
             let base_url = request.base_url()?;
-            if let Some(url) = self.get_follow_location(&response, &base_url) {
-                logger.debug("");
-                logger.debug(format!("=> Redirect to {url}").as_str());
-                logger.debug("");
-                request_spec = RequestSpec {
-                    method: Method::Get,
-                    url,
-                    headers: vec![],
-                    querystring: vec![],
-                    form: vec![],
-                    multipart: vec![],
-                    cookies: vec![],
-                    body: Body::Binary(vec![]),
-                    content_type: None,
-                };
-
-                redirect_count += 1;
-                if let Some(max_redirect) = options.max_redirect {
-                    if redirect_count > max_redirect {
-                        return Err(HttpError::TooManyRedirect);
-                    }
-                }
-            } else {
+            let redirect_url = self.get_follow_location(&response, &base_url);
+            calls.push((request, response));
+            if !options.follow_location || redirect_url.is_none() {
                 break;
             }
+            let redirect_url = redirect_url.unwrap();
+            logger.debug("");
+            logger.debug(format!("=> Redirect to {redirect_url}").as_str());
+            logger.debug("");
+            redirect_count += 1;
+            if let Some(max_redirect) = options.max_redirect {
+                if redirect_count > max_redirect {
+                    return Err(HttpError::TooManyRedirect);
+                }
+            }
+            request_spec = RequestSpec {
+                method: Method::Get,
+                url: redirect_url,
+                headers: vec![],
+                querystring: vec![],
+                form: vec![],
+                multipart: vec![],
+                cookies: vec![],
+                body: Body::Binary(vec![]),
+                content_type: None,
+            };
         }
         Ok(calls)
     }
