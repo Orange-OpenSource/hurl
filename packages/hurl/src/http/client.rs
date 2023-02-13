@@ -37,13 +37,14 @@ use curl::easy::{List, SslOpt};
 use std::str::FromStr;
 use url::Url;
 
+/// Defines an HTTP client to execute HTTP requests.
+///
+/// Most of the methods are delegated to libcurl functions, while some
+/// features are implemented "by hand" (like retry, redirection etc...)
 #[derive(Debug)]
 pub struct Client {
-    pub handle: Box<easy::Easy>,
-    pub redirect_count: usize,
-    // Unfortunately, follow-location feature from libcurl can not be used
-    // libcurl returns a single list of headers for the 2 responses
-    // Hurl needs to keep everything.
+    /// The handle to libcurl binding
+    handle: Box<easy::Easy>,
 }
 
 impl Client {
@@ -61,7 +62,6 @@ impl Client {
 
         Client {
             handle: Box::new(h),
-            redirect_count: 0,
         }
     }
 
@@ -76,7 +76,11 @@ impl Client {
         let mut calls = vec![];
 
         let mut request_spec = request_spec.clone();
-        self.redirect_count = 0;
+
+        // Unfortunately, follow-location feature from libcurl can not be used
+        // libcurl returns a single list of headers for the 2 responses
+        // Hurl needs to keep everything.
+        let mut redirect_count = 0;
         loop {
             let (request, response) = self.execute(&request_spec, options, logger)?;
             calls.push((request.clone(), response.clone()));
@@ -101,9 +105,9 @@ impl Client {
                     content_type: None,
                 };
 
-                self.redirect_count += 1;
+                redirect_count += 1;
                 if let Some(max_redirect) = options.max_redirect {
-                    if self.redirect_count > max_redirect {
+                    if redirect_count > max_redirect {
                         return Err(HttpError::TooManyRedirect);
                     }
                 }

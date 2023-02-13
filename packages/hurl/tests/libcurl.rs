@@ -22,7 +22,7 @@ use std::time::Duration;
 use hurl::http::*;
 use hurl::util::logger::LoggerBuilder;
 
-pub fn new_header(name: &str, value: &str) -> Header {
+fn new_header(name: &str, value: &str) -> Header {
     Header {
         name: name.to_string(),
         value: value.to_string(),
@@ -43,7 +43,12 @@ fn default_get_request(url: &str) -> RequestSpec {
     }
 }
 
-// region basic
+fn redirect_count(calls: &[(Request, Response)]) -> usize {
+    calls
+        .iter()
+        .filter(|(_, resp)| resp.status >= 300 && resp.status < 399)
+        .count()
+}
 
 #[test]
 fn test_hello() {
@@ -87,10 +92,6 @@ fn test_hello() {
     }));
     assert_eq!(response.get_header_values("Date").len(), 1);
 }
-
-// endregion
-
-// region http method
 
 #[test]
 fn test_put() {
@@ -186,10 +187,6 @@ fn test_patch() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region headers
-
 #[test]
 fn test_custom_headers() {
     let options = ClientOptions::default();
@@ -234,10 +231,6 @@ fn test_custom_headers() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 }
-
-// endregion
-
-// region querystrings
 
 #[test]
 fn test_querystring_params() {
@@ -291,10 +284,6 @@ fn test_querystring_params() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 }
-
-// endregion
-
-// region form params
 
 #[test]
 fn test_form_params() {
@@ -366,10 +355,6 @@ fn test_form_params() {
     assert_eq!(response.body, b"Hello World!".to_vec());
 }
 
-// endregion
-
-// region redirect
-
 #[test]
 fn test_redirect() {
     let request_spec = default_get_request("http://localhost:8000/redirect-absolute");
@@ -395,7 +380,6 @@ fn test_redirect() {
         response.url,
         "http://localhost:8000/redirect-absolute".to_string()
     );
-    assert_eq!(client.redirect_count, 0);
 }
 
 #[test]
@@ -448,17 +432,14 @@ fn test_follow_location() {
         "http://localhost:8000/redirected".to_string()
     );
 
-    assert_eq!(client.redirect_count, 1);
-
-    // make sure that the redirect count is reset to 0
     let request = default_get_request("http://localhost:8000/hello");
     let calls = client
         .execute_with_redirect(&request, &options, &logger)
         .unwrap();
+    assert_eq!(calls.len(), 1);
     let (_, response) = calls.get(0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
-    assert_eq!(client.redirect_count, 0);
 }
 
 #[test]
@@ -495,12 +476,8 @@ fn test_max_redirect() {
     let (request, response) = calls.last().unwrap();
     assert_eq!(request.url, "http://localhost:8000/redirect/0".to_string());
     assert_eq!(response.status, 200);
-    assert_eq!(client.redirect_count, 8);
+    assert_eq!(redirect_count(&calls), 8);
 }
-
-// endregion
-
-// region multipart
 
 #[test]
 fn test_multipart_form_data() {
@@ -565,10 +542,6 @@ fn test_multipart_form_data() {
     assert_eq!(response.body, b"Hello World!".to_vec());
 }
 
-// endregion
-
-// region http body
-
 #[test]
 fn test_post_bytes() {
     let options = ClientOptions::default();
@@ -601,8 +574,6 @@ fn test_post_bytes() {
     assert_eq!(response.status, 200);
     assert!(response.body.is_empty());
 }
-
-// endregion
 
 #[test]
 fn test_expect() {
@@ -718,8 +689,6 @@ fn test_cacert() {
     let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
-
-// region error
 
 #[test]
 fn test_error_could_not_resolve_host() {
@@ -964,9 +933,6 @@ fn test_connect_timeout() {
         assert_eq!(url, "http://10.0.0.0");
     }
 }
-// endregion
-
-// region cookie
 
 #[test]
 fn test_cookie() {
@@ -1142,10 +1108,6 @@ fn test_cookie_file() {
     assert!(response.body.is_empty());
 }
 
-// endregion
-
-// region proxy
-
 #[test]
 fn test_proxy() {
     // mitmproxy listening on port 8888
@@ -1167,8 +1129,6 @@ fn test_proxy() {
     assert_eq!(request.url, "http://localhost:8000/proxy");
     assert_eq!(response.status, 200);
 }
-
-// endregion
 
 #[test]
 fn test_insecure() {
