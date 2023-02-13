@@ -42,3 +42,16 @@ pub enum HttpError {
     },
     InvalidUrl(String),
 }
+
+impl From<curl::Error> for HttpError {
+    fn from(err: curl::Error) -> Self {
+        let code = err.code() as i32;
+        let description = err.description().to_string();
+        let url = "".to_string();
+        HttpError::Libcurl {
+            code,
+            description,
+            url,
+        }
+    }
+}

@@ -38,6 +38,7 @@ mod context_dir;
 mod cookie;
 mod core;
 mod debug;
+mod easy_ext;
 mod error;
 mod header;
 mod mimetype;

@@ -29,7 +29,7 @@ use super::request::*;
 use super::request_spec::*;
 use super::response::*;
 use super::{Header, HttpError, Verbosity};
-use crate::http::ContextDir;
+use crate::http::{easy_ext, ContextDir};
 use crate::util::logger::Logger;
 use base64::engine::general_purpose;
 use base64::Engine;
@@ -122,6 +122,9 @@ impl Client {
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
         // way to get access to the outgoing headers.
         self.handle.verbose(true).unwrap();
+
+        // Activates the access of certificates info chain after a transfer has been executed.
+        self.handle.certinfo(true).unwrap();
 
         if !options.connects_to.is_empty() {
             let connects = to_list(&options.connects_to);
@@ -312,6 +315,7 @@ impl Client {
         let duration = start.elapsed();
         let length = response_body.len();
         let certificate = None;
+        let _certinfo = easy_ext::get_certinfo(&self.handle)?;
         self.handle.reset();
 
         let request = Request {
