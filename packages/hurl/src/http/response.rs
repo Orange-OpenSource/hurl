@@ -87,14 +87,8 @@ pub mod tests {
     pub fn hello_http_response() -> Response {
         Response {
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(String::from("Hello World!")),
             ..Default::default()
@@ -103,10 +97,7 @@ pub mod tests {
 
     pub fn html_http_response() -> Response {
         Response {
-            headers: vec![Header {
-                name: String::from("Content-Type"),
-                value: String::from("text/html; charset=utf-8"),
-            }],
+            headers: vec![Header::new("Content-Type", "text/html; charset=utf-8")],
             body: String::into_bytes(String::from(
                 "<html><head><meta charset=\"UTF-8\"></head><body><br></body></html>",
             )),
@@ -117,14 +108,8 @@ pub mod tests {
     pub fn xml_invalid_response() -> Response {
         Response {
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -139,14 +124,8 @@ xxx
     pub fn xml_two_users_http_response() -> Response {
         Response {
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -165,14 +144,8 @@ xxx
     pub fn xml_three_users_http_response() -> Response {
         Response {
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("text/html; charset=utf-8"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("12"),
-                },
+                Header::new("Content-Type", "text/html; charset=utf-8"),
+                Header::new("Content-Length", "12"),
             ],
             body: String::into_bytes(
                 r#"
@@ -211,14 +184,8 @@ xxx
     pub fn bytes_http_response() -> Response {
         Response {
             headers: vec![
-                Header {
-                    name: String::from("Content-Type"),
-                    value: String::from("application/octet-stream"),
-                },
-                Header {
-                    name: String::from("Content-Length"),
-                    value: String::from("1"),
-                },
+                Header::new("Content-Type", "application/octet-stream"),
+                Header::new("Content-Length", "1"),
             ],
             body: vec![255],
             ..Default::default()
@@ -228,10 +195,7 @@ xxx
     #[test]
     fn get_header_values() {
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Length".to_string(),
-                value: "12".to_string(),
-            }],
+            headers: vec![Header::new("Content-Length", "12")],
             ..Default::default()
         };
         assert_eq!(

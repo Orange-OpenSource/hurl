@@ -672,10 +672,7 @@ impl Header {
         match line.find(':') {
             Some(index) => {
                 let (name, value) = line.split_at(index);
-                Some(Header {
-                    name: name.to_string().trim().to_string(),
-                    value: value[1..].to_string().trim().to_string(),
-                })
+                Some(Header::new(name.trim(), value[1..].trim()))
             }
             None => None,
         }
@@ -730,17 +727,11 @@ mod tests {
     fn test_parse_header() {
         assert_eq!(
             Header::parse("Foo: Bar\r\n").unwrap(),
-            Header {
-                name: "Foo".to_string(),
-                value: "Bar".to_string(),
-            }
+            Header::new("Foo", "Bar")
         );
         assert_eq!(
             Header::parse("Location: http://localhost:8000/redirected\r\n").unwrap(),
-            Header {
-                name: "Location".to_string(),
-                value: "http://localhost:8000/redirected".to_string(),
-            }
+            Header::new("Location", "http://localhost:8000/redirected")
         );
         assert!(Header::parse("Foo").is_none());
     }

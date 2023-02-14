@@ -270,19 +270,11 @@ pub mod tests {
     #[test]
     fn header_curl_args() {
         assert_eq!(
-            Header {
-                name: "Host".to_string(),
-                value: "example.com".to_string(),
-            }
-            .curl_args(),
+            Header::new("Host", "example.com").curl_args(),
             vec!["--header".to_string(), "'Host: example.com'".to_string()]
         );
         assert_eq!(
-            Header {
-                name: "If-Match".to_string(),
-                value: "\"e0023aa4e\"".to_string(),
-            }
-            .curl_args(),
+            Header::new("If-Match", "\"e0023aa4e\"").curl_args(),
             vec![
                 "--header".to_string(),
                 "'If-Match: \"e0023aa4e\"'".to_string()

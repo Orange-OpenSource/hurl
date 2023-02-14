@@ -594,10 +594,7 @@ pub mod tests {
         };
         let response = http::Response {
             headers: vec![
-                http::Header {
-                    name: "Set-Cookie".to_string(),
-                    value: "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly".to_string(),
-                }
+                http::Header::new("Set-Cookie", "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly")
             ],
             ..Default::default()
         };

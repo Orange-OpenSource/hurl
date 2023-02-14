@@ -220,10 +220,7 @@ pub mod tests {
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "xx".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "xx")],
             ..Default::default()
         };
         assert_eq!(
@@ -234,10 +231,7 @@ pub mod tests {
         );
 
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br")],
             ..Default::default()
         };
         assert_eq!(
@@ -249,10 +243,7 @@ pub mod tests {
     #[test]
     fn test_multiple_content_encoding() {
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br, identity".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br, identity")],
             ..Default::default()
         };
         assert_eq!(
@@ -264,10 +255,7 @@ pub mod tests {
     #[test]
     fn test_uncompress_body() {
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br")],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
@@ -277,10 +265,7 @@ pub mod tests {
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
         let response = Response {
-            headers: vec![Header {
-                name: "Content-Encoding".to_string(),
-                value: "br, identity".to_string(),
-            }],
+            headers: vec![Header::new("Content-Encoding", "br, identity")],
             body: vec![
                 0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,
                 0x64, 0x21, 0x03,
@@ -350,10 +335,7 @@ pub mod tests {
 
     fn utf8_encoding_response() -> Response {
         Response {
-            headers: vec![Header {
-                name: "Content-Type".to_string(),
-                value: "text/plain; charset=utf-8".to_string(),
-            }],
+            headers: vec![Header::new("Content-Type", "text/plain; charset=utf-8")],
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
             ..Default::default()
         }
@@ -361,10 +343,10 @@ pub mod tests {
 
     fn latin1_encoding_response() -> Response {
         Response {
-            headers: vec![Header {
-                name: "Content-Type".to_string(),
-                value: "text/plain; charset=ISO-8859-1".to_string(),
-            }],
+            headers: vec![Header::new(
+                "Content-Type",
+                "text/plain; charset=ISO-8859-1",
+            )],
             body: vec![0x63, 0x61, 0x66, 0xe9],
             ..Default::default()
         }
@@ -419,10 +401,7 @@ pub mod tests {
     pub fn test_invalid_charset() {
         assert_eq!(
             Response {
-                headers: vec![Header {
-                    name: "Content-Type".to_string(),
-                    value: "test/plain; charset=xxx".to_string()
-                }],
+                headers: vec![Header::new("Content-Type", "test/plain; charset=xxx"),],
                 body: b"Hello World!".to_vec(),
                 ..Default::default()
             }
@@ -452,10 +431,10 @@ pub mod tests {
 
         assert_eq!(
             Response {
-                headers: vec![Header {
-                    name: "Content-Type".to_string(),
-                    value: "text/plain; charset=ISO-8859-1".to_string()
-                }],
+                headers: vec![Header::new(
+                    "Content-Type",
+                    "text/plain; charset=ISO-8859-1"
+                ),],
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
                 ..Default::default()
             }

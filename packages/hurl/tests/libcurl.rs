@@ -22,13 +22,6 @@ use std::time::Duration;
 use hurl::http::*;
 use hurl::util::logger::LoggerBuilder;
 
-fn new_header(name: &str, value: &str) -> Header {
-    Header {
-        name: name.to_string(),
-        value: value.to_string(),
-    }
-}
-
 fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {
         url: url.to_string(),
@@ -181,11 +174,11 @@ fn test_custom_headers() {
         method: Method::Get,
         url: "http://localhost:8000/custom-headers".to_string(),
         headers: vec![
-            new_header("Fruit", "Raspberry"),
-            new_header("Fruit", "Apple"),
-            new_header("Fruit", "Banana"),
-            new_header("Fruit", "Grape"),
-            new_header("Color", "Green"),
+            Header::new("Fruit", "Raspberry"),
+            Header::new("Fruit", "Apple"),
+            Header::new("Fruit", "Banana"),
+            Header::new("Fruit", "Grape"),
+            Header::new("Color", "Green"),
         ],
         ..Default::default()
     };

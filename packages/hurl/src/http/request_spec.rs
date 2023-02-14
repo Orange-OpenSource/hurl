@@ -168,14 +168,8 @@ pub mod tests {
             method: Method::Get,
             url: "http://localhost/custom".to_string(),
             headers: vec![
-                Header {
-                    name: String::from("User-Agent"),
-                    value: String::from("iPhone"),
-                },
-                Header {
-                    name: String::from("Foo"),
-                    value: String::from("Bar"),
-                },
+                Header::new("User-Agent", "iPhone"),
+                Header::new("Foo", "Bar"),
             ],
             cookies: vec![
                 RequestCookie {
@@ -213,10 +207,10 @@ pub mod tests {
         RequestSpec {
             method: Method::Post,
             url: "http://localhost/form-params".to_string(),
-            headers: vec![Header {
-                name: String::from("Content-Type"),
-                value: String::from("application/x-www-form-urlencoded"),
-            }],
+            headers: vec![Header::new(
+                "Content-Type",
+                "application/x-www-form-urlencoded",
+            )],
             form: vec![
                 Param {
                     name: String::from("param1"),

@@ -110,18 +110,9 @@ pub mod tests {
             method: "GET".to_string(),
             url: "http://localhost:8000/hello".to_string(),
             headers: vec![
-                Header {
-                    name: "Host".to_string(),
-                    value: "localhost:8000".to_string(),
-                },
-                Header {
-                    name: "Accept".to_string(),
-                    value: "*/*".to_string(),
-                },
-                Header {
-                    name: "User-Agent".to_string(),
-                    value: "hurl/1.0".to_string(),
-                },
+                Header::new("Host", "localhost:8000"),
+                Header::new("Accept", "*/*"),
+                Header::new("User-Agent", "hurl/1.0"),
             ],
             body: vec![],
         }
@@ -140,10 +131,7 @@ pub mod tests {
         Request {
             method: "GET".to_string(),
             url: "http://localhost:8000/cookies".to_string(),
-            headers: vec![Header {
-                name: "Cookie".to_string(),
-                value: "cookie1=value1; cookie2=value2".to_string(),
-            }],
+            headers: vec![Header::new("Cookie", "cookie1=value1; cookie2=value2")],
             body: vec![],
         }
     }
