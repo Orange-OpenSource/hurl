@@ -32,6 +32,7 @@ pub use self::response::tests::*;
 pub use self::response::{Response, Version};
 pub use self::version::libcurl_version_info;
 
+mod certificate;
 mod client;
 mod context_dir;
 mod cookie;

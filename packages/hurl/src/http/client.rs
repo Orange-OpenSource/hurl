@@ -311,6 +311,7 @@ impl Client {
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
         let length = response_body.len();
+        let certificate = None;
         self.handle.reset();
 
         let request = Request {
@@ -326,6 +327,7 @@ impl Client {
             body: response_body,
             duration,
             url,
+            certificate,
         };
 
         if verbose {

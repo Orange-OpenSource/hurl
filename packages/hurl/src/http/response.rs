@@ -17,9 +17,11 @@
  */
 
 use super::{header, Header};
+use crate::http::certificate::Certificate;
 use core::fmt;
 use std::time::Duration;
 
+/// Represents an HTTP response.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub version: Version,
@@ -28,6 +30,8 @@ pub struct Response {
     pub body: Vec<u8>,
     pub duration: Duration,
     pub url: String,
+    /// The end-user certificate, in the response certificate chain
+    pub certificate: Option<Certificate>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -83,6 +87,7 @@ pub mod tests {
             body: String::into_bytes(String::from("Hello World!")),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -99,6 +104,7 @@ pub mod tests {
             )),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -124,6 +130,7 @@ xxx
             ),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -153,6 +160,7 @@ xxx
             ),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -183,6 +191,7 @@ xxx
             ),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -206,6 +215,7 @@ xxx
             ),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -226,6 +236,7 @@ xxx
             body: vec![255],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -241,6 +252,7 @@ xxx
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(
             response.get_header_values("Content-Length"),

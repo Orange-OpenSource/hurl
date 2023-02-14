@@ -404,6 +404,7 @@ pub mod tests {
             ),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -608,6 +609,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
 
         // cookie "LSID"
@@ -839,6 +841,7 @@ pub mod tests {
             body: vec![200],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         let error = eval_query(&xpath_users(), &variables, &http_response)
             .err()
@@ -995,6 +998,7 @@ pub mod tests {
             body: String::into_bytes(String::from("xxx")),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         let error = eval_query(&jsonpath_success(), &variables, &http_response)
             .err()
@@ -1013,6 +1017,7 @@ pub mod tests {
             body: String::into_bytes(String::from("{}")),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         //assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));
         assert_eq!(
@@ -1098,7 +1103,8 @@ pub mod tests {
                     headers: vec![],
                     body: vec![0xff],
                     duration: Default::default(),
-                    url: "".to_string()
+                    url: "".to_string(),
+                    certificate: None,
                 }
             )
             .unwrap()

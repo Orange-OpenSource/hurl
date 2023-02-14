@@ -223,6 +223,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(response.content_encoding().unwrap(), vec![]);
 
@@ -236,6 +237,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(
             response.content_encoding().err().unwrap(),
@@ -254,6 +256,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(
             response.content_encoding().unwrap(),
@@ -273,6 +276,7 @@ pub mod tests {
             body: vec![],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(
             response.content_encoding().unwrap(),
@@ -295,6 +299,7 @@ pub mod tests {
             ],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
@@ -311,6 +316,7 @@ pub mod tests {
             ],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
 
@@ -321,6 +327,7 @@ pub mod tests {
             body: b"Hello World!".to_vec(),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         };
         assert_eq!(response.uncompress_body().unwrap(), b"Hello World!");
     }
@@ -378,6 +385,7 @@ pub mod tests {
             body: b"Hello World!".to_vec(),
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -392,6 +400,7 @@ pub mod tests {
             body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -406,6 +415,7 @@ pub mod tests {
             body: vec![0x63, 0x61, 0x66, 0xe9],
             duration: Default::default(),
             url: "".to_string(),
+            certificate: None,
         }
     }
 
@@ -466,7 +476,8 @@ pub mod tests {
                 }],
                 body: b"Hello World!".to_vec(),
                 duration: Default::default(),
-                url: "".to_string()
+                url: "".to_string(),
+                certificate: None,
             }
             .character_encoding()
             .err()
@@ -486,7 +497,8 @@ pub mod tests {
                 headers: vec![],
                 body: vec![0x63, 0x61, 0x66, 0xe9],
                 duration: Default::default(),
-                url: "".to_string()
+                url: "".to_string(),
+                certificate: None,
             }
             .text()
             .err()
@@ -506,7 +518,8 @@ pub mod tests {
                 }],
                 body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],
                 duration: Default::default(),
-                url: "".to_string()
+                url: "".to_string(),
+                certificate: None,
             }
             .text()
             .unwrap(),
