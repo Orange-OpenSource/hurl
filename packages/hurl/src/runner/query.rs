@@ -387,9 +387,6 @@ pub mod tests {
 
     pub fn json_http_response() -> http::Response {
         http::Response {
-            version: http::Version::Http10,
-            status: 0,
-            headers: vec![],
             body: String::into_bytes(
                 r#"
 {
@@ -402,9 +399,7 @@ pub mod tests {
 "#
                 .to_string(),
             ),
-            duration: Default::default(),
-            url: "".to_string(),
-            certificate: None,
+            ..Default::default()
         }
     }
 
@@ -598,18 +593,13 @@ pub mod tests {
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let response = http::Response {
-            version: http::Version::Http10,
-            status: 0,
             headers: vec![
                 http::Header {
                     name: "Set-Cookie".to_string(),
                     value: "LSID=DQAAAKEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly".to_string(),
                 }
             ],
-            body: vec![],
-            duration: Default::default(),
-            url: "".to_string(),
-            certificate: None,
+            ..Default::default()
         };
 
         // cookie "LSID"
@@ -835,13 +825,8 @@ pub mod tests {
     fn test_query_invalid_utf8() {
         let variables = HashMap::new();
         let http_response = http::Response {
-            version: http::Version::Http10,
-            status: 0,
-            headers: vec![],
             body: vec![200],
-            duration: Default::default(),
-            url: "".to_string(),
-            certificate: None,
+            ..Default::default()
         };
         let error = eval_query(&xpath_users(), &variables, &http_response)
             .err()
@@ -992,13 +977,8 @@ pub mod tests {
     fn test_query_invalid_json() {
         let variables = HashMap::new();
         let http_response = http::Response {
-            version: http::Version::Http10,
-            status: 0,
-            headers: vec![],
             body: String::into_bytes(String::from("xxx")),
-            duration: Default::default(),
-            url: "".to_string(),
-            certificate: None,
+            ..Default::default()
         };
         let error = eval_query(&jsonpath_success(), &variables, &http_response)
             .err()
@@ -1011,13 +991,8 @@ pub mod tests {
     fn test_query_json_not_found() {
         let variables = HashMap::new();
         let http_response = http::Response {
-            version: http::Version::Http10,
-            status: 0,
-            headers: vec![],
             body: String::into_bytes(String::from("{}")),
-            duration: Default::default(),
-            url: "".to_string(),
-            certificate: None,
+            ..Default::default()
         };
         //assert_eq!(jsonpath_success().eval(http_response).unwrap(), Value::List(vec![]));
         assert_eq!(
@@ -1098,13 +1073,8 @@ pub mod tests {
                 },
                 &variables,
                 &http::Response {
-                    version: http::Version::Http10,
-                    status: 200,
-                    headers: vec![],
                     body: vec![0xff],
-                    duration: Default::default(),
-                    url: "".to_string(),
-                    certificate: None,
+                    ..Default::default()
                 }
             )
             .unwrap()
