@@ -3251,7 +3251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::http::{Header, Response, Version};</pre>
+                <pre class="has-background-white py-0 px-2">    use crate::http::{Header, Response};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3539,7 +3539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response::default();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3555,7 +3555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(response.content_encoding().unwrap(), vec![]);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3571,7 +3571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3587,7 +3587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3603,7 +3603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Encoding&quot;, &quot;xx&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3619,7 +3619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3635,7 +3635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3651,7 +3651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3667,7 +3667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(response.content_encoding().unwrap(), vec![]);</pre>
+                <pre class="has-background-white py-0 px-2">            response.content_encoding().err().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3683,7 +3683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            HttpError::UnsupportedContentEncoding {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3699,7 +3699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">                description: &quot;xx&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3715,7 +3715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3731,7 +3731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3747,7 +3747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3763,7 +3763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Encoding&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3779,7 +3779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;xx&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Encoding&quot;, &quot;br&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3795,7 +3795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3811,7 +3811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3827,7 +3827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3843,7 +3843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            response.content_encoding().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3859,7 +3859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            vec![ContentEncoding::Brotli]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3875,7 +3875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3891,7 +3891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            response.content_encoding().err().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3907,7 +3907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            HttpError::UnsupportedContentEncoding {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3923,7 +3923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                description: &quot;xx&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3939,7 +3939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_multiple_content_encoding() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3955,7 +3955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3971,7 +3971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Encoding&quot;, &quot;br, identity&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3987,7 +3987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4003,7 +4003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4019,7 +4019,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4035,7 +4035,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">            response.content_encoding().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4051,7 +4051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Encoding&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            vec![ContentEncoding::Brotli, ContentEncoding::Identity]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4067,7 +4067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;br&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4083,7 +4083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4099,7 +4099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![],</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4115,7 +4115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4131,7 +4131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_uncompress_body() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4147,7 +4147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4163,7 +4163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Encoding&quot;, &quot;br&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4179,7 +4179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            response.content_encoding().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            body: vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4195,7 +4195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![ContentEncoding::Brotli]</pre>
+                <pre class="has-background-white py-0 px-2">                0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4211,7 +4211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                0x64, 0x21, 0x03,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4227,7 +4227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            ],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4243,7 +4243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4259,7 +4259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4275,7 +4275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_multiple_content_encoding() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4291,7 +4291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4307,7 +4307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4323,7 +4323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Encoding&quot;, &quot;br, identity&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4339,7 +4339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">            body: vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4355,7 +4355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Encoding&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4371,7 +4371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;br, identity&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                0x64, 0x21, 0x03,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4387,7 +4387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">            ],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4403,7 +4403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4419,7 +4419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4435,7 +4435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4451,7 +4451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4467,7 +4467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4483,7 +4483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            response.content_encoding().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            body: b&quot;Hello World!&quot;.to_vec(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4499,7 +4499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![ContentEncoding::Brotli, ContentEncoding::Identity]</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4515,7 +4515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4531,7 +4531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4547,7 +4547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4563,7 +4563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4579,7 +4579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_uncompress_body() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4595,7 +4595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_uncompress_brotli() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4611,7 +4611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4627,7 +4627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">            0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4643,7 +4643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">            0x64, 0x21, 0x03,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4659,7 +4659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Encoding&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        ];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4675,7 +4675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;br&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_brotli(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4691,7 +4691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4707,7 +4707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4723,7 +4723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4739,7 +4739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                0x64, 0x21, 0x03,</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_uncompress_gzip() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4755,7 +4755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ],</pre>
+                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4771,7 +4771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            0x1f, 0x8b, 0x08, 0x08, 0xa7, 0x52, 0x85, 0x5f, 0x00, 0x03, 0x64, 0x61, 0x74, 0x61,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4787,7 +4787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            0x2e, 0x74, 0x78, 0x74, 0x00, 0xf3, 0x48, 0xcd, 0xc9, 0xc9, 0x57, 0x08, 0xcf, 0x2f,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4803,7 +4803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            0xca, 0x49, 0x51, 0x04, 0x00, 0xa3, 0x1c, 0x29, 0x1c, 0x0c, 0x00, 0x00, 0x00,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4819,7 +4819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        ];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4835,7 +4835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_gzip(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4851,7 +4851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4867,7 +4867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4883,7 +4883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4899,7 +4899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_uncompress_zlib() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4915,7 +4915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Encoding&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4931,7 +4931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;br, identity&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            0x78, 0x9c, 0xf3, 0x48, 0xcd, 0xc9, 0xc9, 0x57, 0x08, 0xcf, 0x2f, 0xca, 0x49, 0x51,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4947,7 +4947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">            0x04, 0x00, 0x1c, 0x49, 0x04, 0x3e,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4963,7 +4963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![</pre>
+                <pre class="has-background-white py-0 px-2">        ];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4979,7 +4979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_zlib(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4995,7 +4995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                0x64, 0x21, 0x03,</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5011,7 +5011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ],</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5027,7 +5027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5043,7 +5043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_uncompress_error() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5059,7 +5059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        let data = vec![0x21];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5075,7 +5075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5091,7 +5091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            uncompress_brotli(&amp;data[..]).err().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5107,7 +5107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let response = Response {</pre>
+                <pre class="has-background-white py-0 px-2">            HttpError::CouldNotUncompressResponse {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5123,7 +5123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">                description: &quot;brotli&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5139,7 +5139,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5155,7 +5155,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5171,7 +5171,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: b&quot;Hello World!&quot;.to_vec(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5187,7 +5187,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            uncompress_gzip(&amp;data[..]).err().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5203,7 +5203,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            HttpError::CouldNotUncompressResponse {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5219,7 +5219,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">                description: &quot;gzip&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5235,7 +5235,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(response.uncompress_body().unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5251,7 +5251,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5267,7 +5267,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5283,7 +5283,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5299,7 +5299,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_uncompress_brotli() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn hello_response() -&gt; Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5315,7 +5315,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
+                <pre class="has-background-white py-0 px-2">        Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5331,7 +5331,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x21, 0x2c, 0x00, 0x04, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c,</pre>
+                <pre class="has-background-white py-0 px-2">            body: b&quot;Hello World!&quot;.to_vec(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5347,7 +5347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x64, 0x21, 0x03,</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5363,7 +5363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        ];</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5379,7 +5379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_brotli(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5395,7 +5395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5411,7 +5411,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn utf8_encoding_response() -&gt; Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5427,7 +5427,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5443,7 +5443,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_uncompress_gzip() {</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(&quot;Content-Type&quot;, &quot;text&#x2F;plain; charset=utf-8&quot;)],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5459,7 +5459,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
+                <pre class="has-background-white py-0 px-2">            body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5475,7 +5475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x1f, 0x8b, 0x08, 0x08, 0xa7, 0x52, 0x85, 0x5f, 0x00, 0x03, 0x64, 0x61, 0x74, 0x61,</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5491,7 +5491,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x2e, 0x74, 0x78, 0x74, 0x00, 0xf3, 0x48, 0xcd, 0xc9, 0xc9, 0x57, 0x08, 0xcf, 0x2f,</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5507,7 +5507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0xca, 0x49, 0x51, 0x04, 0x00, 0xa3, 0x1c, 0x29, 0x1c, 0x0c, 0x00, 0x00, 0x00,</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5523,7 +5523,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        ];</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5539,7 +5539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_gzip(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    fn latin1_encoding_response() -&gt; Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5555,7 +5555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5571,7 +5571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![Header::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5587,7 +5587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;Content-Type&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5603,7 +5603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_uncompress_zlib() {</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;text&#x2F;plain; charset=ISO-8859-1&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5619,7 +5619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let data = vec![</pre>
+                <pre class="has-background-white py-0 px-2">            )],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5635,7 +5635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x78, 0x9c, 0xf3, 0x48, 0xcd, 0xc9, 0xc9, 0x57, 0x08, 0xcf, 0x2f, 0xca, 0x49, 0x51,</pre>
+                <pre class="has-background-white py-0 px-2">            body: vec![0x63, 0x61, 0x66, 0xe9],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5651,7 +5651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            0x04, 0x00, 0x1c, 0x49, 0x04, 0x3e,</pre>
+                <pre class="has-background-white py-0 px-2">            ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5667,7 +5667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        ];</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5683,7 +5683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(uncompress_zlib(&amp;data[..]).unwrap(), b&quot;Hello World!&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5699,7 +5699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5715,7 +5715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5731,7 +5731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_content_type() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5747,7 +5747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_uncompress_error() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(hello_response().content_type(), None);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5763,7 +5763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let data = vec![0x21];</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5779,7 +5779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            utf8_encoding_response().content_type(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5795,7 +5795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            uncompress_brotli(&amp;data[..]).err().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            Some(&quot;text&#x2F;plain; charset=utf-8&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5811,7 +5811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            HttpError::CouldNotUncompressResponse {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5827,7 +5827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                description: &quot;brotli&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5843,7 +5843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            latin1_encoding_response().content_type(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5859,7 +5859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            Some(&quot;text&#x2F;plain; charset=ISO-8859-1&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5875,7 +5875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5891,7 +5891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            uncompress_gzip(&amp;data[..]).err().unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5907,7 +5907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            HttpError::CouldNotUncompressResponse {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5923,7 +5923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                description: &quot;gzip&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5939,7 +5939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_character_encoding() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5955,7 +5955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5971,7 +5971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            hello_response().character_encoding().unwrap().name(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5987,7 +5987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            &quot;utf-8&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6003,7 +6003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn hello_response() -&gt; Response {</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6019,7 +6019,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        Response {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6035,7 +6035,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">            utf8_encoding_response()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6051,7 +6051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">                .character_encoding()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6067,7 +6067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6083,7 +6083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: b&quot;Hello World!&quot;.to_vec(),</pre>
+                <pre class="has-background-white py-0 px-2">                .name(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6099,7 +6099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;utf-8&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6115,7 +6115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6131,7 +6131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6147,7 +6147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            latin1_encoding_response()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6163,7 +6163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">                .character_encoding()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6179,7 +6179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn utf8_encoding_response() -&gt; Response {</pre>
+                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6195,7 +6195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        Response {</pre>
+                <pre class="has-background-white py-0 px-2">                .name(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6211,7 +6211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;windows-1252&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6227,7 +6227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6243,7 +6243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6259,7 +6259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Type&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6275,7 +6275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;text&#x2F;plain; charset=utf-8&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6291,7 +6291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_text() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6307,7 +6307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(hello_response().text().unwrap(), &quot;Hello World!&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6323,7 +6323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(utf8_encoding_response().text().unwrap(), &quot;café&quot;.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6339,7 +6339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6355,7 +6355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">            latin1_encoding_response().text().unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6371,7 +6371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;café&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6387,7 +6387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6403,7 +6403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn latin1_encoding_response() -&gt; Response {</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6419,7 +6419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        Response {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6435,7 +6435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version::Http10,</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6451,7 +6451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: 200,</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_invalid_charset() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6467,7 +6467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![Header {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6483,7 +6483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;Content-Type&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6499,7 +6499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: &quot;text&#x2F;plain; charset=ISO-8859-1&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                headers: vec![Header::new(&quot;Content-Type&quot;, &quot;test&#x2F;plain; charset=xxx&quot;),],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6515,7 +6515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }],</pre>
+                <pre class="has-background-white py-0 px-2">                body: b&quot;Hello World!&quot;.to_vec(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6531,7 +6531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: vec![0x63, 0x61, 0x66, 0xe9],</pre>
+                <pre class="has-background-white py-0 px-2">                ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6547,7 +6547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            duration: Default::default(),</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6563,7 +6563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            url: &quot;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            .character_encoding()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6579,7 +6579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6595,7 +6595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6611,7 +6611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            HttpError::InvalidCharset {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6627,7 +6627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">                charset: &quot;xxx&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6643,7 +6643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_content_type() {</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6659,7 +6659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(hello_response().content_type(), None);</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6675,7 +6675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6691,7 +6691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            utf8_encoding_response().content_type(),</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6707,7 +6707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Some(&quot;text&#x2F;plain; charset=utf-8&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6723,7 +6723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_invalid_decoding() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6755,7 +6755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            latin1_encoding_response().content_type(),</pre>
+                <pre class="has-background-white py-0 px-2">            Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6771,7 +6771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Some(&quot;text&#x2F;plain; charset=ISO-8859-1&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">                body: vec![0x63, 0x61, 0x66, 0xe9],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6787,7 +6787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6803,7 +6803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6819,7 +6819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            .text()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6835,7 +6835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">            .err()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6851,7 +6851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_character_encoding() {</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6867,7 +6867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            HttpError::InvalidDecoding {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6883,7 +6883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            hello_response().character_encoding().unwrap().name(),</pre>
+                <pre class="has-background-white py-0 px-2">                charset: &quot;utf-8&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6899,7 +6899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;utf-8&quot;</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6931,7 +6931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6947,7 +6947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            utf8_encoding_response()</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6963,7 +6963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .character_encoding()</pre>
+                <pre class="has-background-white py-0 px-2">            Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6979,7 +6979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">                headers: vec![Header::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6995,7 +6995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .name(),</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;Content-Type&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7011,7 +7011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;utf-8&quot;</pre>
+                <pre class="has-background-white py-0 px-2">                    &quot;text&#x2F;plain; charset=ISO-8859-1&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7027,7 +7027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                ),],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7043,7 +7043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7059,7 +7059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            latin1_encoding_response()</pre>
+                <pre class="has-background-white py-0 px-2">                ..Default::default()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7075,7 +7075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .character_encoding()</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7091,7 +7091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .unwrap()</pre>
+                <pre class="has-background-white py-0 px-2">            .text()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7107,7 +7107,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .name(),</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7123,7 +7123,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;windows-1252&quot;</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;cafÃ©&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7171,1133 +7171,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="447"
-                role="cell">
-                <a href="#447">447</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="448"
-                role="cell">
-                <a href="#448">448</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_text() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="449"
-                role="cell">
-                <a href="#449">449</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(hello_response().text().unwrap(), &quot;Hello World!&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="450"
-                role="cell">
-                <a href="#450">450</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(utf8_encoding_response().text().unwrap(), &quot;café&quot;.to_string());</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="451"
-                role="cell">
-                <a href="#451">451</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="452"
-                role="cell">
-                <a href="#452">452</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            latin1_encoding_response().text().unwrap(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="453"
-                role="cell">
-                <a href="#453">453</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;café&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="454"
-                role="cell">
-                <a href="#454">454</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="455"
-                role="cell">
-                <a href="#455">455</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="456"
-                role="cell">
-                <a href="#456">456</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="457"
-                role="cell">
-                <a href="#457">457</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="458"
-                role="cell">
-                <a href="#458">458</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_invalid_charset() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="459"
-                role="cell">
-                <a href="#459">459</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="460"
-                role="cell">
-                <a href="#460">460</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            Response {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="461"
-                role="cell">
-                <a href="#461">461</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                version: Version::Http10,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="462"
-                role="cell">
-                <a href="#462">462</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                status: 200,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="463"
-                role="cell">
-                <a href="#463">463</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                headers: vec![Header {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="464"
-                role="cell">
-                <a href="#464">464</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    name: &quot;Content-Type&quot;.to_string(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="465"
-                role="cell">
-                <a href="#465">465</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: &quot;test&#x2F;plain; charset=xxx&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="466"
-                role="cell">
-                <a href="#466">466</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                }],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="467"
-                role="cell">
-                <a href="#467">467</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                body: b&quot;Hello World!&quot;.to_vec(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="468"
-                role="cell">
-                <a href="#468">468</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                duration: Default::default(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="469"
-                role="cell">
-                <a href="#469">469</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                url: &quot;&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="470"
-                role="cell">
-                <a href="#470">470</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="471"
-                role="cell">
-                <a href="#471">471</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .character_encoding()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="472"
-                role="cell">
-                <a href="#472">472</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="473"
-                role="cell">
-                <a href="#473">473</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="474"
-                role="cell">
-                <a href="#474">474</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            HttpError::InvalidCharset {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="475"
-                role="cell">
-                <a href="#475">475</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                charset: &quot;xxx&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="476"
-                role="cell">
-                <a href="#476">476</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="477"
-                role="cell">
-                <a href="#477">477</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="478"
-                role="cell">
-                <a href="#478">478</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="479"
-                role="cell">
-                <a href="#479">479</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="480"
-                role="cell">
-                <a href="#480">480</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="481"
-                role="cell">
-                <a href="#481">481</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_invalid_decoding() {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="482"
-                role="cell">
-                <a href="#482">482</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="483"
-                role="cell">
-                <a href="#483">483</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            Response {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="484"
-                role="cell">
-                <a href="#484">484</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                version: Version::Http10,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="485"
-                role="cell">
-                <a href="#485">485</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                status: 200,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="486"
-                role="cell">
-                <a href="#486">486</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                headers: vec![],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="487"
-                role="cell">
-                <a href="#487">487</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                body: vec![0x63, 0x61, 0x66, 0xe9],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="488"
-                role="cell">
-                <a href="#488">488</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                duration: Default::default(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="489"
-                role="cell">
-                <a href="#489">489</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                url: &quot;&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="490"
-                role="cell">
-                <a href="#490">490</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="491"
-                role="cell">
-                <a href="#491">491</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .text()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="492"
-                role="cell">
-                <a href="#492">492</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .err()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="493"
-                role="cell">
-                <a href="#493">493</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="494"
-                role="cell">
-                <a href="#494">494</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            HttpError::InvalidDecoding {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="495"
-                role="cell">
-                <a href="#495">495</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                charset: &quot;utf-8&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="496"
-                role="cell">
-                <a href="#496">496</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="497"
-                role="cell">
-                <a href="#497">497</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="498"
-                role="cell">
-                <a href="#498">498</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="499"
-                role="cell">
-                <a href="#499">499</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="500"
-                role="cell">
-                <a href="#500">500</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            Response {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="501"
-                role="cell">
-                <a href="#501">501</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                version: Version::Http10,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="502"
-                role="cell">
-                <a href="#502">502</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                status: 200,</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="503"
-                role="cell">
-                <a href="#503">503</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                headers: vec![Header {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="504"
-                role="cell">
-                <a href="#504">504</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    name: &quot;Content-Type&quot;.to_string(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="505"
-                role="cell">
-                <a href="#505">505</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: &quot;text&#x2F;plain; charset=ISO-8859-1&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="506"
-                role="cell">
-                <a href="#506">506</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                }],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="507"
-                role="cell">
-                <a href="#507">507</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                body: vec![0x63, 0x61, 0x66, 0xc3, 0xa9],</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="508"
-                role="cell">
-                <a href="#508">508</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                duration: Default::default(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="509"
-                role="cell">
-                <a href="#509">509</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                url: &quot;&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="510"
-                role="cell">
-                <a href="#510">510</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="511"
-                role="cell">
-                <a href="#511">511</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .text()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="512"
-                role="cell">
-                <a href="#512">512</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="513"
-                role="cell">
-                <a href="#513">513</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;cafÃ©&quot;.to_string()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="514"
-                role="cell">
-                <a href="#514">514</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="515"
-                role="cell">
-                <a href="#515">515</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="516"
-                role="cell">
-                <a href="#516">516</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-02-14 08:11</p>
+                <p class="heading">Date: 2023-02-15 08:10</p>
             </div>
         </footer>
     </body>

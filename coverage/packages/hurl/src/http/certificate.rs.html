@@ -2,12 +2,12 @@
 <html lang="en-us">
     <head><meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Grcov report - request_decoding.rs </title>
+        <title>Grcov report - certificate.rs </title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"></head>
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;http</a></li><li class="is-active"><a href="#">request_decoding.rs</a></li>
+        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;http</a></li><li class="is-active"><a href="#">certificate.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -15,15 +15,15 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="11 / 18">61.11 %</abbr></p>
+                <abbr title="0 / 1">0 %</abbr></p>
         </div>
     </div>
 
         <div class="level-item has-text-centered">
         <div>
             <p class="heading">Functions</p>
-            <p class="title has-text-success">
-                <abbr title="2 / 2">100 %</abbr></p>
+            <p class="title has-text-danger">
+                <abbr title="0 / 3">0 %</abbr></p>
         </div>
     </div>
 
@@ -339,7 +339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::http::{mimetype, HttpError, Request};</pre>
+                <pre class="has-background-white py-0 px-2">use chrono::{DateTime, Utc};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use encoding::{DecoderTrap, EncodingRef};</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -365,13 +365,13 @@
                 <a href="#21">21</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">#[derive(Clone, Debug, PartialEq, Eq)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -387,7 +387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Request {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct Certificate {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -403,7 +403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns character encoding of the HTTP request.</pre>
+                <pre class="has-background-white py-0 px-2">    pub subject: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -413,13 +413,13 @@
                 <a href="#24">24</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn character_encoding(&amp;self) -&gt; Result&lt;EncodingRef, HttpError&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">    pub issuer: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -429,13 +429,13 @@
                 <a href="#25">25</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self.content_type() {</pre>
+                <pre class="has-background-white py-0 px-2">    pub start_date: DateTime&lt;Utc&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -445,13 +445,13 @@
                 <a href="#26">26</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Some(content_type) =&gt; match mimetype::charset(&amp;content_type) {</pre>
+                <pre class="has-background-white py-0 px-2">    pub expire_date: DateTime&lt;Utc&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -461,13 +461,13 @@
                 <a href="#27">27</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Some(charset) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">    pub serial_number: String,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -475,342 +475,6 @@
                 id="28"
                 role="cell">
                 <a href="#28">28</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    match encoding::label::encoding_from_whatwg_label(charset.as_str()) {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="29"
-                role="cell">
-                <a href="#29">29</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        None =&gt; Err(HttpError::InvalidCharset { charset }),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="30"
-                role="cell">
-                <a href="#30">30</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        Some(enc) =&gt; Ok(enc),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="31"
-                role="cell">
-                <a href="#31">31</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="32"
-                role="cell">
-                <a href="#32">32</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="33"
-                role="cell">
-                <a href="#33">33</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                None =&gt; Ok(encoding::all::UTF_8),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="34"
-                role="cell">
-                <a href="#34">34</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="35"
-                role="cell">
-                <a href="#35">35</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="36">
-                36
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            None =&gt; Ok(encoding::all::UTF_8),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="36"
-                role="cell">
-                <a href="#36">36</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="37"
-                role="cell">
-                <a href="#37">37</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="38"
-                role="cell">
-                <a href="#38">38</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="39"
-                role="cell">
-                <a href="#39">39</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns response body as text.</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="40"
-                role="cell">
-                <a href="#40">40</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn text(&amp;self) -&gt; Result&lt;String, HttpError&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="41"
-                role="cell">
-                <a href="#41">41</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let encoding = self.character_encoding()?;</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="42"
-                role="cell">
-                <a href="#42">42</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match encoding.decode(&amp;self.body, DecoderTrap::Strict) {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="43"
-                role="cell">
-                <a href="#43">43</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Ok(s) =&gt; Ok(s),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="44"
-                role="cell">
-                <a href="#44">44</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Err(_) =&gt; Err(HttpError::InvalidDecoding {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="45"
-                role="cell">
-                <a href="#45">45</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                charset: encoding.name().to_string(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="46"
-                role="cell">
-                <a href="#46">46</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            }),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="47"
-                role="cell">
-                <a href="#47">47</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="48"
-                role="cell">
-                <a href="#48">48</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="42">
-                42
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="49"
-                role="cell">
-                <a href="#49">49</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
