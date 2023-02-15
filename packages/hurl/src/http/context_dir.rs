@@ -16,7 +16,7 @@
  *
  */
 
-use crate::util;
+use crate::util::path;
 use std::path::{Path, PathBuf};
 
 /// Represents the directories used to run a Hurl file.
@@ -60,7 +60,7 @@ impl ContextDir {
         let file = self.get_path(filename);
         let absolute_file = self.current_dir.join(file);
         let absolute_file_root = self.current_dir.join(&self.file_root);
-        util::is_descendant(absolute_file.as_path(), absolute_file_root.as_path())
+        path::is_descendant(absolute_file.as_path(), absolute_file_root.as_path())
     }
 }
 

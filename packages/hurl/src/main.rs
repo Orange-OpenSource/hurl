@@ -27,11 +27,12 @@ use colored::*;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
 use hurl::report;
-use hurl::report::{canonicalize_filename, html};
+use hurl::report::html;
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::runner::RunnerOptions;
 use hurl::util::logger::{BaseLogger, LoggerBuilder};
+use hurl::util::path;
 use hurl::{cli, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
@@ -294,6 +295,7 @@ fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
 fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), CliError> {
     let hurl_results = runs.iter().map(|it| &it.result).collect::<Vec<_>>();
     html::write_report(dir_path, &hurl_results)?;
+
     for run in runs.iter() {
         let filename = &run.result.filename;
         format_html(filename, dir_path)?;
@@ -355,7 +357,7 @@ fn get_input_files(
 }
 
 fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
-    let relative_input_file = canonicalize_filename(input_file);
+    let relative_input_file = path::canonicalize_filename(input_file);
     let absolute_input_file = dir_path.join(format!("{relative_input_file}.html"));
 
     let parent = absolute_input_file.parent().expect("a parent");

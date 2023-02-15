@@ -19,8 +19,8 @@
 //! HTML report
 
 use crate::cli::CliError;
-use crate::report::canonicalize_filename;
 use crate::runner::HurlResult;
+use crate::util::path;
 use chrono::{DateTime, Local};
 use std::io::Write;
 use std::path::Path;
@@ -44,7 +44,7 @@ pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(),
     let mut results = parse_html(&index_path)?;
     for result in hurl_results.iter() {
         let html_result = HTMLResult {
-            filename: canonicalize_filename(&result.filename),
+            filename: path::canonicalize_filename(&result.filename),
             time_in_ms: result.time_in_ms,
             success: result.success,
         };
