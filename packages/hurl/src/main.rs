@@ -27,7 +27,7 @@ use colored::*;
 use hurl::cli::{CliError, CliOptions, Logger, OutputType};
 use hurl::http;
 use hurl::report;
-use hurl::report::canonicalize_filename;
+use hurl::report::{canonicalize_filename, html};
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::runner::RunnerOptions;
@@ -35,6 +35,8 @@ use hurl::util::logger::{BaseLogger, LoggerBuilder};
 use hurl::{cli, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
+use junit::Testcase;
+use report::junit;
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -43,6 +45,8 @@ const EXIT_ERROR_RUNTIME: i32 = 3;
 const EXIT_ERROR_ASSERT: i32 = 4;
 const EXIT_ERROR_UNDEFINED: i32 = 127;
 
+/// Structure that stores teh result of an Hurl file execution, and the content of the file.
+/// This structure is temporary, as we want to move the `content` into [`HurlResult`].
 struct Run {
     content: String,
     result: HurlResult,
@@ -280,16 +284,16 @@ fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
     for run in runs.iter() {
         let hurl_result = &run.result;
         let content = &run.content;
-        let testcase = report::Testcase::from(hurl_result, content);
+        let testcase = Testcase::from(hurl_result, content);
         testcases.push(testcase);
     }
-    report::create_junit_report(filename, &testcases)
+    junit::write_report(filename, &testcases)
 }
 
 /// Create an HTML report for this run.
 fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), CliError> {
     let hurl_results = runs.iter().map(|it| &it.result).collect::<Vec<_>>();
-    report::write_html_report(dir_path, &hurl_results)?;
+    html::write_report(dir_path, &hurl_results)?;
     for run in runs.iter() {
         let filename = &run.result.filename;
         format_html(filename, dir_path)?;

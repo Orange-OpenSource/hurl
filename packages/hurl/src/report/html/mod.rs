@@ -16,6 +16,8 @@
  *
  */
 
+//! HTML report
+
 use crate::cli::CliError;
 use crate::report::canonicalize_filename;
 use crate::runner::HurlResult;
@@ -34,7 +36,10 @@ struct HTMLResult {
     pub success: bool,
 }
 
-pub fn write_html_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(), CliError> {
+/// Creates and HTML report for this list of [`HurlResult`] at `dir_path`/index.html.
+///
+/// If the report already exists, results are merged.
+pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(), CliError> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
     for result in hurl_results.iter() {

@@ -31,7 +31,7 @@ use hurl_core::ast::*;
 use super::core::*;
 use super::entry;
 
-/// Runs a `hurl_file`, issue from the given `filename` file and `content`, with
+/// Runs a `hurl_file`, issue from the given `filename`, with
 /// an `http_client`. Returns a [`HurlResult`] upon completion.
 ///
 /// `filename` and `content` are used to display line base logs (for parsing error or asserts

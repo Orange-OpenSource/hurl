@@ -16,16 +16,15 @@
  *
  */
 
-//!
 //! XML JUnit report
 //!
 //! The link below seems the most "official" spec
 //! <https://www.ibm.com/docs/fr/developer-for-zos/9.1.1?topic=formats-junit-xml-format>
 //!
-//! One Hurl file will result into one JUnit &lt;testcase&gt;.
+//! One Hurl file will result into one JUnit `<testcase>`.
 //!
-//! The &lt;testcase&gt; can include &lt;error&gt; (for runtime error) or &lt;failure&gt; (for assert error)
-//! Each Hurl execution will generate its own &lt;testsuite&gt; within the root &lt;testsuites>.
+//! The `<testcase>` can include `<error>` (for runtime error) or `<failure>` (for assert error)
+//! Each Hurl execution will generate its own `<testsuite>` within the root `<testsuites>`.
 //!
 //! # Example:
 //!
@@ -37,15 +36,15 @@
 //!     <testcase id="tests/hello.hurl" name="tests/hello.hurl" time="0.029"/>
 //!     <testcase id="tests/error_assert_status.hurl" name="tests/error_assert_status.hurl" time="0.008">
 //!       <failure>Assert Status
-//!   --&gt; tests/error_assert_status.hurl:2:10
+//!   --> tests/error_assert_status.hurl:2:10
 //!    |
 //!  2 | HTTP/1.0 200
-//!    |          ^^^ actual value is &lt;404&gt;
+//!    |          ^^^ actual value is <404>
 //!    |</failure>
 //!     </testcase>
 //!     <testcase id="tests/error_body_json.hurl" time="0.000">
 //!       <error>Undefined Variable
-//!   --&gt; tests/error_body_json.hurl:3:18
+//!   --> tests/error_body_json.hurl:3:18
 //!    |
 //!  3 |     "success": {{success}}
 //!    |                  ^^^^^^^ You must set the variable success
@@ -56,17 +55,15 @@
 //! ```
 //!
 
-use std::fs::File;
-
-use xmltree::{Element, XMLNode};
-
-pub use testcase::Testcase;
-
 use crate::cli::CliError;
+use std::fs::File;
+pub use testcase::Testcase;
+use xmltree::{Element, XMLNode};
 
 mod testcase;
 
-pub fn create_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
+/// Creates a JUnit from a list of `testcases`.
+pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
     let mut testsuites = vec![];
 
     let path = std::path::Path::new(&filename);

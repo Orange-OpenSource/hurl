@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-mod html;
-mod junit;
 
-pub use html::write_html_report;
-pub use junit::create_report as create_junit_report;
-pub use junit::Testcase;
+//! Various reports for Hurl runs (JUnit, HTML etc...)
+
+pub mod html;
+pub mod junit;
 use std::path::Path;
 
 /// Returns the canonical fullname relative to / (technically a relative path)

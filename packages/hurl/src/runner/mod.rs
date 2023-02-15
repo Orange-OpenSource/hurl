@@ -16,12 +16,7 @@
  *
  */
 
-//!
-//! Hurl Runner
-//!
-//! takes the Hurl AST as input
-//!
-//!
+//! A runner for Hurl files. If you want to execute an Hurl file, this is the right place.
 
 pub use self::core::{
     AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult, RunnerError, Verbosity,
