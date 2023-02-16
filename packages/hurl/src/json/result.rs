@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-
-use crate::cli;
 use crate::http::{
     Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
 };
 use crate::runner::{AssertResult, Call, CaptureResult, EntryResult, HurlResult};
+use crate::util::logger;
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.
@@ -258,7 +257,7 @@ impl AssertResult {
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.error() {
-            let message = cli::error_string_no_color(filename, content, &err);
+            let message = logger::error_string_no_color(filename, content, &err);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(

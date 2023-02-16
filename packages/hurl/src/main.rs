@@ -32,11 +32,9 @@ use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::runner::RunnerOptions;
 use hurl::util::logger::{BaseLogger, LoggerBuilder};
-use hurl::util::path;
 use hurl::{cli, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
-use junit::Testcase;
 use report::junit;
 
 const EXIT_OK: i32 = 0;
@@ -285,21 +283,24 @@ fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
     for run in runs.iter() {
         let hurl_result = &run.result;
         let content = &run.content;
-        let testcase = Testcase::from(hurl_result, content);
+        let testcase = junit::Testcase::from(hurl_result, content);
         testcases.push(testcase);
     }
-    junit::write_report(filename, &testcases)
+    junit::write_report(filename, &testcases)?;
+    Ok(())
 }
 
 /// Create an HTML report for this run.
 fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), CliError> {
-    let hurl_results = runs.iter().map(|it| &it.result).collect::<Vec<_>>();
-    html::write_report(dir_path, &hurl_results)?;
-
+    let mut testcases = vec![];
     for run in runs.iter() {
-        let filename = &run.result.filename;
-        format_html(filename, dir_path)?;
+        let hurl_result = &run.result;
+        let content = &run.content;
+        let testcase = html::Testcase::from(hurl_result);
+        testcase.write_html(content, dir_path)?;
+        testcases.push(testcase);
     }
+    html::write_report(dir_path, &testcases)?;
     Ok(())
 }
 
@@ -354,41 +355,6 @@ fn get_input_files(
         }
     }
     filenames
-}
-
-fn format_html(input_file: &str, dir_path: &Path) -> Result<(), CliError> {
-    let relative_input_file = path::canonicalize_filename(input_file);
-    let absolute_input_file = dir_path.join(format!("{relative_input_file}.html"));
-
-    let parent = absolute_input_file.parent().expect("a parent");
-    std::fs::create_dir_all(parent).unwrap();
-    let mut file = match std::fs::File::create(&absolute_input_file) {
-        Err(why) => {
-            return Err(CliError {
-                message: format!(
-                    "Issue writing to {}: {:?}",
-                    absolute_input_file.display(),
-                    why
-                ),
-            });
-        }
-        Ok(file) => file,
-    };
-    let content = cli::read_to_string(input_file).expect("readable hurl file");
-    let hurl_file = parser::parse_hurl_file(content.as_str()).expect("valid hurl file");
-
-    let s = hurl_core::format::format_html(hurl_file, true);
-
-    if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CliError {
-            message: format!(
-                "Issue writing to {}: {:?}",
-                absolute_input_file.display(),
-                why
-            ),
-        });
-    }
-    Ok(())
 }
 
 fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), CliError> {

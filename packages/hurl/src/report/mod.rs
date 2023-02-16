@@ -20,3 +20,8 @@
 
 pub mod html;
 pub mod junit;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Error {
+    pub message: String,
+}

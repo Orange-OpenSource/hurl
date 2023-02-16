@@ -16,6 +16,7 @@
  *
  */
 
+use crate::report;
 use std::error::Error;
 use std::fmt;
 
@@ -26,7 +27,7 @@ pub use self::options::parse_options;
 pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
 pub use self::variables::parse_value as parse_variable_value;
-pub use crate::util::logger::{error_string_no_color, Logger};
+pub use crate::util::logger::Logger;
 
 mod fs;
 pub mod interactive;
@@ -57,9 +58,13 @@ impl From<&str> for CliError {
 
 impl From<String> for CliError {
     fn from(e: String) -> Self {
-        Self {
-            message: format!("{e:?}"),
-        }
+        Self { message: e }
+    }
+}
+
+impl From<report::Error> for CliError {
+    fn from(e: report::Error) -> Self {
+        Self { message: e.message }
     }
 }
 

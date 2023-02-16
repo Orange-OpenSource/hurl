@@ -54,16 +54,15 @@
 //! </testsuites>
 //! ```
 //!
+mod testcase;
 
-use crate::cli::CliError;
+use crate::report::Error;
 use std::fs::File;
 pub use testcase::Testcase;
 use xmltree::{Element, XMLNode};
 
-mod testcase;
-
 /// Creates a JUnit from a list of `testcases`.
-pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliError> {
+pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {
     let mut testsuites = vec![];
 
     let path = std::path::Path::new(&filename);
@@ -71,7 +70,7 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliErr
         let s = match std::fs::read_to_string(path) {
             Ok(s) => s,
             Err(why) => {
-                return Err(CliError {
+                return Err(Error {
                     message: format!("Issue reading {} to string to {:?}", path.display(), why),
                 });
             }
@@ -97,14 +96,14 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), CliErr
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
-            return Err(CliError {
+            return Err(Error {
                 message: format!("Failed to produce junit report: {e:?}"),
             });
         }
     };
     match report.write(file) {
         Ok(_) => Ok(()),
-        Err(e) => Err(CliError {
+        Err(e) => Err(Error {
             message: format!("Failed to produce junit report: {e:?}"),
         }),
     }

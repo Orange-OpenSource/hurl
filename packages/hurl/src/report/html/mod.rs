@@ -18,12 +18,14 @@
 
 //! HTML report
 
-use crate::cli::CliError;
-use crate::runner::HurlResult;
+mod testcase;
+
+use crate::report::Error;
 use crate::util::path;
 use chrono::{DateTime, Local};
 use std::io::Write;
 use std::path::Path;
+pub use testcase::Testcase;
 
 /// The test result to be displayed in an HTML page
 ///
@@ -36,17 +38,17 @@ struct HTMLResult {
     pub success: bool,
 }
 
-/// Creates and HTML report for this list of [`HurlResult`] at `dir_path`/index.html.
+/// Creates and HTML report for this list of [`Testcase`] at `dir_path`/index.html.
 ///
 /// If the report already exists, results are merged.
-pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(), CliError> {
+pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Error> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
-    for result in hurl_results.iter() {
+    for testcase in testcases {
         let html_result = HTMLResult {
-            filename: path::canonicalize_filename(&result.filename),
-            time_in_ms: result.time_in_ms,
-            success: result.success,
+            filename: path::canonicalize_filename(&testcase.filename),
+            time_in_ms: testcase.time_in_ms,
+            success: testcase.success,
         };
         results.push(html_result);
     }
@@ -56,14 +58,14 @@ pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(),
     let file_path = index_path;
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(CliError {
+            return Err(Error {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CliError {
+        return Err(Error {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
@@ -71,26 +73,26 @@ pub fn write_report(dir_path: &Path, hurl_results: &[&HurlResult]) -> Result<(),
     let file_path = dir_path.join("report.css");
     let mut file = match std::fs::File::create(&file_path) {
         Err(why) => {
-            return Err(CliError {
+            return Err(Error {
                 message: format!("Issue writing to {}: {:?}", file_path.display(), why),
             });
         }
         Ok(file) => file,
     };
     if let Err(why) = file.write_all(include_bytes!("../report.css")) {
-        return Err(CliError {
+        return Err(Error {
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
     Ok(())
 }
 
-fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, CliError> {
+fn parse_html(path: &Path) -> Result<Vec<HTMLResult>, Error> {
     if path.exists() {
         let s = match std::fs::read_to_string(path) {
             Ok(s) => s,
             Err(why) => {
-                return Err(CliError {
+                return Err(Error {
                     message: format!("Issue reading {} to string to {:?}", path.display(), why),
                 });
             }

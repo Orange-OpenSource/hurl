@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-
-use crate::cli;
 use crate::runner::HurlResult;
 
+use crate::util::logger;
 use xmltree::{Element, XMLNode};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -40,7 +39,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = cli::error_string_no_color(&hurl_result.filename, content, error);
+            let message = logger::error_string_no_color(&hurl_result.filename, content, error);
             if error.assert {
                 failures.push(message);
             } else {
