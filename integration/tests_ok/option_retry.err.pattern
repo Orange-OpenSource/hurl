@@ -23,11 +23,13 @@
 >
 * Response: (received 60 bytes in ~~~ ms)
 *
-< HTTP/1.0 201 CREATED
+< HTTP/1.1 201 CREATED
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 * Captures:
 * job_id: ~~~
@@ -54,11 +56,13 @@
 >
 * Response: (received 60 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * Assert failure
@@ -92,11 +96,13 @@
 >
 * Response: (received 60 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * Assert failure
@@ -130,11 +136,13 @@
 >
 * Response: (received 60 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * Assert failure
@@ -168,11 +176,13 @@
 >
 * Response: (received 60 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 60
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * Assert failure
@@ -206,11 +216,13 @@
 >
 * Response: (received 62 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 62
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * ------------------------------------------------------------------------------
@@ -231,11 +243,13 @@
 >
 * Response: (received 0 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Server: Flask Server
 < Content-Length: 0
-< Date: ~~~
+< Connection: close
 <
 *
 * ------------------------------------------------------------------------------
@@ -256,10 +270,12 @@
 >
 * Response: (received 42 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: application/json
 < Content-Length: 42
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *

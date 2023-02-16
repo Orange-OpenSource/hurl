@@ -2,6 +2,6 @@ error: Assert HTTP version
   --> tests_failed/assert_http_version.hurl:2:1
    |
  2 | HTTP/2 200
-   | ^^^^^^ actual value is <HTTP/1.0>
+   | ^^^^^^ actual value is <HTTP/1.1>
    |
 

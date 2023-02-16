@@ -1,7 +1,9 @@
-HTTP/1.0 200
+HTTP/1.1 200
+Server: Werkzeug/~~~ Python/~~~
+Date: ~~~
 Content-Type: text/html; charset=utf-8
 Content-Length: 5
 Server: Flask Server
-Date: ~~~
+Connection: close
 
 Hello

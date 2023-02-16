@@ -19,11 +19,13 @@
 >
 * Response: (received 12 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 *
 * ------------------------------------------------------------------------------
@@ -51,15 +53,16 @@
 * Request body:
 *
 ** Mark bundle as not supporting multiuse
-** HTTP 1.0, assume close after body
 ** Closing connection 3
 * Response: (received 12 bytes in ~~~ ms)
 *
-< HTTP/1.0 200 OK
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~ Python/~~~
+< Date: ~~~
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 12
 < Server: Flask Server
-< Date: ~~~
+< Connection: close
 <
 * Response body:
 * Hello World!

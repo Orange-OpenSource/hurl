@@ -63,11 +63,11 @@ fn test_hello() {
         value: "*/*".to_string(),
     }));
 
-    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.version, Version::Http11);
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
 
-    assert_eq!(response.headers.len(), 4);
+    assert_eq!(response.headers.len(), 6);
     assert!(response.headers.contains(&Header {
         name: "Content-Length".to_string(),
         value: "12".to_string(),
@@ -565,7 +565,7 @@ fn test_expect() {
         value: "100-continue".to_string(),
     }));
     assert_eq!(response.status, 200);
-    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.version, Version::Http11);
     assert!(response.body.is_empty());
 }
 
@@ -592,7 +592,7 @@ fn test_basic_authentication() {
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
     }));
     assert_eq!(response.status, 200);
-    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.version, Version::Http11);
     assert_eq!(response.body, b"You are authenticated".to_vec());
 
     let options = ClientOptions::default();
@@ -609,7 +609,7 @@ fn test_basic_authentication() {
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
     }));
     assert_eq!(response.status, 200);
-    assert_eq!(response.version, Version::Http10);
+    assert_eq!(response.version, Version::Http11);
     assert_eq!(response.body, b"You are authenticated".to_vec());
 }
 

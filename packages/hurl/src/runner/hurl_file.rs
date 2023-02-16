@@ -54,7 +54,7 @@ use super::entry;
 /// let filename = "sample.hurl";
 /// let s = r#"
 /// GET http://localhost:8000/hello
-/// HTTP/1.0 200
+/// HTTP/1.1 200
 /// "#;
 /// let hurl_file = parser::parse_hurl_file(s).unwrap();
 ///

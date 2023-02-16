@@ -21,13 +21,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~~ ms)
+* Response: (received 207 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 * Assert status code
@@ -54,13 +56,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~~ ms)
+* Response: (received 207 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 * Assert status code
@@ -87,13 +91,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~~ ms)
+* Response: (received 207 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 * Assert status code
@@ -120,13 +126,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~~ ms)
+* Response: (received 207 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 * Assert status code
@@ -153,13 +161,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~~ ms)
+* Response: (received 207 bytes in ~~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 * Assert status code
@@ -186,13 +196,15 @@
 > Accept: */*
 > User-Agent: hurl/~~~
 >
-* Response: (received 232 bytes in ~~ ms)
+* Response: (received 207 bytes in ~~ ms)
 *
-< HTTP/1.0 404 NOT FOUND
-< Content-Type: text/html; charset=utf-8
-< Content-Length: 232
-< Server: Flask Server
+< HTTP/1.1 404 NOT FOUND
+< Server: Werkzeug/~~~ Python/~~~
 < Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 207
+< Server: Flask Server
+< Connection: close
 <
 *
 *
