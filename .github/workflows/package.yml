@@ -266,6 +266,7 @@ jobs:
         python-version: '3.8'
     - name: Build
       run: |
+        brew install pkg-config
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Test integ
