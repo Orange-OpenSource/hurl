@@ -44,6 +44,6 @@ tornado==6.2
 typing_extensions==4.4.0
 urllib3==1.26.12
 urwid==2.1.2
-Werkzeug==2.0.3
+Werkzeug==2.2.3
 wsproto==1.1.0
 zstandard==0.17.0
