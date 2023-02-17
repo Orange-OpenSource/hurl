@@ -19,17 +19,15 @@ use std::collections::HashMap;
 use std::thread;
 use std::time::Instant;
 
-use crate::cli::Logger;
 use crate::http;
-use crate::runner::entry::get_entry_verbosity;
+use crate::runner::core::*;
+use crate::runner::entry;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::Value;
+use crate::util::logger::Logger;
 use crate::util::logger::LoggerBuilder;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
-
-use super::core::*;
-use super::entry;
 
 /// Runs a `hurl_file`, issue from the given `filename`, with
 /// an `http_client`. Returns a [`HurlResult`] upon completion.
@@ -42,13 +40,12 @@ use super::entry;
 /// ```
 /// use std::collections::HashMap;
 /// use std::path::PathBuf;
-/// use hurl::cli::Logger;
 /// use hurl_core::parser;
 /// use hurl::http;
 /// use hurl::http::ContextDir;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
-/// use hurl::util::logger::LoggerBuilder;
+/// use hurl::util::logger::{Logger, LoggerBuilder};
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl";
@@ -112,7 +109,7 @@ pub fn run(
         // We compute these new overridden options for this entry, before entering into the `run`
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
-        let entry_verbosity = get_entry_verbosity(entry, &runner_options.verbosity);
+        let entry_verbosity = entry::get_entry_verbosity(entry, &runner_options.verbosity);
         let mut builder = LoggerBuilder::new();
         let logger = builder
             .color(logger.color)

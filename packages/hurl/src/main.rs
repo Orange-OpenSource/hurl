@@ -24,14 +24,14 @@ use atty::Stream;
 use clap::Command;
 use colored::*;
 
-use hurl::cli::{CliError, CliOptions, Logger, OutputType};
+use hurl::cli::{CliError, CliOptions, OutputType};
 use hurl::http;
 use hurl::report;
 use hurl::report::html;
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::runner::RunnerOptions;
-use hurl::util::logger::{BaseLogger, LoggerBuilder};
+use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
 use hurl::{cli, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;

@@ -18,39 +18,11 @@
 
 use std::collections::HashMap;
 
-use hurl::cli;
 use hurl::http;
 use hurl::runner;
 use hurl::runner::RunnerOptions;
 use hurl::util::logger::LoggerBuilder;
 use hurl_core::ast::*;
-use hurl_core::parser;
-
-// Can be used for debugging
-#[test]
-fn test_hurl_file() {
-    let filename = "../../integration/tests_ok/bom.hurl";
-    let content = cli::read_to_string(filename).expect("Something went wrong reading the file");
-    let hurl_file = parser::parse_hurl_file(content.as_str()).unwrap();
-    let variables = HashMap::new();
-    let mut client = http::Client::new(None);
-    let mut builder = LoggerBuilder::new();
-    let logger = builder
-        .filename(filename)
-        .content(&content)
-        .build()
-        .unwrap();
-
-    let runner_options = RunnerOptions::default();
-    let _hurl_log = runner::run(
-        &hurl_file,
-        filename,
-        &mut client,
-        &runner_options,
-        &variables,
-        &logger,
-    );
-}
 
 #[cfg(test)]
 fn hello_request() -> Request {

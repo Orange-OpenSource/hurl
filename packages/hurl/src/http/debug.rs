@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::cli::Logger;
+use crate::util::logger::Logger;
 
 /// Debug log text.
 pub fn log_text(text: &str, logger: &Logger) {

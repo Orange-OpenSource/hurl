@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::cli::{CliError, Logger};
+use crate::cli::CliError;
 use crate::http::Response;
 use crate::output::write_output;
 use crate::runner;
 use crate::runner::{HurlResult, RunnerError};
+use crate::util::logger::Logger;
 use colored::Colorize;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;

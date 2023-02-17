@@ -16,8 +16,8 @@
  *
  */
 
-use crate::cli::Logger;
 use crate::http::{debug, mimetype, Response};
+use crate::util::logger::Logger;
 
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.

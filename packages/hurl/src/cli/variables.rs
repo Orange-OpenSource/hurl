@@ -57,7 +57,7 @@ pub fn parse_value(s: &str) -> Result<Value, CliError> {
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use super::*;
 
     #[test]

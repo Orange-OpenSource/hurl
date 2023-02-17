@@ -18,9 +18,9 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use crate::cli::Logger;
 use crate::http;
 use crate::http::ClientOptions;
+use crate::util::logger::Logger;
 use hurl_core::ast::*;
 
 use super::core::*;
