@@ -15,12 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::cli;
-use crate::cli::CliOptions;
 use crate::http::ContextDir;
 use crate::runner::Verbosity;
 use hurl_core::ast::Entry;
-use std::path::Path;
 use std::time::Duration;
 
 pub struct RunnerOptionsBuilder {
@@ -45,6 +42,7 @@ pub struct RunnerOptionsBuilder {
     retry: bool,
     retry_interval: Duration,
     retry_max_count: Option<usize>,
+    ssl_no_revoke: bool,
     timeout: Duration,
     to_entry: Option<usize>,
     user: Option<String>,
@@ -76,6 +74,7 @@ impl Default for RunnerOptionsBuilder {
             retry: false,
             retry_interval: Duration::from_millis(1000),
             retry_max_count: Some(10),
+            ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             to_entry: None,
             user: None,
@@ -243,6 +242,11 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    pub fn ssl_no_revoke(&mut self, ssl_no_revoke: bool) -> &mut Self {
+        self.ssl_no_revoke = ssl_no_revoke;
+        self
+    }
+
     /// Sets maximum time allowed for the transfer.
     ///
     /// Default 300 seconds.
@@ -299,7 +303,7 @@ impl RunnerOptionsBuilder {
             retry: self.retry,
             retry_interval: self.retry_interval,
             retry_max_count: self.retry_max_count,
-            ssl_no_revoke: false,
+            ssl_no_revoke: self.ssl_no_revoke,
             timeout: self.timeout,
             to_entry: self.to_entry,
             user: self.user.clone(),
@@ -343,90 +347,5 @@ pub struct RunnerOptions {
 impl Default for RunnerOptions {
     fn default() -> Self {
         RunnerOptionsBuilder::default().build()
-    }
-}
-
-impl RunnerOptions {
-    pub fn from(filename: &str, current_dir: &Path, cli_options: &CliOptions) -> Self {
-        let cacert_file = cli_options.cacert_file.clone();
-        let client_cert_file = cli_options.client_cert_file.clone();
-        let client_key_file = cli_options.client_key_file.clone();
-        let connects_to = cli_options.connects_to.clone();
-        let follow_location = cli_options.follow_location;
-        let verbosity = match (cli_options.verbose, cli_options.very_verbose) {
-            (true, true) => Some(Verbosity::VeryVerbose),
-            (true, _) => Some(Verbosity::Verbose),
-            _ => None,
-        };
-        let insecure = cli_options.insecure;
-        let max_redirect = cli_options.max_redirect;
-        let proxy = cli_options.proxy.clone();
-        let no_proxy = cli_options.no_proxy.clone();
-        let cookie_input_file = cli_options.cookie_input_file.clone();
-        let timeout = cli_options.timeout;
-        let connect_timeout = cli_options.connect_timeout;
-        let user = cli_options.user.clone();
-        let user_agent = cli_options.user_agent.clone();
-        let compressed = cli_options.compressed;
-        let file_root = match cli_options.file_root {
-            Some(ref filename) => Path::new(filename),
-            None => {
-                if filename == "-" {
-                    current_dir
-                } else {
-                    let path = Path::new(filename);
-                    path.parent().unwrap()
-                }
-            }
-        };
-        let context_dir = ContextDir::new(current_dir, file_root);
-        let pre_entry = if cli_options.interactive {
-            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
-        } else {
-            None
-        };
-        let post_entry = if cli_options.interactive {
-            Some(cli::interactive::post_entry as fn() -> bool)
-        } else {
-            None
-        };
-        let fail_fast = cli_options.fail_fast;
-        let to_entry = cli_options.to_entry;
-        let resolves = cli_options.resolves.clone();
-        let retry = cli_options.retry;
-        let retry_interval = cli_options.retry_interval;
-        let retry_max_count = cli_options.retry_max_count;
-        let ignore_asserts = cli_options.ignore_asserts;
-        let ssl_no_revoke = cli_options.ssl_no_revoke;
-
-        RunnerOptions {
-            cacert_file,
-            client_cert_file,
-            client_key_file,
-            compressed,
-            connect_timeout,
-            connects_to,
-            context_dir,
-            cookie_input_file,
-            fail_fast,
-            follow_location,
-            ignore_asserts,
-            insecure,
-            max_redirect,
-            no_proxy,
-            post_entry,
-            pre_entry,
-            proxy,
-            resolves,
-            retry,
-            retry_interval,
-            retry_max_count,
-            ssl_no_revoke,
-            timeout,
-            to_entry,
-            user,
-            user_agent,
-            verbosity,
-        }
     }
 }

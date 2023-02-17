@@ -25,11 +25,13 @@ use std::time::Duration;
 
 use atty::Stream;
 use clap::{value_parser, ArgAction, ArgMatches, Command};
+use hurl::runner::RunnerOptionsBuilder;
+use hurl_core::ast::Entry;
 
 use crate::cli;
 use crate::cli::CliError;
-use crate::http::ClientOptions;
-use crate::runner::Value;
+use crate::http::{ClientOptions, ContextDir};
+use crate::runner::{RunnerOptions, Value, Verbosity};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -683,4 +685,89 @@ pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
 /// Returns true if the command line options `matches` has a given flag `name`.
 pub fn has_flag(matches: &ArgMatches, name: &str) -> bool {
     matches.get_one::<bool>(name) == Some(&true)
+}
+
+impl CliOptions {
+    pub fn to(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
+        let cacert_file = self.cacert_file.clone();
+        let client_cert_file = self.client_cert_file.clone();
+        let client_key_file = self.client_key_file.clone();
+        let connects_to = self.connects_to.clone();
+        let follow_location = self.follow_location;
+        let verbosity = match (self.verbose, self.very_verbose) {
+            (true, true) => Some(Verbosity::VeryVerbose),
+            (true, _) => Some(Verbosity::Verbose),
+            _ => None,
+        };
+        let insecure = self.insecure;
+        let max_redirect = self.max_redirect;
+        let proxy = self.proxy.clone();
+        let no_proxy = self.no_proxy.clone();
+        let cookie_input_file = self.cookie_input_file.clone();
+        let timeout = self.timeout;
+        let connect_timeout = self.connect_timeout;
+        let user = self.user.clone();
+        let user_agent = self.user_agent.clone();
+        let compressed = self.compressed;
+        let file_root = match self.file_root {
+            Some(ref filename) => Path::new(filename),
+            None => {
+                if filename == "-" {
+                    current_dir
+                } else {
+                    let path = Path::new(filename);
+                    path.parent().unwrap()
+                }
+            }
+        };
+        let context_dir = ContextDir::new(current_dir, file_root);
+        let pre_entry = if self.interactive {
+            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
+        } else {
+            None
+        };
+        let post_entry = if self.interactive {
+            Some(cli::interactive::post_entry as fn() -> bool)
+        } else {
+            None
+        };
+        let fail_fast = self.fail_fast;
+        let to_entry = self.to_entry;
+        let resolves = self.resolves.clone();
+        let retry = self.retry;
+        let retry_interval = self.retry_interval;
+        let retry_max_count = self.retry_max_count;
+        let ignore_asserts = self.ignore_asserts;
+        let ssl_no_revoke = self.ssl_no_revoke;
+
+        let mut bd = RunnerOptionsBuilder::new();
+        bd.cacert_file(cacert_file)
+            .client_cert_file(client_cert_file)
+            .client_key_file(client_key_file)
+            .compressed(compressed)
+            .connect_timeout(connect_timeout)
+            .connects_to(&connects_to)
+            .context_dir(&context_dir)
+            .cookie_input_file(cookie_input_file)
+            .fail_fast(fail_fast)
+            .follow_location(follow_location)
+            .ignore_asserts(ignore_asserts)
+            .insecure(insecure)
+            .max_redirect(max_redirect)
+            .no_proxy(no_proxy)
+            .post_entry(post_entry)
+            .pre_entry(pre_entry)
+            .proxy(proxy)
+            .resolves(&resolves)
+            .retry(retry)
+            .retry_interval(retry_interval)
+            .retry_max_count(retry_max_count)
+            .ssl_no_revoke(ssl_no_revoke)
+            .timeout(timeout)
+            .to_entry(to_entry)
+            .user(user)
+            .user_agent(user_agent)
+            .verbosity(verbosity)
+            .build()
+    }
 }

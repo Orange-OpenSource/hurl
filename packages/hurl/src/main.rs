@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+mod cli;
+
 use std::env;
 use std::io::prelude::*;
 use std::path::Path;
@@ -24,15 +26,12 @@ use atty::Stream;
 use clap::Command;
 use colored::*;
 
-use hurl::cli::{CliError, CliOptions, OutputType};
-use hurl::http;
 use hurl::report;
 use hurl::report::html;
 use hurl::runner;
 use hurl::runner::HurlResult;
-use hurl::runner::RunnerOptions;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
-use hurl::{cli, output};
+use hurl::{http, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
 use report::junit;
@@ -142,7 +141,7 @@ fn main() {
         // We can output the result, either the raw body or a structured JSON representation.
         let output_body = success
             && !cli_options.interactive
-            && matches!(cli_options.output_type, OutputType::ResponseBody);
+            && matches!(cli_options.output_type, cli::OutputType::ResponseBody);
         if output_body {
             let include_headers = cli_options.include;
             let result = output::write_body(
@@ -155,7 +154,7 @@ fn main() {
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
-        if matches!(cli_options.output_type, OutputType::Json) {
+        if matches!(cli_options.output_type, cli::OutputType::Json) {
             let result = output::write_json(&hurl_result, &content, &cli_options.output);
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
@@ -199,14 +198,14 @@ fn execute(
     hurl_file: &HurlFile,
     filename: &str,
     current_dir: &Path,
-    cli_options: &CliOptions,
+    cli_options: &cli::CliOptions,
     logger: &Logger,
 ) -> HurlResult {
     log_run_info(hurl_file, cli_options, logger);
 
     let variables = &cli_options.variables;
     let cookie_input_file = cli_options.cookie_input_file.clone();
-    let runner_options = RunnerOptions::from(filename, current_dir, cli_options);
+    let runner_options = cli_options.to(filename, current_dir);
     let mut client = http::Client::new(cookie_input_file);
 
     runner::run(
@@ -220,7 +219,7 @@ fn execute(
 }
 
 /// Logs various debug information at the start of `hurl_file` run.
-fn log_run_info(hurl_file: &HurlFile, cli_options: &CliOptions, logger: &Logger) {
+fn log_run_info(hurl_file: &HurlFile, cli_options: &cli::CliOptions, logger: &Logger) {
     logger.debug_important("Options:");
     logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
     logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
@@ -278,7 +277,7 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
 }
 
 /// Create a JUnit report for this run.
-fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
+fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), cli::CliError> {
     let mut testcases = vec![];
     for run in runs.iter() {
         let hurl_result = &run.result;
@@ -291,7 +290,7 @@ fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), CliError> {
 }
 
 /// Create an HTML report for this run.
-fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), CliError> {
+fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), cli::CliError> {
     let mut testcases = vec![];
     for run in runs.iter() {
         let hurl_result = &run.result;
@@ -357,10 +356,10 @@ fn get_input_files(
     filenames
 }
 
-fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), CliError> {
+fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), cli::CliError> {
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
-            return Err(CliError {
+            return Err(cli::CliError {
                 message: format!("Issue writing to {filename}: {why:?}"),
             });
         }
@@ -373,7 +372,7 @@ fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), CliError> {
     .to_string();
     match runs.first() {
         None => {
-            return Err(CliError {
+            return Err(cli::CliError {
                 message: "Issue fetching results".to_string(),
             });
         }
@@ -386,7 +385,7 @@ fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), CliError> {
     }
 
     if let Err(why) = file.write_all(s.as_bytes()) {
-        return Err(CliError {
+        return Err(cli::CliError {
             message: format!("Issue writing to {filename}: {why:?}"),
         });
     }

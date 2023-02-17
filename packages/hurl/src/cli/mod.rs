@@ -15,8 +15,12 @@
  * limitations under the License.
  *
  */
+mod fs;
+mod interactive;
+mod options;
+mod variables;
 
-use crate::{output, report};
+use hurl::{output, report};
 use std::error::Error;
 use std::fmt;
 
@@ -24,15 +28,10 @@ pub use self::fs::read_to_string;
 pub use self::options::app;
 pub use self::options::output_color;
 pub use self::options::parse_options;
+pub use self::options::{get_strings, has_flag};
 pub use self::options::{CliOptions, OutputType};
 pub use self::variables::parse as parse_variable;
 pub use self::variables::parse_value as parse_variable_value;
-
-mod fs;
-pub mod interactive;
-mod options;
-mod variables;
-pub use self::options::{get_strings, has_flag};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {
