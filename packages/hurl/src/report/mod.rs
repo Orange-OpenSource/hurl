@@ -16,7 +16,10 @@
  *
  */
 
-//! Various reports for Hurl runs (JUnit, HTML etc...)
+//! Various reports for Hurl runs (JUnit, HTML etc...) A report aggregates multiple runs into
+//! a single unit.
+
+use std::fmt;
 
 pub mod html;
 pub mod junit;
@@ -24,4 +27,10 @@ pub mod junit;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {
     pub message: String,
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.message)
+    }
 }

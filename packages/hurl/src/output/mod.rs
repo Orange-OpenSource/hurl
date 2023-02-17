@@ -15,27 +15,42 @@
  * limitations under the License.
  *
  */
-
+//! Serialize a Hurl run result to a file.
+//!
+//! Therea are two supported serialisation:
+//! - JSON: the whole run is serialized to JSON (like the [HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) format)
+//! - raw: the last response of a run is serialized to a file. The body can be automatically uncompress
+//! or written as it.
 mod json;
 mod raw;
 mod stdout;
 
 pub use self::json::write_json;
 pub use self::raw::write_body;
-use crate::cli::CliError;
-use crate::output::stdout::write_stdout;
+use std::fmt;
 use std::io::Write;
 use std::path::Path;
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Error {
+    pub message: String,
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
 /// Writes `bytes` to the file `filename` or stdout by default.
-fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), CliError> {
+fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), Error> {
     match filename {
-        None => write_stdout(bytes.as_slice()),
+        None => stdout::write_stdout(bytes.as_slice()),
         Some(filename) => {
             let path = Path::new(filename.as_str());
             let mut file = match std::fs::File::create(path) {
                 Err(why) => {
-                    return Err(CliError {
+                    return Err(Error {
                         message: format!("Issue writing to {}: {:?}", path.display(), why),
                     });
                 }

@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-
-use crate::cli::CliError;
-use crate::output::write_output;
+use crate::output;
+use crate::output::Error;
 use crate::runner::HurlResult;
 
 /// Writes the `hurl_result` JSON representation to the file `filename`.
@@ -29,9 +28,9 @@ pub fn write_json(
     hurl_result: &HurlResult,
     content: &str,
     filename: &Option<String>,
-) -> Result<(), CliError> {
+) -> Result<(), Error> {
     let json_result = hurl_result.to_json(content);
     let serialized = serde_json::to_string(&json_result).unwrap();
     let s = format!("{serialized}\n");
-    write_output(&s.into_bytes(), filename)
+    output::write_output(&s.into_bytes(), filename)
 }

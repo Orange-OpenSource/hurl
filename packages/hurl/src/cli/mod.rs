@@ -16,7 +16,7 @@
  *
  */
 
-use crate::report;
+use crate::{output, report};
 use std::error::Error;
 use std::fmt;
 
@@ -63,6 +63,12 @@ impl From<String> for CliError {
 
 impl From<report::Error> for CliError {
     fn from(e: report::Error) -> Self {
+        Self { message: e.message }
+    }
+}
+
+impl From<output::Error> for CliError {
+    fn from(e: output::Error) -> Self {
         Self { message: e.message }
     }
 }

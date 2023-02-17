@@ -15,30 +15,30 @@
  * limitations under the License.
  *
  */
-use crate::cli::CliError;
+use crate::output::Error;
 #[cfg(target_family = "windows")]
 use atty::Stream;
 use std::io;
 use std::io::Write;
 
 #[cfg(target_family = "unix")]
-pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), CliError> {
+pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
     let stdout = io::stdout();
     let mut handle = stdout.lock();
-    handle.write_all(buf).map_err(|_| CliError {
+    handle.write_all(buf).map_err(|_| Error {
         message: "Error writing output".to_string(),
     })
 }
 
 #[cfg(target_family = "windows")]
-pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), CliError> {
+pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
     if atty::is(Stream::Stdout) {
         println!("{}", String::from_utf8_lossy(buf));
         Ok(())
     } else {
         let stdout = io::stdout();
         let mut handle = stdout.lock();
-        handle.write_all(buf).map_err(|_| CliError {
+        handle.write_all(buf).map_err(|_| Error {
             message: "Error writing output".to_string(),
         })
     }

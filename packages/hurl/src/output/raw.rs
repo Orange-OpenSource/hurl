@@ -15,9 +15,8 @@
  * limitations under the License.
  *
  */
-use crate::cli::CliError;
 use crate::http::Response;
-use crate::output::write_output;
+use crate::output;
 use crate::runner;
 use crate::runner::{HurlResult, RunnerError};
 use crate::util::logger::Logger;
@@ -35,7 +34,7 @@ pub fn write_body(
     color: bool,
     filename: &Option<String>,
     logger: &Logger,
-) -> Result<(), CliError> {
+) -> Result<(), output::Error> {
     // By default, we output the body response bytes of the last entry
     if let Some(entry_result) = hurl_result.entries.last() {
         if let Some(call) = entry_result.calls.last() {
@@ -61,16 +60,16 @@ pub fn write_body(
                             assert: false,
                         };
                         let message = error.fixme();
-                        return Err(CliError { message });
+                        return Err(output::Error { message });
                     }
                 }
             } else {
                 response.body.clone()
             };
             output.append(&mut body);
-            let result = write_output(&output, filename);
+            let result = output::write_output(&output, filename);
             if result.is_err() {
-                return Err(CliError {
+                return Err(output::Error {
                     message: "Undefined error".to_string(),
                 });
             }
