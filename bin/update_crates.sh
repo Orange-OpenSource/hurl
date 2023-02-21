@@ -31,7 +31,7 @@ convert_toml_crates_to_key_value() {
 
     # convert toml crates to key value
     sed -n "/dependencies\]/,/^$/p" "${toml_file}" |
-        grep --extended-regexp --invert-match "^\[|path|^$" |
+        grep --extended-regexp --invert-match "^\[|path|^$|^#" |
             cut --delimiter ',' --field 1 |
                 sed "s/version//g" |
                     tr -d '"{=' |
@@ -150,7 +150,7 @@ main() {
         echo -e "\n--------------------------------------------------------"
         echo -e "### Crates updates for *Cargo.lock*\n"
         cargo update --color always -vv 2>&1 |
-            (grep -Ev "crates.io index|Removing" || true) |
+            (grep -Ev "crates.io index|Removing|^#" || true) |
                 tr -s ' ' |
                     sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
                         sed "s/ Updating //g" |
