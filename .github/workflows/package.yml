@@ -16,7 +16,7 @@ env:
 
 jobs:
   package-generic-linux-x64:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -30,16 +30,6 @@ jobs:
       run: |
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Install Python 3.8
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-    - name: Install Curl 7.68
-      uses: myci-actions/add-deb-repo@10
-      with:
-        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
-        repo-name: focal
-        install: curl
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
@@ -199,7 +189,7 @@ jobs:
           ./**/*.log
 
   package-deb-x64:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -215,16 +205,6 @@ jobs:
       run: |
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Install Python 3.8
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-    - name: Install Curl 7.68
-      uses: myci-actions/add-deb-repo@10
-      with:
-        repo: deb http://mirrors.archive.ubuntu.com/ubuntu/ focal main restricted
-        repo-name: focal
-        install: curl
     - name: Test integ
       run: |
         bin/test/test_prerequisites.sh
