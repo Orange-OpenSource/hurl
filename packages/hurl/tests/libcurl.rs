@@ -16,6 +16,7 @@
  *
  */
 
+use regex::Regex;
 use std::default::Default;
 use std::time::Duration;
 
@@ -846,14 +847,17 @@ fn test_connect_timeout() {
     {
         eprintln!("description={description}");
         // TODO: remove the 7 / "Couldn't connect to server" case
-        // On Linux/Windows libcurl version, the correct error message
-        // is 28 / "Connection timeout" | "Connection timed out"
-        // On macOS <= 11.6.4, the built-in libcurl use
-        // 7 / "Couldn't connect to server" errors. On the GitHub CI, macOS images are 11.6.4.
+        // On Linux/Windows libcurl version, the correct error message is:
+        // `CURLE_OPERATION_TIMEDOUT` (28) / "Connection timeout" | "Connection timed out"
+        // On macOS <= 11.6.4, the built-in libcurl is:
+        // `CURLE_COULDNT_CONNECT` (7) / "Couldn't connect to server" errors.
+        // On the GitHub CI, macOS images are 11.6.4.
         // So we keep this code until a newer macOS image is used in the GitHub actions.
         assert!(code == 7 || code == 28);
+        let re = Regex::new(r"^Failed to connect to.*: Timeout was reached$").unwrap();
         assert!(
-            description.starts_with("Couldn't connect to server")
+            re.is_match(&description)
+                || description.starts_with("Couldn't connect to server")
                 || description.starts_with("Connection timed out")
                 || description.starts_with("Connection timeout")
         );

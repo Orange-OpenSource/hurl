@@ -47,7 +47,7 @@ get_crate_latest_version() {
     # get crate latest version
     crate_object=$(curl -kLs "${crate_url}" || true)
     crate_max_stable_version=$(echo "${crate_object}" | (jq -r .crate.max_stable_version 2>/dev/null || true))
-    last_version=$(echo "${crate_max_stable_version}" | (grep --extended-regexp "^[0-9].*.[0-9].*.[0-9]$" || true))
+    last_version=$(echo "${crate_max_stable_version}" | (grep --extended-regexp --only-matching "^[0-9]*\.[0-9]*\.[0-9]*" || true))
     echo "${last_version}"
 }
 
