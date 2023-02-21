@@ -21,21 +21,32 @@
 mod testcase;
 
 use crate::report::Error;
-use crate::util::path;
 use chrono::{DateTime, Local};
 use std::io::Write;
 use std::path::Path;
 pub use testcase::Testcase;
 
 /// The test result to be displayed in an HTML page
-///
-/// The filename has been [canonicalized] (https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.canonicalize)
-/// and does not need to exist in the filesystem
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct HTMLResult {
+    /// Original filename, as given in the run execution
     pub filename: String,
+    /// The id of the corresponding [`Testcase`]
+    pub id: String,
     pub time_in_ms: u128,
     pub success: bool,
+}
+
+impl HTMLResult {
+    /// Creates a new HTMLResult from a [`Testcase`].
+    fn from(testcase: &Testcase) -> Self {
+        HTMLResult {
+            filename: testcase.filename.clone(),
+            id: testcase.id.clone(),
+            time_in_ms: testcase.time_in_ms,
+            success: testcase.success,
+        }
+    }
 }
 
 /// Creates and HTML report for this list of [`Testcase`] at `dir_path`/index.html.
@@ -44,12 +55,8 @@ struct HTMLResult {
 pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Error> {
     let index_path = dir_path.join("index.html");
     let mut results = parse_html(&index_path)?;
-    for testcase in testcases {
-        let html_result = HTMLResult {
-            filename: path::canonicalize_filename(&testcase.filename),
-            time_in_ms: testcase.time_in_ms,
-            success: testcase.success,
-        };
+    for testcase in testcases.iter() {
+        let html_result = HTMLResult::from(testcase);
         results.push(html_result);
     }
     let now: DateTime<Local> = Local::now();
@@ -111,19 +118,20 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
         data-status="(?P<status>[a-z]+)"
         \s+
         data-filename="(?P<filename>[A-Za-z0-9_./-]+)"
+        \s+
+        data-id="(?P<id>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
     "#,
     )
     .unwrap();
     re.captures_iter(html)
         .map(|cap| {
             let filename = cap["filename"].to_string();
-            // The HTML filename is using a relative path relatively in the report
-            // to make the report portable
-            // But the original Hurl file is really an absolute file
+            let id = cap["id"].to_string();
             let time_in_ms = cap["time_in_ms"].to_string().parse().unwrap();
             let success = &cap["status"] == "success";
             HTMLResult {
                 filename,
+                id,
                 time_in_ms,
                 success,
             }
@@ -188,10 +196,16 @@ fn create_html_table_row(result: &HTMLResult) -> String {
     let duration_in_ms = result.time_in_ms;
     let duration_in_s = result.time_in_ms as f64 / 1000.0;
     let filename = &result.filename;
+    let displayed_filename = if filename == "-" {
+        "(standard input)"
+    } else {
+        filename
+    };
+    let id = &result.id;
 
     format!(
-        r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}">
-    <td><a href="{filename}.html">{filename}</a></td>
+        r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}">
+    <td><a href="store/{id}.html">{displayed_filename}</a></td>
     <td>{status}</td>
     <td>{duration_in_s}</td>
 </tr>
@@ -218,12 +232,12 @@ mod tests {
             <h2>Hurl Report</h2>
             <table>
               <tbody>
-                <tr class="success" data-duration="100" data-status="success" data-filename="tests/hello.hurl">
+                <tr class="success" data-duration="100" data-status="success" data-filename="tests/hello.hurl" data-id="08aad14a-8d10-4ecc-892e-a72703c5b494">
                   <td><a href="tests/hello.hurl.html">tests/hello.hurl</a></td>
                   <td>success</td>
                   <td>0.1s</td>
                 </tr>
-                <tr class="failure" data-duration="200" data-status="failure" data-filename="tests/failure.hurl">
+                <tr class="failure" data-duration="200" data-status="failure" data-filename="tests/failure.hurl" data-id="a6641ae3-8ce0-4d9f-80c5-3e23e032e055">
                   <td><a href="tests/failure.hurl.html">tests/failure.hurl</a></td>
                   <td>failure</td>
                   <td>0.2s</td>
@@ -238,11 +252,13 @@ mod tests {
             vec![
                 HTMLResult {
                     filename: "tests/hello.hurl".to_string(),
+                    id: "08aad14a-8d10-4ecc-892e-a72703c5b494".to_string(),
                     time_in_ms: 100,
                     success: true,
                 },
                 HTMLResult {
                     filename: "tests/failure.hurl".to_string(),
+                    id: "a6641ae3-8ce0-4d9f-80c5-3e23e032e055".to_string(),
                     time_in_ms: 200,
                     success: false,
                 }

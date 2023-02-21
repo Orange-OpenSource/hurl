@@ -17,14 +17,6 @@
  */
 use std::path::{Component, Path, PathBuf};
 
-/// Returns the canonical fullname relative to / (technically a relative path)
-/// The function will panic if the input file does not exist
-pub fn canonicalize_filename(input_file: &str) -> String {
-    let relative_input_file = Path::new(input_file).canonicalize().expect("existing file");
-    let relative_input_file = relative_input_file.to_string_lossy();
-    relative_input_file.trim_start_matches('/').to_string()
-}
-
 /// Return true if `path` is a descendant path of `ancestor`, false otherwise.
 pub fn is_descendant(path: &Path, ancestor: &Path) -> bool {
     let path = normalize_path(path);
