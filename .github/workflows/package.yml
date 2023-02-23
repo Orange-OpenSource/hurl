@@ -22,6 +22,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
+    - name: Install Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
@@ -195,6 +199,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
+    - name: Install Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
@@ -240,10 +248,6 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: Install Rust
       run: bin/install_rust_latest.sh
-    - name: Install Python 3.8
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
     - name: Build
       run: |
         brew install pkg-config
