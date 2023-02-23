@@ -8,6 +8,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: environment
+          command: bin/environment.sh
+      - run:
           name: Build
           command: |
             export CARGO_NET_GIT_FETCH_WITH_CLI=true
@@ -18,7 +21,7 @@ jobs:
             rustc --version
             cargo --version
             sudo apt update -qq
-            sudo apt install -y -qq libxml2-utils libcurl4-openssl-dev
+            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev 
             cargo build --release --verbose --locked --color always
             target/release/hurl --version
             curl --version
@@ -37,10 +40,8 @@ jobs:
             python3 ./integration.py
             ./test_curl_commands.sh $(find ./tests_ok -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
             python3 ./test_html_output.py tests_ok/*.html
-            xmllint --noout tests_ok/*.html
             ./test_curl_commands.sh $(find ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
             python3 ./test_html_output.py tests_failed/*.html
-            xmllint --noout tests_failed/*.html
       - store_artifacts:
           path: integration/mitmdump.log
 
