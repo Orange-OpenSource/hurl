@@ -25,7 +25,7 @@ trait Htmlable {
 ///
 /// If `standalone` is true, a complete HTML body with inline styling is returned.
 /// Otherwise, a `<pre>` HTML tag is returned, without styling.
-pub fn format(hurl_file: HurlFile, standalone: bool) -> String {
+pub fn format(hurl_file: &HurlFile, standalone: bool) -> String {
     if standalone {
         format_standalone(hurl_file)
     } else {
@@ -33,7 +33,7 @@ pub fn format(hurl_file: HurlFile, standalone: bool) -> String {
     }
 }
 
-fn format_standalone(hurl_file: HurlFile) -> String {
+fn format_standalone(hurl_file: &HurlFile) -> String {
     let css = include_str!("hurl.css");
     let body = hurl_file.to_html();
 

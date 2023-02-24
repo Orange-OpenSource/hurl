@@ -24,15 +24,16 @@ use colored::Colorize;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
-/// Writes the `hurl_result` last body response to the file `filename`.
+/// Writes the `hurl_result` last body response to the file `filename_out`.
 ///
 /// If `filename` is `None`, stdout is used. If `include_headers` is true, the last HTTP
 /// response headers are written before the body response.
 pub fn write_body(
     hurl_result: &HurlResult,
+    filename_in: &str,
     include_headers: bool,
     color: bool,
-    filename: &Option<String>,
+    filename_out: &Option<String>,
     logger: &Logger,
 ) -> Result<(), output::Error> {
     // By default, we output the body response bytes of the last entry
@@ -67,7 +68,7 @@ pub fn write_body(
                 response.body.clone()
             };
             output.append(&mut body);
-            let result = output::write_output(&output, filename);
+            let result = output::write_output(&output, filename_out);
             if result.is_err() {
                 return Err(output::Error {
                     message: "Undefined error".to_string(),
@@ -77,11 +78,10 @@ pub fn write_body(
             logger.info("No response has been received");
         }
     } else {
-        let filename = &hurl_result.filename;
-        let source = if filename == "-" {
+        let source = if filename_in == "-" {
             "".to_string()
         } else {
-            format!("for file {filename}")
+            format!("for file {filename_in}")
         };
         logger.warning(format!("No entry have been executed {source}").as_str());
     }

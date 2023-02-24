@@ -17,7 +17,7 @@
  */
 use super::Error;
 use crate::runner::HurlResult;
-use hurl_core::parser;
+use hurl_core::ast::HurlFile;
 use std::io::Write;
 use std::path::Path;
 use uuid::Uuid;
@@ -32,11 +32,11 @@ pub struct Testcase {
 
 impl Testcase {
     /// Creates an HTML testcase.
-    pub fn from(hurl_result: &HurlResult) -> Testcase {
+    pub fn from(hurl_result: &HurlResult, filename: &str) -> Testcase {
         let id = Uuid::new_v4();
         Testcase {
             id: id.to_string(),
-            filename: hurl_result.filename.to_string(),
+            filename: filename.to_string(),
             time_in_ms: hurl_result.time_in_ms,
             success: hurl_result.success,
         }
@@ -45,7 +45,7 @@ impl Testcase {
     /// Exports a [`Testcase`] to HTML.
     ///
     /// For the moment, it's just an export of this HTML file, with syntax colored.
-    pub fn write_html(&self, content: &str, dir_path: &Path) -> Result<(), Error> {
+    pub fn write_html(&self, hurl_file: &HurlFile, dir_path: &Path) -> Result<(), Error> {
         let output_file = dir_path.join("store").join(format!("{}.html", self.id));
 
         let parent = output_file.parent().expect("a parent");
@@ -58,8 +58,6 @@ impl Testcase {
             }
             Ok(file) => file,
         };
-        let hurl_file = parser::parse_hurl_file(content).expect("valid hurl file");
-
         let s = hurl_core::format::format_html(hurl_file, true);
 
         if let Err(why) = file.write_all(s.as_bytes()) {

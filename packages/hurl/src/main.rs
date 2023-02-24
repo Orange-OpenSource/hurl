@@ -43,11 +43,15 @@ const EXIT_ERROR_RUNTIME: i32 = 3;
 const EXIT_ERROR_ASSERT: i32 = 4;
 const EXIT_ERROR_UNDEFINED: i32 = 127;
 
-/// Structure that stores teh result of an Hurl file execution, and the content of the file.
-/// This structure is temporary, as we want to move the `content` into [`HurlResult`].
-struct Run {
-    content: String,
-    result: HurlResult,
+/// Structure that stores the result of an Hurl file execution, and the content of the file.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HurlRun {
+    /// Source string for this [`HurlFile`]
+    pub content: String,
+    /// Filename of the content
+    pub filename: String,
+    pub hurl_file: HurlFile,
+    pub hurl_result: HurlResult,
 }
 
 /// Executes Hurl entry point.
@@ -108,35 +112,36 @@ fn main() {
         let content = cli::read_to_string(filename);
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
-        // Our rich logger is using the Hurl filename and content to be able to report error
-        // with file content (line number, etc...)
-        let mut builder = LoggerBuilder::new();
-        let logger = builder
+        let logger = LoggerBuilder::new()
             .color(color)
             .verbose(verbose)
             .test(cli_options.test)
             .progress_bar(progress_bar)
-            .filename(filename)
-            .content(&content)
-            .build()
-            .unwrap();
+            .build();
 
         let total = filenames.len();
-        logger.test_running(current + 1, total);
+        logger.test_running(filename, current + 1, total);
 
         // We try to parse the text file to an HurlFile instance.
         let hurl_file = parser::parse_hurl_file(&content);
         if let Err(e) = hurl_file {
-            logger.error_rich(&e);
+            logger.error_rich(filename, &content, &e);
             std::process::exit(EXIT_ERROR_PARSING);
         }
 
         // Now, we have a syntactically correct HurlFile instance, we can run it.
         let hurl_file = hurl_file.unwrap();
-        let hurl_result = execute(&hurl_file, filename, current_dir, &cli_options, &logger);
+        let hurl_result = execute(
+            &hurl_file,
+            &content,
+            filename,
+            current_dir,
+            &cli_options,
+            &logger,
+        );
         let success = hurl_result.success;
 
-        logger.test_completed(&hurl_result);
+        logger.test_completed(&hurl_result, filename);
 
         // We can output the result, either the raw body or a structured JSON representation.
         let output_body = success
@@ -146,6 +151,7 @@ fn main() {
             let include_headers = cli_options.include;
             let result = output::write_body(
                 &hurl_result,
+                filename,
                 include_headers,
                 color,
                 &cli_options.output,
@@ -155,13 +161,15 @@ fn main() {
         }
 
         if matches!(cli_options.output_type, cli::OutputType::Json) {
-            let result = output::write_json(&hurl_result, &content, &cli_options.output);
+            let result = output::write_json(&hurl_result, &content, filename, &cli_options.output);
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
-        let run = Run {
+        let run = HurlRun {
             content,
-            result: hurl_result,
+            filename: filename.to_string(),
+            hurl_file,
+            hurl_result,
         };
         runs.push(run);
     }
@@ -186,16 +194,20 @@ fn main() {
 
     if cli_options.test {
         let duration = start.elapsed().as_millis();
-        let summary = get_summary(duration, &runs);
+        let summary = get_summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
 
     std::process::exit(exit_code(&runs));
 }
 
-/// Runs a Hurl format `content` originated form the file `filename` and returns a result.
+/// Runs a Hurl file `hurl_file` and returns a result.
+///
+/// Original file `content` and `filename` are used to log rich asserts and errors
+/// (including annotated source, line and column).
 fn execute(
     hurl_file: &HurlFile,
+    content: &str,
     filename: &str,
     current_dir: &Path,
     cli_options: &cli::CliOptions,
@@ -210,6 +222,7 @@ fn execute(
 
     runner::run(
         hurl_file,
+        content,
         filename,
         &mut client,
         &runner_options,
@@ -277,26 +290,21 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
 }
 
 /// Create a JUnit report for this run.
-fn create_junit_report(runs: &[Run], filename: &str) -> Result<(), cli::CliError> {
-    let mut testcases = vec![];
-    for run in runs.iter() {
-        let hurl_result = &run.result;
-        let content = &run.content;
-        let testcase = junit::Testcase::from(hurl_result, content);
-        testcases.push(testcase);
-    }
+fn create_junit_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
+    let testcases: Vec<junit::Testcase> = runs
+        .iter()
+        .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
+        .collect();
     junit::write_report(filename, &testcases)?;
     Ok(())
 }
 
 /// Create an HTML report for this run.
-fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), cli::CliError> {
+fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), cli::CliError> {
     let mut testcases = vec![];
     for run in runs.iter() {
-        let hurl_result = &run.result;
-        let content = &run.content;
-        let testcase = html::Testcase::from(hurl_result);
-        testcase.write_html(content, dir_path)?;
+        let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
+        testcase.write_html(&run.hurl_file, dir_path)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;
@@ -304,11 +312,11 @@ fn create_html_report(runs: &[Run], dir_path: &Path) -> Result<(), cli::CliError
 }
 
 /// Returns an exit code for a list of HurlResult.
-fn exit_code(runs: &[Run]) -> i32 {
+fn exit_code(runs: &[HurlRun]) -> i32 {
     let mut count_errors_runner = 0;
     let mut count_errors_assert = 0;
     for run in runs.iter() {
-        let errors = run.result.errors();
+        let errors = run.hurl_result.errors();
         if errors.is_empty() {
         } else if errors.iter().filter(|e| !e.assert).count() == 0 {
             count_errors_assert += 1;
@@ -356,7 +364,7 @@ fn get_input_files(
     filenames
 }
 
-fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), cli::CliError> {
+fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
     let mut file = match std::fs::File::create(filename) {
         Err(why) => {
             return Err(cli::CliError {
@@ -377,7 +385,7 @@ fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), cli::CliError
             });
         }
         Some(run) => {
-            for cookie in run.result.cookies.clone() {
+            for cookie in run.hurl_result.cookies.clone() {
                 s.push_str(cookie.to_string().as_str());
                 s.push('\n');
             }
@@ -392,9 +400,9 @@ fn create_cookies_file(runs: &[Run], filename: &str) -> Result<(), cli::CliError
     Ok(())
 }
 
-fn get_summary(duration: u128, runs: &[Run]) -> String {
+fn get_summary(runs: &[HurlRun], duration: u128) -> String {
     let total = runs.len();
-    let success = runs.iter().filter(|r| r.result.success).count();
+    let success = runs.iter().filter(|r| r.hurl_result.success).count();
     let failed = total - success;
     let mut s =
         "--------------------------------------------------------------------------------\n"

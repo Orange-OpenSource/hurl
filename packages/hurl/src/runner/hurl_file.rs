@@ -29,10 +29,10 @@ use crate::util::logger::LoggerBuilder;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 
-/// Runs a `hurl_file`, issue from the given `filename`, with
+/// Runs a `hurl_file`, issue from the given `content`and `filename`, with
 /// an `http_client`. Returns a [`HurlResult`] upon completion.
 ///
-/// `filename` and `content` are used to display line base logs (for parsing error or asserts
+/// `filename` and `content` are used to display rich logs (for parsing error or asserts
 /// failures).
 ///
 /// # Example
@@ -45,20 +45,19 @@ use hurl_core::ast::*;
 /// use hurl::http::ContextDir;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
-/// use hurl::util::logger::{Logger, LoggerBuilder};
+/// use hurl::util::logger::LoggerBuilder;
 ///
 /// // Parse Hurl file
 /// let filename = "sample.hurl";
-/// let s = r#"
+/// let content = r#"
 /// GET http://localhost:8000/hello
 /// HTTP/1.1 200
 /// "#;
-/// let hurl_file = parser::parse_hurl_file(s).unwrap();
+/// let hurl_file = parser::parse_hurl_file(content).unwrap();
 ///
 /// // Create an HTTP client
 /// let mut client = http::Client::new(None);
-/// let mut builder = LoggerBuilder::new();
-/// let logger = builder.filename(filename).content(s).build().unwrap();
+/// let logger = LoggerBuilder::new().build();
 ///
 /// // Define runner options
 /// let runner_options = RunnerOptionsBuilder::new()
@@ -73,6 +72,7 @@ use hurl_core::ast::*;
 /// // Run the hurl file
 /// let hurl_results = runner::run(
 ///     &hurl_file,
+///     content,
 ///     filename,
 ///     &mut client,
 ///     &runner_options,
@@ -83,6 +83,7 @@ use hurl_core::ast::*;
 /// ```
 pub fn run(
     hurl_file: &HurlFile,
+    content: &str,
     filename: &str,
     http_client: &mut http::Client,
     runner_options: &RunnerOptions,
@@ -110,16 +111,12 @@ pub fn run(
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
         let entry_verbosity = entry::get_entry_verbosity(entry, &runner_options.verbosity);
-        let mut builder = LoggerBuilder::new();
-        let logger = builder
+        let logger = LoggerBuilder::new()
             .color(logger.color)
             .verbose(entry_verbosity.is_some())
             .test(logger.test)
             .progress_bar(entry_verbosity.is_none() && logger.progress_bar)
-            .filename(logger.filename)
-            .content(logger.content)
-            .build()
-            .unwrap();
+            .build();
 
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
@@ -133,7 +130,7 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {entry_index}").as_str());
 
-        warn_deprecated(entry, &logger);
+        warn_deprecated(entry, filename, &logger);
 
         logger.test_progress(entry_index, n);
 
@@ -188,9 +185,9 @@ pub fn run(
         for e in &entry_result.errors {
             logger.test_erase_line();
             if retry {
-                logger.debug_error(e);
+                logger.debug_error(filename, content, e);
             } else {
-                logger.error_rich(e);
+                logger.error_rich(filename, content, e);
             }
         }
         entries.push(entry_result);
@@ -225,10 +222,8 @@ pub fn run(
 
     let time_in_ms = start.elapsed().as_millis();
     let cookies = http_client.get_cookie_storage();
-    let filename = filename.to_string();
     let success = is_success(&entries);
     HurlResult {
-        filename,
         entries,
         time_in_ms,
         success,
@@ -258,7 +253,7 @@ fn is_success(entries: &[EntryResult]) -> bool {
 }
 
 /// Logs deprecated syntax and provides alternatives.
-fn warn_deprecated(entry: &Entry, logger: &Logger) {
+fn warn_deprecated(entry: &Entry, filename: &str, logger: &Logger) {
     // HTTP/* is used instead of HTTP.
     if let Some(response) = &entry.response {
         let version = &response.version;
@@ -268,8 +263,7 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
         if version.value == VersionAnyLegacy {
             logger.warning(
                 format!(
-                    "{}:{}:{} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead",
-                    logger.filename, line, column
+                    "{filename}:{line}:{column} 'HTTP/*' keyword is deprecated, please use 'HTTP' instead"
                 )
                 .as_str(),
             );
@@ -292,8 +286,7 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
         let template = template.to_string();
         logger.warning(
             format!(
-                "{}:{}:{} '```{}```' request body is deprecated, please use '`{}`' instead",
-                logger.filename, line, column, template, template
+                "{filename}:{line}:{column} '```{template}```' request body is deprecated, please use '`{template}`' instead"
             )
             .as_str(),
         );
@@ -314,8 +307,7 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
         let template = template.to_string();
         logger.warning(
             format!(
-                "{}:{}:{} '```{}```' response body is deprecated, please use '`{}`' instead",
-                logger.filename, line, column, template, template
+                "{filename}:{line}:{column} '```{template}```' response body is deprecated, please use '`{template}`' instead"
             )
             .as_str(),
         );

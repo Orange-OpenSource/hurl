@@ -16,7 +16,6 @@
  *
  */
 use crate::runner::HurlResult;
-
 use crate::util::logger;
 use xmltree::{Element, XMLNode};
 
@@ -30,16 +29,16 @@ pub struct Testcase {
 }
 
 impl Testcase {
-    /// Creates an XML Junit &lt;testcase&gt; from an Hurl result.
-    pub fn from(hurl_result: &HurlResult, content: &str) -> Testcase {
-        let id = hurl_result.filename.clone();
-        let name = hurl_result.filename.clone();
+    /// Creates an XML Junit &lt;testcase&gt; from an [`HurlResult`].
+    pub fn from(hurl_result: &HurlResult, content: &str, filename: &str) -> Testcase {
+        let id = filename.to_string();
+        let name = filename.to_string();
         let time_in_ms = hurl_result.time_in_ms;
         let mut failures = vec![];
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = logger::error_string_no_color(&hurl_result.filename, content, error);
+            let message = logger::error_string_no_color(filename, content, error);
             if error.assert {
                 failures.push(message);
             } else {
@@ -107,7 +106,6 @@ mod test {
     #[test]
     fn test_create_testcase_success() {
         let hurl_result = HurlResult {
-            filename: "test.hurl".to_string(),
             entries: vec![],
             time_in_ms: 230,
             success: true,
@@ -116,7 +114,8 @@ mod test {
 
         let mut buffer = Vec::new();
         let content = "";
-        Testcase::from(&hurl_result, content)
+        let filename = "test.hurl";
+        Testcase::from(&hurl_result, content, filename)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -131,8 +130,8 @@ mod test {
         let content = r#"GET http://localhost:8000/not_found
 HTTP/1.0 200
 "#;
+        let filename = "test.hurl";
         let hurl_result = HurlResult {
-            filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
                 entry_index: 1,
                 calls: vec![],
@@ -153,7 +152,7 @@ HTTP/1.0 200
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from(&hurl_result, content)
+        Testcase::from(&hurl_result, content, filename)
             .to_xml()
             .write(&mut buffer)
             .unwrap();
@@ -171,8 +170,8 @@ HTTP/1.0 200
     #[test]
     fn test_create_testcase_error() {
         let content = "GET http://unknown";
+        let filename = "test.hurl";
         let hurl_result = HurlResult {
-            filename: "test.hurl".to_string(),
             entries: vec![EntryResult {
                 entry_index: 1,
                 calls: vec![],
@@ -194,7 +193,7 @@ HTTP/1.0 200
             cookies: vec![],
         };
         let mut buffer = Vec::new();
-        Testcase::from(&hurl_result, content)
+        Testcase::from(&hurl_result, content, filename)
             .to_xml()
             .write(&mut buffer)
             .unwrap();

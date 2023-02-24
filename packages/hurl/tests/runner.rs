@@ -94,8 +94,7 @@ fn test_hello() {
     // been built from a text content.
     let content = "";
     let filename = "filename";
-    let mut builder = LoggerBuilder::new();
-    let logger = builder.filename(filename).content(content).build().unwrap();
+    let logger = LoggerBuilder::new().build();
 
     let source_info = SourceInfo {
         start: Pos { line: 1, column: 1 },
@@ -138,7 +137,8 @@ fn test_hello() {
     let runner_options = RunnerOptions::default();
     runner::run(
         &hurl_file,
-        "filename",
+        content,
+        filename,
         &mut client,
         &runner_options,
         &variables,

@@ -30,7 +30,6 @@ pub enum Verbosity {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
-    pub filename: String,
     pub entries: Vec<EntryResult>,
     pub time_in_ms: u128,
     pub success: bool,

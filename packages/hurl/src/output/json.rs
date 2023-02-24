@@ -19,18 +19,19 @@ use crate::output;
 use crate::output::Error;
 use crate::runner::HurlResult;
 
-/// Writes the `hurl_result` JSON representation to the file `filename`.
+/// Writes the `hurl_result` JSON representation to the file `filename_out`.
 ///
-/// If `filename` is `None`, stdout is used. The original content of the Hurl
+/// If `filename_out` is `None`, stdout is used. The original content of the Hurl
 /// file is necessary in order to construct error fields with column, line number etc... when
 /// processing failed asserts and captures.
 pub fn write_json(
     hurl_result: &HurlResult,
     content: &str,
-    filename: &Option<String>,
+    filename_in: &str,
+    filename_out: &Option<String>,
 ) -> Result<(), Error> {
-    let json_result = hurl_result.to_json(content);
+    let json_result = hurl_result.to_json(content, filename_in);
     let serialized = serde_json::to_string(&json_result).unwrap();
     let s = format!("{serialized}\n");
-    output::write_output(&s.into_bytes(), filename)
+    output::write_output(&s.into_bytes(), filename_out)
 }

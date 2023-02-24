@@ -206,7 +206,7 @@ fn main() {
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), output_color, optional_filename.clone());
     let log_linter_error = cli::make_logger_linter_error(lines, output_color, optional_filename);
-    match parser::parse_hurl_file(contents.as_str()) {
+    match parser::parse_hurl_file(&contents) {
         Err(e) => {
             log_parser_error(&e, false);
             process::exit(2);
@@ -227,10 +227,10 @@ fn main() {
                         };
                         format::format_text(hurl_file, output_color)
                     }
-                    "json" => format::format_json(hurl_file),
+                    "json" => format::format_json(&hurl_file),
                     "html" => {
                         let standalone = cli::has_flag(&matches, "standalone");
-                        hurl_core::format::format_html(hurl_file, standalone)
+                        hurl_core::format::format_html(&hurl_file, standalone)
                     }
                     "ast" => format!("{hurl_file:#?}"),
                     _ => {

@@ -23,7 +23,7 @@ use hurl_core::ast::*;
 
 use super::serialize_json::*;
 
-pub fn format(hurl_file: HurlFile) -> String {
+pub fn format(hurl_file: &HurlFile) -> String {
     hurl_file.to_json().format()
 }
 

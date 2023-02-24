@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-use crate::ast::HurlFile;
-
 pub type ParseResult<'a, T> = Result<T, Error>;
 pub type ParseFunc<'a, T> = fn(&mut Reader) -> ParseResult<'a, T>;
 
@@ -32,6 +30,7 @@ pub use self::json::number_value as parse_json_number;
 pub use self::json::parse as parse_json;
 pub use self::reader::Reader;
 pub use self::template::templatize;
+use crate::ast::HurlFile;
 
 mod base64;
 mod bytes;

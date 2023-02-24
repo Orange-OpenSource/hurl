@@ -266,7 +266,6 @@ mod tests {
     #[test]
     fn test_entry() {
         let mut reader = Reader::init("GET http://google.fr");
-        //println!("{:?}", entry(&mut reader));
         let e = entry(&mut reader).unwrap();
         assert_eq!(e.request.method, Method::Get);
         assert_eq!(reader.state.cursor, 20);
@@ -277,7 +276,6 @@ mod tests {
         let mut reader = Reader::init("GET http://google.fr\nGET http://google.fr");
 
         let e = entry(&mut reader).unwrap();
-        //println!("{:?}", e);
         assert_eq!(e.request.method, Method::Get);
         assert_eq!(reader.state.cursor, 21);
         assert_eq!(reader.state.pos.line, 2);

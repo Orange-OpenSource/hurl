@@ -66,28 +66,23 @@ impl BaseLogger {
 }
 
 /// A Hurl dedicated logger for an Hurl file. Contrary to [`BaseLogger`], this logger can display
-/// rich error for parsing and runtime errors. As the rich errors can display user content,
-/// this logger should have access to the content of the file being run.
-pub struct Logger<'a> {
+/// rich error for parsing and runtime errors.
+pub struct Logger {
     pub(crate) color: bool,
     pub(crate) verbose: bool,
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
-    pub(crate) filename: &'a str,
-    pub(crate) content: &'a str,
 }
 
 #[derive(Default)]
-pub struct LoggerBuilder<'a> {
+pub struct LoggerBuilder {
     color: bool,
     verbose: bool,
     progress_bar: bool,
     test: bool,
-    filename: Option<&'a str>,
-    content: Option<&'a str>,
 }
 
-impl<'a> LoggerBuilder<'a> {
+impl LoggerBuilder {
     /// Returns a new Logger builder with a default values.
     pub fn new() -> Self {
         LoggerBuilder::default()
@@ -105,18 +100,6 @@ impl<'a> LoggerBuilder<'a> {
         self
     }
 
-    /// Sets the filename used to display error, warning etc...
-    pub fn filename(&mut self, filename: &'a str) -> &mut Self {
-        self.filename = Some(filename);
-        self
-    }
-
-    /// Sets the content used to display error, warning etc...
-    pub fn content(&mut self, content: &'a str) -> &mut Self {
-        self.content = Some(content);
-        self
-    }
-
     /// Sets progress bar.
     pub fn progress_bar(&mut self, progress_bar: bool) -> &mut Self {
         self.progress_bar = progress_bar;
@@ -130,26 +113,17 @@ impl<'a> LoggerBuilder<'a> {
     }
 
     /// Creates a new logger.
-    pub fn build(&self) -> Result<Logger, &'static str> {
-        if self.filename.is_none() {
-            return Err("filename is not set");
-        }
-        if self.content.is_none() {
-            return Err("content is not set");
-        }
-
-        Ok(Logger {
+    pub fn build(&self) -> Logger {
+        Logger {
             color: self.color,
             verbose: self.verbose,
             progress_bar: self.progress_bar,
             test: self.test,
-            filename: self.filename.unwrap(),
-            content: self.content.unwrap(),
-        })
+        }
     }
 }
 
-impl<'a> Logger<'a> {
+impl Logger {
     pub fn info(&self, message: &str) {
         log_info(message)
     }
@@ -176,14 +150,14 @@ impl<'a> Logger<'a> {
         }
     }
 
-    pub fn debug_error(&self, error: &dyn Error) {
+    pub fn debug_error(&self, filename: &str, content: &str, error: &dyn Error) {
         if !self.verbose {
             return;
         }
         if self.color {
-            log_debug_error(self.filename, self.content, error)
+            log_debug_error(filename, content, error)
         } else {
-            log_debug_error_no_color(self.filename, self.content, error)
+            log_debug_error_no_color(filename, content, error)
         }
     }
 
@@ -247,11 +221,11 @@ impl<'a> Logger<'a> {
         }
     }
 
-    pub fn error_rich(&self, error: &dyn Error) {
+    pub fn error_rich(&self, filename: &str, content: &str, error: &dyn Error) {
         if self.color {
-            log_error_rich(self.filename, self.content, error)
+            log_error_rich(filename, content, error)
         } else {
-            log_error_rich_no_color(self.filename, self.content, error)
+            log_error_rich_no_color(filename, content, error)
         }
     }
 
@@ -277,14 +251,14 @@ impl<'a> Logger<'a> {
         }
     }
 
-    pub fn test_running(&self, current: usize, total: usize) {
+    pub fn test_running(&self, filename: &str, current: usize, total: usize) {
         if !self.test {
             return;
         }
         if self.color {
-            log_test_running(self.filename, current, total)
+            log_test_running(filename, current, total)
         } else {
-            log_test_running_no_color(self.filename, current, total)
+            log_test_running_no_color(filename, current, total)
         }
     }
 
@@ -295,14 +269,14 @@ impl<'a> Logger<'a> {
         log_test_progress(entry_index, count)
     }
 
-    pub fn test_completed(&self, result: &HurlResult) {
+    pub fn test_completed(&self, result: &HurlResult, filename: &str) {
         if !self.test {
             return;
         }
         if self.color {
-            log_test_completed(result)
+            log_test_completed(result, filename)
         } else {
-            log_test_completed_no_color(result)
+            log_test_completed_no_color(result, filename)
         }
     }
 
@@ -473,7 +447,7 @@ fn progress_string(entry_index: usize, count: usize) -> String {
     format!("[{completed}>{void}] {entry_index}/{count}")
 }
 
-fn log_test_completed(result: &HurlResult) {
+fn log_test_completed(result: &HurlResult, filename: &str) {
     let state = if result.success {
         "Success".green().bold()
     } else {
@@ -482,19 +456,19 @@ fn log_test_completed(result: &HurlResult) {
     let count = result.entries.iter().flat_map(|r| &r.calls).count();
     eprintln!(
         "{}: {} ({} request(s) in {} ms)",
-        result.filename.bold(),
+        filename.bold(),
         state,
         count,
         result.time_in_ms
     )
 }
 
-fn log_test_completed_no_color(result: &HurlResult) {
+fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
     let state = if result.success { "Success" } else { "Failure" };
     let count = result.entries.iter().flat_map(|r| &r.calls).count();
     eprintln!(
         "{}: {} ({} request(s) in {} ms)",
-        result.filename, state, count, result.time_in_ms
+        filename, state, count, result.time_in_ms
     )
 }
 

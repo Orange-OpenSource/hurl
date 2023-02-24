@@ -27,16 +27,16 @@ impl HurlResult {
     /// Note: `content` is passed to this method to save asserts and
     /// errors messages (with lines and columns). This parameter will be removed
     /// soon and the original content will be accessible through the [`HurlResult`] instance.
-    pub fn to_json(&self, content: &str) -> serde_json::Value {
+    pub fn to_json(&self, content: &str, filename: &str) -> serde_json::Value {
         let mut map = serde_json::Map::new();
         map.insert(
             "filename".to_string(),
-            serde_json::Value::String(self.filename.clone()),
+            serde_json::Value::String(filename.to_string()),
         );
         let entries = self
             .entries
             .iter()
-            .map(|e| e.to_json(&self.filename, content))
+            .map(|e| e.to_json(filename, content))
             .collect();
         map.insert("entries".to_string(), serde_json::Value::Array(entries));
         map.insert("success".to_string(), serde_json::Value::Bool(self.success));
