@@ -613,6 +613,45 @@ fn test_cacert() {
     let request_spec = default_get_request("https://localhost:8001/hello");
     let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
+
+    let certificate = response.certificate.unwrap();
+
+    let issuer = certificate.issuer;
+    let issuers = [
+        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
+    ];
+    assert!(issuers.contains(&issuer), "actual issuer is {issuer}");
+
+    let subject = certificate.subject;
+    let subjects = [
+        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
+    ];
+    assert!(subjects.contains(&subject), "actual subject is {subject}");
+
+    assert_eq!(
+        certificate.start_date,
+        chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
+            .unwrap()
+            .with_timezone(&chrono::Utc)
+    );
+    assert_eq!(
+        certificate.expire_date,
+        chrono::DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
+            .unwrap()
+            .with_timezone(&chrono::Utc)
+    );
+
+    let serial_number = certificate.serial_number;
+    let serial_numbers = [
+        "1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string(),
+        "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0:".to_string(),
+    ];
+    assert!(
+        serial_numbers.contains(&serial_number),
+        "actual serial_number is {serial_number}"
+    );
 }
 
 #[test]

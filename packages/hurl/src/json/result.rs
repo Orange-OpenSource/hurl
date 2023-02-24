@@ -16,10 +16,11 @@
  *
  */
 use crate::http::{
-    Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
+    Certificate, Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
 };
 use crate::runner::{AssertResult, Call, CaptureResult, EntryResult, HurlResult};
 use crate::util::logger;
+use chrono::{DateTime, Utc};
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.
@@ -125,6 +126,9 @@ impl Response {
         map.insert("headers".to_string(), headers);
         let cookies = self.cookies().iter().map(|e| e.to_json()).collect();
         map.insert("cookies".to_string(), serde_json::Value::Array(cookies));
+        if let Some(certificate) = &self.certificate {
+            map.insert("certificate".to_string(), certificate.to_json());
+        }
         serde_json::Value::Object(map)
     }
 }
@@ -237,6 +241,27 @@ impl ResponseCookie {
     }
 }
 
+impl Certificate {
+    fn to_json(&self) -> serde_json::Value {
+        let mut map = serde_json::Map::new();
+        map.insert(
+            "subject".to_string(),
+            serde_json::Value::String(self.subject.clone()),
+        );
+        map.insert(
+            "issue".to_string(),
+            serde_json::Value::String(self.issuer.clone()),
+        );
+        map.insert("start_date".to_string(), json_date(self.start_date));
+        map.insert("expire_date".to_string(), json_date(self.expire_date));
+        map.insert(
+            "serial_number".to_string(),
+            serde_json::Value::String(self.serial_number.clone()),
+        );
+        serde_json::Value::Object(map)
+    }
+}
+
 impl CaptureResult {
     fn to_json(&self) -> serde_json::Value {
         let mut map = serde_json::Map::new();
@@ -302,4 +327,8 @@ impl Cookie {
         );
         serde_json::Value::Object(map)
     }
+}
+
+fn json_date(value: DateTime<Utc>) -> serde_json::Value {
+    serde_json::Value::String(value.to_string())
 }

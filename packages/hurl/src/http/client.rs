@@ -29,6 +29,7 @@ use super::request::*;
 use super::request_spec::*;
 use super::response::*;
 use super::{Header, HttpError, Verbosity};
+use crate::http::certificate::Certificate;
 use crate::http::{easy_ext, ContextDir};
 use crate::util::logger::Logger;
 use base64::engine::general_purpose;
@@ -314,8 +315,17 @@ impl Client {
         let headers = self.parse_response_headers(&response_headers);
         let duration = start.elapsed();
         let length = response_body.len();
-        let certificate = None;
-        let _certinfo = easy_ext::get_certinfo(&self.handle)?;
+        let certificate = if let Some(cert_info) = easy_ext::get_certinfo(&self.handle)? {
+            match Certificate::try_from(cert_info) {
+                Ok(value) => Some(value),
+                Err(message) => {
+                    logger.error(format!("can not parse certificate - {message}").as_str());
+                    None
+                }
+            }
+        } else {
+            None
+        };
         self.handle.reset();
 
         let request = Request {

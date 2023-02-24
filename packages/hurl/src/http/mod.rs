@@ -16,6 +16,7 @@
  *
  */
 
+pub use self::certificate::Certificate;
 pub use self::client::Client;
 pub use self::context_dir::ContextDir;
 pub use self::cookie::{CookieAttribute, ResponseCookie};

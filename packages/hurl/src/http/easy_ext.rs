@@ -23,6 +23,7 @@ use std::ptr;
 
 /// Represents certificate information.
 /// `data` has format "name:content";
+#[derive(Clone)]
 pub struct CertInfo {
     pub data: Vec<String>,
 }
