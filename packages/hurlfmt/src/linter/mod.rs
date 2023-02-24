@@ -16,8 +16,8 @@
  *
  */
 
-pub use self::core::{Error, Lintable, LinterError};
-
+pub use self::core::{Error, LinterError};
+pub use rules::{check_hurl_file, lint_hurl_file};
 mod core;
 mod error;
 mod rules;

@@ -29,8 +29,3 @@ pub enum LinterError {
     UnnecessaryJsonEncoding {},
     OneSpace {},
 }
-
-pub trait Lintable<T> {
-    fn errors(&self) -> Vec<Error>;
-    fn lint(&self) -> T;
-}

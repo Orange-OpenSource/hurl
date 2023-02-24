@@ -24,9 +24,8 @@ use atty::Stream;
 use clap::ArgAction;
 
 use hurl_core::parser;
-use hurlfmt::cli;
 use hurlfmt::format;
-use hurlfmt::linter::Lintable;
+use hurlfmt::{cli, linter};
 
 #[cfg(target_family = "unix")]
 pub fn init_colored() {
@@ -214,8 +213,8 @@ fn main() {
         }
         Ok(hurl_file) => {
             if cli::has_flag(&matches, "check") {
-                for e in hurl_file.errors() {
-                    log_linter_error(&e, true);
+                for e in linter::check_hurl_file(&hurl_file).iter() {
+                    log_linter_error(e, true);
                 }
                 process::exit(1);
             } else {
@@ -224,7 +223,7 @@ fn main() {
                         let hurl_file = if cli::has_flag(&matches, "no_format") {
                             hurl_file
                         } else {
-                            hurl_file.lint()
+                            linter::lint_hurl_file(&hurl_file)
                         };
                         format::format_text(hurl_file, output_color)
                     }
