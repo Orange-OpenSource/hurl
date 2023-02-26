@@ -14,8 +14,8 @@
         <div class="level-item has-text-centered">
         <div>
             <p class="heading">Lines</p>
-            <p class="title has-text-warning">
-                <abbr title="24 / 32">75 %</abbr></p>
+            <p class="title has-text-danger">
+                <abbr title="22 / 30">73.33 %</abbr></p>
         </div>
     </div>
 
@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::parser;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::ast::HurlFile;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -595,7 +595,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn from(hurl_result: &amp;HurlResult) -&gt; Testcase {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn from(hurl_result: &amp;HurlResult, filename: &amp;str) -&gt; Testcase {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -659,7 +659,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            filename: hurl_result.filename.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            filename: filename.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -803,7 +803,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn write_html(&amp;self, content: &amp;str, dir_path: &amp;Path) -&gt; Result&lt;(), Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn write_html(&amp;self, hurl_file: &amp;HurlFile, dir_path: &amp;Path) -&gt; Result&lt;(), Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1011,7 +1011,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let hurl_file = parser::parse_hurl_file(content).expect(&quot;valid hurl file&quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">        let s = hurl_core::format::format_html(hurl_file, true);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1021,13 +1021,13 @@
                 <a href="#62">62</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="351">
-                351
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1043,7 +1043,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let s = hurl_core::format::format_html(hurl_file, true);</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Err(why) = file.write_all(s.as_bytes()) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1053,13 +1053,13 @@
                 <a href="#64">64</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">            return Err(Error {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1069,13 +1069,13 @@
                 <a href="#65">65</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="351">
-                351
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Err(why) = file.write_all(s.as_bytes()) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                message: format!(&quot;Issue writing to {}: {:?}&quot;, output_file.display(), why),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1091,7 +1091,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            return Err(Error {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            });</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1101,13 +1101,13 @@
                 <a href="#67">67</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="351">
+                351
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                message: format!(&quot;Issue writing to {}: {:?}&quot;, output_file.display(), why),</pre>
+                <pre class="has-background-success-light py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1117,13 +1117,13 @@
                 <a href="#68">68</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="351">
+                351
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            });</pre>
+                <pre class="has-background-success-light py-0 px-2">        Ok(())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1139,7 +1139,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        }</pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1147,38 +1147,6 @@
                 id="70"
                 role="cell">
                 <a href="#70">70</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="351">
-                351
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Ok(())</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="71"
-                role="cell">
-                <a href="#71">71</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="351">
-                351
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="72"
-                role="cell">
-                <a href="#72">72</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1193,7 +1161,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-02-25 08:11</p>
+                <p class="heading">Date: 2023-02-26 08:10</p>
             </div>
         </footer>
     </body>

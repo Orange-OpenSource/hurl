@@ -323,7 +323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::ast::HurlFile;</pre>
+                <pre class="has-background-white py-0 px-2">pub type ParseResult&lt;&#x27;a, T&gt; = Result&lt;T, Error&gt;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -339,7 +339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">pub type ParseFunc&lt;&#x27;a, T&gt; = fn(&amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, T&gt;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub type ParseResult&lt;&#x27;a, T&gt; = Result&lt;T, Error&gt;;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -365,13 +365,13 @@
                 <a href="#21">21</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3120">
+                3120
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub type ParseFunc&lt;&#x27;a, T&gt; = fn(&amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, T&gt;;</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn parse_hurl_file(s: &amp;str) -&gt; ParseResult&lt;&#x27;static, HurlFile&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -379,6 +379,54 @@
                 id="22"
                 role="cell">
                 <a href="#22">22</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3120">
+                3120
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let mut reader = Reader::init(s);</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="23"
+                role="cell">
+                <a href="#23">23</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3120">
+                3120
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    parsers::hurl_file(&amp;mut reader)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="24"
+                role="cell">
+                <a href="#24">24</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3120">
+                3120
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">}</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="25"
+                role="cell">
+                <a href="#25">25</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -392,66 +440,18 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="23"
-                role="cell">
-                <a href="#23">23</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3705">
-                3705
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn parse_hurl_file(s: &amp;str) -&gt; ParseResult&lt;&#x27;static, HurlFile&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="24"
-                role="cell">
-                <a href="#24">24</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3705">
-                3705
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut reader = Reader::init(s);</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="25"
-                role="cell">
-                <a href="#25">25</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3705">
-                3705
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">    parsers::hurl_file(&amp;mut reader)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
                 id="26"
                 role="cell">
                 <a href="#26">26</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3705">
-                3705
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::error::{Error, ParseError};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">pub use self::json::boolean_value as parse_json_boolean;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -483,7 +483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::error::{Error, ParseError};</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::json::null_value as parse_json_null;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -499,7 +499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::json::boolean_value as parse_json_boolean;</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::json::number_value as parse_json_number;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -515,7 +515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::json::null_value as parse_json_null;</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::json::parse as parse_json;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::json::number_value as parse_json_number;</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::reader::Reader;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -547,7 +547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::json::parse as parse_json;</pre>
+                <pre class="has-background-white py-0 px-2">pub use self::template::templatize;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -563,7 +563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::reader::Reader;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::ast::HurlFile;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -579,7 +579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub use self::template::templatize;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -595,7 +595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">mod base64;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -611,7 +611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod base64;</pre>
+                <pre class="has-background-white py-0 px-2">mod bytes;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -627,7 +627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod bytes;</pre>
+                <pre class="has-background-white py-0 px-2">mod combinators;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -643,7 +643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod combinators;</pre>
+                <pre class="has-background-white py-0 px-2">mod cookiepath;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -659,7 +659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod cookiepath;</pre>
+                <pre class="has-background-white py-0 px-2">mod error;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -675,7 +675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod error;</pre>
+                <pre class="has-background-white py-0 px-2">mod expr;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -691,7 +691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod expr;</pre>
+                <pre class="has-background-white py-0 px-2">mod filename;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -707,7 +707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod filename;</pre>
+                <pre class="has-background-white py-0 px-2">mod filter;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -723,7 +723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod filter;</pre>
+                <pre class="has-background-white py-0 px-2">mod json;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -739,7 +739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod json;</pre>
+                <pre class="has-background-white py-0 px-2">mod multiline;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -755,7 +755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod multiline;</pre>
+                <pre class="has-background-white py-0 px-2">mod parsers;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -771,7 +771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod parsers;</pre>
+                <pre class="has-background-white py-0 px-2">mod predicate;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -787,7 +787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod predicate;</pre>
+                <pre class="has-background-white py-0 px-2">mod predicate_value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -803,7 +803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod predicate_value;</pre>
+                <pre class="has-background-white py-0 px-2">mod primitives;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -819,7 +819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod primitives;</pre>
+                <pre class="has-background-white py-0 px-2">mod query;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -835,7 +835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod query;</pre>
+                <pre class="has-background-white py-0 px-2">mod reader;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -851,7 +851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod reader;</pre>
+                <pre class="has-background-white py-0 px-2">mod sections;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -867,7 +867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod sections;</pre>
+                <pre class="has-background-white py-0 px-2">mod string;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -883,7 +883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod string;</pre>
+                <pre class="has-background-white py-0 px-2">mod template;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -899,7 +899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod template;</pre>
+                <pre class="has-background-white py-0 px-2">mod url;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -915,29 +915,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod url;</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="56"
-                role="cell">
-                <a href="#56">56</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">mod xml;</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-02-25 08:11</p>
+                <p class="heading">Date: 2023-02-26 08:10</p>
             </div>
         </footer>
     </body>

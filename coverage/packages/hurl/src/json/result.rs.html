@@ -515,7 +515,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn to_json(&amp;self, content: &amp;str) -&gt; serde_json::Value {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn to_json(&amp;self, content: &amp;str, filename: &amp;str) -&gt; serde_json::Value {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -579,7 +579,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(self.filename.clone()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            serde_json::Value::String(filename.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -659,7 +659,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .map(|e| e.to_json(&amp;self.filename, content))</pre>
+                <pre class="has-background-success-light py-0 px-2">            .map(|e| e.to_json(filename, content))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4921,7 +4921,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-02-25 08:11</p>
+                <p class="heading">Date: 2023-02-26 08:10</p>
             </div>
         </footer>
     </body>
