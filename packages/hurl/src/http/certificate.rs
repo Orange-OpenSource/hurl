@@ -91,10 +91,27 @@ fn parse_date(value: &str) -> Result<DateTime<Utc>, String> {
 }
 
 fn parse_serial_number(attributes: &HashMap<String, String>) -> Result<String, String> {
-    attributes
+    let value = attributes
         .get("serial number")
         .cloned()
-        .ok_or(format!("Missing serial number attribute in {attributes:?}"))
+        .ok_or(format!("Missing serial number attribute in {attributes:?}"))?;
+    let normalized_value = if value.contains(':') {
+        value
+            .split(':')
+            .filter(|e| !e.is_empty())
+            .collect::<Vec<&str>>()
+            .join(":")
+    } else {
+        value
+            .chars()
+            .collect::<Vec<char>>()
+            .chunks(2)
+            .map(|c| c.iter().collect::<String>())
+            .collect::<Vec<String>>()
+            .join(":")
+    };
+
+    Ok(normalized_value)
 }
 
 fn parse_attributes(data: &Vec<String>) -> HashMap<String, String> {
@@ -150,6 +167,29 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_serial_number() {
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "serial number".to_string(),
+            "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0:".to_string(),
+        );
+        assert_eq!(
+            parse_serial_number(&attributes).unwrap(),
+            "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0".to_string()
+        );
+
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "serial number".to_string(),
+            "1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string(),
+        );
+        assert_eq!(
+            parse_serial_number(&attributes).unwrap(),
+            "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0".to_string()
+        )
+    }
+
+    #[test]
     fn test_try_from() {
         assert_eq!(
             Certificate::try_from(CertInfo {
@@ -174,7 +214,8 @@ mod tests {
                 expire_date: chrono::DateTime::parse_from_rfc2822("Thu, 30 Oct 2025 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&chrono::Utc),
-                serial_number: "1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string()
+                serial_number: "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"
+                    .to_string()
             }
         );
         assert_eq!(

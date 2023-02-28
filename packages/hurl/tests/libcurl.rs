@@ -643,14 +643,9 @@ fn test_cacert() {
             .with_timezone(&chrono::Utc)
     );
 
-    let serial_number = certificate.serial_number;
-    let serial_numbers = [
-        "1ee8b17f1b64d8d6b3de870103d2a4f533535ab0".to_string(),
-        "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0:".to_string(),
-    ];
-    assert!(
-        serial_numbers.contains(&serial_number),
-        "actual serial_number is {serial_number}"
+    assert_eq!(
+        certificate.serial_number,
+        "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0".to_string()
     );
 }
 
