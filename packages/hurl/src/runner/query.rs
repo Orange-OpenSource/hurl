@@ -30,230 +30,294 @@ use sha2::Digest;
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
+/// Evaluates this `query` and returns a [`QueryResult`], using the HTTP response `http_response` and `variables`.
 pub fn eval_query(
     query: &Query,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
 ) -> QueryResult {
     match query.value.clone() {
-        QueryValue::Status {} => Ok(Some(Value::Integer(i64::from(http_response.status)))),
-        QueryValue::Url {} => Ok(Some(Value::String(http_response.url.clone()))),
-        QueryValue::Header { name, .. } => {
-            let header_name = eval_template(&name, variables)?;
-            let values = http_response.get_header_values(&header_name);
-            if values.is_empty() {
-                Ok(None)
-            } else if values.len() == 1 {
-                let value = values.first().unwrap().to_string();
-                Ok(Some(Value::String(value)))
-            } else {
-                let values = values
-                    .iter()
-                    .map(|v| Value::String(v.to_string()))
-                    .collect();
-                Ok(Some(Value::List(values)))
-            }
-        }
+        QueryValue::Status {} => eval_query_status(http_response),
+        QueryValue::Url {} => eval_query_url(http_response),
+        QueryValue::Header { name, .. } => eval_query_header(http_response, &name, variables),
         QueryValue::Cookie {
             expr: CookiePath { name, attribute },
             ..
-        } => {
-            let cookie_name = eval_template(&name, variables)?;
-            match http_response.get_cookie(cookie_name) {
-                None => Ok(None),
-                Some(cookie) => {
-                    let attribute_name = if let Some(attribute) = attribute {
-                        attribute.name
-                    } else {
-                        CookieAttributeName::Value("Value".to_string())
-                    };
-                    Ok(eval_cookie_attribute_name(attribute_name, cookie))
-                }
-            }
-        }
-        QueryValue::Body {} => {
-            // can return a string if encoding is known and utf8
-            match http_response.text() {
-                Ok(s) => Ok(Some(Value::String(s))),
-                Err(inner) => Err(Error {
-                    source_info: query.source_info.clone(),
-                    inner: RunnerError::from(inner),
-                    assert: false,
-                }),
-            }
-        }
+        } => eval_query_cookie(http_response, &name, &attribute, variables),
+        QueryValue::Body {} => eval_query_body(http_response, &query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            let source_info = &expr.source_info;
-            let value = eval_template(&expr, variables)?;
-            match http_response.text() {
-                Err(inner) => Err(Error {
-                    source_info: query.source_info.clone(),
-                    inner: RunnerError::from(inner),
-                    assert: false,
-                }),
-                Ok(xml) => {
-                    let result = if http_response.is_html() {
-                        xpath::eval_html(&xml, &value)
-                    } else {
-                        xpath::eval_xml(&xml, &value)
-                    };
-                    match result {
-                        Ok(value) => Ok(Some(value)),
-                        Err(xpath::XpathError::InvalidXml {}) => Err(Error {
-                            source_info: query.source_info.clone(),
-                            inner: RunnerError::QueryInvalidXml,
-                            assert: false,
-                        }),
-                        Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
-                            source_info: query.source_info.clone(),
-                            inner: RunnerError::QueryInvalidXml,
-                            assert: false,
-                        }),
-                        Err(xpath::XpathError::Eval {}) => Err(Error {
-                            source_info: source_info.clone(),
-                            inner: RunnerError::QueryInvalidXpathEval,
-                            assert: false,
-                        }),
-                        Err(xpath::XpathError::Unsupported {}) => {
-                            panic!("Unsupported xpath {value}"); // good usecase for panic - I could nmot reporduce this usecase myself
-                        }
-                    }
-                }
-            }
+            eval_query_xpath(http_response, &expr, variables, &query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            let value = eval_template(&expr, variables)?;
-            let source_info = expr.source_info;
-            let jsonpath_query = match jsonpath::parse(value.as_str()) {
-                Ok(q) => q,
-                Err(_) => {
-                    return Err(Error {
-                        source_info,
-                        inner: RunnerError::QueryInvalidJsonpathExpression { value },
-                        assert: false,
-                    });
-                }
-            };
-            let json = match http_response.text() {
-                Err(inner) => {
-                    return Err(Error {
-                        source_info: query.source_info.clone(),
-                        inner: RunnerError::from(inner),
-                        assert: false,
-                    });
-                }
-                Ok(v) => v,
-            };
-            let value = match serde_json::from_str(json.as_str()) {
-                Err(_) => {
-                    return Err(Error {
-                        source_info: query.source_info.clone(),
-                        inner: RunnerError::QueryInvalidJson,
-                        assert: false,
-                    });
-                }
-                Ok(v) => v,
-            };
-            let results = jsonpath_query.eval(value);
-            if results.is_empty() {
-                Ok(None)
-            } else if results.len() == 1 {
-                // list coercions
-                Ok(Some(Value::from_json(results.get(0).unwrap())))
-            } else {
-                Ok(Some(Value::from_json(&serde_json::Value::Array(results))))
-            }
+            eval_query_jsonpath(http_response, &expr, variables, &query.source_info)
         }
         QueryValue::Regex { value, .. } => {
-            let s = match http_response.text() {
-                Err(inner) => {
-                    return Err(Error {
-                        source_info: query.source_info.clone(),
-                        inner: RunnerError::from(inner),
-                        assert: false,
-                    });
-                }
-                Ok(v) => v,
-            };
-            let re = match value {
-                RegexValue::Template(t) => {
-                    let value = eval_template(&t, variables)?;
-                    match Regex::new(value.as_str()) {
-                        Ok(re) => re,
-                        Err(_) => {
-                            let source_info = t.source_info;
-                            return Err(Error {
-                                source_info,
-                                inner: RunnerError::InvalidRegex(),
-                                assert: false,
-                            });
-                        }
-                    }
-                }
-                RegexValue::Regex(re) => re.inner,
-            };
-            match re.captures(s.as_str()) {
-                Some(captures) => match captures.get(1) {
-                    Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                    None => Ok(None),
-                },
-                None => Ok(None),
-            }
+            eval_query_regex(http_response, &value, variables, &query.source_info)
         }
-        QueryValue::Variable { name, .. } => {
-            let name = eval_template(&name, variables)?;
-            if let Some(value) = variables.get(name.as_str()) {
-                Ok(Some(value.clone()))
+        QueryValue::Variable { name, .. } => eval_query_variable(&name, variables),
+        QueryValue::Duration {} => eval_query_duration(http_response),
+        QueryValue::Bytes {} => eval_query_bytes(http_response, &query.source_info),
+        QueryValue::Sha256 {} => eval_query_sha256(http_response, &query.source_info),
+        QueryValue::Md5 {} => eval_query_md5(http_response, &query.source_info),
+    }
+}
+
+fn eval_query_status(response: &http::Response) -> QueryResult {
+    Ok(Some(Value::Integer(i64::from(response.status))))
+}
+
+fn eval_query_url(response: &http::Response) -> QueryResult {
+    Ok(Some(Value::String(response.url.clone())))
+}
+
+fn eval_query_header(
+    response: &http::Response,
+    header: &Template,
+    variables: &HashMap<String, Value>,
+) -> QueryResult {
+    let header = eval_template(header, variables)?;
+    let values = response.get_header_values(&header);
+    if values.is_empty() {
+        Ok(None)
+    } else if values.len() == 1 {
+        let value = values.first().unwrap().to_string();
+        Ok(Some(Value::String(value)))
+    } else {
+        let values = values
+            .iter()
+            .map(|v| Value::String(v.to_string()))
+            .collect();
+        Ok(Some(Value::List(values)))
+    }
+}
+
+fn eval_query_cookie(
+    response: &http::Response,
+    name: &Template,
+    attribute: &Option<CookieAttribute>,
+    variables: &HashMap<String, Value>,
+) -> QueryResult {
+    let name = eval_template(name, variables)?;
+    match response.get_cookie(name) {
+        None => Ok(None),
+        Some(cookie) => {
+            let attribute_name = if let Some(attribute) = attribute {
+                attribute.name.clone()
             } else {
-                Ok(None)
-            }
-        }
-        QueryValue::Duration {} => Ok(Some(Value::Integer(
-            http_response.duration.as_millis() as i64
-        ))),
-        QueryValue::Bytes {} => match http_response.uncompress_body() {
-            Ok(s) => Ok(Some(Value::Bytes(s))),
-            Err(inner) => Err(Error {
-                source_info: query.source_info.clone(),
-                inner: RunnerError::from(inner),
-                assert: false,
-            }),
-        },
-        QueryValue::Sha256 {} => {
-            let bytes = match http_response.uncompress_body() {
-                Ok(s) => s,
-                Err(inner) => {
-                    return Err(Error {
-                        source_info: query.source_info.clone(),
-                        inner: RunnerError::from(inner),
-                        assert: false,
-                    })
-                }
+                CookieAttributeName::Value("Value".to_string())
             };
-            let mut hasher = sha2::Sha256::new();
-            hasher.update(bytes);
-            let result = hasher.finalize();
-            let bytes = Value::Bytes(result[..].to_vec());
-            Ok(Some(bytes))
-        }
-        QueryValue::Md5 {} => {
-            let bytes = match http_response.uncompress_body() {
-                Ok(s) => s,
-                Err(inner) => {
-                    return Err(Error {
-                        source_info: query.source_info.clone(),
-                        inner: RunnerError::from(inner),
-                        assert: false,
-                    })
-                }
-            };
-            let bytes = md5::compute(bytes).to_vec();
-            Ok(Some(Value::Bytes(bytes)))
+            Ok(eval_cookie_attribute_name(attribute_name, cookie))
         }
     }
 }
 
-pub fn eval_cookie_attribute_name(
+fn eval_query_body(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+    // Can return a string if encoding is known and utf8.
+    match response.text() {
+        Ok(s) => Ok(Some(Value::String(s))),
+        Err(inner) => Err(Error {
+            source_info: query_source_info.clone(),
+            inner: RunnerError::from(inner),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_query_xpath(
+    response: &http::Response,
+    expr: &Template,
+    variables: &HashMap<String, Value>,
+    query_source_info: &SourceInfo,
+) -> QueryResult {
+    let expr_source_info = &expr.source_info;
+    let value = eval_template(expr, variables)?;
+    match response.text() {
+        Err(inner) => Err(Error {
+            source_info: query_source_info.clone(),
+            inner: RunnerError::from(inner),
+            assert: false,
+        }),
+        Ok(xml) => {
+            let result = if response.is_html() {
+                xpath::eval_html(&xml, &value)
+            } else {
+                xpath::eval_xml(&xml, &value)
+            };
+            match result {
+                Ok(value) => Ok(Some(value)),
+                Err(xpath::XpathError::InvalidXml {}) => Err(Error {
+                    source_info: query_source_info.clone(),
+                    inner: RunnerError::QueryInvalidXml,
+                    assert: false,
+                }),
+                Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
+                    source_info: query_source_info.clone(),
+                    inner: RunnerError::QueryInvalidXml,
+                    assert: false,
+                }),
+                Err(xpath::XpathError::Eval {}) => Err(Error {
+                    source_info: expr_source_info.clone(),
+                    inner: RunnerError::QueryInvalidXpathEval,
+                    assert: false,
+                }),
+                Err(xpath::XpathError::Unsupported {}) => {
+                    panic!("Unsupported xpath {value}"); // good usecase for panic - I could nmot reporduce this usecase myself
+                }
+            }
+        }
+    }
+}
+
+fn eval_query_jsonpath(
+    response: &http::Response,
+    expr: &Template,
+    variables: &HashMap<String, Value>,
+    query_source_info: &SourceInfo,
+) -> QueryResult {
+    let value = eval_template(expr, variables)?;
+    let expr_source_info = &expr.source_info;
+    let jsonpath_query = match jsonpath::parse(value.as_str()) {
+        Ok(q) => q,
+        Err(_) => {
+            return Err(Error {
+                source_info: expr_source_info.clone(),
+                inner: RunnerError::QueryInvalidJsonpathExpression { value },
+                assert: false,
+            });
+        }
+    };
+    let json = match response.text() {
+        Err(inner) => {
+            return Err(Error {
+                source_info: query_source_info.clone(),
+                inner: RunnerError::from(inner),
+                assert: false,
+            });
+        }
+        Ok(v) => v,
+    };
+    let value = match serde_json::from_str(json.as_str()) {
+        Err(_) => {
+            return Err(Error {
+                source_info: query_source_info.clone(),
+                inner: RunnerError::QueryInvalidJson,
+                assert: false,
+            });
+        }
+        Ok(v) => v,
+    };
+    let results = jsonpath_query.eval(value);
+    if results.is_empty() {
+        Ok(None)
+    } else if results.len() == 1 {
+        // All results from JSONPath queries return an array <https://goessner.net/articles/JsonPath/>.
+        // For usability, we coerce lists that have only one element to this element.
+        Ok(Some(Value::from_json(results.get(0).unwrap())))
+    } else {
+        Ok(Some(Value::from_json(&serde_json::Value::Array(results))))
+    }
+}
+
+fn eval_query_regex(
+    response: &http::Response,
+    regex: &RegexValue,
+    variables: &HashMap<String, Value>,
+    query_source_info: &SourceInfo,
+) -> QueryResult {
+    let s = match response.text() {
+        Err(inner) => {
+            return Err(Error {
+                source_info: query_source_info.clone(),
+                inner: RunnerError::from(inner),
+                assert: false,
+            });
+        }
+        Ok(v) => v,
+    };
+    let re = match regex {
+        RegexValue::Template(t) => {
+            let value = eval_template(t, variables)?;
+            match Regex::new(value.as_str()) {
+                Ok(re) => re,
+                Err(_) => {
+                    let source_info = t.source_info.clone();
+                    return Err(Error {
+                        source_info,
+                        inner: RunnerError::InvalidRegex(),
+                        assert: false,
+                    });
+                }
+            }
+        }
+        RegexValue::Regex(re) => re.inner.clone(),
+    };
+    match re.captures(s.as_str()) {
+        Some(captures) => match captures.get(1) {
+            Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
+            None => Ok(None),
+        },
+        None => Ok(None),
+    }
+}
+
+fn eval_query_variable(name: &Template, variables: &HashMap<String, Value>) -> QueryResult {
+    let name = eval_template(name, variables)?;
+    if let Some(value) = variables.get(name.as_str()) {
+        Ok(Some(value.clone()))
+    } else {
+        Ok(None)
+    }
+}
+
+fn eval_query_duration(response: &http::Response) -> QueryResult {
+    Ok(Some(Value::Integer(response.duration.as_millis() as i64)))
+}
+
+fn eval_query_bytes(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+    match response.uncompress_body() {
+        Ok(s) => Ok(Some(Value::Bytes(s))),
+        Err(inner) => Err(Error {
+            source_info: query_source_info.clone(),
+            inner: RunnerError::from(inner),
+            assert: false,
+        }),
+    }
+}
+
+fn eval_query_sha256(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+    let bytes = match response.uncompress_body() {
+        Ok(s) => s,
+        Err(inner) => {
+            return Err(Error {
+                source_info: query_source_info.clone(),
+                inner: RunnerError::from(inner),
+                assert: false,
+            })
+        }
+    };
+    let mut hasher = sha2::Sha256::new();
+    hasher.update(bytes);
+    let result = hasher.finalize();
+    let bytes = Value::Bytes(result[..].to_vec());
+    Ok(Some(bytes))
+}
+
+fn eval_query_md5(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+    let bytes = match response.uncompress_body() {
+        Ok(s) => s,
+        Err(inner) => {
+            return Err(Error {
+                source_info: query_source_info.clone(),
+                inner: RunnerError::from(inner),
+                assert: false,
+            })
+        }
+    };
+    let bytes = md5::compute(bytes).to_vec();
+    Ok(Some(Value::Bytes(bytes)))
+}
+
+fn eval_cookie_attribute_name(
     cookie_attribute_name: CookieAttributeName,
     cookie: http::ResponseCookie,
 ) -> Option<Value> {

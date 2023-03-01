@@ -33,11 +33,12 @@ use crate::runner::response::eval_version_status_asserts;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::template::eval_template;
 
-/// Runs an `entry` with `http_client` and returns one or more
-/// [`EntryResult`] (if following redirect).
+/// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///
-/// `variables` are used to render values at runtime, and can be updated
-/// by captures.
+/// The `calls` field of the [`EntryResult`] contains a list of HTTP requests and responses that have
+/// been executed. If `http_client` has been configured to follow redirection, the `calls` list contains
+/// every step of the redirection for the first to the last.
+/// `variables` are used to render values at runtime, and can be updated by captures.
 pub fn run(
     entry: &Entry,
     entry_index: usize,
@@ -116,6 +117,10 @@ pub fn run(
 
     // We runs capture and asserts on the last HTTP request/response chains.
     let (_, http_response) = calls.last().unwrap();
+    let time_in_ms = calls
+        .iter()
+        .map(|(_, resp)| resp.duration.as_millis())
+        .sum();
     let calls: Vec<Call> = calls
         .iter()
         .map(|(req, resp)| Call {
@@ -123,7 +128,6 @@ pub fn run(
             response: resp.clone(),
         })
         .collect();
-    let time_in_ms = calls.iter().map(|c| c.response.duration.as_millis()).sum();
 
     // We proceed asserts and captures in this order:
     // 1. first, check implicit assert on status and version. If KO, test is failed
