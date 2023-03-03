@@ -15,20 +15,21 @@
  * limitations under the License.
  *
  */
-use crate::cli;
-use crate::cli::CliError;
-use crate::runner::RunnerOptionsBuilder;
-use crate::runner::{RunnerOptions, Value, Verbosity};
-use atty::Stream;
-use clap::{value_parser, ArgAction, ArgMatches, Command};
-use hurl::util::path::ContextDir;
-use hurl_core::ast::Entry;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
+
+use atty::Stream;
+use clap::{value_parser, ArgAction, ArgMatches, Command};
+use hurl::util::path::ContextDir;
+use hurl_core::ast::Entry;
+
+use crate::cli;
+use crate::cli::CliError;
+use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value, Verbosity};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {

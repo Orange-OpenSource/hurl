@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 pub use self::json::format as format_json;
 pub use self::text::format as format_text;
 pub use self::token::{Token, Tokenizable};

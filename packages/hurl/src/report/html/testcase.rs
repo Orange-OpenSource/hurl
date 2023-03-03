@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
-use super::Error;
-use crate::runner::HurlResult;
-use hurl_core::ast::HurlFile;
 use std::io::Write;
 use std::path::Path;
+
+use hurl_core::ast::HurlFile;
 use uuid::Uuid;
+
+use super::Error;
+use crate::runner::HurlResult;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {

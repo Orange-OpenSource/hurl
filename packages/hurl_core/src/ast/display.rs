@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use super::core::*;
 use core::fmt;
+
+use crate::ast::core::*;
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use clap::ArgMatches;
 
 pub fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {

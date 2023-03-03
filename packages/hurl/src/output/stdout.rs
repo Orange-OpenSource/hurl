@@ -15,11 +15,13 @@
  * limitations under the License.
  *
  */
-use crate::output::Error;
-#[cfg(target_family = "windows")]
-use atty::Stream;
 use std::io;
 use std::io::Write;
+
+#[cfg(target_family = "windows")]
+use atty::Stream;
+
+use crate::output::Error;
 
 #[cfg(target_family = "unix")]
 pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {

@@ -165,10 +165,9 @@ fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::ast::Pos;
     use crate::parser::ParseError;
-
-    use super::*;
 
     #[test]
     fn test_count() {

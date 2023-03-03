@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use super::json;
+use crate::ast::json;
 
 ///
 /// Hurl AST

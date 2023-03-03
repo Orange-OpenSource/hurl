@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-use chrono::NaiveDateTime;
 use std::collections::HashMap;
 
+use chrono::NaiveDateTime;
+use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
 use percent_encoding::AsciiSet;
 
 use crate::html;
-use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
-
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};
@@ -346,10 +345,11 @@ fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use chrono::offset::Utc;
     use chrono::prelude::*;
     use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+
+    use super::*;
 
     pub fn filter_count() -> Filter {
         Filter {

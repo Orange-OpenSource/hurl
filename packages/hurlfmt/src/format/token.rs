@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::*;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

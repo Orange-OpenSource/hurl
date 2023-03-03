@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-
-use super::{header, Header};
-use crate::http::certificate::Certificate;
 use core::fmt;
 use std::time::Duration;
+
+use crate::http::certificate::Certificate;
+use crate::http::{header, Header};
 
 /// Represents an HTTP response.
 #[derive(Clone, Debug, PartialEq, Eq)]

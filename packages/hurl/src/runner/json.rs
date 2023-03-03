@@ -20,9 +20,9 @@ use std::collections::HashMap;
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
-use super::core::{Error, RunnerError};
-use super::value::Value;
+use crate::runner::core::{Error, RunnerError};
 use crate::runner::template::eval_expression;
+use crate::runner::value::Value;
 
 /// Evaluates a JSON value to a string given a set of `variables`.
 /// If `keep_whitespace` is true, whitespace is preserved from the JSonValue, otherwise
@@ -179,9 +179,10 @@ fn encode_json_char(c: char) -> String {
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::*;
+
     use super::super::core::RunnerError;
     use super::*;
-    use hurl_core::ast::*;
 
     pub fn json_hello_world_value() -> JsonValue {
         // "hello\u0020{{name}}!"

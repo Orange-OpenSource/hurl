@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-
-use super::core::*;
-use super::Header;
-use crate::http::{header, HttpError};
 use url::Url;
+
+use crate::http::core::*;
+use crate::http::{header, Header, HttpError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Request {

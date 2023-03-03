@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-use super::core::Error;
-use super::template::eval_template;
-use super::value::Value;
-use crate::http;
-use crate::runner::body::eval_file;
-use crate::util::path::ContextDir;
-use hurl_core::ast::*;
 use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::path::Path;
+
+use hurl_core::ast::*;
+
+use crate::http;
+use crate::runner::body::eval_file;
+use crate::runner::core::Error;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::util::path::ContextDir;
 
 pub fn eval_multipart_param(
     multipart_param: &MultipartParam,

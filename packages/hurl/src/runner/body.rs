@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-use super::core::{Error, RunnerError};
-use super::json::eval_json_value;
-use super::value::Value;
-use crate::http;
-use crate::runner::multiline::eval_multiline;
-use crate::runner::template::eval_template;
-use crate::util::path::ContextDir;
-use hurl_core::ast::*;
 use std::collections::HashMap;
 use std::path::PathBuf;
+
+use hurl_core::ast::*;
+
+use crate::http;
+use crate::runner::core::{Error, RunnerError};
+use crate::runner::json::eval_json_value;
+use crate::runner::multiline::eval_multiline;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::util::path::ContextDir;
 
 pub fn eval_body(
     body: &Body,
@@ -88,8 +90,9 @@ pub fn eval_file(filename: &Filename, context_dir: &ContextDir) -> Result<Vec<u8
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
     use std::path::Path;
+
+    use hurl_core::ast::SourceInfo;
 
     use super::*;
 

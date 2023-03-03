@@ -17,23 +17,11 @@
  */
 use super::reader::Reader;
 
-// part of hurl
-// just reuse Parser/Error Position
-// do not depend on external separator
-// stop parsing when there is no more base64 character
-//
-// what kind of errors can you have?
-// can only fail if using bad padding?
-// if padding is used it must be used properly
-// you can only have an Expecting padding error (missing one for example)
-
-/*
-https://en.wikipedia.org/wiki/Base64
-Test padding/no-padding
-
-Encoded
-YW55IGNhcm5hbCBwbGVhcw==		any carnal pleas   # [97, 110, 121, 32, 99, 97, 114, 110, 97, 108, 32, 112, 108, 101, 97, 115]
-*/
+/// <https://en.wikipedia.org/wiki/Base64>
+/// Test padding/no-padding
+///
+/// Encoded
+/// YW55IGNhcm5hbCBwbGVhcw==    any carnal pleas   # [97, 110, 121, 32, 99, 97, 114, 110, 97, 108, 32, 112, 108, 101, 97, 115]
 
 pub fn parse(reader: &mut Reader) -> Vec<u8> {
     let mut bytes = vec![];

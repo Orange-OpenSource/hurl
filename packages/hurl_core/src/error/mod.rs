@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use super::ast::SourceInfo;
-use super::parser;
-use super::parser::ParseError;
 use core::cmp;
+
+use crate::ast::SourceInfo;
+use crate::parser;
+use crate::parser::ParseError;
 
 pub trait Error {
     fn source_info(&self) -> SourceInfo;

@@ -15,17 +15,19 @@
  * limitations under the License.
  *
  */
-use super::body::eval_body;
-use super::core::Error;
-use super::template::eval_template;
-use super::value::Value;
-use crate::http;
-use crate::runner::multipart::eval_multipart_param;
-use crate::util::path::ContextDir;
+use std::collections::HashMap;
+
 use base64::engine::general_purpose;
 use base64::Engine;
 use hurl_core::ast::*;
-use std::collections::HashMap;
+
+use crate::http;
+use crate::runner::body::eval_body;
+use crate::runner::core::Error;
+use crate::runner::multipart::eval_multipart_param;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::util::path::ContextDir;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
 pub fn eval_request(
@@ -181,9 +183,10 @@ fn eval_method(method: &Method) -> http::Method {
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::SourceInfo;
+
     use super::super::core::RunnerError;
     use super::*;
-    use hurl_core::ast::SourceInfo;
 
     fn whitespace() -> Whitespace {
         Whitespace {

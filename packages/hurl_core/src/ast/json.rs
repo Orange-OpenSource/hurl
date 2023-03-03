@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use super::core::Template;
-use crate::ast::{Expr, TemplateElement};
 use core::fmt;
+
+use crate::ast::core::Template;
+use crate::ast::{Expr, TemplateElement};
 
 ///
 /// This the AST for the JSON used within Hurl

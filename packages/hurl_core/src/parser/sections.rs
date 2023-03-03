@@ -16,17 +16,15 @@
  *
  */
 use crate::ast::*;
+use crate::parser::combinators::*;
+use crate::parser::error::*;
 use crate::parser::filter::filters;
-
-use super::combinators::*;
-use super::error::*;
-use super::filename;
-use super::predicate::predicate;
-use super::primitives::*;
-use super::query::query;
-use super::reader::Reader;
-use super::string::*;
-use super::ParseResult;
+use crate::parser::predicate::predicate;
+use crate::parser::primitives::*;
+use crate::parser::query::query;
+use crate::parser::reader::Reader;
+use crate::parser::string::*;
+use crate::parser::{filename, ParseResult};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;

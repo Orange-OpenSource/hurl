@@ -20,11 +20,13 @@
 
 mod testcase;
 
-use crate::report::Error;
-use chrono::{DateTime, Local};
 use std::io::Write;
 use std::path::Path;
+
+use chrono::{DateTime, Local};
 pub use testcase::Testcase;
+
+use crate::report::Error;
 
 /// The test result to be displayed in an HTML page
 #[derive(Clone, Debug, PartialEq, Eq)]

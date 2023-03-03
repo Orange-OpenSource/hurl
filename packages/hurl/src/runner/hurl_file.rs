@@ -19,15 +19,14 @@ use std::collections::HashMap;
 use std::thread;
 use std::time::Instant;
 
-use crate::http;
-use crate::runner::core::*;
-use crate::runner::entry;
-use crate::runner::runner_options::RunnerOptions;
-use crate::runner::Value;
-use crate::util::logger::Logger;
-use crate::util::logger::LoggerBuilder;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
+
+use crate::http;
+use crate::runner::core::*;
+use crate::runner::runner_options::RunnerOptions;
+use crate::runner::{entry, Value};
+use crate::util::logger::{Logger, LoggerBuilder};
 
 /// Runs a `hurl_file`, issue from the given `content`and `filename` and
 /// returns a [`HurlResult`] upon completion.

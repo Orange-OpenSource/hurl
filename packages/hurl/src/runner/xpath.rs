@@ -16,11 +16,10 @@
  *
  */
 
-// Unique entry point to libxml2
-
+/// Unique entry point to libxml2
 use std::ffi::CStr;
 
-use super::value::Value;
+use crate::runner::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum XpathError {

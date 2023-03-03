@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
+use chrono::{DateTime, Utc};
+
 use crate::http::{
     Certificate, Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie, Version,
 };
 use crate::runner::{AssertResult, Call, CaptureResult, EntryResult, HurlResult};
 use crate::util::logger;
-use chrono::{DateTime, Utc};
 
 impl HurlResult {
     /// Serializes an [`HurlResult`] to a JSON representation.

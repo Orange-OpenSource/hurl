@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+use encoding::{DecoderTrap, EncodingRef};
 
 use crate::http::{mimetype, HttpError, Request};
-use encoding::{DecoderTrap, EncodingRef};
 
 impl Request {
     /// Returns character encoding of the HTTP request.

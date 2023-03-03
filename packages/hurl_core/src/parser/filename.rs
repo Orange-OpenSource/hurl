@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
-use super::error::*;
-use super::reader::Reader;
-
-use super::ParseResult;
 use crate::ast::*;
+use crate::parser::error::*;
+use crate::parser::reader::Reader;
+use crate::parser::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
     // This is an absolute file
@@ -49,9 +47,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::Pos;
-
     use super::*;
+    use crate::ast::Pos;
 
     #[test]
     fn test_filename() {

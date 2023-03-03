@@ -1,0 +1,4 @@
+# Reorganize import. Must be used with nightly.
+# See <https://rust-lang.github.io/rustfmt> for option description
+#group_imports = "StdExternalCrate"
+#imports_granularity = "Module"

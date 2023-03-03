@@ -16,9 +16,10 @@
  *
  */
 
-use crate::runner::Value;
 use base64::engine::general_purpose;
 use base64::Engine;
+
+use crate::runner::Value;
 
 impl Value {
     pub fn to_json(&self) -> serde_json::Value {

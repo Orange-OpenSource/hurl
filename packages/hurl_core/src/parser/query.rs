@@ -16,14 +16,12 @@
  *
  */
 use crate::ast::*;
-use crate::parser::{Error, ParseError};
-
-use super::combinators::*;
-use super::cookiepath::cookiepath;
-use super::primitives::*;
-use super::reader::Reader;
-use super::string::*;
-use super::ParseResult;
+use crate::parser::combinators::*;
+use crate::parser::cookiepath::cookiepath;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::string::*;
+use crate::parser::{Error, ParseError, ParseResult};
 
 pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
     let start = reader.state.pos.clone();

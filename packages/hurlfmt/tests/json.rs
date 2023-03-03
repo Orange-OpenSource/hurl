@@ -18,12 +18,11 @@
 
 use std::fs;
 
-use proptest::prelude::prop::test_runner::TestRunner;
-use proptest::prelude::*;
-
 use hurl_core::ast::*;
 use hurl_core::parser::{parse_json, Reader};
 use hurlfmt::format::{Token, Tokenizable};
+use proptest::prelude::prop::test_runner::TestRunner;
+use proptest::prelude::*;
 
 fn whitespace() -> BoxedStrategy<String> {
     prop_oneof![

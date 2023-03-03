@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use lazy_static::lazy_static;
 use std::collections::HashMap;
+
+use lazy_static::lazy_static;
 
 // HTML5 named character references
 //

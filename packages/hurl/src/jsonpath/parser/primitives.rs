@@ -17,8 +17,7 @@
  */
 use super::super::ast::*;
 use super::error::{Error, ParseError};
-use super::ParseResult;
-use super::Reader;
+use super::{ParseResult, Reader};
 
 pub fn natural(reader: &mut Reader) -> ParseResult<'static, usize> {
     let start = reader.state.clone();

@@ -20,18 +20,16 @@ mod interactive;
 mod options;
 mod variables;
 
-use hurl::{output, report};
 use std::error::Error;
 use std::fmt;
 
+use hurl::{output, report};
+
 pub use self::fs::read_to_string;
-pub use self::options::app;
-pub use self::options::output_color;
-pub use self::options::parse_options;
-pub use self::options::{get_strings, has_flag};
-pub use self::options::{CliOptions, OutputType};
-pub use self::variables::parse as parse_variable;
-pub use self::variables::parse_value as parse_variable_value;
+pub use self::options::{
+    app, get_strings, has_flag, output_color, parse_options, CliOptions, OutputType,
+};
+pub use self::variables::{parse as parse_variable, parse_value as parse_variable_value};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {

@@ -16,12 +16,10 @@
  *
  */
 use crate::ast::*;
-
-use super::error::*;
-use super::expr;
-use super::primitives::*;
-use super::reader::Reader;
-use super::ParseResult;
+use crate::parser::error::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::{expr, ParseResult};
 
 pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
     // Can not be json-encoded, nor empty.

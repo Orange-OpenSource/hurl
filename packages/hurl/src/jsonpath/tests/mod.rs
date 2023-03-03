@@ -20,9 +20,11 @@
 //! These tests are not located at the root of the project, like Rust integration tests
 //! are usually located since we do not want to expose the jsonpath module to our public API.
 
-use crate::jsonpath;
-use serde_json::json;
 use std::fs::read_to_string;
+
+use serde_json::json;
+
+use crate::jsonpath;
 
 fn bookstore_value() -> serde_json::Value {
     let s = read_to_string("tests/bookstore.json").expect("could not read string from file");

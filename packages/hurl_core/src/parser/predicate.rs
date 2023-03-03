@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
-
 use crate::ast::*;
-
-use super::combinators::*;
-use super::error::*;
-use super::predicate_value::predicate_value;
-use super::primitives::*;
-use super::reader::Reader;
-use super::ParseResult;
+use crate::parser::combinators::*;
+use crate::parser::error::*;
+use crate::parser::predicate_value::predicate_value;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::ParseResult;
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<'static, Predicate> {
     let (not, space0) = predicate_not(reader);
@@ -361,9 +359,8 @@ fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::Pos;
-
     use super::*;
+    use crate::ast::Pos;
 
     #[test]
     fn test_predicate_not() {

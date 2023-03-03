@@ -17,10 +17,10 @@
  */
 use std::path::PathBuf;
 
-use crate::http;
 use hurl_core::ast::SourceInfo;
 
 use super::value::Value;
+use crate::http;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {

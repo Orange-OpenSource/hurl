@@ -16,8 +16,9 @@
  *
  */
 
-use super::ast::*;
 use float_cmp::approx_eq;
+
+use super::ast::*;
 
 pub type JsonpathResult = Vec<serde_json::Value>;
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 

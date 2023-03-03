@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::JsonValue;
 use std::fs;
 use std::fs::File;
 use std::io::Read;
+
+use hurl_core::ast::JsonValue;
 
 #[test]
 fn debug() {

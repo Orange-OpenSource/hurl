@@ -56,10 +56,12 @@
 //!
 mod testcase;
 
-use crate::report::Error;
 use std::fs::File;
+
 pub use testcase::Testcase;
 use xmltree::{Element, XMLNode};
+
+use crate::report::Error;
 
 /// Creates a JUnit from a list of `testcases`.
 pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {

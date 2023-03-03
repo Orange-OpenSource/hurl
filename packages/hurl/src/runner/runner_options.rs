@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
+use std::time::Duration;
+
+use hurl_core::ast::Entry;
+
 use crate::runner::Verbosity;
 use crate::util::path::ContextDir;
-use hurl_core::ast::Entry;
-use std::time::Duration;
 
 pub struct RunnerOptionsBuilder {
     cacert_file: Option<String>,

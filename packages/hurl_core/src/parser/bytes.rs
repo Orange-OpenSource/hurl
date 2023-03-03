@@ -16,15 +16,13 @@
  *
  */
 use crate::ast::*;
+use crate::parser::combinators::*;
+use crate::parser::json::parse as parse_json;
 use crate::parser::multiline::multiline_string;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
 use crate::parser::string::backtick_template;
-
-use super::combinators::*;
-use super::json::parse as parse_json;
-use super::primitives::*;
-use super::reader::Reader;
-use super::xml;
-use super::ParseResult;
+use crate::parser::{xml, ParseResult};
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     choice(

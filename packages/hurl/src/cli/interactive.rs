@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-
 use hurl_core::ast::Entry;
 #[cfg(target_family = "unix")]
 use hurl_core::ast::{MultipartParam, Request, SectionValue};
-
 #[cfg(target_family = "unix")]
 use {
     std::io::{stderr, stdin, Write},

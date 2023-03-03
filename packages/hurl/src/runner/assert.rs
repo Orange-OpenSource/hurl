@@ -15,18 +15,16 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 
-use crate::http;
-use crate::runner::filter::eval_filters;
 use hurl_core::ast::*;
 
-use super::core::*;
-use super::core::{Error, RunnerError};
-use super::predicate::eval_predicate;
-use super::query::eval_query;
-use super::value::Value;
+use crate::http;
+use crate::runner::core::{Error, RunnerError, *};
+use crate::runner::filter::eval_filters;
+use crate::runner::predicate::eval_predicate;
+use crate::runner::query::eval_query;
+use crate::runner::value::Value;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
@@ -179,10 +177,11 @@ pub fn eval_assert(
 
 #[cfg(test)]
 pub mod tests {
+    use hurl_core::ast::SourceInfo;
+
     use super::super::query;
     use super::*;
     use crate::http::xml_three_users_http_response;
-    use hurl_core::ast::SourceInfo;
 
     // xpath //user countEquals 3
     pub fn assert_count_user() -> Assert {

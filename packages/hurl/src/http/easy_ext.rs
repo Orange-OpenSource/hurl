@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use std::ffi::CStr;
+use std::ptr;
+
 use curl::easy::Easy;
 use curl::Error;
 use curl_sys::{curl_certinfo, curl_slist};
-use std::ffi::CStr;
-use std::ptr;
 
 /// Represents certificate information.
 /// `data` has format "name:content";
@@ -125,9 +126,10 @@ fn to_list(slist: *mut curl_slist) -> Vec<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::to_list;
     use std::ffi::CString;
     use std::ptr;
+
+    use super::to_list;
 
     #[test]
     fn convert_curl_slist_to_vec() {

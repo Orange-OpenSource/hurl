@@ -15,18 +15,17 @@
  * limitations under the License.
  *
  */
-
-use regex::Regex;
 use std::collections::HashMap;
 
-use super::core::{Error, RunnerError};
-use super::template::eval_template;
-use super::value::Value;
-use super::xpath;
-use crate::http;
-use crate::jsonpath;
 use hurl_core::ast::*;
+use regex::Regex;
 use sha2::Digest;
+
+use crate::runner::core::{Error, RunnerError};
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::runner::xpath;
+use crate::{http, jsonpath};
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
@@ -381,9 +380,10 @@ impl Value {
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use hex_literal::hex;
     use hurl_core::ast::{Pos, SourceInfo};
+
+    use super::*;
 
     pub fn xpath_invalid_query() -> Query {
         // xpath ???

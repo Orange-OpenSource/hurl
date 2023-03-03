@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-use super::error::*;
-use super::reader::Reader;
-use super::{ParseFunc, ParseResult};
+use crate::parser::error::*;
+use crate::parser::reader::Reader;
+use crate::parser::{ParseFunc, ParseResult};
 
 pub fn optional<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Option<T>> {
     let start = reader.state.clone();
@@ -48,7 +48,6 @@ pub fn recover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'
 }
 
 pub fn nonrecover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, T> {
-    //let start = p.state.clone();
     match f(reader) {
         Ok(r) => Ok(r),
         Err(e) => Err(Error {

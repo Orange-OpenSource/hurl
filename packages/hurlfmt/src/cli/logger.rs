@@ -16,7 +16,6 @@
  *
  */
 use colored::*;
-
 use hurl_core::error::Error;
 use hurl_core::parser;
 

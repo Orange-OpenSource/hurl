@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use xmltree::{Element, XMLNode};
+
 use crate::runner::HurlResult;
 use crate::util::logger;
-use xmltree::{Element, XMLNode};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -99,9 +100,10 @@ impl Testcase {
 
 #[cfg(test)]
 mod test {
+    use hurl_core::ast::SourceInfo;
+
     use crate::report::junit::testcase::Testcase;
     use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
-    use hurl_core::ast::SourceInfo;
 
     #[test]
     fn test_create_testcase_success() {

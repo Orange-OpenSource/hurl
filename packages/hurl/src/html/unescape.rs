@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::html::entities::HTML5_ENTITIES;
+use std::collections::HashMap;
+
 use lazy_static::lazy_static;
 use regex::{Captures, Regex};
-use std::collections::HashMap;
+
+use crate::html::entities::HTML5_ENTITIES;
 
 // Ref https://html.spec.whatwg.org/#decimal-character-reference-start-state
 lazy_static! {

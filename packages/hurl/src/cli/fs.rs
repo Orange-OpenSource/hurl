@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use crate::cli::CliError;
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
+
+use crate::cli::CliError;
 
 /// Remove BOM from the input bytes
 fn strip_bom(bytes: &mut Vec<u8>) {

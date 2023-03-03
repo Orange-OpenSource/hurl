@@ -15,17 +15,13 @@
  * limitations under the License.
  *
  */
-
 use crate::ast::*;
-
-use super::combinators::*;
-use super::expr;
-use super::primitives::*;
-use super::reader::Reader;
-use super::string::*;
-use super::ParseResult;
+use crate::parser::combinators::*;
 use crate::parser::multiline::multiline_string;
-use crate::parser::{Error, ParseError};
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::string::*;
+use crate::parser::{expr, Error, ParseError, ParseResult};
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateValue> {
     choice(

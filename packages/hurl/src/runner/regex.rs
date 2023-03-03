@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 
-use regex::Regex;
-
 use hurl_core::ast::RegexValue;
+use regex::Regex;
 
 use crate::runner::template::eval_template;
 use crate::runner::{Error, RunnerError, Value};

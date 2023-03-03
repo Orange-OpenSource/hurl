@@ -16,13 +16,14 @@
  *
  */
 
-use encoding::{DecoderTrap, EncodingRef};
 ///
 /// Decompresses body response
 /// using the Content-Encoding response header
 ///
 /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 use std::io::prelude::*;
+
+use encoding::{DecoderTrap, EncodingRef};
 
 use crate::http::{mimetype, HttpError, Response};
 
@@ -35,11 +36,7 @@ pub enum ContentEncoding {
 }
 
 impl ContentEncoding {
-    /// Returns an encoding from an HTTP header value.
-    ///
-    /// # Arguments
-    ///
-    /// * `s` - A Content-Encoding header value
+    /// Returns an encoding from an HTTP header value `s`.
     pub fn parse(s: &str) -> Result<ContentEncoding, HttpError> {
         match s {
             "br" => Ok(ContentEncoding::Brotli),
@@ -52,11 +49,7 @@ impl ContentEncoding {
         }
     }
 
-    /// Decompresses bytes.
-    ///
-    /// # Arguments
-    ///
-    /// * `data` - A compressed bytes array
+    /// Decompresses `data` bytes.
     pub fn decode(&self, data: &[u8]) -> Result<Vec<u8>, HttpError> {
         match self {
             ContentEncoding::Identity => Ok(data.to_vec()),
@@ -132,11 +125,7 @@ impl Response {
     }
 }
 
-/// Decompresses Brotli compressed data.
-///
-/// # Arguments
-///
-/// * data - Compressed bytes.
+/// Decompresses Brotli compressed `data`.
 fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let buffer_size = 4096;
     let mut reader = brotli::Decompressor::new(data, buffer_size);
@@ -149,11 +138,7 @@ fn uncompress_brotli(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     }
 }
 
-/// Decompresses GZip compressed data.
-///
-/// # Arguments
-///
-/// * data - Compressed bytes.
+/// Decompresses GZip compressed `data`.
 fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::gzip::Decoder::new(data) {
         Ok(v) => v,
@@ -172,11 +157,7 @@ fn uncompress_gzip(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     }
 }
 
-/// Decompresses Zlib compressed data.
-///
-/// # Arguments
-///
-/// * data - Compressed bytes.
+/// Decompresses Zlib compressed `data`.
 fn uncompress_zlib(data: &[u8]) -> Result<Vec<u8>, HttpError> {
     let mut decoder = match libflate::zlib::Decoder::new(data) {
         Ok(v) => v,

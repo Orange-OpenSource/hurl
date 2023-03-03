@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-use super::core::*;
-use super::RequestSpec;
-use crate::http::*;
-use crate::util::path::ContextDir;
 use std::collections::HashMap;
+
+use crate::http::core::*;
+use crate::http::{RequestSpec, *};
+use crate::util::path::ContextDir;
 
 impl RequestSpec {
     /// Returns this request as curl arguments.
@@ -234,9 +234,10 @@ fn escape_string(s: &str) -> String {
 
 #[cfg(test)]
 pub mod tests {
+    use std::path::Path;
+
     use super::*;
     use crate::http;
-    use std::path::Path;
 
     fn form_http_request() -> RequestSpec {
         RequestSpec {

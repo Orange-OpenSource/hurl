@@ -25,13 +25,10 @@ use std::time::Instant;
 use atty::Stream;
 use clap::Command;
 use colored::*;
-
-use hurl::report;
 use hurl::report::html;
-use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
-use hurl::{libcurl_version_info, output};
+use hurl::{libcurl_version_info, output, report, runner};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
 use report::junit;

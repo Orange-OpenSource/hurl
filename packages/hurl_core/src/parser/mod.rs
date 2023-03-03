@@ -24,10 +24,10 @@ pub fn parse_hurl_file(s: &str) -> ParseResult<'static, HurlFile> {
 }
 
 pub use self::error::{Error, ParseError};
-pub use self::json::boolean_value as parse_json_boolean;
-pub use self::json::null_value as parse_json_null;
-pub use self::json::number_value as parse_json_number;
-pub use self::json::parse as parse_json;
+pub use self::json::{
+    boolean_value as parse_json_boolean, null_value as parse_json_null,
+    number_value as parse_json_number, parse as parse_json,
+};
 pub use self::reader::Reader;
 pub use self::template::templatize;
 use crate::ast::HurlFile;

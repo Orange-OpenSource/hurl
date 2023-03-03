@@ -18,20 +18,17 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use crate::http;
-use crate::http::ClientOptions;
-use crate::util::logger::Logger;
 use hurl_core::ast::*;
 
-use super::core::*;
-use super::core::{Error, RunnerError};
-use super::request::eval_request;
-use super::response::{eval_asserts, eval_captures};
-use super::value::Value;
-use crate::runner::request::{cookie_storage_clear, cookie_storage_set};
-use crate::runner::response::eval_version_status_asserts;
+use crate::http;
+use crate::http::ClientOptions;
+use crate::runner::core::{Error, RunnerError, *};
+use crate::runner::request::{cookie_storage_clear, cookie_storage_set, eval_request};
+use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_asserts};
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::util::logger::Logger;
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///

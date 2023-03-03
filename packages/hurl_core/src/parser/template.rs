@@ -15,13 +15,9 @@
  * limitations under the License.
  *
  */
-
 use crate::ast::{Pos, SourceInfo, TemplateElement};
-
-use super::error;
-use super::expr;
-use super::reader::*;
-use super::ParseResult;
+use crate::parser::reader::*;
+use crate::parser::{error, expr, ParseResult};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,
@@ -132,9 +128,8 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::{Expr, Variable, Whitespace};
-
     use super::*;
+    use crate::ast::{Expr, Variable, Whitespace};
 
     #[test]
     fn test_templatize_empty_string() {

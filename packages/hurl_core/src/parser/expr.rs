@@ -16,11 +16,10 @@
  *
  */
 use crate::ast::*;
-
-use super::error::*;
-use super::primitives::*;
-use super::reader::Reader;
-use super::ParseResult;
+use crate::parser::error::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, Expr> {
     // let start = p.state.clone();
@@ -79,9 +78,8 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::Pos;
-
     use super::*;
+    use crate::ast::Pos;
 
     #[test]
     fn test_expr() {

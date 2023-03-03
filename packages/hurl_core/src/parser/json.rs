@@ -16,14 +16,11 @@
  *
  */
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, Pos, SourceInfo, Template};
-
-use super::combinators::*;
-use super::error;
-use super::primitives::*;
-use super::reader::*;
-use super::template::*;
-use super::ParseResult;
-use crate::parser::expr;
+use crate::parser::combinators::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::*;
+use crate::parser::template::*;
+use crate::parser::{error, expr, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     choice(

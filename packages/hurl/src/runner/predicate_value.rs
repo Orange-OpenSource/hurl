@@ -17,13 +17,13 @@
  */
 use std::collections::HashMap;
 
-use crate::runner::multiline::eval_multiline;
 use hurl_core::ast::*;
 
-use super::core::Error;
-use super::expr::eval_expr;
-use super::template::eval_template;
-use super::value::Value;
+use crate::runner::core::Error;
+use crate::runner::expr::eval_expr;
+use crate::runner::multiline::eval_multiline;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,

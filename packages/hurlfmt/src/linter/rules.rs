@@ -17,7 +17,7 @@
  */
 use hurl_core::ast::*;
 
-use super::core::{Error, LinterError};
+use crate::linter::core::{Error, LinterError};
 
 /// Returns lint errors for the `hurl_file`.
 pub fn check_hurl_file(hurl_file: &HurlFile) -> Vec<Error> {

@@ -15,17 +15,15 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 
-use crate::http;
-use crate::runner::filter::eval_filters;
 use hurl_core::ast::*;
 
-use super::core::RunnerError;
-use super::core::{CaptureResult, Error};
-use super::query::eval_query;
-use super::value::Value;
+use crate::http;
+use crate::runner::core::{CaptureResult, Error, RunnerError};
+use crate::runner::filter::eval_filters;
+use crate::runner::query::eval_query;
+use crate::runner::value::Value;
 
 /// Evaluates a `capture` with `variables` map and `http_response`, returns a
 /// [`CaptureResult`] on success or an [`Error`] .
@@ -57,9 +55,10 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
+    use hurl_core::ast::{Pos, SourceInfo};
+
     use self::super::super::query;
     use super::*;
-    use hurl_core::ast::{Pos, SourceInfo};
 
     pub fn user_count_capture() -> Capture {
         // non scalar value

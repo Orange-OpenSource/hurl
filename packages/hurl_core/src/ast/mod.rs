@@ -17,9 +17,9 @@
  */
 
 pub use self::core::*;
-pub use self::json::ListElement as JsonListElement;
-pub use self::json::ObjectElement as JsonObjectElement;
-pub use self::json::Value as JsonValue;
+pub use self::json::{
+    ListElement as JsonListElement, ObjectElement as JsonObjectElement, Value as JsonValue,
+};
 
 mod core;
 mod display;

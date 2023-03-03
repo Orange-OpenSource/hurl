@@ -15,17 +15,14 @@
  * limitations under the License.
  *
  */
-use std::io::Write;
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 use std::path::Path;
 use std::process;
 
 use atty::Stream;
 use clap::ArgAction;
-
 use hurl_core::parser;
-use hurlfmt::format;
-use hurlfmt::{cli, linter};
+use hurlfmt::{cli, format, linter};
 
 #[cfg(target_family = "unix")]
 pub fn init_colored() {

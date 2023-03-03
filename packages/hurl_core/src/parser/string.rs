@@ -16,18 +16,16 @@
  *
  */
 use crate::ast::*;
+use crate::parser::combinators::*;
+use crate::parser::error::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::{template, ParseResult};
 
-use super::combinators::*;
-use super::error::*;
-use super::primitives::*;
-use super::reader::Reader;
-use super::template;
-use super::ParseResult;
-
-// Steps:
-// 1- parse String until end of stream or end of line or #
-//    the string does not contain trailing space
-// 2- templatize
+/// Steps:
+/// 1- parse String until end of stream or end of line or #
+///    the string does not contain trailing space
+/// 2- templatize
 pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let start = reader.state.clone();
     let mut chars = vec![];
@@ -328,8 +326,9 @@ fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::time::SystemTime;
+
+    use super::*;
 
     #[test]
     fn test_unquoted_template_empty() {

@@ -18,15 +18,13 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
+use hurl_core::ast::*;
 use regex;
 
-use hurl_core::ast::*;
-
-use super::core::Error;
-use super::template::eval_template;
-use super::value::Value;
-use crate::runner::core::PredicateResult;
+use crate::runner::core::{Error, PredicateResult};
 use crate::runner::predicate_value::eval_predicate_value;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
 use crate::runner::RunnerError;
 
 pub fn eval_predicate(
@@ -829,8 +827,7 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::AssertResult;
-    use super::*;
+    use super::{AssertResult, *};
 
     fn whitespace() -> Whitespace {
         Whitespace {

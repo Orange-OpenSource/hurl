@@ -15,27 +15,13 @@
  * limitations under the License.
  *
  */
-
 use crate::ast::*;
-
-use super::combinators::*;
-use super::error::*;
-use super::primitives::*;
-use super::reader::Reader;
-use super::string::*;
-use super::ParseResult;
-
-/*
-
-"cookiepath" expression
-not described in the official grammar
-
-cookie-query 	= "cookie" sp sp* """  cookiepath-expr  """
-cookiepath-expr = cookie-query-name ( "[" sp* cookie-query-attribute sp* "]" )
-cookiepath-name = <[a-zA-Z0-9{}]+>
-cookiepath-attribute = Value | Expires | Max-Age | Domain | Path | Secure | HttpOnly | SameSite
-
-*/
+use crate::parser::combinators::*;
+use crate::parser::error::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::string::*;
+use crate::parser::ParseResult;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<'static, CookiePath> {
     let start = reader.state.pos.clone();
@@ -82,9 +68,8 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<'static, Cookie
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::{Pos, SourceInfo};
-
     use super::*;
+    use crate::ast::{Pos, SourceInfo};
 
     #[test]
     fn test_cookiepath_simple() {

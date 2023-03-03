@@ -16,9 +16,10 @@
  *
  */
 
-use regex::Regex;
 use std::default::Default;
 use std::time::Duration;
+
+use regex::Regex;
 
 use crate::http::*;
 use crate::util::logger::LoggerBuilder;
@@ -1112,8 +1113,9 @@ fn test_version() {
 // This test function can be used to reproduce bug
 #[test]
 fn test_libcurl_directly() {
-    use curl;
     use std::io::{stdout, Write};
+
+    use curl;
 
     let mut easy = curl::easy::Easy::new();
     easy.url("http://localhost:8000/hello").unwrap();

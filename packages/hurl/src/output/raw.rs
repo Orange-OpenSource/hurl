@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-use crate::http::Response;
-use crate::output;
-use crate::runner;
-use crate::runner::{HurlResult, RunnerError};
-use crate::util::logger::Logger;
 use colored::Colorize;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
+
+use crate::http::Response;
+use crate::runner::{HurlResult, RunnerError};
+use crate::util::logger::Logger;
+use crate::{output, runner};
 
 /// Writes the `hurl_result` last body response to the file `filename_out`.
 ///

@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-
 use base64::engine::general_purpose;
 use base64::Engine;
-
 use hurl_core::ast::*;
 
 use super::serialize_json::*;

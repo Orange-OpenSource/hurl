@@ -18,10 +18,11 @@
 
 use std::collections::HashMap;
 
+use hurl_core::ast::*;
+
 use crate::runner;
 use crate::runner::RunnerOptions;
 use crate::util::logger::LoggerBuilder;
-use hurl_core::ast::*;
 
 fn hello_request() -> Request {
     // GET http://localhost;8000/hello

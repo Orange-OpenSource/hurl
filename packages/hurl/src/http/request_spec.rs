@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-
-use super::{header, Header};
 use core::fmt;
 
-use super::core::*;
+use crate::http::core::*;
+use crate::http::{header, Header};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RequestSpec {

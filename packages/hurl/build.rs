@@ -16,9 +16,9 @@
  *
  */
 
-use cc::Build;
 use std::path::Path;
 
+use cc::Build;
 #[cfg(windows)]
 use winres::WindowsResource;
 

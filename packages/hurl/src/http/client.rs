@@ -17,27 +17,26 @@
  */
 use std::io::Read;
 use std::str;
-
-use curl::easy;
-use encoding::all::ISO_8859_1;
-use encoding::{DecoderTrap, Encoding};
+use std::str::FromStr;
 use std::time::Instant;
 
-use super::core::*;
-use super::options::ClientOptions;
-use super::request::*;
-use super::request_spec::*;
-use super::response::*;
-use super::{Header, HttpError, Verbosity};
-use crate::http::certificate::Certificate;
-use crate::http::easy_ext;
-use crate::util::logger::Logger;
-use crate::util::path::ContextDir;
 use base64::engine::general_purpose;
 use base64::Engine;
+use curl::easy;
 use curl::easy::{List, SslOpt};
-use std::str::FromStr;
+use encoding::all::ISO_8859_1;
+use encoding::{DecoderTrap, Encoding};
 use url::Url;
+
+use crate::http::certificate::Certificate;
+use crate::http::core::*;
+use crate::http::options::ClientOptions;
+use crate::http::request::*;
+use crate::http::request_spec::*;
+use crate::http::response::*;
+use crate::http::{easy_ext, Header, HttpError, Verbosity};
+use crate::util::logger::Logger;
+use crate::util::path::ContextDir;
 
 /// Defines an HTTP client to execute HTTP requests.
 ///

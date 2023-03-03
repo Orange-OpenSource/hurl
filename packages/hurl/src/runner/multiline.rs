@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
+
+use hurl_core::ast::{MultilineString, Text};
+use serde_json::json;
+
 use crate::runner::json::eval_json_value;
 use crate::runner::template::eval_template;
 use crate::runner::{Error, Value};
-use hurl_core::ast::{MultilineString, Text};
-use serde_json::json;
-use std::collections::HashMap;
 
 /// Renders to string a multiline body, given a set of variables.
 pub fn eval_multiline(
@@ -55,13 +57,14 @@ pub fn eval_multiline(
 
 #[cfg(test)]
 mod tests {
-    use crate::runner::multiline::eval_multiline;
-    use hurl_core::ast::JsonValue;
-    use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, MultilineString, SourceInfo, Template,
-        TemplateElement, Whitespace,
-    };
     use std::collections::HashMap;
+
+    use hurl_core::ast::{
+        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, SourceInfo,
+        Template, TemplateElement, Whitespace,
+    };
+
+    use crate::runner::multiline::eval_multiline;
 
     fn whitespace() -> Whitespace {
         Whitespace {

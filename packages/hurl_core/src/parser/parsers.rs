@@ -17,15 +17,14 @@
  */
 use crate::ast::VersionValue::VersionAny;
 use crate::ast::*;
-
-use super::bytes::*;
-use super::combinators::*;
-use super::error::*;
-use super::primitives::*;
-use super::reader::Reader;
-use super::sections::*;
-use super::url::url;
-use super::ParseResult;
+use crate::parser::bytes::*;
+use crate::parser::combinators::*;
+use crate::parser::error::*;
+use crate::parser::primitives::*;
+use crate::parser::reader::Reader;
+use crate::parser::sections::*;
+use crate::parser::url::url;
+use crate::parser::ParseResult;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
     let entries = zero_or_more(entry, reader)?;

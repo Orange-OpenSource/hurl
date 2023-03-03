@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
+
+use chrono::{DateTime, NaiveDateTime, Utc};
 
 use crate::http::easy_ext::CertInfo;
-use chrono::{DateTime, NaiveDateTime, Utc};
-use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Certificate {

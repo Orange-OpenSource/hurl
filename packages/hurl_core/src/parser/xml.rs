@@ -18,10 +18,9 @@
 use sxd_document::parser;
 
 use crate::ast::Pos;
-
-use super::error::*;
-use super::reader::Reader;
-use super::ParseResult;
+use crate::parser::error::*;
+use crate::parser::reader::Reader;
+use crate::parser::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
     let mut buf = String::from("");

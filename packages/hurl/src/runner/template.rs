@@ -19,8 +19,8 @@ use std::collections::HashMap;
 
 use hurl_core::ast::*;
 
-use super::core::{Error, RunnerError};
-use super::value::Value;
+use crate::runner::core::{Error, RunnerError};
+use crate::runner::value::Value;
 
 /// Renders to string a `template` given a map of variables.
 pub fn eval_template(

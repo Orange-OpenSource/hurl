@@ -25,11 +25,12 @@ mod json;
 mod raw;
 mod stdout;
 
-pub use self::json::write_json;
-pub use self::raw::write_body;
 use std::fmt;
 use std::io::Write;
 use std::path::Path;
+
+pub use self::json::write_json;
+pub use self::raw::write_body;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {

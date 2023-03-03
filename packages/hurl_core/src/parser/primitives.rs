@@ -16,14 +16,11 @@
  *
  */
 use crate::ast::*;
-
-use super::base64;
-use super::combinators::*;
-use super::error::*;
-use super::filename;
-use super::reader::Reader;
-use super::string::*;
-use super::ParseResult;
+use crate::parser::combinators::*;
+use crate::parser::error::*;
+use crate::parser::reader::Reader;
+use crate::parser::string::*;
+use crate::parser::{base64, filename, ParseResult};
 
 pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     let start = reader.state.clone();
@@ -595,9 +592,8 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<'static, u32> {
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::Pos;
-
     use super::*;
+    use crate::ast::Pos;
 
     #[test]
     fn test_space() {

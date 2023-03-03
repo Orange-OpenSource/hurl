@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-use super::combinators::*;
-use super::reader::Reader;
-use super::ParseResult;
 use crate::ast::*;
+use crate::parser::combinators::*;
 use crate::parser::json::object_value;
 use crate::parser::primitives::*;
-use crate::parser::{template, Error, ParseError};
+use crate::parser::reader::Reader;
+use crate::parser::{template, Error, ParseError, ParseResult};
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     try_literal("```", reader)?;

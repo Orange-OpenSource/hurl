@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use core::fmt;
 
 /// Represents an HTTP header
@@ -40,12 +39,7 @@ impl Header {
     }
 }
 
-/// Returns all header values for given name
-///
-/// # Arguments
-///
-/// * `headers` - A list of HTTP headers
-/// * `name` - A name to filter header (case insensitively)
+/// Returns all `headers` values for given `name`.
 pub fn get_values(headers: &[Header], name: &str) -> Vec<String> {
     headers
         .iter()

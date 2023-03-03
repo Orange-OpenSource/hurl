@@ -15,18 +15,20 @@
  * limitations under the License.
  *
  */
-use super::assert::eval_assert;
-use super::body::eval_body;
-use super::capture::eval_capture;
-use super::core::*;
-use super::json::eval_json_value;
-use super::template::eval_template;
-use super::value::Value;
-use crate::http;
-use crate::runner::multiline::eval_multiline;
-use crate::util::path::ContextDir;
-use hurl_core::ast::*;
 use std::collections::HashMap;
+
+use hurl_core::ast::*;
+
+use crate::http;
+use crate::runner::assert::eval_assert;
+use crate::runner::body::eval_body;
+use crate::runner::capture::eval_capture;
+use crate::runner::core::*;
+use crate::runner::json::eval_json_value;
+use crate::runner::multiline::eval_multiline;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::util::path::ContextDir;
 
 /// Returns a list of assert results on the response status code and HTTP version,
 /// given a set of `variables`, an actual `http_response` and a spec `response`.
@@ -326,10 +328,8 @@ pub fn eval_captures(
 
 #[cfg(test)]
 mod tests {
+    use self::super::super::{assert, capture};
     use super::*;
-
-    use self::super::super::assert;
-    use self::super::super::capture;
 
     pub fn user_response() -> Response {
         let whitespace = Whitespace {

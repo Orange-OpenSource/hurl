@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use std::cmp::max;
 
-use crate::runner::{HurlResult, Value};
 use colored::*;
 use hurl_core::error::Error;
-use std::cmp::max;
+
+use crate::runner::{HurlResult, Value};
 
 /// A simple logger to log app related event (start, high levels error, etc...).
 /// When we run an [`hurl_core::ast::HurlFile`], user has to provide a dedicated Hurl logger (see [`Logger`]).
@@ -601,9 +602,10 @@ fn get_lines(text: &str) -> Vec<&str> {
 
 #[cfg(test)]
 pub mod tests {
+    use hurl_core::ast::SourceInfo;
+
     use super::*;
     use crate::runner;
-    use hurl_core::ast::SourceInfo;
 
     #[test]
     fn test_add_line_prefix_no_colored() {

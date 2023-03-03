@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use crate::http::{debug, mimetype, Request};
 use crate::util::logger::Logger;
 
