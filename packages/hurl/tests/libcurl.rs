@@ -616,20 +616,18 @@ fn test_cacert() {
 
     let certificate = response.certificate.unwrap();
 
-    let issuer = certificate.issuer;
-    let issuers = [
-        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
-        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
-    ];
-    assert!(issuers.contains(&issuer), "actual issuer is {issuer}");
-
-    let subject = certificate.subject;
-    let subjects = [
-        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
-        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
-    ];
-    assert!(subjects.contains(&subject), "actual subject is {subject}");
-
+    assert_eq!(
+        certificate.issuer,
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"
+            .to_string()
+            .to_string()
+    );
+    assert_eq!(
+        certificate.subject,
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"
+            .to_string()
+            .to_string()
+    );
     assert_eq!(
         certificate.start_date,
         chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
@@ -642,7 +640,6 @@ fn test_cacert() {
             .unwrap()
             .with_timezone(&chrono::Utc)
     );
-
     assert_eq!(
         certificate.serial_number,
         "1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0".to_string()

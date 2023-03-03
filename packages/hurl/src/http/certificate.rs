@@ -54,17 +54,34 @@ impl TryFrom<CertInfo> for Certificate {
 }
 
 fn parse_subject(attributes: &HashMap<String, String>) -> Result<String, String> {
-    attributes
-        .get("subject")
-        .cloned()
-        .ok_or(format!("missing Subject attribute in {attributes:?}"))
+    match attributes.get("subject") {
+        None => Err(format!("missing Subject attribute in {attributes:?}")),
+        Some(value) => Ok(parse_key_values(value)?),
+    }
 }
 
 fn parse_issuer(attributes: &HashMap<String, String>) -> Result<String, String> {
-    attributes
-        .get("issuer")
-        .cloned()
-        .ok_or(format!("missing issuer attribute in {attributes:?}"))
+    match attributes.get("issuer") {
+        None => Err(format!("missing Issuer attribute in {attributes:?}")),
+        Some(value) => Ok(parse_key_values(value)?),
+    }
+}
+
+fn parse_key_values(value: &str) -> Result<String, String> {
+    let mut values: Vec<String> = vec![];
+    for v in value.split(',') {
+        let v = v.trim();
+        match v.find('=') {
+            None => return Err("Missing '=' in {v}".to_string()),
+            Some(index) => {
+                let (name, value) = v.split_at(index);
+                let name = name.trim();
+                let value = &value[1..].trim();
+                values.push(format!("{name}={value}"))
+            }
+        }
+    }
+    Ok(values.join(", "))
 }
 
 fn parse_start_date(attributes: &HashMap<String, String>) -> Result<DateTime<Utc>, String> {
@@ -140,6 +157,32 @@ mod tests {
     use crate::http::easy_ext::CertInfo;
 
     #[test]
+    fn test_parse_subject() {
+        let mut attributes = HashMap::new();
+        attributes.insert(
+            "subject".to_string(),
+            "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
+        );
+        assert_eq!(
+            parse_subject(&attributes).unwrap(),
+            "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
+        );
+    }
+
+    #[test]
+    fn test_parse_key_values() {
+        assert_eq!(
+            parse_key_values("C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost").unwrap(),
+            "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
+        );
+        assert_eq!(
+            parse_key_values("C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost")
+                .unwrap(),
+            "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
+        );
+    }
+
+    #[test]
     fn test_parse_start_date() {
         let mut attributes = HashMap::new();
         attributes.insert(
@@ -205,9 +248,8 @@ mod tests {
             })
             .unwrap(),
             Certificate {
-                subject: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
-                    .to_string(),
-                issuer: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
+                subject: "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
+                issuer: "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string(),
                 start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
                     .with_timezone(&chrono::Utc),
