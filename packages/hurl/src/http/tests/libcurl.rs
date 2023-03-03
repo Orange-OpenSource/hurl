@@ -20,8 +20,8 @@ use regex::Regex;
 use std::default::Default;
 use std::time::Duration;
 
-use hurl::http::*;
-use hurl::util::logger::LoggerBuilder;
+use crate::http::*;
+use crate::util::logger::LoggerBuilder;
 
 fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {

@@ -53,4 +53,6 @@ mod response;
 mod response_cookie;
 mod response_debug;
 mod response_decoding;
+#[cfg(test)]
+mod tests;
 mod version;

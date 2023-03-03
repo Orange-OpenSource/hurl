@@ -18,11 +18,10 @@
 
 use std::collections::HashMap;
 
-use hurl::http;
-use hurl::runner;
-use hurl::runner::RunnerOptions;
-use hurl::util::logger::LoggerBuilder;
 use hurl_core::ast::*;
+use crate::{http, runner};
+use crate::runner::RunnerOptions;
+use crate::util::logger::LoggerBuilder;
 
 #[cfg(test)]
 fn hello_request() -> Request {
