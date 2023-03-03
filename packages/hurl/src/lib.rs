@@ -18,10 +18,11 @@
 #![cfg_attr(feature = "strict", deny(warnings))]
 
 mod html;
-pub mod http;
+mod http;
 mod json;
 mod jsonpath;
 pub mod output;
 pub mod report;
 pub mod runner;
 pub mod util;
+pub use http::libcurl_version_info;

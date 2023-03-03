@@ -57,11 +57,9 @@ pub fn eval_capture(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{Pos, SourceInfo};
-
-    use super::*;
-
     use self::super::super::query;
+    use super::*;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     pub fn user_count_capture() -> Capture {
         // non scalar value

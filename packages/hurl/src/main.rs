@@ -31,7 +31,7 @@ use hurl::report::html;
 use hurl::runner;
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
-use hurl::{http, output};
+use hurl::{libcurl_version_info, output};
 use hurl_core::ast::HurlFile;
 use hurl_core::parser;
 use report::junit;
@@ -58,7 +58,7 @@ pub struct HurlRun {
 fn main() {
     init_colored();
 
-    let libcurl_version = http::libcurl_version_info();
+    let libcurl_version = libcurl_version_info();
     let version_info = format!(
         "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
         clap::crate_version!(),
@@ -216,15 +216,12 @@ fn execute(
     log_run_info(hurl_file, cli_options, logger);
 
     let variables = &cli_options.variables;
-    let cookie_input_file = cli_options.cookie_input_file.clone();
     let runner_options = cli_options.to(filename, current_dir);
-    let mut client = http::Client::new(cookie_input_file);
 
     runner::run(
         hurl_file,
         content,
         filename,
-        &mut client,
         &runner_options,
         variables,
         logger,

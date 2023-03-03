@@ -15,19 +15,16 @@
  * limitations under the License.
  *
  */
-
-use std::collections::HashMap;
-use std::path::PathBuf;
-
-use hurl_core::ast::*;
-
 use super::core::{Error, RunnerError};
 use super::json::eval_json_value;
 use super::value::Value;
 use crate::http;
-use crate::http::ContextDir;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
+use crate::util::path::ContextDir;
+use hurl_core::ast::*;
+use std::collections::HashMap;
+use std::path::PathBuf;
 
 pub fn eval_body(
     body: &Body,

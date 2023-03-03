@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use crate::cli::CliError;
 use std::fs;
 use std::fs::File;

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use crate::http::ContextDir;
 use crate::runner::Verbosity;
+use crate::util::path::ContextDir;
 use hurl_core::ast::Entry;
 use std::time::Duration;
 

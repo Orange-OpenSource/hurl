@@ -101,11 +101,11 @@ fn parse_cookie(s: &str) -> RequestCookie {
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use super::*;
     use crate::http::RequestCookie;
 
-    pub fn hello_request() -> Request {
+    fn hello_request() -> Request {
         Request {
             method: "GET".to_string(),
             url: "http://localhost:8000/hello".to_string(),
@@ -118,7 +118,7 @@ pub mod tests {
         }
     }
 
-    pub fn query_string_request() -> Request {
+    fn query_string_request() -> Request {
         Request {
             method: "GET".to_string(),
             url: "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3".to_string(),
@@ -127,7 +127,7 @@ pub mod tests {
         }
     }
 
-    pub fn cookies_request() -> Request {
+    fn cookies_request() -> Request {
         Request {
             method: "GET".to_string(),
             url: "http://localhost:8000/cookies".to_string(),

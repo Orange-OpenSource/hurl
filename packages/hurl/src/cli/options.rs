@@ -15,23 +15,20 @@
  * limitations under the License.
  *
  */
-
+use crate::cli;
+use crate::cli::CliError;
+use crate::runner::RunnerOptionsBuilder;
+use crate::runner::{RunnerOptions, Value, Verbosity};
+use atty::Stream;
+use clap::{value_parser, ArgAction, ArgMatches, Command};
+use hurl::util::path::ContextDir;
+use hurl_core::ast::Entry;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
-
-use atty::Stream;
-use clap::{value_parser, ArgAction, ArgMatches, Command};
-use hurl::runner::RunnerOptionsBuilder;
-use hurl_core::ast::Entry;
-
-use crate::cli;
-use crate::cli::CliError;
-use crate::http::{ClientOptions, ContextDir};
-use crate::runner::{RunnerOptions, Value, Verbosity};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
@@ -82,18 +79,10 @@ pub enum OutputType {
 }
 
 pub fn app(version: &str) -> Command {
-    let ClientOptions {
-        connect_timeout: default_connect_timeout,
-        max_redirect: default_max_redirect,
-        retry_max_count: default_retry_max_count,
-        timeout: default_timeout,
-        ..
-    } = ClientOptions::default();
-
-    let default_connect_timeout = default_connect_timeout.as_secs();
-    let default_max_redirect = default_max_redirect.unwrap();
-    let default_timeout = default_timeout.as_secs();
-    let default_retry_max_count = default_retry_max_count.unwrap();
+    let default_connect_timeout = Duration::from_secs(300);
+    let default_max_redirect = 50;
+    let default_timeout = Duration::from_secs(300);
+    let default_retry_max_count = 10;
 
     Command::new("hurl")
         .about("Run Hurl file(s) or standard input")
@@ -145,7 +134,7 @@ pub fn app(version: &str) -> Command {
                 .long("connect-timeout")
                 .value_name("SECONDS")
                 .help("Maximum time allowed for connection")
-                .default_value(default_connect_timeout.to_string())
+                .default_value(default_connect_timeout.as_secs().to_string())
                 .value_parser(value_parser!(u64))
                 .num_args(1)
         )
@@ -252,7 +241,7 @@ pub fn app(version: &str) -> Command {
                 .short('m')
                 .value_name("SECONDS")
                 .help("Maximum time allowed for the transfer")
-                .default_value(default_timeout.to_string())
+                .default_value(default_timeout.as_secs().to_string())
                 .allow_hyphen_values(true)
                 .value_parser(value_parser!(u64))
                 .num_args(1)

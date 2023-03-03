@@ -22,6 +22,7 @@ use std::time::Duration;
 
 use crate::http::*;
 use crate::util::logger::LoggerBuilder;
+use crate::util::path::ContextDir;
 
 fn default_get_request(url: &str) -> RequestSpec {
     RequestSpec {

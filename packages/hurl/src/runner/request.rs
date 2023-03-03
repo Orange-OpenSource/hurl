@@ -15,22 +15,17 @@
  * limitations under the License.
  *
  */
-
-use base64::engine::general_purpose;
-use base64::Engine;
-use std::collections::HashMap;
-#[allow(unused)]
-use std::io::prelude::*;
-
-use crate::http;
-use crate::http::ContextDir;
-use hurl_core::ast::*;
-
 use super::body::eval_body;
 use super::core::Error;
 use super::template::eval_template;
 use super::value::Value;
+use crate::http;
 use crate::runner::multipart::eval_multipart_param;
+use crate::util::path::ContextDir;
+use base64::engine::general_purpose;
+use base64::Engine;
+use hurl_core::ast::*;
+use std::collections::HashMap;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
 pub fn eval_request(
@@ -186,19 +181,18 @@ fn eval_method(method: &Method) -> http::Method {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
-
     use super::super::core::RunnerError;
     use super::*;
+    use hurl_core::ast::SourceInfo;
 
-    pub fn whitespace() -> Whitespace {
+    fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
             source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }
 
-    pub fn hello_request() -> Request {
+    fn hello_request() -> Request {
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
@@ -235,7 +229,7 @@ mod tests {
         }
     }
 
-    pub fn simple_key_value(key: EncodedString, value: Template) -> KeyValue {
+    fn simple_key_value(key: EncodedString, value: Template) -> KeyValue {
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
@@ -252,7 +246,7 @@ mod tests {
         }
     }
 
-    pub fn query_request() -> Request {
+    fn query_request() -> Request {
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
@@ -323,7 +317,7 @@ mod tests {
     }
 
     #[test]
-    pub fn test_error_variable() {
+    fn test_error_variable() {
         let variables = HashMap::new();
         let error = eval_request(&hello_request(), &variables, &ContextDir::default())
             .err()
@@ -338,7 +332,7 @@ mod tests {
     }
 
     #[test]
-    pub fn test_hello_request() {
+    fn test_hello_request() {
         let mut variables = HashMap::new();
         variables.insert(
             String::from("base_url"),
@@ -350,7 +344,7 @@ mod tests {
     }
 
     #[test]
-    pub fn test_query_request() {
+    fn test_query_request() {
         let mut variables = HashMap::new();
         variables.insert(
             String::from("param1"),

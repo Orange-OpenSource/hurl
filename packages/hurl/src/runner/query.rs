@@ -449,24 +449,6 @@ pub mod tests {
         }
     }
 
-    pub fn json_http_response() -> http::Response {
-        http::Response {
-            body: String::into_bytes(
-                r#"
-{
-  "success":false,
-  "errors": [
-    { "id": "error1"},
-    {"id": "error2"}
-  ]
-}
-"#
-                .to_string(),
-            ),
-            ..Default::default()
-        }
-    }
-
     pub fn jsonpath_success() -> Query {
         // jsonpath $.success
         Query {
@@ -1016,7 +998,7 @@ pub mod tests {
             },
         };
 
-        let error = eval_query(&jsonpath_query, &variables, &json_http_response())
+        let error = eval_query(&jsonpath_query, &variables, &http::json_http_response())
             .err()
             .unwrap();
         assert_eq!(
@@ -1066,13 +1048,13 @@ pub mod tests {
     fn test_query_json() {
         let variables = HashMap::new();
         assert_eq!(
-            eval_query(&jsonpath_success(), &variables, &json_http_response())
+            eval_query(&jsonpath_success(), &variables, &http::json_http_response())
                 .unwrap()
                 .unwrap(),
             Value::Bool(false)
         );
         assert_eq!(
-            eval_query(&jsonpath_errors(), &variables, &json_http_response())
+            eval_query(&jsonpath_errors(), &variables, &http::json_http_response())
                 .unwrap()
                 .unwrap(),
             Value::List(vec![

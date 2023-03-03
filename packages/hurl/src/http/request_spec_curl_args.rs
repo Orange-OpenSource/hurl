@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-
 use super::core::*;
 use super::RequestSpec;
 use crate::http::*;
+use crate::util::path::ContextDir;
 use std::collections::HashMap;
 
 impl RequestSpec {
@@ -235,7 +235,31 @@ fn escape_string(s: &str) -> String {
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use crate::http;
     use std::path::Path;
+
+    fn form_http_request() -> RequestSpec {
+        RequestSpec {
+            method: Method::Post,
+            url: "http://localhost/form-params".to_string(),
+            headers: vec![Header::new(
+                "Content-Type",
+                "application/x-www-form-urlencoded",
+            )],
+            form: vec![
+                Param {
+                    name: String::from("param1"),
+                    value: String::from("value1"),
+                },
+                Param {
+                    name: String::from("param2"),
+                    value: String::from("a b"),
+                },
+            ],
+            content_type: Some("multipart/form-data".to_string()),
+            ..Default::default()
+        }
+    }
 
     #[test]
     fn test_encode_byte() {
@@ -322,7 +346,7 @@ pub mod tests {
     fn requests_curl_args() {
         let context_dir = &ContextDir::default();
         assert_eq!(
-            hello_http_request().curl_args(context_dir),
+            http::hello_http_request().curl_args(context_dir),
             vec!["'http://localhost:8000/hello'".to_string()]
         );
         assert_eq!(

@@ -179,10 +179,10 @@ pub fn eval_assert(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::SourceInfo;
-
     use super::super::query;
     use super::*;
+    use crate::http::xml_three_users_http_response;
+    use hurl_core::ast::SourceInfo;
 
     // xpath //user countEquals 3
     pub fn assert_count_user() -> Assert {
@@ -226,7 +226,7 @@ pub mod tests {
             eval_assert(
                 &assert_count_user(),
                 &variables,
-                &http::xml_three_users_http_response()
+                &xml_three_users_http_response(),
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Nodeset(3))),

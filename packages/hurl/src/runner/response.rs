@@ -15,13 +15,6 @@
  * limitations under the License.
  *
  */
-use std::collections::HashMap;
-
-use crate::http;
-use crate::http::ContextDir;
-use crate::runner::multiline::eval_multiline;
-use hurl_core::ast::*;
-
 use super::assert::eval_assert;
 use super::body::eval_body;
 use super::capture::eval_capture;
@@ -29,6 +22,11 @@ use super::core::*;
 use super::json::eval_json_value;
 use super::template::eval_template;
 use super::value::Value;
+use crate::http;
+use crate::runner::multiline::eval_multiline;
+use crate::util::path::ContextDir;
+use hurl_core::ast::*;
+use std::collections::HashMap;
 
 /// Returns a list of assert results on the response status code and HTTP version,
 /// given a set of `variables`, an actual `http_response` and a spec `response`.

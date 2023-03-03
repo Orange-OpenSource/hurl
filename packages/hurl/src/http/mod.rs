@@ -18,24 +18,20 @@
 
 pub use self::certificate::Certificate;
 pub use self::client::Client;
-pub use self::context_dir::ContextDir;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
 pub use self::core::{Cookie, Param, RequestCookie};
 pub use self::error::HttpError;
 pub use self::header::Header;
 pub use self::options::{ClientOptions, Verbosity};
 pub use self::request::Request;
-#[cfg(test)]
-pub use self::request_spec::tests::*;
 pub use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
-#[cfg(test)]
-pub use self::response::tests::*;
 pub use self::response::{Response, Version};
+#[cfg(test)]
+pub use self::tests::*;
 pub use self::version::libcurl_version_info;
 
 mod certificate;
 mod client;
-mod context_dir;
 mod cookie;
 mod core;
 mod debug;

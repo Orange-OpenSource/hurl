@@ -29,8 +29,8 @@ use crate::util::logger::LoggerBuilder;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 
-/// Runs a `hurl_file`, issue from the given `content`and `filename`, with
-/// an `http_client`. Returns a [`HurlResult`] upon completion.
+/// Runs a `hurl_file`, issue from the given `content`and `filename` and
+/// returns a [`HurlResult`] upon completion.
 ///
 /// `filename` and `content` are used to display rich logs (for parsing error or asserts
 /// failures).
@@ -41,13 +41,11 @@ use hurl_core::ast::*;
 /// use std::collections::HashMap;
 /// use std::path::PathBuf;
 /// use hurl_core::parser;
-/// use hurl::http;
-/// use hurl::http::ContextDir;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
 /// use hurl::util::logger::LoggerBuilder;
 ///
-/// // Parse Hurl file
+/// // Parse the Hurl file
 /// let filename = "sample.hurl";
 /// let content = r#"
 /// GET http://localhost:8000/hello
@@ -55,8 +53,6 @@ use hurl_core::ast::*;
 /// "#;
 /// let hurl_file = parser::parse_hurl_file(content).unwrap();
 ///
-/// // Create an HTTP client
-/// let mut client = http::Client::new(None);
 /// let logger = LoggerBuilder::new().build();
 ///
 /// // Define runner options
@@ -69,12 +65,11 @@ use hurl_core::ast::*;
 /// let mut variables = HashMap::default();
 /// variables.insert("name".to_string(), Value::String("toto".to_string()));
 ///
-/// // Run the hurl file
+/// // Run the Hurl file
 /// let hurl_results = runner::run(
 ///     &hurl_file,
 ///     content,
 ///     filename,
-///     &mut client,
 ///     &runner_options,
 ///     &variables,
 ///     &logger
@@ -85,11 +80,12 @@ pub fn run(
     hurl_file: &HurlFile,
     content: &str,
     filename: &str,
-    http_client: &mut http::Client,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     logger: &Logger,
 ) -> HurlResult {
+    let cookie_input_file = runner_options.cookie_input_file.clone();
+    let mut http_client = http::Client::new(cookie_input_file);
     let mut entries = vec![];
     let mut variables = variables.clone();
     let mut entry_index = 1;
@@ -140,7 +136,7 @@ pub fn run(
             Ok(options) => entry::run(
                 entry,
                 entry_index,
-                http_client,
+                &mut http_client,
                 &mut variables,
                 options,
                 &logger,

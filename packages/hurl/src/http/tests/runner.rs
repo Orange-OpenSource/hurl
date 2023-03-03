@@ -18,12 +18,11 @@
 
 use std::collections::HashMap;
 
-use hurl_core::ast::*;
-use crate::{http, runner};
+use crate::runner;
 use crate::runner::RunnerOptions;
 use crate::util::logger::LoggerBuilder;
+use hurl_core::ast::*;
 
-#[cfg(test)]
 fn hello_request() -> Request {
     // GET http://localhost;8000/hello
     let source_info = SourceInfo {
@@ -86,8 +85,6 @@ fn hello_request() -> Request {
 
 #[test]
 fn test_hello() {
-    let mut client = http::Client::new(None);
-
     // We construct a Hurl file ast "by hand", with fake source info.
     // In this particular case, the raw content is empty as the Hurl file hasn't
     // been built from a text content.
@@ -138,7 +135,6 @@ fn test_hello() {
         &hurl_file,
         content,
         filename,
-        &mut client,
         &runner_options,
         &variables,
         &logger,
