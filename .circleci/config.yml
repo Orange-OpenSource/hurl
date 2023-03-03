@@ -31,6 +31,7 @@ jobs:
             python3 -m pip install --upgrade pip --quiet
             bin/test/test_prerequisites.sh
             echo "================= Tests units ================="
+            cargo build --verbose --locked --color always
             cargo test --features strict --verbose --color always
             mitmdump --version
             pip3 install lxml bs4

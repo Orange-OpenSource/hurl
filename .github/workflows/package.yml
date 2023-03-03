@@ -34,10 +34,6 @@ jobs:
       run: |
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Test integ
-      run: |
-        bin/test/test_prerequisites.sh
-        bin/test/test_integ.sh
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -213,10 +209,6 @@ jobs:
       run: |
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Test integ
-      run: |
-        bin/test/test_prerequisites.sh
-        bin/test/test_integ.sh
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -253,10 +245,6 @@ jobs:
         brew install pkg-config
         bin/release/release.sh
         echo "PATH=:${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
-    - name: Test integ
-      run: |
-        bin/test/test_prerequisites.sh
-        bin/test/test_integ.sh
     - name: Get version
       run: |
         VERSION=$(bin/release/get_version.sh)
@@ -308,11 +296,9 @@ jobs:
       run: .\bin\environment.ps1
     - name: Install prerequisites
       run: .\bin\install_prerequisites_windows.ps1
-    - name: Build and test integ
+    - name: Build
       run: |
         .\bin\release\release.ps1
-        .\bin\test\test_prerequisites.ps1
-        .\bin\test\test_integ.ps1
     - name: Create windows64 Zip package
       run: .\bin\release\create_windows64_zip_package.ps1
     - name: Install win64 zip and test integ

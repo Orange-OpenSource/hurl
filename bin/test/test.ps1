@@ -7,5 +7,8 @@ powershell write-host -foregroundcolor Cyan "----- tests -----"
 if ($LASTEXITCODE) { Throw }
 & $PSScriptRoot\test_unit.ps1
 if ($LASTEXITCODE) { Throw }
+& $PSScriptRoot\..\release\release.ps1
+if ($LASTEXITCODE) { Throw }
 & $PSScriptRoot\test_integ.ps1
 if ($LASTEXITCODE) { Throw }
+

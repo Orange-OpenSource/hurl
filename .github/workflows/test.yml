@@ -63,6 +63,7 @@ jobs:
     - name: Tests units
       run: |
         bin/test/test_unit.sh
+        bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
@@ -101,6 +102,7 @@ jobs:
     - name: Tests units
       run: |
         bin/test/test_unit.sh
+        bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
@@ -244,8 +246,8 @@ jobs:
       run: bin/test/test_prerequisites.sh
     - name: Tests units
       run: |
-        brew install pkg-config
         bin/test/test_unit.sh
+        bin/release/release.sh
         echo "PATH=${PWD}/target/release:$PATH" >> "${GITHUB_ENV}"
     - name: Integration Tests
       run: bin/test/test_integ.sh
