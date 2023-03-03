@@ -649,6 +649,14 @@ impl Htmlable for QueryValue {
             QueryValue::Md5 {} => {
                 buffer.push_str("<span class=\"query-type\">md5</span>");
             }
+            QueryValue::Certificate {
+                space0,
+                attribute_name: field,
+            } => {
+                buffer.push_str("<span class=\"query-type\">certificate</span>");
+                buffer.push_str(space0.to_html().as_str());
+                buffer.push_str(field.to_html().as_str());
+            }
         }
         buffer
     }
@@ -685,6 +693,20 @@ impl Htmlable for CookieAttribute {
         buffer.push_str(self.name.value().as_str());
         buffer.push_str(self.space1.to_html().as_str());
         buffer
+    }
+}
+
+impl Htmlable for CertificateAttributeName {
+    fn to_html(&self) -> String {
+        let value = match self {
+            CertificateAttributeName::Subject => "Subject",
+            CertificateAttributeName::Issuer => "Issuer",
+            CertificateAttributeName::StartDate => "Start-Date",
+            CertificateAttributeName::ExpireDate => "Expire-Date",
+            CertificateAttributeName::SerialNumber => "Serial-Number",
+        }
+        .to_string();
+        format!("<span class=\"string\">{value}</span>")
     }
 }
 

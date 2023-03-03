@@ -192,7 +192,7 @@ url-query: "url"
 
 header-query: "header" sp quoted-string
 
-certificate-query: "certificate" sp ("Subject" | "Issuer" | "Start date" | "Expire date" | "Serial Number")
+certificate-query: "certificate" sp ("Subject" | "Issuer" | "Start-Date" | "Expire-Date" | "Serial-Number")
 
 cookie-query: "cookie" sp quoted-string
 

@@ -272,6 +272,13 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
         QueryValue::Bytes {} => QueryValue::Bytes {},
         QueryValue::Sha256 {} => QueryValue::Sha256 {},
         QueryValue::Md5 {} => QueryValue::Md5 {},
+        QueryValue::Certificate {
+            attribute_name: field,
+            ..
+        } => QueryValue::Certificate {
+            attribute_name: field.clone(),
+            space0: one_whitespace(),
+        },
     }
 }
 

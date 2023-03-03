@@ -346,6 +346,16 @@ fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
         QueryValue::Md5 {} => {
             attributes.push(("type".to_string(), JValue::String("md5".to_string())));
         }
+        QueryValue::Certificate {
+            attribute_name: field,
+            ..
+        } => {
+            attributes.push((
+                "type".to_string(),
+                JValue::String("certificate".to_string()),
+            ));
+            attributes.push(("expr".to_string(), field.to_json()));
+        }
     };
     attributes
 }
@@ -366,6 +376,19 @@ impl ToJson for Regex {
             ("value".to_string(), JValue::String(self.to_string())),
         ];
         JValue::Object(attributes)
+    }
+}
+
+impl ToJson for CertificateAttributeName {
+    fn to_json(&self) -> JValue {
+        let value = match self {
+            CertificateAttributeName::Subject => "Subject",
+            CertificateAttributeName::Issuer => "Issuer",
+            CertificateAttributeName::StartDate => "Start-Date",
+            CertificateAttributeName::ExpireDate => "Expire-Date",
+            CertificateAttributeName::SerialNumber => "Serial-Number",
+        };
+        JValue::String(value.to_string())
     }
 }
 

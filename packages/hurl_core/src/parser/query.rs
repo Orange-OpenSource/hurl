@@ -49,6 +49,7 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
             bytes_query,
             sha256_query,
             md5_query,
+            certificate_query,
         ],
         reader,
     )
@@ -177,6 +178,41 @@ fn sha256_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 fn md5_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("md5", reader)?;
     Ok(QueryValue::Md5 {})
+}
+
+fn certificate_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+    try_literal("certificate", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let field = certificate_field(reader)?;
+    Ok(QueryValue::Certificate {
+        space0,
+        attribute_name: field,
+    })
+}
+
+fn certificate_field(reader: &mut Reader) -> ParseResult<'static, CertificateAttributeName> {
+    literal("\"", reader)?;
+    if try_literal(r#"Subject""#, reader).is_ok() {
+        Ok(CertificateAttributeName::Subject)
+    } else if try_literal(r#"Issuer""#, reader).is_ok() {
+        Ok(CertificateAttributeName::Issuer)
+    } else if try_literal(r#"Start-Date""#, reader).is_ok() {
+        Ok(CertificateAttributeName::StartDate)
+    } else if try_literal(r#"Expire-Date""#, reader).is_ok() {
+        Ok(CertificateAttributeName::ExpireDate)
+    } else if try_literal(r#"Serial-Number""#, reader).is_ok() {
+        Ok(CertificateAttributeName::SerialNumber)
+    } else {
+        let value =
+            "Field <Subject>, <Issuer>,<Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
+        let inner = ParseError::Expecting { value };
+        let pos = reader.state.pos.clone();
+        Err(Error {
+            pos,
+            recoverable: false,
+            inner,
+        })
+    }
 }
 
 #[cfg(test)]

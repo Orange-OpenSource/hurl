@@ -58,6 +58,10 @@ pub fn eval_query(
         QueryValue::Bytes {} => eval_query_bytes(http_response, &query.source_info),
         QueryValue::Sha256 {} => eval_query_sha256(http_response, &query.source_info),
         QueryValue::Md5 {} => eval_query_md5(http_response, &query.source_info),
+        QueryValue::Certificate {
+            attribute_name: field,
+            ..
+        } => eval_query_certificate(http_response, field),
     }
 }
 
@@ -316,6 +320,26 @@ fn eval_query_md5(response: &http::Response, query_source_info: &SourceInfo) -> 
     Ok(Some(Value::Bytes(bytes)))
 }
 
+fn eval_query_certificate(
+    response: &http::Response,
+    certificate_attribute: CertificateAttributeName,
+) -> QueryResult {
+    if let Some(certificate) = &response.certificate {
+        let value = match certificate_attribute {
+            CertificateAttributeName::Subject => Value::String(certificate.subject.clone()),
+            CertificateAttributeName::Issuer => Value::String(certificate.issuer.clone()),
+            CertificateAttributeName::StartDate => Value::Date(certificate.start_date),
+            CertificateAttributeName::ExpireDate => Value::Date(certificate.expire_date),
+            CertificateAttributeName::SerialNumber => {
+                Value::String(certificate.serial_number.clone())
+            }
+        };
+        Ok(Some(value))
+    } else {
+        Ok(None)
+    }
+}
+
 fn eval_cookie_attribute_name(
     cookie_attribute_name: CookieAttributeName,
     cookie: http::ResponseCookie,
@@ -381,6 +405,7 @@ impl Value {
 #[cfg(test)]
 pub mod tests {
     use hex_literal::hex;
+
     use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
@@ -1125,6 +1150,36 @@ pub mod tests {
             Value::Bytes(
                 hex!("a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89").to_vec()
             )
+        );
+    }
+
+    #[test]
+    fn test_query_certificate() {
+        assert!(eval_query_certificate(
+            &http::Response {
+                ..Default::default()
+            },
+            CertificateAttributeName::Subject
+        )
+        .unwrap()
+        .is_none());
+        assert_eq!(
+            eval_query_certificate(
+                &http::Response {
+                    certificate: Some(http::Certificate {
+                        subject: "A=B, C=D".to_string(),
+                        issuer: "".to_string(),
+                        start_date: Default::default(),
+                        expire_date: Default::default(),
+                        serial_number: "".to_string()
+                    }),
+                    ..Default::default()
+                },
+                CertificateAttributeName::Subject
+            )
+            .unwrap()
+            .unwrap(),
+            Value::String("A=B, C=D".to_string())
         );
     }
 }

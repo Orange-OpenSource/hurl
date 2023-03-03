@@ -434,6 +434,14 @@ impl Tokenizable for QueryValue {
             QueryValue::Bytes {} => tokens.push(Token::QueryType(String::from("bytes"))),
             QueryValue::Sha256 {} => tokens.push(Token::QueryType(String::from("sha256"))),
             QueryValue::Md5 {} => tokens.push(Token::QueryType(String::from("md5"))),
+            QueryValue::Certificate {
+                space0,
+                attribute_name: field,
+            } => {
+                tokens.push(Token::QueryType(String::from("certificate")));
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut field.tokenize());
+            }
         }
         tokens
     }
@@ -467,6 +475,19 @@ impl Tokenizable for CookieAttribute {
         tokens.append(&mut self.space1.tokenize());
         tokens.push(Token::CodeDelimiter("]".to_string()));
         tokens
+    }
+}
+
+impl Tokenizable for CertificateAttributeName {
+    fn tokenize(&self) -> Vec<Token> {
+        let value = match self {
+            CertificateAttributeName::Subject => "Subject",
+            CertificateAttributeName::Issuer => "Issuer",
+            CertificateAttributeName::StartDate => "Start-Date",
+            CertificateAttributeName::ExpireDate => "Expire-Date",
+            CertificateAttributeName::SerialNumber => "Serial-Number",
+        };
+        vec![Token::String(value.to_string())]
     }
 }
 

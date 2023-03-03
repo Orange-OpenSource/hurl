@@ -336,6 +336,10 @@ pub enum QueryValue {
     Bytes {},
     Sha256 {},
     Md5 {},
+    Certificate {
+        space0: Whitespace,
+        attribute_name: CertificateAttributeName,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -382,6 +386,15 @@ impl CookieAttributeName {
             | CookieAttributeName::SameSite(value) => value.to_string(),
         }
     }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CertificateAttributeName {
+    Subject,
+    Issuer,
+    StartDate,
+    ExpireDate,
+    SerialNumber,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
