@@ -323,7 +323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::Response;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::http::{Response, ResponseCookie};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -339,7 +339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::ResponseCookie;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">impl Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -365,13 +365,13 @@
                 <a href="#21">21</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1038">
+                1038
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Response {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn cookies(&amp;self) -&gt; Vec&lt;ResponseCookie&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -387,7 +387,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn cookies(&amp;self) -&gt; Vec&lt;ResponseCookie&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.headers</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -403,7 +403,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.headers</pre>
+                <pre class="has-background-success-light py-0 px-2">            .iter()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -411,22 +411,6 @@
                 id="24"
                 role="cell">
                 <a href="#24">24</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1038">
-                1038
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .iter()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="25"
-                role="cell">
-                <a href="#25">25</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -440,9 +424,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="26"
+                id="25"
                 role="cell">
-                <a href="#26">26</a>
+                <a href="#25">25</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -452,6 +436,22 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">            .filter_map(|h| ResponseCookie::parse(h.value.clone()))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="26"
+                role="cell">
+                <a href="#26">26</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="1038">
+                1038
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            .collect()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .collect()</pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -477,13 +477,13 @@
                 <a href="#28">28</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="1038">
-                1038
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -499,7 +499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns optional cookies from response.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -509,13 +509,13 @@
                 <a href="#30">30</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="120">
+                120
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Returns optional cookies from response.</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn get_cookie(&amp;self, name: String) -&gt; Option&lt;ResponseCookie&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn get_cookie(&amp;self, name: String) -&gt; Option&lt;ResponseCookie&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.cookies()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -547,7 +547,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.cookies()</pre>
+                <pre class="has-background-success-light py-0 px-2">            .into_iter()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -555,22 +555,6 @@
                 id="33"
                 role="cell">
                 <a href="#33">33</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="120">
-                120
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .into_iter()</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="34"
-                role="cell">
-                <a href="#34">34</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -584,9 +568,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="35"
+                id="34"
                 role="cell">
-                <a href="#35">35</a>
+                <a href="#34">34</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -600,9 +584,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="36"
+                id="35"
                 role="cell">
-                <a href="#36">36</a>
+                <a href="#35">35</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -617,7 +601,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-03-03 08:10</p>
+                <p class="heading">Date: 2023-03-04 08:10</p>
             </div>
         </footer>
     </body>

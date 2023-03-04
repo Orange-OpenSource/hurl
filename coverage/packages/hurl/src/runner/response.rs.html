@@ -355,7 +355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::http;</pre>
+                <pre class="has-background-white py-0 px-2">use hurl_core::ast::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -371,7 +371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::http::ContextDir;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -387,7 +387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::multiline::eval_multiline;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::http;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -403,7 +403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use hurl_core::ast::*;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::assert::eval_assert;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -419,7 +419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::body::eval_body;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -435,7 +435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::assert::eval_assert;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::capture::eval_capture;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -451,7 +451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::body::eval_body;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::core::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::capture::eval_capture;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::json::eval_json_value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -483,7 +483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::core::*;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::multiline::eval_multiline;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -499,7 +499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::json::eval_json_value;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::template::eval_template;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -515,7 +515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::template::eval_template;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::value::Value;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use super::value::Value;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::util::path::ContextDir;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5331,7 +5331,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
+                <pre class="has-background-white py-0 px-2">    use self::super::super::{assert, capture};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5347,7 +5347,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    use super::*;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5363,7 +5363,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use self::super::super::assert;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5379,7 +5379,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use self::super::super::capture;</pre>
+                <pre class="has-background-white py-0 px-2">    pub fn user_response() -&gt; Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5395,7 +5395,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let whitespace = Whitespace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5411,7 +5411,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn user_response() -&gt; Response {</pre>
+                <pre class="has-background-white py-0 px-2">            value: String::from(&quot; &quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5427,7 +5427,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let whitespace = Whitespace {</pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(1, 1, 1, 1),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5443,7 +5443,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            value: String::from(&quot; &quot;),</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5459,7 +5459,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(1, 1, 1, 1),</pre>
+                <pre class="has-background-white py-0 px-2">        let line_terminator = LineTerminator {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5475,7 +5475,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5491,7 +5491,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let line_terminator = LineTerminator {</pre>
+                <pre class="has-background-white py-0 px-2">            comment: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5507,7 +5507,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">            newline: whitespace.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5523,7 +5523,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            comment: None,</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5539,7 +5539,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            newline: whitespace.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; HTTP&#x2F;1.1 200</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5555,7 +5555,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        Response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5571,7 +5571,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; HTTP&#x2F;1.1 200</pre>
+                <pre class="has-background-white py-0 px-2">            line_terminators: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5587,7 +5587,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        Response {</pre>
+                <pre class="has-background-white py-0 px-2">            version: Version {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5603,7 +5603,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            line_terminators: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                value: VersionValue::Version1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5619,7 +5619,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            version: Version {</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(2, 1, 2, 9),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5635,7 +5635,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: VersionValue::Version1,</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5651,7 +5651,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(2, 1, 2, 9),</pre>
+                <pre class="has-background-white py-0 px-2">            space0: whitespace.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5667,7 +5667,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">            status: Status {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5683,7 +5683,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space0: whitespace.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">                value: StatusValue::Specific(200),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5699,7 +5699,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            status: Status {</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(2, 10, 2, 13),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5715,7 +5715,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: StatusValue::Specific(200),</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5731,7 +5731,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(2, 10, 2, 13),</pre>
+                <pre class="has-background-white py-0 px-2">            space1: whitespace.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5747,7 +5747,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">            line_terminator0: line_terminator.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5763,7 +5763,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            space1: whitespace.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5779,7 +5779,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            line_terminator0: line_terminator.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">            sections: vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5795,7 +5795,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            headers: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                Section {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5811,7 +5811,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            sections: vec![</pre>
+                <pre class="has-background-white py-0 px-2">                    line_terminators: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5827,7 +5827,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Section {</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5843,7 +5843,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    line_terminators: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                    line_terminator0: line_terminator.clone(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5859,7 +5859,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: SectionValue::Asserts(vec![assert::tests::assert_count_user()]),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5875,7 +5875,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    line_terminator0: line_terminator.clone(),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5891,7 +5891,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: SectionValue::Asserts(vec![assert::tests::assert_count_user()]),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5907,7 +5907,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">                Section {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5923,7 +5923,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                    line_terminators: vec![],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5939,7 +5939,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Section {</pre>
+                <pre class="has-background-white py-0 px-2">                    space0: whitespace,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5955,7 +5955,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    line_terminators: vec![],</pre>
+                <pre class="has-background-white py-0 px-2">                    line_terminator0: line_terminator,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5971,7 +5971,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    space0: whitespace,</pre>
+                <pre class="has-background-white py-0 px-2">                    value: SectionValue::Captures(vec![capture::tests::user_count_capture()]),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5987,7 +5987,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    line_terminator0: line_terminator,</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6003,7 +6003,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: SectionValue::Captures(vec![capture::tests::user_count_capture()]),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6019,7 +6019,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">            ],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6035,7 +6035,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">            body: None,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6051,7 +6051,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ],</pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(0, 0, 0, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6067,7 +6067,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            body: None,</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6083,7 +6083,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(0, 0, 0, 0),</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6099,7 +6099,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6115,7 +6115,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6131,7 +6131,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_eval_asserts() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6147,7 +6147,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6163,7 +6163,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_eval_asserts() {</pre>
+                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::default();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6179,7 +6179,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6195,7 +6195,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let context_dir = ContextDir::default();</pre>
+                <pre class="has-background-white py-0 px-2">            eval_asserts(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6211,7 +6211,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6227,7 +6227,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_asserts(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6243,7 +6243,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6259,7 +6259,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;variables,</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;context_dir,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6275,7 +6275,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">            ),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6291,7 +6291,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;context_dir,</pre>
+                <pre class="has-background-white py-0 px-2">            vec![AssertResult::Explicit {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6307,7 +6307,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ),</pre>
+                <pre class="has-background-white py-0 px-2">                actual: Ok(Some(Value::Nodeset(2))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6323,7 +6323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![AssertResult::Explicit {</pre>
+                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(1, 14, 1, 27),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6339,7 +6339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: Ok(Some(Value::Nodeset(2))),</pre>
+                <pre class="has-background-white py-0 px-2">                predicate_result: Some(Err(Error {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6355,7 +6355,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                source_info: SourceInfo::new(1, 14, 1, 27),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 0, 1, 0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6371,7 +6371,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                predicate_result: Some(Err(Error {</pre>
+                <pre class="has-background-white py-0 px-2">                    inner: RunnerError::AssertFailure {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6387,7 +6387,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(1, 0, 1, 0),</pre>
+                <pre class="has-background-white py-0 px-2">                        actual: &quot;2&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6403,7 +6403,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    inner: RunnerError::AssertFailure {</pre>
+                <pre class="has-background-white py-0 px-2">                        expected: &quot;3&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6419,7 +6419,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        actual: &quot;2&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6435,7 +6435,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        expected: &quot;3&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6451,7 +6451,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                    assert: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6467,7 +6467,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    },</pre>
+                <pre class="has-background-white py-0 px-2">                })),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6483,7 +6483,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    assert: true,</pre>
+                <pre class="has-background-white py-0 px-2">            },]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6499,7 +6499,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                })),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6515,7 +6515,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },]</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6531,7 +6531,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6547,7 +6547,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6563,7 +6563,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_eval_version_status_asserts() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6579,7 +6579,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6595,7 +6595,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_eval_version_status_asserts() {</pre>
+                <pre class="has-background-white py-0 px-2">            eval_version_status_asserts(&amp;user_response(), &amp;http::xml_two_users_http_response(),),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6611,7 +6611,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            vec![</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6627,7 +6627,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_version_status_asserts(&amp;user_response(), &amp;http::xml_two_users_http_response(),),</pre>
+                <pre class="has-background-white py-0 px-2">                AssertResult::Version {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6643,7 +6643,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![</pre>
+                <pre class="has-background-white py-0 px-2">                    actual: String::from(&quot;HTTP&#x2F;1.0&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6659,7 +6659,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                AssertResult::Version {</pre>
+                <pre class="has-background-white py-0 px-2">                    expected: String::from(&quot;HTTP&#x2F;1.0&quot;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6675,7 +6675,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    actual: String::from(&quot;HTTP&#x2F;1.0&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(2, 1, 2, 9),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6691,7 +6691,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    expected: String::from(&quot;HTTP&#x2F;1.0&quot;),</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6707,7 +6707,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(2, 1, 2, 9),</pre>
+                <pre class="has-background-white py-0 px-2">                AssertResult::Status {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6723,7 +6723,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">                    actual: 200,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6739,7 +6739,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                AssertResult::Status {</pre>
+                <pre class="has-background-white py-0 px-2">                    expected: 200,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6755,7 +6755,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    actual: 200,</pre>
+                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(2, 10, 2, 13),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6771,7 +6771,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    expected: 200,</pre>
+                <pre class="has-background-white py-0 px-2">                },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6787,7 +6787,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source_info: SourceInfo::new(2, 10, 2, 13),</pre>
+                <pre class="has-background-white py-0 px-2">            ]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6803,7 +6803,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                },</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6819,7 +6819,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ]</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6835,7 +6835,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6851,7 +6851,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6867,7 +6867,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    pub fn test_eval_captures() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6883,7 +6883,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let mut variables = HashMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6899,7 +6899,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub fn test_eval_captures() {</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6915,7 +6915,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut variables = HashMap::new();</pre>
+                <pre class="has-background-white py-0 px-2">            eval_captures(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6931,7 +6931,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6947,7 +6947,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_captures(</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6963,7 +6963,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;user_response(),</pre>
+                <pre class="has-background-white py-0 px-2">                &amp;mut variables,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6979,7 +6979,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;http::xml_two_users_http_response(),</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6995,7 +6995,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &amp;mut variables,</pre>
+                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7011,7 +7011,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">            vec![CaptureResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7027,7 +7027,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">                name: &quot;UserCount&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7043,7 +7043,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            vec![CaptureResult {</pre>
+                <pre class="has-background-white py-0 px-2">                value: Value::Float(2.0),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7059,7 +7059,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                name: &quot;UserCount&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            }]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7075,7 +7075,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                value: Value::Float(2.0),</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7091,7 +7091,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }]</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7107,45 +7107,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="443"
-                role="cell">
-                <a href="#443">443</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="444"
-                role="cell">
-                <a href="#444">444</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-03-03 08:10</p>
+                <p class="heading">Date: 2023-03-04 08:10</p>
             </div>
         </footer>
     </body>

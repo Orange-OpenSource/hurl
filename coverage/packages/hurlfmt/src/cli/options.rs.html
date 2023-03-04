@@ -323,7 +323,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use clap::ArgMatches;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -339,7 +339,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use clap::ArgMatches;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -347,22 +347,6 @@
                 id="20"
                 role="cell">
                 <a href="#20">20</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="21"
-                role="cell">
-                <a href="#21">21</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -376,9 +360,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="22"
+                id="21"
                 role="cell">
-                <a href="#22">22</a>
+                <a href="#21">21</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -392,9 +376,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="23"
+                id="22"
                 role="cell">
-                <a href="#23">23</a>
+                <a href="#22">22</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -408,9 +392,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="24"
+                id="23"
                 role="cell">
-                <a href="#24">24</a>
+                <a href="#23">23</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -420,6 +404,22 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="24"
+                role="cell">
+                <a href="#24">24</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">pub fn get_strings(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;Vec&lt;String&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -435,7 +435,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">pub fn get_strings(matches: &amp;ArgMatches, name: &amp;str) -&gt; Option&lt;Vec&lt;String&gt;&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    matches</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -451,7 +451,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    matches</pre>
+                <pre class="has-background-danger-light py-0 px-2">        .get_many::&lt;String&gt;(name)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -467,7 +467,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        .get_many::&lt;String&gt;(name)</pre>
+                <pre class="has-background-danger-light py-0 px-2">        .map(|v| v.map(|x| x.to_string()).collect())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -483,7 +483,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        .map(|v| v.map(|x| x.to_string()).collect())</pre>
+                <pre class="has-background-danger-light py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -493,13 +493,13 @@
                 <a href="#29">29</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -509,13 +509,13 @@
                 <a href="#30">30</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="8709">
+                8709
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn has_flag(matches: &amp;ArgMatches, name: &amp;str) -&gt; bool {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -531,7 +531,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn has_flag(matches: &amp;ArgMatches, name: &amp;str) -&gt; bool {</pre>
+                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;bool&gt;(name) == Some(&amp;true)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -547,29 +547,13 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    matches.get_one::&lt;bool&gt;(name) == Some(&amp;true)</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="33"
-                role="cell">
-                <a href="#33">33</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="8709">
-                8709
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
                 <pre class="has-background-success-light py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-03-03 08:10</p>
+                <p class="heading">Date: 2023-03-04 08:10</p>
             </div>
         </footer>
     </body>
