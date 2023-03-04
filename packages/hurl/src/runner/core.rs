@@ -112,10 +112,6 @@ pub struct CaptureResult {
 
 pub type PredicateResult = Result<(), Error>;
 
-// endregion
-
-// region error
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {
     pub source_info: SourceInfo,
@@ -209,5 +205,3 @@ pub enum RunnerError {
     FilterInvalidInput(String),
     FilterRegexNoCapture {},
 }
-
-// endregion

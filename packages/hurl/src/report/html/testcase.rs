@@ -18,7 +18,7 @@
 use std::io::Write;
 use std::path::Path;
 
-use hurl_core::ast::HurlFile;
+use hurl_core::parser;
 use uuid::Uuid;
 
 use super::Error;
@@ -47,7 +47,7 @@ impl Testcase {
     /// Exports a [`Testcase`] to HTML.
     ///
     /// For the moment, it's just an export of this HTML file, with syntax colored.
-    pub fn write_html(&self, hurl_file: &HurlFile, dir_path: &Path) -> Result<(), Error> {
+    pub fn write_html(&self, content: &str, dir_path: &Path) -> Result<(), Error> {
         let output_file = dir_path.join("store").join(format!("{}.html", self.id));
 
         let parent = output_file.parent().expect("a parent");
@@ -60,7 +60,8 @@ impl Testcase {
             }
             Ok(file) => file,
         };
-        let s = hurl_core::format::format_html(hurl_file, true);
+        let hurl_file = parser::parse_hurl_file(content).unwrap();
+        let s = hurl_core::format::format_html(&hurl_file, true);
 
         if let Err(why) = file.write_all(s.as_bytes()) {
             return Err(Error {

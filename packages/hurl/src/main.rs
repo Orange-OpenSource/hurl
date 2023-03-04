@@ -29,8 +29,6 @@ use hurl::report::html;
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
 use hurl::{libcurl_version_info, output, report, runner};
-use hurl_core::ast::HurlFile;
-use hurl_core::parser;
 use report::junit;
 
 const EXIT_OK: i32 = 0;
@@ -42,13 +40,12 @@ const EXIT_ERROR_UNDEFINED: i32 = 127;
 
 /// Structure that stores the result of an Hurl file execution, and the content of the file.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct HurlRun {
+struct HurlRun {
     /// Source string for this [`HurlFile`]
-    pub content: String,
+    content: String,
     /// Filename of the content
-    pub filename: String,
-    pub hurl_file: HurlFile,
-    pub hurl_result: HurlResult,
+    filename: String,
+    hurl_result: HurlResult,
 }
 
 /// Executes Hurl entry point.
@@ -119,26 +116,14 @@ fn main() {
         let total = filenames.len();
         logger.test_running(filename, current + 1, total);
 
-        // We try to parse the text file to an HurlFile instance.
-        let hurl_file = parser::parse_hurl_file(&content);
-        if let Err(e) = hurl_file {
-            logger.error_rich(filename, &content, &e);
-            std::process::exit(EXIT_ERROR_PARSING);
-        }
-
-        // Now, we have a syntactically correct HurlFile instance, we can run it.
-        let hurl_file = hurl_file.unwrap();
-        let hurl_result = execute(
-            &hurl_file,
-            &content,
-            filename,
-            current_dir,
-            &cli_options,
-            &logger,
-        );
-        let success = hurl_result.success;
-
+        // Run our Hurl file now
+        let hurl_result = execute(&content, filename, current_dir, &cli_options, &logger);
+        let hurl_result = match hurl_result {
+            Ok(h) => h,
+            Err(_) => std::process::exit(EXIT_ERROR_PARSING),
+        };
         logger.test_completed(&hurl_result, filename);
+        let success = hurl_result.success;
 
         // We can output the result, either the raw body or a structured JSON representation.
         let output_body = success
@@ -165,7 +150,6 @@ fn main() {
         let run = HurlRun {
             content,
             filename: filename.to_string(),
-            hurl_file,
             hurl_result,
         };
         runs.push(run);
@@ -198,68 +182,29 @@ fn main() {
     std::process::exit(exit_code(&runs));
 }
 
-/// Runs a Hurl file `hurl_file` and returns a result.
+/// Runs a Hurl `content` and returns a result.
 ///
-/// Original file `content` and `filename` are used to log rich asserts and errors
-/// (including annotated source, line and column).
+/// `filename` is used to log rich asserts and errors
 fn execute(
-    hurl_file: &HurlFile,
     content: &str,
     filename: &str,
     current_dir: &Path,
     cli_options: &cli::CliOptions,
     logger: &Logger,
-) -> HurlResult {
-    log_run_info(hurl_file, cli_options, logger);
-
+) -> Result<HurlResult, String> {
     let variables = &cli_options.variables;
     let runner_options = cli_options.to(filename, current_dir);
 
-    runner::run(
-        hurl_file,
-        content,
-        filename,
-        &runner_options,
-        variables,
-        logger,
-    )
-}
-
-/// Logs various debug information at the start of `hurl_file` run.
-fn log_run_info(hurl_file: &HurlFile, cli_options: &cli::CliOptions, logger: &Logger) {
-    logger.debug_important("Options:");
-    logger.debug(format!("    fail fast: {}", cli_options.fail_fast).as_str());
-    logger.debug(format!("    follow redirect: {}", cli_options.follow_location).as_str());
-    logger.debug(format!("    insecure: {}", cli_options.insecure).as_str());
-    if let Some(n) = cli_options.max_redirect {
-        logger.debug(format!("    max redirect: {n}").as_str());
-    }
-    if let Some(proxy) = &cli_options.proxy {
-        logger.debug(format!("    proxy: {proxy}").as_str());
-    }
-    logger.debug(format!("    retry: {}", cli_options.retry).as_str());
-    if let Some(n) = cli_options.retry_max_count {
-        logger.debug(format!("    retry max count: {n}").as_str());
-    }
-    if !cli_options.variables.is_empty() {
-        logger.debug_important("Variables:");
-        for (name, value) in cli_options.variables.iter() {
-            logger.debug(format!("    {name}: {value}").as_str());
-        }
-    }
-    if let Some(to_entry) = cli_options.to_entry {
-        logger
-            .debug(format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str());
-    }
+    runner::run(content, filename, &runner_options, variables, logger)
 }
 
 #[cfg(target_family = "unix")]
-pub fn init_colored() {
+fn init_colored() {
     control::set_override(true);
 }
 
 #[cfg(target_family = "windows")]
-pub fn init_colored() {
+fn init_colored() {
     colored::control::set_override(true);
     colored::control::set_virtual_terminal(true).expect("set virtual terminal");
 }
@@ -298,7 +243,7 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), cli::CliE
     let mut testcases = vec![];
     for run in runs.iter() {
         let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
-        testcase.write_html(&run.hurl_file, dir_path)?;
+        testcase.write_html(&run.content, dir_path)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;

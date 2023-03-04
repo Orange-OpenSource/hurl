@@ -21,6 +21,8 @@ use std::time::Instant;
 
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
+use hurl_core::error::Error;
+use hurl_core::parser;
 
 use crate::http;
 use crate::runner::core::*;
@@ -28,8 +30,7 @@ use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, Value};
 use crate::util::logger::{Logger, LoggerBuilder};
 
-/// Runs a `hurl_file`, issue from the given `content`and `filename` and
-/// returns a [`HurlResult`] upon completion.
+/// Runs a Hurl `content`and `filename` and returns a [`HurlResult`] upon completion.
 ///
 /// `filename` and `content` are used to display rich logs (for parsing error or asserts
 /// failures).
@@ -39,50 +40,58 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// ```
 /// use std::collections::HashMap;
 /// use std::path::PathBuf;
-/// use hurl_core::parser;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
 /// use hurl::util::logger::LoggerBuilder;
 ///
-/// // Parse the Hurl file
-/// let filename = "sample.hurl";
+/// // A simple Hurl sample
 /// let content = r#"
 /// GET http://localhost:8000/hello
 /// HTTP/1.1 200
 /// "#;
-/// let hurl_file = parser::parse_hurl_file(content).unwrap();
+/// let filename = "sample.hurl";
 ///
-/// let logger = LoggerBuilder::new().build();
-///
-/// // Define runner options
+/// // Define runner options and logger
 /// let runner_options = RunnerOptionsBuilder::new()
 ///     .follow_location(true)
 ///     .verbosity(Some(Verbosity::Verbose))
 ///     .build();
+/// let logger = LoggerBuilder::new().build();
 ///
-/// // set variables
+/// // Set variables
 /// let mut variables = HashMap::default();
 /// variables.insert("name".to_string(), Value::String("toto".to_string()));
 ///
 /// // Run the Hurl file
-/// let hurl_results = runner::run(
-///     &hurl_file,
+/// let hurl_result = runner::run(
 ///     content,
 ///     filename,
 ///     &runner_options,
 ///     &variables,
 ///     &logger
 /// );
-/// assert!(hurl_results.success);
+/// assert!(hurl_result.unwrap().success);
 /// ```
 pub fn run(
-    hurl_file: &HurlFile,
     content: &str,
     filename: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     logger: &Logger,
-) -> HurlResult {
+) -> Result<HurlResult, String> {
+    // Try to parse the content
+    let hurl_file = parser::parse_hurl_file(content);
+    let hurl_file = match hurl_file {
+        Ok(h) => h,
+        Err(e) => {
+            logger.error_rich(filename, content, &e);
+            return Err(e.description());
+        }
+    };
+
+    log_run_info(&hurl_file, runner_options, variables, logger);
+
+    // Now, we have a syntactically correct HurlFile instance, we can run it.
     let cookie_input_file = runner_options.cookie_input_file.clone();
     let mut http_client = http::Client::new(cookie_input_file);
     let mut entries = vec![];
@@ -218,12 +227,12 @@ pub fn run(
     let time_in_ms = start.elapsed().as_millis();
     let cookies = http_client.get_cookie_storage();
     let success = is_success(&entries);
-    HurlResult {
+    Ok(HurlResult {
         entries,
         time_in_ms,
         success,
         cookies,
-    }
+    })
 }
 
 /// Returns `true` if all the entries ar successful, `false` otherwise.
@@ -306,5 +315,38 @@ fn warn_deprecated(entry: &Entry, filename: &str, logger: &Logger) {
             )
             .as_str(),
         );
+    }
+}
+
+/// Logs various debug information at the start of `hurl_file` run.
+fn log_run_info(
+    hurl_file: &HurlFile,
+    runner_options: &RunnerOptions,
+    variables: &HashMap<String, Value>,
+    logger: &Logger,
+) {
+    logger.debug_important("Options:");
+    logger.debug(format!("    fail fast: {}", runner_options.fail_fast).as_str());
+    logger.debug(format!("    follow redirect: {}", runner_options.follow_location).as_str());
+    logger.debug(format!("    insecure: {}", runner_options.insecure).as_str());
+    if let Some(n) = runner_options.max_redirect {
+        logger.debug(format!("    max redirect: {n}").as_str());
+    }
+    if let Some(proxy) = &runner_options.proxy {
+        logger.debug(format!("    proxy: {proxy}").as_str());
+    }
+    logger.debug(format!("    retry: {}", runner_options.retry).as_str());
+    if let Some(n) = runner_options.retry_max_count {
+        logger.debug(format!("    retry max count: {n}").as_str());
+    }
+    if !variables.is_empty() {
+        logger.debug_important("Variables:");
+        for (name, value) in variables.iter() {
+            logger.debug(format!("    {name}: {value}").as_str());
+        }
+    }
+    if let Some(to_entry) = runner_options.to_entry {
+        logger
+            .debug(format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str());
     }
 }
