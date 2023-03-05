@@ -17,6 +17,29 @@
  */
 #![cfg_attr(feature = "strict", deny(warnings))]
 
+//! This crate provides a function to run a Hurl formatted content.
+//! Hurl uses a plain text format to run and tests HTTP requests. The fully documented
+//! format is available at <https://hurl.dev>
+//!
+//! A Hurl sample:
+//! ```hurl
+//! # Get home:
+//! GET https://example.org
+//!
+//! HTTP 200
+//! [Captures]
+//! csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
+//!
+//!
+//! # Do login!
+//! POST https://example.org/login?user=toto&password=1234
+//! X-CSRF-TOKEN: {{csrf_token}}
+//! HTTP 302
+//! ```
+//!
+//! The main function of this crate is [`runner::run`].
+//!
+//! This crate works on Windows, macOS and Linux.
 mod html;
 mod http;
 mod json;

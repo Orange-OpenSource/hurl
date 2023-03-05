@@ -30,10 +30,8 @@ use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, Value};
 use crate::util::logger::{Logger, LoggerBuilder};
 
-/// Runs a Hurl `content`and `filename` and returns a [`HurlResult`] upon completion.
+/// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
-/// `filename` and `content` are used to display rich logs (for parsing error or asserts
-/// failures).
 ///
 /// # Example
 ///
@@ -47,9 +45,8 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// // A simple Hurl sample
 /// let content = r#"
 /// GET http://localhost:8000/hello
-/// HTTP/1.1 200
+/// HTTP 200
 /// "#;
-/// let filename = "sample.hurl";
 ///
 /// // Define runner options and logger
 /// let runner_options = RunnerOptionsBuilder::new()
@@ -65,7 +62,6 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// // Run the Hurl file
 /// let hurl_result = runner::run(
 ///     content,
-///     filename,
 ///     &runner_options,
 ///     &variables,
 ///     &logger
@@ -74,7 +70,6 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// ```
 pub fn run(
     content: &str,
-    filename: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
     logger: &Logger,
@@ -84,7 +79,7 @@ pub fn run(
     let hurl_file = match hurl_file {
         Ok(h) => h,
         Err(e) => {
-            logger.error_rich(filename, content, &e);
+            logger.error_rich(content, &e);
             return Err(e.description());
         }
     };
@@ -116,6 +111,7 @@ pub fn run(
         // "Executing entry..." to be displayed based on the entry level verbosity.
         let entry_verbosity = entry::get_entry_verbosity(entry, &runner_options.verbosity);
         let logger = LoggerBuilder::new()
+            .filename(&logger.filename)
             .color(logger.color)
             .verbose(entry_verbosity.is_some())
             .test(logger.test)
@@ -134,7 +130,7 @@ pub fn run(
         );
         logger.debug_important(format!("Executing entry {entry_index}").as_str());
 
-        warn_deprecated(entry, filename, &logger);
+        warn_deprecated(entry, &logger);
 
         logger.test_progress(entry_index, n);
 
@@ -189,9 +185,9 @@ pub fn run(
         for e in &entry_result.errors {
             logger.test_erase_line();
             if retry {
-                logger.debug_error(filename, content, e);
+                logger.debug_error(content, e);
             } else {
-                logger.error_rich(filename, content, e);
+                logger.error_rich(content, e);
             }
         }
         entries.push(entry_result);
@@ -257,9 +253,10 @@ fn is_success(entries: &[EntryResult]) -> bool {
 }
 
 /// Logs deprecated syntax and provides alternatives.
-fn warn_deprecated(entry: &Entry, filename: &str, logger: &Logger) {
+fn warn_deprecated(entry: &Entry, logger: &Logger) {
     // HTTP/* is used instead of HTTP.
     if let Some(response) = &entry.response {
+        let filename = &logger.filename;
         let version = &response.version;
         let source_info = &version.source_info;
         let line = &source_info.start.line;
@@ -284,6 +281,7 @@ fn warn_deprecated(entry: &Entry, filename: &str, logger: &Logger) {
         ..
     } = &entry.request
     {
+        let filename = &logger.filename;
         let source_info = &template.source_info;
         let line = &source_info.start.line;
         let column = &source_info.start.column;
@@ -305,6 +303,7 @@ fn warn_deprecated(entry: &Entry, filename: &str, logger: &Logger) {
         ..
     }) = &entry.response
     {
+        let filename = &logger.filename;
         let source_info = &template.source_info;
         let line = &source_info.start.line;
         let column = &source_info.start.column;

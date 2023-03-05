@@ -73,6 +73,7 @@ pub struct Logger {
     pub(crate) verbose: bool,
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
+    pub(crate) filename: String,
 }
 
 #[derive(Default)]
@@ -81,6 +82,7 @@ pub struct LoggerBuilder {
     verbose: bool,
     progress_bar: bool,
     test: bool,
+    filename: String,
 }
 
 impl LoggerBuilder {
@@ -113,6 +115,12 @@ impl LoggerBuilder {
         self
     }
 
+    /// Sets filename.
+    pub fn filename(&mut self, filename: &str) -> &mut Self {
+        self.filename = filename.to_string();
+        self
+    }
+
     /// Creates a new logger.
     pub fn build(&self) -> Logger {
         Logger {
@@ -120,6 +128,7 @@ impl LoggerBuilder {
             verbose: self.verbose,
             progress_bar: self.progress_bar,
             test: self.test,
+            filename: self.filename.clone(),
         }
     }
 }
@@ -151,14 +160,14 @@ impl Logger {
         }
     }
 
-    pub fn debug_error(&self, filename: &str, content: &str, error: &dyn Error) {
+    pub fn debug_error(&self, content: &str, error: &dyn Error) {
         if !self.verbose {
             return;
         }
         if self.color {
-            log_debug_error(filename, content, error)
+            log_debug_error(&self.filename, content, error)
         } else {
-            log_debug_error_no_color(filename, content, error)
+            log_debug_error_no_color(&self.filename, content, error)
         }
     }
 
@@ -222,11 +231,11 @@ impl Logger {
         }
     }
 
-    pub fn error_rich(&self, filename: &str, content: &str, error: &dyn Error) {
+    pub fn error_rich(&self, content: &str, error: &dyn Error) {
         if self.color {
-            log_error_rich(filename, content, error)
+            log_error_rich(&self.filename, content, error)
         } else {
-            log_error_rich_no_color(filename, content, error)
+            log_error_rich_no_color(&self.filename, content, error)
         }
     }
 
@@ -252,14 +261,14 @@ impl Logger {
         }
     }
 
-    pub fn test_running(&self, filename: &str, current: usize, total: usize) {
+    pub fn test_running(&self, current: usize, total: usize) {
         if !self.test {
             return;
         }
         if self.color {
-            log_test_running(filename, current, total)
+            log_test_running(&self.filename, current, total)
         } else {
-            log_test_running_no_color(filename, current, total)
+            log_test_running_no_color(&self.filename, current, total)
         }
     }
 
@@ -270,14 +279,14 @@ impl Logger {
         log_test_progress(entry_index, count)
     }
 
-    pub fn test_completed(&self, result: &HurlResult, filename: &str) {
+    pub fn test_completed(&self, result: &HurlResult) {
         if !self.test {
             return;
         }
         if self.color {
-            log_test_completed(result, filename)
+            log_test_completed(result, &self.filename)
         } else {
-            log_test_completed_no_color(result, filename)
+            log_test_completed_no_color(result, &self.filename)
         }
     }
 
@@ -473,12 +482,13 @@ fn log_test_completed_no_color(result: &HurlResult, filename: &str) {
     )
 }
 
-pub fn error_string_no_color(filename: &str, content: &str, error: &dyn Error) -> String {
-    error_string(filename, content, error, false)
-}
-
 /// Returns an `error` as a string, given `lines` of content and a `filename`.
-fn error_string(filename: &str, content: &str, error: &dyn Error, colored: bool) -> String {
+pub(crate) fn error_string(
+    filename: &str,
+    content: &str,
+    error: &dyn Error,
+    colored: bool,
+) -> String {
     let lines = get_lines(content);
     let line_number_size = max(lines.len().to_string().len(), 2);
     let arrow = if colored {

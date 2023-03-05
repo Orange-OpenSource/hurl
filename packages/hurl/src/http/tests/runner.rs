@@ -25,9 +25,8 @@ use crate::util::logger::LoggerBuilder;
 #[test]
 fn test_hello() {
     let content = "GET http://localhost;8000/hello";
-    let filename = "";
     let logger = LoggerBuilder::new().build();
     let variables = HashMap::new();
     let runner_options = RunnerOptions::default();
-    runner::run(content, filename, &runner_options, &variables, &logger).unwrap();
+    runner::run(content, &runner_options, &variables, &logger).unwrap();
 }

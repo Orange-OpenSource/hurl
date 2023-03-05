@@ -39,7 +39,7 @@ impl Testcase {
         let mut errors = vec![];
 
         for error in hurl_result.errors() {
-            let message = logger::error_string_no_color(filename, content, error);
+            let message = logger::error_string(filename, content, error, false);
             if error.assert {
                 failures.push(message);
             } else {

@@ -107,6 +107,7 @@ fn main() {
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
         let logger = LoggerBuilder::new()
+            .filename(filename)
             .color(color)
             .verbose(verbose)
             .test(cli_options.test)
@@ -114,7 +115,7 @@ fn main() {
             .build();
 
         let total = filenames.len();
-        logger.test_running(filename, current + 1, total);
+        logger.test_running(current + 1, total);
 
         // Run our Hurl file now
         let hurl_result = execute(&content, filename, current_dir, &cli_options, &logger);
@@ -122,7 +123,7 @@ fn main() {
             Ok(h) => h,
             Err(_) => std::process::exit(EXIT_ERROR_PARSING),
         };
-        logger.test_completed(&hurl_result, filename);
+        logger.test_completed(&hurl_result);
         let success = hurl_result.success;
 
         // We can output the result, either the raw body or a structured JSON representation.
@@ -183,8 +184,6 @@ fn main() {
 }
 
 /// Runs a Hurl `content` and returns a result.
-///
-/// `filename` is used to log rich asserts and errors
 fn execute(
     content: &str,
     filename: &str,
@@ -195,7 +194,7 @@ fn execute(
     let variables = &cli_options.variables;
     let runner_options = cli_options.to(filename, current_dir);
 
-    runner::run(content, filename, &runner_options, variables, logger)
+    runner::run(content, &runner_options, variables, logger)
 }
 
 #[cfg(target_family = "unix")]

@@ -283,7 +283,7 @@ impl AssertResult {
         map.insert("success".to_string(), serde_json::Value::Bool(success));
 
         if let Some(err) = self.error() {
-            let message = logger::error_string_no_color(filename, content, &err);
+            let message = logger::error_string(filename, content, &err, false);
             map.insert("message".to_string(), serde_json::Value::String(message));
         }
         map.insert(
