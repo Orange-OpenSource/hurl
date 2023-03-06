@@ -17,10 +17,21 @@
  */
 use std::ffi::CStr;
 use std::ptr;
+use std::time::Duration;
 
 use curl::easy::Easy;
 use curl::Error;
-use curl_sys::{curl_certinfo, curl_slist};
+use curl_sys::{curl_certinfo, curl_off_t, curl_slist, CURLINFO};
+
+/// Some definitions not present in curl-sys
+const CURLINFO_OFF_T: CURLINFO = 0x600000;
+
+const CURLINFO_TOTAL_TIME_T: CURLINFO = CURLINFO_OFF_T + 50;
+const CURLINFO_NAMELOOKUP_TIME_T: CURLINFO = CURLINFO_OFF_T + 51;
+const CURLINFO_CONNECT_TIME_T: CURLINFO = CURLINFO_OFF_T + 52;
+const CURLINFO_PRETRANSFER_TIME_T: CURLINFO = CURLINFO_OFF_T + 53;
+const CURLINFO_STARTTRANSFER_TIME_T: CURLINFO = CURLINFO_OFF_T + 54;
+const CURLINFO_APPCONNECT_TIME_T: CURLINFO = CURLINFO_OFF_T + 56;
 
 /// Represents certificate information.
 /// `data` has format "name:content";
@@ -35,9 +46,7 @@ pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         let mut certinfo = ptr::null_mut::<curl_certinfo>();
         let rc =
             curl_sys::curl_easy_getinfo(easy.raw(), curl_sys::CURLINFO_CERTINFO, &mut certinfo);
-        if rc != curl_sys::CURLE_OK {
-            return Err(Error::new(rc));
-        }
+        cvt(easy, rc)?;
         if certinfo.is_null() {
             return Ok(None);
         }
@@ -49,6 +58,118 @@ pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
         let data = to_list(slist);
         Ok(Some(CertInfo { data }))
     }
+}
+
+// Timing of a typical HTTP exchange (over TLS 1.2 connection) from libcurl
+// (courtesy of <https://blog.cloudflare.com/a-question-of-timing/>
+// =========================================================================
+//
+//                                     ┌───────────┐            ┌──────────────┐   ┌──────────────┐
+//                                     │  Client   │            │  DNS Server  │   │  Web Server  │
+//                                     └─────┬─────┘            └──────┬───────┘   └──────┬───────┘
+//                                           │                         │                  │
+//            ┌                           0s ├────── DNS Request ─────►│                  │
+//    DNS     │                              │                         │ DNS Resolver     │
+//  Lookup   <                               │                         │ e.g. 1.1.1.1     │
+//            │                              │◄───── DNS Response ─────┘                  │
+//            └     time_namelookup   1.510s │                                            │
+//            ┌                              ├────────────────── SYN ────────────────────►│
+//    TCP    <                               │                                            │
+// Handshake  └        time_connect   1.757s │◄──────────────  SYN/ACK ───────────────────┤
+//            ┌                              │                                            │
+//            │                              │                                            │
+//            │                              ├────────────────── ACK ────────────────────►│
+//            │                              ├────────────── ClientHello ────────────────►│
+//            │                              │                                            │
+//            │                              │◄───────────── ServerHello ─────────────────┤
+//    SSL    <                               │               Certificate                  │
+// Handshake  │                              │                                            │
+//            │                              ├───────────── ClientKeyExch, ──────────────►│
+//            │                              │            ChangeCipherSpec                │
+//            │                              │                                            │
+//            │                              │◄────────── ChangeCipherSpec ───────────────┤
+//            └     time_appconnect   2.256s │                Finished                    │
+//            ┌   time_pretransfert   2.259s ├─────────────── HTTP GET ──────────────────►│
+//            │                              │                                            │
+//    Wait   <                               │                                            │
+//            │                              │                                            │
+//            └ time_starttransfert   2.506s │                                            │
+//            ┌                              │◄───────────────────────────────────────────┤
+//    Data    │                              │◄─────────────── Response ──────────────────┤
+//  Transfer <                               │                   ...                      │
+//            │                              │◄───────────────────────────────────────────┤
+//            └         time_total    3.001s │                                            │
+//                                           ▼                                            ▼
+
+/// Get the name lookup time.
+///
+/// Returns the total time in microseconds from the start until the name resolving was completed.
+///
+/// Corresponds to [`CURLINFO_NAMELOOKUP_TIME_T`] and may return an error if the
+/// option isn't supported.
+pub fn namelookup_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_NAMELOOKUP_TIME_T).map(microseconds_to_duration)
+}
+
+/// Get the time until connect.
+///
+/// Returns the total time in microseconds from the start until the connection to the remote host (or proxy) was completed.
+///
+/// Corresponds to [`CURLINFO_CONNECT_TIME_T`] and may return an error if the
+/// option isn't supported.
+pub fn connect_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_CONNECT_TIME_T).map(microseconds_to_duration)
+}
+
+/// Get the time until the SSL/SSH handshake is completed.
+///
+/// Returns the total time in microseconds it took from the start until the SSL/SSH
+/// connect/handshake to the remote host was completed. This time is most often
+/// very near to the [`pretransfer_time_t`] time, except for cases such as
+/// HTTP pipelining where the pretransfer time can be delayed due to waits in
+/// line for the pipeline and more.
+///
+/// Corresponds to [`CURLINFO_APPCONNECT_TIME_T`] and may return an error if the
+/// option isn't supported.
+pub fn appconnect_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_APPCONNECT_TIME_T).map(microseconds_to_duration)
+}
+
+/// Get the time until the file transfer start.
+///
+/// Returns the total time in microseconds it took from the start until the file
+/// transfer is just about to begin. This includes all pre-transfer commands
+/// and negotiations that are specific to the particular protocol(s) involved.
+/// It does not involve the sending of the protocol- specific request that
+/// triggers a transfer.
+///
+/// Corresponds to [`CURLINFO_PRETRANSFER_TIME`] and may return an error if the
+/// option isn't supported.
+pub fn pretransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_PRETRANSFER_TIME_T).map(microseconds_to_duration)
+}
+
+/// Get the time in microseconds until the first byte is received.
+///
+/// Returns the total time it took from the start until the first
+/// byte is received by libcurl. This includes [`pretransfer_time_t`] and
+/// also the time the server needs to calculate the result.
+///
+/// Corresponds to [`CURLINFO_STARTTRANSFER_TIME`] and may return an error if the
+/// option isn't supported.
+pub fn starttransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_STARTTRANSFER_TIME_T).map(microseconds_to_duration)
+}
+
+/// Get total time of previous transfer
+///
+/// Returns the total time in microseconds for the previous transfer,
+/// including name resolving, TCP connect etc.
+///
+/// Corresponds to [`CURLINFO_TOTAL_TIME_T`] and may return an error if the
+/// option isn't supported.
+pub fn total_time_t(easy: &Easy) -> Result<Duration, Error> {
+    getopt_off_t(easy, CURLINFO_TOTAL_TIME_T).map(microseconds_to_duration)
 }
 
 /// Converts an instance of libcurl linked list [`curl_slist`] to a vec of [`String`].
@@ -67,6 +188,31 @@ fn to_list(slist: *mut curl_slist) -> Vec<String> {
         }
     }
     data
+}
+
+/// Check if the return code `rc` is OK, and returns an error if not.
+fn cvt(easy: &Easy, rc: curl_sys::CURLcode) -> Result<(), Error> {
+    if rc == curl_sys::CURLE_OK {
+        return Ok(());
+    }
+    let mut err = Error::new(rc);
+    if let Some(msg) = easy.take_error_buf() {
+        err.set_extra(msg);
+    }
+    Err(err)
+}
+
+fn getopt_off_t(easy: &Easy, opt: CURLINFO) -> Result<curl_off_t, Error> {
+    unsafe {
+        let mut p = 0 as curl_off_t;
+        let rc = curl_sys::curl_easy_getinfo(easy.raw(), opt, &mut p);
+        cvt(easy, rc)?;
+        Ok(p)
+    }
+}
+
+fn microseconds_to_duration(microseconds: i64) -> Duration {
+    Duration::from_micros(microseconds as u64)
 }
 
 // // Iterator based implementation more similar to curl crates List implementation.

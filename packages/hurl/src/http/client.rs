@@ -34,6 +34,7 @@ use crate::http::options::ClientOptions;
 use crate::http::request::*;
 use crate::http::request_spec::*;
 use crate::http::response::*;
+use crate::http::timing::TimingInfo;
 use crate::http::{easy_ext, Header, HttpError, Verbosity};
 use crate::util::logger::Logger;
 use crate::util::path::ContextDir;
@@ -326,6 +327,7 @@ impl Client {
         } else {
             None
         };
+        let _timing = TimingInfo::new(&self.handle);
         self.handle.reset();
 
         let request = Request {

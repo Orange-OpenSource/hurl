@@ -51,4 +51,5 @@ mod response_debug;
 mod response_decoding;
 #[cfg(test)]
 mod tests;
+mod timing;
 mod version;
