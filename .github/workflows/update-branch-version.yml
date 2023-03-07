@@ -108,7 +108,7 @@ jobs:
           if [ ${git_exit_code} -eq 0 ] ; then
             echo "  - ✅ commits pushed to ${BOT_UPDATE_VERSION_BRANCHE_NAME} branch."
           else
-            echo "  - ❌ A problem occurs when attempting to push create relase commits to ${BOT_UPDATE_VERSION_BRANCHE_NAME} branch."
+            echo "  - ❌ A problem occurs when attempting to push create release commits to ${BOT_UPDATE_VERSION_BRANCHE_NAME} branch."
             exit 1
           fi
 

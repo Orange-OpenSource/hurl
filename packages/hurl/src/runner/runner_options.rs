@@ -192,7 +192,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets function to be executed after each entry excution.
+    /// Sets function to be executed after each entry execution.
     ///
     /// If the function returns true, the run is stopped.
     pub fn post_entry(&mut self, post_entry: Option<fn() -> bool>) -> &mut Self {
@@ -200,7 +200,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets function to be executed before each entry excution.
+    /// Sets function to be executed before each entry execution.
     ///
     /// If the function returns true, the run is stopped.
     pub fn pre_entry(&mut self, pre_entry: Option<fn(Entry) -> bool>) -> &mut Self {

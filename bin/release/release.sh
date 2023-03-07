@@ -7,6 +7,6 @@ cargo build --release --verbose --locked
 
 # Return PATH var to parent shell
 package_dir="$(cd target/release ; pwd)"
-echo "Run this if you want to use fresh builded hurl package:"
+echo "Run this if you want to use fresh built Hurl package:"
 echo "  export PATH=$package_dir:$PATH"
 

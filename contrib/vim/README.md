@@ -1,4 +1,4 @@
-Install vim syntaxt highlighting for Hurl
+Install vim syntax highlighting for Hurl
 
 ```
 mkdir -p ~/.vim/{ftdetect,syntax}

@@ -757,7 +757,7 @@ fn test_error_ssl() {
     } = error
     {
         // libcurl on linux and mac exists with 60
-        // libcurl with openssl3 feature builded by vcpkg on x64-windows exists with 35
+        // libcurl with openssl3 feature built by vcpkg on x64-windows exists with 35
         assert_eq!(code, 60);
         let descriptions = [
 

@@ -19,7 +19,7 @@ function check_listen_port(){
 
     sleep "${wait}"
     if nc -zv 127.0.0.1 "${port}" ; then
-        echo "${color_green}${label} listenning${color_reset} on ${port}"
+        echo "${color_green}${label} listening${color_reset} on ${port}"
         return 0
     else
         echo "${color_red}${label} not listening${color_reset} on ${port}"

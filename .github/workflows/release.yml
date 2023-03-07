@@ -277,7 +277,7 @@ jobs:
             if [ ${git_exit_code} -eq 0 ] ; then
               echo "  - ✅ commits pushed to ${{ needs.set-context.outputs.release_branch }}."
             else
-              echo "  - ❌ A problem occurs when attempting to push create relase commits to ${{ needs.set-context.outputs.release_branch }} branch."
+              echo "  - ❌ A problem occurs when attempting to push create release commits to ${{ needs.set-context.outputs.release_branch }} branch."
               exit 1
             fi
           else

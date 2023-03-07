@@ -46,7 +46,7 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
     }
 }
 
-/// Tries to apply the list of parser functions `fs` until one ot them succeeds.
+/// Tries to apply the list of parser functions `fs` until one of them succeeds.
 /// Typically this should be recoverable
 pub fn choice<'a, T>(fs: &[ParseFunc<'a, T>], reader: &mut Reader) -> ParseResult<'a, T> {
     for (pos, f) in fs.iter().enumerate() {
