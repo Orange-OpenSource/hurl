@@ -18,10 +18,10 @@
 use std::io::Read;
 use std::str;
 use std::str::FromStr;
-use std::time::Instant;
 
 use base64::engine::general_purpose;
 use base64::Engine;
+use chrono::Utc;
 use curl::easy;
 use curl::easy::{List, SslOpt};
 use encoding::all::ISO_8859_1;
@@ -34,8 +34,8 @@ use crate::http::options::ClientOptions;
 use crate::http::request::*;
 use crate::http::request_spec::*;
 use crate::http::response::*;
-use crate::http::timing::TimingInfo;
-use crate::http::{easy_ext, Header, HttpError, Verbosity};
+use crate::http::timings::Timings;
+use crate::http::{easy_ext, Call, Header, HttpError, Verbosity};
 use crate::util::logger::Logger;
 use crate::util::path::ContextDir;
 
@@ -74,7 +74,7 @@ impl Client {
         request_spec: &RequestSpec,
         options: &ClientOptions,
         logger: &Logger,
-    ) -> Result<Vec<(Request, Response)>, HttpError> {
+    ) -> Result<Vec<Call>, HttpError> {
         let mut calls = vec![];
 
         let mut request_spec = request_spec.clone();
@@ -84,10 +84,10 @@ impl Client {
         // Hurl needs to keep everything.
         let mut redirect_count = 0;
         loop {
-            let (request, response) = self.execute(&request_spec, options, logger)?;
-            let base_url = request.base_url()?;
-            let redirect_url = self.get_follow_location(&response, &base_url);
-            calls.push((request, response));
+            let call = self.execute(&request_spec, options, logger)?;
+            let base_url = call.request.base_url()?;
+            let redirect_url = self.get_follow_location(&call.response, &base_url);
+            calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
                 break;
             }
@@ -117,7 +117,7 @@ impl Client {
         request_spec: &RequestSpec,
         options: &ClientOptions,
         logger: &Logger,
-    ) -> Result<(Request, Response), HttpError> {
+    ) -> Result<Call, HttpError> {
         // Set handle attributes that have not been set or reset.
 
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
@@ -174,7 +174,7 @@ impl Client {
         self.set_body(request_spec_body);
         self.set_headers(request_spec, options);
 
-        let start = Instant::now();
+        let start = Utc::now();
         let verbose = options.verbosity.is_some();
         let very_verbose = options.verbosity == Some(Verbosity::VeryVerbose);
         let mut request_headers: Vec<Header> = vec![];
@@ -314,7 +314,6 @@ impl Client {
             Some(status_line) => self.parse_response_version(status_line)?,
         };
         let headers = self.parse_response_headers(&response_headers);
-        let duration = start.elapsed();
         let length = response_body.len();
         let certificate = if let Some(cert_info) = easy_ext::get_certinfo(&self.handle)? {
             match Certificate::try_from(cert_info) {
@@ -327,7 +326,9 @@ impl Client {
         } else {
             None
         };
-        let _timing = TimingInfo::new(&self.handle);
+        let stop = Utc::now();
+        let duration = (stop - start).to_std().unwrap();
+        let timings = Timings::new(&self.handle, start, stop);
         self.handle.reset();
 
         let request = Request {
@@ -372,7 +373,11 @@ impl Client {
             }
         }
 
-        Ok((request, response))
+        Ok(Call {
+            request,
+            response,
+            timings,
+        })
     }
 
     /// Generates URL.

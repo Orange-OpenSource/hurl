@@ -16,34 +16,11 @@
  *
  */
 
-//! A runner for Hurl files. If you want to execute an Hurl file, this is the right place.
+use crate::http::{Request, Response, Timings};
 
-pub use self::core::{
-    AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, Verbosity,
-};
-pub use self::hurl_file::run;
-pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
-pub use self::value::Value;
-
-mod assert;
-mod body;
-mod capture;
-mod core;
-mod entry;
-mod error;
-mod expr;
-mod filter;
-mod hurl_file;
-mod json;
-mod multiline;
-mod multipart;
-mod predicate;
-mod predicate_value;
-mod query;
-mod regex;
-mod request;
-mod response;
-mod runner_options;
-mod template;
-mod value;
-mod xpath;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Call {
+    pub request: Request,
+    pub response: Response,
+    pub timings: Timings,
+}

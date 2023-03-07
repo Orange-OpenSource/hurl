@@ -19,8 +19,8 @@ use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
 
-use super::value::Value;
-use crate::http;
+use crate::http::{Call, Cookie};
+use crate::runner::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
@@ -33,7 +33,7 @@ pub struct HurlResult {
     pub entries: Vec<EntryResult>,
     pub time_in_ms: u128,
     pub success: bool,
-    pub cookies: Vec<http::Cookie>,
+    pub cookies: Vec<Cookie>,
 }
 
 impl HurlResult {
@@ -67,12 +67,6 @@ pub struct EntryResult {
     pub errors: Vec<Error>,
     pub time_in_ms: u128,
     pub compressed: bool, // The entry has been executed with `--compressed` option
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Call {
-    pub request: http::Request,
-    pub response: http::Response,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

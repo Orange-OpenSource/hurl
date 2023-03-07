@@ -113,18 +113,14 @@ pub fn run(
     };
 
     // We runs capture and asserts on the last HTTP request/response chains.
-    let (_, http_response) = calls.last().unwrap();
+    let call = calls.last().unwrap();
+    let http_response = &call.response;
+    // `time_in_ms` represent the network time of calls, not including assert processing.
     let time_in_ms = calls
         .iter()
-        .map(|(_, resp)| resp.duration.as_millis())
-        .sum();
-    let calls: Vec<Call> = calls
-        .iter()
-        .map(|(req, resp)| Call {
-            request: req.clone(),
-            response: resp.clone(),
-        })
-        .collect();
+        .map(|call| call.timings.total)
+        .sum::<Duration>()
+        .as_millis();
 
     // We proceed asserts and captures in this order:
     // 1. first, check implicit assert on status and version. If KO, test is failed

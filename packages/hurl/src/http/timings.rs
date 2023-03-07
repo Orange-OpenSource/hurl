@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use chrono::{DateTime, Utc};
 use curl::easy::Easy;
 use std::time::Duration;
 
@@ -25,29 +26,33 @@ use crate::http::easy_ext;
 /// See [`easy_ext::namelookup_time_t`], [`easy_ext::connect_time_t`], [`easy_ext::app_connect_time_t`],
 /// [`easy_ext::pre_transfert_time_t`], [`easy_ext::start_transfert_time_t`] and [`easy_ext::total_time_t`]
 /// for [`TimingInfo`] fields definition.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct TimingInfo {
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
+pub struct Timings {
+    pub begin_call: DateTime<Utc>,
+    pub end_call: DateTime<Utc>,
     pub name_lookup: Duration,
-    pub connect_time: Duration,
+    pub connect: Duration,
     pub app_connect: Duration,
     pub pre_transfert: Duration,
     pub start_transfert: Duration,
     pub total: Duration,
 }
 
-impl TimingInfo {
-    pub fn new(easy: &Easy) -> Self {
+impl Timings {
+    pub fn new(easy: &Easy, begin_call: DateTime<Utc>, end_call: DateTime<Utc>) -> Self {
         // TODO: maybe implement fallback to  *_time function in case *_time_t are
         //  not implemented.
         let name_lookup = easy_ext::namelookup_time_t(easy).unwrap_or(Duration::default());
-        let connect_time = easy_ext::connect_time_t(easy).unwrap_or(Duration::default());
+        let connect = easy_ext::connect_time_t(easy).unwrap_or(Duration::default());
         let app_connect = easy_ext::appconnect_time_t(easy).unwrap_or(Duration::default());
         let pre_transfert = easy_ext::pretransfer_time_t(easy).unwrap_or(Duration::default());
         let start_transfert = easy_ext::starttransfer_time_t(easy).unwrap_or(Duration::default());
         let total = easy_ext::total_time_t(easy).unwrap_or(Duration::default());
-        TimingInfo {
+        Timings {
+            begin_call,
+            end_call,
             name_lookup,
-            connect_time,
+            connect,
             app_connect,
             pre_transfert,
             start_transfert,

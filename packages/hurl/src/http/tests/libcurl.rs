@@ -32,10 +32,10 @@ fn default_get_request(url: &str) -> RequestSpec {
     }
 }
 
-fn redirect_count(calls: &[(Request, Response)]) -> usize {
+fn redirect_count(calls: &[Call]) -> usize {
     calls
         .iter()
-        .filter(|(_, resp)| resp.status >= 300 && resp.status < 399)
+        .filter(|call| call.response.status >= 300 && call.response.status < 399)
         .count()
 }
 
@@ -52,7 +52,9 @@ fn test_hello() {
         "curl 'http://localhost:8000/hello'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/hello".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -97,7 +99,9 @@ fn test_put() {
         "curl --request PUT 'http://localhost:8000/put'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "PUT".to_string());
     assert_eq!(request.url, "http://localhost:8000/put".to_string());
     assert!(request.headers.contains(&Header {
@@ -143,7 +147,9 @@ fn test_patch() {
         "curl --request PATCH --header 'Host: www.example.com' --header 'Content-Type: application/example' --header 'If-Match: \"e0023aa4e\"' 'http://localhost:8000/patch/file.txt'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "PATCH".to_string());
     assert_eq!(
         request.url,
@@ -187,7 +193,9 @@ fn test_custom_headers() {
         "curl --header 'Fruit: Raspberry' --header 'Fruit: Apple' --header 'Fruit: Banana' --header 'Fruit: Grape' --header 'Color: Green' 'http://localhost:8000/custom-headers'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(
         request.url,
@@ -239,7 +247,9 @@ fn test_querystring_params() {
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl 'http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3&$top=5'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/querystring-params?param1=value1&param2=&param3=a%3Db&param4=1%2C2%2C3&$top=5".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -292,7 +302,9 @@ fn test_form_params() {
         "curl --data 'param1=value1' --data 'param2=' --data 'param3=a%3Db' --data 'param4=a%253db' --data 'values[0]=0' --data 'values[1]=1' 'http://localhost:8000/form-params'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "POST".to_string());
     assert_eq!(request.url, "http://localhost:8000/form-params".to_string());
     assert!(request.headers.contains(&Header {
@@ -305,7 +317,9 @@ fn test_form_params() {
 
     // make sure you can reuse client for other request
     let request = default_get_request("http://localhost:8000/hello");
-    let (request, response) = client.execute(&request, &options, &logger).unwrap();
+    let call = client.execute(&request, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(request.url, "http://localhost:8000/hello".to_string());
     assert_eq!(request.headers.len(), 3);
@@ -320,7 +334,9 @@ fn test_redirect() {
 
     let options = ClientOptions::default();
     let mut client = Client::new(None);
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(
         request.url,
@@ -361,7 +377,9 @@ fn test_follow_location() {
         .unwrap();
     assert_eq!(calls.len(), 2);
 
-    let (request1, response1) = calls.get(0).unwrap();
+    let call1 = calls.get(0).unwrap();
+    let request1 = &call1.request;
+    let response1 = &call1.response;
     assert_eq!(request1.method, "GET".to_string());
     assert_eq!(
         request1.url,
@@ -378,7 +396,9 @@ fn test_follow_location() {
         "http://localhost:8000/redirect-absolute".to_string()
     );
 
-    let (request2, response2) = calls.get(1).unwrap();
+    let call2 = calls.get(1).unwrap();
+    let request2 = &call2.request;
+    let response2 = &call2.response;
     assert_eq!(request2.method, "GET".to_string());
     assert_eq!(request2.url, "http://localhost:8000/redirected".to_string());
     assert_eq!(request2.headers.len(), 3);
@@ -393,7 +413,7 @@ fn test_follow_location() {
         .execute_with_redirect(&request, &options, &logger)
         .unwrap();
     assert_eq!(calls.len(), 1);
-    let (_, response) = calls.get(0).unwrap();
+    let Call { response, .. } = calls.get(0).unwrap();
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
 }
@@ -428,7 +448,9 @@ fn test_max_redirect() {
     let calls = client
         .execute_with_redirect(&request_spec, &options, &logger)
         .unwrap();
-    let (request, response) = calls.last().unwrap();
+    let call = calls.last().unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.url, "http://localhost:8000/redirect/0".to_string());
     assert_eq!(response.status, 200);
     assert_eq!(redirect_count(&calls), 8);
@@ -476,7 +498,9 @@ fn test_multipart_form_data() {
         "curl --form 'key1=value1' --form 'upload1=@data.txt;type=text/plain' --form 'upload2=@data.html;type=text/html' --form 'upload3=@data.txt;type=text/html' 'http://localhost:8000/multipart-form-data'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Content-Length".to_string(),
         value: "627".to_string(),
@@ -486,7 +510,9 @@ fn test_multipart_form_data() {
 
     // make sure you can reuse client for other request
     let request_spec = default_get_request("http://localhost:8000/hello");
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.method, "GET".to_string());
     assert_eq!(response.status, 200);
     assert_eq!(response.body, b"Hello World!".to_vec());
@@ -514,7 +540,9 @@ fn test_post_bytes() {
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --header 'Content-Type: application/octet-stream' --data $'\\x48\\x65\\x6c\\x6c\\x6f\\x20\\x57\\x6f\\x72\\x6c\\x64\\x21' 'http://localhost:8000/post-base64'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Content-Length".to_string(),
         value: "12".to_string(),
@@ -550,7 +578,9 @@ fn test_expect() {
         "curl --header 'Expect: 100-continue' --header 'Content-Type:' --data 'data' 'http://localhost:8000/expect'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Expect".to_string(),
         value: "100-continue".to_string(),
@@ -576,7 +606,9 @@ fn test_basic_authentication() {
         "curl --user 'bob@email.com:secret' 'http://localhost:8000/basic-authentication'"
             .to_string()
     );
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
@@ -593,7 +625,9 @@ fn test_basic_authentication() {
         request_spec.curl_args(&ContextDir::default()),
         vec!["'http://bob%40email.com:secret@localhost:8000/basic-authentication'".to_string()]
     );
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Authorization".to_string(),
         value: "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=".to_string(),
@@ -613,7 +647,7 @@ fn test_cacert() {
     let logger = LoggerBuilder::new().build();
 
     let request_spec = default_get_request("https://localhost:8001/hello");
-    let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let Call { response, .. } = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 
     let certificate = response.certificate.unwrap();
@@ -815,7 +849,9 @@ fn test_accept_encoding() {
     let mut client = Client::new(None);
     let logger = LoggerBuilder::new().build();
     let request_spec = default_get_request("http://localhost:8000/compressed/gzip");
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Accept-Encoding".to_string(),
         value: "gzip, deflate, br".to_string(),
@@ -897,7 +933,9 @@ fn test_cookie() {
 
     //assert_eq!(request.cookies(), vec!["cookie1=valueA".to_string(),]);
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "cookie1=valueA".to_string(),
@@ -907,7 +945,7 @@ fn test_cookie() {
 
     let request_spec =
         default_get_request("http://localhost:8000/cookies/assert-that-cookie1-is-not-in-session");
-    let (_, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let Call { response, .. } = client.execute(&request_spec, &options, &logger).unwrap();
     assert_eq!(response.status, 200);
 }
 
@@ -942,7 +980,9 @@ fn test_multiple_request_cookies() {
         "curl --cookie 'user1=Bob; user2=Bill; user3=Bruce' 'http://localhost:8000/cookies/set-multiple-request-cookies'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "user1=Bob; user2=Bill; user3=Bruce".to_string(),
@@ -959,7 +999,9 @@ fn test_cookie_storage() {
 
     let request_spec =
         default_get_request("http://localhost:8000/cookies/set-session-cookie2-valueA");
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(
         request.url,
         "http://localhost:8000/cookies/set-session-cookie2-valueA".to_string()
@@ -984,7 +1026,9 @@ fn test_cookie_storage() {
 
     let request_spec =
         default_get_request("http://localhost:8000/cookies/assert-that-cookie2-is-valueA");
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert!(request.headers.contains(&Header {
         name: "Cookie".to_string(),
         value: "cookie2=valueA".to_string(),
@@ -1010,7 +1054,9 @@ fn test_cookie_file() {
         "curl --cookie tests/cookies.txt 'http://localhost:8000/cookies/assert-that-cookie2-is-valueA'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(
         request.url,
         "http://localhost:8000/cookies/assert-that-cookie2-is-valueA"
@@ -1040,7 +1086,9 @@ fn test_proxy() {
         client.curl_command_line(&request_spec, &context_dir, &options),
         "curl --proxy 'localhost:8888' 'http://localhost:8000/proxy'".to_string()
     );
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.url, "http://localhost:8000/proxy");
     assert_eq!(response.status, 200);
 }
@@ -1061,7 +1109,9 @@ fn test_insecure() {
         "curl --insecure 'https://localhost:8001/hello'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.url, "https://localhost:8001/hello");
     assert_eq!(response.status, 200);
 }
@@ -1085,7 +1135,9 @@ fn test_head() {
         "curl --head 'http://localhost:8000/head'".to_string()
     );
 
-    let (request, response) = client.execute(&request_spec, &options, &logger).unwrap();
+    let call = client.execute(&request_spec, &options, &logger).unwrap();
+    let request = &call.request;
+    let response = &call.response;
     assert_eq!(request.url, "http://localhost:8000/head");
     assert_eq!(response.status, 200);
     assert!(response.headers.contains(&Header {

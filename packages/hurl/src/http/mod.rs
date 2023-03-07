@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-
+pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
@@ -28,8 +28,10 @@ pub use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpe
 pub use self::response::{Response, Version};
 #[cfg(test)]
 pub use self::tests::*;
+pub use self::timings::Timings;
 pub use self::version::libcurl_version_info;
 
+mod call;
 mod certificate;
 mod client;
 mod cookie;
@@ -51,5 +53,5 @@ mod response_debug;
 mod response_decoding;
 #[cfg(test)]
 mod tests;
-mod timing;
+mod timings;
 mod version;
