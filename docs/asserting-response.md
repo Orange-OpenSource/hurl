@@ -184,7 +184,7 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
 | __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
 | __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
-| __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.suceeded" isBoolean`                                                     |
+| __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                     |
 | __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
 | __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
 

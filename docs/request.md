@@ -444,7 +444,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 ```
 ~~~
 
-> Contrary to JSON body, the succint syntax of XML body can not use variables. If you need to use variables in your
+> Contrary to JSON body, the succinct syntax of XML body can not use variables. If you need to use variables in your
 > XML body, use a simple [multiline string body] with variables.
 
 #### GraphQL query
