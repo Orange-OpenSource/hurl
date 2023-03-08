@@ -340,7 +340,6 @@ pub fn app(version: &str) -> Command {
         )
         .arg(
             clap::Arg::new("test")
-		.short('t')
                 .long("test")
                 .help("Activate test mode")
                 .action(ArgAction::SetTrue)
