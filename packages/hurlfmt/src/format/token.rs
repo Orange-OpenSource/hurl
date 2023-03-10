@@ -592,6 +592,9 @@ impl Tokenizable for PredicateFuncValue {
             PredicateFuncValue::Exist {} => {
                 tokens.push(Token::PredicateType(self.name()));
             }
+            PredicateFuncValue::IsEmpty {} => {
+                tokens.push(Token::PredicateType(self.name()));
+            }
         }
         tokens
     }
