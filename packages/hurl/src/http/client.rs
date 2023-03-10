@@ -347,13 +347,13 @@ impl Client {
         };
 
         if verbose {
+            // FIXME: the cast to u64 seems not necessary.
+            //  If we dont cast from u128 and try to format! or println!
+            //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
+            //  ok with Rust >= 1.67.0.
+            let duration = duration.as_millis() as u64;
             logger.debug_important(
-                format!(
-                    "Response: (received {} bytes in {} ms)",
-                    length,
-                    duration.as_millis()
-                )
-                .as_str(),
+                format!("Response: (received {length} bytes in {duration} ms)").as_str(),
             );
             logger.debug("");
 

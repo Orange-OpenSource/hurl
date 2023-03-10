@@ -3,3 +3,8 @@
 # in order to produce a valid binary (mainly because of curl crate)
 [target.'cfg(target_env = "musl")']
 rustflags = ["-Ctarget-feature=-crt-static"]
+
+# Desactivate static linking for `cargo test --doc`
+# Should be only activated for Alpine but I don't know how to set it...
+[build]
+rustdocflags = ["-Ctarget-feature=-crt-static"]
