@@ -24,8 +24,7 @@ pub use self::logger::{
 
 mod fs;
 mod logger;
-mod options;
-pub use self::options::{get_string, get_strings, has_flag};
+pub mod options;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {

@@ -18,6 +18,7 @@
 use colored::*;
 use hurl_core::error::Error;
 use hurl_core::parser;
+use std::path::PathBuf;
 
 use crate::linter;
 
@@ -32,7 +33,7 @@ pub fn make_logger_error_message(color: bool) -> impl Fn(bool, &str) {
 pub fn make_logger_parser_error(
     lines: Vec<String>,
     color: bool,
-    filename: Option<String>,
+    filename: Option<PathBuf>,
 ) -> impl Fn(&parser::Error, bool) {
     move |error: &parser::Error, warning: bool| {
         log_error(lines.clone(), color, filename.clone(), error, warning)
@@ -42,7 +43,7 @@ pub fn make_logger_parser_error(
 pub fn make_logger_linter_error(
     lines: Vec<String>,
     color: bool,
-    filename: Option<String>,
+    filename: Option<PathBuf>,
 ) -> impl Fn(&linter::Error, bool) {
     move |error: &linter::Error, warning: bool| {
         log_error(lines.clone(), color, filename.clone(), error, warning)
@@ -76,7 +77,7 @@ fn log_verbose(verbose: bool, message: &str) {
 fn log_error(
     lines: Vec<String>,
     color: bool,
-    filename: Option<String>,
+    filename: Option<PathBuf>,
     error: &dyn Error,
     warning: bool,
 ) {
@@ -106,7 +107,7 @@ fn log_error(
         eprintln!(
             "{}--> {}:{}:{}",
             " ".repeat(line_number_size).as_str(),
-            filename,
+            filename.display(),
             error.source_info().start.line,
             error.source_info().start.column,
         );
