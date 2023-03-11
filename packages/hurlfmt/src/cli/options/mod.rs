@@ -31,7 +31,7 @@ pub struct Options {
     pub in_place: bool,
     pub input_file: Option<PathBuf>,
     pub output_file: Option<PathBuf>,
-    pub output_format: Option<OutputFormat>,
+    pub output_format: OutputFormat,
     pub standalone: bool,
 }
 
@@ -69,7 +69,6 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::in_place())
         .arg(commands::input_file())
         .arg(commands::no_color())
-        .arg(commands::no_format())
         .arg(commands::output())
         .arg(commands::standalone());
 

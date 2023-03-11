@@ -70,13 +70,6 @@ pub fn no_color() -> clap::Arg {
         .conflicts_with("color")
 }
 
-pub fn no_format() -> clap::Arg {
-    clap::Arg::new("no_format")
-        .long("no-format")
-        .help("Do not format output")
-        .action(ArgAction::SetTrue)
-}
-
 pub fn output() -> clap::Arg {
     clap::Arg::new("output")
         .short('o')

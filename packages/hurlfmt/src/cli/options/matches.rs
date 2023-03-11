@@ -35,16 +35,12 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
     }
 }
 
-pub fn output_format(arg_matches: &ArgMatches) -> Result<Option<OutputFormat>, OptionsError> {
-    if has_flag(arg_matches, "no_format") {
-        Ok(None)
-    } else {
-        match get_string(arg_matches, "format").unwrap().as_str() {
-            "text" => Ok(Some(OutputFormat::Hurl)),
-            "json" => Ok(Some(OutputFormat::Json)),
-            "html" => Ok(Some(OutputFormat::Html)),
-            v => Err(OptionsError::Error(format!("Invalid output format {v}"))),
-        }
+pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsError> {
+    match get_string(arg_matches, "format").unwrap().as_str() {
+        "text" => Ok(OutputFormat::Hurl),
+        "json" => Ok(OutputFormat::Json),
+        "html" => Ok(OutputFormat::Html),
+        v => Err(OptionsError::Error(format!("Invalid output format {v}"))),
     }
 }
 

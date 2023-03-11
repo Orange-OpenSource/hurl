@@ -103,24 +103,19 @@ fn main() {
                 process::exit(1);
             } else {
                 let output = match opts.output_format {
-                    None => format::format_text(hurl_file, opts.color),
-                    Some(fmt) => {
-                        let output = match fmt {
-                            OutputFormat::Hurl => {
-                                let hurl_file = linter::lint_hurl_file(&hurl_file);
-                                format::format_text(hurl_file, opts.color)
-                            }
-                            OutputFormat::Json => format::format_json(&hurl_file),
-                            OutputFormat::Html => {
-                                hurl_core::format::format_html(&hurl_file, opts.standalone)
-                            }
-                        };
-                        if !output.ends_with('\n') {
-                            format!("{output}\n")
-                        } else {
-                            output
-                        }
+                    OutputFormat::Hurl => {
+                        let hurl_file = linter::lint_hurl_file(&hurl_file);
+                        format::format_text(hurl_file, opts.color)
                     }
+                    OutputFormat::Json => format::format_json(&hurl_file),
+                    OutputFormat::Html => {
+                        hurl_core::format::format_html(&hurl_file, opts.standalone)
+                    }
+                };
+                let output = if !output.ends_with('\n') {
+                    format!("{output}\n")
+                } else {
+                    output
                 };
                 write_output(output.into_bytes(), opts.output_file);
             }
