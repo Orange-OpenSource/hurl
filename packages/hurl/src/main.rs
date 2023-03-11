@@ -24,12 +24,11 @@ use std::time::Instant;
 
 use atty::Stream;
 use clap::Command;
-use colored::*;
-use hurl::report::html;
+use colored::control;
+use hurl::report::{html, junit};
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
-use hurl::{libcurl_version_info, output, report, runner};
-use report::junit;
+use hurl::{libcurl_version_info, output, runner};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -204,8 +203,8 @@ fn init_colored() {
 
 #[cfg(target_family = "windows")]
 fn init_colored() {
-    colored::control::set_override(true);
-    colored::control::set_virtual_terminal(true).expect("set virtual terminal");
+    control::set_override(true);
+    control::set_virtual_terminal(true).expect("set virtual terminal");
 }
 
 /// Unwraps a `result` or exit with message.
