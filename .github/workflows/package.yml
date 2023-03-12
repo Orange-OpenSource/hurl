@@ -29,7 +29,7 @@ jobs:
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
-        bin/install_rust_latest.sh
+        bin/install_rust.sh
     - name: Build
       run: |
         bin/release/release.sh
@@ -202,7 +202,7 @@ jobs:
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
-        bin/install_rust_latest.sh
+        bin/install_rust.sh
     - name: Environment
       run: bin/environment.sh
     - name: Build
@@ -239,7 +239,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
     - name: Build
       run: |
         brew install pkg-config

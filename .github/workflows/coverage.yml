@@ -25,7 +25,7 @@ jobs:
       run: bin/install_prerequisites_ubuntu.sh
 
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
 
     - name: Install Grcov
       run: bin/install_grcov.sh

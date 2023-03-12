@@ -43,6 +43,9 @@ jobs:
     - name: Install prerequisites
       run: bin/check/install_prerequisites.sh
 
+    - name: Check Rust version
+      run: bin/check/rust_version.py 7
+    
     - name: Rustfmt
       run: bin/check/rustfmt.sh
 

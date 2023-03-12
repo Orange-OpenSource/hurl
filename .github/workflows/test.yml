@@ -27,7 +27,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
     - name: Build
       run: |
         bin/release/release.sh
@@ -57,7 +57,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests units
@@ -96,7 +96,7 @@ jobs:
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests units
@@ -137,7 +137,7 @@ jobs:
           bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install Rust"
-          bin/install_rust_latest.sh
+          bin/install_rust.sh
           echo "::endgroup::"
           echo "::group::Tests"
           bin/test/test.sh
@@ -171,7 +171,7 @@ jobs:
           bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install Rust"
-          bin/install_rust_latest.sh
+          bin/install_rust.sh
           echo "::endgroup::"
           echo "::group::Tests"
           bin/test/test.sh
@@ -211,7 +211,7 @@ jobs:
           bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install Rust"
-          bin/install_rust_latest.sh
+          bin/install_rust.sh
           echo "::endgroup::"
           echo "::group::Tests"
           bin/test/test.sh
@@ -241,7 +241,7 @@ jobs:
     - name: Environment
       run: bin/environment.sh
     - name: Install Rust
-      run: bin/install_rust_latest.sh
+      run: bin/install_rust.sh
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
     - name: Tests units
