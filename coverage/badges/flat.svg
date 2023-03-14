@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink" width="96" height="20" role="img" aria-label="coverage: 78%">
-    <title>coverage: 78%</title>
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="96" height="20" role="img" aria-label="coverage: 77%">
+    <title>coverage: 77%</title>
     <linearGradient id="s" x2="0" y2="100%">
         <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
         <stop offset="1" stop-opacity=".1"/>
@@ -16,8 +16,8 @@
     <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
         <text aria-hidden="true" x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="510">coverage</text>
         <text x="315" y="140" transform="scale(.1)" fill="#fff" textLength="510">coverage</text>
-        <text aria-hidden="true" x="775" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="250">78%</text>
-        <text x="775" y="140" transform="scale(.1)" fill="#fff" textLength="250">78%</text>
+        <text aria-hidden="true" x="775" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="250">77%</text>
+        <text x="775" y="140" transform="scale(.1)" fill="#fff" textLength="250">77%</text>
     </g>
     <script xmlns=""/>
 </svg>

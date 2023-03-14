@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink" width="99" height="20" role="img" aria-label="Coverage: 78%">
-    <title>Coverage: 78%</title>
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="99" height="20" role="img" aria-label="Coverage: 77%">
+    <title>Coverage: 77%</title>
     <style>a:hover #llink{fill:url(#b);stroke:#ccc}a:hover #rlink{fill:#4183c4}</style>
     <linearGradient id="a" x2="0" y2="100%">
         <stop offset="0" stop-color="#fcfcfc" stop-opacity="0"/>
@@ -20,8 +20,8 @@
         <rect id="llink" stroke="#d5d5d5" fill="url(#a)" x=".5" y=".5" width="61" height="19" rx="2"/>
         <text aria-hidden="true" x="305" y="150" fill="#fff" transform="scale(.1)" textLength="510">Coverage</text>
         <text x="305" y="140" transform="scale(.1)" textLength="510">Coverage</text>
-        <text aria-hidden="true" x="825" y="150" fill="#fff" transform="scale(.1)" textLength="230">78%</text>
-        <text id="rlink" x="825" y="140" transform="scale(.1)" textLength="230">78%</text>
+        <text aria-hidden="true" x="825" y="150" fill="#fff" transform="scale(.1)" textLength="230">77%</text>
+        <text id="rlink" x="825" y="140" transform="scale(.1)" textLength="230">77%</text>
     </g>
     <script xmlns=""/>
 </svg>
