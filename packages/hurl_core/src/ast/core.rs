@@ -887,6 +887,8 @@ pub struct Filter {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FilterValue {
     Count,
+    DaysAfterNow,
+    DaysBeforeNow,
     Format {
         space0: Whitespace,
         fmt: Template,

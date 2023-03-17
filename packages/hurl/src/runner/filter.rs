@@ -17,7 +17,7 @@
  */
 use std::collections::HashMap;
 
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, Utc};
 use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
 use percent_encoding::AsciiSet;
 
@@ -49,6 +49,8 @@ fn eval_filter(
 ) -> Result<Value, Error> {
     match &filter.value {
         FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
+        FilterValue::DaysAfterNow => eval_days_after_now(value, &filter.source_info, in_assert),
+        FilterValue::DaysBeforeNow => eval_days_before_now(value, &filter.source_info, in_assert),
         FilterValue::Format { fmt, .. } => {
             eval_format(value, fmt, variables, &filter.source_info, in_assert)
         }
@@ -125,6 +127,42 @@ fn eval_count(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<V
         Value::List(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
         Value::Nodeset(size) => Ok(Value::Integer(*size as i64)),
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+fn eval_days_after_now(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
+    match value {
+        Value::Date(value) => {
+            let diff = value.signed_duration_since(Utc::now());
+            Ok(Value::Integer(diff.num_days()))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+fn eval_days_before_now(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
+    match value {
+        Value::Date(value) => {
+            let diff = Utc::now().signed_duration_since(*value);
+            Ok(Value::Integer(diff.num_days()))
+        }
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -347,6 +385,7 @@ fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<
 pub mod tests {
     use chrono::offset::Utc;
     use chrono::prelude::*;
+    use chrono::Duration;
     use hurl_core::ast::{FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
 
     use super::*;
@@ -404,6 +443,54 @@ pub mod tests {
         assert_eq!(
             error.inner,
             RunnerError::FilterInvalidInput("boolean".to_string())
+        );
+    }
+
+    #[test]
+    pub fn eval_filter_days_after_before_now() {
+        let variables = HashMap::new();
+
+        let now = Utc::now();
+        assert_eq!(
+            eval_filter(
+                &Filter {
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    value: FilterValue::DaysAfterNow,
+                },
+                &Value::Date(now),
+                &variables,
+                false,
+            )
+            .unwrap(),
+            Value::Integer(0)
+        );
+
+        let now_plus_30hours = now + Duration::hours(30);
+        assert_eq!(
+            eval_filter(
+                &Filter {
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    value: FilterValue::DaysAfterNow,
+                },
+                &Value::Date(now_plus_30hours),
+                &variables,
+                false,
+            )
+            .unwrap(),
+            Value::Integer(1)
+        );
+        assert_eq!(
+            eval_filter(
+                &Filter {
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    value: FilterValue::DaysBeforeNow,
+                },
+                &Value::Date(now_plus_30hours),
+                &variables,
+                false,
+            )
+            .unwrap(),
+            Value::Integer(-1)
         );
     }
 

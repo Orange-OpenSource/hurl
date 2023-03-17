@@ -1148,6 +1148,12 @@ impl Htmlable for FilterValue {
     fn to_html(&self) -> String {
         match self {
             FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
+            FilterValue::DaysAfterNow => {
+                "<span class=\"filter-type\">daysAfterNow</span>".to_string()
+            }
+            FilterValue::DaysBeforeNow => {
+                "<span class=\"filter-type\">daysBeforeNow</span>".to_string()
+            }
             FilterValue::Format { space0, fmt } => {
                 let mut buffer = "<span class=\"filter-type\">format</span>".to_string();
                 buffer.push_str(space0.to_html().as_str());

@@ -52,6 +52,8 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     let value = choice(
         &[
             count_filter,
+            days_after_now_filter,
+            days_before_now_filter,
             format_filter,
             html_decode_filter,
             html_encode_filter,
@@ -87,6 +89,16 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
 fn count_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("count", reader)?;
     Ok(FilterValue::Count)
+}
+
+fn days_after_now_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("daysAfterNow", reader)?;
+    Ok(FilterValue::DaysAfterNow)
+}
+
+fn days_before_now_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("daysBeforeNow", reader)?;
+    Ok(FilterValue::DaysBeforeNow)
 }
 
 fn format_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
