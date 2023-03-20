@@ -4,6 +4,8 @@ import re
 import test_lint
 import test_format
 import test_hurl
+import test_script
+import platform
 
 
 def get_files(glob_expr):
@@ -32,6 +34,13 @@ def main():
         + get_files("ssl/*.hurl")
         if accept(f)
     ]
+    # Run test scripts
+    extension = "ps1" if platform.system() == "Windows" else "sh"
+    script_files = get_files("tests_ok/*." + extension) + get_files(
+        "tests_failed/*." + extension
+    )
+    for f in sorted(script_files):
+        test_script.test(f)
 
     print("test integration ok!")
 
