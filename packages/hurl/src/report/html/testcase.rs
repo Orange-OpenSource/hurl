@@ -15,13 +15,8 @@
  * limitations under the License.
  *
  */
-use std::io::Write;
-use std::path::Path;
-
-use hurl_core::parser;
 use uuid::Uuid;
 
-use super::Error;
 use crate::runner::HurlResult;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -42,32 +37,5 @@ impl Testcase {
             time_in_ms: hurl_result.time_in_ms,
             success: hurl_result.success,
         }
-    }
-
-    /// Exports a [`Testcase`] to HTML.
-    ///
-    /// For the moment, it's just an export of this HTML file, with syntax colored.
-    pub fn write_html(&self, content: &str, dir_path: &Path) -> Result<(), Error> {
-        let output_file = dir_path.join("store").join(format!("{}.html", self.id));
-
-        let parent = output_file.parent().expect("a parent");
-        std::fs::create_dir_all(parent).unwrap();
-        let mut file = match std::fs::File::create(&output_file) {
-            Err(why) => {
-                return Err(Error {
-                    message: format!("Issue writing to {}: {:?}", output_file.display(), why),
-                });
-            }
-            Ok(file) => file,
-        };
-        let hurl_file = parser::parse_hurl_file(content).unwrap();
-        let s = hurl_core::format::format_html(&hurl_file, true);
-
-        if let Err(why) = file.write_all(s.as_bytes()) {
-            return Err(Error {
-                message: format!("Issue writing to {}: {:?}", output_file.display(), why),
-            });
-        }
-        Ok(())
     }
 }

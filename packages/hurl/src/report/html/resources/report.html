@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Report</title>
+    <link rel="stylesheet" type="text/css" href="report.css">
+</head>
+<body>
+<div class="container">
+    <h2>Report</h2>
+    <div class="summary">
+        <div class="date">{now}</div>
+        <div class="count">Executed: {count_total} (100%)</div>
+        <div class="count">Succeeded: {count_success} ({percentage_success})</div>
+        <div class="count">Failed: {count_failure} ({percentage_failure})</div>
+    </div>
+    <table>
+        <thead>
+        <td>File</td>
+        <td>Status</td>
+        <td>Duration</td>
+        </thead>
+        <tbody>
+        {rows}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.report-nav {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.report-nav-links {
+    margin-bottom: 20px;
+}
+
+.report-nav a {
+    color: royalblue;
+    margin-right: 20px;
+}
+
+.report-nav-summary {
+    font-size: 1.25rem;
+}
+
+.file-container {
+    display: flex;
+    padding: 0;
+    border: solid 1px #dcdcde;
+}
+
+.line-numbers {
+    text-align: right;
+    padding: 8px 10px;
+    border-right: solid 1px #dcdcde;
+    background: #fbfafd;
+}
+
+.line-numbers a {
+    color: #89888d;
+    text-decoration: none;
+}
+
+.line-numbers a:hover {
+    text-decoration: underline;
+}
+
+.file {
+    padding: 8px 10px;
+    overflow: auto;
+    overflow-y: hidden;
+}
+
+.success, .success a {
+    color: green;
+}
+
+.failure, .failure a {
+    color: red;
+}

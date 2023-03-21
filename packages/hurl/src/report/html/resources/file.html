@@ -1,0 +1,30 @@
+<!DOCTYPE "html">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{filename}</title>
+    <style>
+        {file_css}
+        {hurl_css}
+    </style>
+<body>
+<div>
+    <div class="container">
+        <div class="report-nav">
+            <div class="report-nav-links"><a href="../index.html">Report</a></div>
+            <table class="report-nav-summary">
+                <tbody>
+                    <tr><td>File:</td><td><a href="{href}">{filename}</a></td></tr>
+                    <tr><td>Status:</td><td>{status}</td></tr>
+                    <tr><td>Duration:</td><td>{duration} ms</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="file-container">
+            <div class="line-numbers">{lines_div}</div>
+            <div class="file">{file_div}</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -183,10 +183,13 @@ pub fn run(
         // If we're going to retry the entry, we log error only in verbose. Otherwise,
         // we log error on stderr.
         for e in &entry_result.errors {
-            logger.test_erase_line();
             if retry {
-                logger.debug_error(content, e);
+                if logger.verbose {
+                    logger.test_erase_line();
+                    logger.debug_error(content, e);
+                }
             } else {
+                logger.test_erase_line();
                 logger.error_rich(content, e);
             }
         }

@@ -33,6 +33,10 @@ pub fn format(hurl_file: &HurlFile, standalone: bool) -> String {
     }
 }
 
+pub fn hurl_css() -> String {
+    include_str!("hurl.css").to_string()
+}
+
 fn format_standalone(hurl_file: &HurlFile) -> String {
     let css = include_str!("hurl.css");
     let body = hurl_file.to_html();

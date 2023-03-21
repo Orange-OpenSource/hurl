@@ -17,5 +17,6 @@
  */
 
 pub use self::html::format as format_html;
+pub use self::html::hurl_css;
 
 mod html;
