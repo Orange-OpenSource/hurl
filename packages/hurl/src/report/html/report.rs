@@ -50,21 +50,6 @@ pub fn write_report(dir_path: &Path, testcases: &[Testcase]) -> Result<(), Error
             message: format!("Issue writing to {}: {:?}", file_path.display(), why),
         });
     }
-
-    let file_path = dir_path.join("report.css");
-    let mut file = match std::fs::File::create(&file_path) {
-        Err(why) => {
-            return Err(Error {
-                message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-            });
-        }
-        Ok(file) => file,
-    };
-    if let Err(why) = file.write_all(include_bytes!("resources/report.css")) {
-        return Err(Error {
-            message: format!("Issue writing to {}: {:?}", file_path.display(), why),
-        });
-    }
     Ok(())
 }
 
@@ -75,16 +60,16 @@ fn create_html_index(now: &str, hurl_results: &[HTMLResult]) -> String {
     let count_success = hurl_results.iter().filter(|result| result.success).count();
     let percentage_success = percentage(count_success, count_total);
     let percentage_failure = percentage(count_failure, count_total);
-
+    let css = include_str!("resources/report.css");
     let rows = hurl_results
         .iter()
         .map(create_html_table_row)
         .collect::<Vec<String>>()
         .join("");
-
     format!(
         include_str!("resources/report.html"),
         now = now,
+        css = css,
         count_total = count_total,
         count_success = count_success,
         count_failure = count_failure,
