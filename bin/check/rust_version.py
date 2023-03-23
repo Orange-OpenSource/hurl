@@ -28,7 +28,7 @@ def main():
 
     latest_version, date = get_latest_release()
     current_version = get_current_version()
-    if latest_version != current_version:
+    if current_version < latest_version:
         sys.stderr.write(
             "Rust version must be updated from %s to the latest version %s\n"
             % (current_version, latest_version)
