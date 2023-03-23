@@ -1,3 +1,34 @@
+[3.0.0 (2023-03-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.0)
+========================================================================================================================
+
+Thanks to
+[@DannyBen](https://github.com/DannyBen),
+
+
+Enhancements:
+
+* Add certificate query [#1384](https://github.com/Orange-OpenSource/hurl/issues/1384)
+
+* Add daysAfterNow / daysBeforeNow filters [#1309](https://github.com/Orange-OpenSource/hurl/issues/1309)
+
+* Use long options for curl command [#1236](https://github.com/Orange-OpenSource/hurl/issues/1236)
+
+* Add progress bar for tests [#1224](https://github.com/Orange-OpenSource/hurl/issues/1224)
+
+* Add Date value/filters [#1206](https://github.com/Orange-OpenSource/hurl/issues/1206)
+
+* Implement isEmpty predicate [#849](https://github.com/Orange-OpenSource/hurl/issues/849)
+
+
+Bugs Fixed:
+
+* Add meta utf-8 charset to HTML report [#1366](https://github.com/Orange-OpenSource/hurl/issues/1366)
+
+* Use an uuid as identifier for the HTML Hurl file run report [#1285](https://github.com/Orange-OpenSource/hurl/issues/1285) [#1283](https://github.com/Orange-OpenSource/hurl/issues/1283)
+
+* Improve HTML export [#1059](https://github.com/Orange-OpenSource/hurl/issues/1059)
+
+
 [2.0.1 (2023-02-01)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#2.0.1)
 ========================================================================================================================
 
