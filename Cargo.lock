@@ -159,9 +159,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.1.11"
+version = "4.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42dfd32784433290c51d92c438bb72ea5063797fc3cc9a21a8c4346bebbb2098"
+checksum = "76e21918af71fb4bcd813230cf549e33d14f73d0326b932b630ce2930332b131"
 dependencies = [
  "bitflags 2.0.2",
  "clap_lex",
