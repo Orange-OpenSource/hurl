@@ -1,4 +1,0 @@
---cacert
-ssl/ca/cert.pem
---ssl-no-revoke
-

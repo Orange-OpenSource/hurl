@@ -29,15 +29,15 @@ def main():
     # Dynamic run (with server)
     [
         test_hurl.test(f)
-        for f in get_files("tests_ok/*.hurl")
-        + get_files("tests_failed/*.hurl")
-        + get_files("ssl/*.hurl")
+        for f in get_files("tests_ok/*.hurl") + get_files("tests_failed/*.hurl")
         if accept(f)
     ]
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
-    script_files = get_files("tests_ok/*." + extension) + get_files(
-        "tests_failed/*." + extension
+    script_files = (
+        get_files("tests_ok/*." + extension)
+        + get_files("tests_failed/*." + extension)
+        + get_files("ssl/*." + extension)
     )
     for f in sorted(script_files):
         test_script.test(f)
