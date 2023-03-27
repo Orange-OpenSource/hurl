@@ -279,12 +279,12 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ inputs.branch }}
-#    - name: Cache
-#      uses: actions/cache@v3
-#      with:
-#        path: C:\vcpkg\installed
-#        key: ${{ runner.os }}-test-windows-x64-${{ github.sha }}
-#        restore-keys: ${{ runner.os }}-test-windows-x64-
+    - name: Manage vcpkg cache
+      uses: actions/cache@v3
+      with:
+        path: C:\vcpkg\installed
+        key: ${{ runner.os }}-test-windows-x64-${{ github.sha }}
+        restore-keys: ${{ runner.os }}-test-windows-x64-
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
