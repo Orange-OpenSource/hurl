@@ -28,11 +28,11 @@ def test(script_file: str):
     script_file -- the script file to run
     """
     cmd = (
-        "pwsh " + script_file + " ; exit $LASTEXITCODE"
+        "pwsh " + script_file
         if script_file.endswith("ps1")
         else script_file
     )
-    # subprocess.run(['pwsh ' + script_file + " ; exit $LASTEXITCODE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # subprocess.run(['pwsh ' + script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print(cmd)
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
