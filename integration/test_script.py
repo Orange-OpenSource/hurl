@@ -28,11 +28,10 @@ def test(script_file: str):
     script_file -- the script file to run
     """
     cmd = (
-        "powershell.exe -Command " + script_file + " ; exit $LASTEXITCODE"
+        "pwsh -Command " + script_file + " ; exit $LASTEXITCODE"
         if script_file.endswith("ps1")
         else script_file
     )
-    # subprocess.run(['powershell', '-Command', script_file + " ; exit $LASTEXITCODE"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print(cmd)
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
