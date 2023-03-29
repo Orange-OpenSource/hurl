@@ -16,7 +16,7 @@ strict = []
 [dependencies]
 atty = "0.2.14"
 base64 = "0.21.0"
-clap = { version = "4.1.14", features = ["cargo", "wrap_help"] }
+clap = { version = "4.2.0", features = ["cargo", "wrap_help"] }
 colored = "2.0.0"
 hurl_core = { version = "3.0.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.7.3"
