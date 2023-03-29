@@ -56,7 +56,6 @@ def test_exit_code(f, result) -> int:
             print(stderr)
         stdout = decode_string(result.stdout).strip()
         if stdout != "":
-            sys.setdefaultencoding("utf-8")
             sys.stdout.write(stdout + "\n")
 
         sys.exit(1)

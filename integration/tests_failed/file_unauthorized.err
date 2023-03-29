@@ -25,3 +25,4 @@ error: Unauthorized file access
 19 | file1: file,../secret.txt;
    |             ^^^^^^^^^^^^^ unauthorized access to file ../secret.txt, check --file-root option
    |
+

@@ -4,3 +4,4 @@ error: Invalid JSONPath
  4 | jsonpath "" equals false
    |          ^^ the JSONPath expression '' is not valid
    |
+

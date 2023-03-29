@@ -1,6 +1,0 @@
---retry
---retry-max-count
-5
---retry-interval
-100
---verbose

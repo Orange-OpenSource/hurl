@@ -27,11 +27,7 @@ def main():
     [test_hurl.test(f) for f in get_files("tests_error_parser/*.hurl")]
 
     # Dynamic run (with server)
-    [
-        test_hurl.test(f)
-        for f in get_files("tests_ok/*.hurl") + get_files("tests_failed/*.hurl")
-        if accept(f)
-    ]
+    [test_hurl.test(f) for f in get_files("tests_ok/*.hurl") if accept(f)]
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (
