@@ -14,5 +14,5 @@ cd integration || exit
 ./integration.py
 ./test_curl_commands.sh 
 ./test_html_output.py tests_ok/*.html tests_failed/*.html
-./report.py
+#./report.py TODO: review test report
 

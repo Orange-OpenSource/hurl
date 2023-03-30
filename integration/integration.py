@@ -26,8 +26,6 @@ def main():
     [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
     [test_hurl.test(f) for f in get_files("tests_error_parser/*.hurl")]
 
-    # Dynamic run (with server)
-    [test_hurl.test(f) for f in get_files("tests_ok/*.hurl") if accept(f)]
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (

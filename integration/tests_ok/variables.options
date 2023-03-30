@@ -1,6 +1,0 @@
---variables-file
-tests_ok/variables0.properties
---variables-file
-tests_ok/variables1.properties
---variable
-female=true
