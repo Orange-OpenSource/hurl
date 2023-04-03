@@ -163,7 +163,7 @@ impl Htmlable for Section {
         buffer.push_str(self.space0.to_html().as_str());
         buffer.push_str(
             format!(
-                "<span class=\"line section-header\">[{}]</span>",
+                "<span class=\"line\"><span class=\"section-header\">[{}]</span></span>",
                 self.name()
             )
             .as_str(),

@@ -17,7 +17,7 @@
  */
 use uuid::Uuid;
 
-use crate::runner::HurlResult;
+use crate::runner::{Error, HurlResult};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -25,6 +25,7 @@ pub struct Testcase {
     pub filename: String,
     pub success: bool,
     pub time_in_ms: u128,
+    pub errors: Vec<Error>,
 }
 
 impl Testcase {
@@ -36,6 +37,11 @@ impl Testcase {
             filename: filename.to_string(),
             time_in_ms: hurl_result.time_in_ms,
             success: hurl_result.success,
+            errors: hurl_result
+                .entries
+                .iter()
+                .flat_map(|e| e.errors.clone())
+                .collect(),
         }
     }
 }

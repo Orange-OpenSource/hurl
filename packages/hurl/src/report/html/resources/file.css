@@ -11,7 +11,6 @@ body {
     margin-right: auto;
 }
 
-
 .report-nav {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -26,8 +25,37 @@ body {
     margin-right: 20px;
 }
 
-.report-nav-summary {
-    font-size: 1.25rem;
+.report-nav-summary > div {
+    display: flex;
+}
+
+.report-nav-summary .item-name {
+    min-width: 100px;
+    font-weight: bold;
+}
+
+.error {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-left: red 4px solid;
+}
+
+.error-desc {
+    background: #f5f5f5;
+}
+
+.error-desc pre {
+    font-size: 0.8rem;
+    padding: 0.8rem;
+    overflow-x: auto;
+}
+
+.line-error {
+    border-bottom: red 2px dashed;
+}
+
+.line-error::after {
+    content: " ⛔️"
 }
 
 .file-container {

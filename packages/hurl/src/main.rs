@@ -238,6 +238,9 @@ fn create_junit_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
 
 /// Create an HTML report for this run.
 fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), cli::CliError> {
+    // We ensure that the containing folder exists.
+    std::fs::create_dir_all(dir_path.join("store")).unwrap();
+
     let mut testcases = vec![];
     for run in runs.iter() {
         let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
