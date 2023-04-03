@@ -56,4 +56,6 @@ echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + 
 (python3 ssl/server.py 8003 ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 || true) &
 check_listen_port "ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
-
+echo -e "\n------------------ Starting squid proxy server"
+squid3 -z
+service squid3 restart
