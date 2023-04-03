@@ -6,5 +6,4 @@ sudo apt update
 sudo apt install bash libcurl4-openssl-dev libxml2-utils netcat squid
 python3 -m pip install --upgrade pip --quiet
 
-squid3 -z
-service squid3 restart
+service squid restart
