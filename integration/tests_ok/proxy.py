@@ -4,5 +4,5 @@ from flask import request
 
 @app.route("/proxy")
 def proxy():
-    assert request.headers["From-Proxy"] == "Hello"
+    assert request.headers["Proxy-Connection"] == "Keep-Alive"
     return ""

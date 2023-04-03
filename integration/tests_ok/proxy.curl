@@ -1,1 +1,1 @@
-curl --proxy 'localhost:8888' 'http://localhost:8000/proxy'
+curl --proxy 'localhost:3128' 'http://localhost:8000/proxy'

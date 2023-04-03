@@ -22,3 +22,5 @@ if ($LASTEXITCODE) { Throw }
 # update pip
 python -m pip install --upgrade pip --quiet
 if ($LASTEXITCODE) { Throw }
+
+choco install squid

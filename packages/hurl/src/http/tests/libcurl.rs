@@ -1072,9 +1072,9 @@ fn test_cookie_file() {
 
 #[test]
 fn test_proxy() {
-    // mitmproxy listening on port 8888
+    // proxy listening on port 3128
     let options = ClientOptions {
-        proxy: Some("localhost:8888".to_string()),
+        proxy: Some("localhost:3128".to_string()),
         ..Default::default()
     };
     let context_dir = ContextDir::default();
@@ -1084,7 +1084,7 @@ fn test_proxy() {
     let request_spec = default_get_request("http://localhost:8000/proxy");
     assert_eq!(
         client.curl_command_line(&request_spec, &context_dir, &options),
-        "curl --proxy 'localhost:8888' 'http://localhost:8000/proxy'".to_string()
+        "curl --proxy 'localhost:3128' 'http://localhost:8000/proxy'".to_string()
     );
     let call = client.execute(&request_spec, &options, &logger).unwrap();
     let request = &call.request;

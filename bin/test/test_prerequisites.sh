@@ -56,7 +56,4 @@ echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + 
 (python3 ssl/server.py 8003 ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 || true) &
 check_listen_port "ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
-echo -e "\n------------------ Starting mitmdump"
-(mitmdump --listen-host 127.0.0.1 --listen-port 8888 --modify-header "/From-Proxy/Hello" > build/mitmproxy.log 2>&1 ||true) &
-check_listen_port "mitmdump" 8888 || cat_and_exit_err build/mitmproxy.log
 
