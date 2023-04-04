@@ -57,7 +57,7 @@ echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + 
 check_listen_port "ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
 echo -e "\n------------------ Starting squid"
-(squid > build/squid.log 2>&1 & || true) &
+(squid > build/squid.log 2>&1 || true) &
 check_listen_port "squid" 3128 || cat_and_exit_err build/squid.log
 
 
