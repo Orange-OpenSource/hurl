@@ -14,10 +14,10 @@ if ($LASTEXITCODE) { Throw }
 cd $project_root_path\integration
 New-Item -ItemType Directory -Force -Path build
 
-#Start-Process powershell -WindowStyle Hidden { mitmdump --listen-port 8888 --modify-header "/From-Proxy/Hello" 2>&1 > build\mitmdump.log }
-#if ($LASTEXITCODE) { Throw }
-#sleep 5
-#if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:8888) {powershell write-host -foregroundcolor Green "mitmdump is up"} else {powershell write-host -foregroundcolor Red "mitmdump is down" ; exit 1}
+Start-Process powershell -WindowStyle Hidden { squid 2>&1 > build\squid.log }
+if ($LASTEXITCODE) { Throw }
+sleep 5
+if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:3128) {powershell write-host -foregroundcolor Green "squid is up"} else {powershell write-host -foregroundcolor Red "squid is down" ; exit 1}
 
 Start-Process powershell -WindowStyle Hidden { python server.py 2>&1 > build\server.log }
 if ($LASTEXITCODE) { Throw }
