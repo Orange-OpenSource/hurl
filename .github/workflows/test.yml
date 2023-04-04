@@ -71,12 +71,12 @@ jobs:
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: tests-ubuntu-${{ matrix.rust }}-artifacts
+        name: tests-ubuntu-latest-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
           ./**/report/*.json
           ./**/report/*.xml
-          /var/log/squid/*.log
 
   test-ubuntu-x64-20-04:
     runs-on: ubuntu-20.04
@@ -111,9 +111,10 @@ jobs:
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: tests-ubuntu-${{ matrix.rust }}-artifacts
+        name: tests-ubuntu-20-04-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
           ./**/report/*.json
           ./**/report/*.xml
 
@@ -150,6 +151,7 @@ jobs:
         name: tests-archlinux-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-docker-fedora-x64:
     runs-on: ubuntu-latest
@@ -188,6 +190,7 @@ jobs:
         name: tests-fedora-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-docker-alpine-x64:
     runs-on: ubuntu-latest
@@ -228,6 +231,7 @@ jobs:
         name: tests-alpine-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-macos-x64:
     runs-on: macos-latest
@@ -263,6 +267,7 @@ jobs:
         name: tests-macos-${{ matrix.rust }}-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-windows-x64:
     runs-on: windows-latest
