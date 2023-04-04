@@ -57,8 +57,12 @@ echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + 
 check_listen_port "ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
 echo -e "\n------------------ Starting squid"
-(squid > build/squid.log 2>&1 || true) &
+squid_cache_log=${PWD}/build/squid.cache.log
+squid_access_log=${PWD}/build/squid.access.log
+touch "${squid_cache_log}" "${squid_access_log}"
+chmod 666 "${squid_cache_log}" "${squid_access_log}"
+echo "cache_log ${squid_cache_log}" >> /etc/squid/squid.conf
+echo "access_log stdio:${squid_access_log} squid" >> /etc/squid/squid.conf
+squid -k kill >/dev/null 2>&1 || true
+(squid -d 2 -N > build/squid.log 2>&1 || true) &
 check_listen_port "squid" 3128 || cat_and_exit_err build/squid.log
-
-
-
