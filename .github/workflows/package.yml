@@ -99,6 +99,7 @@ jobs:
         name: test-generic-linux-package-docker-debian-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-generic-linux-docker-archlinux-x64:
     needs: package-generic-linux-x64
@@ -143,6 +144,7 @@ jobs:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   test-generic-linux-docker-fedora-x64:
     needs: package-generic-linux-x64
@@ -187,6 +189,7 @@ jobs:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
         path: |
           ./**/*.log
+          /var/log/squid/*.log
 
   package-deb-x64:
     runs-on: ubuntu-20.04
