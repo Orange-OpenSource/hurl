@@ -76,6 +76,7 @@ jobs:
           ./**/*.log
           ./**/report/*.json
           ./**/report/*.xml
+          /var/log/squid/*.log
 
   test-ubuntu-x64-20-04:
     runs-on: ubuntu-20.04
