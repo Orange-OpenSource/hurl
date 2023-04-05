@@ -1,12 +1,39 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multipart-form-data</span></span>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># On can use the dedicated [MultipartFormData] section</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multipart-form-data</span></span>
 <span class="line section-header">[MultipartFormData]</span>
 <span class="line"><span class="string">key1</span><span>:</span> <span class="string">value1</span></span>
 <span class="line"><span class="string">upload1</span>: file,<span class="filename">data.txt</span>;</span>
 <span class="line"><span class="string">upload2</span>: file,<span class="filename">data.html</span>;</span>
 <span class="line"><span class="string">upload3</span>: file,<span class="filename">data.txt</span>; <span class="string">text/html</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-</span></span><span class="line"></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
+<span class="line"></span><span class="comment"># Or, as an alternative to the [MultipartFormData] section, we can just use</span>
+<span class="line"></span><span class="comment"># a multiline string body, constructing boundaries by hand (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST).</span>
+<span class="line"></span><span class="comment"># The downside of this method is that we must inline the files content (for the moment).</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multipart-form-data</span></span>
+<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">multipart/form-data; boundary="boundary"</span></span>
+<span class="multiline"><span class="line">```</span>
+<span class="line">--boundary</span>
+<span class="line">Content-Disposition: form-data; name="key1"</span>
 <span class="line"></span>
-</code></pre>
+<span class="line">value1</span>
+<span class="line">--boundary</span>
+<span class="line">Content-Disposition: form-data; name="upload1"; filename="data.txt"</span>
+<span class="line">Content-Type: text/plain</span>
+<span class="line"></span>
+<span class="line">Hello World!</span>
+<span class="line">--boundary</span>
+<span class="line">Content-Disposition: form-data; name="upload2"; filename="data.html"</span>
+<span class="line">Content-Type: text/html</span>
+<span class="line"></span>
+<span class="line">&lt;div&gt;Hello &lt;b&gt;World&lt;/b&gt;!&lt;/div&gt;</span>
+<span class="line">--boundary</span>
+<span class="line">Content-Disposition: form-data; name="upload3"; filename="data.txt"</span>
+<span class="line">Content-Type: text/html</span>
+<span class="line"></span>
+<span class="line">Hello World!</span>
+<span class="line">--boundary--</span>
+<span class="line">```</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span></span></code></pre>

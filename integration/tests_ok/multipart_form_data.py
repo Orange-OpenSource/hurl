@@ -1,4 +1,3 @@
-#  curl -v -F key1=value1 -F upload1=@tests_ok/data.txt -Fupload2=@tests_ok/data.html http://localhost:8000/multipart-form-data
 from app import app
 from flask import request
 

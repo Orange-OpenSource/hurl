@@ -113,6 +113,36 @@ field3: file,example.zip; application/zip
 
 [Doc](/docs/request.md#multipart-form-data)
 
+Multipart forms can also be sent with a [multiline string body]:
+
+~~~hurl
+POST https://example.org/upload
+Content-Type: multipart/form-data; boundary="boundary"
+```
+--boundary
+Content-Disposition: form-data; name="key1"
+
+value1
+--boundary
+Content-Disposition: form-data; name="upload1"; filename="data.txt"
+Content-Type: text/plain
+
+Hello World!
+--boundary
+Content-Disposition: form-data; name="upload2"; filename="data.html"
+Content-Type: text/html
+
+<div>Hello <b>World</b>!</div>
+--boundary--
+```
+~~~
+
+In that case, files have to be inlined in the Hurl file.
+
+[Doc](/docs/request.md#multiline-string-body)
+
+
+
 ### Posting a JSON Body
 
 With an inline JSON:
@@ -468,6 +498,7 @@ bytes startsWith hex,efbbbf;
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
 [XML multiline string body]: /docs/request.md#multiline-string-body
+[multiline string body]: /docs/request.md#multiline-string-body
 [predicates]: /docs/asserting-response.md#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
