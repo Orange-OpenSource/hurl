@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- integration tests -----"
+write-host -foregroundcolor Cyan "----- integration tests -----"
 
 $actual_dir=(Get-Location).Path
 $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
@@ -20,3 +20,4 @@ python integration.py
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
+

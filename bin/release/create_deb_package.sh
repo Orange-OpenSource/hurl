@@ -38,7 +38,7 @@ dpkg --build target/debian
 
 
 echo "Check Lintian"
-sudo apt install lintian
+sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload

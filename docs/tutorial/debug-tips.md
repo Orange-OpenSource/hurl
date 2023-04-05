@@ -427,14 +427,14 @@ $ hurl -i --to-entry 2 basic.hurl
 
 Finally, you can use a proxy between Hurl and your server to inspect requests and responses.
 
-For instance, with [mitmproxy]:
+For instance, with [squid]:
 
-1. First, launch mitmproxy, it will listen to connections on 8888 port
+1. First, launch proxy listenning on port 3128
 
     ```shell
-$ mitmweb -p 8888 --web-port 8889 --web-open-browser
-Web server listening at http://127.0.0.1:8889/
-Proxy server listening at http://*:8888
+$ squid_conf="http_access allow all\nhttp_port 3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
+$ (echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1) &
+2023/04/06 07:58:23| Starting Squid
     ```
 
 2. Then, run Hurl with [`-x/--proxy` option]
@@ -443,15 +443,11 @@ Proxy server listening at http://*:8888
 $ hurl --proxy localhost:8888 basic.hurl
     ```
 
-The web interface of mitmproxy allows you to inspect, intercept any requests run by Hurl, and see
-the returned response to Hurl.
-
-
 [`-v/--verbose` option]: /docs/manual.md#verbose
 [`--very-verbose`]: /docs/manual.md#very-verbose
 [`--verbose`]: /docs/manual.md#verbose
 [`--interactive` option]: /docs/manual.md#interactive
 [`-i/--include` option]: /docs/manual.md#include
 [`--to-entry` option]: /docs/manual.md#to-entry
-[mitmproxy]: https://mitmproxy.org
+[squid]: https://github.com/squid-cache/squid
 [`-x/--proxy` option]: /docs/manual.md#proxy

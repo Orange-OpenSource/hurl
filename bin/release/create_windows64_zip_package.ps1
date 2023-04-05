@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- create windows64 zip package -----"
+write-host -foregroundcolor Cyan "----- create windows64 zip package -----"
 
 $actual_dir=(Get-Location).Path
 
@@ -14,3 +14,4 @@ Get-ChildItem -Path *.dll, *hurl.exe, *hurlfmt.exe, *.txt, ../../*.md -Exclude h
 Get-ChildItem .\*win64.zip
 
 cd $actual_dir
+

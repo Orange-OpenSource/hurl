@@ -19,8 +19,6 @@ kaitaistruct==0.10
 ldap3==2.9.1
 lxml==4.9.1
 MarkupSafe==2.1.2
-mitmproxy==9.0.1
-mitmproxy-wireguard==0.1.20
 msgpack==1.0.4
 mypy==0.971
 mypy-extensions==1.0.0

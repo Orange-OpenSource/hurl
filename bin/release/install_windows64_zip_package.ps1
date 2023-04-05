@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- install windows64 zip -----"
+write-host -foregroundcolor Cyan "----- install windows64 zip -----"
 
 $actual_dir=(Get-Location).Path
 $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
@@ -29,3 +29,4 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
+

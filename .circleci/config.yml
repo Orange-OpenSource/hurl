@@ -8,49 +8,37 @@ jobs:
     steps:
       - checkout
       - run:
-          name: environment
-          command: bin/environment.sh
-      - run:
-          name: Build
+          name: Environment
           command: |
-            export CARGO_NET_GIT_FETCH_WITH_CLI=true
-            uname -a
-            lsb_release -a
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-            source $HOME/.cargo/env
-            rustc --version
-            cargo --version
+            bin/environment.sh
+      - run:
+          name: Install prerequisites
+          command: |
+            bin/install_prerequisites_ubuntu.sh
             sudo apt update -qq
-            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev 
-            cargo build --release --verbose --locked --color always
-            target/release/hurl --version
-            curl --version
+            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev
       - run:
-          name: Tests units and integration tests
+          name: Install rust
           command: |
-            python3 -m pip install --upgrade pip --quiet
+            bin/install_rust.sh
+      - run:
+          name: Tests units
+          command: |
             bin/test/test_prerequisites.sh
-            echo "================= Tests units ================="
-            cargo build --verbose --locked --color always
-            cargo test --features strict --verbose --color always
-            mitmdump --version
-            pip3 install lxml bs4
-            echo "================= Integration tests ================="
-            export PATH="$PWD/target/debug:$PATH"
-            cd integration
-            python3 ./integration.py
-            ./test_curl_commands.sh $(find ./tests_ok -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
-            python3 ./test_html_output.py tests_ok/*.html
-            ./test_curl_commands.sh $(find ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
-            python3 ./test_html_output.py tests_failed/*.html
+            bin/test/test_unit.sh
+      - run:
+          name: Build release
+          command: |
+            bin/release/release.sh
+      - run:
+          name: Integration tests
+          command: |
+            PATH="${PWD}/target/release:${PATH}"
+            export PATH
+            bin/test/test_prerequisites.sh
+            bin/test/test_integ.sh
       - store_artifacts:
-          path: integration/mitmdump.log
-
-      - store_artifacts:
-          path: integration/server.log
-
-      - store_artifacts:
-          path: integration/server-ssl.log
+          path: integration/build/*.log
 
 workflows:
   tests-arm64:
