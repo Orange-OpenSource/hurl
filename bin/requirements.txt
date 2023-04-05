@@ -2,7 +2,6 @@ black==22.6.0
 beautifulsoup4==4.11.1
 Flask==2.0.3
 lxml==4.9.1
-mitmproxy==9.0.1
 mypy==0.971
 requests==2.28.1
 Werkzeug==2.2.3

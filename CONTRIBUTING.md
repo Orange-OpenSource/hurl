@@ -69,11 +69,11 @@ Then, you can launch our local server (used to test Hurl features):
 $ cd integration
 $ python3 server.py >server.log 2>&1 &
 $ python3 ssl/server.py >server-ssl.log 2>&1 &
-$ mitmdump --listen-host 127.0.0.1 --listen-port 8888 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
+$ mitmdump --listen-host 127.0.0.1 --listen-port 3128 --modify-header "/From-Proxy/Hello" >mitmdump.log 2>&1 &
 $ jobs
 [1]    running    python3 server.py > server.log 2>&1
 [2]  - running    python3 ssl/server.py > server-ssl.log 2>&1
-[3]  + running    mitmdump --listen-host 127.0.0.1 --listen-port 8888 --modify-header  >  2>&1
+[3]  + running    mitmdump --listen-host 127.0.0.1 --listen-port 3128 --modify-header  >  2>&1
 ```
 
 You can check [`bin/test/test_prerequisites.sh`] and [`bin/test/test_prerequisites.ps1`] for more details.

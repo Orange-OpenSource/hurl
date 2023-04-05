@@ -1,12 +1,12 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- context -----"
+write-host -foregroundcolor Cyan "----- context -----"
 
 # get windows infos
 Get-ComputerInfo -Property WindowsProductName,WindowsVersion,OsHardwareAbstractionLayer
 
-# get powershell infos
+# get pwsh infos
 (Get-Variable PSVersionTable -ValueOnly).PSVersion
 
 # get vcpkg infos
@@ -20,3 +20,4 @@ if ($LASTEXITCODE) { Throw }
 # get cargo info
 cargo --version
 if ($LASTEXITCODE) { Throw }
+

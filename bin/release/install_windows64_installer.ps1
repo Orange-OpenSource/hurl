@@ -27,3 +27,4 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
+

@@ -21,7 +21,7 @@ jobs:
             rustc --version
             cargo --version
             sudo apt update -qq
-            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev 
+            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev squid
             cargo build --release --verbose --locked --color always
             target/release/hurl --version
             curl --version
@@ -33,7 +33,6 @@ jobs:
             echo "================= Tests units ================="
             cargo build --verbose --locked --color always
             cargo test --features strict --verbose --color always
-            mitmdump --version
             pip3 install lxml bs4
             echo "================= Integration tests ================="
             export PATH="$PWD/target/debug:$PATH"
@@ -44,13 +43,7 @@ jobs:
             ./test_curl_commands.sh $(find ./tests_failed -maxdepth 1 -type f -name '*.curl' ! -name '*windows*')
             python3 ./test_html_output.py tests_failed/*.html
       - store_artifacts:
-          path: integration/mitmdump.log
-
-      - store_artifacts:
-          path: integration/server.log
-
-      - store_artifacts:
-          path: integration/server-ssl.log
+          path: integration/build/*.log
 
 workflows:
   tests-arm64:

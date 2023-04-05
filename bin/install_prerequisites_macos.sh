@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 echo "----- install prerequisite packages -----"
-pacman -Syy --noconfirm
-pacman -Sy --noconfirm bash sudo curl icu base-devel libxml2 python3 glibc openbsd-netcat squid
-python3 get-pip.py
+brew install curl pkg-config squid
+python3 -m pip install --upgrade pip --quiet
 sudo squid -k kill > /dev/null 2>&1 || true
 sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+

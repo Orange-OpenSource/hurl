@@ -429,12 +429,12 @@ Finally, you can use a proxy between Hurl and your server to inspect requests an
 
 For instance, with [mitmproxy]:
 
-1. First, launch mitmproxy, it will listen to connections on 8888 port
+1. First, launch proxy listenning on port 3128
 
     ```shell
-$ mitmweb -p 8888 --web-port 8889 --web-open-browser
-Web server listening at http://127.0.0.1:8889/
-Proxy server listening at http://*:8888
+$ squid_conf="http_access allow all\nhttp_port 3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
+$ squid -d 2 -N -f <(echo -e "${squid_conf}") 2>&1 &
+2023/04/06 07:58:23| Starting Squid
     ```
 
 2. Then, run Hurl with [`-x/--proxy` option]
