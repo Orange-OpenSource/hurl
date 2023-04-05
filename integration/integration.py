@@ -3,7 +3,6 @@ import glob
 import re
 import test_lint
 import test_format
-import test_hurl
 import test_script
 import platform
 
