@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- create windows64 installer -----"
+write-host -foregroundcolor Cyan "----- create windows64 installer -----"
 
 $actual_dir=(Get-Location).Path
 
@@ -16,3 +16,4 @@ makensis.exe /NOCD /V4 ..\..\bin\windows\hurl.nsi
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
+

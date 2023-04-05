@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- build release -----"
+write-host -foregroundcolor Cyan "----- build release -----"
 
 $actual_dir=(Get-Location).Path
 $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
@@ -34,3 +34,4 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 cd $actual_dir
+

@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
-powershell write-host -foregroundcolor Cyan "----- tests -----"
+write-host -foregroundcolor Cyan "----- tests -----"
 
 & $PSScriptRoot\test_prerequisites.ps1
 if ($LASTEXITCODE) { Throw }
