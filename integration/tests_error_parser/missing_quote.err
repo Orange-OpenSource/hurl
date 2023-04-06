@@ -4,3 +4,4 @@ error: Parsing literal
  4 | jsonpath "$.error.message" == "not found
    |                                         ^ expecting '"'
    |
+

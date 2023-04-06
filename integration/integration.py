@@ -24,13 +24,13 @@ def main():
     [test_format.test("html", f) for f in get_files("tests_ok/*.hurl")]
     [test_format.test("html", f) for f in get_files("tests_failed/*.hurl")]
     [test_lint.test(f) for f in get_files("tests_error_lint/*.hurl")]
-    [test_hurl.test(f) for f in get_files("tests_error_parser/*.hurl")]
 
     # Run test scripts
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (
         get_files("tests_ok/*." + extension)
         + get_files("tests_failed/*." + extension)
+        + get_files("tests_error_parser/*." + extension)
         + get_files("ssl/*." + extension)
     )
     for f in sorted(script_files):
