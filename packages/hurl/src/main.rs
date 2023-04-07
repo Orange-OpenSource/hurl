@@ -337,36 +337,79 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
     Ok(())
 }
 
+/// Returns the text summary of this Hurl runs.
 fn get_summary(runs: &[HurlRun], duration: u128) -> String {
     let total = runs.len();
     let success = runs.iter().filter(|r| r.hurl_result.success).count();
+    let success_percent = 100.0 * success as f32 / total as f32;
     let failed = total - success;
-    let mut s =
-        "--------------------------------------------------------------------------------\n"
-            .to_string();
-    s.push_str(format!("Executed files:  {total}\n").as_str());
-    s.push_str(
-        format!(
-            "Succeeded files: {} ({:.1}%)\n",
-            success,
-            100.0 * success as f32 / total as f32
-        )
-        .as_str(),
-    );
-    s.push_str(
-        format!(
-            "Failed files:    {} ({:.1}%)\n",
-            failed,
-            100.0 * failed as f32 / total as f32
-        )
-        .as_str(),
-    );
-    s.push_str(format!("Duration:        {duration} ms\n").as_str());
-    s
+    let failed_percent = 100.0 * failed as f32 / total as f32;
+    format!(
+        "--------------------------------------------------------------------------------\n\
+             Executed files:  {total}\n\
+             Succeeded files: {success} ({success_percent:.1}%)\n\
+             Failed files:    {failed} ({failed_percent:.1}%)\n\
+             Duration:        {duration} ms\n"
+    )
 }
 
 /// Whether or not this running in a Continuous Integration environment.
 /// Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
 fn is_ci() -> bool {
     env::var("CI").is_ok() || env::var("TF_BUILD").is_ok()
+}
+
+#[cfg(test)]
+pub mod tests {
+    use super::*;
+    use hurl::runner::EntryResult;
+
+    #[test]
+    fn create_run_summary() {
+        fn new_run(success: bool, entries_count: usize) -> HurlRun {
+            let dummy_entry = EntryResult {
+                entry_index: 0,
+                calls: vec![],
+                captures: vec![],
+                asserts: vec![],
+                errors: vec![],
+                time_in_ms: 0,
+                compressed: false,
+            };
+            HurlRun {
+                content: "".to_string(),
+                filename: "".to_string(),
+                hurl_result: HurlResult {
+                    entries: vec![dummy_entry; entries_count],
+                    time_in_ms: 0,
+                    success,
+                    cookies: vec![],
+                },
+            }
+        }
+
+        let runs = vec![new_run(true, 10), new_run(true, 20), new_run(true, 4)];
+        let duration = 128;
+        let summary = get_summary(&runs, duration);
+        assert_eq!(
+            summary,
+            "--------------------------------------------------------------------------------\n\
+             Executed files:  3\n\
+             Succeeded files: 3 (100.0%)\n\
+             Failed files:    0 (0.0%)\n\
+             Duration:        128 ms\n"
+        );
+
+        let runs = vec![new_run(true, 10), new_run(false, 10), new_run(true, 40)];
+        let duration = 200;
+        let summary = get_summary(&runs, duration);
+        assert_eq!(
+            summary,
+            "--------------------------------------------------------------------------------\n\
+            Executed files:  3\n\
+            Succeeded files: 2 (66.7%)\n\
+            Failed files:    1 (33.3%)\n\
+            Duration:        200 ms\n"
+        );
+    }
 }
