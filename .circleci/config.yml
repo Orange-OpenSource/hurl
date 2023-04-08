@@ -18,7 +18,10 @@ jobs:
           command: bin/install_rust.sh
       - run:
           name: Test Prerequisites
-          command: bin/test/test_prerequisites.sh
+          command: |
+            sudo apt update -qq
+            sudo apt install -y -qq libxml2-dev libxslt-dev libxml2-utils libcurl4-openssl-dev 
+            bin/test/test_prerequisites.sh
       - run:
           name: Tests units
           command: bin/test/test_unit.sh
