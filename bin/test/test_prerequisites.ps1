@@ -35,7 +35,7 @@ sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8003) {write-host -foregroundcolor Green "server-ssl-client-authent up"} else {write-host -foregroundcolor Red "server-ssl-client-authent is down" ; cat build\server-ssl-client-authent.log ; exit 1}
 
 Get-ChildItem -Force C:\Squid\bin
-write-output "cache deny all" "cache_log /dev/null" "access_log /dev/null" "http_access allow all" "http_port 127.0.0.1:3128" "request_header_add From-Proxy Hello" "reply_header_add From-Proxy Hello" > squid.conf
+write-output "cache deny all" "cache_log /dev/null" "access_log /dev/null" "dns_nameservers 127.0.0.1" "http_access allow all" "http_port 127.0.0.1:3128" "request_header_add From-Proxy Hello" "reply_header_add From-Proxy Hello" > squid.conf
 C:\Squid\bin\squid -k kill 2>&1 || true
 C:\Squid\bin\squid -d 2 -N -f squid.conf 2>&1 > build\proxy.log &
 if ($LASTEXITCODE) { Throw }
