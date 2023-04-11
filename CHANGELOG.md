@@ -11,11 +11,13 @@ Enhancements:
 
 * Add daysAfterNow / daysBeforeNow filters [#1309](https://github.com/Orange-OpenSource/hurl/issues/1309)
 
+* Add errors in HTML report [#1286](https://github.com/Orange-OpenSource/hurl/issues/1286)
+
 * Use long options for curl command [#1236](https://github.com/Orange-OpenSource/hurl/issues/1236)
 
 * Add progress bar for tests [#1224](https://github.com/Orange-OpenSource/hurl/issues/1224)
 
-* Add Date value/filters [#1206](https://github.com/Orange-OpenSource/hurl/issues/1206)
+* Add date value/filters [#1206](https://github.com/Orange-OpenSource/hurl/issues/1206)
 
 * Implement isEmpty predicate [#849](https://github.com/Orange-OpenSource/hurl/issues/849)
 
