@@ -1,5 +1,5 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params</span></span>
-<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="section-header">[QueryStringParams]</span></span>
 <span class="line"><span class="string">param1</span><span>:</span> <span class="string">value1</span></span>
 <span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span>
 <span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span>
@@ -15,7 +15,7 @@
 <span class="line"></span>
 <span class="line"></span><span class="comment"># combine version</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params?param1=value1</span></span>
-<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="section-header">[QueryStringParams]</span></span>
 <span class="line"><span class="string">param2</span><span>:</span><span class="string"></span></span>
 <span class="line"><span class="string">param3</span><span>:</span> <span class="string">a=b</span></span>
 <span class="line"><span class="string">param4</span><span>:</span> <span class="string">1,2,3</span></span>
@@ -25,7 +25,7 @@
 <span class="line"></span>
 <span class="line"></span><span class="comment"># encoding slash</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/querystring-params-encoded?value1=/&amp;value2=%2F</span></span>
-<span class="line section-header">[QueryStringParams]</span>
+<span class="line"><span class="section-header">[QueryStringParams]</span></span>
 <span class="line"><span class="string">value3</span><span>:</span><span class="string">/</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 </span></span></code></pre>
