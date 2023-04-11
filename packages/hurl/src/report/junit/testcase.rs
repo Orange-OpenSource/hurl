@@ -96,6 +96,14 @@ impl Testcase {
             children,
         }
     }
+
+    pub fn get_error_count(&self) -> usize {
+        self.errors.len()
+    }
+
+    pub fn get_fail_count(&self) -> usize {
+        self.failures.len()
+    }
 }
 
 #[cfg(test)]
