@@ -112,6 +112,21 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
 }
 
 fn create_testsuite(testcases: &[Testcase]) -> XMLNode {
+    let mut attrs = indexmap::map::IndexMap::new();
+    let mut tests = 0;
+    let mut errors = 0;
+    let mut failures = 0;
+
+    for cases in testcases.iter() {
+        tests += 1;
+        errors += cases.get_error_count();
+        failures += cases.get_fail_count();
+    }
+
+    attrs.insert("tests".to_string(), tests.to_string());
+    attrs.insert("errors".to_string(), errors.to_string());
+    attrs.insert("failures".to_string(), failures.to_string());
+
     let children = testcases
         .iter()
         .map(|t| XMLNode::Element(t.to_xml()))
@@ -121,7 +136,7 @@ fn create_testsuite(testcases: &[Testcase]) -> XMLNode {
         prefix: None,
         namespace: None,
         namespaces: None,
-        attributes: indexmap::map::IndexMap::new(),
+        attributes: attrs,
         children,
     };
     XMLNode::Element(element)
