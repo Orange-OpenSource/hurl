@@ -1,0 +1,14 @@
+error: Assert status code
+  --> tests_failed/fail_at_end.hurl:2:6
+   |
+ 2 | HTTP 400
+   |      ^^^ actual value is <200>
+   |
+
+error: Assert status code
+  --> tests_failed/fail_at_end.hurl:8:6
+   |
+ 8 | HTTP 400
+   |      ^^^ actual value is <200>
+   |
+
