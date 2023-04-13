@@ -1,0 +1,28 @@
+error: Assert status code
+  --> tests_failed/option_fail_at_end_not_last_ko.hurl:2:6
+   |
+ 2 | HTTP 404
+   |      ^^^ actual value is <200>
+   |
+
+error: Assert status code
+  --> tests_failed/option_fail_at_end_not_last_ko.hurl:5:6
+   |
+ 5 | HTTP 404
+   |      ^^^ actual value is <200>
+   |
+
+error: Assert status code
+  --> tests_failed/option_fail_at_end_last_ko.hurl:2:6
+   |
+ 2 | HTTP 404
+   |      ^^^ actual value is <200>
+   |
+
+error: Assert status code
+  --> tests_failed/option_fail_at_end_last_ko.hurl:8:6
+   |
+ 8 | HTTP 404
+   |      ^^^ actual value is <200>
+   |
+
