@@ -31,6 +31,14 @@ def post_json_array():
     return ""
 
 
+@app.route("/post-json-array-empty", methods=["POST"])
+def post_json_array_empty():
+    assert request.headers["Content-Type"] == "application/json"
+    s = request.data.decode("utf-8")
+    assert s == "[]"
+    return ""
+
+
 @app.route("/post-json-string", methods=["POST"])
 def post_json_string():
     assert request.headers["Content-Type"] == "application/json"

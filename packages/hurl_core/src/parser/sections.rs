@@ -109,8 +109,19 @@ fn response_section(reader: &mut Reader) -> ParseResult<'static, Section> {
 }
 
 fn section_name(reader: &mut Reader) -> ParseResult<'static, String> {
+    let pos = reader.state.pos.clone();
     try_literal("[", reader)?;
     let name = reader.read_while(|c| c.is_alphanumeric());
+    if name.is_empty() {
+        // Could be the empty json array for the body
+        return Err(Error {
+            pos,
+            recoverable: true,
+            inner: ParseError::Expecting {
+                value: "a valid section name".to_string(),
+            },
+        });
+    }
     try_literal("]", reader)?;
     Ok(name)
 }
@@ -729,6 +740,9 @@ mod tests {
     fn test_section_name() {
         let mut reader = Reader::init("[SectionA]");
         assert_eq!(section_name(&mut reader).unwrap(), String::from("SectionA"));
+
+        let mut reader = Reader::init("[]");
+        assert!(section_name(&mut reader).err().unwrap().recoverable);
     }
 
     #[test]

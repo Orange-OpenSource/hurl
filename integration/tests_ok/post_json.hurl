@@ -18,6 +18,12 @@ POST http://localhost:8000/post-json-array
 
 HTTP 200
 
+
+POST http://localhost:8000/post-json-array-empty
+[]
+
+HTTP 200
+
 POST http://localhost:8000/post-json-string
 "Hello"
 
