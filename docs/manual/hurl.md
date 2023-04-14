@@ -388,6 +388,10 @@ When set to a non-empty string, do not colorize output (see [`--no-color`](#no-c
 
 ## EXIT CODES
 
+### 0
+
+Success.
+
 ### 1
 
 Failed to parse command-line options.

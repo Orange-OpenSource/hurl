@@ -209,6 +209,7 @@ Using an environment variable to set the proxy has the same effect as using the 
 
 | Value | Description                                             |
 |-------|---------------------------------------------------------|
+| `0`   | Success.<br>                                            |
 | `1`   | Failed to parse command-line options.<br>               |
 | `2`   | Input File Parsing Error.<br>                           |
 | `3`   | Runtime error (such as failure to connect to host).<br> |

@@ -146,7 +146,9 @@ but it's still the [curl] that we love.
 
 # Feedbacks
 
-[Feedback, suggestion, bugs or improvements] are welcome!
+To support its development, [star Hurl on GitHub]!
+
+[Feedback, suggestion, bugs or improvements] are welcome.
 
 ```hurl
 POST https://hurl.dev/api/feedback
@@ -348,6 +350,36 @@ field3: file,example.zip; application/zip
 ```
 
 [Doc](https://hurl.dev/docs/request.html#multipart-form-data)
+
+Multipart forms can also be sent with a [multiline string body]:
+
+~~~hurl
+POST https://example.org/upload
+Content-Type: multipart/form-data; boundary="boundary"
+```
+--boundary
+Content-Disposition: form-data; name="key1"
+
+value1
+--boundary
+Content-Disposition: form-data; name="upload1"; filename="data.txt"
+Content-Type: text/plain
+
+Hello World!
+--boundary
+Content-Disposition: form-data; name="upload2"; filename="data.html"
+Content-Type: text/html
+
+<div>Hello <b>World</b>!</div>
+--boundary--
+```
+~~~
+
+In that case, files have to be inlined in the Hurl file.
+
+[Doc](https://hurl.dev/docs/request.html#multiline-string-body)
+
+
 
 ### Posting a JSON Body
 
@@ -912,6 +944,7 @@ Using an environment variable to set the proxy has the same effect as using the 
 
 | Value | Description                                             |
 |-------|---------------------------------------------------------|
+| `0`   | Success.<br>                                            |
 | `1`   | Failed to parse command-line options.<br>               |
 | `2`   | Input File Parsing Error.<br>                           |
 | `3`   | Runtime error (such as failure to connect to host).<br> |
@@ -1084,8 +1117,6 @@ $ ./target/release/hurl --version
 Please follow the [contrib on Windows section].
 
 
-
-
 [XPath]: https://en.wikipedia.org/wiki/XPath
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Rust]: https://www.rust-lang.org
@@ -1098,9 +1129,11 @@ Please follow the [contrib on Windows section].
 [Blog]: https://hurl.dev/blog/
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [libcurl]: https://curl.se/libcurl/
+[star Hurl on GitHub]: https://github.com/Orange-OpenSource/hurl/stargazers
 [JSON body]: https://hurl.dev/docs/request.html#json-body
 [XML body]: https://hurl.dev/docs/request.html#xml-body
 [XML multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
+[multiline string body]: https://hurl.dev/docs/request.html#multiline-string-body
 [predicates]: https://hurl.dev/docs/asserting-response.html#predicates
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
