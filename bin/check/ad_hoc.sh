@@ -39,7 +39,7 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.sh")
 
-# Check *PS1 error handling at line 2
+# Check *PS1 error handling at two first lines
 echo "------------------------------------------------------------------------------------------"
 while read -r script ; do
     if [ "$(head -1 "$script" | grep -c "Set-StrictMode -Version latest" || true)" -eq 0 ] ; then
