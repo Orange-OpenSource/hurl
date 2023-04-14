@@ -284,9 +284,8 @@ jobs:
     - name: Manage vcpkg cache
       uses: actions/cache@v3
       with:
-        path: C:\vcpkg\installed
+        path: C:\vcpkg
         key: ${{ runner.os }}-release-windows-x64
-        restore-keys: ${{ runner.os }}-release-windows-x64
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
