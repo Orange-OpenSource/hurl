@@ -16,35 +16,22 @@
  *
  */
 use crate::ast::*;
-
-trait Htmlable {
-    fn to_html(&self) -> String;
-}
+use std::fmt::Display;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///
 /// If `standalone` is true, a complete HTML body with inline styling is returned.
 /// Otherwise, a `<pre>` HTML tag is returned, without styling.
 pub fn format(hurl_file: &HurlFile, standalone: bool) -> String {
+    let mut fmt = HtmlFormatter::new();
+    let body = fmt.fmt_hurl_file(hurl_file);
     if standalone {
-        format_standalone(hurl_file)
-    } else {
-        hurl_file.to_html()
-    }
-}
-
-pub fn hurl_css() -> String {
-    include_str!("hurl.css").to_string()
-}
-
-fn format_standalone(hurl_file: &HurlFile) -> String {
-    let css = include_str!("hurl.css");
-    let body = hurl_file.to_html();
-
-    format!(
-        r#"<!DOCTYPE html>
+        let css = include_str!("hurl.css");
+        format!(
+            r#"<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>Hurl File</title>
         <style>
 {css}
@@ -55,1056 +42,837 @@ fn format_standalone(hurl_file: &HurlFile) -> String {
     </body>
 </html>
 "#
-    )
-}
-
-impl Htmlable for HurlFile {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("<pre><code class=\"language-hurl\">");
-        for entry in self.entries.iter() {
-            buffer.push_str(entry.to_html().as_str());
-        }
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("</code></pre>");
-        buffer
+        )
+    } else {
+        body.to_string()
     }
 }
 
-impl Htmlable for Entry {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("<span class=\"hurl-entry\">");
-        buffer.push_str(self.request.to_html().as_str());
-        if let Some(response) = &self.response {
-            buffer.push_str(response.to_html().as_str());
-        }
-        buffer.push_str("</span>");
-        buffer
-    }
+pub fn hurl_css() -> String {
+    include_str!("hurl.css").to_string()
 }
 
-impl Htmlable for Request {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("<span class=\"request\">");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.method.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str(self.url.span_with_class("url").as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-
-        for header in self.headers.iter() {
-            buffer.push_str(header.to_html().as_str());
-        }
-        for section in self.sections.iter() {
-            buffer.push_str(section.to_html().as_str());
-        }
-        if let Some(body) = &self.body {
-            buffer.push_str(body.to_html().as_str());
-        }
-        buffer.push_str("</span>");
-        buffer
-    }
+/// A HTML formatter for Hurl content.
+struct HtmlFormatter {
+    buffer: String,
 }
 
-impl Htmlable for Response {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("<span class=\"response\">");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.version.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str(self.status.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        for header in self.headers.iter() {
-            buffer.push_str(header.to_html().as_str());
+impl HtmlFormatter {
+    pub fn new() -> Self {
+        HtmlFormatter {
+            buffer: String::new(),
         }
-        for section in self.sections.iter() {
-            buffer.push_str(section.to_html().as_str());
+    }
+
+    pub fn fmt_hurl_file(&mut self, hurl_file: &HurlFile) -> &str {
+        self.buffer.clear();
+        self.fmt_pre_open("language-hurl");
+        hurl_file.entries.iter().for_each(|e| self.fmt_entry(e));
+        self.fmt_lts(&hurl_file.line_terminators);
+        self.fmt_pre_close();
+        &self.buffer
+    }
+
+    fn fmt_pre_open(&mut self, class: &str) {
+        self.buffer.push_str("<pre><code class=\"");
+        self.buffer.push_str(class);
+        self.buffer.push_str("\">");
+    }
+
+    fn fmt_pre_close(&mut self) {
+        self.buffer.push_str("</code></pre>");
+    }
+
+    fn fmt_span_open(&mut self, class: &str) {
+        self.buffer.push_str("<span class=\"");
+        self.buffer.push_str(class);
+        self.buffer.push_str("\">");
+    }
+
+    fn fmt_span_close(&mut self) {
+        self.buffer.push_str("</span>");
+    }
+
+    fn fmt_span(&mut self, class: &str, value: &str) {
+        self.buffer.push_str("<span class=\"");
+        self.buffer.push_str(class);
+        self.buffer.push_str("\">");
+        self.buffer.push_str(value);
+        self.buffer.push_str("</span>");
+    }
+
+    fn fmt_entry(&mut self, entry: &Entry) {
+        self.fmt_span_open("hurl-entry");
+        self.fmt_request(&entry.request);
+        if let Some(response) = &entry.response {
+            self.fmt_response(response);
         }
-        if let Some(body) = &self.body {
-            buffer.push_str(body.to_html().as_str());
+        self.fmt_span_close();
+    }
+
+    fn fmt_request(&mut self, request: &Request) {
+        self.fmt_span_open("request");
+        self.fmt_lts(&request.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&request.space0);
+        self.fmt_method(&request.method);
+        self.fmt_space(&request.space1);
+        let url = escape_xml(&request.url.to_encoded_string());
+        self.fmt_span("url", &url);
+        self.fmt_span_close();
+        self.fmt_lt(&request.line_terminator0);
+        request.headers.iter().for_each(|h| self.fmt_kv(h));
+        request.sections.iter().for_each(|s| self.fmt_section(s));
+        if let Some(body) = &request.body {
+            self.fmt_body(body);
         }
-        buffer.push_str("</span>");
-        buffer
+        self.fmt_span_close();
     }
-}
 
-impl Htmlable for Method {
-    fn to_html(&self) -> String {
-        format!("<span class=\"method\">{self}</span>")
+    fn fmt_response(&mut self, response: &Response) {
+        self.fmt_span_open("response");
+        self.fmt_lts(&response.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&response.space0);
+        self.fmt_version(&response.version);
+        self.fmt_space(&response.space1);
+        self.fmt_status(&response.status);
+        self.fmt_span_close();
+        self.fmt_lt(&response.line_terminator0);
+        response.headers.iter().for_each(|h| self.fmt_kv(h));
+        response.sections.iter().for_each(|s| self.fmt_section(s));
+        if let Some(body) = &response.body {
+            self.fmt_body(body);
+        }
+        self.fmt_span_close();
     }
-}
 
-impl Htmlable for Version {
-    fn to_html(&self) -> String {
-        format!("<span class=\"version\">{}</span>", self.value)
+    fn fmt_method(&mut self, method: &Method) {
+        self.fmt_span("method", &method.to_string());
     }
-}
 
-impl Htmlable for Status {
-    fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self.value)
+    fn fmt_version(&mut self, version: &Version) {
+        self.fmt_span("version", &version.value.to_string());
     }
-}
 
-impl Htmlable for Section {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(
-            format!(
-                "<span class=\"line\"><span class=\"section-header\">[{}]</span></span>",
-                self.name()
-            )
-            .as_str(),
-        );
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer
+    fn fmt_status(&mut self, status: &Status) {
+        self.fmt_number(&status.value.to_string());
     }
-}
 
-impl Htmlable for SectionValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        match self {
-            SectionValue::Asserts(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
-            }
-            SectionValue::QueryParams(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
-            }
-            SectionValue::BasicAuth(item) => buffer.push_str(item.to_html().as_str()),
-            SectionValue::FormParams(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
-            }
+    fn fmt_section(&mut self, section: &Section) {
+        self.fmt_lts(&section.line_terminators);
+        self.fmt_space(&section.space0);
+        self.fmt_span_open("line");
+        let name = format!("[{}]", section.name());
+        self.fmt_span("section-header", &name);
+        self.fmt_span_close();
+        self.fmt_lt(&section.line_terminator0);
+        self.fmt_section_value(&section.value);
+    }
+
+    fn fmt_section_value(&mut self, section_value: &SectionValue) {
+        match section_value {
+            SectionValue::Asserts(items) => items.iter().for_each(|item| self.fmt_assert(item)),
+            SectionValue::QueryParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
+            SectionValue::BasicAuth(item) => self.fmt_kv(item),
+            SectionValue::FormParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
             SectionValue::MultipartFormData(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
+                items.iter().for_each(|item| self.fmt_multipart_param(item))
             }
-            SectionValue::Cookies(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
-            }
-            SectionValue::Captures(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
-            }
+            SectionValue::Cookies(items) => items.iter().for_each(|item| self.fmt_cookie(item)),
+            SectionValue::Captures(items) => items.iter().for_each(|item| self.fmt_capture(item)),
             SectionValue::Options(items) => {
-                for item in items {
-                    buffer.push_str(item.to_html().as_str())
-                }
+                items.iter().for_each(|item| self.fmt_entry_option(item))
             }
         }
-        buffer
     }
-}
 
-impl Htmlable for KeyValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.key.encoded.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_kv(&mut self, kv: &KeyValue) {
+        self.fmt_lts(&kv.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&kv.space0);
+        self.fmt_string(&kv.key.encoded);
+        self.fmt_space(&kv.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&kv.space2);
+        self.fmt_template(&kv.value);
+        self.fmt_span_close();
+        self.fmt_lt(&kv.line_terminator0);
     }
-}
 
-impl Htmlable for EntryOption {
-    fn to_html(&self) -> String {
-        match self {
-            EntryOption::CaCertificate(option) => option.to_html(),
-            EntryOption::ClientCert(option) => option.to_html(),
-            EntryOption::ClientKey(option) => option.to_html(),
-            EntryOption::Compressed(option) => option.to_html(),
-            EntryOption::Insecure(option) => option.to_html(),
-            EntryOption::FollowLocation(option) => option.to_html(),
-            EntryOption::MaxRedirect(option) => option.to_html(),
-            EntryOption::Retry(option) => option.to_html(),
-            EntryOption::RetryInterval(option) => option.to_html(),
-            EntryOption::RetryMaxCount(option) => option.to_html(),
-            EntryOption::Variable(option) => option.to_html(),
-            EntryOption::Verbose(option) => option.to_html(),
-            EntryOption::VeryVerbose(option) => option.to_html(),
+    fn fmt_entry_option(&mut self, entry_option: &EntryOption) {
+        match entry_option {
+            EntryOption::CaCertificate(option) => self.fmt_ca_certificate_option(option),
+            EntryOption::ClientCert(option) => self.fmt_client_cert_option(option),
+            EntryOption::ClientKey(option) => self.fmt_client_key_option(option),
+            EntryOption::Compressed(option) => self.fmt_compressed_option(option),
+            EntryOption::Insecure(option) => self.fmt_insecure_option(option),
+            EntryOption::FollowLocation(option) => self.fmt_follow_location_option(option),
+            EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
+            EntryOption::Retry(option) => self.fmt_retry_option(option),
+            EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
+            EntryOption::RetryMaxCount(option) => self.fmt_retry_max_count_option(option),
+            EntryOption::Variable(option) => self.fmt_variable_option(option),
+            EntryOption::Verbose(option) => self.fmt_verbose_option(option),
+            EntryOption::VeryVerbose(option) => self.fmt_very_verbose_option(option),
+        };
+    }
+
+    fn fmt_compressed_option(&mut self, option: &CompressedOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("compressed");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_insecure_option(&mut self, option: &InsecureOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("insecure");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_ca_certificate_option(&mut self, option: &CaCertificateOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("cacert");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_filename(&option.filename);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_client_cert_option(&mut self, option: &ClientCertOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("cert");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_filename(&option.filename);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_client_key_option(&mut self, option: &ClientKeyOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("key");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_filename(&option.filename);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_follow_location_option(&mut self, option: &FollowLocationOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("location");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_max_redirect_option(&mut self, option: &MaxRedirectOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("max-redirs");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_number(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_retry_option(&mut self, option: &RetryOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("retry");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_retry_interval_option(&mut self, option: &RetryIntervalOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("retry-interval");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_number(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_retry_max_count_option(&mut self, option: &RetryMaxCountOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("retry-max-count");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_number(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_variable_option(&mut self, option: &VariableOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("variable");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_variable_definition(&option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_variable_definition(&mut self, option: &VariableDefinition) {
+        self.buffer.push_str(option.name.as_str());
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>=</span>");
+        self.fmt_variable_value(&option.value);
+    }
+
+    fn fmt_variable_value(&mut self, option: &VariableValue) {
+        match option {
+            VariableValue::Null { .. } => self.fmt_span("null", "null"),
+            VariableValue::Bool(v) => self.fmt_bool(*v),
+            VariableValue::Integer(v) => self.fmt_number(v),
+            VariableValue::Float(v) => self.fmt_number(&v.encoded),
+            VariableValue::String(t) => self.fmt_template(t),
         }
     }
-}
 
-impl Htmlable for CompressedOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("compressed".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_verbose_option(&mut self, option: &VerboseOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("verbose");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
     }
-}
 
-impl Htmlable for InsecureOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("insecure".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_very_verbose_option(&mut self, option: &VeryVerboseOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("very-verbose");
+        self.fmt_space(&option.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
     }
-}
 
-impl Htmlable for CaCertificateOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("cacert".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.filename.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_multipart_param(&mut self, param: &MultipartParam) {
+        match param {
+            MultipartParam::Param(param) => self.fmt_kv(param),
+            MultipartParam::FileParam(param) => self.fmt_file_param(param),
+        };
     }
-}
 
-impl Htmlable for ClientCertOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("cert".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.filename.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_file_param(&mut self, param: &FileParam) {
+        self.fmt_lts(&param.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&param.space0);
+        self.fmt_string(&param.key.encoded);
+        self.fmt_space(&param.space1);
+        self.buffer.push(':');
+        self.fmt_space(&param.space2);
+        self.fmt_file_value(&param.value);
+        self.fmt_span_close();
+        self.fmt_lt(&param.line_terminator0);
     }
-}
 
-impl Htmlable for ClientKeyOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("key".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.filename.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for FollowLocationOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("location".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for MaxRedirectOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("max-redirs".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for RetryOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("retry".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for RetryIntervalOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("retry-interval".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for RetryMaxCountOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("retry-max-count".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for VariableOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("variable".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for VariableDefinition {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str(self.name.as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>=</span>");
-        buffer.push_str(self.value.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for VariableValue {
-    fn to_html(&self) -> String {
-        match self {
-            VariableValue::Null { .. } => "<span class=\"null\">null</span>".to_string(),
-            VariableValue::Bool(v) => v.to_html(),
-            VariableValue::Integer(v) => v.to_html(),
-            VariableValue::Float(v) => v.to_html(),
-            VariableValue::String(t) => t.to_html(),
+    fn fmt_file_value(&mut self, file_value: &FileValue) {
+        self.buffer.push_str("file,");
+        self.fmt_space(&file_value.space0);
+        self.fmt_filename(&file_value.filename);
+        self.fmt_space(&file_value.space1);
+        self.buffer.push(';');
+        self.fmt_space(&file_value.space2);
+        if let Some(content_type) = &file_value.content_type {
+            self.fmt_string(content_type);
         }
     }
-}
 
-impl Htmlable for VerboseOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("verbose".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_filename(&mut self, filename: &Filename) {
+        self.fmt_span_open("filename");
+        let s = filename.value.replace(' ', "\\ ");
+        self.buffer.push_str(s.as_str());
+        self.fmt_span_close();
     }
-}
 
-impl Htmlable for VeryVerboseOption {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str("very-verbose".to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_cookie(&mut self, cookie: &Cookie) {
+        self.fmt_lts(&cookie.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&cookie.space0);
+        self.fmt_span("name", &cookie.name.value);
+        self.fmt_space(&cookie.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&cookie.space2);
+        self.fmt_template(&cookie.value);
+        self.fmt_span_close();
+        self.fmt_lt(&cookie.line_terminator0);
     }
-}
 
-impl Htmlable for MultipartParam {
-    fn to_html(&self) -> String {
-        match self {
-            MultipartParam::Param(keyvalue) => keyvalue.to_html(),
-            MultipartParam::FileParam(file_param) => file_param.to_html(),
+    fn fmt_capture(&mut self, capture: &Capture) {
+        self.fmt_lts(&capture.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&capture.space0);
+        self.fmt_span("name", &capture.name.value);
+        self.fmt_space(&capture.space1);
+        self.buffer.push_str("<span>:</span>");
+        self.fmt_space(&capture.space2);
+        self.fmt_query(&capture.query);
+        for (space, filter) in capture.filters.iter() {
+            self.fmt_space(space);
+            self.fmt_filter(filter);
         }
+        self.fmt_span_close();
+        self.fmt_lt(&capture.line_terminator0);
     }
-}
 
-impl Htmlable for FileParam {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.key.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push(':');
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_query(&mut self, query: &Query) {
+        self.fmt_query_value(&query.value);
     }
-}
 
-impl Htmlable for FileValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("file,");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.filename.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push(';');
-        buffer.push_str(self.space2.to_html().as_str());
-        if let Some(content_type) = &self.content_type {
-            buffer.push_str(content_type.to_html().as_str());
-        }
-        buffer
-    }
-}
-
-impl Htmlable for Filename {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("<span class=\"filename\">");
-        let s = self.value.replace(' ', "\\ ");
-        buffer.push_str(s.as_str());
-        buffer.push_str("</span>");
-        buffer
-    }
-}
-
-impl Htmlable for Cookie {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer
-            .push_str(format!("<span class=\"name\">{}</span>", self.name.value.as_str()).as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for Capture {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer
-            .push_str(format!("<span class=\"name\">{}</span>", self.name.value.as_str()).as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str("<span>:</span>");
-        buffer.push_str(self.space2.to_html().as_str());
-        buffer.push_str(self.query.to_html().as_str());
-        for (space, filter) in self.filters.iter() {
-            buffer.push_str(space.to_html().as_str());
-            buffer.push_str(filter.to_html().as_str());
-        }
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
-    }
-}
-
-impl Htmlable for Query {
-    fn to_html(&self) -> String {
-        self.value.to_html()
-    }
-}
-
-impl Htmlable for QueryValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        match self {
-            QueryValue::Status {} => {
-                buffer.push_str("<span class=\"query-type\">status</span>");
-            }
-            QueryValue::Url {} => {
-                buffer.push_str("<span class=\"query-type\">url</span>");
-            }
+    fn fmt_query_value(&mut self, query_value: &QueryValue) {
+        match query_value {
+            QueryValue::Status {} => self.fmt_span("query-type", "status"),
+            QueryValue::Url {} => self.fmt_span("query-type", "url"),
             QueryValue::Header { space0, name } => {
-                buffer.push_str("<span class=\"query-type\">header</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(name.to_html().as_str());
+                self.fmt_span("query-type", "header");
+                self.fmt_space(space0);
+                self.fmt_template(name);
             }
             QueryValue::Cookie { space0, expr } => {
-                buffer.push_str("<span class=\"query-type\">cookie</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(expr.to_html().as_str());
+                self.fmt_span("query-type", "cookie");
+                self.fmt_space(space0);
+                self.fmt_cookie_path(expr);
             }
-            QueryValue::Body {} => {
-                buffer.push_str("<span class=\"query-type\">body</span>");
-            }
+            QueryValue::Body {} => self.fmt_span("query-type", "body"),
             QueryValue::Xpath { space0, expr } => {
-                buffer.push_str("<span class=\"query-type\">xpath</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(expr.to_html().as_str());
+                self.fmt_span("query-type", "xpath");
+                self.fmt_space(space0);
+                self.fmt_template(expr);
             }
             QueryValue::Jsonpath { space0, expr } => {
-                buffer.push_str("<span class=\"query-type\">jsonpath</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(expr.to_html().as_str());
+                self.fmt_span("query-type", "jsonpath");
+                self.fmt_space(space0);
+                self.fmt_template(expr);
             }
             QueryValue::Regex { space0, value } => {
-                buffer.push_str("<span class=\"query-type\">regex</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_span("query-type", "regex");
+                self.fmt_space(space0);
+                self.fmt_regex_value(value);
             }
             QueryValue::Variable { space0, name } => {
-                buffer.push_str("<span class=\"query-type\">variable</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(name.to_html().as_str());
+                self.fmt_span("query-type", "variable");
+                self.fmt_space(space0);
+                self.fmt_template(name);
             }
-            QueryValue::Duration {} => {
-                buffer.push_str("<span class=\"query-type\">duration</span>");
-            }
-            QueryValue::Bytes {} => {
-                buffer.push_str("<span class=\"query-type\">bytes</span>");
-            }
-            QueryValue::Sha256 {} => {
-                buffer.push_str("<span class=\"query-type\">sha256</span>");
-            }
-            QueryValue::Md5 {} => {
-                buffer.push_str("<span class=\"query-type\">md5</span>");
-            }
+            QueryValue::Duration {} => self.fmt_span("query-type", "duration"),
+            QueryValue::Bytes {} => self.fmt_span("query-type", "bytes"),
+            QueryValue::Sha256 {} => self.fmt_span("query-type", "sha256"),
+            QueryValue::Md5 {} => self.fmt_span("query-type", "md5"),
             QueryValue::Certificate {
                 space0,
                 attribute_name: field,
             } => {
-                buffer.push_str("<span class=\"query-type\">certificate</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(field.to_html().as_str());
+                self.fmt_span("query-type", "certificate");
+                self.fmt_space(space0);
+                self.fmt_certificate_attribute_name(field);
             }
         }
-        buffer
     }
-}
 
-impl Htmlable for RegexValue {
-    fn to_html(&self) -> String {
-        match self {
-            RegexValue::Template(template) => template.to_html(),
-            RegexValue::Regex(regex) => regex.to_html(),
+    fn fmt_regex_value(&mut self, regex_value: &RegexValue) {
+        match regex_value {
+            RegexValue::Template(template) => self.fmt_template(template),
+            RegexValue::Regex(regex) => self.fmt_regex(regex),
         }
     }
-}
 
-impl Htmlable for CookiePath {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push('"');
-        buffer.push_str(self.name.to_encoded_string().as_str());
-        if let Some(attribute) = &self.attribute {
-            buffer.push('[');
-            buffer.push_str(attribute.to_html().as_str());
-            buffer.push(']');
+    fn fmt_cookie_path(&mut self, cookie_path: &CookiePath) {
+        self.fmt_span_open("string");
+        self.buffer.push('"');
+        self.buffer
+            .push_str(cookie_path.name.to_encoded_string().as_str());
+        if let Some(attribute) = &cookie_path.attribute {
+            self.buffer.push('[');
+            self.fmt_cookie_attribute(attribute);
+            self.buffer.push(']');
         }
-        buffer.push('"');
-        buffer.to_html()
+        self.buffer.push('"');
+        self.fmt_span_close();
     }
-}
 
-impl Htmlable for CookieAttribute {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.name.value().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer
+    fn fmt_cookie_attribute(&mut self, cookie_attribute: &CookieAttribute) {
+        self.fmt_space(&cookie_attribute.space0);
+        self.buffer.push_str(cookie_attribute.name.value().as_str());
+        self.fmt_space(&cookie_attribute.space1);
     }
-}
 
-impl Htmlable for CertificateAttributeName {
-    fn to_html(&self) -> String {
-        let value = match self {
+    fn fmt_certificate_attribute_name(&mut self, name: &CertificateAttributeName) {
+        let value = match name {
             CertificateAttributeName::Subject => "Subject",
             CertificateAttributeName::Issuer => "Issuer",
             CertificateAttributeName::StartDate => "Start-Date",
             CertificateAttributeName::ExpireDate => "Expire-Date",
             CertificateAttributeName::SerialNumber => "Serial-Number",
+        };
+        self.fmt_string(value);
+    }
+
+    fn fmt_assert(&mut self, assert: &Assert) {
+        self.fmt_lts(&assert.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&assert.space0);
+        self.fmt_query(&assert.query);
+        for (space, filter) in assert.filters.iter() {
+            self.fmt_space(space);
+            self.fmt_filter(filter);
         }
-        .to_string();
-        format!("<span class=\"string\">{value}</span>")
+        self.fmt_space(&assert.space1);
+        self.fmt_predicate(&assert.predicate);
+        self.fmt_span_close();
+        self.fmt_lt(&assert.line_terminator0);
     }
-}
 
-impl Htmlable for Assert {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str("<span class=\"line\">");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.query.to_html().as_str());
-        for (space, filter) in self.filters.iter() {
-            buffer.push_str(space.to_html().as_str());
-            buffer.push_str(filter.to_html().as_str());
+    fn fmt_predicate(&mut self, predicate: &Predicate) {
+        if predicate.not {
+            self.fmt_span("not", "not");
+            self.fmt_space(&predicate.space0);
         }
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push_str(self.predicate.to_html().as_str());
-        buffer.push_str("</span>");
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+        self.fmt_predicate_func(&predicate.predicate_func);
     }
-}
 
-impl Htmlable for Predicate {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        if self.not {
-            buffer.push_str("<span class=\"not\">not</span>");
-            buffer.push_str(self.space0.to_html().as_str());
-        }
-        buffer.push_str(self.predicate_func.to_html().as_str());
-        buffer
+    fn fmt_predicate_func(&mut self, predicate_func: &PredicateFunc) {
+        self.fmt_predicate_func_value(&predicate_func.value);
     }
-}
 
-impl Htmlable for PredicateFunc {
-    fn to_html(&self) -> String {
-        self.value.to_html()
-    }
-}
+    fn fmt_predicate_func_value(&mut self, value: &PredicateFuncValue) {
+        self.fmt_span_open("predicate-type");
+        self.buffer.push_str(&encode_html(value.name()));
+        self.fmt_span_close();
 
-impl Htmlable for PredicateFuncValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        match self {
+        match value {
             PredicateFuncValue::CountEqual { space0, value, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::Equal { space0, value, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::NotEqual { space0, value, .. } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::GreaterThan { space0, value, .. } => {
-                buffer.push_str(
-                    format!(
-                        "<span class=\"predicate-type\">{}</span>",
-                        encode_html(self.name())
-                    )
-                    .as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::GreaterThanOrEqual { space0, value, .. } => {
-                buffer.push_str(
-                    format!(
-                        "<span class=\"predicate-type\">{}</span>",
-                        encode_html(self.name())
-                    )
-                    .as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::LessThan { space0, value, .. } => {
-                buffer.push_str(
-                    format!(
-                        "<span class=\"predicate-type\">{}</span>",
-                        encode_html(self.name())
-                    )
-                    .as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::LessThanOrEqual { space0, value, .. } => {
-                buffer.push_str(
-                    format!(
-                        "<span class=\"predicate-type\">{}</span>",
-                        encode_html(self.name())
-                    )
-                    .as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::StartWith { space0, value } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::EndWith { space0, value } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::Contain { space0, value } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::Include { space0, value } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
             PredicateFuncValue::Match { space0, value } => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
+                self.fmt_space(space0);
+                self.fmt_predicate_value(value);
             }
-            PredicateFuncValue::IsInteger {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::IsFloat {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::IsBoolean {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::IsString {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::IsCollection {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::Exist {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-            PredicateFuncValue::IsEmpty {} => {
-                buffer.push_str(
-                    format!("<span class=\"predicate-type\">{}</span>", self.name()).as_str(),
-                );
-            }
-        }
-        buffer
-    }
-}
-
-impl Htmlable for PredicateValue {
-    fn to_html(&self) -> String {
-        match self {
-            PredicateValue::String(value) => value.to_html(),
-            PredicateValue::MultilineString(value) => value.to_html(),
-            PredicateValue::Integer(value) => value.to_html(),
-            PredicateValue::Float(value) => value.to_html(),
-            PredicateValue::Bool(value) => value.to_html(),
-            PredicateValue::Hex(value) => value.to_html(),
-            PredicateValue::Base64(value) => value.to_html(),
-            PredicateValue::Expression(value) => value.to_html(),
-            PredicateValue::Null {} => "<span class=\"null\">null</span>".to_string(),
-            PredicateValue::Regex(value) => value.to_html(),
+            PredicateFuncValue::IsInteger {} => {}
+            PredicateFuncValue::IsFloat {} => {}
+            PredicateFuncValue::IsBoolean {} => {}
+            PredicateFuncValue::IsString {} => {}
+            PredicateFuncValue::IsCollection {} => {}
+            PredicateFuncValue::Exist {} => {}
+            PredicateFuncValue::IsEmpty {} => {}
         }
     }
-}
 
-impl Htmlable for MultilineString {
-    fn to_html(&self) -> String {
-        let lang = match self {
+    fn fmt_predicate_value(&mut self, predicate_value: &PredicateValue) {
+        match predicate_value {
+            PredicateValue::String(value) => self.fmt_template(value),
+            PredicateValue::MultilineString(value) => self.fmt_multiline_string(value),
+            PredicateValue::Integer(value) => self.fmt_number(value),
+            PredicateValue::Float(value) => self.fmt_number(&value.encoded),
+            PredicateValue::Bool(value) => self.fmt_bool(*value),
+            PredicateValue::Hex(value) => self.fmt_hex(value),
+            PredicateValue::Base64(value) => self.fmt_base64(value),
+            PredicateValue::Expression(value) => self.fmt_expr(value),
+            PredicateValue::Null {} => self.fmt_span("null", "null"),
+            PredicateValue::Regex(value) => self.fmt_regex(value),
+        };
+    }
+
+    fn fmt_multiline_string(&mut self, multiline_string: &MultilineString) {
+        let lang = match multiline_string {
             MultilineString::OneLineText(_) => "".to_string(),
             MultilineString::Text(_)
             | MultilineString::Json(_)
             | MultilineString::Xml(_)
             | MultilineString::GraphQl(_) => {
-                format!("{}\n", self.lang())
+                format!("{}\n", multiline_string.lang())
             }
         };
-        let body = format!("```{lang}{self}```");
-        let body = multilines(&body);
-        format!("<span class=\"multiline\">{body}</span>")
+        let body = format!("```{lang}{multiline_string}```");
+        let body = format_multilines(&body);
+        self.fmt_span("multiline", &body);
     }
-}
 
-impl Htmlable for Body {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        add_line_terminators(&mut buffer, &self.line_terminators);
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.value.to_html().as_str());
-        buffer.push_str(self.line_terminator0.to_html().as_str());
-        buffer
+    fn fmt_body(&mut self, body: &Body) {
+        self.fmt_lts(&body.line_terminators);
+        self.fmt_space(&body.space0);
+        self.fmt_bytes(&body.value);
+        self.fmt_lt(&body.line_terminator0);
     }
-}
 
-impl Htmlable for Bytes {
-    fn to_html(&self) -> String {
-        match self {
-            Bytes::Base64(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
-            Bytes::File(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
-            Bytes::Hex(value) => format!("<span class=\"line\">{}</span>", value.to_html()),
-            Bytes::OnelineString(value) => {
-                format!("<span class=\"line\">{}</span>", value.to_html())
+    fn fmt_bytes(&mut self, bytes: &Bytes) {
+        match bytes {
+            Bytes::Base64(value) => {
+                self.fmt_span_open("line");
+                self.fmt_base64(value);
+                self.fmt_span_close();
             }
-            Bytes::Json(value) => value.to_html(),
-            Bytes::MultilineString(value) => value.to_html(),
-            Bytes::Xml(value) => xml_html(value),
+            Bytes::File(value) => {
+                self.fmt_span_open("line");
+                self.fmt_file(value);
+                self.fmt_span_close();
+            }
+            Bytes::Hex(value) => {
+                self.fmt_span_open("line");
+                self.fmt_hex(value);
+                self.fmt_span_close();
+            }
+            Bytes::OnelineString(value) => {
+                self.fmt_span_open("line");
+                self.fmt_template(value);
+                self.fmt_span_close();
+            }
+            Bytes::Json(value) => self.fmt_json_value(value),
+            Bytes::MultilineString(value) => self.fmt_multiline_string(value),
+            Bytes::Xml(value) => self.fmt_xml(value),
+        }
+    }
+
+    fn fmt_string(&mut self, value: &str) {
+        self.fmt_span("string", value);
+    }
+
+    fn fmt_bool(&mut self, value: bool) {
+        self.fmt_span("boolean", &value.to_string());
+    }
+
+    fn fmt_number<T: Sized + Display>(&mut self, value: T) {
+        self.fmt_span("number", &value.to_string());
+    }
+
+    fn fmt_xml(&mut self, value: &str) {
+        let xml = format_multilines(value);
+        self.fmt_span("xml", &xml);
+    }
+
+    fn fmt_json_value(&mut self, json_value: &JsonValue) {
+        let json = format_multilines(&json_value.encoded());
+        self.fmt_span("json", &json);
+    }
+
+    fn fmt_space(&mut self, space: &Whitespace) {
+        let Whitespace { value, .. } = space;
+        if !value.is_empty() {
+            self.buffer.push_str(value);
+        };
+    }
+
+    fn fmt_lt(&mut self, lt: &LineTerminator) {
+        self.fmt_space(&lt.space0);
+        if let Some(v) = &lt.comment {
+            self.fmt_comment(v);
+        }
+        self.buffer.push_str(lt.newline.value.as_str());
+    }
+
+    fn fmt_comment(&mut self, comment: &Comment) {
+        let comment = format!("#{}", escape_xml(&comment.value));
+        self.fmt_span("comment", &comment);
+    }
+
+    fn fmt_file(&mut self, file: &File) {
+        self.buffer.push_str("file,");
+        self.fmt_space(&file.space0);
+        self.fmt_filename(&file.filename);
+        self.fmt_space(&file.space1);
+        self.buffer.push(';');
+    }
+
+    fn fmt_base64(&mut self, base64: &Base64) {
+        self.buffer.push_str("base64,");
+        self.fmt_space(&base64.space0);
+        self.fmt_span("base64", &base64.encoded);
+        self.fmt_space(&base64.space1);
+        self.buffer.push(';');
+    }
+
+    fn fmt_hex(&mut self, hex: &Hex) {
+        self.buffer.push_str("hex,");
+        self.fmt_space(&hex.space0);
+        self.fmt_span("hex", &hex.encoded);
+        self.fmt_space(&hex.space1);
+        self.buffer.push(';');
+    }
+
+    fn fmt_regex(&mut self, regex: &Regex) {
+        let s = str::replace(regex.inner.as_str(), "/", "\\/");
+        let regex = format!("/{s}/");
+        self.fmt_span("regex", &regex);
+    }
+
+    fn fmt_template(&mut self, template: &Template) {
+        let s = template.to_encoded_string();
+        self.fmt_string(&escape_xml(&s));
+    }
+
+    fn fmt_expr(&mut self, expr: &Expr) {
+        let expr = format!("{{{{{}}}}}", &expr.to_string());
+        self.fmt_span("expr", &expr);
+    }
+
+    fn fmt_filter(&mut self, filter: &Filter) {
+        self.fmt_filter_value(&filter.value);
+    }
+
+    fn fmt_filter_value(&mut self, filter_value: &FilterValue) {
+        match filter_value {
+            FilterValue::Count => self.fmt_span("filter-type", "count"),
+            FilterValue::DaysAfterNow => self.fmt_span("filter-type", "daysAfterNow"),
+            FilterValue::DaysBeforeNow => self.fmt_span("filter-type", "daysBeforeNow"),
+            FilterValue::Format { space0, fmt } => {
+                self.fmt_span("filter-type", "format");
+                self.fmt_space(space0);
+                self.fmt_template(fmt);
+            }
+            FilterValue::HtmlEscape => self.fmt_span("filter-type", "htmlEscape"),
+            FilterValue::HtmlUnescape => self.fmt_span("filter-type", "htmlUnescape"),
+            FilterValue::Nth { space0, n: value } => {
+                self.fmt_span("filter-type", "nth");
+                self.fmt_space(space0);
+                self.fmt_number(value);
+            }
+            FilterValue::Regex { space0, value } => {
+                self.fmt_span("filter-type", "regex");
+                self.fmt_space(space0);
+                self.fmt_regex_value(value);
+            }
+            FilterValue::Replace {
+                space0,
+                old_value,
+                space1,
+                new_value,
+            } => {
+                self.fmt_span("filter-type", "replace");
+                self.fmt_space(space0);
+                self.fmt_regex_value(old_value);
+                self.fmt_space(space1);
+                self.fmt_template(new_value);
+            }
+            FilterValue::Split { space0, sep } => {
+                self.fmt_span("filter-type", "split");
+                self.fmt_space(space0);
+                self.fmt_template(sep);
+            }
+            FilterValue::ToDate { space0, fmt } => {
+                self.fmt_span("filter-type", "toDate");
+                self.fmt_space(space0);
+                self.fmt_template(fmt);
+            }
+            FilterValue::ToInt => self.fmt_span("filter-type", "toInt"),
+            FilterValue::UrlDecode => self.fmt_span("filter-type", "urlDecode"),
+            FilterValue::UrlEncode => self.fmt_span("filter-type", "urlEncode"),
+        };
+    }
+
+    fn fmt_lts(&mut self, line_terminators: &[LineTerminator]) {
+        for line_terminator in line_terminators {
+            self.fmt_span_open("line");
+            if line_terminator.newline.value.is_empty() {
+                self.buffer.push_str("<br>");
+            }
+            self.fmt_span_close();
+            self.fmt_lt(line_terminator);
         }
     }
 }
 
-impl Htmlable for String {
-    fn to_html(&self) -> String {
-        format!("<span class=\"string\">{self}</span>")
-    }
-}
-
-impl Htmlable for &str {
-    fn to_html(&self) -> String {
-        format!("<span class=\"string\">{self}</span>")
-    }
-}
-
-impl Htmlable for bool {
-    fn to_html(&self) -> String {
-        format!("<span class=\"boolean\">{self}</span>")
-    }
-}
-
-impl Htmlable for u64 {
-    fn to_html(&self) -> String {
-        format!("<span class=\"number\">{self}</span>")
-    }
-}
-
-impl Htmlable for Float {
-    fn to_html(&self) -> String {
-        format!("<span class=\"number\">{}</span>", self.encoded)
-    }
-}
-
-impl Htmlable for i64 {
-    fn to_html(&self) -> String {
-        format!("<span class=\"number\">{self}</span>")
-    }
-}
-
-impl Htmlable for usize {
-    fn to_html(&self) -> String {
-        format!("<span class=\"number\">{self}</span>")
-    }
-}
-
-// you should probably define for XML value to be consistent with the other types
-fn xml_html(value: &str) -> String {
-    let mut buffer = String::from("<span class=\"xml\">");
-    buffer.push_str(multilines(value).as_str());
-    buffer.push_str("</span>");
-    buffer
-}
-
-fn xml_escape(s: &str) -> String {
+fn escape_xml(s: &str) -> String {
     s.replace('&', "&amp;")
         .replace('<', "&lt;")
         .replace('>', "&gt;")
-}
-
-// Improvement: break into spans within the json value
-impl Htmlable for JsonValue {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("<span class=\"json\">");
-        buffer.push_str(multilines(&self.encoded()).as_str());
-        buffer.push_str("</span>");
-        buffer
-    }
-}
-
-impl Htmlable for Whitespace {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        let Whitespace { value, .. } = self;
-        if !value.is_empty() {
-            buffer.push_str(self.value.as_str());
-        };
-        buffer
-    }
-}
-
-impl Htmlable for LineTerminator {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str(self.space0.to_html().as_str());
-        if let Some(v) = &self.comment {
-            buffer.push_str(v.to_html().as_str());
-        }
-        buffer.push_str(self.newline.value.as_str());
-        buffer
-    }
-}
-
-impl Htmlable for Comment {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("<span class=\"comment\">");
-        buffer.push_str(format!("#{}", xml_escape(&self.value)).as_str());
-        buffer.push_str("</span>");
-        buffer
-    }
-}
-
-impl Htmlable for File {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("file,");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(self.filename.to_html().as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push(';');
-        buffer
-    }
-}
-
-impl Htmlable for Base64 {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("base64,");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer
-            .push_str(format!("<span class=\"base64\">{}</span>", self.encoded.as_str()).as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push(';');
-        buffer
-    }
-}
-
-impl Htmlable for Hex {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("hex,");
-        buffer.push_str(self.space0.to_html().as_str());
-        buffer.push_str(format!("<span class=\"hex\">{}</span>", self.encoded.as_str()).as_str());
-        buffer.push_str(self.space1.to_html().as_str());
-        buffer.push(';');
-        buffer
-    }
-}
-
-impl Htmlable for Regex {
-    fn to_html(&self) -> String {
-        let s = str::replace(self.inner.as_str(), "/", "\\/");
-        format!("<span class=\"regex\">/{s}/</span>")
-    }
-}
-
-impl Htmlable for EncodedString {
-    fn to_html(&self) -> String {
-        self.encoded.to_html()
-    }
-}
-
-impl Htmlable for Template {
-    fn to_html(&self) -> String {
-        self.span_with_class("string")
-    }
 }
 
 impl Template {
@@ -1125,115 +893,17 @@ impl Template {
         }
         s
     }
-
-    fn span_with_class(&self, class: &str) -> String {
-        let s = self.to_encoded_string();
-        format!("<span class=\"{}\">{}</span>", class, xml_escape(&s))
-    }
-}
-
-impl Htmlable for Expr {
-    fn to_html(&self) -> String {
-        let mut buffer = String::from("");
-        buffer.push_str("<span class=\"expr\">{{");
-        buffer.push_str(self.to_string().as_str());
-        buffer.push_str("}}</span>");
-        buffer
-    }
-}
-
-impl Htmlable for Filter {
-    fn to_html(&self) -> String {
-        self.value.to_html()
-    }
-}
-
-impl Htmlable for FilterValue {
-    fn to_html(&self) -> String {
-        match self {
-            FilterValue::Count => "<span class=\"filter-type\">count</span>".to_string(),
-            FilterValue::DaysAfterNow => {
-                "<span class=\"filter-type\">daysAfterNow</span>".to_string()
-            }
-            FilterValue::DaysBeforeNow => {
-                "<span class=\"filter-type\">daysBeforeNow</span>".to_string()
-            }
-            FilterValue::Format { space0, fmt } => {
-                let mut buffer = "<span class=\"filter-type\">format</span>".to_string();
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(fmt.to_html().as_str());
-                buffer
-            }
-            FilterValue::HtmlEscape => "<span class=\"filter-type\">htmlEscape</span>".to_string(),
-            FilterValue::HtmlUnescape => {
-                "<span class=\"filter-type\">htmlUnescape</span>".to_string()
-            }
-            FilterValue::Nth { space0, n: value } => {
-                let mut buffer = "<span class=\"filter-type\">nth</span>".to_string();
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
-                buffer
-            }
-            FilterValue::Regex { space0, value } => {
-                let mut buffer = "".to_string();
-                buffer.push_str("<span class=\"filter-type\">regex</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(value.to_html().as_str());
-                buffer
-            }
-            FilterValue::Replace {
-                space0,
-                old_value,
-                space1,
-                new_value,
-            } => {
-                let mut buffer = "<span class=\"filter-type\">replace</span>".to_string();
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(old_value.to_html().as_str());
-                buffer.push_str(space1.to_html().as_str());
-                buffer.push_str(new_value.to_html().as_str());
-                buffer
-            }
-            FilterValue::Split { space0, sep } => {
-                let mut buffer = "<span class=\"filter-type\">split</span>".to_string();
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(sep.to_html().as_str());
-                buffer
-            }
-            FilterValue::ToDate { space0, fmt } => {
-                let mut buffer = "".to_string();
-                buffer.push_str("<span class=\"filter-type\">toDate</span>");
-                buffer.push_str(space0.to_html().as_str());
-                buffer.push_str(fmt.to_html().as_str());
-                buffer
-            }
-            FilterValue::ToInt => "<span class=\"filter-type\">toInt</span>".to_string(),
-            FilterValue::UrlDecode => "<span class=\"filter-type\">urlDecode</span>".to_string(),
-            FilterValue::UrlEncode => "<span class=\"filter-type\">urlEncode</span>".to_string(),
-        }
-    }
-}
-
-fn add_line_terminators(buffer: &mut String, line_terminators: &[LineTerminator]) {
-    for line_terminator in line_terminators {
-        buffer.push_str("<span class=\"line\">");
-        if line_terminator.newline.value.is_empty() {
-            buffer.push_str("<br>");
-        }
-        buffer.push_str("</span>");
-        buffer.push_str(line_terminator.to_html().as_str());
-    }
 }
 
 fn encode_html(s: String) -> String {
     s.replace('>', "&gt;").replace('<', "&lt;")
 }
 
-fn multilines(s: &str) -> String {
+fn format_multilines(s: &str) -> String {
     regex::Regex::new(r"\n|\r\n")
         .unwrap()
         .split(s)
-        .map(|l| format!("<span class=\"line\">{}</span>", xml_escape(l)))
+        .map(|l| format!("<span class=\"line\">{}</span>", escape_xml(l)))
         .collect::<Vec<String>>()
         .join("\n")
 }
@@ -1245,6 +915,7 @@ mod tests {
     #[test]
     fn test_multiline_string() {
         // ``````
+        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::OneLineText(Template {
             delimiter: None,
             elements: vec![TemplateElement::String {
@@ -1253,12 +924,14 @@ mod tests {
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
         });
+        fmt.fmt_multiline_string(&multiline_string);
         assert_eq!(
-            multiline_string.to_html(),
-            "<span class=\"multiline\"><span class=\"line\">``````</span></span>".to_string()
+            fmt.buffer,
+            "<span class=\"multiline\"><span class=\"line\">``````</span></span>"
         );
 
         // ```hello```
+        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::OneLineText(Template {
             delimiter: None,
             elements: vec![TemplateElement::String {
@@ -1267,15 +940,17 @@ mod tests {
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
         });
+        fmt.fmt_multiline_string(&multiline_string);
         assert_eq!(
-            multiline_string.to_html(),
-            "<span class=\"multiline\"><span class=\"line\">```hello```</span></span>".to_string()
+            fmt.buffer,
+            "<span class=\"multiline\"><span class=\"line\">```hello```</span></span>"
         );
 
         // ```
         // line1
         // line2
         // ```
+        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::Text(Text {
             space: Whitespace {
                 value: "".to_string(),
@@ -1300,31 +975,33 @@ mod tests {
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
         });
+        fmt.fmt_multiline_string(&multiline_string);
         assert_eq!(
-            multiline_string.to_html(),
-            "<span class=\"multiline\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>".to_string()
+            fmt.buffer,
+            "<span class=\"multiline\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>"
         );
     }
 
     #[test]
     fn test_multilines() {
         assert_eq!(
-            multilines("{\n   \"id\": 1\n}"),
+            format_multilines("{\n   \"id\": 1\n}"),
             "<span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span>"
         );
         assert_eq!(
-            multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>"),
+            format_multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>"),
             "<span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span>"
         );
 
         assert_eq!(
-            multilines("Hello\n"),
+            format_multilines("Hello\n"),
             "<span class=\"line\">Hello</span>\n<span class=\"line\"></span>"
         );
     }
 
     #[test]
     fn test_json() {
+        let mut fmt = HtmlFormatter::new();
         let value = JsonValue::Object {
             space0: "".to_string(),
             elements: vec![JsonObjectElement {
@@ -1343,14 +1020,16 @@ mod tests {
                 space3: "\n".to_string(),
             }],
         };
+        fmt.fmt_json_value(&value);
         assert_eq!(
-            value.to_html(),
+            fmt.buffer,
             "<span class=\"json\"><span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span></span>"
         );
     }
 
     #[test]
     fn test_json_encoded_newline() {
+        let mut fmt = HtmlFormatter::new();
         let value = JsonValue::String(Template {
             delimiter: Some('"'),
             elements: vec![TemplateElement::String {
@@ -1359,26 +1038,29 @@ mod tests {
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
         });
+        fmt.fmt_json_value(&value);
         assert_eq!(
-            value.to_html(),
+            fmt.buffer,
             "<span class=\"json\"><span class=\"line\">\"\\n\"</span></span>"
         )
     }
 
     #[test]
     fn test_xml() {
+        let mut fmt = HtmlFormatter::new();
         let value = "<?xml version=\"1.0\"?>\n<drink>café</drink>";
+        fmt.fmt_xml(value);
         assert_eq!(
-            xml_html(value),
+            fmt.buffer,
             "<span class=\"xml\"><span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span></span>"
         )
     }
 
     #[test]
     fn test_xml_escape() {
-        assert_eq!(xml_escape("hello"), "hello");
+        assert_eq!(escape_xml("hello"), "hello");
         assert_eq!(
-            xml_escape("<?xml version=\"1.0\"?>"),
+            escape_xml("<?xml version=\"1.0\"?>"),
             "&lt;?xml version=\"1.0\"?&gt;"
         );
     }
