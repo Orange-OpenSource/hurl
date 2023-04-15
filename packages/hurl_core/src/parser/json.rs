@@ -58,7 +58,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut chars = vec![];
     let start = reader.state.pos.clone();
     loop {
-        if reader.remaining().starts_with('"') || reader.is_eof() {
+        if reader.peek() == Some('"') || reader.is_eof() {
             break;
         }
         let char = any_char(reader)?;
@@ -209,7 +209,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
         Err(_) => "".to_string(),
     };
 
-    let exponent = if reader.remaining().starts_with('e') || reader.remaining().starts_with('E') {
+    let exponent = if reader.peek() == Some('e') || reader.peek() == Some('E') {
         reader.read();
         let exponent_sign = match try_literal("-", reader) {
             Ok(_) => "-".to_string(),
@@ -240,15 +240,15 @@ fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     let mut elements = vec![];
 
     // at least one element
-    if !reader.remaining().starts_with(']') {
+    if reader.peek() != Some(']') {
         let first_element = list_element(reader)?;
         elements.push(first_element);
 
         loop {
-            if reader.remaining().starts_with(']') {
+            if reader.peek() == Some(']') {
                 break;
             }
-            if !reader.remaining().starts_with(',') {
+            if reader.peek() != Some(',') {
                 break;
             }
             literal(",", reader)?;
@@ -286,15 +286,15 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     try_literal("{", reader)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];
-    if !reader.remaining().starts_with('}') {
+    if reader.peek() != Some('}') {
         let first_element = object_element(reader)?;
         elements.push(first_element);
 
         loop {
-            if reader.remaining().starts_with('}') {
+            if reader.peek() == Some('}') {
                 break;
             }
-            if !reader.remaining().starts_with(',') {
+            if reader.peek() != Some(',') {
                 break;
             }
             literal(",", reader)?;

@@ -110,7 +110,7 @@ mod tests {
             String::from("<users><user /></users>")
         );
         assert_eq!(reader.state.cursor, 23);
-        assert_eq!(reader.remaining(), String::from("xx"));
+        assert_eq!(reader.peek_n(2), String::from("xx"));
 
         let mut reader = Reader::init("<?xml version=\"1.0\"?><users/>xxx");
         assert_eq!(

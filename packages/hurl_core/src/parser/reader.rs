@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::cmp::min;
+
 use crate::ast::Pos;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -30,6 +32,7 @@ pub struct ReaderState {
 }
 
 impl Reader {
+    // FIXME: change name to the more idiomatic new
     pub fn init(s: &str) -> Reader {
         Reader {
             buffer: s.chars().collect(),
@@ -63,6 +66,12 @@ impl Reader {
 
     pub fn peek(&mut self) -> Option<char> {
         self.buffer.get(self.state.cursor).copied()
+    }
+
+    pub fn peek_n(&self, n: usize) -> String {
+        let start = self.state.cursor;
+        let end = min(start + n, self.buffer.len());
+        self.buffer[start..end].iter().collect()
     }
 
     pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {
@@ -118,7 +127,7 @@ impl Reader {
     }
 
     pub fn try_literal(&mut self, value: &str) -> bool {
-        if self.remaining().starts_with(value.to_string().as_str()) {
+        if self.peek_n(value.len()) == value {
             self.read_n(value.len());
             true
         } else {
@@ -126,16 +135,7 @@ impl Reader {
         }
     }
 
-    pub fn remaining(&self) -> String {
-        self.buffer.as_slice()[self.state.cursor..self.buffer.len()]
-            .iter()
-            .collect()
-    }
-
-    pub fn slice(&self, start: usize, end: usize) -> String {
-        self.buffer.as_slice()[start..end].iter().collect()
-    }
-
+    // FIXME: explain this method, find a better name mayebe?
     pub fn from(&self, start: usize) -> String {
         let end = self.state.cursor;
         self.buffer.as_slice()[start..end].iter().collect()
@@ -155,7 +155,7 @@ mod tests {
         let mut reader = Reader::init("hi");
         assert_eq!(reader.state.cursor, 0);
         assert!(!reader.is_eof());
-        assert_eq!(reader.remaining(), "hi".to_string());
+        assert_eq!(reader.peek_n(2), "hi".to_string());
 
         assert_eq!(reader.read().unwrap(), 'h');
         assert_eq!(reader.state.cursor, 1);

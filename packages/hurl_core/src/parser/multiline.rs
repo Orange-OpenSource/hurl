@@ -83,7 +83,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     let mut chars = vec![];
 
     let start = reader.state.pos.clone();
-    while !reader.remaining().starts_with("```") && !reader.is_eof() {
+    while reader.peek_n(3) != "```" && !reader.is_eof() {
         let pos = reader.state.pos.clone();
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
@@ -233,7 +233,7 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<'static, Template>
     let mut chars = vec![];
 
     let start = reader.state.pos.clone();
-    while !reader.remaining().starts_with("```") && !reader.is_eof() {
+    while reader.peek_n(3) != "```" && !reader.is_eof() {
         let pos = reader.state.pos.clone();
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
@@ -262,7 +262,7 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
     let mut chars = vec![];
 
     let start = reader.state.pos.clone();
-    while !reader.remaining().starts_with("```") && !reader.is_eof() {
+    while reader.peek_n(3) != "```" && !reader.is_eof() {
         let pos = reader.state.pos.clone();
         let c = reader.read().unwrap();
         if c == '\n' {
