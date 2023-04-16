@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn test_url() {
-        let mut reader = Reader::init("http://google.fr # ");
+        let mut reader = Reader::new("http://google.fr # ");
         assert_eq!(
             url(&mut reader).unwrap(),
             Template {
@@ -156,7 +156,7 @@ mod tests {
 
     #[test]
     fn test_url2() {
-        let mut reader = Reader::init("http://localhost:8000/cookies/set-session-cookie2-valueA");
+        let mut reader = Reader::new("http://localhost:8000/cookies/set-session-cookie2-valueA");
         assert_eq!(
             url(&mut reader).unwrap(),
             Template {
@@ -175,7 +175,7 @@ mod tests {
 
     #[test]
     fn test_url_with_expression() {
-        let mut reader = Reader::init("http://{{host}}.fr ");
+        let mut reader = Reader::new("http://{{host}}.fr ");
         assert_eq!(
             url(&mut reader).unwrap(),
             Template {
@@ -212,7 +212,7 @@ mod tests {
 
     #[test]
     fn test_url_error_variable() {
-        let mut reader = Reader::init("http://{{host>}}.fr");
+        let mut reader = Reader::new("http://{{host>}}.fr");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -233,7 +233,7 @@ mod tests {
 
     #[test]
     fn test_url_error_missing_delimiter() {
-        let mut reader = Reader::init("http://{{host");
+        let mut reader = Reader::new("http://{{host");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -253,7 +253,7 @@ mod tests {
 
     #[test]
     fn test_url_error_empty() {
-        let mut reader = Reader::init(" # eol");
+        let mut reader = Reader::new(" # eol");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::UrlIllegalCharacter(' '));
@@ -315,7 +315,7 @@ mod tests {
         ];
         for s in valid_urls {
             //eprintln!("{}", s);
-            let mut reader = Reader::init(s);
+            let mut reader = Reader::new(s);
             assert!(url(&mut reader).is_ok());
         }
     }

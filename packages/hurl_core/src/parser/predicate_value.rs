@@ -88,19 +88,19 @@ mod tests {
 
     #[test]
     fn test_predicate_value() {
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Bool(true)
         );
 
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Integer(1)
         );
 
-        let mut reader = Reader::init("1.1");
+        let mut reader = Reader::new("1.1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
             PredicateValue::Float(Float {
@@ -112,7 +112,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_error() {
-        let mut reader = Reader::init("xx");
+        let mut reader = Reader::new("xx");
         let error = predicate_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::PredicateValue {});
@@ -121,7 +121,7 @@ mod tests {
 
     #[test]
     fn test_predicate_value_error_missing_quote() {
-        let mut reader = Reader::init("\"not_found");
+        let mut reader = Reader::new("\"not_found");
         let error = predicate_value(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,

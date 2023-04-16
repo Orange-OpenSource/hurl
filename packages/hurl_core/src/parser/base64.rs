@@ -181,27 +181,27 @@ mod tests {
 
     #[test]
     fn test_decode_one_block() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         assert_eq!(parse(&mut reader), vec![] as Vec<u8>);
         assert_eq!(reader.state.cursor, 0);
 
-        let mut reader = Reader::init("AA==;");
+        let mut reader = Reader::new("AA==;");
         assert_eq!(parse(&mut reader), vec![0]);
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("AA");
+        let mut reader = Reader::new("AA");
         assert_eq!(parse(&mut reader), vec![0]);
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("AA;");
+        let mut reader = Reader::new("AA;");
         assert_eq!(parse(&mut reader), vec![0]);
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("TWE=;");
+        let mut reader = Reader::new("TWE=;");
         assert_eq!(parse(&mut reader), vec![77, 97]);
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("TWFu;");
+        let mut reader = Reader::new("TWFu;");
         assert_eq!(parse(&mut reader), vec![77, 97, 110]);
         assert_eq!(reader.state.cursor, 4);
     }
@@ -222,29 +222,29 @@ mod tests {
 
     #[test]
     fn test_decode_with_padding() {
-        let mut reader = Reader::init("YW55IGNhcm5hbCBwbGVhcw==;");
+        let mut reader = Reader::new("YW55IGNhcm5hbCBwbGVhcw==;");
         let decoded = parse(&mut reader);
         assert_eq!(decoded, b"any carnal pleas");
 
-        let mut reader = Reader::init("YW55IGNhcm5hbCBwbGVhc3U=;");
+        let mut reader = Reader::new("YW55IGNhcm5hbCBwbGVhc3U=;");
         assert_eq!(parse(&mut reader), b"any carnal pleasu");
 
-        let mut reader = Reader::init("YW55IGNhcm5hbCBwbGVhc3Vy;");
+        let mut reader = Reader::new("YW55IGNhcm5hbCBwbGVhc3Vy;");
         assert_eq!(parse(&mut reader), b"any carnal pleasur");
     }
 
     #[test]
     fn test_decode_without_padding() {
-        let mut reader = Reader::init("YW55IGNhcm5hbCBwbGVhcw;");
+        let mut reader = Reader::new("YW55IGNhcm5hbCBwbGVhcw;");
         assert_eq!(parse(&mut reader), b"any carnal pleas");
 
-        let mut reader = Reader::init("YW55IGNhcm5hbCBwbGVhc3U;");
+        let mut reader = Reader::new("YW55IGNhcm5hbCBwbGVhc3U;");
         assert_eq!(parse(&mut reader), b"any carnal pleasu");
     }
 
     #[test]
     fn test_decode_with_whitespace() {
-        let mut reader = Reader::init("TW E=\n;");
+        let mut reader = Reader::new("TW E=\n;");
         assert_eq!(parse(&mut reader), vec![77, 97]);
         assert_eq!(reader.state.cursor, 5);
     }

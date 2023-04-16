@@ -15,8 +15,11 @@
  * limitations under the License.
  *
  */
+use std::cmp::min;
+
 use super::Pos;
 
+/// Represents a JSONPath reader.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Reader {
     pub buffer: Vec<char>,
@@ -30,7 +33,8 @@ pub struct ReaderState {
 }
 
 impl Reader {
-    pub fn init(s: &str) -> Reader {
+    /// Creates a new reader.
+    pub fn new(s: &str) -> Reader {
         Reader {
             buffer: s.chars().collect(),
             state: ReaderState {
@@ -40,10 +44,12 @@ impl Reader {
         }
     }
 
+    /// Returns true if the reader has read all the buffer, false otherwise.
     pub fn is_eof(&self) -> bool {
         self.state.cursor == self.buffer.len()
     }
 
+    /// Returns the next char from the buffer advancing the internal state.
     pub fn read(&mut self) -> Option<char> {
         match self.buffer.get(self.state.cursor) {
             None => None,
@@ -61,10 +67,20 @@ impl Reader {
         }
     }
 
-    pub fn peek(&mut self) -> Option<char> {
-        self.buffer.get(self.state.cursor).copied()
+    /// Returns `count` chars from the buffer advancing the internal state.
+    /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
+    pub fn read_n(&mut self, count: usize) -> String {
+        let mut s = String::from("");
+        for _ in 0..count {
+            match self.read() {
+                None => {}
+                Some(c) => s.push(c),
+            }
+        }
+        s
     }
 
+    /// Returns chars from the buffer while `predicate` is true, advancing the internal state.
     pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {
         let mut s = String::from("");
         loop {
@@ -81,31 +97,26 @@ impl Reader {
         }
     }
 
-    // assume that you still have count characters to read in your buffer
-    pub fn read_n(&mut self, count: usize) -> String {
-        let mut s = String::from("");
-        for _ in 0..count {
-            match self.read() {
-                None => {}
-                Some(c) => s.push(c),
-            }
-        }
-        s
+    /// Returns the next char from the buffer without advancing the internal state.
+    pub fn peek(&mut self) -> Option<char> {
+        self.buffer.get(self.state.cursor).copied()
+    }
+
+    /// Returns the `count` char from the buffer without advancing the internal state.
+    /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
+    pub fn peek_n(&self, count: usize) -> String {
+        let start = self.state.cursor;
+        let end = min(start + count, self.buffer.len());
+        self.buffer[start..end].iter().collect()
     }
 
     pub fn try_literal(&mut self, value: &str) -> bool {
-        if self.remaining().starts_with(value.to_string().as_str()) {
+        if self.peek_n(value.len()) == value {
             self.read_n(value.len());
             true
         } else {
             false
         }
-    }
-
-    pub fn remaining(&self) -> String {
-        self.buffer.as_slice()[self.state.cursor..self.buffer.len()]
-            .iter()
-            .collect()
     }
 }
 
@@ -119,10 +130,10 @@ mod tests {
 
     #[test]
     fn test_reader() {
-        let mut reader = Reader::init("hi");
+        let mut reader = Reader::new("hi");
         assert_eq!(reader.state.cursor, 0);
         assert!(!reader.is_eof());
-        assert_eq!(reader.remaining(), "hi".to_string());
+        assert_eq!(reader.peek_n(2), "hi".to_string());
 
         assert_eq!(reader.read().unwrap(), 'h');
         assert_eq!(reader.state.cursor, 1);
@@ -135,11 +146,11 @@ mod tests {
 
     #[test]
     fn test_try_predicate() {
-        let mut reader = Reader::init("hi");
+        let mut reader = Reader::new("hi");
         assert!(reader.try_literal("hi"));
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("hello");
+        let mut reader = Reader::new("hello");
         assert!(!reader.try_literal("hi"));
         assert_eq!(reader.state.cursor, 0);
     }

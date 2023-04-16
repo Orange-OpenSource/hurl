@@ -66,30 +66,30 @@ mod tests {
 
     #[test]
     fn test_parsing_xml_brute_force_errors() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("<<");
+        let mut reader = Reader::new("<<");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("<users><user /></users");
+        let mut reader = Reader::new("<users><user /></users");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
 
-        let mut reader = Reader::init("<users aa><user /></users");
+        let mut reader = Reader::new("<users aa><user /></users");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::Xml {});
@@ -97,14 +97,14 @@ mod tests {
 
     #[test]
     fn test_parsing_xml_brute_force() {
-        let mut reader = Reader::init("<users><user /></users>");
+        let mut reader = Reader::new("<users><user /></users>");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
         );
         assert_eq!(reader.state.cursor, 23);
 
-        let mut reader = Reader::init("<users><user /></users>xx");
+        let mut reader = Reader::new("<users><user /></users>xx");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<users><user /></users>")
@@ -112,7 +112,7 @@ mod tests {
         assert_eq!(reader.state.cursor, 23);
         assert_eq!(reader.peek_n(2), String::from("xx"));
 
-        let mut reader = Reader::init("<?xml version=\"1.0\"?><users/>xxx");
+        let mut reader = Reader::new("<?xml version=\"1.0\"?><users/>xxx");
         assert_eq!(
             parse(&mut reader).unwrap(),
             String::from("<?xml version=\"1.0\"?><users/>")

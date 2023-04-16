@@ -86,7 +86,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
         match escape_char(reader) {
             Ok(c) => {
                 value.push(c);
-                encoded.push_str(reader.from(save.cursor).as_str())
+                encoded.push_str(reader.peek_back(save.cursor).as_str())
             }
             Err(e) => {
                 if e.recoverable {
@@ -104,7 +104,7 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
                                 || c == '$'
                             {
                                 value.push(c);
-                                encoded.push_str(reader.from(save.cursor).as_str())
+                                encoded.push_str(reader.peek_back(save.cursor).as_str())
                             } else {
                                 reader.state = save;
                                 break;
@@ -237,7 +237,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<'static, Template> 
 fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (char, String)> {
     let start = reader.state.clone();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.from(start.cursor))),
+        Ok(c) => Ok((c, reader.peek_back(start.cursor))),
         Err(e) => {
             if e.recoverable {
                 reader.state = start.clone();
@@ -261,7 +261,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (cha
                                 },
                             })
                         } else {
-                            Ok((c, reader.from(start.cursor)))
+                            Ok((c, reader.peek_back(start.cursor)))
                         }
                     }
                 }
@@ -332,7 +332,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_empty() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -346,7 +346,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_with_hash() {
-        let mut reader = Reader::init("a#");
+        let mut reader = Reader::new("a#");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -363,7 +363,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_with_encoded_hash() {
-        let mut reader = Reader::init("a\\u{23}");
+        let mut reader = Reader::new("a\\u{23}");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -380,7 +380,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_with_quote() {
-        let mut reader = Reader::init("\"hi\"");
+        let mut reader = Reader::new("\"hi\"");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -397,7 +397,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_hello_world() {
-        let mut reader = Reader::init("hello\\u{20}{{name}}!");
+        let mut reader = Reader::new("hello\\u{20}{{name}}!");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -434,7 +434,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_template_trailing_space() {
-        let mut reader = Reader::init("hello world # comment");
+        let mut reader = Reader::new("hello world # comment");
         assert_eq!(
             unquoted_template(&mut reader).unwrap(),
             Template {
@@ -458,7 +458,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_key() {
-        let mut reader = Reader::init("key");
+        let mut reader = Reader::new("key");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -470,7 +470,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("key\\u{20}\\u{3a} :");
+        let mut reader = Reader::new("key\\u{20}\\u{3a} :");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -482,7 +482,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 15);
 
-        let mut reader = Reader::init("$top:");
+        let mut reader = Reader::new("$top:");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -497,7 +497,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_key_with_square_bracket() {
-        let mut reader = Reader::init("values\\u{5b}0\\u{5d} :");
+        let mut reader = Reader::new("values\\u{5b}0\\u{5d} :");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -509,7 +509,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 19);
 
-        let mut reader = Reader::init("values[0] :");
+        let mut reader = Reader::new("values[0] :");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -524,7 +524,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_keys_ignore_start_square_bracket() {
-        let mut reader = Reader::init("[0]:");
+        let mut reader = Reader::new("[0]:");
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert!(error.recoverable);
         assert_eq!(reader.state.cursor, 3);
@@ -532,7 +532,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_keys_accept_start_escape_square_bracket() {
-        let mut reader = Reader::init("\\u{5b}0\\u{5d}");
+        let mut reader = Reader::new("\\u{5b}0\\u{5d}");
         assert_eq!(
             unquoted_string_key(&mut reader).unwrap(),
             EncodedString {
@@ -547,7 +547,7 @@ mod tests {
 
     #[test]
     fn test_unquoted_key_error() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -557,12 +557,12 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("\\l");
+        let mut reader = Reader::new("\\l");
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(error.inner, ParseError::EscapeChar {});
 
-        let mut reader = Reader::init(r#"{"id":1}"#);
+        let mut reader = Reader::new(r#"{"id":1}"#);
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -575,7 +575,7 @@ mod tests {
 
     #[test]
     fn test_quoted_template() {
-        let mut reader = Reader::init("\"\"");
+        let mut reader = Reader::new("\"\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
@@ -586,7 +586,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("\"a#\"");
+        let mut reader = Reader::new("\"a#\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
@@ -600,7 +600,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("\"{0}\"");
+        let mut reader = Reader::new("\"{0}\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
@@ -618,7 +618,7 @@ mod tests {
     #[test]
     fn test_quoted_template_with_quote() {
         // "\"hi\""
-        let mut reader = Reader::init("\"\\\"hi\\\"\"");
+        let mut reader = Reader::new("\"\\\"hi\\\"\"");
         assert_eq!(
             quoted_template(&mut reader).unwrap(),
             Template {
@@ -635,7 +635,7 @@ mod tests {
 
     #[test]
     fn test_quoted_template_error_missing_closing_quote() {
-        let mut reader = Reader::init("\"not found");
+        let mut reader = Reader::new("\"not found");
         let error = quoted_template(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -649,18 +649,18 @@ mod tests {
 
     #[test]
     fn test_quoted_string() {
-        let mut reader = Reader::init("\"\"");
+        let mut reader = Reader::new("\"\"");
         assert_eq!(quoted_string(&mut reader).unwrap(), "");
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("\"Hello\"");
+        let mut reader = Reader::new("\"Hello\"");
         assert_eq!(quoted_string(&mut reader).unwrap(), "Hello");
         assert_eq!(reader.state.cursor, 7);
     }
 
     #[test]
     fn test_backtick_template() {
-        let mut reader = Reader::init("``");
+        let mut reader = Reader::new("``");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
             Template {
@@ -671,7 +671,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("`foo#`");
+        let mut reader = Reader::new("`foo#`");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
             Template {
@@ -685,7 +685,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("`{0}`");
+        let mut reader = Reader::new("`{0}`");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
             Template {
@@ -703,7 +703,7 @@ mod tests {
     #[test]
     fn test_backtick_template_with_backtick() {
         // `\`hi\``
-        let mut reader = Reader::init("`\\`hi\\``");
+        let mut reader = Reader::new("`\\`hi\\``");
         assert_eq!(
             backtick_template(&mut reader).unwrap(),
             Template {
@@ -720,7 +720,7 @@ mod tests {
 
     #[test]
     fn test_backtick_template_error_missing_closing_backtick() {
-        let mut reader = Reader::init("`not found");
+        let mut reader = Reader::new("`not found");
         let error = backtick_template(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -734,28 +734,28 @@ mod tests {
 
     #[test]
     fn test_any_char() {
-        let mut reader = Reader::init("a");
+        let mut reader = Reader::new("a");
         assert_eq!(
             any_char(vec![], &mut reader).unwrap(),
             ('a', "a".to_string())
         );
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init(" ");
+        let mut reader = Reader::new(" ");
         assert_eq!(
             any_char(vec![], &mut reader).unwrap(),
             (' ', " ".to_string())
         );
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("\\t");
+        let mut reader = Reader::new("\\t");
         assert_eq!(
             any_char(vec![], &mut reader).unwrap(),
             ('\t', "\\t".to_string())
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("#");
+        let mut reader = Reader::new("#");
         assert_eq!(
             any_char(vec![], &mut reader).unwrap(),
             ('#', "#".to_string())
@@ -765,7 +765,7 @@ mod tests {
 
     #[test]
     fn test_any_char_quote() {
-        let mut reader = Reader::init("\\\"");
+        let mut reader = Reader::new("\\\"");
         assert_eq!(
             any_char(vec![], &mut reader).unwrap(),
             ('"', "\\\"".to_string())
@@ -775,17 +775,17 @@ mod tests {
 
     #[test]
     fn test_any_char_error() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = any_char(vec![], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("#");
+        let mut reader = Reader::new("#");
         let error = any_char(vec!['#'], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("\t");
+        let mut reader = Reader::new("\t");
         let error = any_char(vec![], &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
@@ -793,15 +793,15 @@ mod tests {
 
     #[test]
     fn test_escape_char() {
-        let mut reader = Reader::init("\\n");
+        let mut reader = Reader::new("\\n");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("\\u{0a}");
+        let mut reader = Reader::new("\\u{0a}");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = escape_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -816,21 +816,21 @@ mod tests {
 
     #[test]
     fn test_unicode() {
-        let mut reader = Reader::init("{000a}");
+        let mut reader = Reader::new("{000a}");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("{E9}");
+        let mut reader = Reader::new("{E9}");
         assert_eq!(unicode(&mut reader).unwrap(), 'é');
         assert_eq!(reader.state.cursor, 4);
     }
 
     #[test]
     fn test_hex_value() {
-        let mut reader = Reader::init("20x");
+        let mut reader = Reader::new("20x");
         assert_eq!(hex_value(&mut reader).unwrap(), 32);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = hex_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, ParseError::HexDigit);
@@ -841,7 +841,7 @@ mod tests {
     fn test_quoted_template_benchmark() {
         // benchmark tests not in stable toolchain yet
         // Simply log duration for the time-being
-        let mut reader = Reader::init(
+        let mut reader = Reader::new(
             format!(
                 "\"Hello World!\"{}",
                 (0..10_000_000).map(|_| "X").collect::<String>()

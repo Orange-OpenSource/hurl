@@ -87,7 +87,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
 fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
     let start = reader.state.clone();
     match escape_char(reader) {
-        Ok(c) => Ok((c, reader.from(start.cursor), start.pos)),
+        Ok(c) => Ok((c, reader.peek_back(start.cursor), start.pos)),
         Err(e) => {
             if e.recoverable {
                 reader.state = start.clone();
@@ -109,7 +109,7 @@ fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
                                 },
                             })
                         } else {
-                            Ok((c, reader.from(start.cursor), start.pos))
+                            Ok((c, reader.peek_back(start.cursor), start.pos))
                         }
                     }
                 }
@@ -364,13 +364,13 @@ mod tests {
 
     #[test]
     fn test_parse_error() {
-        let mut reader = Reader::init("{ \"a\":\n}");
+        let mut reader = Reader::new("{ \"a\":\n}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("[0,1,]");
+        let mut reader = Reader::new("[0,1,]");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(error.inner, error::ParseError::Json {});
@@ -379,11 +379,11 @@ mod tests {
 
     #[test]
     fn test_null_value() {
-        let mut reader = Reader::init("null");
+        let mut reader = Reader::new("null");
         assert_eq!(null_value(&mut reader).unwrap(), JsonValue::Null {});
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         let error = null_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -397,14 +397,14 @@ mod tests {
 
     #[test]
     fn test_boolean_value() {
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         assert_eq!(
             boolean_value(&mut reader).unwrap(),
             JsonValue::Boolean(true)
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         let error = boolean_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -450,7 +450,7 @@ mod tests {
 
     #[test]
     fn test_string_value() {
-        let mut reader = Reader::init("\"\"");
+        let mut reader = Reader::new("\"\"");
         assert_eq!(
             string_value(&mut reader).unwrap(),
             JsonValue::String(Template {
@@ -461,11 +461,11 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("\"Hello\\u0020{{name}}!\"");
+        let mut reader = Reader::new("\"Hello\\u0020{{name}}!\"");
         assert_eq!(string_value(&mut reader).unwrap(), json_hello_world_value());
         assert_eq!(reader.state.cursor, 22);
 
-        let mut reader = Reader::init("\"{}\"");
+        let mut reader = Reader::new("\"{}\"");
         assert_eq!(
             string_value(&mut reader).unwrap(),
             JsonValue::String(Template {
@@ -482,7 +482,7 @@ mod tests {
 
     #[test]
     fn test_string_value_error() {
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -493,7 +493,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("\"1");
+        let mut reader = Reader::new("\"1");
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
@@ -504,7 +504,7 @@ mod tests {
         );
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("\"{{x\"");
+        let mut reader = Reader::new("\"{{x\"");
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
@@ -518,35 +518,35 @@ mod tests {
 
     #[test]
     fn test_any_char() {
-        let mut reader = Reader::init("a");
+        let mut reader = Reader::new("a");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             ('a', "a".to_string(), Pos { line: 1, column: 1 })
         );
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init(" ");
+        let mut reader = Reader::new(" ");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             (' ', " ".to_string(), Pos { line: 1, column: 1 })
         );
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("\\u0020 ");
+        let mut reader = Reader::new("\\u0020 ");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             (' ', "\\u0020".to_string(), Pos { line: 1, column: 1 })
         );
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("\\t");
+        let mut reader = Reader::new("\\t");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             ('\t', "\\t".to_string(), Pos { line: 1, column: 1 })
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("#");
+        let mut reader = Reader::new("#");
         assert_eq!(
             any_char(&mut reader).unwrap(),
             ('#', "#".to_string(), Pos { line: 1, column: 1 })
@@ -556,12 +556,12 @@ mod tests {
 
     #[test]
     fn test_any_char_error() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = any_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("\t");
+        let mut reader = Reader::new("\t");
         let error = any_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
@@ -569,15 +569,15 @@ mod tests {
 
     #[test]
     fn test_escape_char() {
-        let mut reader = Reader::init("\\n");
+        let mut reader = Reader::new("\\n");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("\\u000a");
+        let mut reader = Reader::new("\\u000a");
         assert_eq!(escape_char(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = escape_char(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -592,17 +592,17 @@ mod tests {
 
     #[test]
     fn test_unicode() {
-        let mut reader = Reader::init("000a");
+        let mut reader = Reader::new("000a");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 4);
     }
 
     #[test]
     fn test_hex_value() {
-        let mut reader = Reader::init("0020x");
+        let mut reader = Reader::new("0020x");
         assert_eq!(hex_value(&mut reader).unwrap(), 32);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = hex_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(error.inner, error::ParseError::HexDigit);
@@ -611,49 +611,49 @@ mod tests {
 
     #[test]
     fn test_number_value() {
-        let mut reader = Reader::init("100");
+        let mut reader = Reader::new("100");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("100".to_string())
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("1.333");
+        let mut reader = Reader::new("1.333");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1.333".to_string())
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("-1");
+        let mut reader = Reader::new("-1");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("-1".to_string())
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("00");
+        let mut reader = Reader::new("00");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("0".to_string())
         );
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("1e0");
+        let mut reader = Reader::new("1e0");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e0".to_string())
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("1e005");
+        let mut reader = Reader::new("1e005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e005".to_string())
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("1e-005");
+        let mut reader = Reader::new("1e-005");
         assert_eq!(
             number_value(&mut reader).unwrap(),
             JsonValue::Number("1e-005".to_string())
@@ -663,7 +663,7 @@ mod tests {
 
     #[test]
     fn test_number_value_error() {
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         let error = number_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -674,7 +674,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("1.x");
+        let mut reader = Reader::new("1.x");
         let error = number_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
@@ -688,7 +688,7 @@ mod tests {
 
     #[test]
     fn test_expression_value() {
-        let mut reader = Reader::init("{{n}}");
+        let mut reader = Reader::new("{{n}}");
         assert_eq!(
             expression_value(&mut reader).unwrap(),
             JsonValue::Expression(Expr {
@@ -711,7 +711,7 @@ mod tests {
 
     #[test]
     fn test_list_value() {
-        let mut reader = Reader::init("[]");
+        let mut reader = Reader::new("[]");
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
@@ -721,7 +721,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("[ ]");
+        let mut reader = Reader::new("[ ]");
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
@@ -731,7 +731,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("[true]");
+        let mut reader = Reader::new("[true]");
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
@@ -748,7 +748,7 @@ mod tests {
 
     #[test]
     fn test_list_error() {
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -759,7 +759,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("[1, 2,]");
+        let mut reader = Reader::new("[1, 2,]");
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
@@ -768,7 +768,7 @@ mod tests {
 
     #[test]
     fn test_list_element() {
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         assert_eq!(
             list_element(&mut reader).unwrap(),
             JsonListElement {
@@ -782,7 +782,7 @@ mod tests {
 
     #[test]
     fn test_object_value() {
-        let mut reader = Reader::init("{}");
+        let mut reader = Reader::new("{}");
         assert_eq!(
             object_value(&mut reader).unwrap(),
             JsonValue::Object {
@@ -792,7 +792,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("{ }");
+        let mut reader = Reader::new("{ }");
         assert_eq!(
             object_value(&mut reader).unwrap(),
             JsonValue::Object {
@@ -802,7 +802,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("{\n  \"a\": true\n}");
+        let mut reader = Reader::new("{\n  \"a\": true\n}");
         assert_eq!(
             object_value(&mut reader).unwrap(),
             JsonValue::Object {
@@ -826,7 +826,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 15);
 
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -840,7 +840,7 @@ mod tests {
 
     #[test]
     fn test_object_error() {
-        let mut reader = Reader::init("{ \"a\":\n}");
+        let mut reader = Reader::new("{ \"a\":\n}");
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, error::ParseError::Json {});
@@ -849,7 +849,7 @@ mod tests {
 
     #[test]
     fn test_object_element() {
-        let mut reader = Reader::init("\"a\": true");
+        let mut reader = Reader::new("\"a\": true");
         assert_eq!(
             object_element(&mut reader).unwrap(),
             JsonObjectElement {
@@ -873,7 +873,7 @@ mod tests {
 
     #[test]
     fn test_object_element_error() {
-        let mut reader = Reader::init(":");
+        let mut reader = Reader::new(":");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -884,7 +884,7 @@ mod tests {
         );
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("\"name\":\n");
+        let mut reader = Reader::new("\"name\":\n");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(error.inner, error::ParseError::Json {});
@@ -893,15 +893,15 @@ mod tests {
 
     #[test]
     fn test_whitespace() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         assert_eq!(whitespace(&mut reader), "".to_string());
         assert_eq!(reader.state.cursor, 0);
 
-        let mut reader = Reader::init(" x");
+        let mut reader = Reader::new(" x");
         assert_eq!(whitespace(&mut reader), " ".to_string());
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("\n  x");
+        let mut reader = Reader::new("\n  x");
         assert_eq!(whitespace(&mut reader), "\n  ".to_string());
         assert_eq!(reader.state.cursor, 3);
     }

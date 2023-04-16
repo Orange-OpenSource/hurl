@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn test_expr() {
-        let mut reader = Reader::init("{{ name}}");
+        let mut reader = Reader::new("{{ name}}");
         assert_eq!(
             parse(&mut reader).unwrap(),
             Expr {
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_expr_error() {
-        let mut reader = Reader::init("{{host>}}");
+        let mut reader = Reader::new("{{host>}}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
@@ -119,7 +119,7 @@ mod tests {
 
     #[test]
     fn test_expr_error_eof() {
-        let mut reader = Reader::init("{{host");
+        let mut reader = Reader::new("{{host");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
@@ -133,7 +133,7 @@ mod tests {
 
     #[test]
     fn test_variable() {
-        let mut reader = Reader::init("name");
+        let mut reader = Reader::new("name");
         assert_eq!(
             variable_name(&mut reader).unwrap(),
             Variable {
@@ -142,7 +142,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("my-id");
+        let mut reader = Reader::new("my-id");
         assert_eq!(
             variable_name(&mut reader).unwrap(),
             Variable {

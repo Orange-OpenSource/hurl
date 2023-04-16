@@ -300,7 +300,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_text() {
-        let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -323,7 +323,7 @@ mod tests {
             })
         );
 
-        let mut reader = Reader::init("```         \nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```         \nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -349,7 +349,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_json() {
-        let mut reader = Reader::init("```json\nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```json\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Json(Text {
@@ -375,7 +375,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_graphql() {
-        let mut reader = Reader::init("```graphql\nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```graphql\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::GraphQl(GraphQl {
@@ -399,7 +399,7 @@ mod tests {
             })
         );
 
-        let mut reader = Reader::init("```graphql      \nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```graphql      \nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::GraphQl(GraphQl {
@@ -432,14 +432,14 @@ mod tests {
         ];
 
         for text in datas.iter() {
-            let mut reader = Reader::init(text);
+            let mut reader = Reader::new(text);
             assert!(multiline_string(&mut reader).is_err())
         }
     }
 
     #[test]
     fn test_multiline_string_empty() {
-        let mut reader = Reader::init("``````");
+        let mut reader = Reader::new("``````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
@@ -449,7 +449,7 @@ mod tests {
             })
         );
 
-        let mut reader = Reader::init("```\n```");
+        let mut reader = Reader::new("```\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -468,7 +468,7 @@ mod tests {
                 },
             })
         );
-        let mut reader = Reader::init("```\r\n```");
+        let mut reader = Reader::new("```\r\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -491,7 +491,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_hello() {
-        let mut reader = Reader::init("```Hello World!```");
+        let mut reader = Reader::new("```Hello World!```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
@@ -507,7 +507,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_base64_prefix() {
-        let mut reader = Reader::init("```base64_inline```");
+        let mut reader = Reader::new("```base64_inline```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::OneLineText(Template {
@@ -523,7 +523,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_csv() {
-        let mut reader = Reader::init("```\nline1\nline2\nline3\n```");
+        let mut reader = Reader::new("```\nline1\nline2\nline3\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -549,7 +549,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_one_empty_line() {
-        let mut reader = Reader::init("```\n\n```");
+        let mut reader = Reader::new("```\n\n```");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -573,7 +573,7 @@ mod tests {
         );
 
         // One cr
-        let mut reader = Reader::init("```\n\r\n````");
+        let mut reader = Reader::new("```\n\r\n````");
         assert_eq!(
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
@@ -599,7 +599,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_error() {
-        let mut reader = Reader::init("xxx");
+        let mut reader = Reader::new("xxx");
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -610,13 +610,13 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("```\nxxx");
+        let mut reader = Reader::new("```\nxxx");
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
         assert_eq!(error.inner, ParseError::Multiline);
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("```xxx");
+        let mut reader = Reader::new("```xxx");
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
@@ -630,7 +630,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_value() {
-        let mut reader = Reader::init("```");
+        let mut reader = Reader::new("```");
         assert_eq!(
             multiline_string_value(&mut reader).unwrap(),
             Template {
@@ -641,7 +641,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("hello```");
+        let mut reader = Reader::new("hello```");
         assert_eq!(
             multiline_string_value(&mut reader).unwrap(),
             Template {
@@ -658,7 +658,7 @@ mod tests {
 
     #[test]
     fn test_multiline_string_graphql_with_variables() {
-        let mut reader = Reader::init(
+        let mut reader = Reader::new(
             r#"```graphql
 query Human($name: String!) {
   human(name: $name) {
@@ -737,7 +737,7 @@ variables {
 
     #[test]
     fn test_multiline_string_graphql_with_variables_error() {
-        let mut reader = Reader::init(
+        let mut reader = Reader::new(
             r#"```graphql
 query Human($name: String!) {
   human(name: $name) {
@@ -765,7 +765,7 @@ variables
 
     #[test]
     fn test_multiline_string_graphql_with_variables_not_an_object() {
-        let mut reader = Reader::init(
+        let mut reader = Reader::new(
             r#"```graphql
 query Human($name: String!) {
   human(name: $name) {

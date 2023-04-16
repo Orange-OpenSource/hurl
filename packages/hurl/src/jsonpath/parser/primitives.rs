@@ -252,22 +252,22 @@ mod tests {
 
     #[test]
     fn test_natural() {
-        let mut reader = Reader::init("0");
+        let mut reader = Reader::new("0");
         assert_eq!(natural(&mut reader).unwrap(), 0);
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("0.");
+        let mut reader = Reader::new("0.");
         assert_eq!(natural(&mut reader).unwrap(), 0);
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("10x");
+        let mut reader = Reader::new("10x");
         assert_eq!(natural(&mut reader).unwrap(), 10);
         assert_eq!(reader.state.cursor, 2);
     }
 
     #[test]
     fn test_natural_error() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -278,7 +278,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("01");
+        let mut reader = Reader::new("01");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
@@ -289,7 +289,7 @@ mod tests {
         );
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = natural(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -303,16 +303,16 @@ mod tests {
 
     #[test]
     pub fn test_integer() {
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         assert_eq!(integer(&mut reader).unwrap(), 1);
 
-        let mut reader = Reader::init("1.1");
+        let mut reader = Reader::new("1.1");
         assert_eq!(integer(&mut reader).unwrap(), 1);
 
-        let mut reader = Reader::init("-1.1");
+        let mut reader = Reader::new("-1.1");
         assert_eq!(integer(&mut reader).unwrap(), -1);
 
-        let mut reader = Reader::init("x");
+        let mut reader = Reader::new("x");
         let error = integer(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -326,15 +326,15 @@ mod tests {
 
     #[test]
     fn test_number() {
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init("1.0");
+        let mut reader = Reader::new("1.0");
         assert_eq!(number(&mut reader).unwrap(), Number { int: 1, decimal: 0 });
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("-1.0");
+        let mut reader = Reader::new("-1.0");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -344,7 +344,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("1.1");
+        let mut reader = Reader::new("1.1");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -354,7 +354,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("1.100");
+        let mut reader = Reader::new("1.100");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -364,7 +364,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("1.01");
+        let mut reader = Reader::new("1.01");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -374,7 +374,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("1.010");
+        let mut reader = Reader::new("1.010");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -384,7 +384,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("-0.333333333333333333");
+        let mut reader = Reader::new("-0.333333333333333333");
         assert_eq!(
             number(&mut reader).unwrap(),
             Number {
@@ -397,7 +397,7 @@ mod tests {
 
     #[test]
     fn test_number_error() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -408,7 +408,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("-");
+        let mut reader = Reader::new("-");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -419,7 +419,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("1.");
+        let mut reader = Reader::new("1.");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -430,7 +430,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("1.x");
+        let mut reader = Reader::new("1.x");
         let error = number(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -444,13 +444,13 @@ mod tests {
 
     #[test]
     fn test_string_value() {
-        let mut reader = Reader::init("'hello'");
+        let mut reader = Reader::new("'hello'");
         assert_eq!(string_value(&mut reader).unwrap(), "hello".to_string());
 
-        let mut reader = Reader::init("'\\''");
+        let mut reader = Reader::new("'\\''");
         assert_eq!(string_value(&mut reader).unwrap(), "'".to_string());
 
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -461,7 +461,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("'hi");
+        let mut reader = Reader::new("'hi");
         let error = string_value(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -475,13 +475,13 @@ mod tests {
 
     #[test]
     fn test_key_name() {
-        let mut reader = Reader::init("id'");
+        let mut reader = Reader::new("id'");
         assert_eq!(key_name(&mut reader).unwrap(), "id".to_string());
 
-        let mut reader = Reader::init("id123");
+        let mut reader = Reader::new("id123");
         assert_eq!(key_name(&mut reader).unwrap(), "id123".to_string());
 
-        let mut reader = Reader::init(".");
+        let mut reader = Reader::new(".");
         let error = key_name(&mut reader).err().unwrap();
         assert!(!error.recoverable);
         assert_eq!(
@@ -491,7 +491,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("1id");
+        let mut reader = Reader::new("1id");
         let error = key_name(&mut reader).err().unwrap();
         assert!(!error.recoverable);
         assert_eq!(
@@ -504,10 +504,10 @@ mod tests {
 
     #[test]
     fn test_key_path() {
-        let mut reader = Reader::init("id");
+        let mut reader = Reader::new("id");
         assert_eq!(key_path(&mut reader).unwrap(), vec!["id".to_string()]);
 
-        let mut reader = Reader::init("key1.key2");
+        let mut reader = Reader::new("key1.key2");
         assert_eq!(
             key_path(&mut reader).unwrap(),
             vec!["key1".to_string(), "key2".to_string()]
@@ -516,15 +516,15 @@ mod tests {
 
     #[test]
     fn test_literal() {
-        let mut reader = Reader::init("hello");
+        let mut reader = Reader::new("hello");
         assert_eq!(literal("hello", &mut reader), Ok(()));
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("hello ");
+        let mut reader = Reader::new("hello ");
         assert_eq!(literal("hello", &mut reader), Ok(()));
         assert_eq!(reader.state.cursor, 6);
 
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -535,7 +535,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 0);
 
-        let mut reader = Reader::init("hi");
+        let mut reader = Reader::new("hi");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -546,7 +546,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("he");
+        let mut reader = Reader::new("he");
         let error = literal("hello", &mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(

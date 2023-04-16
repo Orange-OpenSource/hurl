@@ -183,7 +183,7 @@ mod tests {
 
     #[test]
     fn test_count() {
-        let mut reader = Reader::init("count");
+        let mut reader = Reader::new("count");
         assert_eq!(
             filter(&mut reader).unwrap(),
             Filter {
@@ -195,7 +195,7 @@ mod tests {
 
     #[test]
     fn test_error() {
-        let mut reader = Reader::init("xcount");
+        let mut reader = Reader::new("xcount");
         let err = filter(&mut reader).err().unwrap();
         assert_eq!(
             err.inner,
@@ -206,7 +206,7 @@ mod tests {
         assert_eq!(err.pos, Pos { line: 1, column: 1 });
         assert!(err.recoverable);
 
-        let mut reader = Reader::init("regex 1");
+        let mut reader = Reader::new("regex 1");
         let err = filter(&mut reader).err().unwrap();
         assert_eq!(
             err.inner,

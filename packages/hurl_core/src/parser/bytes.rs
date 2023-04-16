@@ -80,7 +80,7 @@ mod tests {
 
     #[test]
     fn test_bytes_json() {
-        let mut reader = Reader::init("[1,2,3] ");
+        let mut reader = Reader::new("[1,2,3] ");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::List {
@@ -106,7 +106,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 7);
 
-        let mut reader = Reader::init("{ } ");
+        let mut reader = Reader::new("{ } ");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Object {
@@ -116,14 +116,14 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Boolean(true))
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init("\"\" x");
+        let mut reader = Reader::new("\"\" x");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::String(Template {
@@ -137,7 +137,7 @@ mod tests {
 
     #[test]
     fn test_bytes_xml() {
-        let mut reader = Reader::init("<a/>");
+        let mut reader = Reader::new("<a/>");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Xml(String::from("<a/>"))
@@ -146,7 +146,7 @@ mod tests {
 
     #[test]
     fn test_bytes_json_error() {
-        let mut reader = Reader::init("{ x ");
+        let mut reader = Reader::new("{ x ");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn test_bytes_multilines_error() {
-        let mut reader = Reader::init("```\nxxx ");
+        let mut reader = Reader::new("```\nxxx ");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 4 });
         assert_eq!(error.inner, ParseError::Multiline);
@@ -167,7 +167,7 @@ mod tests {
 
     #[test]
     fn test_bytes_eof() {
-        let mut reader = Reader::init("");
+        let mut reader = Reader::new("");
         let error = bytes(&mut reader).err().unwrap();
         assert_eq!(
             error.inner,
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn test_json_bytes() {
-        let mut reader = Reader::init("100");
+        let mut reader = Reader::new("100");
         assert_eq!(
             json_bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::Number("100".to_string()))
@@ -189,7 +189,7 @@ mod tests {
 
     #[test]
     fn test_bytes_string() {
-        let mut reader = Reader::init("`foo`  ");
+        let mut reader = Reader::new("`foo`  ");
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::OnelineString(Template {

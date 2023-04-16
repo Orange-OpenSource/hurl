@@ -19,7 +19,7 @@ pub type ParseResult<'a, T> = Result<T, Error>;
 pub type ParseFunc<'a, T> = fn(&mut Reader) -> ParseResult<'a, T>;
 
 pub fn parse_hurl_file(s: &str) -> ParseResult<'static, HurlFile> {
-    let mut reader = Reader::init(s);
+    let mut reader = Reader::new(s);
     parsers::hurl_file(&mut reader)
 }
 

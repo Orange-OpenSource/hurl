@@ -82,7 +82,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
             State::FirstCloseBracket {} => {
                 if s.as_str() == "}" {
-                    let mut reader = Reader::init(encoded.as_str());
+                    let mut reader = Reader::new(encoded.as_str());
                     reader.state = ReaderState {
                         cursor: 0,
                         pos: expression_start.unwrap().clone(),

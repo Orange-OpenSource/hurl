@@ -52,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_filename() {
-        let mut reader = Reader::init("data/data.bin");
+        let mut reader = Reader::new("data/data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
             Filename {
@@ -62,7 +62,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 13);
 
-        let mut reader = Reader::init("data.bin");
+        let mut reader = Reader::new("data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
             Filename {
@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn test_include_space() {
-        let mut reader = Reader::init("file\\ with\\ spaces");
+        let mut reader = Reader::new("file\\ with\\ spaces");
         assert_eq!(
             parse(&mut reader).unwrap(),
             Filename {
@@ -88,7 +88,7 @@ mod tests {
 
     #[test]
     fn test_filename_error() {
-        let mut reader = Reader::init("???");
+        let mut reader = Reader::new("???");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.inner, ParseError::Filename {});
         assert_eq!(error.pos, Pos { line: 1, column: 1 });

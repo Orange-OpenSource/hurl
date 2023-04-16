@@ -276,7 +276,7 @@ fn test_echo() {
             //eprintln!("value={:#?}", value);
             let s = format_value(value);
             eprintln!("s={s}");
-            let mut reader = Reader::init(s.as_str());
+            let mut reader = Reader::new(s.as_str());
             let parsed_value = parse_json(&mut reader).unwrap();
             assert_eq!(format_value(parsed_value), s);
 
@@ -294,7 +294,7 @@ fn test_parse_files() {
         let path = p.unwrap().path();
         println!("parsing json file {}", path.display());
         let s = fs::read_to_string(path).expect("Something went wrong reading the file");
-        let mut reader = Reader::init(s.as_str());
+        let mut reader = Reader::new(s.as_str());
         let parsed_value = parse_json(&mut reader).unwrap();
 
         assert_eq!(format_value(parsed_value), s);

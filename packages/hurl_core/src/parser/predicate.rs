@@ -370,7 +370,7 @@ mod tests {
 
     #[test]
     fn test_predicate_not() {
-        let mut reader = Reader::init("notXX");
+        let mut reader = Reader::new("notXX");
         assert_eq!(
             predicate_not(&mut reader),
             (
@@ -383,7 +383,7 @@ mod tests {
         );
         assert_eq!(reader.state.pos, Pos { line: 1, column: 1 });
 
-        let mut reader = Reader::init("not XX");
+        let mut reader = Reader::new("not XX");
         assert_eq!(
             predicate_not(&mut reader),
             (
@@ -399,7 +399,7 @@ mod tests {
 
     #[test]
     fn test_predicate() {
-        let mut reader = Reader::init("not equals true");
+        let mut reader = Reader::new("not equals true");
         assert_eq!(
             predicate(&mut reader).unwrap(),
             Predicate {
@@ -425,7 +425,7 @@ mod tests {
 
     #[test]
     fn test_predicate_error() {
-        let mut reader = Reader::init("countEquals true");
+        let mut reader = Reader::new("countEquals true");
         let error = predicate(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -440,7 +440,7 @@ mod tests {
 
     #[test]
     fn test_predicate_func() {
-        let mut reader = Reader::init("tata equals 1");
+        let mut reader = Reader::new("tata equals 1");
         let error = predicate_func(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(!error.recoverable);
@@ -449,7 +449,7 @@ mod tests {
 
     #[test]
     fn test_equal_predicate() {
-        let mut reader = Reader::init("equals  true");
+        let mut reader = Reader::new("equals  true");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -463,7 +463,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("equals 1.1");
+        let mut reader = Reader::new("equals 1.1");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -479,7 +479,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("equals 2");
+        let mut reader = Reader::new("equals 2");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -492,7 +492,7 @@ mod tests {
             },
         );
 
-        let mut reader = Reader::init("== 2");
+        let mut reader = Reader::new("== 2");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -505,7 +505,7 @@ mod tests {
             },
         );
 
-        let mut reader = Reader::init("equals \"Bob\"");
+        let mut reader = Reader::new("equals \"Bob\"");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -528,7 +528,7 @@ mod tests {
 
     #[test]
     fn test_equal_expression_predicate() {
-        let mut reader = Reader::init("equals {{count}}");
+        let mut reader = Reader::new("equals {{count}}");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -557,7 +557,7 @@ mod tests {
 
     #[test]
     fn test_count_equal_predicate() {
-        let mut reader = Reader::init("countEquals 2");
+        let mut reader = Reader::new("countEquals 2");
         assert_eq!(
             count_equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::CountEqual {
@@ -569,7 +569,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::init("countEquals true");
+        let mut reader = Reader::new("countEquals true");
         let error = count_equal_predicate(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -584,7 +584,7 @@ mod tests {
 
     #[test]
     fn test_start_with_predicate() {
-        let mut reader = Reader::init("startsWith 2");
+        let mut reader = Reader::new("startsWith 2");
         let error = start_with_predicate(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,

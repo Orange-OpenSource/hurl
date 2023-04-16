@@ -738,17 +738,17 @@ mod tests {
 
     #[test]
     fn test_section_name() {
-        let mut reader = Reader::init("[SectionA]");
+        let mut reader = Reader::new("[SectionA]");
         assert_eq!(section_name(&mut reader).unwrap(), String::from("SectionA"));
 
-        let mut reader = Reader::init("[]");
+        let mut reader = Reader::new("[]");
         assert!(section_name(&mut reader).err().unwrap().recoverable);
     }
 
     #[test]
     fn test_asserts_section() {
         let mut reader =
-            Reader::init("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
+            Reader::new("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
 
         assert_eq!(
             response_section(&mut reader).unwrap(),
@@ -841,8 +841,7 @@ mod tests {
 
     #[test]
     fn test_asserts_section_error() {
-        let mut reader =
-            Reader::init("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
+        let mut reader = Reader::new("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -853,7 +852,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("[Assertsx]\nheader Location equals \"https://google.fr\"\n");
+        let mut reader = Reader::new("[Assertsx]\nheader Location equals \"https://google.fr\"\n");
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
@@ -867,7 +866,7 @@ mod tests {
 
     #[test]
     fn test_cookie() {
-        let mut reader = Reader::init("Foo: Bar");
+        let mut reader = Reader::new("Foo: Bar");
         let c = cookie(&mut reader).unwrap();
         assert_eq!(c.name.value, String::from("Foo"));
         assert_eq!(
@@ -885,7 +884,7 @@ mod tests {
 
     #[test]
     fn test_option_insecure() {
-        let mut reader = Reader::init("insecure: true");
+        let mut reader = Reader::new("insecure: true");
         let option = option_insecure(&mut reader).unwrap();
         assert_eq!(
             option,
@@ -954,14 +953,14 @@ mod tests {
 
     #[test]
     fn test_option_insecure_error() {
-        let mut reader = Reader::init("insecure: error");
+        let mut reader = Reader::new("insecure: error");
         let error = option_insecure(&mut reader).err().unwrap();
         assert!(!error.recoverable)
     }
 
     #[test]
     fn test_option_cacert() {
-        let mut reader = Reader::init("cacert: /home/foo/cert.pem");
+        let mut reader = Reader::new("cacert: /home/foo/cert.pem");
         let option = option_cacert(&mut reader).unwrap();
         assert_eq!(
             option,
@@ -1033,14 +1032,14 @@ mod tests {
 
     #[test]
     fn test_option_cacert_error() {
-        let mut reader = Reader::init("cacert: ###");
+        let mut reader = Reader::new("cacert: ###");
         let error = option_cacert(&mut reader).err().unwrap();
         assert!(!error.recoverable)
     }
 
     #[test]
     fn test_variable_definition() {
-        let mut reader = Reader::init("a=1");
+        let mut reader = Reader::new("a=1");
         assert_eq!(
             variable_definition(&mut reader).unwrap(),
             VariableDefinition {
@@ -1066,22 +1065,22 @@ mod tests {
 
     #[test]
     fn test_variable_value() {
-        let mut reader = Reader::init("null");
+        let mut reader = Reader::new("null");
         assert_eq!(variable_value(&mut reader).unwrap(), VariableValue::Null {});
 
-        let mut reader = Reader::init("true");
+        let mut reader = Reader::new("true");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::Bool(true)
         );
 
-        let mut reader = Reader::init("1");
+        let mut reader = Reader::new("1");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::Integer(1)
         );
 
-        let mut reader = Reader::init("toto");
+        let mut reader = Reader::new("toto");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::String(Template {
@@ -1096,7 +1095,7 @@ mod tests {
                 },
             })
         );
-        let mut reader = Reader::init("\"123\"");
+        let mut reader = Reader::new("\"123\"");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
             VariableValue::String(Template {
@@ -1115,7 +1114,7 @@ mod tests {
 
     #[test]
     fn test_cookie_error() {
-        let mut reader = Reader::init("Foo: {{Bar");
+        let mut reader = Reader::new("Foo: {{Bar");
         let error = cookie(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -1135,7 +1134,7 @@ mod tests {
 
     #[test]
     fn test_file_value() {
-        let mut reader = Reader::init("file,hello.txt;");
+        let mut reader = Reader::new("file,hello.txt;");
         assert_eq!(
             file_value(&mut reader).unwrap(),
             FileValue {
@@ -1158,7 +1157,7 @@ mod tests {
                 content_type: None,
             }
         );
-        let mut reader = Reader::init("file,hello.txt; text/html");
+        let mut reader = Reader::new("file,hello.txt; text/html");
         assert_eq!(
             file_value(&mut reader).unwrap(),
             FileValue {
@@ -1185,21 +1184,21 @@ mod tests {
 
     #[test]
     fn test_file_content_type() {
-        let mut reader = Reader::init("text/html");
+        let mut reader = Reader::new("text/html");
         assert_eq!(
             file_content_type(&mut reader).unwrap(),
             "text/html".to_string()
         );
         assert_eq!(reader.state.cursor, 9);
 
-        let mut reader = Reader::init("text/plain; charset=us-ascii");
+        let mut reader = Reader::new("text/plain; charset=us-ascii");
         assert_eq!(
             file_content_type(&mut reader).unwrap(),
             "text/plain; charset=us-ascii".to_string()
         );
         assert_eq!(reader.state.cursor, 28);
 
-        let mut reader = Reader::init("text/html # comment");
+        let mut reader = Reader::new("text/html # comment");
         assert_eq!(
             file_content_type(&mut reader).unwrap(),
             "text/html".to_string()
@@ -1209,7 +1208,7 @@ mod tests {
 
     #[test]
     fn test_capture() {
-        let mut reader = Reader::init("url: header \"Location\"");
+        let mut reader = Reader::new("url: header \"Location\"");
         let capture0 = capture(&mut reader).unwrap();
 
         assert_eq!(
@@ -1245,7 +1244,7 @@ mod tests {
 
     #[test]
     fn test_capture_with_filter() {
-        let mut reader = Reader::init("token: header \"Location\" regex \"token=(.*)\"");
+        let mut reader = Reader::new("token: header \"Location\" regex \"token=(.*)\"");
         let capture0 = capture(&mut reader).unwrap();
 
         assert_eq!(
@@ -1273,7 +1272,7 @@ mod tests {
 
     #[test]
     fn test_capture_with_filter_error() {
-        let mut reader = Reader::init("token: header \"Location\" regex ");
+        let mut reader = Reader::new("token: header \"Location\" regex ");
         let error = capture(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -1290,7 +1289,7 @@ mod tests {
         );
         assert!(!error.recoverable);
 
-        let mut reader = Reader::init("token: header \"Location\" xxx");
+        let mut reader = Reader::new("token: header \"Location\" xxx");
         let error = capture(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,
@@ -1310,7 +1309,7 @@ mod tests {
 
     #[test]
     fn test_assert() {
-        let mut reader = Reader::init("header \"Location\" equals \"https://google.fr\"");
+        let mut reader = Reader::new("header \"Location\" equals \"https://google.fr\"");
         let assert0 = assert(&mut reader).unwrap();
 
         assert_eq!(
@@ -1337,7 +1336,7 @@ mod tests {
 
     #[test]
     fn test_assert_jsonpath() {
-        let mut reader = Reader::init("jsonpath \"$.errors\" equals 5");
+        let mut reader = Reader::new("jsonpath \"$.errors\" equals 5");
 
         assert_eq!(
             assert(&mut reader).unwrap().predicate,

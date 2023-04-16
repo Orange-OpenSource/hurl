@@ -23,7 +23,7 @@ use super::reader::Reader;
 use super::ParseResult;
 
 pub fn parse(s: &str) -> Result<Query, Error> {
-    let mut reader = Reader::init(s);
+    let mut reader = Reader::new(s);
     query(&mut reader)
 }
 
@@ -296,15 +296,15 @@ mod tests {
 
     #[test]
     pub fn test_try_left_bracket() {
-        let mut reader = Reader::init("xxx");
+        let mut reader = Reader::new("xxx");
         let error = try_left_bracket(&mut reader).err().unwrap();
         assert!(error.recoverable);
 
-        let mut reader = Reader::init("[xxx");
+        let mut reader = Reader::new("[xxx");
         assert!(try_left_bracket(&mut reader).is_ok());
         assert_eq!(reader.state.cursor, 1);
 
-        let mut reader = Reader::init(".[xxx");
+        let mut reader = Reader::new(".[xxx");
         assert!(try_left_bracket(&mut reader).is_ok());
         assert_eq!(reader.state.cursor, 2);
     }
@@ -314,26 +314,23 @@ mod tests {
         let expected_query = Query {
             selectors: vec![Selector::ArrayIndex(vec![2])],
         };
-        assert_eq!(query(&mut Reader::init("$[2]")).unwrap(), expected_query);
+        assert_eq!(query(&mut Reader::new("$[2]")).unwrap(), expected_query);
 
         let expected_query = Query {
             selectors: vec![Selector::NameChild("key".to_string())],
         };
-        assert_eq!(
-            query(&mut Reader::init("$['key']")).unwrap(),
-            expected_query
-        );
-        assert_eq!(query(&mut Reader::init("$.key")).unwrap(), expected_query);
+        assert_eq!(query(&mut Reader::new("$['key']")).unwrap(), expected_query);
+        assert_eq!(query(&mut Reader::new("$.key")).unwrap(), expected_query);
 
         let expected_query = Query {
             selectors: vec![Selector::NameChild("profile-id".to_string())],
         };
         assert_eq!(
-            query(&mut Reader::init("$['profile-id']")).unwrap(),
+            query(&mut Reader::new("$['profile-id']")).unwrap(),
             expected_query
         );
         assert_eq!(
-            query(&mut Reader::init("$.profile-id")).unwrap(),
+            query(&mut Reader::new("$.profile-id")).unwrap(),
             expected_query
         );
 
@@ -346,11 +343,11 @@ mod tests {
             ],
         };
         assert_eq!(
-            query(&mut Reader::init("$.store.book[0].title")).unwrap(),
+            query(&mut Reader::new("$.store.book[0].title")).unwrap(),
             expected_query
         );
         assert_eq!(
-            query(&mut Reader::init("$['store']['book'][0]['title']")).unwrap(),
+            query(&mut Reader::new("$['store']['book'][0]['title']")).unwrap(),
             expected_query
         );
 
@@ -361,24 +358,24 @@ mod tests {
             ],
         };
         assert_eq!(
-            query(&mut Reader::init("$..book[2]")).unwrap(),
+            query(&mut Reader::new("$..book[2]")).unwrap(),
             expected_query
         );
     }
 
     #[test]
     pub fn test_query_error() {
-        let error = query(&mut Reader::init("?$.store")).err().unwrap();
+        let error = query(&mut Reader::new("?$.store")).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
 
-        let error = query(&mut Reader::init("$.store?")).err().unwrap();
+        let error = query(&mut Reader::new("$.store?")).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
     }
 
     #[test]
     pub fn test_selector_filter() {
         // Filter exist value
-        let mut reader = Reader::init("[?(@.isbn)]");
+        let mut reader = Reader::new("[?(@.isbn)]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
@@ -389,7 +386,7 @@ mod tests {
         assert_eq!(reader.state.cursor, 11);
 
         // Filter equal on string with single quotes
-        let mut reader = Reader::init("[?(@.key=='value')]");
+        let mut reader = Reader::new("[?(@.key=='value')]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
@@ -399,7 +396,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 19);
 
-        let mut reader = Reader::init("[?(@.price<10)]");
+        let mut reader = Reader::new("[?(@.price<10)]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
@@ -415,7 +412,7 @@ mod tests {
 
     #[test]
     pub fn test_selector_recursive() {
-        let mut reader = Reader::init("..book");
+        let mut reader = Reader::new("..book");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::RecursiveKey("book".to_string())
@@ -425,14 +422,14 @@ mod tests {
 
     #[test]
     pub fn test_selector_array_index() {
-        let mut reader = Reader::init("[2]");
+        let mut reader = Reader::new("[2]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArrayIndex(vec![2])
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("[0,1]");
+        let mut reader = Reader::new("[0,1]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArrayIndex(vec![0, 1])
@@ -441,7 +438,7 @@ mod tests {
 
         // you don't need to keep the exact string
         // this is not part of the AST
-        let mut reader = Reader::init(".[2]");
+        let mut reader = Reader::new(".[2]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArrayIndex(vec![2])
@@ -451,20 +448,20 @@ mod tests {
 
     #[test]
     pub fn test_selector_wildcard() {
-        let mut reader = Reader::init("[*]");
+        let mut reader = Reader::new("[*]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
         assert_eq!(reader.state.cursor, 3);
 
         // you don't need to keep the exact string
         // this is not part of the AST
-        let mut reader = Reader::init(".[*]");
+        let mut reader = Reader::new(".[*]");
         assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
         assert_eq!(reader.state.cursor, 4);
     }
 
     #[test]
     pub fn test_selector_array_slice() {
-        let mut reader = Reader::init("[-1:]");
+        let mut reader = Reader::new("[-1:]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArraySlice(Slice {
@@ -474,7 +471,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("[:2]");
+        let mut reader = Reader::new("[:2]");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::ArraySlice(Slice {
@@ -487,21 +484,21 @@ mod tests {
 
     #[test]
     pub fn test_key_bracket_selector() {
-        let mut reader = Reader::init("['key']");
+        let mut reader = Reader::new("['key']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
         assert_eq!(reader.state.cursor, 7);
 
-        let mut reader = Reader::init(".['key']");
+        let mut reader = Reader::new(".['key']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
         assert_eq!(reader.state.cursor, 8);
 
-        let mut reader = Reader::init("['key1']");
+        let mut reader = Reader::new("['key1']");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key1".to_string())
@@ -511,14 +508,14 @@ mod tests {
 
     #[test]
     pub fn test_selector_key_dot_notation() {
-        let mut reader = Reader::init(".key");
+        let mut reader = Reader::new(".key");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key".to_string())
         );
         assert_eq!(reader.state.cursor, 4);
 
-        let mut reader = Reader::init(".key1");
+        let mut reader = Reader::new(".key1");
         assert_eq!(
             selector(&mut reader).unwrap(),
             Selector::NameChild("key1".to_string())
@@ -530,7 +527,7 @@ mod tests {
     pub fn test_predicate() {
         // Key exists
         assert_eq!(
-            predicate(&mut Reader::init("@.isbn")).unwrap(),
+            predicate(&mut Reader::new("@.isbn")).unwrap(),
             Predicate {
                 key: vec!["isbn".to_string()],
                 func: PredicateFunc::KeyExist {},
@@ -539,7 +536,7 @@ mod tests {
 
         // Filter equal on string with single quotes
         assert_eq!(
-            predicate(&mut Reader::init("@.key=='value'")).unwrap(),
+            predicate(&mut Reader::new("@.key=='value'")).unwrap(),
             Predicate {
                 key: vec!["key".to_string()],
                 func: PredicateFunc::EqualString("value".to_string()),
@@ -548,7 +545,7 @@ mod tests {
 
         // Filter equal on int
         assert_eq!(
-            predicate(&mut Reader::init("@.key==1")).unwrap(),
+            predicate(&mut Reader::new("@.key==1")).unwrap(),
             Predicate {
                 key: vec!["key".to_string()],
                 func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
@@ -557,7 +554,7 @@ mod tests {
 
         // Filter equal on int for key in object
         assert_eq!(
-            predicate(&mut Reader::init("@.obj.key==1")).unwrap(),
+            predicate(&mut Reader::new("@.obj.key==1")).unwrap(),
             Predicate {
                 key: vec!["obj".to_string(), "key".to_string()],
                 func: PredicateFunc::Equal(Number { int: 1, decimal: 0 }),
@@ -566,7 +563,7 @@ mod tests {
 
         // Filter less than int
         assert_eq!(
-            predicate(&mut Reader::init("@.price<10")).unwrap(),
+            predicate(&mut Reader::new("@.price<10")).unwrap(),
             Predicate {
                 key: vec!["price".to_string()],
                 func: PredicateFunc::LessThan(Number {
@@ -579,14 +576,14 @@ mod tests {
 
     #[test]
     pub fn test_predicate_func() {
-        let mut reader = Reader::init("==2");
+        let mut reader = Reader::new("==2");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::Equal(Number { int: 2, decimal: 0 })
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("==2.1");
+        let mut reader = Reader::new("==2.1");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::Equal(Number {
@@ -596,7 +593,7 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 5);
 
-        let mut reader = Reader::init("== 2.1 ");
+        let mut reader = Reader::new("== 2.1 ");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::Equal(Number {
@@ -606,35 +603,35 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 7);
 
-        let mut reader = Reader::init("=='hello'");
+        let mut reader = Reader::new("=='hello'");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::EqualString("hello".to_string())
         );
         assert_eq!(reader.state.cursor, 9);
 
-        let mut reader = Reader::init(">5");
+        let mut reader = Reader::new(">5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::GreaterThan(Number { int: 5, decimal: 0 })
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init(">=5");
+        let mut reader = Reader::new(">=5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::GreaterThanOrEqual(Number { int: 5, decimal: 0 })
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::init("<5");
+        let mut reader = Reader::new("<5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::LessThan(Number { int: 5, decimal: 0 })
         );
         assert_eq!(reader.state.cursor, 2);
 
-        let mut reader = Reader::init("<=5");
+        let mut reader = Reader::new("<=5");
         assert_eq!(
             predicate_func(&mut reader).unwrap(),
             PredicateFunc::LessThanOrEqual(Number { int: 5, decimal: 0 })

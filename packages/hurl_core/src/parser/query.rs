@@ -80,7 +80,7 @@ fn cookie_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
 
-    let mut cookiepath_reader = Reader::init(s.as_str());
+    let mut cookiepath_reader = Reader::new(s.as_str());
     cookiepath_reader.state.pos = Pos {
         line: start.line,
         column: start.column + 1,
@@ -222,7 +222,7 @@ mod tests {
 
     #[test]
     fn test_query() {
-        let mut reader = Reader::init("status");
+        let mut reader = Reader::new("status");
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
@@ -234,7 +234,7 @@ mod tests {
 
     #[test]
     fn test_status_query() {
-        let mut reader = Reader::init("status");
+        let mut reader = Reader::new("status");
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
@@ -246,7 +246,7 @@ mod tests {
 
     #[test]
     fn test_header_query() {
-        let mut reader = Reader::init("header \"Foo\"");
+        let mut reader = Reader::new("header \"Foo\"");
         assert_eq!(
             header_query(&mut reader).unwrap(),
             QueryValue::Header {
@@ -268,7 +268,7 @@ mod tests {
 
     #[test]
     fn test_cookie_query() {
-        let mut reader = Reader::init("cookie \"Foo[Domain]\"");
+        let mut reader = Reader::new("cookie \"Foo[Domain]\"");
         assert_eq!(
             cookie_query(&mut reader).unwrap(),
             QueryValue::Cookie {
@@ -307,7 +307,7 @@ mod tests {
 
     #[test]
     fn test_xpath_query() {
-        let mut reader = Reader::init("xpath \"normalize-space(//head/title)\"");
+        let mut reader = Reader::new("xpath \"normalize-space(//head/title)\"");
         assert_eq!(
             xpath_query(&mut reader).unwrap(),
             QueryValue::Xpath {
@@ -326,7 +326,7 @@ mod tests {
             },
         );
 
-        let mut reader = Reader::init("xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"");
+        let mut reader = Reader::new("xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"");
         assert_eq!(xpath_query(&mut reader).unwrap(), QueryValue::Xpath {
             space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(1, 6, 1, 7) },
             expr: Template {
@@ -345,7 +345,7 @@ mod tests {
 
     #[test]
     fn test_jsonpath_query() {
-        let mut reader = Reader::init("jsonpath \"$['statusCode']\"");
+        let mut reader = Reader::new("jsonpath \"$['statusCode']\"");
         assert_eq!(
             jsonpath_query(&mut reader).unwrap(),
             QueryValue::Jsonpath {
@@ -363,7 +363,7 @@ mod tests {
                 },
             },
         );
-        let mut reader = Reader::init("jsonpath \"$.success\"");
+        let mut reader = Reader::new("jsonpath \"$.success\"");
         assert_eq!(
             jsonpath_query(&mut reader).unwrap(),
             QueryValue::Jsonpath {
@@ -385,7 +385,7 @@ mod tests {
 
     #[test]
     fn test_query_with_filters() {
-        let mut reader = Reader::init("body urlDecode ");
+        let mut reader = Reader::new("body urlDecode ");
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
