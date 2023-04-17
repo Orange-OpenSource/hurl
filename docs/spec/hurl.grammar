@@ -231,6 +231,7 @@ predicate-func:
   | contain-predicate
   | match-predicate
   | exist-predicate
+  | is-empty-predicate
   | include-predicate
   | integer-predicate
   | float-predicate
@@ -259,6 +260,8 @@ contain-predicate: "contains" sp quoted-string
 match-predicate: "matches" sp (quoted-string | regex)
 
 exist-predicate: "exists"
+
+is-empty-predicate: "isEmpty"
 
 include-predicate: "includes" sp predicate-value
 
