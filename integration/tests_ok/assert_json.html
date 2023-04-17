@@ -1,16 +1,16 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
 <span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> one<span>=</span><span class="number">1</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> two<span>=</span><span class="number">2</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> three<span>=</span><span class="number">3</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> four<span>=</span><span class="number">4</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> five<span>=</span><span class="number">5</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> foo<span>=</span><span class="string">abc</span></span>
-<span class="line"><span class="string">insecure</span><span>:</span> <span class="boolean">false</span></span>
+<span class="line"><span class="string">variable</span>: one=<span class="number">1</span></span>
+<span class="line"><span class="string">variable</span>: two=<span class="number">2</span></span>
+<span class="line"><span class="string">variable</span>: three=<span class="number">3</span></span>
+<span class="line"><span class="string">variable</span>: four=<span class="number">4</span></span>
+<span class="line"><span class="string">variable</span>: five=<span class="number">5</span></span>
+<span class="line"><span class="string">variable</span>: foo=<span class="string">abc</span></span>
+<span class="line"><span class="string">insecure</span>: <span class="boolean">false</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="name">count</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$.count"</span></span>
+<span class="line"><span class="name">count</span>: <span class="query-type">jsonpath</span> <span class="string">"$.count"</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">5.0</span></span>
@@ -73,7 +73,7 @@
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/index</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="name">index</span><span>:</span> <span class="query-type">body</span></span>
+<span class="line"><span class="name">index</span>: <span class="query-type">body</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>

@@ -2,13 +2,13 @@
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="name">param1</span><span>:</span> <span class="query-type">header</span> <span class="string">"header1"</span></span>
-<span class="line"><span class="name">param2</span><span>:</span> <span class="query-type">header</span> <span class="string">"header2"</span> <span class="filter-type">regex</span> <span class="string">"Hello (.*)!"</span></span>
-<span class="line"><span class="name">param3</span><span>:</span> <span class="query-type">header</span> <span class="string">"header2"</span> <span class="filter-type">regex</span> <span class="regex">/Hello (.*)!/</span></span>
+<span class="line"><span class="name">param1</span>: <span class="query-type">header</span> <span class="string">"header1"</span></span>
+<span class="line"><span class="name">param2</span>: <span class="query-type">header</span> <span class="string">"header2"</span> <span class="filter-type">regex</span> <span class="string">"Hello (.*)!"</span></span>
+<span class="line"><span class="name">param3</span>: <span class="query-type">header</span> <span class="string">"header2"</span> <span class="filter-type">regex</span> <span class="regex">/Hello (.*)!/</span></span>
 <span class="line"></span><span class="comment"># With the next captures, we test that the captured variable</span>
 <span class="line"></span><span class="comment"># can be immediatlety used in the next captures + asserts</span>
-<span class="line"><span class="name">data1</span><span>:</span> <span class="query-type">body</span></span>
-<span class="line"><span class="name">data2</span><span>:</span> <span class="query-type">variable</span> <span class="string">"data1"</span></span>
+<span class="line"><span class="name">data1</span>: <span class="query-type">body</span></span>
+<span class="line"><span class="name">data2</span>: <span class="query-type">variable</span> <span class="string">"data1"</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"param1"</span> <span class="predicate-type">==</span> <span class="string">"value1"</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"param2"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
@@ -18,8 +18,8 @@
 <span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/captures-check</span></span>
 <span class="line"><span class="section-header">[QueryStringParams]</span></span>
-<span class="line"><span class="string">param1</span><span>:</span> <span class="string">{{param1}}</span></span>
-<span class="line"><span class="string">param2</span><span>:</span> <span class="string">{{param2}}</span></span>
+<span class="line"><span class="string">param1</span>: <span class="string">{{param1}}</span></span>
+<span class="line"><span class="string">param2</span>: <span class="string">{{param2}}</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span>
@@ -27,14 +27,14 @@
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
-<span class="line"><span class="name">an_object</span><span>:</span>  <span class="query-type">jsonpath</span> <span class="string">"$['an_object']"</span></span>
-<span class="line"><span class="name">a_list</span><span>:</span>     <span class="query-type">jsonpath</span> <span class="string">"$['a_list']"</span></span>
-<span class="line"><span class="name">a_null</span><span>:</span>     <span class="query-type">jsonpath</span> <span class="string">"$['a_null']"</span></span>
-<span class="line"><span class="name">an_integer</span><span>:</span> <span class="query-type">jsonpath</span> <span class="string">"$['an_integer']"</span></span>
-<span class="line"><span class="name">a_float</span><span>:</span>    <span class="query-type">jsonpath</span> <span class="string">"$['a_float']"</span></span>
-<span class="line"><span class="name">a_bool</span><span>:</span>     <span class="query-type">jsonpath</span> <span class="string">"$['a_bool']"</span></span>
-<span class="line"><span class="name">a_string</span><span>:</span>   <span class="query-type">jsonpath</span> <span class="string">"$['a_string']"</span></span>
-<span class="line"><span class="name">all</span><span>:</span>        <span class="query-type">jsonpath</span> <span class="string">"$"</span></span>
+<span class="line"><span class="name">an_object</span>:  <span class="query-type">jsonpath</span> <span class="string">"$['an_object']"</span></span>
+<span class="line"><span class="name">a_list</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_list']"</span></span>
+<span class="line"><span class="name">a_null</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_null']"</span></span>
+<span class="line"><span class="name">an_integer</span>: <span class="query-type">jsonpath</span> <span class="string">"$['an_integer']"</span></span>
+<span class="line"><span class="name">a_float</span>:    <span class="query-type">jsonpath</span> <span class="string">"$['a_float']"</span></span>
+<span class="line"><span class="name">a_bool</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_bool']"</span></span>
+<span class="line"><span class="name">a_string</span>:   <span class="query-type">jsonpath</span> <span class="string">"$['a_string']"</span></span>
+<span class="line"><span class="name">all</span>:        <span class="query-type">jsonpath</span> <span class="string">"$"</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"a_null"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">variable</span> <span class="string">"undefined"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>

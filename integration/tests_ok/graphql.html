@@ -25,7 +25,7 @@
 <span class="line"></span>
 <span class="line"></span><span class="comment"># Equivalent syntax by posting a JSON body</span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
-<span class="line"><span class="string">Content-Type</span><span>:</span> <span class="string">application/json</span></span>
+<span class="line"><span class="string">Content-Type</span>: <span class="string">application/json</span></span>
 <span class="json"><span class="line">{"query":"{\n  allFilms {\n    films {\n      title\n      director\n      releaseDate\n    }\n  }\n}"}</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
@@ -74,7 +74,7 @@
 <span class="line"></span><span class="comment"># Hurl variables can also be used:</span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/graphql</span></span>
 <span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">variable</span><span>:</span> id<span>=</span><span class="string">cGVvcGxlOjQ=</span></span>
+<span class="line"><span class="string">variable</span>: id=<span class="string">cGVvcGxlOjQ=</span></span>
 <span class="multiline"><span class="line">```graphql</span>
 <span class="line">query Person($id: ID!) {</span>
 <span class="line">  person(id: $id) {</span>

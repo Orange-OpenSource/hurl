@@ -9,7 +9,7 @@
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"></span><span class="comment"># Header value can be computed with `echo -n 'bob@email.com:secret' | base64`</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/basic-authentication-per-request</span></span>
-<span class="line"><span class="string">Authorization</span><span>:</span> <span class="string">Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=</span></span>
+<span class="line"><span class="string">Authorization</span>: <span class="string">Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">`You are authenticated`</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
@@ -20,7 +20,7 @@
 <span class="line"></span><span class="comment"># unicode literal \u{20}.</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/basic-authentication-per-request</span></span>
 <span class="line"><span class="section-header">[BasicAuth]</span></span>
-<span class="line"><span class="string">bob@email.com</span><span>:</span> <span class="string">secret</span></span>
+<span class="line"><span class="string">bob@email.com</span>: <span class="string">secret</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">`You are authenticated`</span></span>
 </span></span></code></pre>

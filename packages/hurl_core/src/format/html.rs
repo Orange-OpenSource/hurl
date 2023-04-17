@@ -193,7 +193,7 @@ impl HtmlFormatter {
         self.fmt_space(&kv.space0);
         self.fmt_string(&kv.key.encoded);
         self.fmt_space(&kv.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&kv.space2);
         self.fmt_template(&kv.value);
         self.fmt_span_close();
@@ -224,7 +224,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("compressed");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -237,7 +237,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("insecure");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -250,7 +250,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("cacert");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_filename(&option.filename);
         self.fmt_span_close();
@@ -263,7 +263,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("cert");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_filename(&option.filename);
         self.fmt_span_close();
@@ -276,7 +276,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("key");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_filename(&option.filename);
         self.fmt_span_close();
@@ -289,7 +289,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("location");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -302,7 +302,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("max-redirs");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_number(option.value);
         self.fmt_span_close();
@@ -315,7 +315,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("retry");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -328,7 +328,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("retry-interval");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_number(option.value);
         self.fmt_span_close();
@@ -341,7 +341,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("retry-max-count");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_number(option.value);
         self.fmt_span_close();
@@ -354,7 +354,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("variable");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_variable_definition(&option.value);
         self.fmt_span_close();
@@ -364,7 +364,7 @@ impl HtmlFormatter {
     fn fmt_variable_definition(&mut self, option: &VariableDefinition) {
         self.buffer.push_str(option.name.as_str());
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>=</span>");
+        self.buffer.push('=');
         self.fmt_variable_value(&option.value);
     }
 
@@ -384,7 +384,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("verbose");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -397,7 +397,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space0);
         self.fmt_string("very-verbose");
         self.fmt_space(&option.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_bool(option.value);
         self.fmt_span_close();
@@ -449,7 +449,7 @@ impl HtmlFormatter {
         self.fmt_space(&cookie.space0);
         self.fmt_span("name", &cookie.name.value);
         self.fmt_space(&cookie.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&cookie.space2);
         self.fmt_template(&cookie.value);
         self.fmt_span_close();
@@ -462,7 +462,7 @@ impl HtmlFormatter {
         self.fmt_space(&capture.space0);
         self.fmt_span("name", &capture.name.value);
         self.fmt_space(&capture.space1);
-        self.buffer.push_str("<span>:</span>");
+        self.buffer.push(':');
         self.fmt_space(&capture.space2);
         self.fmt_query(&capture.query);
         for (space, filter) in capture.filters.iter() {
