@@ -659,7 +659,7 @@ impl HtmlFormatter {
     fn fmt_predicate_value(&mut self, predicate_value: &PredicateValue) {
         match predicate_value {
             PredicateValue::String(value) => self.fmt_template(value),
-            PredicateValue::MultilineString(value) => self.fmt_multiline_string(value),
+            PredicateValue::MultilineString(value) => self.fmt_multiline_string(value, false),
             PredicateValue::Integer(value) => self.fmt_number(value),
             PredicateValue::Float(value) => self.fmt_number(&value.encoded),
             PredicateValue::Bool(value) => self.fmt_bool(*value),
@@ -671,19 +671,91 @@ impl HtmlFormatter {
         };
     }
 
-    fn fmt_multiline_string(&mut self, multiline_string: &MultilineString) {
-        let lang = match multiline_string {
-            MultilineString::OneLineText(_) => "".to_string(),
-            MultilineString::Text(_)
-            | MultilineString::Json(_)
-            | MultilineString::Xml(_)
-            | MultilineString::GraphQl(_) => {
-                format!("{}\n", multiline_string.lang())
+    fn fmt_multiline_string(&mut self, multiline_string: &MultilineString, as_body: bool) {
+        if let MultilineString::OneLineText(line) = multiline_string {
+            let line = format!("```{line}```");
+            if as_body {
+                self.fmt_span_open("multiline");
+                self.fmt_span("line", &line);
+                self.fmt_span_close();
+            } else {
+                self.fmt_span("multiline", &line);
             }
-        };
-        let body = format!("```{lang}{multiline_string}```");
-        let body = format_multilines(&body);
-        self.fmt_span("multiline", &body);
+            return;
+        }
+
+        // The multiline spans multiple newlines. We distinguish cases for multiline
+        // as a body and multiline as a predicate value. When used as a body, we can embed
+        // span lines with the multiline span. Used as a predicate, we have to break the multiline
+        // span in two parts.
+        //
+        // # Case 1: multiline string as a body
+        //
+        // ~~~hurl
+        // GET https://foo.com
+        // ```
+        // line1
+        // line2
+        // line3
+        // ```
+        // ~~~
+        //
+        // We embed span lines inside the span for the body:
+        //
+        // ```html
+        // ...
+        // <span class="multiline">
+        //   <span class="line">```</span>
+        //   <span class="line">line1</span>
+        //   <span class="line">line2</span>
+        //   <span class="line">line3</span>
+        //   <span class="line">```</span>
+        // </span>
+        // ```
+        //
+        // # Case 1: multiline string as a predicate value
+        //
+        // ~~~hurl
+        // GET https://foo.com
+        // HTTP 200
+        // [Asserts]
+        // body == ```
+        // line1
+        // line2
+        // line3
+        // ```
+        // ~~~
+        //
+        // ```html
+        // ...
+        // <span class="line">body ==
+        //   <span class="multiline">```</span>
+        // </span>
+        // <span class="multiline">
+        //   <span class="line">line1</span>
+        //   <span class="line">line2</span>
+        //   <span class="line">line3</span>
+        //   <span class="line">```</span>
+        // </span>
+        // ```
+        let lang = multiline_string.lang();
+        if as_body {
+            let body = format!("```{lang}\n{multiline_string}```");
+            let body = format_multilines(&body);
+            self.fmt_span("multiline", &body);
+        } else {
+            let head = format!("```{lang}");
+            self.fmt_span("multiline", &head);
+            // We close the current span line opened by the assert
+            self.fmt_span_close();
+            self.buffer.push('\n');
+            let tail = format!("{multiline_string}```");
+            let tail = format_multilines(&tail);
+            self.fmt_span("multiline", &tail);
+            // As we have added a span close, we must remove one to have the right number
+            // of span. The current span line will add a closing span.
+            pop_str(&mut self.buffer, "</span>")
+        }
     }
 
     fn fmt_body(&mut self, body: &Body) {
@@ -716,7 +788,7 @@ impl HtmlFormatter {
                 self.fmt_span_close();
             }
             Bytes::Json(value) => self.fmt_json_value(value),
-            Bytes::MultilineString(value) => self.fmt_multiline_string(value),
+            Bytes::MultilineString(value) => self.fmt_multiline_string(value, true),
             Bytes::Xml(value) => self.fmt_xml(value),
         }
     }
@@ -908,6 +980,13 @@ fn format_multilines(s: &str) -> String {
         .join("\n")
 }
 
+fn pop_str(string: &mut String, suffix: &str) {
+    let len = string.len();
+    let n = suffix.len();
+    let len = len - n;
+    string.truncate(len);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -915,7 +994,6 @@ mod tests {
     #[test]
     fn test_multiline_string() {
         // ``````
-        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::OneLineText(Template {
             delimiter: None,
             elements: vec![TemplateElement::String {
@@ -924,14 +1002,19 @@ mod tests {
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
         });
-        fmt.fmt_multiline_string(&multiline_string);
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, false);
+        assert_eq!(fmt.buffer, "<span class=\"multiline\">``````</span>");
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, true);
         assert_eq!(
             fmt.buffer,
-            "<span class=\"multiline\"><span class=\"line\">``````</span></span>"
+            "<span class=\"multiline\">\
+                <span class=\"line\">``````</span>\
+            </span>"
         );
 
         // ```hello```
-        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::OneLineText(Template {
             delimiter: None,
             elements: vec![TemplateElement::String {
@@ -940,17 +1023,21 @@ mod tests {
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
         });
-        fmt.fmt_multiline_string(&multiline_string);
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, false);
+        assert_eq!(fmt.buffer, "<span class=\"multiline\">```hello```</span>");
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, true);
         assert_eq!(
             fmt.buffer,
-            "<span class=\"multiline\"><span class=\"line\">```hello```</span></span>"
+            "<span class=\"multiline\">\
+                <span class=\"line\">```hello```</span>\
+            </span>"
         );
-
         // ```
         // line1
         // line2
         // ```
-        let mut fmt = HtmlFormatter::new();
         let multiline_string = MultilineString::Text(Text {
             space: Whitespace {
                 value: "".to_string(),
@@ -975,10 +1062,28 @@ mod tests {
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
         });
-        fmt.fmt_multiline_string(&multiline_string);
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, true);
         assert_eq!(
             fmt.buffer,
-            "<span class=\"multiline\"><span class=\"line\">```</span>\n<span class=\"line\">line1</span>\n<span class=\"line\">line2</span>\n<span class=\"line\">```</span></span>"
+            "<span class=\"multiline\">\
+                <span class=\"line\">```</span>\n\
+                <span class=\"line\">line1</span>\n\
+                <span class=\"line\">line2</span>\n\
+                <span class=\"line\">```</span>\
+            </span>"
+        );
+
+        let mut fmt = HtmlFormatter::new();
+        fmt.fmt_multiline_string(&multiline_string, false);
+        assert_eq!(
+            fmt.buffer,
+            "<span class=\"multiline\">```</span>\
+        </span>\n\
+        <span class=\"multiline\">\
+            <span class=\"line\">line1</span>\n\
+            <span class=\"line\">line2</span>\n\
+            <span class=\"line\">```</span>"
         );
     }
 
@@ -986,16 +1091,23 @@ mod tests {
     fn test_multilines() {
         assert_eq!(
             format_multilines("{\n   \"id\": 1\n}"),
-            "<span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span>"
+            "<span class=\"line\">{</span>\n\
+            <span class=\"line\">   \"id\": 1</span>\n\
+            <span class=\"line\">}</span>"
         );
         assert_eq!(
-            format_multilines("<?xml version=\"1.0\"?>\n<drink>café</drink>"),
-            "<span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n<span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span>"
+            format_multilines(
+                "<?xml version=\"1.0\"?>\n\
+            <drink>café</drink>"
+            ),
+            "<span class=\"line\">&lt;?xml version=\"1.0\"?&gt;</span>\n\
+            <span class=\"line\">&lt;drink&gt;café&lt;/drink&gt;</span>"
         );
 
         assert_eq!(
             format_multilines("Hello\n"),
-            "<span class=\"line\">Hello</span>\n<span class=\"line\"></span>"
+            "<span class=\"line\">Hello</span>\n\
+            <span class=\"line\"></span>"
         );
     }
 
@@ -1023,7 +1135,11 @@ mod tests {
         fmt.fmt_json_value(&value);
         assert_eq!(
             fmt.buffer,
-            "<span class=\"json\"><span class=\"line\">{</span>\n<span class=\"line\">   \"id\": 1</span>\n<span class=\"line\">}</span></span>"
+            "<span class=\"json\">\
+                <span class=\"line\">{</span>\n\
+                <span class=\"line\">   \"id\": 1</span>\n\
+                <span class=\"line\">}</span>\
+            </span>"
         );
     }
 
