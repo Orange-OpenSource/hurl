@@ -1477,7 +1477,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        Ok(c) =&gt; Ok((c, reader.from(start.cursor), start.pos)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        Ok(c) =&gt; Ok((c, reader.peek_back(start.cursor), start.pos)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1829,7 +1829,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                            Ok((c, reader.from(start.cursor), start.pos))</pre>
+                <pre class="has-background-success-light py-0 px-2">                            Ok((c, reader.peek_back(start.cursor), start.pos))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5909,7 +5909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{ \&quot;a\&quot;:\n}&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{ \&quot;a\&quot;:\n}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6005,7 +6005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;[0,1,]&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;[0,1,]&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6149,7 +6149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;null&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;null&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6213,7 +6213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6437,7 +6437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6549,7 +6549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7285,7 +7285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7461,7 +7461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;Hello\\u0020{{name}}!\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;Hello\\u0020{{name}}!\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7525,7 +7525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;{}\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;{}\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7797,7 +7797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7973,7 +7973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8149,7 +8149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;{{x\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;{{x\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8373,7 +8373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;a&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;a&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8485,7 +8485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot; &quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot; &quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8597,7 +8597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\\u0020 &quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\\u0020 &quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8709,7 +8709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\\t&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\\t&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8821,7 +8821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;#&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;#&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8981,7 +8981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9061,7 +9061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\t&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\t&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9189,7 +9189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\\n&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\\n&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9253,7 +9253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\\u000a&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\\u000a&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9317,7 +9317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9557,7 +9557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;000a&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;000a&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9669,7 +9669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;0020x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;0020x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9717,7 +9717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9861,7 +9861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;100&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;100&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -9973,7 +9973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1.333&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1.333&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10085,7 +10085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;-1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;-1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10197,7 +10197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;00&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;00&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10309,7 +10309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1e0&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1e0&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10421,7 +10421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1e005&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1e005&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10533,7 +10533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1e-005&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1e-005&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10693,7 +10693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10869,7 +10869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;1.x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;1.x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11093,7 +11093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{{n}}&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{{n}}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11461,7 +11461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;[]&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;[]&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11621,7 +11621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;[ ]&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;[ ]&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11781,7 +11781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;[true]&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;[true]&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12053,7 +12053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12229,7 +12229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;[1, 2,]&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;[1, 2,]&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12373,7 +12373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12597,7 +12597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{}&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12757,7 +12757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{ }&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{ }&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12917,7 +12917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{\n  \&quot;a\&quot;: true\n}&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{\n  \&quot;a\&quot;: true\n}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13301,7 +13301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13525,7 +13525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;{ \&quot;a\&quot;:\n}&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;{ \&quot;a\&quot;:\n}&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13669,7 +13669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;a\&quot;: true&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;a\&quot;: true&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14053,7 +14053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;:&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;:&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14229,7 +14229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\&quot;name\&quot;:\n&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;name\&quot;:\n&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14373,7 +14373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14437,7 +14437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot; x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot; x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14501,7 +14501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::init(&quot;\n  x&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\n  x&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14571,7 +14571,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-04-16 08:10</p>
+                <p class="heading">Date: 2023-04-17 08:12</p>
             </div>
         </footer>
     </body>
