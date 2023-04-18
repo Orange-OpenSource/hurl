@@ -16,8 +16,9 @@
  *
  */
 use super::OptionsError;
-use crate::cli::options::OutputFormat;
+use crate::cli::options::{InputFormat, OutputFormat};
 use atty::Stream;
+use clap::parser::ValueSource;
 use clap::ArgMatches;
 use std::path::{Path, PathBuf};
 
@@ -35,9 +36,27 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
     }
 }
 
+pub fn input_format(arg_matches: &ArgMatches) -> Result<InputFormat, OptionsError> {
+    match get_string(arg_matches, "input_format").unwrap().as_str() {
+        "hurl" => Ok(InputFormat::Hurl),
+        v => Err(OptionsError::Error(format!("Invalid input format {v}"))),
+    }
+}
+
 pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsError> {
-    match get_string(arg_matches, "format").unwrap().as_str() {
-        "text" => Ok(OutputFormat::Hurl),
+    // Deprecated --format option
+    if arg_matches.value_source("format") == Some(ValueSource::CommandLine) {
+        eprintln!("--format is deprecated. use --out instead.");
+        return match get_string(arg_matches, "format").unwrap().as_str() {
+            "hurl" => Ok(OutputFormat::Hurl),
+            "json" => Ok(OutputFormat::Json),
+            "html" => Ok(OutputFormat::Html),
+            v => Err(OptionsError::Error(format!("Invalid output format {v}"))),
+        };
+    }
+
+    match get_string(arg_matches, "output_format").unwrap().as_str() {
+        "hurl" => Ok(OutputFormat::Hurl),
         "json" => Ok(OutputFormat::Json),
         "html" => Ok(OutputFormat::Html),
         v => Err(OptionsError::Error(format!("Invalid output format {v}"))),
@@ -46,9 +65,9 @@ pub fn output_format(arg_matches: &ArgMatches) -> Result<OutputFormat, OptionsEr
 
 pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
     if has_flag(arg_matches, "in_place") {
-        if get_string(arg_matches, "format") != Some("text".to_string()) {
+        if get_string(arg_matches, "format") != Some("hurl".to_string()) {
             Err(OptionsError::Error(
-                "You can use --in-place only text format!".to_string(),
+                "You can use --in-place only hurl format!".to_string(),
             ))
         } else if get_string(arg_matches, "input_file").is_none() {
             Err(OptionsError::Error(

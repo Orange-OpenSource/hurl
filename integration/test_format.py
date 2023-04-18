@@ -22,7 +22,7 @@ def test(format_type, hurl_file):
     output_file = hurl_file.replace(".hurl", "." + format_type)
     if not os.path.exists(output_file):
         return
-    cmd = ["hurlfmt", "--format", format_type, hurl_file]
+    cmd = ["hurlfmt", "--out", format_type, hurl_file]
     print(" ".join(cmd))
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
     expected = open(output_file, encoding="utf-8").read()

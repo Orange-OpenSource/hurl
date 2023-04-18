@@ -30,9 +30,15 @@ pub struct Options {
     pub color: bool,
     pub in_place: bool,
     pub input_file: Option<PathBuf>,
+    pub input_format: InputFormat,
     pub output_file: Option<PathBuf>,
     pub output_format: OutputFormat,
     pub standalone: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum InputFormat {
+    Hurl,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -68,8 +74,10 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::format())
         .arg(commands::in_place())
         .arg(commands::input_file())
+        .arg(commands::input_format())
         .arg(commands::no_color())
         .arg(commands::output())
+        .arg(commands::output_format())
         .arg(commands::standalone());
 
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
@@ -87,6 +95,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let color = matches::color(arg_matches);
     let in_place = matches::in_place(arg_matches)?;
     let input_file = matches::input_file(arg_matches)?;
+    let input_format = matches::input_format(arg_matches)?;
     let output_file = matches::output_file(arg_matches);
     let output_format = matches::output_format(arg_matches)?;
     let standalone = matches::standalone(arg_matches)?;
@@ -95,6 +104,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         color,
         in_place,
         input_file,
+        input_format,
         output_file,
         output_format,
         standalone,

@@ -39,9 +39,9 @@ pub fn format() -> clap::Arg {
     clap::Arg::new("format")
         .long("format")
         .value_name("FORMAT")
-        .help("Specify output format: hurl, json or html")
+        .help("Specify output format: hurl, json or html (DEPRECATED)")
         .conflicts_with("check")
-        .default_value("text")
+        .default_value("hurl")
         .num_args(1)
 }
 
@@ -62,6 +62,15 @@ pub fn input_file() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn input_format() -> clap::Arg {
+    clap::Arg::new("input_format")
+        .long("in")
+        .value_name("FORMAT")
+        .help("Specify input format: hurl")
+        .conflicts_with("check")
+        .default_value("hurl")
+        .num_args(1)
+}
 pub fn no_color() -> clap::Arg {
     clap::Arg::new("no_color")
         .long("no-color")
@@ -76,6 +85,16 @@ pub fn output() -> clap::Arg {
         .long("output")
         .value_name("FILE")
         .help("Write to FILE instead of stdout")
+        .num_args(1)
+}
+
+pub fn output_format() -> clap::Arg {
+    clap::Arg::new("output_format")
+        .long("out")
+        .value_name("FORMAT")
+        .help("Specify output format: hurl, json or html")
+        .conflicts_with("check")
+        .default_value("hurl")
         .num_args(1)
 }
 
