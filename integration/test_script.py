@@ -95,14 +95,16 @@ def test_stdout_pattern(f, result):
     actual_lines = re.split(r"\r?\n", actual)
 
     if len(actual_lines) != len(expected_pattern_lines):
-        print(">>> error in stout / mismatch in number of lines")
+        print(">>> error in stdout / mismatch in number of lines")
         print(
             f"actual: {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
         )
+        print(f"actual <{actual}>")
+
         sys.exit(1)
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
-            print(f">>> error in stout in line {i+1}")
+            print(f">>> error in stdout in line {i+1}")
             print(f"actual: <{actual_lines[i]}>")
             print(
                 f"expected: <{expected_lines[i]}> (translated to regex <{expected_pattern_lines[i]}>)"

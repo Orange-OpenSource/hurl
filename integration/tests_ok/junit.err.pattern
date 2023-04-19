@@ -1,0 +1,18 @@
+tests_ok~test.1.hurl: Running [1/2]
+tests_ok~test.1.hurl: Success (1 request(s) in ~~~ ms)
+tests_ok~test.2.hurl: Running [2/2]
+tests_ok~test.2.hurl: Success (1 request(s) in ~~~ ms)
+--------------------------------------------------------------------------------
+Executed files:  2
+Succeeded files: 2 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        ~ ms
+
+tests_ok~test.3.hurl: Running [1/1]
+tests_ok~test.3.hurl: Success (1 request(s) in ~~~ ms)
+--------------------------------------------------------------------------------
+Executed files:  1
+Succeeded files: 1 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        ~~~ ms
+

@@ -99,14 +99,14 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
         Ok(f) => f,
         Err(e) => {
             return Err(Error {
-                message: format!("Failed to produce junit report: {e:?}"),
+                message: format!("Failed to produce JUnit report: {e:?}"),
             });
         }
     };
     match report.write(file) {
         Ok(_) => Ok(()),
         Err(e) => Err(Error {
-            message: format!("Failed to produce junit report: {e:?}"),
+            message: format!("Failed to produce Junit report: {e:?}"),
         }),
     }
 }
