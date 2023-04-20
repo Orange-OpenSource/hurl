@@ -15,9 +15,28 @@
  * limitations under the License.
  *
  */
-#![cfg_attr(feature = "strict", deny(warnings))]
+use clap::ArgAction;
 
-pub mod cli;
-pub mod curl;
-pub mod format;
-pub mod linter;
+pub fn headers() -> clap::Arg {
+    clap::Arg::new("headers")
+        .long("header")
+        .short('H')
+        .value_name("NAME:VALUE")
+        .action(ArgAction::Append)
+        .num_args(1)
+}
+
+pub fn method() -> clap::Arg {
+    clap::Arg::new("method")
+        .long("request")
+        .short('X')
+        .value_name("METHOD")
+        .num_args(1)
+}
+
+pub fn url() -> clap::Arg {
+    clap::Arg::new("url")
+        .help("Sets the url to use")
+        .required(false)
+        .num_args(1)
+}
