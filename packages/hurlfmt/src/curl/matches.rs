@@ -17,9 +17,28 @@
  */
 use clap::ArgMatches;
 
+pub fn body(arg_matches: &ArgMatches) -> Option<String> {
+    match get_string(arg_matches, "data") {
+        None => None,
+        Some(v) => {
+            if let Some(filename) = v.strip_prefix('@') {
+                Some(format!("file, {filename};"))
+            } else {
+                Some(format!("```{v}```"))
+            }
+        }
+    }
+}
+
 pub fn method(arg_matches: &ArgMatches) -> String {
     match get_string(arg_matches, "method") {
-        None => "GET".to_string(),
+        None => {
+            if arg_matches.contains_id("data") {
+                "POST".to_string()
+            } else {
+                "GET".to_string()
+            }
+        }
         Some(v) => v,
     }
 }
@@ -34,18 +53,62 @@ pub fn url(arg_matches: &ArgMatches) -> String {
 }
 
 pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
-    match get_strings(arg_matches, "headers") {
+    let mut headers = match get_strings(arg_matches, "headers") {
         None => vec![],
         Some(v) => v,
+    };
+    if !has_content_type(&headers) {
+        if let Some(data) = get_string(arg_matches, "data") {
+            if !data.starts_with('@') {
+                headers.push("Content-Type: application/x-www-form-urlencoded".to_string())
+            }
+        }
     }
+
+    headers
 }
 
-pub fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
+pub fn options(arg_matches: &ArgMatches) -> Vec<String> {
+    let mut options = vec![];
+    if has_flag(arg_matches, "compressed") {
+        options.push("compressed: true".to_string());
+    }
+    if has_flag(arg_matches, "location") {
+        options.push("location: true".to_string());
+    }
+    if has_flag(arg_matches, "insecure") {
+        options.push("insecure: true".to_string());
+    }
+    if let Some(value) = get::<i32>(arg_matches, "max_redirects") {
+        options.push(format!("max-redirs: {value}"));
+    }
+    options
+}
+
+fn has_content_type(headers: &Vec<String>) -> bool {
+    for header in headers {
+        if header.starts_with("Content-Type") {
+            return true;
+        }
+    }
+    false
+}
+
+fn has_flag(matches: &ArgMatches, name: &str) -> bool {
+    matches.get_one::<bool>(name) == Some(&true)
+}
+
+/// Returns an optional value of type `T` from the command line `matches` given the option `name`.
+fn get<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, name: &str) -> Option<T> {
+    matches.get_one::<T>(name).cloned()
+}
+
+fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
     matches.get_one::<String>(name).map(|x| x.to_string())
 }
 
 /// Returns an optional list of `String` from the command line `matches` given the option `name`.
-pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
+fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
