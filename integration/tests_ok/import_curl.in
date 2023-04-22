@@ -1,0 +1,3 @@
+curl http://localhost:8000/hello
+curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry' -H 'Fruit:Apple' -H 'Fruit:Banana' -H 'Fruit: Grape' -H 'Color:Green'
+curl --header 'Content-Type: application/json' --data $'{\n    "name": "Bob",\n    "password": "&secret\\\\\'<>",\n    "age": 30,\n    "strict": true,\n    "spacing": "\\n",\n    "g_clef": "\\uD834\\uDD1E",\n    "items": [true, "true", 1],\n    "variable": "\\\\"\n}' 'http://localhost:8000/post-json'

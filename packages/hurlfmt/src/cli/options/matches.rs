@@ -39,6 +39,7 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
 pub fn input_format(arg_matches: &ArgMatches) -> Result<InputFormat, OptionsError> {
     match get_string(arg_matches, "input_format").unwrap().as_str() {
         "hurl" => Ok(InputFormat::Hurl),
+        "curl" => Ok(InputFormat::Curl),
         v => Err(OptionsError::Error(format!("Invalid input format {v}"))),
     }
 }

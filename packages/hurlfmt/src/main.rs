@@ -20,8 +20,8 @@ use std::path::PathBuf;
 use std::process;
 
 use hurl_core::parser;
-use hurlfmt::cli::options::{OptionsError, OutputFormat};
-use hurlfmt::{cli, format, linter};
+use hurlfmt::cli::options::{InputFormat, OptionsError, OutputFormat};
+use hurlfmt::{cli, curl, format, linter};
 
 #[cfg(target_family = "unix")]
 pub fn init_colored() {
@@ -80,17 +80,28 @@ fn main() {
         contents
     };
 
+    let input = match opts.input_format {
+        InputFormat::Hurl => contents,
+        InputFormat::Curl => match curl::parse(&contents) {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(2);
+            }
+        },
+    };
+
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
         .unwrap()
-        .split(&contents)
+        .split(&input)
         .collect();
-
     let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
     let log_parser_error =
         cli::make_logger_parser_error(lines.clone(), opts.color, opts.input_file.clone());
     let log_linter_error =
         cli::make_logger_linter_error(lines, opts.color, opts.input_file.clone());
-    match parser::parse_hurl_file(&contents) {
+
+    match parser::parse_hurl_file(&input) {
         Err(e) => {
             log_parser_error(&e, false);
             process::exit(2);

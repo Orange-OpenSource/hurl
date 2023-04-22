@@ -24,7 +24,7 @@ pub fn body(arg_matches: &ArgMatches) -> Option<String> {
             if let Some(filename) = v.strip_prefix('@') {
                 Some(format!("file, {filename};"))
             } else {
-                Some(format!("```{v}```"))
+                Some(format!("```\n{v}\n```"))
             }
         }
     }

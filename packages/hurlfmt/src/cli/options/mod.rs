@@ -38,6 +38,7 @@ pub struct Options {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum InputFormat {
+    Curl,
     Hurl,
 }
 

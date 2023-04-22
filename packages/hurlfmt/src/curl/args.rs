@@ -94,7 +94,7 @@ impl Parser {
                         Some('t') => '\t',
                         Some('r') => '\r',
                         Some(c) => c,
-                        _ => return Err(format!("Invalid escape at index {}", self.index)),
+                        _ => return Err(format!("Invalid escape at column {}", self.index + 1)),
                     };
                     value.push(c2);
                 } else if c1 == delimiter {
@@ -104,8 +104,8 @@ impl Parser {
                 }
             }
             Err(format!(
-                "Missing delimiter {delimiter} at index {}",
-                self.index
+                "Missing delimiter {delimiter} at column {}",
+                self.index + 1
             ))
         } else {
             loop {
@@ -114,7 +114,7 @@ impl Parser {
                         if let Some(c) = self.read() {
                             value.push(c);
                         } else {
-                            return Err(format!("Invalid escape at index {}", self.index));
+                            return Err(format!("Invalid escape at column {}", self.index + 1));
                         }
                     }
                     Some(' ') => return Ok(Some(value)),
@@ -150,7 +150,7 @@ mod test {
     fn test_split_error() {
         assert_eq!(
             args::split(r#"AAA 'BBB"#).err().unwrap(),
-            "Missing delimiter ' at index 8".to_string()
+            "Missing delimiter ' at column 9".to_string()
         );
     }
 
@@ -196,7 +196,7 @@ mod test {
         let mut parser = Parser::new("'value");
         assert_eq!(
             parser.param().err().unwrap(),
-            "Missing delimiter ' at index 6".to_string()
+            "Missing delimiter ' at column 7".to_string()
         );
         assert_eq!(parser.index, 6);
     }

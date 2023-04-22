@@ -1,0 +1,24 @@
+GET http://localhost:8000/hello
+
+GET http://localhost:8000/custom-headers
+Fruit: Raspberry
+Fruit: Apple
+Fruit: Banana
+Fruit: Grape
+Color: Green
+
+POST http://localhost:8000/post-json
+Content-Type: application/json
+```
+{
+    "name": "Bob",
+    "password": "&secret\\'<>",
+    "age": 30,
+    "strict": true,
+    "spacing": "\n",
+    "g_clef": "\uD834\uDD1E",
+    "items": [true, "true", 1],
+    "variable": "\\"
+}
+```
+

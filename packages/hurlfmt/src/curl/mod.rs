@@ -21,6 +21,22 @@ mod commands;
 mod matches;
 
 pub fn parse(s: &str) -> Result<String, String> {
+    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
+        .unwrap()
+        .split(s)
+        .filter(|s| !s.is_empty())
+        .collect();
+    let mut s = "".to_string();
+    for (i, line) in lines.iter().enumerate() {
+        let hurl_str = parse_line(line).map_err(|message| {
+            format!("Can not parse curl command at line {}: {message}", i + 1)
+        })?;
+        s.push_str(format!("{hurl_str}\n").as_str())
+    }
+    Ok(s)
+}
+
+fn parse_line(s: &str) -> Result<String, String> {
     let mut command = clap::Command::new("curl")
         .arg(commands::compressed())
         .arg(commands::data())
@@ -64,7 +80,8 @@ fn format(
         }
     }
     if let Some(body) = body {
-        s.push_str(format!("\n{body}").as_str());
+        s.push('\n');
+        s.push_str(body.as_str());
     }
     s.push('\n');
     s
@@ -72,13 +89,35 @@ fn format(
 
 #[cfg(test)]
 mod test {
-    use crate::curl::parse;
+    use crate::curl::*;
+
+    #[test]
+    fn test_parse() {
+        let hurl_str = r#"GET http://localhost:8000/hello
+
+GET http://localhost:8000/custom-headers
+Fruit:Raspberry
+
+"#;
+        assert_eq!(
+            parse(
+                r#"curl http://localhost:8000/hello
+curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry'
+"#
+            )
+            .unwrap(),
+            hurl_str
+        );
+    }
 
     #[test]
     fn test_hello() {
-        let hurl_str = r#"GET http://locahost:8000/hello
+        let hurl_str = r#"GET http://localhost:8000/hello
 "#;
-        assert_eq!(parse("curl http://locahost:8000/hello").unwrap(), hurl_str);
+        assert_eq!(
+            parse_line("curl http://localhost:8000/hello").unwrap(),
+            hurl_str
+        );
     }
 
     #[test]
@@ -89,11 +128,25 @@ Fruit: Banana
 Test: '
 "#;
         assert_eq!(
-            parse("curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry' -H 'Fruit: Banana' -H $'Test: \\''").unwrap(),
+            parse_line("curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry' -H 'Fruit: Banana' -H $'Test: \\''").unwrap(),
             hurl_str
         );
         assert_eq!(
-            parse("curl http://localhost:8000/custom-headers   --header Fruit:Raspberry -H 'Fruit: Banana' -H $'Test: \\''  ").unwrap(),
+            parse_line("curl http://localhost:8000/custom-headers   --header Fruit:Raspberry -H 'Fruit: Banana' -H $'Test: \\''  ").unwrap(),
+            hurl_str
+        );
+    }
+
+    #[test]
+    fn test_post_hello() {
+        let hurl_str = r#"POST http://localhost:8000/hello
+Content-Type: text/plain
+```
+hello
+```
+"#;
+        assert_eq!(
+            parse_line(r#"curl -d $'hello'  -H 'Content-Type: text/plain' -X POST http://localhost:8000/hello"#).unwrap(),
             hurl_str
         );
     }
@@ -102,14 +155,16 @@ Test: '
     fn test_post_format_params() {
         let hurl_str = r#"POST http://localhost:3000/data
 Content-Type: application/x-www-form-urlencoded
-```param1=value1&param2=value2```
+```
+param1=value1&param2=value2
+```
 "#;
         assert_eq!(
-            parse("curl http://localhost:3000/data -d 'param1=value1&param2=value2'").unwrap(),
+            parse_line("curl http://localhost:3000/data -d 'param1=value1&param2=value2'").unwrap(),
             hurl_str
         );
         assert_eq!(
-            parse("curl -X POST http://localhost:3000/data -H 'Content-Type: application/x-www-form-urlencoded' --data 'param1=value1&param2=value2'").unwrap(),
+            parse_line("curl -X POST http://localhost:3000/data -H 'Content-Type: application/x-www-form-urlencoded' --data 'param1=value1&param2=value2'").unwrap(),
             hurl_str
         );
     }
@@ -118,23 +173,26 @@ Content-Type: application/x-www-form-urlencoded
     fn test_post_json() {
         let hurl_str = r#"POST http://localhost:3000/data
 Content-Type: application/json
-```{"key1":"value1", "key2":"value2"}```
+```
+{"key1":"value1", "key2":"value2"}
+```
 "#;
         assert_eq!(
-            parse(r#"curl -d '{"key1":"value1", "key2":"value2"}' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap(),
-            hurl_str
-        );
+                hurl_str,
+                parse_line(r#"curl -d '{"key1":"value1", "key2":"value2"}' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap()
+            );
 
         let hurl_str = r#"POST http://localhost:3000/data
 Content-Type: application/json
-```{
+```
+{
   "key1": "value1",
   "key2": "value2"
 }
 ```
 "#;
         assert_eq!(
-            parse(r#"curl -d $'{\n  "key1": "value1",\n  "key2": "value2"\n}\n' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap(),
+            parse_line(r#"curl -d $'{\n  "key1": "value1",\n  "key2": "value2"\n}' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap(),
             hurl_str
         );
     }
@@ -145,7 +203,7 @@ Content-Type: application/json
 file, filename;
 "#;
         assert_eq!(
-            parse(r#"curl --data @filename http://example.com/"#).unwrap(),
+            parse_line(r#"curl --data @filename http://example.com/"#).unwrap(),
             hurl_str
         );
     }
@@ -157,7 +215,7 @@ file, filename;
 location: true
 "#;
         assert_eq!(
-            parse(r#"curl -L http://localhost:8000/redirect-absolute"#).unwrap(),
+            parse_line(r#"curl -L http://localhost:8000/redirect-absolute"#).unwrap(),
             hurl_str
         );
     }
@@ -169,7 +227,7 @@ location: true
 insecure: true
 "#;
         assert_eq!(
-            parse(r#"curl -k https://localhost:8001/hello"#).unwrap(),
+            parse_line(r#"curl -k https://localhost:8001/hello"#).unwrap(),
             hurl_str
         );
     }
@@ -181,7 +239,7 @@ insecure: true
 max-redirs: 10
 "#;
         assert_eq!(
-            parse(r#"curl https://localhost:8001/hello --max-redirs 10"#).unwrap(),
+            parse_line(r#"curl https://localhost:8001/hello --max-redirs 10"#).unwrap(),
             hurl_str
         );
     }
