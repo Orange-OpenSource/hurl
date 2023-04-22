@@ -124,6 +124,19 @@ Content-Type: application/json
             parse(r#"curl -d '{"key1":"value1", "key2":"value2"}' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap(),
             hurl_str
         );
+
+        let hurl_str = r#"POST http://localhost:3000/data
+Content-Type: application/json
+```{
+  "key1": "value1",
+  "key2": "value2"
+}
+```
+"#;
+        assert_eq!(
+            parse(r#"curl -d $'{\n  "key1": "value1",\n  "key2": "value2"\n}\n' -H 'Content-Type: application/json' -X POST http://localhost:3000/data"#).unwrap(),
+            hurl_str
+        );
     }
 
     #[test]

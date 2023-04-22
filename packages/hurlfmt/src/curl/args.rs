@@ -47,7 +47,6 @@ impl Parser {
     fn read(&mut self) -> Option<char> {
         match self.buffer.get(self.index) {
             None => None,
-
             Some(c) => {
                 self.index += 1;
                 Some(*c)
@@ -62,16 +61,16 @@ impl Parser {
         self.index == self.buffer.len()
     }
 
-    fn delimiter(&mut self) -> Option<char> {
+    fn delimiter(&mut self) -> Option<(char, bool)> {
         if self.peek() == Some('\'') {
             self.read();
-            Some('\'')
+            Some(('\'', false))
         } else if self.peek() == Some('$') {
             let save = self.index;
             self.read();
             if self.peek() == Some('\'') {
                 self.read();
-                Some('\'')
+                Some(('\'', true))
             } else {
                 self.index = save;
                 None
@@ -87,18 +86,21 @@ impl Parser {
             return Ok(None);
         }
         let mut value = "".to_string();
-        if let Some(delimiter) = self.delimiter() {
-            while let Some(c) = self.read() {
-                if c == '\\' {
-                    if let Some(c) = self.read() {
-                        value.push(c);
-                    } else {
-                        return Err(format!("Invalid escape at index {}", self.index));
-                    }
-                } else if c == delimiter {
+        if let Some((delimiter, escaping)) = self.delimiter() {
+            while let Some(c1) = self.read() {
+                if c1 == '\\' && escaping {
+                    let c2 = match self.read() {
+                        Some('n') => '\n',
+                        Some('t') => '\t',
+                        Some('r') => '\r',
+                        Some(c) => c,
+                        _ => return Err(format!("Invalid escape at index {}", self.index)),
+                    };
+                    value.push(c2);
+                } else if c1 == delimiter {
                     return Ok(Some(value));
                 } else {
-                    value.push(c);
+                    value.push(c1);
                 }
             }
             Err(format!(
@@ -172,6 +174,10 @@ mod test {
         let mut parser = Parser::new(" 'value'  ");
         assert_eq!(parser.param().unwrap().unwrap(), "value".to_string());
         assert_eq!(parser.index, 8);
+
+        let mut parser = Parser::new("'\\n'");
+        assert_eq!(parser.param().unwrap().unwrap(), "\\n".to_string());
+        assert_eq!(parser.index, 4);
     }
 
     #[test]
@@ -179,6 +185,10 @@ mod test {
         let mut parser = Parser::new("$'Test: \\''");
         assert_eq!(parser.param().unwrap().unwrap(), "Test: '".to_string());
         assert_eq!(parser.index, 11);
+
+        let mut parser = Parser::new("$'\\n'");
+        assert_eq!(parser.param().unwrap().unwrap(), "\n".to_string());
+        assert_eq!(parser.index, 5);
     }
 
     #[test]
@@ -203,10 +213,10 @@ mod test {
         assert_eq!(parser.delimiter(), None);
         assert_eq!(parser.index, 0);
         let mut parser = Parser::new("'value'");
-        assert_eq!(parser.delimiter().unwrap(), '\'');
+        assert_eq!(parser.delimiter().unwrap(), ('\'', false));
         assert_eq!(parser.index, 1);
         let mut parser = Parser::new("$'value'");
-        assert_eq!(parser.delimiter().unwrap(), '\'');
+        assert_eq!(parser.delimiter().unwrap(), ('\'', true));
         assert_eq!(parser.index, 2);
         let mut parser = Parser::new("$value");
         assert_eq!(parser.delimiter(), None);
