@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-warning">
-                <abbr title="43 / 54">79.63 %</abbr></p>
+                <abbr title="56 / 67">83.58 %</abbr></p>
         </div>
     </div>
 
@@ -1877,7 +1877,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let children = testcases</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut attrs = indexmap::map::IndexMap::new();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1893,7 +1893,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut tests = 0;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1904,12 +1904,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="11">
-                11
+                role="cell" aria-label="6">
+                6
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .map(|t| XMLNode::Element(t.to_xml()))</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut errors = 0;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1925,7 +1925,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        .collect();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut failures = 0;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1935,13 +1935,13 @@
                 <a href="#119">119</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let element = Element {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1952,12 +1952,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        name: &quot;testsuite&quot;.to_string(),</pre>
+                <pre class="has-background-success-light py-0 px-2">    for cases in testcases.iter() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1968,12 +1968,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        prefix: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">        tests += 1;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1984,12 +1984,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        namespace: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">        errors += cases.get_error_count();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2000,12 +2000,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        namespaces: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">        failures += cases.get_fail_count();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2016,12 +2016,12 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                role="cell" aria-label="9">
+                9
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        attributes: indexmap::map::IndexMap::new(),</pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2031,13 +2031,13 @@
                 <a href="#125">125</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="6">
-                6
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        children,</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    };</pre>
+                <pre class="has-background-success-light py-0 px-2">    attrs.insert(&quot;tests&quot;.to_string(), tests.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    XMLNode::Element(element)</pre>
+                <pre class="has-background-success-light py-0 px-2">    attrs.insert(&quot;errors&quot;.to_string(), errors.to_string());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2085,13 +2085,253 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
+                <pre class="has-background-success-light py-0 px-2">    attrs.insert(&quot;failures&quot;.to_string(), failures.to_string());</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="129"
+                role="cell">
+                <a href="#129">129</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="130"
+                role="cell">
+                <a href="#130">130</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let children = testcases</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="131"
+                role="cell">
+                <a href="#131">131</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .iter()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="132"
+                role="cell">
+                <a href="#132">132</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="11">
+                11
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .map(|t| XMLNode::Element(t.to_xml()))</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="133"
+                role="cell">
+                <a href="#133">133</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        .collect();</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="134"
+                role="cell">
+                <a href="#134">134</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    let element = Element {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="135"
+                role="cell">
+                <a href="#135">135</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        name: &quot;testsuite&quot;.to_string(),</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="136"
+                role="cell">
+                <a href="#136">136</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        prefix: None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="137"
+                role="cell">
+                <a href="#137">137</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        namespace: None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="138"
+                role="cell">
+                <a href="#138">138</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        namespaces: None,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="139"
+                role="cell">
+                <a href="#139">139</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        attributes: attrs,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="140"
+                role="cell">
+                <a href="#140">140</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        children,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="141"
+                role="cell">
+                <a href="#141">141</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    };</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="142"
+                role="cell">
+                <a href="#142">142</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    XMLNode::Element(element)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="143"
+                role="cell">
+                <a href="#143">143</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="6">
+                6
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
                 <pre class="has-background-success-light py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-04-21 15:17</p>
+                <p class="heading">Date: 2023-04-22 08:10</p>
             </div>
         </footer>
     </body>
