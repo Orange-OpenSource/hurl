@@ -9,7 +9,7 @@
 
 # What's Hurl?
 
-Hurl is a command line tool that runs <b>HTTP requests</b> defined in a simple <b>plain text format</b>.
+Hurl is a command line tool that runs <b>HTTP   requests</b> defined in a simple <b>plain text format</b>.
 
 It can chain requests, capture values and evaluate queries on headers and body response. Hurl is very
 versatile: it can be used for both <b>fetching data</b> and <b>testing HTTP</b> sessions.
