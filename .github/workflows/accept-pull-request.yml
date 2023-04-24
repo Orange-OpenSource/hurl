@@ -9,7 +9,7 @@ concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
-    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/accept') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force') }}
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}    
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
@@ -24,6 +24,18 @@ jobs:
     name: accept-pull-request
     runs-on: ubuntu-latest
     steps:
+
+      - name: Check user permission
+        run: |
+          comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
+          if [ "${comment_user_permission}" = "admin" ] ; then
+            echo "  - ✅ You have the ${comment_user_permission} permission then you are allowed to merge pull request n°${PR_NUMBER}"
+          else
+            comment="❌ Sorry \`${COMMENT_USER_LOGIN}\`, you are not allowed to merge this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
+          fi
 
       - name: Init all internal env vars
         id: init-all-internal-env-vars
@@ -60,7 +72,11 @@ jobs:
 
       - name: Notify user
         run: |
-          order="${{ github.event.comment.body }}"
+          if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
+            order="/accept --force"
+          else
+            order="/accept"
+          fi
           comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
           gh pr comment "${PR_NUMBER}" --body "${comment}"
 
@@ -80,18 +96,6 @@ jobs:
           git remote add fork https://github.com/${{ env.HEAD_REPO_FULL_NAME}}
           git remote --verbose
           git fetch --all
-
-      - name: Check comment user permission
-        run: |
-          comment_user_permission=$(gh api repos/"${OWNER}"/"${REPO}"/collaborators/"${COMMENT_USER_LOGIN}"/permission -q .permission)
-          if [ "${comment_user_permission}" = "admin" ] ; then
-            echo "  - ✅ You have the ${comment_user_permission} permission then you are allowed to merge pull request n°${PR_NUMBER}"
-          else
-            comment="❌ Sorry \`${COMMENT_USER_LOGIN}\`, you are not allowed to merge this pull request because you do not have admin permission (actual permission=${comment_user_permission})."
-            echo "  - ${comment}"
-            gh pr comment "${PR_NUMBER}" --body "${comment}"
-            exit 1
-          fi
 
       - name: Check if pull request state is open
         run: |
@@ -313,4 +317,3 @@ jobs:
       - name: release-final-comment
         run: |      
           gh pr comment "${{ github.event.issue.number }}" --body "✅ New PR [${{ needs.update-branch-version.outputs.pr_number }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${{ needs.update-branch-version.outputs.pr_number }}) created to update master branch to ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }} version"
-
