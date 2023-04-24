@@ -92,4 +92,3 @@ cd c:\hurl
 .\bin\release\release.ps1
 .\bin\release\create_windows64_installer.ps1
 ```
-
