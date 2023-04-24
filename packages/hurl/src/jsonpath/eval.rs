@@ -23,12 +23,12 @@ use super::ast::*;
 pub type JsonpathResult = Vec<serde_json::Value>;
 
 impl Query {
-    pub fn eval(self, value: serde_json::Value) -> JsonpathResult {
-        let mut results = vec![value];
+    pub fn eval(self, value: &serde_json::Value) -> JsonpathResult {
+        let mut results = vec![value.clone()];
         for selector in self.selectors {
             results = results
                 .iter()
-                .flat_map(|value| selector.clone().eval(value.clone()))
+                .flat_map(|value| selector.clone().eval(value))
                 .collect();
         }
         results
@@ -36,13 +36,13 @@ impl Query {
 }
 
 impl Selector {
-    pub fn eval(self, root: serde_json::Value) -> JsonpathResult {
+    pub fn eval(self, root: &serde_json::Value) -> JsonpathResult {
         match self {
             Selector::Wildcard | Selector::ArrayWildcard => {
                 let mut elements = vec![];
                 if let serde_json::Value::Array(values) = root {
                     for value in values {
-                        elements.push(value);
+                        elements.push(value.clone());
                     }
                 } else if let serde_json::Value::Object(key_values) = root {
                     for value in key_values.values() {
@@ -101,14 +101,14 @@ impl Selector {
                             elements.push(elem.clone());
                         }
                         for value in obj.values() {
-                            for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {
+                            for element in Selector::RecursiveKey(key.clone()).eval(value) {
                                 elements.push(element);
                             }
                         }
                     }
                     serde_json::Value::Array(values) => {
                         for value in values {
-                            for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {
+                            for element in Selector::RecursiveKey(key.clone()).eval(value) {
                                 elements.push(element);
                             }
                         }
@@ -123,7 +123,7 @@ impl Selector {
                     serde_json::Value::Object(map) => {
                         for elem in map.values() {
                             elements.push(elem.clone());
-                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {
+                            for element in Selector::RecursiveWildcard.eval(elem) {
                                 elements.push(element);
                             }
                         }
@@ -131,7 +131,7 @@ impl Selector {
                     serde_json::Value::Array(values) => {
                         for elem in values {
                             elements.push(elem.clone());
-                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {
+                            for element in Selector::RecursiveWildcard.eval(elem) {
                                 elements.push(element);
                             }
                         }
@@ -266,7 +266,7 @@ mod tests {
     #[test]
     pub fn test_query() {
         assert_eq!(
-            Query { selectors: vec![] }.eval(json_root()),
+            Query { selectors: vec![] }.eval(&json_root()),
             vec![json_root()]
         );
 
@@ -274,7 +274,7 @@ mod tests {
             Query {
                 selectors: vec![Selector::NameChild("store".to_string())]
             }
-            .eval(json_root()),
+            .eval(&json_root()),
             vec![json_store()]
         );
 
@@ -287,7 +287,7 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(json_root()),
+            query.eval(&json_root()),
             vec![json!("Sayings of the Century")]
         );
 
@@ -307,7 +307,7 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(json_root()),
+            query.eval(&json_root()),
             vec![json!("Sayings of the Century"), json!("Moby Dick")]
         );
 
@@ -316,7 +316,7 @@ mod tests {
             selectors: vec![Selector::RecursiveKey("author".to_string())],
         };
         assert_eq!(
-            query.eval(json_root()),
+            query.eval(&json_root()),
             vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
@@ -335,7 +335,7 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(json_root()),
+            query.eval(&json_root()),
             vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
@@ -348,11 +348,11 @@ mod tests {
     #[test]
     pub fn test_selector_array_index() {
         assert_eq!(
-            Selector::ArrayIndex(vec![0]).eval(json_books()),
+            Selector::ArrayIndex(vec![0]).eval(&json_books()),
             vec![json_first_book()]
         );
         assert_eq!(
-            Selector::ArrayIndex(vec![1, 2]).eval(json_books()),
+            Selector::ArrayIndex(vec![1, 2]).eval(&json_books()),
             vec![json_second_book(), json_third_book()]
         );
     }
@@ -360,7 +360,7 @@ mod tests {
     #[test]
     pub fn test_selector_array_wildcard() {
         assert_eq!(
-            Selector::ArrayWildcard {}.eval(json_books()),
+            Selector::ArrayWildcard {}.eval(&json_books()),
             vec![
                 json_first_book(),
                 json_second_book(),
@@ -377,7 +377,7 @@ mod tests {
                 start: None,
                 end: Some(2),
             })
-            .eval(json_books()),
+            .eval(&json_books()),
             vec![json_first_book(), json_second_book(),]
         );
     }
@@ -385,7 +385,7 @@ mod tests {
     #[test]
     pub fn test_recursive_key() {
         assert_eq!(
-            Selector::RecursiveKey("author".to_string()).eval(json_root()),
+            Selector::RecursiveKey("author".to_string()).eval(&json_root()),
             vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
@@ -400,7 +400,7 @@ mod tests {
     pub fn test_array_index() {
         let value = json!(["first", "second", "third", "forth", "fifth"]);
         assert_eq!(
-            Selector::ArrayIndex(vec![2]).eval(value),
+            Selector::ArrayIndex(vec![2]).eval(&value),
             vec![json!("third")]
         );
     }

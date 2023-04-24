@@ -209,7 +209,7 @@ fn eval_query_jsonpath(
         }
         Ok(v) => v,
     };
-    let results = jsonpath_query.eval(value);
+    let results = jsonpath_query.eval(&value);
     if results.is_empty() {
         Ok(None)
     } else if results.len() == 1 {
