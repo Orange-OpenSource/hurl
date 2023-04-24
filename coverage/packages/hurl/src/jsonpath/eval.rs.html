@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn eval(self, value: serde_json::Value) -&gt; JsonpathResult {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn eval(self, value: &amp;serde_json::Value) -&gt; JsonpathResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut results = vec![value];</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut results = vec![value.clone()];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                .flat_map(|value| selector.clone().eval(value.clone()))</pre>
+                <pre class="has-background-success-light py-0 px-2">                .flat_map(|value| selector.clone().eval(value))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn eval(self, root: serde_json::Value) -&gt; JsonpathResult {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn eval(self, root: &amp;serde_json::Value) -&gt; JsonpathResult {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        elements.push(value);</pre>
+                <pre class="has-background-success-light py-0 px-2">                        elements.push(value.clone());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveKey(key.clone()).eval(value) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1813,7 +1813,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveKey(key.clone()).eval(value.clone()) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveKey(key.clone()).eval(value) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveWildcard.eval(elem) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2181,7 +2181,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveWildcard.eval(elem.clone()) {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                            for element in Selector::RecursiveWildcard.eval(elem) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4341,7 +4341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Query { selectors: vec![] }.eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            Query { selectors: vec![] }.eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4469,7 +4469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            .eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4677,7 +4677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            query.eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            query.eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4997,7 +4997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            query.eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            query.eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5141,7 +5141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            query.eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            query.eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5445,7 +5445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            query.eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            query.eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5653,7 +5653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![0]).eval(json_books()),</pre>
+                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![0]).eval(&amp;json_books()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5717,7 +5717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![1, 2]).eval(json_books()),</pre>
+                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![1, 2]).eval(&amp;json_books()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5845,7 +5845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Selector::ArrayWildcard {}.eval(json_books()),</pre>
+                <pre class="has-background-white py-0 px-2">            Selector::ArrayWildcard {}.eval(&amp;json_books()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6117,7 +6117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            .eval(json_books()),</pre>
+                <pre class="has-background-white py-0 px-2">            .eval(&amp;json_books()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6245,7 +6245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Selector::RecursiveKey(&quot;author&quot;.to_string()).eval(json_root()),</pre>
+                <pre class="has-background-white py-0 px-2">            Selector::RecursiveKey(&quot;author&quot;.to_string()).eval(&amp;json_root()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6485,7 +6485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![2]).eval(value),</pre>
+                <pre class="has-background-white py-0 px-2">            Selector::ArrayIndex(vec![2]).eval(&amp;value),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7579,7 +7579,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-04-23 08:11</p>
+                <p class="heading">Date: 2023-04-24 08:12</p>
             </div>
         </footer>
     </body>
