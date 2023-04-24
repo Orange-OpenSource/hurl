@@ -58,15 +58,17 @@ mod testcase;
 
 use std::fs::File;
 
-pub use testcase::Testcase;
+use indexmap::IndexMap;
 use xmltree::{Element, XMLNode};
 
 use crate::report::Error;
+pub use testcase::Testcase;
 
 /// Creates a JUnit from a list of `testcases`.
 pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {
     let mut testsuites = vec![];
 
+    // If there is an existing JUnit report, we parses it to insert a new testsuite.
     let path = std::path::Path::new(&filename);
     if path.exists() {
         let s = match std::fs::read_to_string(path) {
@@ -86,13 +88,13 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
     }
 
     let testsuite = create_testsuite(testcases);
-    testsuites.push(testsuite);
+    testsuites.push(XMLNode::Element(testsuite));
     let report = Element {
         name: "testsuites".to_string(),
         prefix: None,
         namespace: None,
         namespaces: None,
-        attributes: indexmap::map::IndexMap::new(),
+        attributes: IndexMap::new(),
         children: testsuites,
     };
     let file = match File::create(filename) {
@@ -111,8 +113,9 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
     }
 }
 
-fn create_testsuite(testcases: &[Testcase]) -> XMLNode {
-    let mut attrs = indexmap::map::IndexMap::new();
+/// Returns a testsuite as a XML object, from a list of `testcases`.
+fn create_testsuite(testcases: &[Testcase]) -> Element {
+    let mut attrs = IndexMap::new();
     let mut tests = 0;
     let mut errors = 0;
     let mut failures = 0;
@@ -131,13 +134,105 @@ fn create_testsuite(testcases: &[Testcase]) -> XMLNode {
         .iter()
         .map(|t| XMLNode::Element(t.to_xml()))
         .collect();
-    let element = Element {
+    Element {
         name: "testsuite".to_string(),
         prefix: None,
         namespace: None,
         namespaces: None,
         attributes: attrs,
         children,
-    };
-    XMLNode::Element(element)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::report::junit::{create_testsuite, Testcase};
+    use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
+    use hurl_core::ast::SourceInfo;
+
+    #[test]
+    fn create_junit_report() {
+        let content = "GET http://localhost:8000/not_found\n\
+                       HTTP/1.0 200";
+        let filename = "-";
+        let mut testcases = vec![];
+        let res = HurlResult {
+            entries: vec![],
+            time_in_ms: 230,
+            success: true,
+            cookies: vec![],
+        };
+        let tc = Testcase::from(&res, content, filename);
+        testcases.push(tc);
+
+        let res = HurlResult {
+            entries: vec![EntryResult {
+                entry_index: 1,
+                calls: vec![],
+                captures: vec![],
+                asserts: vec![],
+                errors: vec![Error {
+                    source_info: SourceInfo::new(2, 10, 2, 13),
+                    inner: RunnerError::AssertStatus {
+                        actual: "404".to_string(),
+                    },
+                    assert: true,
+                }],
+                time_in_ms: 0,
+                compressed: false,
+            }],
+            time_in_ms: 230,
+            success: true,
+            cookies: vec![],
+        };
+        let tc = Testcase::from(&res, content, filename);
+        testcases.push(tc);
+
+        let res = HurlResult {
+            entries: vec![EntryResult {
+                entry_index: 1,
+                calls: vec![],
+                captures: vec![],
+                asserts: vec![],
+                errors: vec![Error {
+                    source_info: SourceInfo::new(1, 5, 1, 19),
+                    inner: RunnerError::HttpConnection {
+                        url: "http://unknown".to_string(),
+                        message: "(6) Could not resolve host: unknown".to_string(),
+                    },
+                    assert: false,
+                }],
+                time_in_ms: 0,
+                compressed: false,
+            }],
+            time_in_ms: 230,
+            success: true,
+            cookies: vec![],
+        };
+        let tc = Testcase::from(&res, content, filename);
+        testcases.push(tc);
+
+        let mut buffer = Vec::new();
+        create_testsuite(&testcases).write(&mut buffer).unwrap();
+        assert_eq!(
+            std::str::from_utf8(&buffer).unwrap(),
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+            <testsuite tests=\"3\" errors=\"1\" failures=\"1\">\
+                <testcase id=\"-\" name=\"-\" time=\"0.230\" />\
+                <testcase id=\"-\" name=\"-\" time=\"0.230\">\
+                    <failure>Assert status code\n  \
+                    --> -:2:10\n   \
+                      |\n \
+                    2 | HTTP/1.0 200\n   \
+                      |          ^^^ actual value is &lt;404>\n   \
+                      |\
+                    </failure>\
+                </testcase>\
+                <testcase id=\"-\" name=\"-\" time=\"0.230\">\
+                    <error>HTTP connection\n  --> -:1:5\n   |\n 1 | GET http://localhost:8000/not_found\n   |     ^^^^^^^^^^^^^^ (6) Could not resolve host: unknown\n   |\
+                    </error>\
+                </testcase>\
+            </testsuite>"
+        );
+    }
 }

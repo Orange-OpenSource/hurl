@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use indexmap::map::IndexMap;
 use xmltree::{Element, XMLNode};
 
 use crate::runner::HurlResult;
@@ -58,7 +59,7 @@ impl Testcase {
     /// Serializes this testcase to XML.
     pub fn to_xml(&self) -> Element {
         let name = "testcase".to_string();
-        let mut attributes = indexmap::map::IndexMap::new();
+        let mut attributes = IndexMap::new();
         attributes.insert("id".to_string(), self.id.clone());
         attributes.insert("name".to_string(), self.name.clone());
         let time_in_seconds = format!("{:.3}", self.time_in_ms as f64 / 1000.0);
@@ -71,7 +72,7 @@ impl Testcase {
                 namespace: None,
                 namespaces: None,
                 name: "failure".to_string(),
-                attributes: indexmap::map::IndexMap::new(),
+                attributes: IndexMap::new(),
                 children: vec![XMLNode::Text(message)],
             };
             children.push(XMLNode::Element(element));
@@ -82,7 +83,7 @@ impl Testcase {
                 namespace: None,
                 namespaces: None,
                 name: "error".to_string(),
-                attributes: indexmap::map::IndexMap::new(),
+                attributes: IndexMap::new(),
                 children: vec![XMLNode::Text(message)],
             };
             children.push(XMLNode::Element(element));
