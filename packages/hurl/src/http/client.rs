@@ -328,7 +328,7 @@ impl Client {
         };
         let stop = Utc::now();
         let duration = (stop - start).to_std().unwrap();
-        let timings = Timings::new(&self.handle, start, stop);
+        let timings = Timings::new(&mut self.handle, start, stop);
         self.handle.reset();
 
         let request = Request {

@@ -107,7 +107,7 @@ pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
 ///
 /// Corresponds to [`CURLINFO_NAMELOOKUP_TIME_T`] and may return an error if the
 /// option isn't supported.
-pub fn namelookup_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn namelookup_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_NAMELOOKUP_TIME_T).map(microseconds_to_duration)
 }
 
@@ -117,7 +117,7 @@ pub fn namelookup_time_t(easy: &Easy) -> Result<Duration, Error> {
 ///
 /// Corresponds to [`CURLINFO_CONNECT_TIME_T`] and may return an error if the
 /// option isn't supported.
-pub fn connect_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn connect_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_CONNECT_TIME_T).map(microseconds_to_duration)
 }
 
@@ -131,7 +131,7 @@ pub fn connect_time_t(easy: &Easy) -> Result<Duration, Error> {
 ///
 /// Corresponds to [`CURLINFO_APPCONNECT_TIME_T`] and may return an error if the
 /// option isn't supported.
-pub fn appconnect_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn appconnect_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_APPCONNECT_TIME_T).map(microseconds_to_duration)
 }
 
@@ -145,7 +145,7 @@ pub fn appconnect_time_t(easy: &Easy) -> Result<Duration, Error> {
 ///
 /// Corresponds to [`CURLINFO_PRETRANSFER_TIME`] and may return an error if the
 /// option isn't supported.
-pub fn pretransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn pretransfer_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_PRETRANSFER_TIME_T).map(microseconds_to_duration)
 }
 
@@ -157,7 +157,7 @@ pub fn pretransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
 ///
 /// Corresponds to [`CURLINFO_STARTTRANSFER_TIME`] and may return an error if the
 /// option isn't supported.
-pub fn starttransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn starttransfer_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_STARTTRANSFER_TIME_T).map(microseconds_to_duration)
 }
 
@@ -168,7 +168,7 @@ pub fn starttransfer_time_t(easy: &Easy) -> Result<Duration, Error> {
 ///
 /// Corresponds to [`CURLINFO_TOTAL_TIME_T`] and may return an error if the
 /// option isn't supported.
-pub fn total_time_t(easy: &Easy) -> Result<Duration, Error> {
+pub fn total_time_t(easy: &mut Easy) -> Result<Duration, Error> {
     getopt_off_t(easy, CURLINFO_TOTAL_TIME_T).map(microseconds_to_duration)
 }
 
@@ -202,7 +202,7 @@ fn cvt(easy: &Easy, rc: curl_sys::CURLcode) -> Result<(), Error> {
     Err(err)
 }
 
-fn getopt_off_t(easy: &Easy, opt: CURLINFO) -> Result<curl_off_t, Error> {
+fn getopt_off_t(easy: &mut Easy, opt: CURLINFO) -> Result<curl_off_t, Error> {
     unsafe {
         let mut p = 0 as curl_off_t;
         let rc = curl_sys::curl_easy_getinfo(easy.raw(), opt, &mut p);

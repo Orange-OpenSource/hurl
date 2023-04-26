@@ -33,29 +33,42 @@ pub struct Timings {
     pub name_lookup: Duration,
     pub connect: Duration,
     pub app_connect: Duration,
-    pub pre_transfert: Duration,
-    pub start_transfert: Duration,
+    pub pre_transfer: Duration,
+    pub start_transfer: Duration,
     pub total: Duration,
 }
 
 impl Timings {
-    pub fn new(easy: &Easy, begin_call: DateTime<Utc>, end_call: DateTime<Utc>) -> Self {
-        // TODO: maybe implement fallback to  *_time function in case *_time_t are
-        //  not implemented.
-        let name_lookup = easy_ext::namelookup_time_t(easy).unwrap_or(Duration::default());
-        let connect = easy_ext::connect_time_t(easy).unwrap_or(Duration::default());
-        let app_connect = easy_ext::appconnect_time_t(easy).unwrap_or(Duration::default());
-        let pre_transfert = easy_ext::pretransfer_time_t(easy).unwrap_or(Duration::default());
-        let start_transfert = easy_ext::starttransfer_time_t(easy).unwrap_or(Duration::default());
-        let total = easy_ext::total_time_t(easy).unwrap_or(Duration::default());
+    pub fn new(easy: &mut Easy, begin_call: DateTime<Utc>, end_call: DateTime<Utc>) -> Self {
+        // We try the *_t timing function of libcurl (available for libcurl >= 7.61.0)
+        // returning timing in nanoseconds, or fallback to timing function returning seconds
+        // if *_t are not available.
+        let name_lookup = easy_ext::namelookup_time_t(easy)
+            .or(easy.namelookup_time())
+            .unwrap_or(Duration::default());
+        let connect = easy_ext::connect_time_t(easy)
+            .or(easy.connect_time())
+            .unwrap_or(Duration::default());
+        let app_connect = easy_ext::appconnect_time_t(easy)
+            .or(easy.appconnect_time())
+            .unwrap_or(Duration::default());
+        let pre_transfer = easy_ext::pretransfer_time_t(easy)
+            .or(easy.pretransfer_time())
+            .unwrap_or(Duration::default());
+        let start_transfer = easy_ext::starttransfer_time_t(easy)
+            .or(easy.starttransfer_time())
+            .unwrap_or(Duration::default());
+        let total = easy_ext::total_time_t(easy)
+            .or(easy.total_time())
+            .unwrap_or(Duration::default());
         Timings {
             begin_call,
             end_call,
             name_lookup,
             connect,
             app_connect,
-            pre_transfert,
-            start_transfert,
+            pre_transfer,
+            start_transfer,
             total,
         }
     }

@@ -292,12 +292,12 @@ impl Timings {
             "app_connect".to_string(),
             serde_json::Value::Number(Number::from(value)),
         );
-        let value = self.pre_transfert.as_micros() as u64;
+        let value = self.pre_transfer.as_micros() as u64;
         map.insert(
             "pre_transfert".to_string(),
             serde_json::Value::Number(Number::from(value)),
         );
-        let value = self.start_transfert.as_micros() as u64;
+        let value = self.start_transfer.as_micros() as u64;
         map.insert(
             "start_transfert".to_string(),
             serde_json::Value::Number(Number::from(value)),
