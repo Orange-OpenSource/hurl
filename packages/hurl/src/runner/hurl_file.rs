@@ -37,7 +37,6 @@ use crate::util::logger::{Logger, LoggerBuilder};
 ///
 /// ```
 /// use std::collections::HashMap;
-/// use std::path::PathBuf;
 /// use hurl::runner;
 /// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
 /// use hurl::util::logger::LoggerBuilder;
@@ -49,7 +48,7 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// "#;
 ///
 /// // Define runner options and logger
-/// let runner_options = RunnerOptionsBuilder::new()
+/// let options = RunnerOptionsBuilder::new()
 ///     .follow_location(true)
 ///     .verbosity(Some(Verbosity::Verbose))
 ///     .build();
@@ -59,14 +58,14 @@ use crate::util::logger::{Logger, LoggerBuilder};
 /// let mut variables = HashMap::default();
 /// variables.insert("name".to_string(), Value::String("toto".to_string()));
 ///
-/// // Run the Hurl file
-/// let hurl_result = runner::run(
+/// // Run the Hurl sample
+/// let result = runner::run(
 ///     content,
-///     &runner_options,
+///     &options,
 ///     &variables,
 ///     &logger
 /// );
-/// assert!(hurl_result.unwrap().success);
+/// assert!(result.unwrap().success);
 /// ```
 pub fn run(
     content: &str,

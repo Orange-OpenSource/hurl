@@ -24,7 +24,7 @@ use crate::ast::Pos;
 /// The `Reader` implements methods to read a stream of text. A reader manages
 /// an internal `state` which is the position of the current cursor within the reader's buffer.
 /// Methods like [`Reader::read`], [`Reader::read_while`], [`Reader::read_while_escaping`]
-/// do advance the internal reader's`state`. Other methods, like [`Reader::peek`], [`Reader::peek_k`]
+/// do advance the internal reader's`state`. Other methods, like [`Reader::peek`], [`Reader::peek_n`]
 /// allows to get the next chars in the buffer without modifying the current reader state.
 ///
 /// # Example
