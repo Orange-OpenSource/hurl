@@ -98,8 +98,8 @@ def set_session_cookie2_valuea_subdomain2():
 
 
 # Set-Cookie: LSID=; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
-# Set-Cookie: HSID=AYQEVn…DKrdst; Domain=.localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly
-# Set-Cookie: SSID=Ap4P…GTEq; Domain=.localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
+# Set-Cookie: HSID=AYQEVn…DKrdst; Domain=localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly
+# Set-Cookie: SSID=Ap4P…GTEq; Domain=localhost; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly
 @app.route("/cookies/set")
 def set_cookies():
     resp = make_response()
@@ -114,7 +114,7 @@ def set_cookies():
     resp.set_cookie(
         "HSID",
         "AYQEVnDKrdst",
-        domain=".localhost",
+        domain="localhost",
         path="/",
         expires="Wed, 13 Jan 2021 22:23:01 GMT",
         httponly=True,
@@ -122,7 +122,7 @@ def set_cookies():
     resp.set_cookie(
         "SSID",
         "Ap4PGTEq",
-        domain=".localhost",
+        domain="localhost",
         path="/",
         expires="Wed, 13 Jan 2021 22:23:01 GMT",
         secure=True,

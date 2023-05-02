@@ -15,7 +15,7 @@ def set_cookie_jar():
     resp.set_cookie(
         "HSID",
         "AYQEVnDKrdst",
-        domain=".localhost",
+        domain="localhost",
         path="/",
         expires="Thu, 13 Jan 2078 22:23:01 GMT",
         httponly=True,
@@ -23,7 +23,7 @@ def set_cookie_jar():
     resp.set_cookie(
         "SSID",
         "Ap4PGTEq",
-        domain=".localhost",
+        domain="localhost",
         path="/",
         expires="Thu, 13 Jan 2078 22:23:01 GMT",
         httponly=True,

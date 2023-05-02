@@ -10,7 +10,7 @@ Age: {{age}}
 Height: {{height}}
 Female: {{female}}
 Id: {{my-id}}
-A_Null: {{a_null}}
+A-Null: {{a_null}}
 Country: {{country}}
 Planet: {{planet}}
 Galaxy: {{galaxy}}

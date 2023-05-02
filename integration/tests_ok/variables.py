@@ -11,7 +11,7 @@ def variables():
     assert request.headers["Female"] == "true"
     assert request.headers["Id"] == "123"
     assert request.headers["Height"] == "1.7"
-    assert request.headers["A_null"] == "null"
+    assert request.headers["A-null"] == "null"
     assert request.headers["Country"] == "Italy"
     assert request.headers["Planet"] == "The Earth"
     assert request.headers["Galaxy"] == "Milky Way"

@@ -6,8 +6,8 @@ GET http://localhost:8000/cookie-jar
 
 HTTP 200
 Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/accounts
-Set-Cookie: HSID=AYQEVnDKrdst; Domain=.localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
-Set-Cookie: SSID=Ap4PGTEq; Domain=.localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
+Set-Cookie: HSID=AYQEVnDKrdst; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
+Set-Cookie: SSID=Ap4PGTEq; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
 [Asserts]
 header "Set-Cookie" count == 3
 cookie "LSID" equals "DQAAAKEaem_vYg"
