@@ -4,4 +4,4 @@ Flask==2.0.3
 lxml==4.9.1
 mypy==0.971
 requests==2.28.1
-Werkzeug==2.2.3
+Werkzeug==2.3.2
