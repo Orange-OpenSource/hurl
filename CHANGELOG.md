@@ -1,11 +1,15 @@
-[3.0.0 (2023-03-23)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.0)
+[3.0.0 (2023-05-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.0)
 ========================================================================================================================
 
 Thanks to
-[@DannyBen](https://github.com/DannyBen),
+[@DannyBen](https://github.com/DannyBen), [@dermetfan](https://github.com/dermetfan), [@joesantos418](https://github.com/joesantos418)
+
+3.0.0 is a major update because of breaking changes in Hurl crates.
 
 
 Enhancements:
+
+* Add test attributes to JUnit XML [#1460](https://github.com/Orange-OpenSource/hurl/issues/1460)
 
 * Add certificate query [#1384](https://github.com/Orange-OpenSource/hurl/issues/1384)
 
@@ -23,6 +27,10 @@ Enhancements:
 
 
 Bugs Fixed:
+
+* Fix performance issue in Reader remaining method [#1456](https://github.com/Orange-OpenSource/hurl/issues/1456)
+
+* Parse empty JSON array body [#1424](https://github.com/Orange-OpenSource/hurl/issues/1424)
 
 * Add meta utf-8 charset to HTML report [#1366](https://github.com/Orange-OpenSource/hurl/issues/1366)
 
