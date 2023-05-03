@@ -159,6 +159,7 @@ is shared with [captures], and can be one of :
 - [`md5`](#md5-assert)
 - [`variable`](#variable-assert)
 - [`duration`](#duration-assert)
+- [`certificate`](#ssl-certificate-assert)
 
 Queries are used to extract data from the HTTP response. Queries, in asserts and in captures, can be refined with [filters], like 
 [`count`][count] to add tests on collections sizes.
@@ -629,6 +630,23 @@ GET https://sample.org/helloworld
 HTTP 200
 [Asserts]
 duration < 1000   # Check that response time is less than one second
+```
+
+### SSL certificate assert
+
+Check the SSL certificate properties. Certificate assert consists of the keyword `certificate`, followed by the certificate attribute value.
+
+The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date` and `Serial-Number`.
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Asserts]
+certificate "Subject" == "CN=example.org"
+certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
+certificate "Expire-Date" daysAfterNow > 15
+certificate "Serial-Number" matches "[0-9af]+"
 ```
 
 ## Body

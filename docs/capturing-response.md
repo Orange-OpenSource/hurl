@@ -60,6 +60,7 @@ A query can be of the following type:
 - [`regex`](#regex-capture)
 - [`variable`](#variable-capture)
 - [`duration`](#duration-capture)
+- [`certificate`](#certificate-capture)
 
 Extracted data can then be further refined using [filters].
 
@@ -300,6 +301,23 @@ GET https://example.org/helloworld
 HTTP 200
 [Captures]
 duration_in_ms: duration
+```
+
+### SSL certificate capture
+
+Capture the SSL certificate properties. Certificate capture consists of the keyword `certificate`, followed by the certificate attribute value.
+
+The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date` and `Serial-Number`.
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Captures]
+cert_subject: certificate "Subject"
+cert_issuer: certificate "Issuer"
+cert_expire_date: certificate "Expire-Date"
+cert_serial_number: certificate "Serial-Number"
 ```
 
 

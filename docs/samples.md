@@ -360,7 +360,7 @@ xpath "string(//div[1])" matches /Hello.*/
 ### Testing Set-Cookie Attributes
 
 ```hurl
-GET http://myserver.com/home
+GET https://example.org/home
 
 HTTP 200
 [Asserts]
@@ -376,7 +376,6 @@ cookie "JSESSIONID[SameSite]" == "Lax"
 
 ### Testing Bytes Content
 
-
 Check the SHA-256 response body hash:
 
 ```hurl
@@ -388,6 +387,23 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
 [Doc](/docs/asserting-response.md#sha-256-assert)
+
+### SSL Certificate
+
+Check the properties of a SSL certificate:
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Asserts]
+certificate "Subject" == "CN=example.org"
+certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
+certificate "Expire-Date" daysAfterNow > 15
+certificate "Serial-Number" matches "[0-9af]+"
+```
+
+[Doc](/docs/asserting-response.md#ssl-certificate-assert)
 
 
 ## Others
