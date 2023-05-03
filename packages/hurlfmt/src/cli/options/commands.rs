@@ -66,7 +66,7 @@ pub fn input_format() -> clap::Arg {
     clap::Arg::new("input_format")
         .long("in")
         .value_name("FORMAT")
-        .help("Specify input format: hurl")
+        .help("Specify input format: hurl or curl")
         .conflicts_with("check")
         .default_value("hurl")
         .num_args(1)

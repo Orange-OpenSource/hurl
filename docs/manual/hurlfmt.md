@@ -10,7 +10,7 @@ hurlfmt - format Hurl files
 
 ## DESCRIPTION
 
-**hurlfmt** formats Hurl files and converts them to other formats.
+**hurlfmt** formats Hurl files and converts them from/to other formats.
 
 With no FILE, read standard input.
 
@@ -49,6 +49,14 @@ $ hurl hello.hurl --output json | jq
 ```
 
 
+hurlfmt can also be used to convert a curl command-line to Hurl
+
+```
+$ echo "curl http://localhost:8000/custom-headers -H 'Fruit:Raspberry'" | hurlfmt --in curl
+GET http://localhost:8000/custom-headers
+Fruit: Raspberry
+```
+
 
 ## OPTIONS
 
@@ -69,14 +77,13 @@ Colorize Output.
 This can not be used [--in-place](#inplace).
 
 
-### --format {#output}
-
-Specify output format: text (default), json or html.
-
-
 ### -h, --help {#help}
 
 Usage help.
+
+### --in {#input-format}
+
+Specify input format: hurl (default) or curl
 
 
 ### --inplace {#inplace}
@@ -91,12 +98,10 @@ This can be used only with text output.
 Do not colorize Output.
 
 
-### --no-format {#noformat}
+### --out {#output-format}
 
-Do not format output. 
 
-By default text output is automatically formatted.
-
+Specify output format: hurl (default), json or html
 
 ### -o, --output <file> {#output}
 
