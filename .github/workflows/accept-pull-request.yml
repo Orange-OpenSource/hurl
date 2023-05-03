@@ -191,6 +191,13 @@ jobs:
               comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
+              if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
+                order="/accept --force"
+              else
+                order="/accept"
+              fi
+              comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is still running, please wait for completion."
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
               sleep 15
             else
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails on `git push --force`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
