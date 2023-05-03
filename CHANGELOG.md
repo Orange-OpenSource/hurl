@@ -25,6 +25,8 @@ Enhancements:
 
 * Implement isEmpty predicate [#849](https://github.com/Orange-OpenSource/hurl/issues/849)
 
+* Add curl input to hurlfmt [#316](https://github.com/Orange-OpenSource/hurl/issues/316)
+
 
 Bugs Fixed:
 
