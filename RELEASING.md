@@ -4,7 +4,7 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
 
 ## CHANGELOG
 
-- Add enhancement or Bug label to the issue
+- Add Enhancement or Bug label to the issue
 - Add target milestone to the issue
 - Use a well formatted description on PR (starts with a verb)
 - Add link(s) to the issue
@@ -21,9 +21,10 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
   - Generate CHANGELOG
   - Commit all updates
   - Create the `x.y.0` tag
-  - Create draft github release `x.y.0`
+  - Create draft GitHub release `x.y.0`
   - Create PR from `release/x.y.0` to `master`
-- You have to `/accept --release` this PR, it will:
+- Publish the draft release
+- Accept the PR with `/accept --release`, it will:
   - Merge fast-forward this PR
   - Open a new one to update `master` files to next version `x.y+1.0-SNAPSHOT`
 
@@ -40,16 +41,16 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
   - Generate CHANGELOG
   - Commit all updates
   - Create the `x.y.z` tag
-  - Create draft github release `x.y.z`
+  - Create draft GitHub release `x.y.z`
   - Create PR from `release/x.y.z` to `master`
 - You have to manually `merge` as a revert rebase to reorder commits between this new hotfix and  master
 - Run `update-branch-version.yml` workflow on `master` to restore actual dev version to `x.y+1.0-SNAPSHOT`, for example from `1.8.1` to `1.9.0-SNAPSHOT`
 
 ## Additional
 
-- push package to chocolatey
-- push package to winget
-- push package to docker
-- push package to brew
-- push source packages to crates.io
+- Push package to Chocolatey
+- Push package to winget
+- Push package to Docker
+- Push package to Brew
+- Push source packages to crates.io
 
