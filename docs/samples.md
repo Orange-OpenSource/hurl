@@ -400,7 +400,7 @@ HTTP 200
 certificate "Subject" == "CN=example.org"
 certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" daysAfterNow > 15
-certificate "Serial-Number" matches "[0-9af]+"
+certificate "Serial-Number" matches /[\da-f]+/
 ```
 
 [Doc](/docs/asserting-response.md#ssl-certificate-assert)

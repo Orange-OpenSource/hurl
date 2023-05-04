@@ -93,7 +93,7 @@ GET https://example.org
 
 HTTP 200
 [Asserts]
-certificate "Start-date" daysBeforeNow < 100
+certificate "Start-Date" daysBeforeNow < 100
 ```
 
 ### format

@@ -152,7 +152,7 @@ To support its development, [star Hurl on GitHub]!
 POST https://hurl.dev/api/feedback
 {
   "name": "John Doe",
-  "feedback": "Hurl is awesome !"
+  "feedback": "Hurl is awesome!"
 }
 HTTP 200
 ```
