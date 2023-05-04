@@ -28,7 +28,7 @@ xpath "//li" count == 18
   <div class="hurl-structure">
     <div class="hurl-structure-col-0">
         <div class="hurl-part-0">
-            HTTP *
+            HTTP 200
         </div>
         <div class=" hurl-part-1">
             content-length: 206<br>accept-ranges: bytes<br>user-agent: Test
