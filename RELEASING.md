@@ -15,18 +15,21 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
   - Clean pending release
   - Create new `release/x.y.0` branch
   - Checkout this new branch
-  - Update all toml with `x.y.0`
-  - Update all crate with `x.y.0`
-  - Update man and docs with `x.y.0`
+  - Update all toml, crates, man and docs with `x.y.0`
   - Generate CHANGELOG
   - Commit all updates
   - Create the `x.y.0` tag
   - Create draft GitHub release `x.y.0`
   - Create PR from `release/x.y.0` to `master`
 - Publish the draft release
-- Accept the PR with `/accept --release`, it will:
-  - Merge fast-forward this PR
-  - Open a new one to update `master` files to next version `x.y+1.0-SNAPSHOT`
+- Accept the PR from `release/x.y.0` to `master` with `/accept`
+- Run `update-branch-version.yml` workflow on `master` branch, filling in the `desired SNAPSHOT version`, it will:
+  - Create `bot/update-branch-version-master` branch
+  - Checkout this new branch
+  - Update all toml, crates, and man with `desired SNAPSHOT version`
+  - Commit all updates
+  - Create PR from `bot/update-branch-version-master` to `master`
+- Accept the PR from `bot/update-branch-version-master` to `master` with `/accept`
 
 ## Hotfix steps
 
@@ -43,7 +46,7 @@ We always have to start with current version x.y.0-snapshot (in all Cargo.toml).
   - Create the `x.y.z` tag
   - Create draft GitHub release `x.y.z`
   - Create PR from `release/x.y.z` to `master`
-- You have to manually `merge` as a revert rebase to reorder commits between this new hotfix and  master
+- You have to manually `merge` as a revert rebase to reorder commits between this new hotfix and master
 - Run `update-branch-version.yml` workflow on `master` to restore actual dev version to `x.y+1.0-SNAPSHOT`, for example from `1.8.1` to `1.9.0-SNAPSHOT`
 
 ## Additional
