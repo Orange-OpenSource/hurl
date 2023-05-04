@@ -72,6 +72,43 @@ HTTP 200
 jsonpath "$.books" count == 12
 ```
 
+### daysAfterNow
+
+Returns the number of days between now and a date in the future.
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Asserts]
+certificate "Expire-Date" daysAfterNow > 15
+```
+
+### daysBeforeNow
+
+Returns the number of days between now and a date in the past.
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Asserts]
+certificate "Start-date" daysBeforeNow < 100
+```
+
+### format
+
+Formats a date to a string given [a specification format].
+
+```hurl
+GET https://example.org
+
+HTTP 200
+[Asserts]
+cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
+```
+
+
 ### htmlEscape
 
 Converts the characters `&`, `<` and `>` to HTML-safe sequence.
@@ -148,6 +185,18 @@ HTTP 200
 jsonpath "$.ips" split ", " count == 3
 ```
 
+### toDate
+
+Converts a string to a date given [a specification format].
+
+```hurl
+GET https:///example.org
+
+HTTP 200
+[Asserts]
+header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000
+```
+
 ### toInt
 
 Converts to integer number.
@@ -187,3 +236,4 @@ jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D
 [Captures]: /docs/capturing-response.md
 [asserts]: /docs/asserting-response.md
 [RFC3986]: https://www.rfc-editor.org/rfc/rfc3986
+[a specification format]: https://docs.rs/chrono/latest/chrono/format/strftime/index.html
