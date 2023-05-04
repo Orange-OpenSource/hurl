@@ -1,0 +1,8 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">https://hurl.dev</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="predicate-type">==</span> <span class="string">"CN=hurl.dev"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, O=Let's Encrypt, CN=R3"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">daysAfterNow</span> <span class="predicate-type">&gt;</span> <span class="number">15</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">matches</span> <span class="regex">/^([\da-f]{2}:){17}[\da-f]{2}$/</span></span>
+</span></span></code></pre>
