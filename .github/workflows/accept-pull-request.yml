@@ -9,7 +9,7 @@ concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
-    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/accept --release') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force') }}
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}    
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
@@ -74,8 +74,6 @@ jobs:
         run: |
           if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
             order="/accept --force"
-          elif [[ "${{ github.event.comment.body }}" =~ "--release" ]] ; then
-            order="/accept --release"
           else
             order="/accept"
           fi
@@ -195,8 +193,6 @@ jobs:
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
                 order="/accept --force"
-              elif [[ "${{ github.event.comment.body }}" =~ "--release" ]] ; then
-                order="/accept --release"
               else
                 order="/accept"
               fi
@@ -292,39 +288,3 @@ jobs:
             #gh pr comment "${PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             #exit 1       
           fi
-
-      - name: Release mode comment
-        if: contains(github.event.comment.body, '--release')
-        run: |
-          gh pr comment "${PR_NUMBER}" --body "🕗 As you used \`--release\` mode, a new PR will be created shortly to automatically update master branch to next ${{ steps.check-github-release.outputs.new_version_master_snapshot_version }} dev version"
-
-  update-branch-version:
-    needs:
-      - accept-pull-request
-    name: update-branch-version
-    if: needs.accept-pull-request.outputs.is_a_github_release_pr == 'true' && contains(github.event.comment.body, '--release')
-    uses: ./.github/workflows/update-branch-version.yml
-    with:
-      new_version: ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }}
-      branch: ${{ needs.accept-pull-request.outputs.base_ref }}
-    secrets: inherit
-
-  release-final-comment:
-    if: contains(github.event.comment.body, '--release')
-    needs:
-      - accept-pull-request
-      - update-branch-version
-    env:
-      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
-    name: release-final-comment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.BASE_REF }}
-          fetch-depth: 0
-
-      - name: release-final-comment
-        run: |      
-          gh pr comment "${{ github.event.issue.number }}" --body "✅ New PR [${{ needs.update-branch-version.outputs.pr_number }}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${{ needs.update-branch-version.outputs.pr_number }}) created to update master branch to ${{ needs.accept-pull-request.outputs.new_version_master_snapshot_version }} version"
