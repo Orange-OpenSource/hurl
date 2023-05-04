@@ -555,7 +555,7 @@ checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 
 [[package]]
 name = "hurl"
-version = "3.0.0"
+version = "3.1.0-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
@@ -591,7 +591,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "3.0.0"
+version = "3.1.0-SNAPSHOT"
 dependencies = [
  "float-cmp",
  "regex",
@@ -600,7 +600,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "3.0.0"
+version = "3.1.0-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
@@ -774,9 +774,9 @@ dependencies = [
 
 [[package]]
 name = "linux-raw-sys"
-version = "0.3.6"
+version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b64f40e5e03e0d54f03845c8197d0291253cdbedfb1cb46b13c2c117554a9f4c"
+checksum = "ece97ea872ece730aed82664c424eb4c8291e1ff2480247ccf7409044bc6479f"
 
 [[package]]
 name = "log"
@@ -1021,9 +1021,9 @@ checksum = "3582f63211428f83597b51b2ddb88e2a91a9d52d12831f9d08f5e624e8977422"
 
 [[package]]
 name = "rustix"
-version = "0.37.18"
+version = "0.37.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8bbfc1d1c7c40c01715f47d71444744a81669ca84e8b63e25a55e169b1f86433"
+checksum = "acf8729d8542766f1b2cf77eb034d52f40d375bb8b615d0b147089946e16613d"
 dependencies = [
  "bitflags",
  "errno",
