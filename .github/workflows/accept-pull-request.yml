@@ -132,11 +132,11 @@ jobs:
             exit 1         
           fi
 
-      - name: Check github release
+      - name: Check GitHub release
         id: check-github-release
         run: |
           if [ $(echo ${{ env.HEAD_REF }} | grep -Ec '^release/') -eq 0 ] ; then
-            echo "  - ✅ Pull request is not about a pending github release."
+            echo "  - ✅ Pull request is not about a pending GitHub release."
           else
             echo "is_a_github_release_pr=true" | tee -a "${GITHUB_OUTPUT}"
             tag_version="$(echo ${{ env.HEAD_REF }} | cut --delimiter '/' --field 2)"
