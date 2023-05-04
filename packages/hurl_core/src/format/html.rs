@@ -562,7 +562,11 @@ impl HtmlFormatter {
             CertificateAttributeName::ExpireDate => "Expire-Date",
             CertificateAttributeName::SerialNumber => "Serial-Number",
         };
-        self.fmt_string(value);
+        self.fmt_span_open("string");
+        self.buffer.push('"');
+        self.buffer.push_str(value);
+        self.buffer.push('"');
+        self.fmt_span_close();
     }
 
     fn fmt_assert(&mut self, assert: &Assert) {
