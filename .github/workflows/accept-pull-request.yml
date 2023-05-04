@@ -9,7 +9,7 @@ concurrency: accept-pull-request-${{ github.event.issue.number }}
 
 jobs:
   accept-pull-request:
-    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force') }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force' || github.event.comment.body == '/accept --release') }}
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}    
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
@@ -74,6 +74,8 @@ jobs:
         run: |
           if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
             order="/accept --force"
+          elif [[ "${{ github.event.comment.body }}" =~ "--release" ]] ; then
+            order="/accept --release"
           else
             order="/accept"
           fi
@@ -193,10 +195,12 @@ jobs:
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               if [[ "${{ github.event.comment.body }}" =~ "--force" ]] ; then
                 order="/accept --force"
+              elif [[ "${{ github.event.comment.body }}" =~ "--release" ]] ; then
+                order="/accept --release"
               else
                 order="/accept"
               fi
-              comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is still running, please wait for completion."
+              comment="🕗 [${order}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) is running, please wait for completion."
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               sleep 15
             else
