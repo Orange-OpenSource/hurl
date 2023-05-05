@@ -16,12 +16,11 @@
  *
  */
 
-mod selector;
 pub mod query;
+mod selector;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum JsonpathResult {
     SingleEntry(serde_json::Value),     // returned by a "definite" path
     Collection(Vec<serde_json::Value>), // returned by a "indefinite" path
 }
-

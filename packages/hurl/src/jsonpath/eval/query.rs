@@ -20,6 +20,8 @@ use crate::jsonpath::ast::Query;
 use crate::jsonpath::JsonpathResult;
 
 impl Query {
+    /// Eval a JSONPath `Query` for a `serde_json::Value` input.
+    /// It returns an Option<`JsonResultPath`>.
     pub fn eval(&self, value: &serde_json::Value) -> Option<JsonpathResult> {
         let mut result = JsonpathResult::SingleEntry(value.clone());
         for selector in &self.selectors {
@@ -52,8 +54,6 @@ mod tests {
     use crate::jsonpath::ast::{Number, Predicate, PredicateFunc, Query, Selector};
     use crate::jsonpath::JsonpathResult;
     use serde_json::json;
-
-    
 
     pub fn json_root() -> serde_json::Value {
         json!({ "store": json_store() })
