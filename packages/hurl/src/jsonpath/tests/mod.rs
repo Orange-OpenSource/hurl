@@ -25,7 +25,7 @@ use std::fs::read_to_string;
 use serde_json::json;
 
 use crate::jsonpath;
-use crate::jsonpath::eval::JsonpathResult;
+use crate::jsonpath::JsonpathResult;
 
 fn bookstore_value() -> serde_json::Value {
     let s = read_to_string("tests/bookstore.json").expect("could not read string from file");
