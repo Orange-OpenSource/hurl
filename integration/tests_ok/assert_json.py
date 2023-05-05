@@ -9,6 +9,7 @@ def assert_json():
   "count": 5,
   "success": false,
   "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
   "warnings": [],
   "duration": 1.5,
   "tags": ["test"],

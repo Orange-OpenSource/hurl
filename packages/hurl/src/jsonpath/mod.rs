@@ -48,7 +48,11 @@
 //! For example, `.price.US` specify field 'US' in an object for the field price.
 //! The predicate if not present just checks the key existence.
 //!
+//! The Hurl API for evaluating a jsonpath expression does not always return a collection (as defined in the jsonpath spec).
+//! It returns an optional value, which is either a collection or a single value.
+//!
 
+pub use self::eval::JsonpathResult;
 pub use self::parser::parse;
 
 mod ast;

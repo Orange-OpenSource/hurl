@@ -20,24 +20,49 @@ use float_cmp::approx_eq;
 
 use super::ast::*;
 
-pub type JsonpathResult = Vec<serde_json::Value>;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum JsonpathResult {
+    SingleEntry(serde_json::Value),     // returned by a "definite" path
+    Collection(Vec<serde_json::Value>), // returned by a "indefinite" path
+}
 
 impl Query {
-    pub fn eval(self, value: &serde_json::Value) -> JsonpathResult {
-        let mut results = vec![value.clone()];
-        for selector in self.selectors {
-            results = results
-                .iter()
-                .flat_map(|value| selector.clone().eval(value))
-                .collect();
+    pub fn eval(&self, value: &serde_json::Value) -> Option<JsonpathResult> {
+        let mut result = JsonpathResult::SingleEntry(value.clone());
+        for selector in &self.selectors {
+            match result.clone() {
+                JsonpathResult::SingleEntry(value) => {
+                    result = selector.eval(&value)?;
+                }
+                JsonpathResult::Collection(values) => {
+                    let mut elements = vec![];
+                    for value in values {
+                        match selector.eval(&value)? {
+                            JsonpathResult::SingleEntry(new_value) => {
+                                elements.push(new_value);
+                            }
+                            JsonpathResult::Collection(mut new_values) => {
+                                elements.append(&mut new_values);
+                            }
+                        }
+                        result = JsonpathResult::Collection(elements.clone());
+                    }
+                }
+            }
         }
-        results
+        Some(result)
     }
 }
 
 impl Selector {
-    pub fn eval(self, root: &serde_json::Value) -> JsonpathResult {
+    pub fn eval(&self, root: &serde_json::Value) -> Option<JsonpathResult> {
         match self {
+            // Selectors returning single JSON node ("finite")
+            Selector::NameChild(field) => root
+                .get(field)
+                .map(|result| JsonpathResult::SingleEntry(result.clone())),
+
+            // Selectors returning a collection ("indefinite")
             Selector::Wildcard | Selector::ArrayWildcard => {
                 let mut elements = vec![];
                 if let serde_json::Value::Array(values) = root {
@@ -49,33 +74,20 @@ impl Selector {
                         elements.push(value.clone());
                     }
                 }
-                elements
-            }
-            Selector::NameChild(field) => match root.get(field) {
-                None => vec![],
-                Some(value) => vec![value.clone()],
-            },
-            Selector::ArrayIndex(indexes) => {
-                let mut values = vec![];
-                for index in indexes {
-                    if let Some(value) = root.get(index) {
-                        values.push(value.clone())
-                    }
-                }
-                values
+                Some(JsonpathResult::Collection(elements))
             }
             Selector::ArraySlice(Slice { start, end }) => {
                 let mut elements = vec![];
                 if let serde_json::Value::Array(values) = root {
                     for (i, value) in values.iter().enumerate() {
                         if let Some(n) = start {
-                            let n = if n < 0 { values.len() as i64 + n } else { n };
+                            let n = if *n < 0 { values.len() as i64 + n } else { *n };
                             if (i as i64) < n {
                                 continue;
                             }
                         }
                         if let Some(n) = end {
-                            let n = if n < 0 { values.len() as i64 + n } else { n };
+                            let n = if *n < 0 { values.len() as i64 + n } else { *n };
                             if (i as i64) >= n {
                                 continue;
                             }
@@ -83,16 +95,8 @@ impl Selector {
                         elements.push(value.clone());
                     }
                 }
-                elements
+                Some(JsonpathResult::Collection(elements))
             }
-            Selector::Filter(predicate) => match root {
-                serde_json::Value::Array(elements) => elements
-                    .iter()
-                    .filter(|&e| predicate.eval(e.clone()))
-                    .cloned()
-                    .collect(),
-                _ => vec![],
-            },
             Selector::RecursiveKey(key) => {
                 let mut elements = vec![];
                 match root {
@@ -101,21 +105,25 @@ impl Selector {
                             elements.push(elem.clone());
                         }
                         for value in obj.values() {
-                            for element in Selector::RecursiveKey(key.clone()).eval(value) {
-                                elements.push(element);
+                            if let Some(JsonpathResult::Collection(mut values)) =
+                                Selector::RecursiveKey(key.clone()).eval(value)
+                            {
+                                elements.append(&mut values);
                             }
                         }
                     }
                     serde_json::Value::Array(values) => {
                         for value in values {
-                            for element in Selector::RecursiveKey(key.clone()).eval(value) {
-                                elements.push(element);
+                            if let Some(JsonpathResult::Collection(mut values)) =
+                                Selector::RecursiveKey(key.clone()).eval(value)
+                            {
+                                elements.append(&mut values);
                             }
                         }
                     }
                     _ => {}
                 }
-                elements
+                Some(JsonpathResult::Collection(elements))
             }
             Selector::RecursiveWildcard => {
                 let mut elements = vec![];
@@ -123,23 +131,54 @@ impl Selector {
                     serde_json::Value::Object(map) => {
                         for elem in map.values() {
                             elements.push(elem.clone());
-                            for element in Selector::RecursiveWildcard.eval(elem) {
-                                elements.push(element);
+                            if let Some(JsonpathResult::Collection(mut values)) =
+                                Selector::RecursiveWildcard.eval(elem)
+                            {
+                                elements.append(&mut values);
                             }
                         }
                     }
                     serde_json::Value::Array(values) => {
                         for elem in values {
                             elements.push(elem.clone());
-                            for element in Selector::RecursiveWildcard.eval(elem) {
-                                elements.push(element);
+                            if let Some(JsonpathResult::Collection(mut values)) =
+                                Selector::RecursiveWildcard.eval(elem)
+                            {
+                                elements.append(&mut values);
                             }
                         }
                     }
                     _ => {}
                 }
+                Some(JsonpathResult::Collection(elements))
+            }
+            Selector::Filter(predicate) => {
+                let elements = match root {
+                    serde_json::Value::Array(elements) => elements
+                        .iter()
+                        .filter(|&e| predicate.eval(e.clone()))
+                        .cloned()
+                        .collect(),
+                    _ => vec![],
+                };
+                Some(JsonpathResult::Collection(elements))
+            }
 
-                elements
+            // Selectors returning one or the other
+            Selector::ArrayIndex(indexes) => {
+                if indexes.len() == 1 {
+                    let index = indexes[0];
+                    root.get(index)
+                        .map(|result| JsonpathResult::SingleEntry(result.clone()))
+                } else {
+                    let mut values = vec![];
+                    for index in indexes {
+                        if let Some(value) = root.get(index) {
+                            values.push(value.clone())
+                        }
+                    }
+                    Some(JsonpathResult::Collection(values))
+                }
             }
         }
     }
@@ -266,16 +305,17 @@ mod tests {
     #[test]
     pub fn test_query() {
         assert_eq!(
-            Query { selectors: vec![] }.eval(&json_root()),
-            vec![json_root()]
+            Query { selectors: vec![] }.eval(&json_root()).unwrap(),
+            JsonpathResult::SingleEntry(json_root())
         );
 
         assert_eq!(
             Query {
                 selectors: vec![Selector::NameChild("store".to_string())]
             }
-            .eval(&json_root()),
-            vec![json_store()]
+            .eval(&json_root())
+            .unwrap(),
+            JsonpathResult::SingleEntry(json_store())
         );
 
         let query = Query {
@@ -287,8 +327,8 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(&json_root()),
-            vec![json!("Sayings of the Century")]
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::SingleEntry(json!("Sayings of the Century"))
         );
 
         // $.store.book[?(@.price<10)].title
@@ -307,8 +347,8 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(&json_root()),
-            vec![json!("Sayings of the Century"), json!("Moby Dick")]
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::Collection(vec![json!("Sayings of the Century"), json!("Moby Dick")])
         );
 
         // $..author
@@ -316,13 +356,13 @@ mod tests {
             selectors: vec![Selector::RecursiveKey("author".to_string())],
         };
         assert_eq!(
-            query.eval(&json_root()),
-            vec![
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::Collection(vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
                 json!("Herman Melville"),
                 json!("J. R. R. Tolkien")
-            ]
+            ])
         );
 
         // $.store.book[*].author
@@ -335,38 +375,53 @@ mod tests {
             ],
         };
         assert_eq!(
-            query.eval(&json_root()),
-            vec![
+            query.eval(&json_root()).unwrap(),
+            JsonpathResult::Collection(vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
                 json!("Herman Melville"),
                 json!("J. R. R. Tolkien")
-            ]
+            ])
         );
+    }
+
+    #[test]
+    pub fn test_selector_name_child() {
+        assert_eq!(
+            Selector::NameChild("author".to_string())
+                .eval(&json_first_book())
+                .unwrap(),
+            JsonpathResult::SingleEntry(json!("Nigel Rees"))
+        );
+        assert!(Selector::NameChild("undefined".to_string())
+            .eval(&json_first_book())
+            .is_none(),);
     }
 
     #[test]
     pub fn test_selector_array_index() {
         assert_eq!(
-            Selector::ArrayIndex(vec![0]).eval(&json_books()),
-            vec![json_first_book()]
+            Selector::ArrayIndex(vec![0]).eval(&json_books()).unwrap(),
+            JsonpathResult::SingleEntry(json_first_book())
         );
         assert_eq!(
-            Selector::ArrayIndex(vec![1, 2]).eval(&json_books()),
-            vec![json_second_book(), json_third_book()]
+            Selector::ArrayIndex(vec![1, 2])
+                .eval(&json_books())
+                .unwrap(),
+            JsonpathResult::Collection(vec![json_second_book(), json_third_book()])
         );
     }
 
     #[test]
     pub fn test_selector_array_wildcard() {
         assert_eq!(
-            Selector::ArrayWildcard {}.eval(&json_books()),
-            vec![
+            Selector::ArrayWildcard {}.eval(&json_books()).unwrap(),
+            JsonpathResult::Collection(vec![
                 json_first_book(),
                 json_second_book(),
                 json_third_book(),
                 json_fourth_book()
-            ]
+            ])
         );
     }
 
@@ -377,21 +432,24 @@ mod tests {
                 start: None,
                 end: Some(2),
             })
-            .eval(&json_books()),
-            vec![json_first_book(), json_second_book(),]
+            .eval(&json_books())
+            .unwrap(),
+            JsonpathResult::Collection(vec![json_first_book(), json_second_book(),])
         );
     }
 
     #[test]
     pub fn test_recursive_key() {
         assert_eq!(
-            Selector::RecursiveKey("author".to_string()).eval(&json_root()),
-            vec![
+            Selector::RecursiveKey("author".to_string())
+                .eval(&json_root())
+                .unwrap(),
+            JsonpathResult::Collection(vec![
                 json!("Nigel Rees"),
                 json!("Evelyn Waugh"),
                 json!("Herman Melville"),
                 json!("J. R. R. Tolkien")
-            ]
+            ])
         );
     }
 
@@ -400,8 +458,8 @@ mod tests {
     pub fn test_array_index() {
         let value = json!(["first", "second", "third", "forth", "fifth"]);
         assert_eq!(
-            Selector::ArrayIndex(vec![2]).eval(&value),
-            vec![json!("third")]
+            Selector::ArrayIndex(vec![2]).eval(&value).unwrap(),
+            JsonpathResult::SingleEntry(json!("third"))
         );
     }
 
