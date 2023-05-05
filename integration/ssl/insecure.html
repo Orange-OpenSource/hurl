@@ -1,0 +1,11 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">https://localhost:8001/hello</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Start-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2023-01-10 08:29:52 UTC"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">format</span> <span class="string">"%Y-%m-%d %H:%M:%S UTC"</span> <span class="predicate-type">==</span> <span class="string">"2025-10-30 08:29:52 UTC"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">==</span> <span class="string">"1e:e8:b1:7f:1b:64:d8:d6:b3:de:87:01:03:d2:a4:f5:33:53:5a:b0"</span></span>
+<span class="line"></span>
+<span class="line"><span class="string">`Hello World!`</span></span></span></span></code></pre>
