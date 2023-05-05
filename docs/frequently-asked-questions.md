@@ -174,8 +174,8 @@ $ hurl --test critical/*.hurl
 
 ### How can I use my Hurl files outside Hurl?
 
-Hurl file can be exported to a json file with `hurlfmt`.
-This json file can then be easily parsed for converting a different format, getting ad-hoc information,...
+Hurl file can be exported to a JSON file with `hurlfmt`.
+This JSON file can then be easily parsed for converting a different format, getting ad-hoc information,...
 
 For example, the Hurl file
 
@@ -188,10 +188,10 @@ HTTP/1.1 200
 jsonpath "$.name" equals "Bob"
 ```
 
-will be converted to json with the following command:
+will be converted to JSON with the following command:
 
 ```shell
-$ hurlfmt test.hurl --format json | jq
+$ hurlfmt test.hurl --out json | jq
 {
   "entries": [
     {
@@ -271,16 +271,6 @@ For instance:
 $ sudo install_name_tool -change /usr/lib/libcurl.4.dylib /usr/local/opt/curl/lib/libcurl.4.dylib /usr/local/bin/hurl
 ```
 
-### Hurl error: SSL certificate has expired
-
-If you have a `SSL certificate has expired` error on valid certificates with Hurl, it can be due to the macOS libcurl certificates
-not updated. On Mojave, the built-in curl (`/usr/bin/curl`) relies on the `/etc/ssl/cert.pem` file for root CA verification,
-and some certificates has expired. To solve this problem:
-
-1. Edit `/etc/ssl/cert.pem` and remove the expired certificate (for instance, the `DST Root CA X3` has expired)
-2. Use a recent curl (installed with Homebrew) and [configure Hurl to use it].
-
-
 [curl]: https://curl.haxx.se
 [other eminent tools]: https://git.wiki.kernel.org/index.php/GitFaq#Why_the_.27Git.27_name.3F
 [Postman]: https://www.postman.com
@@ -290,6 +280,5 @@ and some certificates has expired. To solve this problem:
 [captures]: /docs/capturing-response.md
 [CSRF tokens]: https://en.wikipedia.org/wiki/Cross-site_request_forgery
 [asserts]: /docs/asserting-response.md
-[configure Hurl to use it]: #how-can-i-use-a-custom-libcurl-from-homebrew-by-instance
 [Homebrew]: https://brew.sh
 [filters]: /docs/filters.md
