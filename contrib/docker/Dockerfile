@@ -1,10 +1,13 @@
 FROM alpine:3.17 AS builder
 WORKDIR /tmp
 ARG hurl_latest_version
-RUN apk add --no-cache git=* jq=* curl=* cargo=* gcc=* libffi-dev=* libxml2-dev=* libxml2-utils=* openssl-dev=* && \
-    git clone --quiet --depth 1 --branch ${hurl_latest_version} https://github.com/Orange-OpenSource/hurl.git
+# hadolint ignore=DL3018
+RUN apk add --no-cache bash git && \
+    git clone --quiet --depth 1 --branch ${hurl_latest_version} https://github.com/Orange-OpenSource/hurl.git /tmp/hurl
 WORKDIR /tmp/hurl
-RUN cargo build --release --verbose --bin hurl
+RUN bash -c bin/install_prerequisites_alpine.sh && \
+    bash -c bin/install_rust.sh && \ 
+    bash -c ./bin/release/release.sh
 
 FROM alpine:3.17 AS runner
 ARG docker_build_date
@@ -24,6 +27,9 @@ LABEL "com.orange.hurl.title"="Hurl"
 LABEL "com.orange.hurl.description"="Hurl is a command line tool that runs HTTP requests defined in a simple plain text format"
 LABEL "com.orange.hurl.base.name"="alpine:3.17"
 COPY --from=builder /tmp/hurl/target/release/hurl /usr/bin/
+COPY --from=builder /usr/lib/libcurl.so.4 /usr/lib/
+COPY --from=builder /usr/lib/libnghttp2.so.14 /usr/lib/
+COPY --from=builder /usr/lib/libbrotli*.so.1 /usr/lib/
 COPY --from=builder /usr/lib/libxml2.so.2 /usr/lib/
 COPY --from=builder /usr/lib/libgcc_s.so.1 /usr/lib/
 COPY --from=builder /usr/lib/liblzma.so.5 /usr/lib/
