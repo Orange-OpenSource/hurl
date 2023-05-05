@@ -108,7 +108,6 @@ HTTP 200
 cookie "LSID[Expires]" format "%a, %d %b %Y %H:%M:%S" == "Wed, 13 Jan 2021 22:23:01"
 ```
 
-
 ### htmlEscape
 
 Converts the characters `&`, `<` and `>` to HTML-safe sequence.
@@ -196,6 +195,20 @@ HTTP 200
 [Asserts]
 header "Expires" toDate "%a, %d %b %Y %H:%M:%S GMT" daysBeforeNow > 1000
 ```
+
+
+ISO 8601 / RFC 3339 date and time format have shorthand format `%+`:
+
+```hurl
+GET https://example.org/api/books
+
+HTTP 200
+[Asserts]
+jsonpath "$.published" == "2023-01-23T18:25:43.511Z"
+jsonpath "$.published" toDate "%Y-%m-%dT%H:%M:%S%.fZ" format "%A" == "Monday"
+jsonpath "$.published" toDate "%+" format "%A" == "Monday" # %+ can be used to parse ISO 8601 / RFC 3339
+```
+
 
 ### toInt
 
