@@ -50,7 +50,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
             selector_wildcard,
             selector_recursive_wildcard,
             selector_recursive_key,
-            selector_array_index,
+            selector_array_index_or_array_indices,
             selector_array_wildcard,
             selector_array_slice,
             selector_object_key_bracket,
@@ -60,7 +60,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
     )
 }
 
-fn selector_array_index(reader: &mut Reader) -> Result<Selector, Error> {
+fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, Error> {
     try_left_bracket(reader)?;
     let mut indexes = vec![];
     let i = match natural(reader) {
@@ -94,7 +94,12 @@ fn selector_array_index(reader: &mut Reader) -> Result<Selector, Error> {
         }
     }
     literal("]", reader)?;
-    Ok(Selector::ArrayIndex(indexes))
+    let selector = if indexes.len() == 1 {
+        Selector::ArrayIndex(*indexes.first().unwrap())
+    } else {
+        Selector::ArrayIndices(indexes)
+    };
+    Ok(selector)
 }
 
 fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
@@ -312,7 +317,7 @@ mod tests {
     #[test]
     pub fn test_query() {
         let expected_query = Query {
-            selectors: vec![Selector::ArrayIndex(vec![2])],
+            selectors: vec![Selector::ArrayIndex(2)],
         };
         assert_eq!(query(&mut Reader::new("$[2]")).unwrap(), expected_query);
 
@@ -338,7 +343,7 @@ mod tests {
             selectors: vec![
                 Selector::NameChild("store".to_string()),
                 Selector::NameChild("book".to_string()),
-                Selector::ArrayIndex(vec![0]),
+                Selector::ArrayIndex(0),
                 Selector::NameChild("title".to_string()),
             ],
         };
@@ -354,7 +359,7 @@ mod tests {
         let expected_query = Query {
             selectors: vec![
                 Selector::RecursiveKey("book".to_string()),
-                Selector::ArrayIndex(vec![2]),
+                Selector::ArrayIndex(2),
             ],
         };
         assert_eq!(
@@ -423,26 +428,20 @@ mod tests {
     #[test]
     pub fn test_selector_array_index() {
         let mut reader = Reader::new("[2]");
-        assert_eq!(
-            selector(&mut reader).unwrap(),
-            Selector::ArrayIndex(vec![2])
-        );
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
         assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::new("[0,1]");
         assert_eq!(
             selector(&mut reader).unwrap(),
-            Selector::ArrayIndex(vec![0, 1])
+            Selector::ArrayIndices(vec![0, 1])
         );
         assert_eq!(reader.state.cursor, 5);
 
         // you don't need to keep the exact string
         // this is not part of the AST
         let mut reader = Reader::new(".[2]");
-        assert_eq!(
-            selector(&mut reader).unwrap(),
-            Selector::ArrayIndex(vec![2])
-        );
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayIndex(2));
         assert_eq!(reader.state.cursor, 4);
     }
 
