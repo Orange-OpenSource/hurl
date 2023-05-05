@@ -25,6 +25,7 @@ use std::fs::read_to_string;
 use serde_json::json;
 
 use crate::jsonpath;
+use crate::jsonpath::eval::JsonpathResult;
 
 fn bookstore_value() -> serde_json::Value {
     let s = read_to_string("tests/bookstore.json").expect("could not read string from file");
@@ -163,25 +164,25 @@ fn test_bookstore_path() {
     // the authors of all books in the store
     let expr = jsonpath::parse("$.store.book[*].author").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![
             json!("Nigel Rees"),
             json!("Evelyn Waugh"),
             json!("Herman Melville"),
             json!("J. R. R. Tolkien")
-        ]
+        ])
     );
 
     // all authors
     let expr = jsonpath::parse("$..author").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![
             json!("Nigel Rees"),
             json!("Evelyn Waugh"),
             json!("Herman Melville"),
             json!("J. R. R. Tolkien")
-        ]
+        ])
     );
 
     // all things in store, which are some books and a red bicycle.
@@ -190,8 +191,8 @@ fn test_bookstore_path() {
     // But you expect that order stays the same
     // that's why bicycle and boot are inverted
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![bicycle_value(), book_value(),]
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![bicycle_value(), book_value()])
     );
 
     // the price of everything in the store.
@@ -199,51 +200,57 @@ fn test_bookstore_path() {
     // Attention, there is no ordering on object keys with serde_json
     // But you expect that order stays the same
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![
             json!(19.95),
             json!(8.95),
             json!(12.99),
             json!(8.99),
             json!(22.99),
-        ]
+        ])
     );
 
     // the third book
     let expr = jsonpath::parse("$..book[2]").unwrap();
-    assert_eq!(expr.eval(&bookstore_value()), vec![book2_value()]);
+    assert_eq!(
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book2_value()])
+    );
 
     // the last book in order
     // The following expression is not supported
     // (@.length-1)
     // use python-like indexing instead
     let expr = jsonpath::parse("$..book[-1:]").unwrap();
-    assert_eq!(expr.eval(&bookstore_value()), vec![book3_value()]);
+    assert_eq!(
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book3_value()])
+    );
 
     // the first two books
     let expr = jsonpath::parse("$..book[0,1]").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![book0_value(), book1_value()]
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book0_value(), book1_value()])
     );
     let expr = jsonpath::parse("$..book[:2]").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![book0_value(), book1_value()]
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book0_value(), book1_value()])
     );
 
     // filter all books with isbn number
     let expr = jsonpath::parse("$..book[?(@.isbn)]").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![book2_value(), book3_value(),]
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book2_value(), book3_value()])
     );
 
-    // filter all books cheapier than 10
+    // filter all books cheaper than 10
     let expr = jsonpath::parse("$..book[?(@.price<10)]").unwrap();
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![book0_value(), book2_value(),]
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![book0_value(), book2_value()])
     );
 
     // All members of JSON structure
@@ -251,8 +258,8 @@ fn test_bookstore_path() {
     // Order is reproducible
     // but does not keep same order of json input!
     assert_eq!(
-        expr.eval(&bookstore_value()),
-        vec![
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![
             store_value(),
             bicycle_value(),
             json!("red"),
@@ -280,32 +287,42 @@ fn test_bookstore_path() {
             json!("0-395-19395-8"),
             json!(22.99),
             json!("The Lord of the Rings"),
-        ]
+        ])
     );
 }
 
 #[test]
 fn test_bookstore_additional() {
-    let no_result: Vec<serde_json::Value> = vec![];
-
     // Find books more expensive than 100
     let expr = jsonpath::parse("$.store.book[?(@.price>100)]").unwrap();
-    assert_eq!(expr.eval(&bookstore_value()), no_result);
+    assert_eq!(
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![])
+    );
 
     // find all authors for reference book
     let expr = jsonpath::parse("$..book[?(@.category=='reference')].author").unwrap();
-    assert_eq!(expr.eval(&bookstore_value()), vec![json!("Nigel Rees")]);
+    assert_eq!(
+        expr.eval(&bookstore_value()).unwrap(),
+        JsonpathResult::Collection(vec![json!("Nigel Rees")])
+    );
 }
 
 #[test]
 fn test_array() {
     let array = json!([0, 1, 2, 3]);
     let expr = jsonpath::parse("$[2]").unwrap();
-    assert_eq!(expr.eval(&array), vec![json!(2)]);
+    assert_eq!(
+        expr.eval(&array).unwrap(),
+        JsonpathResult::SingleEntry(json!(2))
+    );
 
     let expr = jsonpath::parse("$[0].name").unwrap();
     let array = json!([{"name": "Bob"},{"name": "Bill"}]);
-    assert_eq!(expr.eval(&array), vec![json!("Bob")]);
+    assert_eq!(
+        expr.eval(&array).unwrap(),
+        JsonpathResult::SingleEntry(json!("Bob"))
+    );
 }
 
 #[test]
@@ -321,26 +338,47 @@ fn test_key_access() {
 
     // Bracket notation
     let expr = jsonpath::parse("$['-']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("hyphen")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("hyphen"))
+    );
 
     let expr = jsonpath::parse("$['_']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("underscore")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("underscore"))
+    );
 
     let expr = jsonpath::parse("$['*']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("asterisk")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("asterisk"))
+    );
 
     let expr = jsonpath::parse("$['\\'']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("single_quote")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("single_quote"))
+    );
 
     let expr = jsonpath::parse("$['\"']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("double_quote")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("double_quote"))
+    );
 
     let expr = jsonpath::parse("$['✈']").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("plane")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("plane"))
+    );
 
     // Dot notation
     let expr = jsonpath::parse("$._").unwrap();
-    assert_eq!(expr.eval(&obj), vec![json!("underscore")]);
+    assert_eq!(
+        expr.eval(&obj).unwrap(),
+        JsonpathResult::SingleEntry(json!("underscore"))
+    );
 
     // Asterisk
     // return all elements
@@ -356,22 +394,26 @@ fn test_key_access() {
     ];
 
     let expr = jsonpath::parse("$.*").unwrap();
-    let results = expr.eval(&obj);
-    let mut results = results
-        .iter()
-        .map(|e| e.as_str().unwrap())
-        .collect::<Vec<&str>>();
-    results.sort_unstable();
-    assert_eq!(results, values);
+    let results = expr.eval(&obj).unwrap();
+    if let JsonpathResult::Collection(results) = results {
+        let mut results = results
+            .iter()
+            .map(|e| e.as_str().unwrap())
+            .collect::<Vec<&str>>();
+        results.sort_unstable();
+        assert_eq!(results, values);
+    }
 
     let expr = jsonpath::parse("$[*]").unwrap();
-    let results = expr.eval(&obj);
-    let mut results = results
-        .iter()
-        .map(|e| e.as_str().unwrap())
-        .collect::<Vec<&str>>();
-    results.sort_unstable();
-    assert_eq!(results, values);
+    let results = expr.eval(&obj).unwrap();
+    if let JsonpathResult::Collection(results) = results {
+        let mut results = results
+            .iter()
+            .map(|e| e.as_str().unwrap())
+            .collect::<Vec<&str>>();
+        results.sort_unstable();
+        assert_eq!(results, values);
+    }
 }
 
 fn fruit_prices_value() -> serde_json::Value {
@@ -403,10 +445,16 @@ fn fruit_prices_value() -> serde_json::Value {
 #[test]
 fn test_filter_nested_object() {
     let expr = jsonpath::parse("$.fruit[?(@.price.US==200)].name").unwrap();
-    assert_eq!(expr.eval(&fruit_prices_value()), vec![json!("grape")]);
+    assert_eq!(
+        expr.eval(&fruit_prices_value()).unwrap(),
+        JsonpathResult::Collection(vec![json!("grape")])
+    );
 
     let expr = jsonpath::parse("$.fruit[?(@.pricex.US==200)].name").unwrap();
-    assert!(expr.eval(&fruit_prices_value()).is_empty());
+    assert_eq!(
+        expr.eval(&fruit_prices_value()).unwrap(),
+        JsonpathResult::Collection(vec![])
+    );
 }
 
 #[test]

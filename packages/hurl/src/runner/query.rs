@@ -209,15 +209,14 @@ fn eval_query_jsonpath(
         }
         Ok(v) => v,
     };
+
     let results = jsonpath_query.eval(&value);
-    if results.is_empty() {
-        Ok(None)
-    } else if results.len() == 1 {
-        // All results from JSONPath queries return an array <https://goessner.net/articles/JsonPath/>.
-        // For usability, we coerce lists that have only one element to this element.
-        Ok(Some(Value::from_json(results.get(0).unwrap())))
-    } else {
-        Ok(Some(Value::from_json(&serde_json::Value::Array(results))))
+    match results {
+        None => Ok(None),
+        Some(jsonpath::JsonpathResult::SingleEntry(value)) => Ok(Some(Value::from_json(&value))),
+        Some(jsonpath::JsonpathResult::Collection(values)) => {
+            Ok(Some(Value::from_json(&serde_json::Value::Array(values))))
+        }
     }
 }
 

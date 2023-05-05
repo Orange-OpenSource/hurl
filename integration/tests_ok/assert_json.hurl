@@ -29,17 +29,20 @@ jsonpath "$.success" exists
 jsonpath "$.success" isBoolean
 jsonpath "$.errors" count == 2
 jsonpath "$.errors" isCollection
+jsonpath "$.failures" count == 1
+jsonpath "$.failures" isCollection
 jsonpath "$.warnings" count == 0
 jsonpath "$.warnings" isEmpty
 jsonpath "$.toto" not exists
-jsonpath "$.warnings" exists
+jsonpath "$.failures" exists
 jsonpath "$.warnings" exists
 jsonpath "$.errors[0]" exists
 jsonpath "$.errors[0]" isCollection
 jsonpath "$.errors[0].id" == "error1"
 jsonpath "$.errors[0]['id']" == "error1"
 jsonpath "$.errors[*].id" includes "error1"
-jsonpath "$.errors[?(@.id=='error1')].id" == "error1"
+jsonpath "$.errors[?(@.id=='error1')].id" nth 0 == "error1"
+jsonpath "$.failures[*].id" includes "failure1"
 jsonpath "$.duration" == 1.5
 jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" < 2
@@ -58,11 +61,11 @@ jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
 
 
-
 {
   "count": 5,
   "success": false,
   "errors": [{"id":"error1"},{"id":"error2"}],
+  "failures": [{"id":"failure1"}],
   "warnings": [],
   "duration": 1.5,
   "tags": ["test"],
@@ -94,4 +97,4 @@ jsonpath "$[0].name" == "Bob"
 GET http://localhost:8000/assert-json/filter
 HTTP 200
 [Asserts]
-jsonpath "$.fruit[?(@.price.US==200)].name" equals "grape"
+jsonpath "$.fruit[?(@.price.US==200)].name" nth 0 equals "grape"
