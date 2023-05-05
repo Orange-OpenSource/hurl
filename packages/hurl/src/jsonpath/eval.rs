@@ -61,6 +61,9 @@ impl Selector {
             Selector::NameChild(field) => root
                 .get(field)
                 .map(|result| JsonpathResult::SingleEntry(result.clone())),
+            Selector::ArrayIndex(index) => root
+                .get(index)
+                .map(|result| JsonpathResult::SingleEntry(result.clone())),
 
             // Selectors returning a collection ("indefinite")
             Selector::Wildcard | Selector::ArrayWildcard => {
@@ -163,22 +166,14 @@ impl Selector {
                 };
                 Some(JsonpathResult::Collection(elements))
             }
-
-            // Selectors returning one or the other
-            Selector::ArrayIndex(indexes) => {
-                if indexes.len() == 1 {
-                    let index = indexes[0];
-                    root.get(index)
-                        .map(|result| JsonpathResult::SingleEntry(result.clone()))
-                } else {
-                    let mut values = vec![];
-                    for index in indexes {
-                        if let Some(value) = root.get(index) {
-                            values.push(value.clone())
-                        }
+            Selector::ArrayIndices(indexes) => {
+                let mut values = vec![];
+                for index in indexes {
+                    if let Some(value) = root.get(index) {
+                        values.push(value.clone())
                     }
-                    Some(JsonpathResult::Collection(values))
                 }
+                Some(JsonpathResult::Collection(values))
             }
         }
     }
@@ -322,7 +317,7 @@ mod tests {
             selectors: vec![
                 Selector::NameChild("store".to_string()),
                 Selector::NameChild("book".to_string()),
-                Selector::ArrayIndex(vec![0]),
+                Selector::ArrayIndex(0),
                 Selector::NameChild("title".to_string()),
             ],
         };
@@ -401,11 +396,11 @@ mod tests {
     #[test]
     pub fn test_selector_array_index() {
         assert_eq!(
-            Selector::ArrayIndex(vec![0]).eval(&json_books()).unwrap(),
+            Selector::ArrayIndex(0).eval(&json_books()).unwrap(),
             JsonpathResult::SingleEntry(json_first_book())
         );
         assert_eq!(
-            Selector::ArrayIndex(vec![1, 2])
+            Selector::ArrayIndices(vec![1, 2])
                 .eval(&json_books())
                 .unwrap(),
             JsonpathResult::Collection(vec![json_second_book(), json_third_book()])
@@ -458,8 +453,12 @@ mod tests {
     pub fn test_array_index() {
         let value = json!(["first", "second", "third", "forth", "fifth"]);
         assert_eq!(
-            Selector::ArrayIndex(vec![2]).eval(&value).unwrap(),
+            Selector::ArrayIndex(2).eval(&value).unwrap(),
             JsonpathResult::SingleEntry(json!("third"))
+        );
+        assert_eq!(
+            Selector::ArrayIndices(vec![2, 3]).eval(&value).unwrap(),
+            JsonpathResult::Collection(vec![json!("third"), json!("forth")])
         );
     }
 
