@@ -16,43 +16,9 @@
  *
  */
 
+use crate::jsonpath::ast::{Predicate, PredicateFunc, Selector, Slice};
+use crate::jsonpath::JsonpathResult;
 use float_cmp::approx_eq;
-
-use super::ast::*;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum JsonpathResult {
-    SingleEntry(serde_json::Value),     // returned by a "definite" path
-    Collection(Vec<serde_json::Value>), // returned by a "indefinite" path
-}
-
-impl Query {
-    pub fn eval(&self, value: &serde_json::Value) -> Option<JsonpathResult> {
-        let mut result = JsonpathResult::SingleEntry(value.clone());
-        for selector in &self.selectors {
-            match result.clone() {
-                JsonpathResult::SingleEntry(value) => {
-                    result = selector.eval(&value)?;
-                }
-                JsonpathResult::Collection(values) => {
-                    let mut elements = vec![];
-                    for value in values {
-                        match selector.eval(&value)? {
-                            JsonpathResult::SingleEntry(new_value) => {
-                                elements.push(new_value);
-                            }
-                            JsonpathResult::Collection(mut new_values) => {
-                                elements.append(&mut new_values);
-                            }
-                        }
-                        result = JsonpathResult::Collection(elements.clone());
-                    }
-                }
-            }
-        }
-        Some(result)
-    }
-}
 
 impl Selector {
     pub fn eval(&self, root: &serde_json::Value) -> Option<JsonpathResult> {
@@ -234,6 +200,7 @@ fn extract_value(obj: serde_json::Value, key_path: Vec<String>) -> Option<serde_
 
 #[cfg(test)]
 mod tests {
+    use crate::jsonpath::ast::Number;
     use serde_json::json;
 
     use super::*;
@@ -295,89 +262,6 @@ mod tests {
             "isbn": "0-395-19395-8",
             "price": 22.99
         })
-    }
-
-    #[test]
-    pub fn test_query() {
-        assert_eq!(
-            Query { selectors: vec![] }.eval(&json_root()).unwrap(),
-            JsonpathResult::SingleEntry(json_root())
-        );
-
-        assert_eq!(
-            Query {
-                selectors: vec![Selector::NameChild("store".to_string())]
-            }
-            .eval(&json_root())
-            .unwrap(),
-            JsonpathResult::SingleEntry(json_store())
-        );
-
-        let query = Query {
-            selectors: vec![
-                Selector::NameChild("store".to_string()),
-                Selector::NameChild("book".to_string()),
-                Selector::ArrayIndex(0),
-                Selector::NameChild("title".to_string()),
-            ],
-        };
-        assert_eq!(
-            query.eval(&json_root()).unwrap(),
-            JsonpathResult::SingleEntry(json!("Sayings of the Century"))
-        );
-
-        // $.store.book[?(@.price<10)].title
-        let query = Query {
-            selectors: vec![
-                Selector::NameChild("store".to_string()),
-                Selector::NameChild("book".to_string()),
-                Selector::Filter(Predicate {
-                    key: vec!["price".to_string()],
-                    func: PredicateFunc::LessThan(Number {
-                        int: 10,
-                        decimal: 0,
-                    }),
-                }),
-                Selector::NameChild("title".to_string()),
-            ],
-        };
-        assert_eq!(
-            query.eval(&json_root()).unwrap(),
-            JsonpathResult::Collection(vec![json!("Sayings of the Century"), json!("Moby Dick")])
-        );
-
-        // $..author
-        let query = Query {
-            selectors: vec![Selector::RecursiveKey("author".to_string())],
-        };
-        assert_eq!(
-            query.eval(&json_root()).unwrap(),
-            JsonpathResult::Collection(vec![
-                json!("Nigel Rees"),
-                json!("Evelyn Waugh"),
-                json!("Herman Melville"),
-                json!("J. R. R. Tolkien")
-            ])
-        );
-
-        // $.store.book[*].author
-        let query = Query {
-            selectors: vec![
-                Selector::NameChild("store".to_string()),
-                Selector::NameChild("book".to_string()),
-                Selector::ArrayWildcard {},
-                Selector::NameChild("author".to_string()),
-            ],
-        };
-        assert_eq!(
-            query.eval(&json_root()).unwrap(),
-            JsonpathResult::Collection(vec![
-                json!("Nigel Rees"),
-                json!("Evelyn Waugh"),
-                json!("Herman Melville"),
-                json!("J. R. R. Tolkien")
-            ])
-        );
     }
 
     #[test]
