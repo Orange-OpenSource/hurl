@@ -1,7 +1,9 @@
 <pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/utf8</span></span>
 </span><span class="response"><span class="line"></span>
 <span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Type</span>: <span class="string">text/html; charset=utf-8</span></span>
+<span class="line"><span class="string">Content-Length</span>: <span class="string">18</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">==</span> <span class="string">"café"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"normalize-space(//data)"</span> <span class="predicate-type">==</span> <span class="string">"caf\u{e9}"</span></span>
-</span></span></code></pre>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">==</span> hex,<span class="hex">3c646174613e636166c3a93c2f646174613e</span>;</span></span></span></code></pre>
