@@ -17,18 +17,18 @@
  */
 mod cli;
 
-use std::env;
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
+use std::{env, process};
 
+use crate::cli::options::OptionsError;
 use atty::Stream;
-use clap::Command;
 use colored::control;
 use hurl::report::{html, junit};
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
-use hurl::{libcurl_version_info, output, runner};
+use hurl::{output, runner};
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -51,43 +51,26 @@ struct HurlRun {
 fn main() {
     init_colored();
 
-    let libcurl_version = libcurl_version_info();
-    let version_info = format!(
-        "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
-        clap::crate_version!(),
-        libcurl_version.libraries.join(" "),
-        libcurl_version.features.join(" "),
-    );
-    let mut app = cli::app(&version_info);
-    let matches = app.clone().get_matches();
+    let opts = match cli::options::parse() {
+        Ok(v) => v,
+        Err(e) => match e {
+            OptionsError::Info(message) => {
+                print!("{message}");
+                process::exit(EXIT_OK);
+            }
+            OptionsError::Error(message) => {
+                eprintln!("error: {message}");
+                process::exit(EXIT_ERROR_COMMANDLINE);
+            }
+        },
+    };
 
     // We create a basic logger that can just display info, warning or error generic messages.
     // We'll use a more advanced logger for rich error report when running Hurl files.
-    let verbose = cli::has_flag(&matches, "verbose")
-        || cli::has_flag(&matches, "very_verbose")
-        || cli::has_flag(&matches, "interactive");
-    let color = cli::output_color(&matches);
-    let base_logger = BaseLogger::new(color, verbose);
+    let verbose = opts.verbose || opts.very_verbose || opts.interactive;
+    let base_logger = BaseLogger::new(opts.color, verbose);
 
-    let cli_options = cli::parse_options(&matches);
-    let cli_options = unwrap_or_exit(cli_options, EXIT_ERROR_UNDEFINED, &base_logger);
-
-    // We aggregate the input files from the positional arguments and the glob
-    // options. If we've no file input (either from the standard input or from
-    // the command line arguments), we just print help and exit.
-    let files = cli::get_strings(&matches, "FILE");
-    let glob_files = &cli_options.glob_files;
-    let filenames = get_input_files(&files, glob_files, &mut app, &base_logger);
-
-    if cli_options.cookie_output_file.is_some() && filenames.len() > 1 {
-        exit_with_error(
-            "Only save cookies for a unique session",
-            EXIT_ERROR_UNDEFINED,
-            &base_logger,
-        );
-    }
-
-    let progress_bar = cli_options.test && !verbose && !is_ci() && atty::is(Stream::Stderr);
+    let progress_bar = opts.test && !verbose && !is_ci() && atty::is(Stream::Stderr);
     let current_dir = env::current_dir();
     let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
@@ -95,55 +78,55 @@ fn main() {
     let start = Instant::now();
     let mut runs = vec![];
 
-    for (current, filename) in filenames.iter().enumerate() {
+    for (current, filename) in opts.input_files.iter().enumerate() {
         // We check the input file existence and check that we can read its contents.
         // Once the preconditions succeed, we can parse the Hurl file, and run it.
         if filename != "-" && !Path::new(filename).exists() {
             let message = format!("hurl: cannot access '{filename}': No such file or directory");
             exit_with_error(&message, EXIT_ERROR_PARSING, &base_logger);
         }
-        let content = cli::read_to_string(filename);
+        let content = cli::read_to_string(filename.as_str());
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
         let logger = LoggerBuilder::new()
             .filename(filename)
-            .color(color)
+            .color(opts.color)
             .verbose(verbose)
-            .test(cli_options.test)
+            .test(opts.test)
             .progress_bar(progress_bar)
             .build();
 
-        let total = filenames.len();
+        let total = opts.input_files.len();
         logger.test_running(current + 1, total);
 
         // Run our Hurl file now
-        let hurl_result = execute(&content, filename, current_dir, &cli_options, &logger);
+        let hurl_result = execute(&content, filename, current_dir, &opts, &logger);
         let hurl_result = match hurl_result {
             Ok(h) => h,
-            Err(_) => std::process::exit(EXIT_ERROR_PARSING),
+            Err(_) => process::exit(EXIT_ERROR_PARSING),
         };
         logger.test_completed(&hurl_result);
         let success = hurl_result.success;
 
         // We can output the result, either the raw body or a structured JSON representation.
         let output_body = success
-            && !cli_options.interactive
-            && matches!(cli_options.output_type, cli::OutputType::ResponseBody);
+            && !opts.interactive
+            && matches!(opts.output_type, cli::OutputType::ResponseBody);
         if output_body {
-            let include_headers = cli_options.include;
+            let include_headers = opts.include;
             let result = output::write_body(
                 &hurl_result,
                 filename,
                 include_headers,
-                color,
-                &cli_options.output,
+                opts.color,
+                &opts.output,
                 &logger,
             );
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
-        if matches!(cli_options.output_type, cli::OutputType::Json) {
-            let result = output::write_json(&hurl_result, &content, filename, &cli_options.output);
+        if matches!(opts.output_type, cli::OutputType::Json) {
+            let result = output::write_json(&hurl_result, &content, filename, &opts.output);
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
@@ -155,31 +138,31 @@ fn main() {
         runs.push(run);
     }
 
-    if let Some(filename) = cli_options.junit_file {
+    if let Some(filename) = opts.junit_file {
         base_logger.debug(format!("Writing JUnit report to {filename}").as_str());
         let result = create_junit_report(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
-    if let Some(dir) = cli_options.html_dir {
+    if let Some(dir) = opts.html_dir {
         base_logger.debug(format!("Writing HTML report to {}", dir.display()).as_str());
         let result = create_html_report(&runs, &dir);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
-    if let Some(filename) = cli_options.cookie_output_file {
+    if let Some(filename) = opts.cookie_output_file {
         base_logger.debug(format!("Writing cookies to {filename}").as_str());
         let result = create_cookies_file(&runs, &filename);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
-    if cli_options.test {
+    if opts.test {
         let duration = start.elapsed().as_millis();
         let summary = get_summary(&runs, duration);
         base_logger.info(summary.as_str());
     }
 
-    std::process::exit(exit_code(&runs));
+    process::exit(exit_code(&runs));
 }
 
 /// Runs a Hurl `content` and returns a result.
@@ -187,12 +170,11 @@ fn execute(
     content: &str,
     filename: &str,
     current_dir: &Path,
-    cli_options: &cli::CliOptions,
+    cli_options: &cli::options::Options,
     logger: &Logger,
 ) -> Result<HurlResult, String> {
     let variables = &cli_options.variables;
     let runner_options = cli_options.to(filename, current_dir);
-
     runner::run(content, &runner_options, variables, logger)
 }
 
@@ -223,7 +205,7 @@ fn exit_with_error(message: &str, code: i32, logger: &BaseLogger) -> ! {
     if !message.is_empty() {
         logger.error(message);
     }
-    std::process::exit(code);
+    process::exit(code);
 }
 
 /// Create a JUnit report for this run.
@@ -271,37 +253,6 @@ fn exit_code(runs: &[HurlRun]) -> i32 {
     } else {
         EXIT_OK
     }
-}
-
-/// Returns the input files from the positional arguments and the glob options.
-fn get_input_files(
-    files: &Option<Vec<String>>,
-    glob_files: &[String],
-    app: &mut Command,
-    logger: &BaseLogger,
-) -> Vec<String> {
-    let mut filenames = vec![];
-    if let Some(values) = files {
-        for value in values {
-            filenames.push(value.to_string());
-        }
-    };
-    for filename in glob_files {
-        filenames.push(filename.to_string());
-    }
-    if filenames.is_empty() {
-        if atty::is(Stream::Stdin) {
-            let error = if app.print_help().is_err() {
-                "Panic during printing help"
-            } else {
-                ""
-            };
-            exit_with_error(error, EXIT_ERROR_COMMANDLINE, logger);
-        } else {
-            filenames.push("-".to_string());
-        }
-    }
-    filenames
 }
 
 fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {

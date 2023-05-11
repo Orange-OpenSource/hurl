@@ -17,8 +17,7 @@
  */
 mod fs;
 mod interactive;
-mod options;
-mod variables;
+pub(crate) mod options;
 
 use std::error::Error;
 use std::fmt;
@@ -26,10 +25,7 @@ use std::fmt;
 use hurl::{output, report};
 
 pub use self::fs::read_to_string;
-pub use self::options::{
-    app, get_strings, has_flag, output_color, parse_options, CliOptions, OutputType,
-};
-pub use self::variables::{parse as parse_variable, parse_value as parse_variable_value};
+pub use self::options::OutputType;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {
