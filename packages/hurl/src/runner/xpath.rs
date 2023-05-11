@@ -283,9 +283,17 @@ mod tests {
     }
 
     #[test]
-    fn test_cafe() {
+    fn test_cafe_xml() {
         assert_eq!(
             eval_xml("<data>café</data>", "normalize-space(//data)").unwrap(),
+            Value::String(String::from("café"))
+        );
+    }
+
+    #[test]
+    fn test_cafe_html() {
+        assert_eq!(
+            eval_html("<data>café</data>", "normalize-space(//data)").unwrap(),
             Value::String(String::from("café"))
         );
     }
