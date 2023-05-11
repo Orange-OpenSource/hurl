@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-use crate::cli::CliError;
+
+use super::OptionsError;
 use crate::runner::Value;
 
-pub fn parse(s: &str) -> Result<(String, Value), CliError> {
+pub fn parse(s: &str) -> Result<(String, Value), OptionsError> {
     match s.find('=') {
-        None => Err(CliError {
-            message: format!("Missing value for variable {s}!"),
-        }),
+        None => Err(OptionsError::Error(format!(
+            "Missing value for variable {s}!"
+        ))),
         Some(index) => {
             let (name, value) = s.split_at(index);
             let value = parse_value(&value[1..])?;
@@ -31,7 +32,7 @@ pub fn parse(s: &str) -> Result<(String, Value), CliError> {
     }
 }
 
-pub fn parse_value(s: &str) -> Result<Value, CliError> {
+pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
     if s == "true" {
         Ok(Value::Bool(true))
     } else if s == "false" {
@@ -46,9 +47,9 @@ pub fn parse_value(s: &str) -> Result<Value, CliError> {
         if let Some(s) = s.strip_suffix('"') {
             Ok(Value::String(s.to_string()))
         } else {
-            Err(CliError {
-                message: "Value should end with a double quote".to_string(),
-            })
+            Err(OptionsError::Error(
+                "Value should end with a double quote".to_string(),
+            ))
         }
     } else {
         Ok(Value::String(s.to_string()))
@@ -57,6 +58,7 @@ pub fn parse_value(s: &str) -> Result<Value, CliError> {
 
 #[cfg(test)]
 mod tests {
+    use super::OptionsError;
     use super::*;
 
     #[test]
@@ -91,9 +93,7 @@ mod tests {
     fn test_parse_error() {
         assert_eq!(
             parse("name").err().unwrap(),
-            CliError {
-                message: "Missing value for variable name!".to_string()
-            }
+            OptionsError::Error("Missing value for variable name!".to_string())
         );
     }
 
@@ -119,9 +119,7 @@ mod tests {
     fn test_parse_value_error() {
         assert_eq!(
             parse_value("\"123").err().unwrap(),
-            CliError {
-                message: "Value should end with a double quote".to_string()
-            }
+            OptionsError::Error("Value should end with a double quote".to_string())
         )
     }
 }
