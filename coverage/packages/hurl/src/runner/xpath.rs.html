@@ -4181,7 +4181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_cafe() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_cafe_xml() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4309,7 +4309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_html() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_cafe_html() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4325,7 +4325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let html = r#&quot;&lt;html&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4341,7 +4341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;head&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            eval_html(&quot;&lt;data&gt;café&lt;&#x2F;data&gt;&quot;, &quot;normalize-space(&#x2F;&#x2F;data)&quot;).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4357,7 +4357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;meta charset=&quot;UTF-8&quot;\&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;café&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4373,7 +4373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;head&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4389,7 +4389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;body&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4405,7 +4405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;br&gt;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4421,7 +4421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;body&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4437,7 +4437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;html&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_html() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4453,7 +4453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xpath = &quot;normalize-space(&#x2F;html&#x2F;head&#x2F;meta&#x2F;@charset)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        let html = r#&quot;&lt;html&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4469,7 +4469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">  &lt;head&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4485,7 +4485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_html(html, xpath).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;meta charset=&quot;UTF-8&quot;\&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4501,7 +4501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;UTF-8&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;head&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4517,7 +4517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">  &lt;body&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4533,7 +4533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;br&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4549,7 +4549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;body&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4565,7 +4565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;html&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4581,7 +4581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_bug() {</pre>
+                <pre class="has-background-white py-0 px-2">        let xpath = &quot;normalize-space(&#x2F;html&#x2F;head&#x2F;meta&#x2F;@charset)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4597,7 +4597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let html = r#&quot;&lt;html&gt;&lt;&#x2F;html&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4613,7 +4613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F;let xpath = String::from(&quot;boolean(count(&#x2F;&#x2F;a[contains(@href,&#x27;xxx&#x27;)]))&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">            eval_html(html, xpath).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4629,7 +4629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xpath = &quot;boolean(count(&#x2F;&#x2F;a[contains(@href,&#x27;xxx&#x27;)]))&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(String::from(&quot;UTF-8&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4645,7 +4645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_html(html, xpath).unwrap(), Value::Bool(false));</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4709,7 +4709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_unregistered_function() {</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_bug() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4741,7 +4741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xpath = &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F;let xpath = String::from(&quot;boolean(count(&#x2F;&#x2F;a[contains(@href,&#x27;xxx&#x27;)]))&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4757,7 +4757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_html(html, xpath).err().unwrap(), XpathError::Eval);</pre>
+                <pre class="has-background-white py-0 px-2">        let xpath = &quot;boolean(count(&#x2F;&#x2F;a[contains(@href,&#x27;xxx&#x27;)]))&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4773,7 +4773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_html(html, xpath).unwrap(), Value::Bool(false));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4789,7 +4789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4805,7 +4805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_namespaces_with_prefix() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4837,7 +4837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version =&quot;1.0&quot;?&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_unregistered_function() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4853,7 +4853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;a:books xmlns:a=&quot;foo:&quot; xmlns:b=&quot;bar:&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let html = r#&quot;&lt;html&gt;&lt;&#x2F;html&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4869,7 +4869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;b:book xmlns:c=&quot;baz:&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let xpath = &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4885,7 +4885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;b:title&gt;Dune&lt;&#x2F;b:title&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_html(html, xpath).err().unwrap(), XpathError::Eval);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4901,7 +4901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;c:author&gt;Franck Herbert&lt;&#x2F;c:author&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4917,7 +4917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;b:book&gt;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4933,7 +4933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;a:books&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4949,7 +4949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    fn test_namespaces_with_prefix() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4965,7 +4965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;a:books&#x2F;b:book&#x2F;b:title)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version =&quot;1.0&quot;?&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4981,7 +4981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">&lt;a:books xmlns:a=&quot;foo:&quot; xmlns:b=&quot;bar:&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4997,7 +4997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;b:book xmlns:c=&quot;baz:&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5013,7 +5013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Dune&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;b:title&gt;Dune&lt;&#x2F;b:title&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5029,7 +5029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;c:author&gt;Franck Herbert&lt;&#x2F;c:author&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5045,7 +5045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;b:book&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5061,7 +5061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;a:books&#x2F;b:book&#x2F;c:author)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;a:books&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5077,7 +5077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5093,7 +5093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;a:books&#x2F;b:book&#x2F;b:title)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5109,7 +5109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5125,7 +5125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5141,7 +5141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Dune&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5157,7 +5157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;a:books&#x27;]&#x2F;*[name()=&#x27;b:book&#x27;]&#x2F;*[name()=&#x27;c:author&#x27;])&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5173,7 +5173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5189,7 +5189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;a:books&#x2F;b:book&#x2F;c:author)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5205,7 +5205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5221,7 +5221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5237,7 +5237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5253,7 +5253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr =</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5269,7 +5269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;books&#x27;]&#x2F;*[local-name()=&#x27;book&#x27;]&#x2F;*[local-name()=&#x27;author&#x27;])&quot;;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5285,7 +5285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;a:books&#x27;]&#x2F;*[name()=&#x27;b:book&#x27;]&#x2F;*[name()=&#x27;c:author&#x27;])&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5301,7 +5301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5317,7 +5317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5333,7 +5333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5349,7 +5349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5381,7 +5381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">        let expr =</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5397,7 +5397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_default_namespaces() {</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;books&#x27;]&#x2F;*[local-name()=&#x27;book&#x27;]&#x2F;*[local-name()=&#x27;author&#x27;])&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5413,7 +5413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;svg version=&quot;1.1&quot; width=&quot;300&quot; height=&quot;200&quot; xmlns=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2000&#x2F;svg&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5429,7 +5429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;red&quot; &#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5445,7 +5445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;circle cx=&quot;150&quot; cy=&quot;100&quot; r=&quot;80&quot; fill=&quot;green&quot; &#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Franck Herbert&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5461,7 +5461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;text x=&quot;150&quot; y=&quot;125&quot; font-size=&quot;60&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot;&gt;SVG&lt;&#x2F;text&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5477,7 +5477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;svg&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5509,7 +5509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:svg&#x2F;_:text)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5525,7 +5525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_default_namespaces() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5541,7 +5541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;svg version=&quot;1.1&quot; width=&quot;300&quot; height=&quot;200&quot; xmlns=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2000&#x2F;svg&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5557,7 +5557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;red&quot; &#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5573,7 +5573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;circle cx=&quot;150&quot; cy=&quot;100&quot; r=&quot;80&quot; fill=&quot;green&quot; &#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5589,7 +5589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    &lt;text x=&quot;150&quot; y=&quot;125&quot; font-size=&quot;60&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot;&gt;SVG&lt;&#x2F;text&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5605,7 +5605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;svg&#x27;]&#x2F;*[name()=&#x27;text&#x27;])&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;svg&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5621,7 +5621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5637,7 +5637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:svg&#x2F;_:text)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5653,7 +5653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5669,7 +5669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5685,7 +5685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5701,7 +5701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;svg&#x27;]&#x2F;*[local-name()=&#x27;text&#x27;])&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5717,7 +5717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5733,7 +5733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;svg&#x27;]&#x2F;*[name()=&#x27;text&#x27;])&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5749,7 +5749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5765,7 +5765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5781,7 +5781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5797,7 +5797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5813,7 +5813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5829,7 +5829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_soap() {</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;svg&#x27;]&#x2F;*[local-name()=&#x27;text&#x27;])&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5845,7 +5845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;soap:Envelope xmlns:soap=&quot;http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;soap&#x2F;envelope&#x2F;&quot;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5861,7 +5861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    xmlns:xsd=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema&quot;</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5877,7 +5877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    xmlns:xsi=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;SVG&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5893,7 +5893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;soap:Body xmlns:ns1=&quot;http:&#x2F;&#x2F;www.opentravel.org&#x2F;OTA&#x2F;2003&#x2F;05&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5909,7 +5909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;ns1:OTA_AirAvailRS</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5925,7 +5925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            EchoToken=&quot;11868765275150-1300257934&quot;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5941,7 +5941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            PrimaryLangID=&quot;en-us&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5957,7 +5957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            RetransmissionIndicator=&quot;false&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_soap() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5973,7 +5973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            SequenceNmbr=&quot;1&quot;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;soap:Envelope xmlns:soap=&quot;http:&#x2F;&#x2F;schemas.xmlsoap.org&#x2F;soap&#x2F;envelope&#x2F;&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5989,7 +5989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            TransactionIdentifier=&quot;TID$16459590516432752971.demo2144&quot;</pre>
+                <pre class="has-background-white py-0 px-2">    xmlns:xsd=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6005,7 +6005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Version=&quot;2006.01&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    xmlns:xsi=&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6021,7 +6021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;ns1:OTA_AirAvailRS&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;soap:Body xmlns:ns1=&quot;http:&#x2F;&#x2F;www.opentravel.org&#x2F;OTA&#x2F;2003&#x2F;05&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6037,7 +6037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;soap:Body&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;ns1:OTA_AirAvailRS</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6053,7 +6053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;soap:Envelope&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">            EchoToken=&quot;11868765275150-1300257934&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6069,7 +6069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            PrimaryLangID=&quot;en-us&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6085,7 +6085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;soap:Envelope&#x2F;soap:Body&#x2F;ns1:OTA_AirAvailRS&#x2F;@TransactionIdentifier)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">            RetransmissionIndicator=&quot;false&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6101,7 +6101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            SequenceNmbr=&quot;1&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6117,7 +6117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            TransactionIdentifier=&quot;TID$16459590516432752971.demo2144&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6133,7 +6133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">            Version=&quot;2006.01&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6149,7 +6149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;ns1:OTA_AirAvailRS&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6165,7 +6165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;soap:Body&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6181,7 +6181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;soap:Envelope&#x27;]&#x2F;*[name()=&#x27;soap:Body&#x27;]&#x2F;*[name()=&#x27;ns1:OTA_AirAvailRS&#x27;]&#x2F;@TransactionIdentifier)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;soap:Envelope&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6197,7 +6197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6213,7 +6213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;soap:Envelope&#x2F;soap:Body&#x2F;ns1:OTA_AirAvailRS&#x2F;@TransactionIdentifier)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6229,7 +6229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6245,7 +6245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6261,7 +6261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6277,7 +6277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;Envelope&#x27;]&#x2F;*[local-name()=&#x27;Body&#x27;]&#x2F;*[local-name()=&#x27;OTA_AirAvailRS&#x27;]&#x2F;@TransactionIdentifier)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6293,7 +6293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6309,7 +6309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[name()=&#x27;soap:Envelope&#x27;]&#x2F;*[name()=&#x27;soap:Body&#x27;]&#x2F;*[name()=&#x27;ns1:OTA_AirAvailRS&#x27;]&#x2F;@TransactionIdentifier)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6325,7 +6325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6341,7 +6341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6357,7 +6357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6373,7 +6373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6389,7 +6389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6405,7 +6405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_namespaces_scoping() {</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;*[local-name()=&#x27;Envelope&#x27;]&#x2F;*[local-name()=&#x27;Body&#x27;]&#x2F;*[local-name()=&#x27;OTA_AirAvailRS&#x27;]&#x2F;@TransactionIdentifier)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6421,7 +6421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot;?&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6437,7 +6437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;!-- initially, the default namespace is &quot;books&quot; --&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6453,7 +6453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;book xmlns=&#x27;urn:loc.gov:books&#x27;</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;TID$16459590516432752971.demo2144&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6469,7 +6469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">      xmlns:isbn=&#x27;urn:ISBN:0-395-36341-6&#x27;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6485,7 +6485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;title&gt;Cheaper by the Dozen&lt;&#x2F;title&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6501,7 +6501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;isbn:number&gt;1568491379&lt;&#x2F;isbn:number&gt;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6517,7 +6517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;notes&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6533,7 +6533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">      &lt;!-- make HTML the default namespace for some commentary --&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_namespaces_scoping() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6549,7 +6549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">      &lt;p xmlns=&#x27;http:&#x2F;&#x2F;www.w3.org&#x2F;1999&#x2F;xhtml&#x27;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot;?&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6565,7 +6565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">          This is a &lt;i&gt;funny&lt;&#x2F;i&gt; book!</pre>
+                <pre class="has-background-white py-0 px-2">&lt;!-- initially, the default namespace is &quot;books&quot; --&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6581,7 +6581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">      &lt;&#x2F;p&gt;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;book xmlns=&#x27;urn:loc.gov:books&#x27;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6597,7 +6597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;notes&gt;</pre>
+                <pre class="has-background-white py-0 px-2">      xmlns:isbn=&#x27;urn:ISBN:0-395-36341-6&#x27;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6613,7 +6613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;book&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;title&gt;Cheaper by the Dozen&lt;&#x2F;title&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6629,7 +6629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;isbn:number&gt;1568491379&lt;&#x2F;isbn:number&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6645,7 +6645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    &lt;notes&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6661,7 +6661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:book&#x2F;_:title)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">      &lt;!-- make HTML the default namespace for some commentary --&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6677,7 +6677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">      &lt;p xmlns=&#x27;http:&#x2F;&#x2F;www.w3.org&#x2F;1999&#x2F;xhtml&#x27;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6693,7 +6693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">          This is a &lt;i&gt;funny&lt;&#x2F;i&gt; book!</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6709,7 +6709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Cheaper by the Dozen&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">      &lt;&#x2F;p&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6725,7 +6725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;notes&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6741,7 +6741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;book&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6757,7 +6757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:book&#x2F;isbn:number)&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        &quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6773,7 +6773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6789,7 +6789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:book&#x2F;_:title)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6805,7 +6805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Value::String(&quot;1568491379&quot;.to_string())</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6821,7 +6821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6837,7 +6837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;Cheaper by the Dozen&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6853,7 +6853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;&#x2F;&#x2F;*[name()=&#x27;book&#x27;]&#x2F;*[name()=&#x27;notes&#x27;]&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6869,7 +6869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6885,7 +6885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;string(&#x2F;&#x2F;_:book&#x2F;isbn:number)&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6901,7 +6901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let expr = &quot;&#x2F;&#x2F;_:book&#x2F;_:notes&#x2F;*[local-name()=&#x27;p&#x27;]&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6917,7 +6917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));</pre>
+                <pre class="has-background-white py-0 px-2">            eval_xml(xml, expr).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6933,7 +6933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">            Value::String(&quot;1568491379&quot;.to_string())</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6949,13 +6949,141 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">        );</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="433"
+                role="cell">
+                <a href="#433">433</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="434"
+                role="cell">
+                <a href="#434">434</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;&#x2F;&#x2F;*[name()=&#x27;book&#x27;]&#x2F;*[name()=&#x27;notes&#x27;]&quot;;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="435"
+                role="cell">
+                <a href="#435">435</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="436"
+                role="cell">
+                <a href="#436">436</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2"></pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="437"
+                role="cell">
+                <a href="#437">437</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        let expr = &quot;&#x2F;&#x2F;_:book&#x2F;_:notes&#x2F;*[local-name()=&#x27;p&#x27;]&quot;;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="438"
+                role="cell">
+                <a href="#438">438</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        assert_eq!(eval_xml(xml, expr).unwrap(), Value::Nodeset(1));</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="439"
+                role="cell">
+                <a href="#439">439</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="440"
+                role="cell">
+                <a href="#440">440</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-05-11 08:11</p>
+                <p class="heading">Date: 2023-05-12 08:10</p>
             </div>
         </footer>
     </body>
