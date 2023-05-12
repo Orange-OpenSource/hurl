@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/utf8.hurl --very-verbose
+hurl --very-verbose tests_ok/utf8.hurl
