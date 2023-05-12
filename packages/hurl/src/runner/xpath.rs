@@ -15,9 +15,14 @@
  * limitations under the License.
  *
  */
+/// Unique entry point to libxml2.
+use std::ffi::{CStr, CString};
+use std::os::raw::c_char;
+use std::ptr;
 
-/// Unique entry point to libxml2
-use std::ffi::CStr;
+use libxml::bindings::{htmlReadMemory, xmlReadMemory};
+use libxml::parser::{ParseFormat, Parser, XmlParseError};
+use libxml::tree::Document;
 
 use crate::runner::value::Value;
 
@@ -29,16 +34,10 @@ pub enum XpathError {
     Unsupported,
 }
 
-/// Eval a XPath 1.0 expression against a XML text.
-///
-/// # Arguments
-///
-/// * `xml` - A string slice that holds a XML body
-/// * `expr`- A string slice for a XPath expression
-///
+/// Evaluates a XPath 1.0 expression `expr` against a XML text `xml`.
 pub fn eval_xml(xml: &str, expr: &str) -> Result<Value, XpathError> {
-    let parser = libxml::parser::Parser::default();
-    match parser.parse_string(xml) {
+    let parser = Parser::default();
+    match parse_html_string_patched(xml, &parser) {
         Ok(doc) => {
             if doc.get_root_element().is_none() {
                 Err(XpathError::InvalidXml {})
@@ -50,16 +49,10 @@ pub fn eval_xml(xml: &str, expr: &str) -> Result<Value, XpathError> {
     }
 }
 
-/// Eval a XPath 1.0 expression against an HTML text
-///
-/// # Arguments
-///
-/// * `html` - A string slice that holds an HTML body
-/// * `expr`- A string slice for a XPath expression
-///
+/// Evaluates a XPath 1.0 expression `expr` against an HTML text `html`.
 pub fn eval_html(html: &str, expr: &str) -> Result<Value, XpathError> {
-    let parser = libxml::parser::Parser::default_html();
-    match parser.parse_string(html) {
+    let parser = Parser::default_html();
+    match parse_html_string_patched(html, &parser) {
         Ok(doc) => {
             // You can have a doc structure even if the input xml is not valid
             // check that the root element exists
@@ -73,6 +66,53 @@ pub fn eval_html(html: &str, expr: &str) -> Result<Value, XpathError> {
     }
 }
 
+/// FIXME: Here are some patched functions of libxml crate.
+/// Started from libxml 2.11.1+, we have some encoding issue.
+/// See:
+/// - <https://github.com/KWARC/rust-libxml/issues/111>
+/// - <https://github.com/Orange-OpenSource/hurl/issues/1535>
+/// These two functions should be removed when the issue is fixed in libxml crate.
+fn try_usize_to_i32(value: usize) -> Result<i32, XmlParseError> {
+    if cfg!(target_pointer_width = "16") || (value < i32::max_value() as usize) {
+        // Cannot safely use our value comparison, but the conversion if always safe.
+        // Or, if the value can be safely represented as a 32-bit signed integer.
+        Ok(value as i32)
+    } else {
+        // Document too large, cannot parse using libxml2.
+        Err(XmlParseError::DocumentTooLarge)
+    }
+}
+
+fn parse_html_string_patched(input: &str, parser: &Parser) -> Result<Document, XmlParseError> {
+    let input_bytes: &[u8] = input.as_ref();
+    let input_ptr = input_bytes.as_ptr() as *const c_char;
+    let input_len = try_usize_to_i32(input_bytes.len())?;
+    let encoding = CString::new("utf-8").unwrap();
+    let encoding_ptr = encoding.as_ptr();
+    let url_ptr = ptr::null();
+
+    // HTML_PARSE_RECOVER | HTML_PARSE_NOERROR
+    let options = 1 + 32;
+    match parser.format {
+        ParseFormat::XML => unsafe {
+            let doc_ptr = xmlReadMemory(input_ptr, input_len, url_ptr, encoding_ptr, options);
+            if doc_ptr.is_null() {
+                Err(XmlParseError::GotNullPointer)
+            } else {
+                Ok(Document::new_ptr(doc_ptr))
+            }
+        },
+        ParseFormat::HTML => unsafe {
+            let docptr = htmlReadMemory(input_ptr, input_len, url_ptr, encoding_ptr, options);
+            if docptr.is_null() {
+                Err(XmlParseError::GotNullPointer)
+            } else {
+                Ok(Document::new_ptr(docptr))
+            }
+        },
+    }
+}
+
 extern "C" {
     pub fn silentErrorFunc(
         ctx: *mut ::std::os::raw::c_void,
@@ -81,14 +121,8 @@ extern "C" {
     );
 }
 
-/// Register all XML namespaces from a document to a context.
-///
-/// # Arguments
-///
-/// * `doc`- A libxml2 document reference
-/// * `context` - A libxml2 context reference
-///
-fn register_namespaces(doc: &libxml::tree::Document, context: &libxml::xpath::Context) {
+/// Registers all XML namespaces from a document `doc` to a `context`.
+fn register_namespaces(doc: &Document, context: &libxml::xpath::Context) {
     // We walk through the xml document to register each namespace,
     // so we can eval xpath queries with namespace. For convenience, we register the
     // first default namespace with _ prefix. Other default namespaces are not registered
@@ -108,15 +142,8 @@ fn register_namespaces(doc: &libxml::tree::Document, context: &libxml::xpath::Co
     }
 }
 
-/// Eval a XPath 1.0 expression against an libxml2 document.
-///
-/// # Arguments
-///
-/// * `doc` - A libxml2 document reference
-/// * `expr` - A string slice for an XPath expression
-/// * `support_ns` - `true` if we need to support XML namespaces, `false` otherwise
-///
-fn eval(doc: &libxml::tree::Document, expr: &str, support_ns: bool) -> Result<Value, XpathError> {
+/// Evaluates a XPath 1.0 expression `expr` against an libxml2 document `doc`, optionally using namespace.
+fn eval(doc: &Document, expr: &str, support_ns: bool) -> Result<Value, XpathError> {
     let context = libxml::xpath::Context::new(doc).expect("error setting context in xpath module");
 
     // libxml2 prints to sdtout warning and errors, so we mut it.
@@ -180,7 +207,7 @@ impl Namespace {
 }
 
 /// Returns all XML namespaces for a libxml2 document.
-fn get_document_namespaces(doc: &libxml::tree::Document) -> Vec<Namespace> {
+fn get_document_namespaces(doc: &Document) -> Vec<Namespace> {
     let root = doc.get_root_element();
     let root = match root {
         None => return vec![],
