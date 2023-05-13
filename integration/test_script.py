@@ -100,6 +100,15 @@ def test_stdout_pattern(f, result):
             f"actual: {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
         )
         print(f"actual <{actual}>")
+        print("# Actual lines")
+        for i, line in enumerate(actual_lines):
+            print("%2d: %s" % (i, line))
+        print("# Expected lines")
+        for i, line in enumerate(expected_lines):
+            print("%2d: %s" % (i, line))
+        print("# Expected Pattern lines")
+        for i, line in enumerate(expected_pattern_lines):
+            print("%2d: %s" % (i, line))
 
         sys.exit(1)
     for i in range(len(expected_pattern_lines)):
@@ -149,6 +158,16 @@ def test_stderr_pattern(f, result):
         print(
             f"actual: {len(actual_lines)} lines\nexpected: {len(expected_pattern_lines)} lines"
         )
+        print("# Actual lines")
+        for i, line in enumerate(actual_lines):
+            print("%2d: %s" % (i, line))
+        print("# Expected lines")
+        for i, line in enumerate(expected_lines):
+            print("%2d: %s" % (i, line))
+        print("# Expected Pattern lines")
+        for i, line in enumerate(expected_pattern_lines):
+            print("%2d: %s" % (i, line))
+
         sys.exit(1)
     for i in range(len(expected_pattern_lines)):
         if not re.match(expected_pattern_lines[i], actual_lines[i]):
