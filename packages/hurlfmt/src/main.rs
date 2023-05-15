@@ -39,7 +39,7 @@ fn main() {
         Ok(v) => v,
         Err(e) => match e {
             OptionsError::Info(message) => {
-                eprintln!("{message}");
+                print!("{message}");
                 process::exit(0);
             }
             OptionsError::Error(message) => {
