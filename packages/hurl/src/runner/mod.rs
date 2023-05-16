@@ -25,6 +25,11 @@ pub use self::hurl_file::run;
 pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::Value;
 
+// We only expose specific structs from the module `http`.
+// We don't want to expose the whole internal HTTP client, but needs those structs as
+// they're exposed through `EntryResult`.
+pub use crate::http::{Call, Certificate, Cookie, Header, Request, Response, Timings, Version};
+
 mod assert;
 mod body;
 mod capture;

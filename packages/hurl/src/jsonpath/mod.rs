@@ -54,8 +54,8 @@
 //! Note that other implementations (such as the Java lib <https://github.com/json-path/JsonPath>) also distinguish between node value (definite path) and collection (indefinite path).
 //!
 //! Note that the only selectors returning a scalar are:
-//! - array index selector ($.store.book[2])
-//! - object key selector ($.store.bicycle.color/$.store.bicycle['color'])
+//! - array index selector (`$.store.book[2]`)
+//! - object key selector (`$.store.bicycle.color/$.store.bicycle['color']`)
 //!  
 //! This will make testing the value a bit easier.
 //!
