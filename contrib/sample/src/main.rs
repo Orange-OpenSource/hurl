@@ -16,16 +16,16 @@
  *
  */
 
-use hurl::http::{ContextDir, Header, Request, Response};
-use hurl::runner::{AssertResult, Call, CaptureResult, EntryResult, Error, HurlResult, Verbosity};
-use hurl::util::logger::LoggerBuilder;
-use hurl::{http, runner};
-use hurl_core::parser;
+use std::{env, fs};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::process::exit;
 use std::time::Duration;
-use std::{env, fs};
+
+use hurl::runner;
+use hurl::runner::{AssertResult, CaptureResult, EntryResult, Error, HurlResult, Verbosity};
+use hurl::util::logger::LoggerBuilder;
+use hurl::util::path::ContextDir;
 
 /// Run a Hurl file and dumps results.
 /// This sample is used to detect public APIs change for Hurl crates.
@@ -37,23 +37,14 @@ fn main() {
         println!("Missing Hurl file as input");
         exit(1);
     }
-    let file_path = &args[1];
-    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    let filename = &args[1];
+    let content = fs::read_to_string(filename).expect("Should have been able to read the file");
 
-    // Parse Hurl file
-    let hurl_file = parser::parse_hurl_file(&contents).expect("Invalid Hurl file");
-
-    // Create an HTTP client
-    let mut client = http::Client::new(None);
-
-    let mut logger_builder = LoggerBuilder::new();
-    let logger = logger_builder
+    let logger = LoggerBuilder::new()
         .color(false)
         .verbose(false)
-        .filename(file_path)
-        .content(&contents)
-        .build()
-        .unwrap();
+        .filename(filename)
+        .build();
 
     // Define runner options
     let runner_options = runner::RunnerOptionsBuilder::new()
@@ -85,22 +76,20 @@ fn main() {
     let variables = HashMap::default();
 
     // Run the hurl file
-    let results = runner::run(
-        &hurl_file,
-        file_path,
-        &mut client,
+    let result = runner::run(
+        &content,
         &runner_options,
         &variables,
         &logger,
-    );
+    ).unwrap();
 
-    print_results(&results);
+    print_result(&result, filename);
 }
 
 /// Prints a Hurl result
-fn print_results(results: &HurlResult) {
+fn print_result(results: &HurlResult, filename: &str) {
     let level = 0;
-    print(level, "file", &results.filename);
+    print(level, "file", &filename);
     print(level, "success", &results.success.to_string());
     print(level, "duration", &results.time_in_ms.to_string());
     if results.entries.is_empty() {
@@ -135,12 +124,13 @@ fn print_entry(entry: &EntryResult) {
         print(level, "errors", "");
         entry.errors.iter().for_each(print_error);
     }
-    if entry.calls.is_empty() {
-        print(level, "calls", "-");
-    } else {
-        print(level, "calls", "");
-        entry.calls.iter().for_each(print_call);
-    }
+    // FIXME: Call is not public
+    // if entry.calls.is_empty() {
+    //     print(level, "calls", "-");
+    // } else {
+    //     print(level, "calls", "");
+    //     entry.calls.iter().for_each(print_call);
+    // }
 }
 
 /// Prints a capture.
@@ -169,55 +159,56 @@ fn print_error(error: &Error) {
     print_dbg(level, "type", &error.inner);
 }
 
-/// Prints a call.
-fn print_call(call: &Call) {
-    let level = 2;
-    print(level, "request", "");
-    print_request(&call.request);
-    print(level, "response", "");
-    print_response(&call.response);
-}
+// /// Prints a call.
+// fn print_call(call: &Call) {
+//     let level = 2;
+//     print(level, "request", "");
+//     print_request(&call.request);
+//     print(level, "response", "");
+//     print_response(&call.response);
+// }
+//
+// /// Prints an HTTP request
+// fn print_request(request: &Request) {
+//     let level = 3;
+//     print(level, "method", &request.method);
+//     print(level, "url", &request.url);
+//     if request.headers.is_empty() {
+//         print(level, "headers", "-");
+//     } else {
+//         print(level, "headers", "");
+//         request.headers.iter().for_each(print_header);
+//     }
+//     print(level, "body (bytes)", &request.body.len().to_string());
+// }
+//
+// /// Prints an HTTP response
+// fn print_response(response: &Response) {
+//     let level = 3;
+//     print(level, "url", &response.url);
+//     print(level, "version", &response.version.to_string());
+//     print(level, "status", &response.status.to_string());
+//     if response.headers.is_empty() {
+//         print(level, "headers", "-");
+//     } else {
+//         print(level, "headers", "");
+//         response.headers.iter().for_each(print_header);
+//     }
+//     print(level, "body (bytes)", &response.body.len().to_string());
+//     print(
+//         level,
+//         "duration (ms)",
+//         &response.duration.as_millis().to_string(),
+//     );
+// }
+//
+// /// Print an HTTP header
+// fn print_header(header: &Header) {
+//     let level = 4;
+//     print(level, "name", &header.name);
+//     print(level, "value", &header.value);
+// }
 
-/// Prints an HTTP request
-fn print_request(request: &Request) {
-    let level = 3;
-    print(level, "method", &request.method);
-    print(level, "url", &request.url);
-    if request.headers.is_empty() {
-        print(level, "headers", "-");
-    } else {
-        print(level, "headers", "");
-        request.headers.iter().for_each(print_header);
-    }
-    print(level, "body (bytes)", &request.body.len().to_string());
-}
-
-/// Prints an HTTP response
-fn print_response(response: &Response) {
-    let level = 3;
-    print(level, "url", &response.url);
-    print(level, "version", &response.version.to_string());
-    print(level, "status", &response.status.to_string());
-    if response.headers.is_empty() {
-        print(level, "headers", "-");
-    } else {
-        print(level, "headers", "");
-        response.headers.iter().for_each(print_header);
-    }
-    print(level, "body (bytes)", &response.body.len().to_string());
-    print(
-        level,
-        "duration (ms)",
-        &response.duration.as_millis().to_string(),
-    );
-}
-
-/// Print an HTTP header
-fn print_header(header: &Header) {
-    let level = 4;
-    print(level, "name", &header.name);
-    print(level, "value", &header.value);
-}
 
 fn print(level: usize, key: &str, value: &str) {
     let prefix = " ".repeat(level * 2);
