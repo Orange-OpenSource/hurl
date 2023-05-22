@@ -44,6 +44,7 @@ pub struct Options {
     pub connects_to: Vec<String>,
     pub cookie_input_file: Option<String>,
     pub cookie_output_file: Option<String>,
+    pub error_format: ErrorFormat,
     pub fail_fast: bool,
     pub file_root: Option<String>,
     pub follow_location: bool,
@@ -89,6 +90,13 @@ impl From<clap::Error> for OptionsError {
         }
     }
 }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ErrorFormat {
+    Short,
+    Long,
+}
+
 fn get_version() -> String {
     let libcurl_version = libcurl_version_info();
     format!(
@@ -113,6 +121,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::connect_to())
         .arg(commands::cookies_input_file())
         .arg(commands::cookies_output_file())
+        .arg(commands::error_format())
         .arg(commands::fail_at_en())
         .arg(commands::file_root())
         .arg(commands::follow_location())
@@ -174,6 +183,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let connects_to = matches::connects_to(arg_matches);
     let cookie_input_file = matches::cookie_input_file(arg_matches);
     let cookie_output_file = matches::cookie_output_file(arg_matches);
+    let error_format = matches::error_format(arg_matches);
     let fail_fast = matches::fail_fast(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let follow_location = matches::follow_location(arg_matches);
@@ -212,6 +222,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         connects_to,
         cookie_input_file,
         cookie_output_file,
+        error_format,
         fail_fast,
         file_root,
         follow_location,
@@ -303,8 +314,8 @@ impl Options {
         let ignore_asserts = self.ignore_asserts;
         let ssl_no_revoke = self.ssl_no_revoke;
 
-        let mut bd = RunnerOptionsBuilder::new();
-        bd.cacert_file(cacert_file)
+        RunnerOptionsBuilder::new()
+            .cacert_file(cacert_file)
             .client_cert_file(client_cert_file)
             .client_key_file(client_key_file)
             .compressed(compressed)

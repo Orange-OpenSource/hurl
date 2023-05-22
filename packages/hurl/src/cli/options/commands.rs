@@ -94,6 +94,16 @@ pub fn cookies_output_file() -> clap::Arg {
         .help("Write cookies to FILE after running the session (only for one session)")
         .num_args(1)
 }
+
+pub fn error_format() -> clap::Arg {
+    clap::Arg::new("error_format")
+        .long("error-format")
+        .value_name("FORMAT")
+        .value_parser(["short", "long"])
+        .default_value("short")
+        .help("Control the format of error messages")
+}
+
 pub fn fail_at_en() -> clap::Arg {
     clap::Arg::new("fail_at_end")
         .long("fail-at-end")
@@ -105,7 +115,7 @@ pub fn file_root() -> clap::Arg {
     clap::Arg::new("file_root")
         .long("file-root")
         .value_name("DIR")
-        .help("Set root filesystem to import files (default is current directory)")
+        .help("Set root filesystem to import files [default: current directory]")
         .num_args(1)
 }
 
@@ -156,6 +166,7 @@ pub fn insecure() -> clap::Arg {
         .help("Allow insecure SSL connections")
         .action(ArgAction::SetTrue)
 }
+
 pub fn interactive() -> clap::Arg {
     clap::Arg::new("interactive")
         .long("interactive")
