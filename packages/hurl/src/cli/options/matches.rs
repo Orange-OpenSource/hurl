@@ -17,6 +17,7 @@
  */
 use super::variables::{parse as parse_variable, parse_value};
 use super::OptionsError;
+use crate::cli::options::ErrorFormat;
 use crate::cli::OutputType;
 use atty::Stream;
 use clap::ArgMatches;
@@ -108,6 +109,15 @@ pub fn cookie_input_file(arg_matches: &ArgMatches) -> Option<String> {
 
 pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "cookies_output_file")
+}
+
+pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
+    let error_format = get::<String>(arg_matches, "error_format");
+    match error_format.as_deref() {
+        Some("long") => ErrorFormat::Long,
+        Some("short") => ErrorFormat::Short,
+        _ => ErrorFormat::Short,
+    }
 }
 
 pub fn fail_fast(arg_matches: &ArgMatches) -> bool {
