@@ -93,6 +93,8 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[0].name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[0].name"</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/filter</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>

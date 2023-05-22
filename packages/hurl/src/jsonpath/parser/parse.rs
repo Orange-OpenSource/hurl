@@ -141,7 +141,8 @@ fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
 }
 
 fn selector_filter(reader: &mut Reader) -> Result<Selector, Error> {
-    try_literal("[?(", reader)?;
+    try_left_bracket(reader)?;
+    try_literal("?(", reader)?;
     let pred = predicate(reader)?;
     literal(")]", reader)?;
     Ok(Selector::Filter(pred))
@@ -400,6 +401,15 @@ mod tests {
             })
         );
         assert_eq!(reader.state.cursor, 19);
+        let mut reader = Reader::new(".[?(@.key=='value')]");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
+            Selector::Filter(Predicate {
+                key: vec!["key".to_string()],
+                func: PredicateFunc::EqualString("value".to_string()),
+            })
+        );
+        assert_eq!(reader.state.cursor, 20);
 
         let mut reader = Reader::new("[?(@.price<10)]");
         assert_eq!(

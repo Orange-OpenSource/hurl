@@ -93,6 +93,8 @@ HTTP 200
 jsonpath "$" count == 2
 jsonpath "$.[0].name" == "Bob"
 jsonpath "$[0].name" == "Bob"
+jsonpath "$.[?(@.id == 1)].name" nth 0 == "Bob"
+jsonpath "$[?(@.id == 1)].name" nth 0 == "Bob"
 
 GET http://localhost:8000/assert-json/filter
 HTTP 200
