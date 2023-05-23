@@ -14,7 +14,7 @@ mypy==0.971
 mypy-extensions==1.0.0
 pathspec==0.11.1
 platformdirs==3.5.0
-requests==2.28.1
+requests==2.31.0
 soupsieve==2.4.1
 tomli==2.0.1
 typing_extensions==4.5.0
