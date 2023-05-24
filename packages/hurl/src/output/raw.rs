@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-use colored::Colorize;
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
-use crate::http::Response;
 use crate::runner::{HurlResult, RunnerError};
 use crate::util::logger::Logger;
 use crate::{output, runner};
@@ -45,7 +43,8 @@ pub fn write_body(
             // If include options is set, we output the HTTP response headers
             // with status and version (to mimic curl outputs)
             if include_headers {
-                let text = get_status_line_headers(response, color);
+                let mut text = response.get_status_line_headers(color);
+                text.push('\n');
                 output.append(&mut text.into_bytes());
             }
             let mut body = if entry_result.compressed {
@@ -86,26 +85,4 @@ pub fn write_body(
         logger.warning(format!("No entry have been executed {source}").as_str());
     }
     Ok(())
-}
-
-/// Returns status, version and HTTP headers from an HTTP `response`.
-fn get_status_line_headers(response: &Response, color: bool) -> String {
-    let mut str = String::new();
-    let status_line = format!("{} {}\n", response.version, response.status);
-    let status_line = if color {
-        format!("{}", status_line.green().bold())
-    } else {
-        status_line
-    };
-    str.push_str(&status_line);
-    for header in response.headers.iter() {
-        let header_line = if color {
-            format!("{}: {}\n", header.name.cyan().bold(), header.value)
-        } else {
-            format!("{}: {}\n", header.name, header.value)
-        };
-        str.push_str(&header_line);
-    }
-    str.push('\n');
-    str
 }

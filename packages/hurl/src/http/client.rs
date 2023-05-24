@@ -235,7 +235,7 @@ impl Client {
                             logger.info(">");
 
                             if very_verbose {
-                                debug_request.log_body(logger);
+                                debug_request.log_body(true, logger);
                             }
                         }
                     }
@@ -256,7 +256,7 @@ impl Client {
                             logger.info(">");
 
                             if very_verbose {
-                                debug_request.log_body(logger);
+                                debug_request.log_body(true, logger);
                             }
                         }
                     }
@@ -369,7 +369,7 @@ impl Client {
             }
             logger.info("<");
             if very_verbose {
-                response.log_body(logger);
+                response.log_body(true, logger);
             }
         }
 

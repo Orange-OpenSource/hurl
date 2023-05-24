@@ -97,6 +97,15 @@ pub enum ErrorFormat {
     Long,
 }
 
+impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
+    fn from(value: ErrorFormat) -> Self {
+        match value {
+            ErrorFormat::Short => hurl::util::logger::ErrorFormat::Short,
+            ErrorFormat::Long => hurl::util::logger::ErrorFormat::Long,
+        }
+    }
+}
+
 fn get_version() -> String {
     let libcurl_version = libcurl_version_info();
     format!(

@@ -70,19 +70,39 @@ impl BaseLogger {
 /// rich error for parsing and runtime errors.
 pub struct Logger {
     pub(crate) color: bool,
-    pub(crate) verbose: bool,
+    pub(crate) error_format: ErrorFormat,
+    pub(crate) filename: String,
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
-    pub(crate) filename: String,
+    pub(crate) verbose: bool,
 }
 
-#[derive(Default)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum ErrorFormat {
+    Short,
+    Long,
+}
+
 pub struct LoggerBuilder {
     color: bool,
-    verbose: bool,
+    error_format: ErrorFormat,
+    filename: String,
     progress_bar: bool,
     test: bool,
-    filename: String,
+    verbose: bool,
+}
+
+impl Default for LoggerBuilder {
+    fn default() -> Self {
+        LoggerBuilder {
+            color: false,
+            error_format: ErrorFormat::Short,
+            filename: "".to_string(),
+            progress_bar: false,
+            test: false,
+            verbose: false,
+        }
+    }
 }
 
 impl LoggerBuilder {
@@ -94,6 +114,14 @@ impl LoggerBuilder {
     /// Sets color usage.
     pub fn color(&mut self, color: bool) -> &mut Self {
         self.color = color;
+        self
+    }
+
+    /// Control the format of error messages.
+    /// If `error_format` is [`ErrorFormat::Long`], the HTTP request and response that has
+    /// errors is displayed (headers, body, etc..)
+    pub fn error_format(&mut self, error_format: ErrorFormat) -> &mut Self {
+        self.error_format = error_format;
         self
     }
 
@@ -125,10 +153,11 @@ impl LoggerBuilder {
     pub fn build(&self) -> Logger {
         Logger {
             color: self.color,
-            verbose: self.verbose,
+            error_format: self.error_format,
+            filename: self.filename.clone(),
             progress_bar: self.progress_bar,
             test: self.test,
-            filename: self.filename.clone(),
+            verbose: self.verbose,
         }
     }
 }

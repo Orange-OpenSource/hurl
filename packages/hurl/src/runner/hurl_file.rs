@@ -25,10 +25,11 @@ use hurl_core::error::Error;
 use hurl_core::parser;
 
 use crate::http;
+use crate::http::Call;
 use crate::runner::core::*;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, Value};
-use crate::util::logger::{Logger, LoggerBuilder};
+use crate::util::logger::{ErrorFormat, Logger, LoggerBuilder};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -110,11 +111,12 @@ pub fn run(
         // "Executing entry..." to be displayed based on the entry level verbosity.
         let entry_verbosity = entry::get_entry_verbosity(entry, &runner_options.verbosity);
         let logger = LoggerBuilder::new()
-            .filename(&logger.filename)
             .color(logger.color)
+            .filename(&logger.filename)
+            .error_format(logger.error_format)
+            .progress_bar(entry_verbosity.is_none() && logger.progress_bar)
             .verbose(entry_verbosity.is_some())
             .test(logger.test)
-            .progress_bar(entry_verbosity.is_none() && logger.progress_bar)
             .build();
 
         if let Some(pre_entry) = runner_options.pre_entry {
@@ -133,9 +135,9 @@ pub fn run(
 
         logger.test_progress(entry_index, n);
 
-        let options_result =
-            entry::get_entry_options(entry, runner_options, &mut variables, &logger);
-        let entry_result = match &options_result {
+        // The real execution of the entry happens here, with the overridden entry options.
+        let options = entry::get_entry_options(entry, runner_options, &mut variables, &logger);
+        let entry_result = match &options {
             Ok(options) => entry::run(
                 entry,
                 entry_index,
@@ -157,7 +159,7 @@ pub fn run(
 
         // Check if we need to retry.
         let has_error = !entry_result.errors.is_empty();
-        let (retry, retry_max_count, retry_interval) = match &options_result {
+        let (retry, retry_max_count, retry_interval) = match &options {
             Ok(options) => (
                 options.retry,
                 options.retry_max_count,
@@ -170,36 +172,25 @@ pub fn run(
             ),
         };
         let retry_max_reached = match retry_max_count {
-            None => false,
             Some(r) => retry_count > r,
+            None => false,
         };
-        if retry_max_reached {
-            logger.debug("");
-            logger.debug_important("Retry max count reached, no more retry");
-        }
         let retry = retry && !retry_max_reached && has_error;
 
-        // If we're going to retry the entry, we log error only in verbose. Otherwise,
-        // we log error on stderr.
-        for e in &entry_result.errors {
-            if retry {
-                if logger.verbose {
-                    logger.test_erase_line();
-                    logger.debug_error(content, e);
-                }
-            } else {
-                logger.test_erase_line();
-                logger.error_rich(content, e);
-            }
+        // If `retry_max_reached` is true, we print now a warning, before displaying
+        // any assert error so any potential error is the last thing displayed to the user.
+        // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
+        // we first log the error and a potential warning about retrying.
+        logger.test_erase_line();
+        if retry_max_reached {
+            logger.debug_important("Retry max count reached, no more retry");
+            logger.debug("");
         }
-        entries.push(entry_result);
+        if has_error {
+            log_errors(&entry_result, content, retry, &logger);
+        }
 
-        if let Some(post_entry) = runner_options.post_entry {
-            let exit = post_entry();
-            if exit {
-                break;
-            }
-        }
+        entries.push(entry_result);
 
         if retry {
             let delay = retry_interval.as_millis();
@@ -208,8 +199,20 @@ pub fn run(
                 format!("Retry entry {entry_index} (x{retry_count} pause {delay} ms)").as_str(),
             );
             retry_count += 1;
+            // If we retry the entry, we do not want to display a 'blank' progress bar
+            // during the sleep delay. During the pause, we artificially show the previsoulsy
+            // erased progress line.
+            logger.test_progress(entry_index, n);
             thread::sleep(retry_interval);
+            logger.test_erase_line();
             continue;
+        }
+
+        if let Some(post_entry) = runner_options.post_entry {
+            let exit = post_entry();
+            if exit {
+                break;
+            }
         }
         if runner_options.fail_fast && has_error {
             break;
@@ -219,8 +222,6 @@ pub fn run(
         entry_index += 1;
         retry_count = 1;
     }
-
-    logger.test_erase_line();
 
     let time_in_ms = start.elapsed().as_millis();
     let cookies = http_client.get_cookie_storage();
@@ -350,4 +351,29 @@ fn log_run_info(
         logger
             .debug(format!("Executing {}/{} entries", to_entry, hurl_file.entries.len()).as_str());
     }
+}
+
+/// Logs runner `errors`.
+/// If we're going to `retry` the entry, we log errors only in verbose. Otherwise, we log error on stderr.
+fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &Logger) {
+    if retry {
+        entry_result
+            .errors
+            .iter()
+            .for_each(|e| logger.debug_error(content, e));
+        return;
+    }
+
+    if logger.error_format == ErrorFormat::Long {
+        if let Some(Call { response, .. }) = entry_result.calls.last() {
+            response.log_all(logger);
+        } else {
+            logger.info("<No HTTP response>");
+            logger.info("");
+        }
+    }
+    entry_result
+        .errors
+        .iter()
+        .for_each(|e| logger.error_rich(content, e));
 }
