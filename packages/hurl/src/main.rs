@@ -89,11 +89,12 @@ fn main() {
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
         let logger = LoggerBuilder::new()
-            .filename(filename)
             .color(opts.color)
-            .verbose(verbose)
-            .test(opts.test)
+            .error_format(opts.error_format.clone().into())
+            .filename(filename)
             .progress_bar(progress_bar)
+            .test(opts.test)
+            .verbose(verbose)
             .build();
 
         let total = opts.input_files.len();

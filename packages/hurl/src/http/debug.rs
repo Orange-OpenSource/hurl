@@ -18,30 +18,39 @@
 use crate::util::logger::Logger;
 
 /// Debug log text.
-pub fn log_text(text: &str, logger: &Logger) {
+pub fn log_text(text: &str, debug: bool, logger: &Logger) {
     if text.is_empty() {
-        logger.debug("");
+        if debug {
+            logger.debug("");
+        } else {
+            logger.info("");
+        }
     } else {
-        text.split('\n').for_each(|l| logger.debug(l))
+        let lines = text.split('\n');
+        if debug {
+            lines.for_each(|l| logger.debug(l))
+        } else {
+            lines.for_each(|l| logger.info(l))
+        }
     }
 }
 
-/// Debug log bytes with a maximum size.
-///
-/// # Arguments
-///
-/// * `bytes`- the bytes to log
-/// * `max` - The maximum number if bytes to log
-pub fn log_bytes(bytes: &[u8], max: usize, logger: &Logger) {
+/// Debug log `bytes` with a maximum size of `max` bytes.
+pub fn log_bytes(bytes: &[u8], max: usize, debug: bool, logger: &Logger) {
     let bytes = if bytes.len() > max {
         &bytes[..max]
     } else {
         bytes
     };
 
-    if bytes.is_empty() {
-        logger.debug("");
+    let log = if bytes.is_empty() {
+        "".to_string()
     } else {
-        logger.debug(format!("Bytes <{}...>", hex::encode(bytes)).as_str());
+        format!("Bytes <{}...>", hex::encode(bytes))
+    };
+    if debug {
+        logger.debug(&log);
+    } else {
+        logger.info(&log)
     }
 }

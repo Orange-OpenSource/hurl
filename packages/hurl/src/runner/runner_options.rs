@@ -31,7 +31,6 @@ pub struct RunnerOptionsBuilder {
     connects_to: Vec<String>,
     context_dir: ContextDir,
     cookie_input_file: Option<String>,
-    error_format: ErrorFormat,
     fail_fast: bool,
     follow_location: bool,
     ignore_asserts: bool,
@@ -53,11 +52,6 @@ pub struct RunnerOptionsBuilder {
     verbosity: Option<Verbosity>,
 }
 
-pub enum ErrorFormat {
-    Short,
-    Long,
-}
-
 impl Default for RunnerOptionsBuilder {
     fn default() -> Self {
         RunnerOptionsBuilder {
@@ -69,7 +63,6 @@ impl Default for RunnerOptionsBuilder {
             connects_to: vec![],
             context_dir: ContextDir::default(),
             cookie_input_file: None,
-            error_format: ErrorFormat::Short,
             fail_fast: true,
             follow_location: false,
             ignore_asserts: false,
@@ -153,14 +146,6 @@ impl RunnerOptionsBuilder {
     /// Reads cookies from this file (using the Netscape cookie file format).
     pub fn cookie_input_file(&mut self, cookie_input_file: Option<String>) -> &mut Self {
         self.cookie_input_file = cookie_input_file;
-        self
-    }
-
-    /// Control the format of error messages.
-    /// If `error_format` is [`ErrorFormat::Long`], the HTTP request and response that has
-    /// errors is displayed (headers, body, etc..)
-    pub fn error_format(&mut self, error_format: ErrorFormat) -> &mut Self {
-        self.error_format = error_format;
         self
     }
 
