@@ -1,0 +1,33 @@
+HTTP/1.1 200
+Server: Werkzeug/~~~ Python/~~
+Date: ~~~
+Content-Type: text/html; charset=utf-8
+Content-Length: 45
+Server: Flask Server
+Connection: close
+
+<html><head><title>Test</title></head></html>
+
+error: Assert header value
+  --> tests_failed/error_format_long.hurl:3:15
+   |
+ 3 | Content-Type: text/html
+   |               ^^^^^^^^^ actual value is <text/html; charset=utf-8>
+   |
+
+error: Assert failure
+  --> tests_failed/error_format_long.hurl:5:0
+   |
+ 5 | xpath "string(//head/title)" equals "Welcome!"
+   |   actual:   string <Test>
+   |   expected: string <Welcome!>
+   |
+
+error: Assert failure
+  --> tests_failed/error_format_long.hurl:7:0
+   |
+ 7 | xpath "//title" count == 2
+   |   actual:   int <1>
+   |   expected: int <2>
+   |
+
