@@ -1,0 +1,7 @@
+error: Invalid decoding
+  --> tests_failed/hello_gb2312_failed.hurl:10:1
+   |
+10 | xpath "string(//body)" == "你好世界"
+   | ^^^^^^^^^^^^^^^^^^^^^^ the body can not be decoded with charset 'utf-8'
+   |
+
