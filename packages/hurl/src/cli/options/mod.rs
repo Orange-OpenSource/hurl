@@ -258,8 +258,8 @@ impl Options {
         let connects_to = self.connects_to.clone();
         let follow_location = self.follow_location;
         let verbosity = match (self.verbose, self.very_verbose) {
-            (true, true) => Some(Verbosity::VeryVerbose),
-            (true, _) => Some(Verbosity::Verbose),
+            (_, true) => Some(Verbosity::VeryVerbose),
+            (true, false) => Some(Verbosity::Verbose),
             _ => None,
         };
         let insecure = self.insecure;
