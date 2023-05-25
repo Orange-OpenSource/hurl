@@ -207,8 +207,8 @@
 < Connection: close
 <
 *
-*
 * Retry max count reached, no more retry
+*
 error: Assert status code
   --> tests_failed/retry.hurl:2:6
    |

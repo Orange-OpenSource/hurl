@@ -117,8 +117,8 @@
 < Connection: close
 <
 *
-*
 * Retry max count reached, no more retry
+*
 error: Assert status code
   --> tests_failed/option_retry.hurl:6:6
    |
