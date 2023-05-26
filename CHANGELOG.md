@@ -1,3 +1,29 @@
+[4.0.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.0.0)
+========================================================================================================================
+
+Thanks to
+[@phaza](https://github.com/phaza),
+[@FiloSottile](https://github.com/FiloSottile),
+[@devnoname120](https://github.com/devnoname120),
+
+Enhancements:
+
+* Add --error-format option to output HTTP context on errors [#1542](https://github.com/Orange-OpenSource/hurl/issues/1542)
+
+* Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
+
+
+Bugs Fixed:
+
+* Support additional dot in jsonpath expression [#1555](https://github.com/Orange-OpenSource/hurl/issues/1555)
+
+* Make Call, Certificate, Cookie, Header, Request, Response, Timings, Version public [#1548](https://github.com/Orange-OpenSource/hurl/issues/1548)
+
+* Patch encoding issue with xpath and libxml 2.11.1+ [#1535](https://github.com/Orange-OpenSource/hurl/issues/1535)
+
+* Add quotes around certificate attribute in HTML export. [#1515](https://github.com/Orange-OpenSource/hurl/issues/1515)
+
+
 [3.0.0 (2023-05-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.0)
 ========================================================================================================================
 
