@@ -399,6 +399,16 @@ HTTP 200
 body contains "<h1>Welcome!</h1>"
 ```
 
+```hurl
+# Our HTML response is encoded with GB 2312 (see https://en.wikipedia.org/wiki/GB_2312)
+GET https://example.org/cn
+
+HTTP 200
+header "Content-Type" == "text/html; charset=gb2312"
+bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB 2312
+body contains == "你好世界"
+```
+
 ### Bytes assert
 
 Check the value of the received HTTP response body as a bytestream. Body assert
@@ -416,8 +426,8 @@ header "Content-Length" == "12424"
 
 ### XPath assert
 
-Check the value of a [XPath] query on the received HTTP body decoded as a string.
-Currently, only XPath 1.0 expression can be used. Body assert consists of the
+Check the value of a [XPath] query on the received HTTP body decoded as a string (using the `charset` value in the
+`Content-Type` header response). Currently, only XPath 1.0 expression can be used. Body assert consists of the
 keyword `xpath` followed by a predicate function and value. Values can be string,
 boolean or number depending on the XPath query.
 
