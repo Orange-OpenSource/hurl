@@ -28,7 +28,7 @@ use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_a
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
-use crate::util::logger::Logger;
+use crate::util::logger::{Logger, Verbosity};
 
 /// Runs an `entry` with `http_client` and returns one [`EntryResult`].
 ///
@@ -58,7 +58,7 @@ pub fn run(
             };
         }
     };
-    let client_options = http::ClientOptions::from(runner_options);
+    let client_options = ClientOptions::from(runner_options, logger.verbosity);
 
     // Experimental features with cookie storage
     use std::str::FromStr;
@@ -217,8 +217,8 @@ fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<Error> {
         .collect()
 }
 
-impl From<&RunnerOptions> for ClientOptions {
-    fn from(runner_options: &RunnerOptions) -> Self {
+impl ClientOptions {
+    fn from(runner_options: &RunnerOptions, verbosity: Option<Verbosity>) -> Self {
         ClientOptions {
             cacert_file: runner_options.cacert_file.clone(),
             client_cert_file: runner_options.client_cert_file.clone(),
@@ -229,10 +229,11 @@ impl From<&RunnerOptions> for ClientOptions {
             cookie_input_file: runner_options.cookie_input_file.clone(),
             proxy: runner_options.proxy.clone(),
             no_proxy: runner_options.no_proxy.clone(),
-            verbosity: runner_options.verbosity.as_ref().map(|v| match v {
-                Verbosity::Verbose => http::Verbosity::Verbose,
-                Verbosity::VeryVerbose => http::Verbosity::VeryVerbose,
-            }),
+            verbosity: match verbosity {
+                Some(Verbosity::Verbose) => Some(http::Verbosity::Verbose),
+                Some(Verbosity::VeryVerbose) => Some(http::Verbosity::VeryVerbose),
+                _ => None,
+            },
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
             retry_max_count: runner_options.retry_max_count,
@@ -353,20 +354,10 @@ pub fn get_entry_options(
                         variables.insert(name.clone(), value);
                     }
                     EntryOption::Verbose(option) => {
-                        runner_options.verbosity = if option.value {
-                            Some(Verbosity::Verbose)
-                        } else {
-                            None
-                        };
                         logger.debug(format!("verbose: {}", option.value).as_str());
                     }
 
                     EntryOption::VeryVerbose(option) => {
-                        runner_options.verbosity = if option.value {
-                            Some(Verbosity::VeryVerbose)
-                        } else {
-                            None
-                        };
                         logger.debug(format!("very-verbose: {}", option.value).as_str());
                     }
                 }
@@ -403,7 +394,7 @@ fn has_options(entry: &Entry) -> bool {
 
 /// Returns the overridden `entry` verbosity, or the default `verbosity` file.
 pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Option<Verbosity> {
-    let mut verbosity = verbosity.clone();
+    let mut verbosity = *verbosity;
 
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {

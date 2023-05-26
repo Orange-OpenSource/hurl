@@ -29,7 +29,7 @@ use crate::http::Call;
 use crate::runner::core::*;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, Value};
-use crate::util::logger::{ErrorFormat, Logger, LoggerBuilder};
+use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -39,8 +39,8 @@ use crate::util::logger::{ErrorFormat, Logger, LoggerBuilder};
 /// ```
 /// use std::collections::HashMap;
 /// use hurl::runner;
-/// use hurl::runner::{Value, RunnerOptionsBuilder, Verbosity};
-/// use hurl::util::logger::LoggerBuilder;
+/// use hurl::runner::{Value, RunnerOptionsBuilder};
+/// use hurl::util::logger::{LoggerOptionsBuilder, Verbosity};
 ///
 /// // A simple Hurl sample
 /// let content = r#"
@@ -48,12 +48,13 @@ use crate::util::logger::{ErrorFormat, Logger, LoggerBuilder};
 /// HTTP 200
 /// "#;
 ///
-/// // Define runner options and logger
-/// let options = RunnerOptionsBuilder::new()
+/// // Define runner and logger options
+/// let runner_opts = RunnerOptionsBuilder::new()
 ///     .follow_location(true)
+///     .build();
+/// let logger_opts = LoggerOptionsBuilder::new()
 ///     .verbosity(Some(Verbosity::Verbose))
 ///     .build();
-/// let logger = LoggerBuilder::new().build();
 ///
 /// // Set variables
 /// let mut variables = HashMap::default();
@@ -62,9 +63,9 @@ use crate::util::logger::{ErrorFormat, Logger, LoggerBuilder};
 /// // Run the Hurl sample
 /// let result = runner::run(
 ///     content,
-///     &options,
+///     &runner_opts,
 ///     &variables,
-///     &logger
+///     &logger_opts
 /// );
 /// assert!(result.unwrap().success);
 /// ```
@@ -72,8 +73,10 @@ pub fn run(
     content: &str,
     runner_options: &RunnerOptions,
     variables: &HashMap<String, Value>,
-    logger: &Logger,
+    logger_options: &LoggerOptions,
 ) -> Result<HurlResult, String> {
+    let logger = Logger::from(logger_options);
+
     // Try to parse the content
     let hurl_file = parser::parse_hurl_file(content);
     let hurl_file = match hurl_file {
@@ -84,7 +87,7 @@ pub fn run(
         }
     };
 
-    log_run_info(&hurl_file, runner_options, variables, logger);
+    log_run_info(&hurl_file, runner_options, variables, &logger);
 
     // Now, we have a syntactically correct HurlFile instance, we can run it.
     let cookie_input_file = runner_options.cookie_input_file.clone();
@@ -106,19 +109,10 @@ pub fn run(
         }
         let entry = &hurl_file.entries[entry_index - 1];
 
-        // We compute these new overridden options for this entry, before entering into the `run`
+        // We compute the new logger for this entry, before entering into the `run`
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
-        let entry_verbosity = entry::get_entry_verbosity(entry, &runner_options.verbosity);
-        let logger = LoggerBuilder::new()
-            .color(logger.color)
-            .filename(&logger.filename)
-            .error_format(logger.error_format)
-            .progress_bar(entry_verbosity.is_none() && logger.progress_bar)
-            .verbose(entry_verbosity.is_some())
-            .test(logger.test)
-            .build();
-
+        let logger = get_entry_logger(entry, logger_options);
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
             if exit {
@@ -376,4 +370,20 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
         .errors
         .iter()
         .for_each(|e| logger.error_rich(content, e));
+}
+
+/// Creates a new logger for this entry.
+/// Verbosity can be overridden at entry level with an Options section so each
+/// entry has its own logger.
+fn get_entry_logger(entry: &Entry, logger_options: &LoggerOptions) -> Logger {
+    let entry_verbosity = entry::get_entry_verbosity(entry, &logger_options.verbosity);
+    let entry_logger_options = LoggerOptionsBuilder::new()
+        .color(logger_options.color)
+        .filename(&logger_options.filename)
+        .error_format(logger_options.error_format)
+        .progress_bar(entry_verbosity.is_none() && logger_options.progress_bar)
+        .verbosity(entry_verbosity)
+        .test(logger_options.test)
+        .build();
+    Logger::from(&entry_logger_options)
 }

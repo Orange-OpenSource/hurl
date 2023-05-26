@@ -27,11 +27,12 @@ use std::time::Duration;
 use atty::Stream;
 use clap::ArgMatches;
 use hurl::libcurl_version_info;
+use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Entry;
 
 use crate::cli;
-use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value, Verbosity};
+use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
@@ -59,6 +60,7 @@ pub struct Options {
     pub no_proxy: Option<String>,
     pub output: Option<String>,
     pub output_type: OutputType,
+    pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
     pub retry: bool,
@@ -131,7 +133,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::cookies_input_file())
         .arg(commands::cookies_output_file())
         .arg(commands::error_format())
-        .arg(commands::fail_at_en())
+        .arg(commands::fail_at_end())
         .arg(commands::file_root())
         .arg(commands::follow_location())
         .arg(commands::glob())
@@ -205,6 +207,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let junit_file = matches::junit_file(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
+    let progress_bar = matches::progress_bar(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
@@ -244,6 +247,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         junit_file,
         max_redirect,
         no_proxy,
+        progress_bar,
         proxy,
         output,
         output_type,
@@ -271,17 +275,12 @@ pub enum OutputType {
 }
 
 impl Options {
-    pub fn to(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
+    pub fn to_runner_options(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
         let cacert_file = self.cacert_file.clone();
         let client_cert_file = self.client_cert_file.clone();
         let client_key_file = self.client_key_file.clone();
         let connects_to = self.connects_to.clone();
         let follow_location = self.follow_location;
-        let verbosity = match (self.verbose, self.very_verbose) {
-            (_, true) => Some(Verbosity::VeryVerbose),
-            (true, false) => Some(Verbosity::Verbose),
-            _ => None,
-        };
         let insecure = self.insecure;
         let max_redirect = self.max_redirect;
         let proxy = self.proxy.clone();
@@ -350,6 +349,17 @@ impl Options {
             .to_entry(to_entry)
             .user(user)
             .user_agent(user_agent)
+            .build()
+    }
+
+    pub fn to_logger_options(&self, filename: &str) -> LoggerOptions {
+        let verbosity = Verbosity::from(self.verbose, self.very_verbose);
+        LoggerOptionsBuilder::new()
+            .color(self.color)
+            .error_format(self.error_format.clone().into())
+            .filename(filename)
+            .progress_bar(self.progress_bar)
+            .test(self.test)
             .verbosity(verbosity)
             .build()
     }

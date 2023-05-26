@@ -226,6 +226,15 @@ pub fn output_type(arg_matches: &ArgMatches) -> OutputType {
     }
 }
 
+pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
+    let verbose = verbose(arg_matches) || very_verbose(arg_matches);
+    test(arg_matches)
+        && !verbose
+        && !interactive(arg_matches)
+        && !is_ci()
+        && atty::is(Stream::Stderr)
+}
+
 pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "proxy")
 }
@@ -391,4 +400,10 @@ pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+/// Whether or not this running in a Continuous Integration environment.
+/// Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
+fn is_ci() -> bool {
+    env::var("CI").is_ok() || env::var("TF_BUILD").is_ok()
 }
