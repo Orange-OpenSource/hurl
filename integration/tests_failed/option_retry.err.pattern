@@ -3,15 +3,13 @@
 *     follow redirect: false
 *     insecure: false
 *     max redirect: 50
-*     retry: false
-*     retry max count: 10
+*     retry: 0
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
 * Entry options:
-* retry: true
+* retry: 2
 * retry-interval: 0
-* retry-max-count: 2
 *
 * Cookie store:
 *
@@ -38,9 +36,9 @@
 <
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:6:6
+*   --> tests_failed/option_retry.hurl:5:6
 *    |
-*  6 | HTTP 200
+*  5 | HTTP 200
 *    |      ^^^ actual value is <404>
 *    |
 *
@@ -49,9 +47,8 @@
 * Executing entry 1
 *
 * Entry options:
-* retry: true
+* retry: 2
 * retry-interval: 0
-* retry-max-count: 2
 *
 * Cookie store:
 *
@@ -78,9 +75,9 @@
 <
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:6:6
+*   --> tests_failed/option_retry.hurl:5:6
 *    |
-*  6 | HTTP 200
+*  5 | HTTP 200
 *    |      ^^^ actual value is <404>
 *    |
 *
@@ -89,9 +86,8 @@
 * Executing entry 1
 *
 * Entry options:
-* retry: true
+* retry: 2
 * retry-interval: 0
-* retry-max-count: 2
 *
 * Cookie store:
 *
@@ -120,9 +116,9 @@
 * Retry max count reached, no more retry
 *
 error: Assert status code
-  --> tests_failed/option_retry.hurl:6:6
+  --> tests_failed/option_retry.hurl:5:6
    |
- 6 | HTTP 200
+ 5 | HTTP 200
    |      ^^^ actual value is <404>
    |
 

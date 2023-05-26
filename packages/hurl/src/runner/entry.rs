@@ -236,7 +236,7 @@ impl ClientOptions {
             },
             insecure: runner_options.insecure,
             resolves: runner_options.resolves.clone(),
-            retry_max_count: runner_options.retry_max_count,
+            retry: runner_options.retry,
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
             connect_timeout: runner_options.connect_timeout,
@@ -335,16 +335,12 @@ pub fn get_entry_options(
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
                     }
                     EntryOption::Retry(option) => {
-                        runner_options.retry = option.value;
+                        runner_options.retry = Some(option.value);
                         logger.debug(format!("retry: {}", option.value).as_str());
                     }
                     EntryOption::RetryInterval(option) => {
                         runner_options.retry_interval = Duration::from_millis(option.value);
                         logger.debug(format!("retry-interval: {}", option.value).as_str());
-                    }
-                    EntryOption::RetryMaxCount(option) => {
-                        runner_options.retry_max_count = Some(option.value);
-                        logger.debug(format!("retry-max-count: {}", option.value).as_str());
                     }
                     EntryOption::Variable(VariableOption {
                         value: VariableDefinition { name, value, .. },

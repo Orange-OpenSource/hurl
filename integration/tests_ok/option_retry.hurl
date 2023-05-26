@@ -11,7 +11,7 @@ jsonpath "$.state" == "RUNNING"
 # Pull job status until it is completed
 GET http://localhost:8000/jobs/{{job_id}}
 [Options]
-retry: true
+retry: 10
 retry-interval: 100
 
 HTTP 200

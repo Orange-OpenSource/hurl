@@ -366,7 +366,6 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_max_redirect,
             option_retry,
             option_retry_interval,
-            option_retry_max_count,
             option_variable,
             option_verbose,
             option_very_verbose,
@@ -538,18 +537,19 @@ fn option_retry(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(natural, reader)?;
     let line_terminator0 = line_terminator(reader)?;
 
+    // FIXME: try to not unwrap redirect value
+    // and returns an error if not possible
     let option = RetryOption {
         line_terminators,
         space0,
         space1,
         space2,
-        value,
+        value: usize::try_from(value).unwrap(),
         line_terminator0,
     };
-
     Ok(EntryOption::Retry(option))
 }
 
@@ -571,32 +571,7 @@ fn option_retry_interval(reader: &mut Reader) -> ParseResult<'static, EntryOptio
         value,
         line_terminator0,
     };
-
     Ok(EntryOption::RetryInterval(option))
-}
-
-fn option_retry_max_count(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("retry-max-count", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(natural, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    // FIXME: try to not unwrap redirect value
-    // and returns an error if not possible
-    let option = RetryMaxCountOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value: usize::try_from(value).unwrap(),
-        line_terminator0,
-    };
-
-    Ok(EntryOption::RetryMaxCount(option))
 }
 
 fn option_variable(reader: &mut Reader) -> ParseResult<'static, EntryOption> {

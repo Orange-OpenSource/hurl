@@ -725,7 +725,6 @@ pub enum EntryOption {
     MaxRedirect(MaxRedirectOption),
     Retry(RetryOption),
     RetryInterval(RetryIntervalOption),
-    RetryMaxCount(RetryMaxCountOption),
     Variable(VariableOption),
     Verbose(VerboseOption),
     VeryVerbose(VeryVerboseOption),
@@ -782,16 +781,6 @@ pub struct ClientKeyOption {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RetryOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RetryIntervalOption {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
@@ -802,7 +791,7 @@ pub struct RetryIntervalOption {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RetryMaxCountOption {
+pub struct RetryOption {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub space1: Whitespace,

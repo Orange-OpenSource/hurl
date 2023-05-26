@@ -277,8 +277,12 @@ pub fn resolve() -> clap::Arg {
 pub fn retry() -> clap::Arg {
     clap::Arg::new("retry")
         .long("retry")
-        .help("Retry requests on errors")
-        .action(ArgAction::SetTrue)
+        .value_name("NUM")
+        .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
+        .allow_hyphen_values(true)
+        .default_value("0")
+        .value_parser(value_parser!(i32).range(-1..))
+        .num_args(1)
 }
 
 pub fn retry_interval() -> clap::Arg {
@@ -288,17 +292,6 @@ pub fn retry_interval() -> clap::Arg {
         .help("Interval in milliseconds before a retry")
         .value_parser(value_parser!(u64))
         .default_value("1000")
-        .num_args(1)
-}
-
-pub fn retry_max_count() -> clap::Arg {
-    clap::Arg::new("retry_max_count")
-        .long("retry-max-count")
-        .value_name("NUM")
-        .help("Maximum number of retries, -1 for unlimited retries")
-        .default_value("10".to_string())
-        .allow_hyphen_values(true)
-        .value_parser(value_parser!(i32).range(-1..))
         .num_args(1)
 }
 
