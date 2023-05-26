@@ -20,13 +20,13 @@ use std::collections::HashMap;
 
 use crate::runner;
 use crate::runner::RunnerOptions;
-use crate::util::logger::LoggerBuilder;
+use crate::util::logger::LoggerOptionsBuilder;
 
 #[test]
 fn test_hello() {
     let content = "GET http://localhost;8000/hello";
-    let logger = LoggerBuilder::new().build();
+    let logger_opts = LoggerOptionsBuilder::new().build();
     let variables = HashMap::new();
-    let runner_options = RunnerOptions::default();
-    runner::run(content, &runner_options, &variables, &logger).unwrap();
+    let runner_opts = RunnerOptions::default();
+    runner::run(content, &runner_opts, &variables, &logger_opts).unwrap();
 }
