@@ -63,9 +63,8 @@ pub struct Options {
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
-    pub retry: bool,
+    pub retry: Option<usize>,
     pub retry_interval: Duration,
-    pub retry_max_count: Option<usize>,
     pub ssl_no_revoke: bool,
     pub test: bool,
     pub timeout: Duration,
@@ -155,7 +154,6 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::resolve())
         .arg(commands::retry())
         .arg(commands::retry_interval())
-        .arg(commands::retry_max_count())
         .arg(commands::ssl_no_revoke())
         .arg(commands::test())
         .arg(commands::to_entry())
@@ -214,7 +212,6 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let resolves = matches::resolves(arg_matches);
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches);
-    let retry_max_count = matches::retry_max_count(arg_matches);
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
     let test = matches::test(arg_matches);
     let timeout = matches::timeout(arg_matches);
@@ -254,7 +251,6 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         resolves,
         retry,
         retry_interval,
-        retry_max_count,
         ssl_no_revoke,
         test,
         timeout,
@@ -318,7 +314,6 @@ impl Options {
         let resolves = self.resolves.clone();
         let retry = self.retry;
         let retry_interval = self.retry_interval;
-        let retry_max_count = self.retry_max_count;
         let ignore_asserts = self.ignore_asserts;
         let ssl_no_revoke = self.ssl_no_revoke;
 
@@ -343,7 +338,6 @@ impl Options {
             .resolves(&resolves)
             .retry(retry)
             .retry_interval(retry_interval)
-            .retry_max_count(retry_max_count)
             .ssl_no_revoke(ssl_no_revoke)
             .timeout(timeout)
             .to_entry(to_entry)

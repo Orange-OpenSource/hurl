@@ -30,7 +30,7 @@ fn simple_sample() {
     // - assert against hard coded values
     // - check that function parameters type are public through the hurl crate
     fn check_result(result: &HurlResult) {
-        assert_eq!(result.success, true);
+        assert!(result.success);
         assert_eq!(result.cookies.len(), 0);
         assert_eq!(result.entries.len(), 1);
         assert!(result.time_in_ms < 1000);
@@ -108,9 +108,8 @@ fn simple_sample() {
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
-        .retry(false)
+        .retry(Some(0))
         .retry_interval(Duration::from_secs(1))
-        .retry_max_count(Some(10))
         .timeout(Duration::from_secs(300))
         .to_entry(None)
         .user(None)
@@ -127,18 +126,18 @@ fn simple_sample() {
     let variables = HashMap::default();
 
     // Run the hurl file and check data:
-    let result = runner::run(&content, &runner_opts, &variables, &logger_opts).unwrap();
+    let result = runner::run(content, &runner_opts, &variables, &logger_opts).unwrap();
     check_result(&result);
 
     let entry = result.entries.first().unwrap();
-    check_entry(&entry);
+    check_entry(entry);
 
     let call = entry.calls.first().unwrap();
-    check_call(&call);
+    check_call(call);
 
     let request = &call.request;
-    check_request(&request);
+    check_request(request);
 
     let response = &call.response;
-    check_response(&response);
+    check_response(response);
 }

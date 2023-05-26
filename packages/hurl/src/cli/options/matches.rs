@@ -243,20 +243,16 @@ pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
     get_strings(arg_matches, "resolve").unwrap_or_default()
 }
 
-pub fn retry(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "retry")
+pub fn retry(arg_matches: &ArgMatches) -> Option<usize> {
+    match get::<i32>(arg_matches, "retry").unwrap() {
+        r if r == -1 => None,
+        r => Some(r as usize),
+    }
 }
 
 pub fn retry_interval(arg_matches: &ArgMatches) -> Duration {
     let value = get::<u64>(arg_matches, "retry_interval").unwrap();
     Duration::from_millis(value)
-}
-
-pub fn retry_max_count(arg_matches: &ArgMatches) -> Option<usize> {
-    match get::<i32>(arg_matches, "retry_max_count").unwrap() {
-        r if r == -1 => None,
-        r => Some(r as usize),
-    }
 }
 
 pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {

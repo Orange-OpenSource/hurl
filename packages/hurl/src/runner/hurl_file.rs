@@ -153,30 +153,22 @@ pub fn run(
 
         // Check if we need to retry.
         let has_error = !entry_result.errors.is_empty();
-        let (retry, retry_max_count, retry_interval) = match &options {
-            Ok(options) => (
-                options.retry,
-                options.retry_max_count,
-                options.retry_interval,
-            ),
-            Err(_) => (
-                runner_options.retry,
-                runner_options.retry_max_count,
-                runner_options.retry_interval,
-            ),
+        let (retry_opts, retry_interval) = match &options {
+            Ok(options) => (options.retry, options.retry_interval),
+            Err(_) => (runner_options.retry, runner_options.retry_interval),
         };
-        let retry_max_reached = match retry_max_count {
+        let retry_max_reached = match retry_opts {
             Some(r) => retry_count > r,
             None => false,
         };
-        let retry = retry && !retry_max_reached && has_error;
+        let retry = retry_opts.is_some() && !retry_max_reached && has_error;
 
         // If `retry_max_reached` is true, we print now a warning, before displaying
         // any assert error so any potential error is the last thing displayed to the user.
         // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
         // we first log the error and a potential warning about retrying.
         logger.test_erase_line();
-        if retry_max_reached {
+        if retry_max_reached && retry_opts != Some(0) {
             logger.debug_important("Retry max count reached, no more retry");
             logger.debug("");
         }
@@ -331,9 +323,9 @@ fn log_run_info(
     if let Some(proxy) = &runner_options.proxy {
         logger.debug(format!("    proxy: {proxy}").as_str());
     }
-    logger.debug(format!("    retry: {}", runner_options.retry).as_str());
-    if let Some(n) = runner_options.retry_max_count {
-        logger.debug(format!("    retry max count: {n}").as_str());
+    match runner_options.retry {
+        None => logger.debug("    retry: indefinitely".to_string().as_str()),
+        Some(n) => logger.debug(format!("    retry: {n}").as_str()),
     }
     if !variables.is_empty() {
         logger.debug_important("Variables:");

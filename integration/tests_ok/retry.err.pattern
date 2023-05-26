@@ -3,8 +3,7 @@
 *     follow redirect: false
 *     insecure: false
 *     max redirect: 50
-*     retry: true
-*     retry max count: 10
+*     retry: 10
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *

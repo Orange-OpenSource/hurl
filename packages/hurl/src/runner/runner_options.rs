@@ -40,9 +40,8 @@ pub struct RunnerOptionsBuilder {
     pre_entry: Option<fn(Entry) -> bool>,
     proxy: Option<String>,
     resolves: Vec<String>,
-    retry: bool,
+    retry: Option<usize>,
     retry_interval: Duration,
-    retry_max_count: Option<usize>,
     ssl_no_revoke: bool,
     timeout: Duration,
     to_entry: Option<usize>,
@@ -71,9 +70,8 @@ impl Default for RunnerOptionsBuilder {
             pre_entry: None,
             proxy: None,
             resolves: vec![],
-            retry: false,
+            retry: Some(0),
             retry_interval: Duration::from_millis(1000),
-            retry_max_count: Some(10),
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             to_entry: None,
@@ -217,10 +215,10 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Retries requests if any error occurs (asserts, captures, runtimes etc...).
+    /// Sets maximum number of retries.
     ///
-    /// Default is false.
-    pub fn retry(&mut self, retry: bool) -> &mut Self {
+    /// Default is 0.
+    pub fn retry(&mut self, retry: Option<usize>) -> &mut Self {
         self.retry = retry;
         self
     }
@@ -230,14 +228,6 @@ impl RunnerOptionsBuilder {
     /// Default is 1000 ms.
     pub fn retry_interval(&mut self, retry_interval: Duration) -> &mut Self {
         self.retry_interval = retry_interval;
-        self
-    }
-
-    /// Sets maximum number of retries.
-    ///
-    /// Default is 10.
-    pub fn retry_max_count(&mut self, retry_max_count: Option<usize>) -> &mut Self {
-        self.retry_max_count = retry_max_count;
         self
     }
 
@@ -295,7 +285,6 @@ impl RunnerOptionsBuilder {
             resolves: self.resolves.clone(),
             retry: self.retry,
             retry_interval: self.retry_interval,
-            retry_max_count: self.retry_max_count,
             ssl_no_revoke: self.ssl_no_revoke,
             timeout: self.timeout,
             to_entry: self.to_entry,
@@ -325,9 +314,8 @@ pub struct RunnerOptions {
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,
     pub(crate) proxy: Option<String>,
     pub(crate) resolves: Vec<String>,
-    pub(crate) retry: bool,
+    pub(crate) retry: Option<usize>,
     pub(crate) retry_interval: Duration,
-    pub(crate) retry_max_count: Option<usize>,
     pub(crate) ssl_no_revoke: bool,
     pub(crate) timeout: Duration,
     pub(crate) to_entry: Option<usize>,

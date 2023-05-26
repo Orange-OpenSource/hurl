@@ -211,7 +211,6 @@ impl HtmlFormatter {
             EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
             EntryOption::Retry(option) => self.fmt_retry_option(option),
             EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
-            EntryOption::RetryMaxCount(option) => self.fmt_retry_max_count_option(option),
             EntryOption::Variable(option) => self.fmt_variable_option(option),
             EntryOption::Verbose(option) => self.fmt_verbose_option(option),
             EntryOption::VeryVerbose(option) => self.fmt_very_verbose_option(option),
@@ -317,7 +316,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space1);
         self.buffer.push(':');
         self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
+        self.fmt_number(option.value);
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }
@@ -327,19 +326,6 @@ impl HtmlFormatter {
         self.fmt_span_open("line");
         self.fmt_space(&option.space0);
         self.fmt_string("retry-interval");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_number(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_retry_max_count_option(&mut self, option: &RetryMaxCountOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("retry-max-count");
         self.fmt_space(&option.space1);
         self.buffer.push(':');
         self.fmt_space(&option.space2);
