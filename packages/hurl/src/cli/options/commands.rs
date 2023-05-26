@@ -104,7 +104,7 @@ pub fn error_format() -> clap::Arg {
         .help("Control the format of error messages")
 }
 
-pub fn fail_at_en() -> clap::Arg {
+pub fn fail_at_end() -> clap::Arg {
     clap::Arg::new("fail_at_end")
         .long("fail-at-end")
         .help("Fail at end")

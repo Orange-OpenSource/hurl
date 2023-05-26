@@ -23,11 +23,10 @@ use std::time::Instant;
 use std::{env, process};
 
 use crate::cli::options::OptionsError;
-use atty::Stream;
 use colored::control;
 use hurl::report::{html, junit};
 use hurl::runner::HurlResult;
-use hurl::util::logger::{BaseLogger, Logger, LoggerBuilder};
+use hurl::util::logger::{BaseLogger, Logger, LoggerOptionsBuilder, Verbosity};
 use hurl::{output, runner};
 
 const EXIT_OK: i32 = 0;
@@ -70,7 +69,6 @@ fn main() {
     let verbose = opts.verbose || opts.very_verbose || opts.interactive;
     let base_logger = BaseLogger::new(opts.color, verbose);
 
-    let progress_bar = opts.test && !verbose && !is_ci() && atty::is(Stream::Stderr);
     let current_dir = env::current_dir();
     let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
@@ -88,20 +86,22 @@ fn main() {
         let content = cli::read_to_string(filename.as_str());
         let content = unwrap_or_exit(content, EXIT_ERROR_PARSING, &base_logger);
 
-        let logger = LoggerBuilder::new()
+        let verbosity = Verbosity::from(opts.verbose, opts.very_verbose);
+        let logger_options = LoggerOptionsBuilder::new()
             .color(opts.color)
             .error_format(opts.error_format.clone().into())
             .filename(filename)
-            .progress_bar(progress_bar)
+            .progress_bar(opts.progress_bar)
             .test(opts.test)
-            .verbose(verbose)
+            .verbosity(verbosity)
             .build();
+        let logger = Logger::from(&logger_options);
 
         let total = opts.input_files.len();
         logger.test_running(current + 1, total);
 
         // Run our Hurl file now
-        let hurl_result = execute(&content, filename, current_dir, &opts, &logger);
+        let hurl_result = execute(&content, filename, current_dir, &opts);
         let hurl_result = match hurl_result {
             Ok(h) => h,
             Err(_) => process::exit(EXIT_ERROR_PARSING),
@@ -172,11 +172,11 @@ fn execute(
     filename: &str,
     current_dir: &Path,
     cli_options: &cli::options::Options,
-    logger: &Logger,
 ) -> Result<HurlResult, String> {
     let variables = &cli_options.variables;
-    let runner_options = cli_options.to(filename, current_dir);
-    runner::run(content, &runner_options, variables, logger)
+    let runner_options = cli_options.to_runner_options(filename, current_dir);
+    let logger_options = cli_options.to_logger_options(filename);
+    runner::run(content, &runner_options, variables, &logger_options)
 }
 
 #[cfg(target_family = "unix")]
@@ -306,12 +306,6 @@ fn get_summary(runs: &[HurlRun], duration: u128) -> String {
              Failed files:    {failed} ({failed_percent:.1}%)\n\
              Duration:        {duration} ms\n"
     )
-}
-
-/// Whether or not this running in a Continuous Integration environment.
-/// Code borrowed from <https://github.com/rust-lang/cargo/blob/master/crates/cargo-util/src/lib.rs>
-fn is_ci() -> bool {
-    env::var("CI").is_ok() || env::var("TF_BUILD").is_ok()
 }
 
 #[cfg(test)]

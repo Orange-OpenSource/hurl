@@ -66,6 +66,28 @@ impl BaseLogger {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum ErrorFormat {
+    Short,
+    Long,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Verbosity {
+    Verbose,
+    VeryVerbose,
+}
+
+impl Verbosity {
+    pub fn from(verbose: bool, very_verbose: bool) -> Option<Verbosity> {
+        match (verbose, very_verbose) {
+            (_, true) => Some(Verbosity::VeryVerbose),
+            (true, false) => Some(Verbosity::Verbose),
+            _ => None,
+        }
+    }
+}
+
 /// A Hurl dedicated logger for an Hurl file. Contrary to [`BaseLogger`], this logger can display
 /// rich error for parsing and runtime errors.
 pub struct Logger {
@@ -74,41 +96,44 @@ pub struct Logger {
     pub(crate) filename: String,
     pub(crate) progress_bar: bool,
     pub(crate) test: bool,
-    pub(crate) verbose: bool,
+    pub(crate) verbosity: Option<Verbosity>,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum ErrorFormat {
-    Short,
-    Long,
+impl From<&LoggerOptions> for Logger {
+    fn from(options: &LoggerOptions) -> Self {
+        Logger {
+            color: options.color,
+            error_format: options.error_format,
+            filename: options.filename.clone(),
+            progress_bar: options.progress_bar,
+            test: options.test,
+            verbosity: options.verbosity,
+        }
+    }
 }
 
-pub struct LoggerBuilder {
+pub struct LoggerOptions {
+    pub(crate) color: bool,
+    pub(crate) error_format: ErrorFormat,
+    pub(crate) filename: String,
+    pub(crate) progress_bar: bool,
+    pub(crate) test: bool,
+    pub(crate) verbosity: Option<Verbosity>,
+}
+
+pub struct LoggerOptionsBuilder {
     color: bool,
     error_format: ErrorFormat,
     filename: String,
     progress_bar: bool,
     test: bool,
-    verbose: bool,
+    verbosity: Option<Verbosity>,
 }
 
-impl Default for LoggerBuilder {
-    fn default() -> Self {
-        LoggerBuilder {
-            color: false,
-            error_format: ErrorFormat::Short,
-            filename: "".to_string(),
-            progress_bar: false,
-            test: false,
-            verbose: false,
-        }
-    }
-}
-
-impl LoggerBuilder {
+impl LoggerOptionsBuilder {
     /// Returns a new Logger builder with a default values.
     pub fn new() -> Self {
-        LoggerBuilder::default()
+        LoggerOptionsBuilder::default()
     }
 
     /// Sets color usage.
@@ -126,8 +151,8 @@ impl LoggerBuilder {
     }
 
     /// Sets verbose logger.
-    pub fn verbose(&mut self, verbose: bool) -> &mut Self {
-        self.verbose = verbose;
+    pub fn verbosity(&mut self, verbosity: Option<Verbosity>) -> &mut Self {
+        self.verbosity = verbosity;
         self
     }
 
@@ -150,14 +175,27 @@ impl LoggerBuilder {
     }
 
     /// Creates a new logger.
-    pub fn build(&self) -> Logger {
-        Logger {
+    pub fn build(&self) -> LoggerOptions {
+        LoggerOptions {
             color: self.color,
             error_format: self.error_format,
             filename: self.filename.clone(),
             progress_bar: self.progress_bar,
             test: self.test,
-            verbose: self.verbose,
+            verbosity: self.verbosity,
+        }
+    }
+}
+
+impl Default for LoggerOptionsBuilder {
+    fn default() -> Self {
+        LoggerOptionsBuilder {
+            color: false,
+            error_format: ErrorFormat::Short,
+            filename: "".to_string(),
+            progress_bar: false,
+            test: false,
+            verbosity: None,
         }
     }
 }
@@ -168,7 +206,7 @@ impl Logger {
     }
 
     pub fn debug(&self, message: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -179,7 +217,7 @@ impl Logger {
     }
 
     pub fn debug_curl(&self, message: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -190,7 +228,7 @@ impl Logger {
     }
 
     pub fn debug_error(&self, content: &str, error: &dyn Error) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -201,7 +239,7 @@ impl Logger {
     }
 
     pub fn debug_header_in(&self, name: &str, value: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -212,7 +250,7 @@ impl Logger {
     }
 
     pub fn debug_header_out(&self, name: &str, value: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -223,7 +261,7 @@ impl Logger {
     }
 
     pub fn debug_important(&self, message: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -234,7 +272,7 @@ impl Logger {
     }
 
     pub fn debug_status_version_in(&self, line: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -269,7 +307,7 @@ impl Logger {
     }
 
     pub fn debug_method_version_out(&self, line: &str) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {
@@ -280,7 +318,7 @@ impl Logger {
     }
 
     pub fn capture(&self, name: &str, value: &Value) {
-        if !self.verbose {
+        if self.verbosity.is_none() {
             return;
         }
         if self.color {

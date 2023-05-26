@@ -23,12 +23,6 @@ use crate::http::{Call, Cookie};
 use crate::runner::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Verbosity {
-    Verbose,
-    VeryVerbose,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
     pub entries: Vec<EntryResult>,
     pub time_in_ms: u128,

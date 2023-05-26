@@ -19,7 +19,6 @@ use std::time::Duration;
 
 use hurl_core::ast::Entry;
 
-use crate::runner::Verbosity;
 use crate::util::path::ContextDir;
 
 pub struct RunnerOptionsBuilder {
@@ -49,7 +48,6 @@ pub struct RunnerOptionsBuilder {
     to_entry: Option<usize>,
     user: Option<String>,
     user_agent: Option<String>,
-    verbosity: Option<Verbosity>,
 }
 
 impl Default for RunnerOptionsBuilder {
@@ -81,7 +79,6 @@ impl Default for RunnerOptionsBuilder {
             to_entry: None,
             user: None,
             user_agent: None,
-            verbosity: None,
         }
     }
 }
@@ -275,12 +272,6 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets verbosity level.
-    pub fn verbosity(&mut self, verbosity: Option<Verbosity>) -> &mut Self {
-        self.verbosity = verbosity;
-        self
-    }
-
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
@@ -310,7 +301,6 @@ impl RunnerOptionsBuilder {
             to_entry: self.to_entry,
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
-            verbosity: self.verbosity.clone(),
         }
     }
 }
@@ -343,7 +333,6 @@ pub struct RunnerOptions {
     pub(crate) to_entry: Option<usize>,
     pub(crate) user: Option<String>,
     pub(crate) user_agent: Option<String>,
-    pub(crate) verbosity: Option<Verbosity>,
 }
 
 impl Default for RunnerOptions {

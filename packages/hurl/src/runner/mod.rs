@@ -18,9 +18,7 @@
 
 //! A runner for Hurl files. If you want to execute an Hurl file, this is the right place.
 
-pub use self::core::{
-    AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError, Verbosity,
-};
+pub use self::core::{AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError};
 pub use self::hurl_file::run;
 pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::Value;

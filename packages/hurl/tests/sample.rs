@@ -16,8 +16,10 @@
  *
  */
 use hurl::runner;
-use hurl::runner::{Call, EntryResult, HurlResult, Request, Response, Verbosity, Version};
-use hurl::util::logger::LoggerBuilder;
+use hurl::runner::{
+    Call, EntryResult, HurlResult, Request, Response, RunnerOptionsBuilder, Version,
+};
+use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
 use std::collections::HashMap;
 use std::time::Duration;
@@ -90,14 +92,8 @@ fn simple_sample() {
 
     let filename = "-";
 
-    let logger = LoggerBuilder::new()
-        .color(false)
-        .verbose(false)
-        .filename(filename)
-        .build();
-
-    // Define runner options
-    let runner_options = runner::RunnerOptionsBuilder::new()
+    // Define runner and logger options
+    let runner_opts = RunnerOptionsBuilder::new()
         .cacert_file(None)
         .compressed(false)
         .connect_timeout(Duration::from_secs(300))
@@ -119,14 +115,19 @@ fn simple_sample() {
         .to_entry(None)
         .user(None)
         .user_agent(None)
-        .verbosity(Some(Verbosity::VeryVerbose))
+        .build();
+
+    let logger_opts = LoggerOptionsBuilder::new()
+        .color(false)
+        .filename(filename)
+        .verbosity(None)
         .build();
 
     // Set variables
     let variables = HashMap::default();
 
     // Run the hurl file and check data:
-    let result = runner::run(&content, &runner_options, &variables, &logger).unwrap();
+    let result = runner::run(&content, &runner_opts, &variables, &logger_opts).unwrap();
     check_result(&result);
 
     let entry = result.entries.first().unwrap();
