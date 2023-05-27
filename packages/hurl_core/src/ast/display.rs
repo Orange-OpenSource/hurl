@@ -238,6 +238,17 @@ impl PredicateFuncValue {
     }
 }
 
+impl fmt::Display for Retry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let value = match self {
+            Retry::None => 0,
+            Retry::Finite(n) => *n as i32,
+            Retry::Infinite => -1,
+        };
+        write!(f, "{}", value)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

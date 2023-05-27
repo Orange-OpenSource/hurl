@@ -29,7 +29,7 @@ use clap::ArgMatches;
 use hurl::libcurl_version_info;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
-use hurl_core::ast::Entry;
+use hurl_core::ast::{Entry, Retry};
 
 use crate::cli;
 use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
@@ -63,7 +63,7 @@ pub struct Options {
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
-    pub retry: Option<usize>,
+    pub retry: Retry,
     pub retry_interval: Duration,
     pub ssl_no_revoke: bool,
     pub test: bool,

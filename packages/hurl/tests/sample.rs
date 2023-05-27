@@ -21,6 +21,7 @@ use hurl::runner::{
 };
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
+use hurl_core::ast::Retry;
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -108,7 +109,7 @@ fn simple_sample() {
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
-        .retry(Some(0))
+        .retry(Retry::None)
         .retry_interval(Duration::from_secs(1))
         .timeout(Duration::from_secs(300))
         .to_entry(None)

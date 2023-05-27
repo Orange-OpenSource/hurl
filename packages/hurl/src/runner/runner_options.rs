@@ -17,7 +17,7 @@
  */
 use std::time::Duration;
 
-use hurl_core::ast::Entry;
+use hurl_core::ast::{Entry, Retry};
 
 use crate::util::path::ContextDir;
 
@@ -40,7 +40,7 @@ pub struct RunnerOptionsBuilder {
     pre_entry: Option<fn(Entry) -> bool>,
     proxy: Option<String>,
     resolves: Vec<String>,
-    retry: Option<usize>,
+    retry: Retry,
     retry_interval: Duration,
     ssl_no_revoke: bool,
     timeout: Duration,
@@ -70,7 +70,7 @@ impl Default for RunnerOptionsBuilder {
             pre_entry: None,
             proxy: None,
             resolves: vec![],
-            retry: Some(0),
+            retry: Retry::None,
             retry_interval: Duration::from_millis(1000),
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
@@ -218,7 +218,7 @@ impl RunnerOptionsBuilder {
     /// Sets maximum number of retries.
     ///
     /// Default is 0.
-    pub fn retry(&mut self, retry: Option<usize>) -> &mut Self {
+    pub fn retry(&mut self, retry: Retry) -> &mut Self {
         self.retry = retry;
         self
     }
@@ -314,7 +314,7 @@ pub struct RunnerOptions {
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,
     pub(crate) proxy: Option<String>,
     pub(crate) resolves: Vec<String>,
-    pub(crate) retry: Option<usize>,
+    pub(crate) retry: Retry,
     pub(crate) retry_interval: Duration,
     pub(crate) ssl_no_revoke: bool,
     pub(crate) timeout: Duration,

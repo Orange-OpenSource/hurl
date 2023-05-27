@@ -335,7 +335,7 @@ pub fn get_entry_options(
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
                     }
                     EntryOption::Retry(option) => {
-                        runner_options.retry = Some(option.value);
+                        runner_options.retry = option.value;
                         logger.debug(format!("retry: {}", option.value).as_str());
                     }
                     EntryOption::RetryInterval(option) => {
