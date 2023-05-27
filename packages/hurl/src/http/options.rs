@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::Retry;
 use std::time::Duration;
 
 #[derive(Debug, Clone)]
@@ -32,7 +33,7 @@ pub struct ClientOptions {
     pub no_proxy: Option<String>,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
-    pub retry: Option<usize>,
+    pub retry: Retry,
     pub ssl_no_revoke: bool,
     pub timeout: Duration,
     pub user: Option<String>,
@@ -62,7 +63,7 @@ impl Default for ClientOptions {
             no_proxy: None,
             proxy: None,
             resolves: vec![],
-            retry: Some(0),
+            retry: Retry::None,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             user: None,
@@ -167,7 +168,7 @@ mod tests {
                     "foo.com:80:192.168.0.1".to_string(),
                     "bar.com:443:127.0.0.1".to_string()
                 ],
-                retry: Some(0),
+                retry: Retry::None,
                 ssl_no_revoke: false,
                 timeout: Duration::from_secs(10),
                 connect_timeout: Duration::from_secs(20),

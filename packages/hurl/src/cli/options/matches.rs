@@ -22,6 +22,7 @@ use crate::cli::OutputType;
 use atty::Stream;
 use clap::ArgMatches;
 use hurl::runner::Value;
+use hurl_core::ast::Retry;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
@@ -243,10 +244,11 @@ pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
     get_strings(arg_matches, "resolve").unwrap_or_default()
 }
 
-pub fn retry(arg_matches: &ArgMatches) -> Option<usize> {
+pub fn retry(arg_matches: &ArgMatches) -> Retry {
     match get::<i32>(arg_matches, "retry").unwrap() {
-        r if r == -1 => None,
-        r => Some(r as usize),
+        r if r == -1 => Retry::Infinite,
+        r if r == 0 => Retry::None,
+        r => Retry::Finite(r as usize),
     }
 }
 

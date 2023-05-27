@@ -1024,13 +1024,25 @@ impl Tokenizable for RetryOption {
                 .collect(),
         );
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("retry-max-count".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Number(self.value.to_string()));
+        if !matches!(self.value, Retry::None) {
+            tokens.push(Token::String("retry".to_string()));
+            tokens.append(&mut self.space1.tokenize());
+            tokens.push(Token::Colon(String::from(":")));
+            tokens.append(&mut self.space2.tokenize());
+            tokens.append(&mut self.value.tokenize());
+        }
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens
+    }
+}
+
+impl Tokenizable for Retry {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            Retry::None => vec![Token::Number("0".to_string())],
+            Retry::Finite(n) => vec![Token::Number(n.to_string())],
+            Retry::Infinite => vec![Token::Number("-1".to_string())],
+        }
     }
 }
 

@@ -157,25 +157,26 @@ pub fn run(
             Ok(options) => (options.retry, options.retry_interval),
             Err(_) => (runner_options.retry, runner_options.retry_interval),
         };
-        let retry_max_reached = match retry_opts {
-            Some(r) => retry_count > r,
-            None => false,
+        // The retry threshold can only reached with a finite positive number of retries
+        let retry_max_reached = if let Retry::Finite(r) = retry_opts {
+            retry_count > r
+        } else {
+            false
         };
-        let retry = retry_opts.is_some() && !retry_max_reached && has_error;
-
         // If `retry_max_reached` is true, we print now a warning, before displaying
         // any assert error so any potential error is the last thing displayed to the user.
         // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
         // we first log the error and a potential warning about retrying.
         logger.test_erase_line();
-        if retry_max_reached && retry_opts != Some(0) {
+        if retry_max_reached {
             logger.debug_important("Retry max count reached, no more retry");
             logger.debug("");
         }
+
+        let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
         if has_error {
             log_errors(&entry_result, content, retry, &logger);
         }
-
         entries.push(entry_result);
 
         if retry {
@@ -323,10 +324,7 @@ fn log_run_info(
     if let Some(proxy) = &runner_options.proxy {
         logger.debug(format!("    proxy: {proxy}").as_str());
     }
-    match runner_options.retry {
-        None => logger.debug("    retry: indefinitely".to_string().as_str()),
-        Some(n) => logger.debug(format!("    retry: {n}").as_str()),
-    }
+    logger.debug(format!("    retry: {}", runner_options.retry).as_str());
     if !variables.is_empty() {
         logger.debug_important("Variables:");
         for (name, value) in variables.iter() {

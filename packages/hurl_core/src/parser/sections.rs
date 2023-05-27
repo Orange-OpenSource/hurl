@@ -537,22 +537,38 @@ fn option_retry(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(natural, reader)?;
+    let value = retry(reader)?;
     let line_terminator0 = line_terminator(reader)?;
-
-    // FIXME: try to not unwrap redirect value
-    // and returns an error if not possible
     let option = RetryOption {
         line_terminators,
         space0,
         space1,
         space2,
-        value: usize::try_from(value).unwrap(),
+        value,
         line_terminator0,
     };
     Ok(EntryOption::Retry(option))
 }
 
+fn retry(reader: &mut Reader) -> ParseResult<Retry> {
+    let pos = reader.state.pos.clone();
+    let value = nonrecover(integer, reader)?;
+    if value == -1 {
+        Ok(Retry::Infinite)
+    } else if value == 0 {
+        Ok(Retry::None)
+    } else if value > 0 {
+        Ok(Retry::Finite(value as usize))
+    } else {
+        Err(Error {
+            pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "Expecting a retry value".to_string(),
+            },
+        })
+    }
+}
 fn option_retry_interval(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;

@@ -796,7 +796,7 @@ pub struct RetryOption {
     pub space0: Whitespace,
     pub space1: Whitespace,
     pub space2: Whitespace,
-    pub value: usize,
+    pub value: Retry,
     pub line_terminator0: LineTerminator,
 }
 
@@ -909,4 +909,11 @@ pub enum FilterValue {
     ToInt,
     UrlDecode,
     UrlEncode,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Copy)]
+pub enum Retry {
+    None,
+    Finite(usize),
+    Infinite,
 }

@@ -316,7 +316,7 @@ impl HtmlFormatter {
         self.fmt_space(&option.space1);
         self.buffer.push(':');
         self.fmt_space(&option.space2);
-        self.fmt_number(option.value);
+        self.fmt_retry(option.value);
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }
@@ -928,6 +928,14 @@ impl HtmlFormatter {
             self.fmt_span_close();
             self.fmt_lt(line_terminator);
         }
+    }
+
+    fn fmt_retry(&mut self, retry: Retry) {
+        match retry {
+            Retry::Finite(n) => self.fmt_span("number", &n.to_string()),
+            Retry::Infinite => self.fmt_span("number", "-1"),
+            _ => {}
+        };
     }
 }
 
