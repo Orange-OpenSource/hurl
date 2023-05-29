@@ -21,6 +21,7 @@
 mod file;
 mod report;
 mod testcase;
+mod waterfall;
 
 pub use report::write_report;
 pub use testcase::Testcase;

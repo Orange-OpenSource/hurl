@@ -227,7 +227,7 @@ fn create_html_report(runs: &[HurlRun], dir_path: &Path) -> Result<(), cli::CliE
     let mut testcases = vec![];
     for run in runs.iter() {
         let testcase = html::Testcase::from(&run.hurl_result, &run.filename);
-        testcase.write_html(&run.content, dir_path)?;
+        testcase.write_html(&run.content, &run.hurl_result.entries, dir_path)?;
         testcases.push(testcase);
     }
     html::write_report(dir_path, &testcases)?;

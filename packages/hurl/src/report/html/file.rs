@@ -15,7 +15,9 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::HurlFile;
 use regex::{Captures, Regex};
+use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
@@ -23,25 +25,47 @@ use hurl_core::parser;
 
 use crate::report::html::Testcase;
 use crate::report::Error;
-use crate::runner::Error as RunnerError;
+use crate::runner::{EntryResult, Error as RunnerError};
 use crate::util::logger;
 
 impl Testcase {
     /// Exports a [`Testcase`] to HTML.
     ///
-    /// For the moment, it's just an export of this HTML file, with syntax colored.
-    pub fn write_html(&self, content: &str, dir_path: &Path) -> Result<(), Error> {
+    /// It will create two HTML files:
+    /// - an HTML for the Hurl source file (with potential errors and syntax colored),
+    /// - an HTML for the entries waterfall
+    pub fn write_html(
+        &self,
+        content: &str,
+        entries: &[EntryResult],
+        dir_path: &Path,
+    ) -> Result<(), Error> {
+        // We create the HTML Hurl source file.
         let output_file = dir_path.join("store").join(format!("{}.html", self.id));
-        let mut file = match std::fs::File::create(&output_file) {
-            Err(why) => {
-                return Err(Error {
-                    message: format!("Issue writing to {}: {:?}", output_file.display(), why),
-                });
-            }
-            Ok(file) => file,
-        };
+        let mut file = File::create(output_file)?;
+
+        // We parse the content as we'll reuse the AST to construct the HTML source file, and
+        // the waterfall.
+        // TODO: for the moment, we can only have parseable file.
         let hurl_file = parser::parse_hurl_file(content).unwrap();
-        let file_div = hurl_core::format::format_html(&hurl_file, false);
+
+        let html = self.get_file_html(&hurl_file, content);
+        file.write_all(html.as_bytes())?;
+
+        // Then we create the HTML entries waterfall.
+        let output_file = dir_path
+            .join("store")
+            .join(format!("{}-waterfall.html", self.id));
+        let mut file = File::create(output_file)?;
+        let html = self.get_waterfall_html(&hurl_file, entries);
+        file.write_all(html.as_bytes())?;
+
+        Ok(())
+    }
+
+    /// Returns the HTML string of the Hurl source file (syntax colored and errors).
+    fn get_file_html(&self, hurl_file: &HurlFile, content: &str) -> String {
+        let file_div = hurl_core::format::format_html(hurl_file, false);
         let file_div = underline_errors(&file_div, &self.errors);
         let lines_div = get_numbered_lines(content);
         let file_css = include_str!("resources/file.css");
@@ -52,14 +76,15 @@ impl Testcase {
         };
 
         let errors = get_html_errors(&self.filename, content, &self.errors);
-        let errors_count = if !self.errors.is_empty() {
-            self.errors.len().to_string()
+        let errors_count = if !errors.is_empty() {
+            errors.len().to_string()
         } else {
             "-".to_string()
         };
         let hurl_css = hurl_core::format::hurl_css();
-        let href = format!("{}.html", self.id);
-        let html = format!(
+        let href_file = format!("{}.html", self.id);
+        let href_waterfall = format!("{}-waterfall.html", self.id);
+        format!(
             include_str!("resources/file.html"),
             file_css = file_css,
             hurl_css = hurl_css,
@@ -69,15 +94,10 @@ impl Testcase {
             errors = errors,
             filename = self.filename,
             status = status,
-            href = href,
+            href_file = href_file,
+            href_waterfall = href_waterfall,
             duration = self.time_in_ms
-        );
-        if let Err(why) = file.write_all(html.as_bytes()) {
-            return Err(Error {
-                message: format!("Issue writing to {}: {:?}", output_file.display(), why),
-            });
-        }
-        Ok(())
+        )
     }
 }
 

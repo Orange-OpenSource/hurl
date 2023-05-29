@@ -34,3 +34,11 @@ impl fmt::Display for Error {
         write!(f, "{}", self.message)
     }
 }
+
+impl From<std::io::Error> for Error {
+    fn from(e: std::io::Error) -> Self {
+        Self {
+            message: e.to_string(),
+        }
+    }
+}

@@ -11,9 +11,13 @@
 <div>
     <div class="container">
         <div class="report-nav">
-            <div class="report-nav-links"><a href="../index.html">Report</a></div>
+            <div class="report-nav-links">
+                <div><a href="../index.html">Report</a></div>
+                <div><a href="{href_file}">File</a></div>
+                <div><a href="{href_waterfall}">Waterfall</a></div>
+            </div>
             <div class="report-nav-summary">
-                <div><div class="item-name">File:</div><div><a href="{href}">{filename}</a></div></div>
+                <div><div class="item-name">File:</div><div><a href="{href_file}">{filename}</a></div></div>
                 <div><div class="item-name">Status:</div><div>{status}</div></div>
                 <div><div class="item-name">Duration:</div><div>{duration} ms</div></div>
                 <div><div class="item-name">Errors:</div><div>{errors_count}</div></div>

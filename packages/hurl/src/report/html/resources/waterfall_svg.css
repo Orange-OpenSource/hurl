@@ -1,0 +1,30 @@
+
+.grid-labels {
+    font: 15px sans-serif;
+}
+
+.call-detail {
+    display: none;
+    font: 17px sans-serif;
+}
+
+.call-summary:hover + .call-detail, .call-detail:hover {
+    display: block;
+}
+
+.call-detail-total {
+    font-weight: bold;
+}
+
+a:link, a:visited {
+    cursor: pointer;
+}
+
+a text, text a {
+    fill: blue;
+    text-decoration: underline;
+}
+
+a:hover, a:active {
+    outline: dotted 1px blue;
+}
