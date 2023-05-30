@@ -83,7 +83,7 @@ pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
 }
 
 pub fn input_file(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsError> {
-    match get_string(arg_matches, "INPUT") {
+    match get_string(arg_matches, "input_file") {
         None => Ok(None),
         Some(s) => {
             let path = Path::new(&s);
