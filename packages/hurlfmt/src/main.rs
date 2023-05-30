@@ -48,7 +48,6 @@ fn main() {
             }
         },
     };
-
     init_colored();
 
     let log_error_message = cli::make_logger_error_message(opts.color);
@@ -128,7 +127,20 @@ fn main() {
                 } else {
                     output
                 };
-                write_output(output.into_bytes(), opts.output_file);
+                let output_file = match opts.output_file {
+                    None => {
+                        if opts.in_place {
+                            Some(
+                                opts.input_file
+                                    .expect("an input file when --in-place is set"),
+                            )
+                        } else {
+                            None
+                        }
+                    }
+                    v => v,
+                };
+                write_output(output.into_bytes(), output_file);
             }
         }
     }

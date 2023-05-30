@@ -55,7 +55,7 @@ pub fn in_place() -> clap::Arg {
 }
 
 pub fn input_file() -> clap::Arg {
-    clap::Arg::new("INPUT")
+    clap::Arg::new("input_file")
         .help("Sets the input file to use")
         .required(false)
         .index(1)
