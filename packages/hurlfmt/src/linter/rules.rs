@@ -444,11 +444,12 @@ fn lint_graphql(graphql: &GraphQl) -> GraphQl {
     let space = empty_whitespace();
     let newline = graphql.newline.clone();
     let value = lint_template(&graphql.value);
+    let variables = graphql.variables.clone();
     GraphQl {
         space,
         newline,
         value,
-        variables: None,
+        variables,
     }
 }
 
