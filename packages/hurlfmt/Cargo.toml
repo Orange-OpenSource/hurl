@@ -15,14 +15,14 @@ strict = []
 
 [dependencies]
 atty = "0.2.14"
-base64 = "0.21.0"
-clap = { version = "4.2.7", features = ["cargo", "wrap_help"] }
+base64 = "0.21.2"
+clap = { version = "4.3.0", features = ["cargo", "wrap_help"] }
 colored = "2.0.0"
 hurl_core = { version = "3.0.1", path = "../hurl_core" }
-regex = "1.8.1"
+regex = "1.8.3"
 
 [dev-dependencies]
-proptest = "1.1.0"
+proptest = "1.2.0"
 
 
 
