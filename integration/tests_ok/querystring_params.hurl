@@ -19,12 +19,12 @@ GET http://localhost:8000/querystring-params?param1=value1
 param2:
 param3: a=b
 param4: 1,2,3
-$top:5
+$top: 5
 HTTP 200
 
 
 # encoding slash
 GET http://localhost:8000/querystring-params-encoded?value1=/&value2=%2F
 [QueryStringParams]
-value3:/
+value3: /
 HTTP 200

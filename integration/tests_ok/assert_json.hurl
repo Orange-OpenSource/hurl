@@ -15,14 +15,12 @@ count: jsonpath "$.count"
 jsonpath "$.count" == 5
 jsonpath "$.count" == 5.0
 jsonpath "$.count" == {{five}}
-jsonpath "$.count" equals 5
 jsonpath "$.count" != 4
 jsonpath "$.count" != {{four}}
-jsonpath "$.count" not equals 4
+jsonpath "$.count" not == 4
 jsonpath "$.count" > 1
 jsonpath "$.count" > {{one}}
 jsonpath "$.count" > 1.0
-jsonpath "$.count" greaterThan 1.0
 jsonpath "$.success" == false
 jsonpath "$.success" != null
 jsonpath "$.success" exists
@@ -47,8 +45,6 @@ jsonpath "$.duration" == 1.5
 jsonpath "$.duration" <= 2.0
 jsonpath "$.duration" < 2
 jsonpath "$.duration" < {{two}}
-jsonpath "$.duration" lessThanOrEquals 2.0
-jsonpath "$.duration" lessThan 2
 jsonpath "$.duration" isFloat
 jsonpath "$.duration" not isInteger
 jsonpath "$.nullable" == null
@@ -99,4 +95,4 @@ jsonpath "$[?(@.id == 1)].name" nth 0 == "Bob"
 GET http://localhost:8000/assert-json/filter
 HTTP 200
 [Asserts]
-jsonpath "$.fruit[?(@.price.US==200)].name" nth 0 equals "grape"
+jsonpath "$.fruit[?(@.price.US==200)].name" nth 0 == "grape"

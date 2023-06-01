@@ -27,14 +27,14 @@ GET http://localhost:8000/captures-json
 
 HTTP 200
 [Captures]
-an_object:  jsonpath "$['an_object']"
-a_list:     jsonpath "$['a_list']"
-a_null:     jsonpath "$['a_null']"
+an_object: jsonpath "$['an_object']"
+a_list: jsonpath "$['a_list']"
+a_null: jsonpath "$['a_null']"
 an_integer: jsonpath "$['an_integer']"
-a_float:    jsonpath "$['a_float']"
-a_bool:     jsonpath "$['a_bool']"
-a_string:   jsonpath "$['a_string']"
-all:        jsonpath "$"
+a_float: jsonpath "$['a_float']"
+a_bool: jsonpath "$['a_bool']"
+a_string: jsonpath "$['a_string']"
+all: jsonpath "$"
 [Asserts]
 variable "a_null" exists
 variable "undefined" not exists

@@ -28,6 +28,7 @@ def main():
     extension = "ps1" if platform.system() == "Windows" else "sh"
     script_files = (
         get_files("tests_ok/*." + extension)
+        + get_files("tests_ok_not_linted/*." + extension)
         + get_files("tests_failed/*." + extension)
         + get_files("tests_error_parser/*." + extension)
         + get_files("ssl/*." + extension)

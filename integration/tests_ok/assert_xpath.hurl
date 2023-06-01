@@ -32,7 +32,7 @@ GET http://localhost:8000/assert-xpath-svg
 HTTP 200
 [Asserts]
 xpath "//_:svg/_:g/_:circle" count == 3
-xpath "//*[local-name()='svg']/*[local-name()='g']/*[local-name()='circle']" count ==  3
+xpath "//*[local-name()='svg']/*[local-name()='g']/*[local-name()='circle']" count == 3
 xpath "//*[name()='svg']/*[name()='g']/*[name()='circle']" count == 3
 
 
