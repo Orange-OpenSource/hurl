@@ -24,7 +24,7 @@ Content-Type: application/json
 
 POST http://localhost:8000/post-file
 Content-Type:
-file, tests_ok/data.bin;
+file,tests_ok/data.bin;
 
 GET http://localhost:8000/redirect-absolute
 [Options]

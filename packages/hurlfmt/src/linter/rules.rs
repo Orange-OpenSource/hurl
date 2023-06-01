@@ -484,7 +484,7 @@ fn lint_bytes(bytes: &Bytes) -> Bytes {
 
 fn lint_base64(base64: &Base64) -> Base64 {
     Base64 {
-        space0: one_whitespace(),
+        space0: empty_whitespace(),
         value: base64.value.clone(),
         encoded: base64.encoded.clone(),
         space1: empty_whitespace(),
@@ -493,7 +493,7 @@ fn lint_base64(base64: &Base64) -> Base64 {
 
 fn lint_hex(hex: &Hex) -> Hex {
     Hex {
-        space0: one_whitespace(),
+        space0: empty_whitespace(),
         value: hex.value.clone(),
         encoded: hex.encoded.clone(),
         space1: empty_whitespace(),
@@ -502,7 +502,7 @@ fn lint_hex(hex: &Hex) -> Hex {
 
 fn lint_file(file: &File) -> File {
     File {
-        space0: one_whitespace(),
+        space0: empty_whitespace(),
         filename: Filename {
             value: file.filename.value.clone(),
             source_info: SourceInfo::new(0, 0, 0, 0),
