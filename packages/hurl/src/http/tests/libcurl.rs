@@ -653,12 +653,12 @@ fn test_cacert() {
     let certificate = response.certificate.unwrap();
 
     assert_eq!(
-        certificate.issuer,
-        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()
+        certificate.issuer.replace(" = ", "=").replace(";", " "),
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
     );
     assert_eq!(
-        certificate.subject,
-        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()
+        certificate.subject.replace(" = ", "=").replace(";", " "),
+        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
     );
     assert_eq!(
         certificate.start_date,
