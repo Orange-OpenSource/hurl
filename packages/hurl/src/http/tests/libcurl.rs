@@ -654,11 +654,11 @@ fn test_cacert() {
 
     assert_eq!(
         certificate.issuer,
-        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
+        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()
     );
     assert_eq!(
         certificate.subject,
-        "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
+        "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string()
     );
     assert_eq!(
         certificate.start_date,
