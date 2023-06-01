@@ -219,7 +219,8 @@ mod tests {
             })
             .unwrap(),
             Certificate {
-                subject: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
+                subject: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost"
+                    .to_string(),
                 issuer: "C = US, ST = Denial, L = Springfield, O = Dis, CN = localhost".to_string(),
                 start_date: chrono::DateTime::parse_from_rfc2822("Tue, 10 Jan 2023 08:29:52 GMT")
                     .unwrap()
