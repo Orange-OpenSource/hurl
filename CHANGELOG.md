@@ -1,3 +1,20 @@
+[3.0.1 (2023-06-01)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.1)
+========================================================================================================================
+
+Thanks to
+[@RWDai](https://github.com/RWDai),
+[@plul](https://github.com/plul),
+
+
+Bugs Fixed:
+
+* Do not parse key/value in certificate subject/issue any more [#1583](https://github.com/Orange-OpenSource/hurl/issues/1583)
+
+* Fix hurlfmt less predicate [#1577](https://github.com/Orange-OpenSource/hurl/issues/1577)
+
+* Patch encoding issue with xpath and libxml 2.11.1+ [#1535](https://github.com/Orange-OpenSource/hurl/issues/1535)
+
+
 [3.0.0 (2023-05-03)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.0)
 ========================================================================================================================
 
