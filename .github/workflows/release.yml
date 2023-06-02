@@ -4,25 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       set-release-version:
-        description: 'Set release version (x.y.z)'
+        description: 'Desired delivery version (x.y.z)'
         required: true
         type: string
-      create-release-branch:
-        description: 'Create release branch'
-        required: true
-        type: boolean
-        default: true
-      deliver-github-release:
-        description: 'Deliver GitHub release'
-        required: true
-        type: boolean
-        default: true
 
 concurrency: release
 
 jobs:
   set-context:
-    if: github.event.inputs.create-release-branch == 'true'
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
@@ -37,7 +26,7 @@ jobs:
           if [ $(echo "${{ github.ref_name }}" | grep -Ec "^master$|^release/") -eq 1 ] ; then
             echo "  - ✅ The branch triggering this workflow is ${{ github.ref_name }}."
           else
-            echo "  - ❌ The branch triggering this workflow is ${{ github.ref_name }} instead of master or release/[0-9].[0-9].[0-9] ."
+            echo "  - ❌ The branch triggering this workflow is ${{ github.ref_name }} instead of master or release/[0-9].[0-9].[0-9]."
             exit 1
           fi
 
@@ -55,17 +44,7 @@ jobs:
             echo "release_branch=release/${{ github.event.inputs.set-release-version }}" | tee -a $GITHUB_OUTPUT
           fi
 
-      - name: Control release version
-        run: |
-          if [ "${{ github.event.inputs.set-release-version }}" == "${{ steps.set-release-version.outputs.release_version }}" ] ; then
-            echo "  - ✅ Desired release version ${{ github.event.inputs.set-release-version }} equals version ${{ steps.set-release-version.outputs.release_version }} getted from package/hurl/Cargo.toml on ${{ github.ref_name }}."
-          else
-            echo "  - ❌ Desired release version ${{ github.event.inputs.set-release-version }} do not equals version ${{ steps.set-release-version.outputs.release_version }} getted from package/hurl/Cargo.toml on ${{ github.ref_name }}."
-            exit 1
-          fi
-
   clean-release:
-    if: github.event.inputs.create-release-branch == 'true'
     needs: set-context
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -178,18 +157,18 @@ jobs:
             exit 1
           fi
 
-  create-release-branch:
-    if: github.event.inputs.create-release-branch == 'true'
+  update-release-branch:
     needs:
-      - clean-release
       - set-context
+      - clean-release
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
-    name: create-release-branch
+    name: update-release-branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        if: github.ref_name == 'master'
         uses: actions/checkout@v3
 
       - name: Create release branch
@@ -296,9 +275,8 @@ jobs:
     needs:
       - set-context
       - clean-release
-      - create-release-branch
+      - update-release-branch
     name: package-release
-    if: github.event.inputs.deliver-github-release == 'true'
     uses: ./.github/workflows/package.yml
     with:
       branch: ${{ needs.set-context.outputs.release_branch }}
@@ -311,10 +289,9 @@ jobs:
     needs:
       - set-context
       - clean-release
-      - create-release-branch
+      - update-release-branch
       - package-release
     name: deliver-github-release
-    if: github.event.inputs.deliver-github-release == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout new release branch
@@ -388,4 +365,3 @@ jobs:
             echo "  - ❌ A problem occurs when attempting to create new pull request."
             exit 1
           fi
-
