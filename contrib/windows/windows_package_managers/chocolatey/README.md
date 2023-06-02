@@ -35,6 +35,6 @@ echo "GET https://google.fr" | hurl --location
 And finally push package to official chocolatey repository
 
 ```
-choco apikey -k <choco api key> -source https://push.chocolatey.org/
-choco push
+choco apikey -k <choco api key> --source https://push.chocolatey.org/
+choco push --source https://push.chocolatey.org/
 ```
