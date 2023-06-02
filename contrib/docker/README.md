@@ -22,7 +22,7 @@ docker run --rm ghcr.io/orange-opensource/hurl:latest --version
 # Run docker hurl from STDIN
 
 ```
-echo -e "GET https://hurl.dev\n\nHTTP 200" | docker run --rm -i ghcr.io/orange-opensource/hurl:latest --test --color
+echo -e "GET https://hurl.dev\n\nHTTP 200" | docker run --rm ghcr.io/orange-opensource/hurl:latest --test --color
 ```
 
 # Run docker hurl from FILE
