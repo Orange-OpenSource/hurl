@@ -668,11 +668,11 @@ fn test_cacert() {
     let certificate = response.certificate.unwrap();
 
     assert_eq!(
-        certificate.issuer.replace(" = ", "=").replace(";", " "),
+        certificate.issuer.replace(" = ", "=").replace(';', " "),
         "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
     );
     assert_eq!(
-        certificate.subject.replace(" = ", "=").replace(";", " "),
+        certificate.subject.replace(" = ", "=").replace(';', " "),
         "C=US, ST=Denial, L=Springfield, O=Dis, CN=localhost".to_string()
     );
     assert_eq!(
