@@ -82,6 +82,9 @@ pub fn options(arg_matches: &ArgMatches) -> Vec<String> {
     if let Some(value) = get::<i32>(arg_matches, "max_redirects") {
         options.push(format!("max-redirs: {value}"));
     }
+    if let Some(value) = get::<i32>(arg_matches, "retry") {
+        options.push(format!("retry: {value}"));
+    }
     options
 }
 

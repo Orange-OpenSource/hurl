@@ -45,6 +45,7 @@ fn parse_line(s: &str) -> Result<String, String> {
         .arg(commands::location())
         .arg(commands::max_redirects())
         .arg(commands::method())
+        .arg(commands::retry())
         .arg(commands::url());
 
     let params = args::split(s)?;

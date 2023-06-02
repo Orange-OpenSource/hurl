@@ -30,6 +30,10 @@ GET http://localhost:8000/redirect-absolute
 [Options]
 location: true
 
+GET http://localhost:8000/retry/until-200
+[Options]
+retry: 4
+
 GET https://localhost:8001/hello
 [Options]
 insecure: true
