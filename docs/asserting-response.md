@@ -404,9 +404,10 @@ body contains "<h1>Welcome!</h1>"
 GET https://example.org/cn
 
 HTTP 200
+[Asserts]
 header "Content-Type" == "text/html; charset=gb2312"
 bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB 2312
-body contains == "你好世界"
+body contains "你好世界"
 ```
 
 ### Bytes assert
