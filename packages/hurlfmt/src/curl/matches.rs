@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use super::HurlOption;
 use clap::ArgMatches;
 
 pub fn body(arg_matches: &ArgMatches) -> Option<String> {
@@ -68,22 +69,22 @@ pub fn headers(arg_matches: &ArgMatches) -> Vec<String> {
     headers
 }
 
-pub fn options(arg_matches: &ArgMatches) -> Vec<String> {
+pub fn options(arg_matches: &ArgMatches) -> Vec<HurlOption> {
     let mut options = vec![];
     if has_flag(arg_matches, "compressed") {
-        options.push("compressed: true".to_string());
+        options.push(HurlOption::new("compressed", "true"));
     }
     if has_flag(arg_matches, "location") {
-        options.push("location: true".to_string());
+        options.push(HurlOption::new("location", "true"));
     }
     if has_flag(arg_matches, "insecure") {
-        options.push("insecure: true".to_string());
+        options.push(HurlOption::new("insecure", "true"));
     }
     if let Some(value) = get::<i32>(arg_matches, "max_redirects") {
-        options.push(format!("max-redirs: {value}"));
+        options.push(HurlOption::new("max-redirs", value.to_string().as_str()));
     }
     if let Some(value) = get::<i32>(arg_matches, "retry") {
-        options.push(format!("retry: {value}"));
+        options.push(HurlOption::new("retry", value.to_string().as_str()));
     }
     options
 }

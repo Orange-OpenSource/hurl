@@ -16,9 +16,31 @@
  *
  */
 
+use std::fmt;
+
 mod args;
 mod commands;
 mod matches;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HurlOption {
+    name: String,
+    value: String,
+}
+
+impl HurlOption {
+    pub fn new(name: &str, value: &str) -> HurlOption {
+        HurlOption {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+}
+impl fmt::Display for HurlOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}: {}", self.name, self.value)
+    }
+}
 
 pub fn parse(s: &str) -> Result<String, String> {
     let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
@@ -59,7 +81,7 @@ fn parse_line(s: &str) -> Result<String, String> {
     let headers = matches::headers(&arg_matches);
     let options = matches::options(&arg_matches);
     let body = matches::body(&arg_matches);
-    let s = format(&method, &url, headers, options, body);
+    let s = format(&method, &url, headers, &options, body);
     Ok(s)
 }
 
@@ -67,7 +89,7 @@ fn format(
     method: &str,
     url: &str,
     headers: Vec<String>,
-    options: Vec<String>,
+    options: &[HurlOption],
     body: Option<String>,
 ) -> String {
     let mut s = format!("{method} {url}");
@@ -84,8 +106,33 @@ fn format(
         s.push('\n');
         s.push_str(body.as_str());
     }
+    let asserts = additional_asserts(options);
+    if !asserts.is_empty() {
+        s.push_str("\nHTTP *");
+        s.push_str("\n[Asserts]");
+        for assert in asserts {
+            s.push_str(format!("\n{assert}").as_str());
+        }
+    }
     s.push('\n');
     s
+}
+
+fn has_option(options: &[HurlOption], name: &str) -> bool {
+    for option in options {
+        if option.name == name {
+            return true;
+        }
+    }
+    false
+}
+
+fn additional_asserts(options: &[HurlOption]) -> Vec<String> {
+    let mut asserts = vec![];
+    if has_option(options, "retry") {
+        asserts.push("status < 500".to_string());
+    }
+    asserts
 }
 
 #[cfg(test)]

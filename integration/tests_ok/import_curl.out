@@ -33,6 +33,9 @@ location: true
 GET http://localhost:8000/retry/until-200
 [Options]
 retry: 4
+HTTP *
+[Asserts]
+status < 500
 
 GET https://localhost:8001/hello
 [Options]
