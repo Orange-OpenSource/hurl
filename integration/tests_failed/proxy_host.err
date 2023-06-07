@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_ok/hello.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/hello
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ (5) Could not resolve proxy: unknown
+   |
+

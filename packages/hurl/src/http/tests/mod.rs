@@ -17,9 +17,6 @@
  */
 use crate::http::{Header, Method, Param, RequestCookie, RequestSpec, Response};
 
-mod libcurl;
-mod runner;
-
 /// Some Request Response to be used by tests
 
 pub fn hello_http_request() -> RequestSpec {

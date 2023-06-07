@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_ok/hello.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/hello
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ (7) Failed to connect to localhost port 1111~~~
+   |
+

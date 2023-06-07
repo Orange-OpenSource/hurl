@@ -4,7 +4,6 @@ from flask import request
 
 @app.route("/multipart-form-data", methods=["POST"])
 def multipart_form_data():
-
     assert request.form["key1"] == "value1"
     assert "Expect" not in request.headers
 

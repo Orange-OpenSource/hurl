@@ -1,13 +1,13 @@
-GET http://foo.com/hello
+GET http://foo.com/connect-to
 HTTP 200
 `Hello World!`
 
 
-GET http://bar.com/hello
+GET http://bar.com/connect-to
 HTTP 200
 `Hello World!`
 
 
-GET http://baz.com/hello
+GET http://baz.com/connect-to
 HTTP 200
 `Hello World!`
