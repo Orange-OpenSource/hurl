@@ -41,8 +41,18 @@ impl Testcase {
     /// `hurl_file` AST is used to construct URL with line numbers to the correponding
     /// entry in the colored HTML source file.
     pub fn get_waterfall_html(&self, hurl_file: &HurlFile, entries: &[EntryResult]) -> String {
+        let href_file = format!("{}.html", self.id);
+        let href_waterfall = format!("{}-waterfall.html", self.id);
+        let css = include_str!("../resources/waterfall.css");
         let svg = get_waterfall_svg(hurl_file, &self.id, entries);
-        format!(include_str!("../resources/waterfall.html"), svg = svg,)
+        format!(
+            include_str!("../resources/waterfall.html"),
+            filename = self.filename,
+            css = css,
+            svg = svg,
+            href_file = href_file,
+            href_waterfall = href_waterfall
+        )
     }
 }
 

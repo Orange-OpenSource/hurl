@@ -2,9 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>{filename}</title>
+    <style>
+        {css}
+    </style>
 <body>
 <div>
-    {svg}
+    <div class="container">
+        <div class="report-nav">
+            <div class="report-nav-links">
+                <div><a href="../index.html">Report</a></div>
+                <div><a href="{href_file}">File</a></div>
+                <div><a aria-selected="true" href="{href_waterfall}">Waterfall</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="waterfall-container">
+        <div class="waterfall">{svg}</div>
+    </div>
 </div>
 </body>
 </html>
