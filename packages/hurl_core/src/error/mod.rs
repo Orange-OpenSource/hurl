@@ -68,10 +68,10 @@ impl Error for parser::Error {
     fn fixme(&self) -> String {
         match self.inner.clone() {
             ParseError::Method { name }
-            => format!("the HTTP method is not valid. {}", did_you_mean(
-                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH", "LINK", "UNLINK", "PURGE", "LOCK", "UNLOCK", "PROPFIND", "VIEW"],
+            => format!("the HTTP method <{name}> is not valid. {}", did_you_mean(
+                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"],
                 name.as_str(),
-                "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH, LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND or VIEW",
+                "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
             )),
             ParseError::Version { .. } => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
             ParseError::Status { .. } => "HTTP status code is not valid".to_string(),

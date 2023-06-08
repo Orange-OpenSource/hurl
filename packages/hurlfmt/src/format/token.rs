@@ -84,7 +84,7 @@ impl Tokenizable for Request {
                 .collect(),
         );
         tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::Method(self.method.to_string()));
+        tokens.append(&mut self.method.tokenize());
         tokens.append(&mut self.space1.tokenize());
         tokens.append(&mut self.url.tokenize());
         tokens.append(&mut self.line_terminator0.tokenize());
@@ -94,6 +94,12 @@ impl Tokenizable for Request {
             tokens.append(&mut body.tokenize());
         }
         tokens
+    }
+}
+
+impl Tokenizable for Method {
+    fn tokenize(&self) -> Vec<Token> {
+        vec![Token::Method(self.to_string())]
     }
 }
 

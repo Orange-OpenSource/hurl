@@ -21,25 +21,7 @@ use crate::ast::core::*;
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            Method::Get => "GET",
-            Method::Head => "HEAD",
-            Method::Post => "POST",
-            Method::Put => "PUT",
-            Method::Delete => "DELETE",
-            Method::Connect => "CONNECT",
-            Method::Options => "OPTIONS",
-            Method::Trace => "TRACE",
-            Method::Patch => "PATCH",
-            Method::Link => "LINK",
-            Method::Unlink => "UNLINK",
-            Method::Purge => "PURGE",
-            Method::Lock => "LOCK",
-            Method::Unlock => "UNLOCK",
-            Method::Propfind => "PROPFIND",
-            Method::View => "VIEW",
-        };
-        write!(f, "{s}")
+        write!(f, "{}", self.0)
     }
 }
 

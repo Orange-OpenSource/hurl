@@ -102,7 +102,7 @@ impl Client {
                 }
             }
             request_spec = RequestSpec {
-                method: Method::Get,
+                method: Method("GET".to_string()),
                 url: redirect_url,
                 ..Default::default()
             };
@@ -191,7 +191,7 @@ impl Client {
         let mut request_body = Vec::<u8>::new();
         let mut response_body = Vec::<u8>::new();
 
-        if *method == Method::Head {
+        if *method == Method("HEAD".to_string()) {
             self.handle.nobody(true).unwrap();
         }
         {

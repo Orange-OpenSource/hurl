@@ -161,24 +161,7 @@ pub fn cookie_storage_clear(request: &Request) -> bool {
 }
 
 fn eval_method(method: &Method) -> http::Method {
-    match method {
-        Method::Get => http::Method::Get,
-        Method::Head => http::Method::Head,
-        Method::Post => http::Method::Post,
-        Method::Put => http::Method::Put,
-        Method::Delete => http::Method::Delete,
-        Method::Connect => http::Method::Connect,
-        Method::Options => http::Method::Options,
-        Method::Trace => http::Method::Trace,
-        Method::Patch => http::Method::Patch,
-        Method::Link => http::Method::Link,
-        Method::Unlink => http::Method::Unlink,
-        Method::Purge => http::Method::Purge,
-        Method::Lock => http::Method::Lock,
-        Method::Unlock => http::Method::Unlock,
-        Method::Propfind => http::Method::Propfind,
-        Method::View => http::Method::View,
-    }
+    http::Method(method.0.clone())
 }
 
 #[cfg(test)]
@@ -204,7 +187,7 @@ mod tests {
         Request {
             line_terminators: vec![],
             space0: whitespace(),
-            method: Method::Get,
+            method: Method("GET".to_string()),
             space1: whitespace(),
             url: Template {
                 elements: vec![
@@ -258,7 +241,7 @@ mod tests {
         Request {
             line_terminators: vec![],
             space0: whitespace(),
-            method: Method::Get,
+            method: Method("GET".to_string()),
             space1: whitespace(),
             url: Template {
                 elements: vec![TemplateElement::String {
@@ -376,7 +359,7 @@ mod tests {
                 newline: whitespace(),
             }],
             space0: whitespace(),
-            method: Method::Get,
+            method: Method("GET".to_string()),
             space1: whitespace(),
             url: Template {
                 elements: vec![TemplateElement::String {
@@ -416,7 +399,7 @@ mod tests {
                     newline: whitespace(),
                 }],
                 space0: whitespace(),
-                method: Method::Get,
+                method: Method("GET".to_string()),
                 space1: whitespace(),
                 url: Template {
                     elements: vec![TemplateElement::String {

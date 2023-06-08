@@ -128,24 +128,7 @@ impl Response {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Method {
-    Get,
-    Head,
-    Post,
-    Put,
-    Delete,
-    Connect,
-    Options,
-    Trace,
-    Patch,
-    Link,
-    Unlink,
-    Purge,
-    Lock,
-    Unlock,
-    Propfind,
-    View,
-}
+pub struct Method(pub String);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Version {

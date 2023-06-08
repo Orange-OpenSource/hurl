@@ -20,24 +20,7 @@ response:
   response-section*
   body?
 
-method:
-    "GET"
-  | "HEAD"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "CONNECT"
-  | "OPTIONS"
-  | "TRACE"
-  | "PATCH"
-  | "LINK"
-  | "UNLINK"
-  | "PURGE"
-  | "LOCK"
-  | "UNLOCK"
-  | "PROPFIND"
-  | "VIEW"
-
+method: [A-Z]+
 
 version:
     "HTTP/1.0"

@@ -36,7 +36,7 @@ pub struct RequestSpec {
 impl Default for RequestSpec {
     fn default() -> Self {
         RequestSpec {
-            method: Method::Get,
+            method: Method("GET".to_string()),
             url: "".to_string(),
             headers: vec![],
             querystring: vec![],
@@ -50,24 +50,7 @@ impl Default for RequestSpec {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Method {
-    Get,
-    Head,
-    Post,
-    Put,
-    Delete,
-    Connect,
-    Options,
-    Trace,
-    Patch,
-    Link,
-    Unlink,
-    Purge,
-    Lock,
-    Unlock,
-    Propfind,
-    View,
-}
+pub struct Method(pub String);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MultipartParam {
@@ -109,25 +92,7 @@ impl RequestSpec {
 
 impl fmt::Display for Method {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let value = match self {
-            Method::Get => "GET",
-            Method::Head => "HEAD",
-            Method::Post => "POST",
-            Method::Put => "PUT",
-            Method::Delete => "DELETE",
-            Method::Connect => "CONNECT",
-            Method::Options => "OPTIONS",
-            Method::Trace => "TRACE",
-            Method::Patch => "PATCH",
-            Method::Link => "LINK",
-            Method::Unlink => "UNLINK",
-            Method::Purge => "PURGE",
-            Method::Lock => "LOCK",
-            Method::Unlock => "UNLOCK",
-            Method::Propfind => "PROPFIND",
-            Method::View => "VIEW",
-        };
-        write!(f, "{value}")
+        write!(f, "{}", self.0)
     }
 }
 

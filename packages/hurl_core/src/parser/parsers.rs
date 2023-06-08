@@ -133,37 +133,16 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
         });
     }
     let start = reader.state.clone();
-    let name = reader.read_while(|c| c.is_alphanumeric());
-    let available_methods = [
-        ("GET", Method::Get),
-        ("HEAD", Method::Head),
-        ("POST", Method::Post),
-        ("PUT", Method::Put),
-        ("DELETE", Method::Delete),
-        ("CONNECT", Method::Connect),
-        ("OPTIONS", Method::Options),
-        ("TRACE", Method::Trace),
-        ("PATCH", Method::Patch),
-        ("LINK", Method::Link),
-        ("UNLINK", Method::Unlink),
-        ("PURGE", Method::Purge),
-        ("LOCK", Method::Lock),
-        ("UNLOCK", Method::Unlock),
-        ("PROPFIND", Method::Propfind),
-        ("VIEW", Method::View),
-    ];
-
-    for (s, method) in available_methods.into_iter() {
-        if name == s {
-            return Ok(method);
-        }
+    let name = reader.read_while(|c| c.is_ascii_alphabetic());
+    if name.is_empty() || name.to_uppercase() != name {
+        Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Method { name },
+        })
+    } else {
+        Ok(Method(name))
     }
-    reader.state = start.clone();
-    Err(Error {
-        pos: start.pos,
-        recoverable: false,
-        inner: ParseError::Method { name },
-    })
 }
 
 fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
@@ -266,7 +245,7 @@ mod tests {
     fn test_entry() {
         let mut reader = Reader::new("GET http://google.fr");
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 20);
     }
 
@@ -275,12 +254,12 @@ mod tests {
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 21);
         assert_eq!(reader.state.pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 41);
         assert_eq!(reader.state.pos.line, 2);
 
@@ -288,12 +267,12 @@ mod tests {
             Reader::new("GET http://google.fr # comment1\nGET http://google.fr # comment2");
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 32);
         assert_eq!(reader.state.pos.line, 2);
 
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 63);
         assert_eq!(reader.state.pos.line, 2);
     }
@@ -302,7 +281,7 @@ mod tests {
     fn test_entry_with_response() {
         let mut reader = Reader::new("GET http://google.fr\nHTTP/1.1 200");
         let e = entry(&mut reader).unwrap();
-        assert_eq!(e.request.method, Method::Get);
+        assert_eq!(e.request.method, Method("GET".to_string()));
         assert_eq!(e.response.unwrap().status.value, StatusValue::Specific(200));
     }
 
@@ -315,7 +294,7 @@ mod tests {
                 value: "".to_string(),
                 source_info: SourceInfo::new(1, 1, 1, 1),
             },
-            method: Method::Get,
+            method: Method("GET".to_string()),
             space1: Whitespace {
                 value: " ".to_string(),
                 source_info: SourceInfo::new(1, 4, 1, 5),
@@ -353,7 +332,7 @@ mod tests {
                 value: "".to_string(),
                 source_info: SourceInfo::new(1, 1, 1, 1),
             },
-            method: Method::Get,
+            method: Method("GET".to_string()),
             space1: Whitespace {
                 value: "  ".to_string(),
                 source_info: SourceInfo::new(1, 4, 1, 6),
@@ -388,10 +367,10 @@ mod tests {
 
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
         let r = request(&mut reader);
-        assert_eq!(r.unwrap().method, Method::Get);
+        assert_eq!(r.unwrap().method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 21);
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method::Get);
+        assert_eq!(r.method, Method("GET".to_string()));
     }
 
     #[test]
@@ -447,7 +426,7 @@ mod tests {
     fn test_request_post_json() {
         let mut reader = Reader::new("POST http://localhost:8000/post-json-array\n[1,2,3]");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method::Post);
+        assert_eq!(r.method, Method("POST".to_string()));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::List {
@@ -474,7 +453,7 @@ mod tests {
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-string\n\"Hello\"");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method::Post);
+        assert_eq!(r.method, Method("POST".to_string()));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::String(Template {
@@ -489,7 +468,7 @@ mod tests {
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-number\n100");
         let r = request(&mut reader).unwrap();
-        assert_eq!(r.method, Method::Post);
+        assert_eq!(r.method, Method("POST".to_string()));
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::Number("100".to_string()))
@@ -518,7 +497,7 @@ mod tests {
         let mut reader = Reader::new("xxx ");
         let error = method(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(reader.state.cursor, 0);
+        assert_eq!(reader.state.cursor, 3);
 
         let mut reader = Reader::new("");
         let error = method(&mut reader).err().unwrap();
@@ -526,8 +505,12 @@ mod tests {
         assert_eq!(reader.state.cursor, 0);
 
         let mut reader = Reader::new("GET ");
-        assert_eq!(Ok(Method::Get), method(&mut reader));
+        assert_eq!(method(&mut reader).unwrap(), Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 3);
+
+        let mut reader = Reader::new("CUSTOM");
+        assert_eq!(method(&mut reader).unwrap(), Method("CUSTOM".to_string()));
+        assert_eq!(reader.state.cursor, 6);
     }
 
     #[test]

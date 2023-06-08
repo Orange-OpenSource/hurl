@@ -113,23 +113,23 @@ fn encode_bytes(b: Vec<u8>) -> String {
 
 impl Method {
     pub fn curl_args(&self, data: bool) -> Vec<String> {
-        match self {
-            Method::Get => {
+        match self.0.clone().as_str() {
+            "GET" => {
                 if data {
                     vec!["--request".to_string(), "GET".to_string()]
                 } else {
                     vec![]
                 }
             }
-            Method::Head => vec!["--head".to_string()],
-            Method::Post => {
+            "HEAD" => vec!["--head".to_string()],
+            "POST" => {
                 if data {
                     vec![]
                 } else {
                     vec!["--request".to_string(), "POST".to_string()]
                 }
             }
-            _ => vec!["--request".to_string(), self.to_string()],
+            s => vec!["--request".to_string(), s.to_string()],
         }
     }
 }
@@ -241,7 +241,7 @@ pub mod tests {
 
     fn form_http_request() -> RequestSpec {
         RequestSpec {
-            method: Method::Post,
+            method: Method("POST".to_string()),
             url: "http://localhost/form-params".to_string(),
             headers: vec![Header::new(
                 "Content-Type",
@@ -270,24 +270,24 @@ pub mod tests {
 
     #[test]
     fn method_curl_args() {
-        assert!(Method::Get.curl_args(false).is_empty());
+        assert!(Method("GET".to_string()).curl_args(false).is_empty());
         assert_eq!(
-            Method::Get.curl_args(true),
+            Method("GET".to_string()).curl_args(true),
             vec!["--request".to_string(), "GET".to_string()]
         );
 
         assert_eq!(
-            Method::Post.curl_args(false),
+            Method("POST".to_string()).curl_args(false),
             vec!["--request".to_string(), "POST".to_string()]
         );
-        assert!(Method::Post.curl_args(true).is_empty());
+        assert!(Method("POST".to_string()).curl_args(true).is_empty());
 
         assert_eq!(
-            Method::Put.curl_args(false),
+            Method("PUT".to_string()).curl_args(false),
             vec!["--request".to_string(), "PUT".to_string()]
         );
         assert_eq!(
-            Method::Put.curl_args(true),
+            Method("PUT".to_string()).curl_args(true),
             vec!["--request".to_string(), "PUT".to_string()]
         );
     }

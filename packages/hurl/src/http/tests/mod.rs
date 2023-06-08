@@ -21,7 +21,7 @@ use crate::http::{Header, Method, Param, RequestCookie, RequestSpec, Response};
 
 pub fn hello_http_request() -> RequestSpec {
     RequestSpec {
-        method: Method::Get,
+        method: Method("GET".to_string()),
         url: "http://localhost:8000/hello".to_string(),
         ..Default::default()
     }
@@ -121,7 +121,7 @@ pub fn html_http_response() -> Response {
 
 pub fn query_http_request() -> RequestSpec {
     RequestSpec {
-        method: Method::Get,
+        method: Method("GET".to_string()),
         url: "http://localhost:8000/querystring-params".to_string(),
         querystring: vec![
             Param {
@@ -139,7 +139,7 @@ pub fn query_http_request() -> RequestSpec {
 
 pub fn custom_http_request() -> RequestSpec {
     RequestSpec {
-        method: Method::Get,
+        method: Method("GET".to_string()),
         url: "http://localhost/custom".to_string(),
         headers: vec![
             Header::new("User-Agent", "iPhone"),

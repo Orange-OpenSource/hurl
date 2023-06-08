@@ -2,6 +2,6 @@ error: Parsing method
   --> tests_error_parser/method.hurl:1:1
    |
  1 | GeT http://localhost:8000/hello
-   | ^ the HTTP method is not valid. Did you mean GET?
+   | ^ the HTTP method <GeT> is not valid. Did you mean GET?
    |
 
