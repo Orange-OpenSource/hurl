@@ -73,7 +73,7 @@ jobs:
 
       - name: Notify user
         run: |
-          if [[ "${{ env.PR_COMMENT }}" =~ "--force" ]] ; then
+          if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
             order="/accept --force"
           else
             order="/accept"
@@ -192,7 +192,7 @@ jobs:
               comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
-              if [[ "${{ env.PR_COMMENT }}" =~ "--force" ]] ; then
+              if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
                 order="/accept --force"
               else
                 order="/accept"
@@ -275,7 +275,7 @@ jobs:
 
       - name: Close pull request
         run: |
-          if [[ "${{ env.PR_COMMENT }}" =~ "--force" ]] ; then
+          if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
             comment="✅ Pull request merged without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."          
           else
             comment="✅ Pull request merged and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
