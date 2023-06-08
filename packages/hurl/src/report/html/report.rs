@@ -143,7 +143,7 @@ fn create_html_table_row(result: &HTMLResult) -> String {
 
     format!(
         r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}">
-    <td><a href="store/{id}.html">{displayed_filename}</a></td>
+    <td><a href="store/{id}-timeline.html">{displayed_filename}</a></td>
     <td>{status}</td>
     <td>{duration_in_s}</td>
 </tr>

@@ -17,11 +17,12 @@
  */
 
 //! HTML report
-
-mod file;
+mod nav;
 mod report;
+mod run;
+mod source;
 mod testcase;
-mod waterfall;
+mod timeline;
 
 pub use report::write_report;
 pub use testcase::Testcase;

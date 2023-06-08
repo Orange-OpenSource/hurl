@@ -15,9 +15,13 @@
  * limitations under the License.
  *
  */
+use hurl_core::parser;
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
 use uuid::Uuid;
 
-use crate::runner::{Error, HurlResult};
+use crate::runner::{EntryResult, Error, HurlResult};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -43,5 +47,55 @@ impl Testcase {
                 .flat_map(|e| e.errors.clone())
                 .collect(),
         }
+    }
+
+    /// Exports a [`Testcase`] to HTML.
+    ///
+    /// It will create three HTML files:
+    /// - an HTML view of the Hurl source file (with potential errors and syntax colored),
+    /// - an HTML timeline view of the executed entries (with potential errors, waterfall)
+    /// - an HTML view of the executed run (headers, cookies, etc...)
+    pub fn write_html(
+        &self,
+        content: &str,
+        entries: &[EntryResult],
+        dir_path: &Path,
+    ) -> Result<(), crate::report::Error> {
+        // We parse the content as we'll reuse the AST to construct the HTML source file, and
+        // the waterfall.
+        // TODO: for the moment, we can only have parseable file.
+        let hurl_file = parser::parse_hurl_file(content).unwrap();
+
+        // We create the timeline view.
+        let output_file = dir_path.join("store").join(self.timeline_filename());
+        let mut file = File::create(output_file)?;
+        let html = self.get_timeline_html(&hurl_file, content, entries);
+        file.write_all(html.as_bytes())?;
+
+        // Then create the run view.
+        let output_file = dir_path.join("store").join(self.run_filename());
+        let mut file = File::create(output_file)?;
+        let html = self.get_run_html(&hurl_file, content, entries);
+        file.write_all(html.as_bytes())?;
+
+        // And create the source view.
+        let output_file = dir_path.join("store").join(self.source_filename());
+        let mut file = File::create(output_file)?;
+        let html = self.get_source_html(&hurl_file, content);
+        file.write_all(html.as_bytes())?;
+
+        Ok(())
+    }
+
+    pub fn source_filename(&self) -> String {
+        format!("{}-source.html", self.id)
+    }
+
+    pub fn timeline_filename(&self) -> String {
+        format!("{}-timeline.html", self.id)
+    }
+
+    pub fn run_filename(&self) -> String {
+        format!("{}-run.html", self.id)
     }
 }

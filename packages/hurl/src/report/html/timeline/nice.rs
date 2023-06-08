@@ -85,7 +85,7 @@ fn nice_number(range: f64, round: bool) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::report::html::waterfall::NiceScale;
+    use crate::report::html::timeline::nice::NiceScale;
 
     #[test]
     fn test_nice_scale() {

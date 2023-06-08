@@ -1,45 +1,11 @@
-body {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 1.125rem;
-    line-height: 1.4;
+.call-detail {
+    display: none;
 }
 
-.container {
-    max-width: 2000px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+.call-summary:hover + .call-detail, .call-detail:hover {
+    display: block;
 }
 
-.report-nav {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.report-nav-links {
-    display: flex;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.report-nav a {
-    color: royalblue;
-    margin-right: 20px;
-}
-
-.report-nav a[aria-selected="true"] {
-    color: #ff0288;
-}
-
-.waterfall-container {
-    max-width: 2000px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    border: solid 1px #dcdcde;
-}
-
-.waterfall {
-    overflow: auto;
-    overflow-y: hidden;
+.call-cell {
+    pointer-events: none;
 }

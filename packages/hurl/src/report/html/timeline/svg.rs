@@ -29,10 +29,13 @@ pub enum ElementKind {
     Filter,       // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/filter
     Group,        // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/g
     Line,         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line
+    Path,         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
     Rect,         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect
     Style,        // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/style
     Svg,          // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg
+    Symbol,       // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/symbol
     Text,         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
+    Use,          // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use
 }
 
 impl ElementKind {
@@ -45,10 +48,13 @@ impl ElementKind {
             ElementKind::FeDropShadow => "feDropShadow",
             ElementKind::Group => "g",
             ElementKind::Line => "line",
+            ElementKind::Path => "path",
             ElementKind::Rect => "rect",
             ElementKind::Style => "style",
             ElementKind::Svg => "svg",
+            ElementKind::Symbol => "symbol",
             ElementKind::Text => "text",
+            ElementKind::Use => "use",
         }
     }
 }
@@ -77,11 +83,11 @@ impl Element {
 
     /// Adds an attribute `attr` to this element.
     pub fn add_attr(&mut self, attr: Attribute) {
-        self.attrs.push(attr)
+        self.attrs.push(attr);
     }
 
     /// Returns an iterator over these element's attributes.
-    pub fn get_attrs(&self) -> Iter<'_, Attribute> {
+    pub fn attrs(&self) -> Iter<'_, Attribute> {
         self.attrs.iter()
     }
 
@@ -91,7 +97,7 @@ impl Element {
     }
 
     /// Returns an iterator over these element's children.
-    pub fn get_children(&self) -> Iter<'_, Element> {
+    pub fn children(&self) -> Iter<'_, Element> {
         self.children.iter()
     }
 
@@ -101,7 +107,7 @@ impl Element {
     }
 
     /// Returns this element's kind.
-    pub fn get_kind(&self) -> ElementKind {
+    pub fn kind(&self) -> ElementKind {
         self.kind
     }
 
@@ -116,7 +122,7 @@ impl Element {
     }
 
     /// Returns the content if this element or an empty string if this element has no content.
-    pub fn get_content(&self) -> &str {
+    pub fn content(&self) -> &str {
         match &self.content {
             None => "",
             Some(e) => e,
@@ -125,27 +131,27 @@ impl Element {
 
     /// Serializes this element to a SVG string.
     fn to_svg(&self) -> String {
-        let name = self.get_kind().name();
+        let name = self.kind().name();
 
         let mut s = String::from("<");
         s.push_str(name);
 
-        if self.get_kind() == ElementKind::Svg {
+        if self.kind() == ElementKind::Svg {
             // Attributes specific to svg
             push_attr(&mut s, "xmlns", "http://www.w3.org/2000/svg");
         }
 
-        for att in self.get_attrs() {
+        for att in self.attrs() {
             s.push(' ');
             s.push_str(&att.to_string());
         }
 
         if self.has_children() || self.has_content() {
             s.push('>');
-            for child in self.get_children() {
+            for child in self.children() {
                 s.push_str(&child.to_svg());
             }
-            s.push_str(self.get_content());
+            s.push_str(self.content());
             s.push_str("</");
             s.push_str(name);
             s.push('>');
@@ -170,22 +176,30 @@ fn push_attr(f: &mut String, key: &str, value: &str) {
 /// SVG elements can be modified using attributes.
 /// This list of attributes is __partial__ and only includes attributes necessary for Hurl waterfall
 /// export. See <https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute>
+// TODO: fond a better way to represent unit. For the moment X attribute
+// take a float but X could be "10", "10px", "10%".
 #[derive(Clone, Debug, PartialEq)]
 pub enum Attribute {
-    Class(String),     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/class
-    DX(f64),           // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dx
-    DY(f64),           // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dy
-    Fill(String),      // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill
-    Filter(String),    // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/filter
-    FloodOpacity(f64), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/flood-opacity
-    Height(f64),       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height
-    Href(String),      // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href
-    Id(String),        // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/id
-    StdDeviation(f64), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stdDeviation
-    Stroke(String),    // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke
-    StrokeWidth(f64),  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-width
+    Class(String),      // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/class
+    D(String),          // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
+    DX(f64),            // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dx
+    DY(f64),            // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dy
+    Fill(String),       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill
+    Filter(String),     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/filter
+    FloodOpacity(f64),  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/flood-opacity
+    FontFamily(String), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/font-family
+    FontSize(String),   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/font-size
+    FontWeight(String), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/font-weight
+    Height(String),     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height
+    Href(String),       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href
+    Id(String),         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/id
+    Opacity(f64),       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/opacity
+    StdDeviation(f64),  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stdDeviation
+    Stroke(String),     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke
+    StrokeWidth(f64),   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-width
+    TextDecoration(String), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-decoration
     ViewBox(f64, f64, f64, f64), // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
-    Width(f64),                  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width
+    Width(String),               // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width
     X(f64),                      // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/x
     X1(f64),                     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/x1
     X2(f64),                     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/x2
@@ -198,17 +212,23 @@ impl Attribute {
     fn name(&self) -> &'static str {
         match self {
             Attribute::Class(_) => "class",
+            Attribute::D(_) => "d",
             Attribute::DX(_) => "dx",
             Attribute::DY(_) => "dy",
             Attribute::Fill(_) => "fill",
             Attribute::Filter(_) => "filter",
             Attribute::FloodOpacity(_) => "flood-opacity",
+            Attribute::FontFamily(_) => "font-family",
+            Attribute::FontSize(_) => "font-size",
+            Attribute::FontWeight(_) => "font-weight",
             Attribute::Height(_) => "height",
             Attribute::Href(_) => "href",
             Attribute::Id(_) => "id",
+            Attribute::Opacity(_) => "opacity",
             Attribute::StdDeviation(_) => "stdDeviation",
             Attribute::Stroke(_) => "stroke",
             Attribute::StrokeWidth(_) => "stroke-width",
+            Attribute::TextDecoration(_) => "text-decoration",
             Attribute::ViewBox(_, _, _, _) => "viewBox",
             Attribute::Width(_) => "width",
             Attribute::X(_) => "x",
@@ -225,17 +245,23 @@ impl fmt::Display for Attribute {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
             Attribute::Class(value) => value.clone(),
+            Attribute::D(value) => value.clone(),
             Attribute::DX(value) => value.to_string(),
             Attribute::DY(value) => value.to_string(),
             Attribute::Fill(value) => value.clone(),
             Attribute::Filter(value) => value.clone(),
             Attribute::FloodOpacity(value) => value.to_string(),
+            Attribute::FontFamily(value) => value.clone(),
+            Attribute::FontSize(value) => value.clone(),
+            Attribute::FontWeight(value) => value.clone(),
             Attribute::Height(value) => value.to_string(),
             Attribute::Href(value) => value.to_string(),
             Attribute::Id(value) => value.clone(),
+            Attribute::Opacity(value) => value.to_string(),
             Attribute::StdDeviation(value) => value.to_string(),
             Attribute::Stroke(value) => value.to_string(),
             Attribute::StrokeWidth(value) => value.to_string(),
+            Attribute::TextDecoration(value) => value.clone(),
             Attribute::ViewBox(min_x, min_y, width, height) => {
                 format!("{min_x} {min_y} {width} {height}")
             }
@@ -252,31 +278,31 @@ impl fmt::Display for Attribute {
 }
 
 /// Returns a new `<a>` element.
-pub fn a(href: &str) -> Element {
+pub fn new_a(href: &str) -> Element {
     let mut elt = Element::new(ElementKind::A);
     elt.add_attr(Attribute::Href(href.to_string()));
     elt
 }
 
 /// Returns a new `<svg>` element.
-pub fn svg() -> Element {
+pub fn new_svg() -> Element {
     Element::new(ElementKind::Svg)
 }
 
 /// Returns a new `<g>` element.
-pub fn group() -> Element {
+pub fn new_group() -> Element {
     Element::new(ElementKind::Group)
 }
 
 /// Returns a new `<style>` element.
-pub fn style(content: &str) -> Element {
+pub fn new_style(content: &str) -> Element {
     let mut elt = Element::new(ElementKind::Style);
     elt.set_content(content);
     elt
 }
 
 /// Returns a new `<text>` element.
-pub fn text(x: f64, y: f64, content: &str) -> Element {
+pub fn new_text(x: f64, y: f64, content: &str) -> Element {
     let mut elt = Element::new(ElementKind::Text);
     elt.add_attr(Attribute::X(x));
     elt.add_attr(Attribute::Y(y));
@@ -285,7 +311,7 @@ pub fn text(x: f64, y: f64, content: &str) -> Element {
 }
 
 /// Returns a new `<line>` element.
-pub fn line(x1: f64, y1: f64, x2: f64, y2: f64) -> Element {
+pub fn new_line(x1: f64, y1: f64, x2: f64, y2: f64) -> Element {
     let mut elt = Element::new(ElementKind::Line);
     elt.add_attr(Attribute::X1(x1));
     elt.add_attr(Attribute::Y1(y1));
@@ -295,29 +321,46 @@ pub fn line(x1: f64, y1: f64, x2: f64, y2: f64) -> Element {
 }
 
 /// Returns a new `<rect>` element.
-pub fn rect(x: f64, y: f64, width: f64, height: f64, fill: &str) -> Element {
+pub fn new_rect(x: f64, y: f64, width: f64, height: f64, fill: &str) -> Element {
     let mut elt = Element::new(ElementKind::Rect);
     elt.add_attr(Attribute::X(x));
     elt.add_attr(Attribute::Y(y));
-    elt.add_attr(Attribute::Width(width));
-    elt.add_attr(Attribute::Height(height));
+    elt.add_attr(Attribute::Width(width.to_string()));
+    elt.add_attr(Attribute::Height(height.to_string()));
     elt.add_attr(Attribute::Fill(fill.to_string()));
     elt
 }
 
 /// Returns a new `<defs>` element.
-pub fn defs() -> Element {
+pub fn new_defs() -> Element {
     Element::new(ElementKind::Defs)
 }
 
 /// Returns a new `<filter>` element.
-pub fn filter() -> Element {
+pub fn new_filter() -> Element {
     Element::new(ElementKind::Filter)
 }
 
 /// Returns a new `<feDropShadow>` element.
-pub fn fe_drop_shadow() -> Element {
+pub fn new_fe_drop_shadow() -> Element {
     Element::new(ElementKind::FeDropShadow)
+}
+
+/// Returns a new `<symbol>` element.
+pub fn new_symbol() -> Element {
+    Element::new(ElementKind::Symbol)
+}
+
+/// Returns a new `<path>` element.
+pub fn new_path(d: &str) -> Element {
+    let mut elt = Element::new(ElementKind::Path);
+    elt.add_attr(Attribute::D(d.to_string()));
+    elt
+}
+
+/// Returns a new `<use>` element.
+pub fn new_use() -> Element {
+    Element::new(ElementKind::Use)
 }
 
 #[cfg(test)]
@@ -327,7 +370,7 @@ mod tests {
 
     #[test]
     fn simple_line_svg() {
-        let mut elt = line(0.0, 80.0, 100.0, 20.0);
+        let mut elt = new_line(0.0, 80.0, 100.0, 20.0);
         elt.add_attr(Stroke("black".to_string()));
         assert_eq!(
             elt.to_string(),
@@ -337,17 +380,17 @@ mod tests {
 
     #[test]
     fn group_svg() {
-        let mut root = svg();
+        let mut root = new_svg();
         root.add_attr(ViewBox(0.0, 0.0, 100.0, 100.0));
 
-        let mut group = group();
+        let mut group = new_group();
         group.add_attr(Fill("white".to_string()));
         group.add_attr(Stroke("green".to_string()));
         group.add_attr(StrokeWidth(5.0));
 
-        let elt = rect(0.0, 0.0, 40.0, 60.0, "#fff");
+        let elt = new_rect(0.0, 0.0, 40.0, 60.0, "#fff");
         group.add_child(elt);
-        let elt = rect(20.0, 10.0, 3.5, 15.0, "red");
+        let elt = new_rect(20.0, 10.0, 3.5, 15.0, "red");
         group.add_child(elt);
         root.add_child(group);
 

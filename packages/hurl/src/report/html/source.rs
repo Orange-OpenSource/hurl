@@ -15,88 +15,32 @@
  * limitations under the License.
  *
  */
+use crate::report::html::nav::Tab;
 use hurl_core::ast::HurlFile;
 use regex::{Captures, Regex};
-use std::fs::File;
-use std::io::Write;
-use std::path::Path;
-
-use hurl_core::parser;
 
 use crate::report::html::Testcase;
-use crate::report::Error;
-use crate::runner::{EntryResult, Error as RunnerError};
-use crate::util::logger;
+use crate::runner::Error as RunnerError;
 
 impl Testcase {
-    /// Exports a [`Testcase`] to HTML.
-    ///
-    /// It will create two HTML files:
-    /// - an HTML for the Hurl source file (with potential errors and syntax colored),
-    /// - an HTML for the entries waterfall
-    pub fn write_html(
-        &self,
-        content: &str,
-        entries: &[EntryResult],
-        dir_path: &Path,
-    ) -> Result<(), Error> {
-        // We create the HTML Hurl source file.
-        let output_file = dir_path.join("store").join(format!("{}.html", self.id));
-        let mut file = File::create(output_file)?;
-
-        // We parse the content as we'll reuse the AST to construct the HTML source file, and
-        // the waterfall.
-        // TODO: for the moment, we can only have parseable file.
-        let hurl_file = parser::parse_hurl_file(content).unwrap();
-
-        let html = self.get_file_html(&hurl_file, content);
-        file.write_all(html.as_bytes())?;
-
-        // Then we create the HTML entries waterfall.
-        let output_file = dir_path
-            .join("store")
-            .join(format!("{}-waterfall.html", self.id));
-        let mut file = File::create(output_file)?;
-        let html = self.get_waterfall_html(&hurl_file, entries);
-        file.write_all(html.as_bytes())?;
-
-        Ok(())
-    }
-
     /// Returns the HTML string of the Hurl source file (syntax colored and errors).
-    fn get_file_html(&self, hurl_file: &HurlFile, content: &str) -> String {
-        let file_div = hurl_core::format::format_html(hurl_file, false);
-        let file_div = underline_errors(&file_div, &self.errors);
+    pub fn get_source_html(&self, hurl_file: &HurlFile, content: &str) -> String {
+        let nav = self.get_nav_html(content, Tab::Source);
+        let nav_css = include_str!("resources/nav.css");
+        let source_div = hurl_core::format::format_html(hurl_file, false);
+        let source_div = underline_errors(&source_div, &self.errors);
         let lines_div = get_numbered_lines(content);
-        let file_css = include_str!("resources/file.css");
-        let status = if self.success {
-            "<span class=\"success\">Success</span>"
-        } else {
-            "<span class=\"failure\">Failure</span>"
-        };
-
-        let errors = get_html_errors(&self.filename, content, &self.errors);
-        let errors_count = if !errors.is_empty() {
-            errors.len().to_string()
-        } else {
-            "-".to_string()
-        };
+        let source_css = include_str!("resources/source.css");
         let hurl_css = hurl_core::format::hurl_css();
-        let href_file = format!("{}.html", self.id);
-        let href_waterfall = format!("{}-waterfall.html", self.id);
         format!(
-            include_str!("resources/file.html"),
-            file_css = file_css,
+            include_str!("resources/source.html"),
+            filename = self.filename,
             hurl_css = hurl_css,
             lines_div = lines_div,
-            file_div = file_div,
-            errors_count = errors_count,
-            errors = errors,
-            filename = self.filename,
-            status = status,
-            href_file = href_file,
-            href_waterfall = href_waterfall,
-            duration = self.time_in_ms
+            nav = nav,
+            nav_css = nav_css,
+            source_div = source_div,
+            source_css = source_css,
         )
     }
 }
@@ -113,29 +57,6 @@ fn get_numbered_lines(content: &str) -> String {
             });
     lines.push_str("</pre></code>");
     lines
-}
-
-/// Formats a list of Hurl errors to HTML snippet.
-fn get_html_errors(filename: &str, content: &str, errors: &[RunnerError]) -> String {
-    errors
-        .iter()
-        .map(|e| {
-            let line = e.source_info.start.line;
-            let column = e.source_info.start.column;
-            let message = logger::error_string(filename, content, e, false);
-            // We override the first part of the error string to add an anchor to
-            // the error context.
-            let old = format!("{filename}:{line}:{column}");
-            let new = format!("<a href=\"#l{line}\">{filename}:{line}:{column}</a>");
-            let message = message.replace(&old, &new);
-            format!(
-                "<div class=\"error\">\
-                     <div class=\"error-desc\"><pre><code>{message}</code></pre></div>\
-                 </div>"
-            )
-        })
-        .collect::<Vec<_>>()
-        .join("")
 }
 
 /// Adds error class to `content` lines that triggers `errors`.

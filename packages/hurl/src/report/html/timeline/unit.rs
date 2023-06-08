@@ -16,10 +16,11 @@
  *
  */
 use std::cmp::Ordering;
-use std::ops::{Add, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
 use chrono::{DateTime, Utc};
 
+/// Represents a second, millisecond or microsecond.
 #[derive(Copy, Clone, PartialEq)]
 pub enum TimeUnit {
     Second(Second),
@@ -73,15 +74,18 @@ impl PartialOrd for TimeUnit {
     }
 }
 
+/// Represents a second.
 #[derive(Copy, Clone, PartialEq)]
 pub struct Second(pub f64);
 
+/// Represents a microsecond.
 impl From<Microsecond> for Second {
     fn from(value: Microsecond) -> Self {
         Second(value.0 / 1_000_000.0)
     }
 }
 
+/// Represents a millisecond.
 #[derive(Copy, Clone, PartialEq)]
 pub struct Millisecond(pub f64);
 
@@ -124,8 +128,29 @@ impl From<TimeUnit> for Microsecond {
     }
 }
 
+/// Represents a byte.
+#[derive(Copy, Clone, PartialEq)]
+pub struct Byte(pub f64);
+
+/// Represents a logic pixel.
 #[derive(Copy, Clone, PartialEq)]
 pub struct Pixel(pub f64);
+
+pub trait Px {
+    fn px(self) -> Pixel;
+}
+
+impl Px for f64 {
+    fn px(self) -> Pixel {
+        Pixel(self)
+    }
+}
+
+impl Px for usize {
+    fn px(self) -> Pixel {
+        Pixel(self as f64)
+    }
+}
 
 impl Sub for Pixel {
     type Output = Pixel;
@@ -138,6 +163,32 @@ impl Add for Pixel {
     type Output = Pixel;
     fn add(self, rhs: Self) -> Self {
         Pixel(self.0 + rhs.0)
+    }
+}
+
+impl Mul<f64> for Pixel {
+    type Output = Pixel;
+    fn mul(self, rhs: f64) -> Pixel {
+        Pixel(self.0 * rhs)
+    }
+}
+
+impl Mul<usize> for Pixel {
+    type Output = Pixel;
+    fn mul(self, rhs: usize) -> Pixel {
+        Pixel(self.0 * rhs as f64)
+    }
+}
+
+impl AddAssign for Pixel {
+    fn add_assign(&mut self, rhs: Pixel) {
+        *self = *self + rhs
+    }
+}
+
+impl SubAssign for Pixel {
+    fn sub_assign(&mut self, rhs: Pixel) {
+        *self = *self - rhs
     }
 }
 
@@ -159,6 +210,15 @@ impl PartialOrd for Pixel {
     }
 }
 
+impl Pixel {
+    pub fn max(v1: Pixel, v2: Pixel) -> Pixel {
+        Pixel(f64::max(v1.0, v2.0))
+    }
+    pub fn min(v1: Pixel, v2: Pixel) -> Pixel {
+        Pixel(f64::min(v1.0, v2.0))
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct Interval<Idx: Copy> {
     pub start: Idx,
@@ -171,6 +231,8 @@ impl<Idx: Copy> Interval<Idx> {
     }
 }
 
+/// Structure that hold a time interval and a pixel interval.
+/// This can be used to easily convert a time to a pixel value.
 #[derive(Copy, Clone)]
 pub struct Scale {
     times: Interval<Microsecond>,
@@ -178,6 +240,7 @@ pub struct Scale {
 }
 
 impl Scale {
+    /// Returns a new scale from `times` to `pixels`.
     pub fn new(times: Interval<DateTime<Utc>>, pixels: Interval<Pixel>) -> Self {
         let duration = times.end - times.start;
         let start = Microsecond(0.0);
@@ -186,6 +249,7 @@ impl Scale {
         Scale { times, pixels }
     }
 
+    /// Returns a pixel value of `time`.
     pub fn to_pixel(self, time: Microsecond) -> Pixel {
         let pixel = (time.0 - self.times.start.0) * (self.pixels.end.0 - self.pixels.start.0)
             / (self.times.end.0 - self.times.start.0);
