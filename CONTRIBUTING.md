@@ -54,7 +54,14 @@ $ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
 ```
 
-Hurl unit and integration tests need Python 3.6+ to be run. You can use a [virtual environment] and install the dependencies needed
+To run unit tests, you can run:
+
+```shell
+$ cargo test --lib
+```
+
+
+Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.6+. You can use a [virtual environment] and install the dependencies needed
 by the tests suite:
 
 ```shell
@@ -84,7 +91,7 @@ Now, you can follow these steps when you make changes:
 1. Build `cargo build`
 2. Run Clippy `cargo clippy`
 3. Format `cargo fmt`
-4. Run units tests `cargo test`
+4. Run units tests `cargo test --lib`
 5. Run integration tests `cd integration && python3 integration.py`
 
 Et voilà 🎉! 
@@ -103,3 +110,4 @@ Et voilà 🎉!
 [an integration test]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
 [Create a new Git branch]: https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-and-deleting-branches-within-your-repository
 [required to be signed]: https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification
+[integration tests]: https://github.com/Orange-OpenSource/hurl/tree/master/integration
