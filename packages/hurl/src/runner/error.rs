@@ -142,8 +142,8 @@ impl Error for runner::Error {
             RunnerError::VariableNotDefined { name } => {
                 format!("you must set the variable {name}")
             }
-            RunnerError::UnrenderableVariable { value } => {
-                format!("value {value} can not be rendered")
+            RunnerError::UnrenderableVariable { name, value } => {
+                format!("variable <{name}> with value {value} can not be rendered")
             }
             RunnerError::NoQueryResult { .. } => "The query didn't return any result".to_string(),
             RunnerError::UnsupportedContentEncoding(algorithm) => {

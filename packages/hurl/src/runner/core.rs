@@ -181,6 +181,7 @@ pub enum RunnerError {
     },
 
     UnrenderableVariable {
+        name: String,
         value: String,
     },
 

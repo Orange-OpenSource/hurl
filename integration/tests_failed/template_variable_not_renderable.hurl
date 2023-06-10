@@ -1,9 +1,9 @@
+# Only variables with scalar value (string, integer, ...) can be rendered in template
 GET http://localhost:8000/get-list
 
 HTTP 200
 [Captures]
 list: jsonpath "$.values"
-
 
 GET http://localhost:8000/undefined
 [QueryStringParams]

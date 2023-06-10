@@ -59,6 +59,7 @@ pub fn eval_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Resul
                 Err(Error {
                     source_info: source_info.clone(),
                     inner: RunnerError::UnrenderableVariable {
+                        name: name.to_string(),
                         value: value.to_string(),
                     },
                     assert: false,
@@ -143,6 +144,7 @@ mod tests {
         assert_eq!(
             error.inner,
             RunnerError::UnrenderableVariable {
+                name: "name".to_string(),
                 value: "[1,2]".to_string()
             }
         );
