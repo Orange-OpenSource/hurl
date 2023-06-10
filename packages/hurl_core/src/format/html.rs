@@ -874,6 +874,11 @@ impl HtmlFormatter {
             FilterValue::Count => self.fmt_span("filter-type", "count"),
             FilterValue::DaysAfterNow => self.fmt_span("filter-type", "daysAfterNow"),
             FilterValue::DaysBeforeNow => self.fmt_span("filter-type", "daysBeforeNow"),
+            FilterValue::Decode { space0, encoding } => {
+                self.fmt_span("filter-type", "decode");
+                self.fmt_space(space0);
+                self.fmt_template(encoding);
+            }
             FilterValue::Format { space0, fmt } => {
                 self.fmt_span("filter-type", "format");
                 self.fmt_space(space0);

@@ -1165,6 +1165,12 @@ impl Tokenizable for Filter {
             FilterValue::Count => vec![Token::FilterType(String::from("count"))],
             FilterValue::DaysAfterNow => vec![Token::FilterType(String::from("daysAfterNow"))],
             FilterValue::DaysBeforeNow => vec![Token::FilterType(String::from("daysBeforeNow"))],
+            FilterValue::Decode { space0, encoding } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("decode"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut encoding.tokenize());
+                tokens
+            }
             FilterValue::Format { space0, fmt } => {
                 let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("format"))];
                 tokens.append(&mut space0.tokenize());

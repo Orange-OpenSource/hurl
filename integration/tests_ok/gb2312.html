@@ -1,0 +1,11 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># In this test, the data returned by the server is encoded using GB2312.</span>
+<span class="line"></span><span class="comment"># Meanwhile, the 'Content-Type' HTTP response header doesn't precise</span>
+<span class="line"></span><span class="comment"># any charset.</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/gb2312</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">header</span> <span class="string">"Content-Type"</span> <span class="predicate-type">==</span> <span class="string">"text/html"</span></span>
+<span class="line"><span class="query-type">bytes</span> <span class="predicate-type">contains</span> hex,<span class="hex">c4e3bac3cac0bde7</span>;</span> <span class="comment"># 你好世界 encoded in GB2312</span>
+<span class="line"><span class="query-type">bytes</span> <span class="filter-type">decode</span> <span class="string">"gb2312"</span> <span class="predicate-type">contains</span> <span class="string">"你好"</span></span>
+</span></span><span class="line"></span>
+</code></pre>

@@ -565,6 +565,10 @@ impl ToJson for FilterValue {
                     JValue::String("daysBeforeNow".to_string()),
                 ));
             }
+            FilterValue::Decode { encoding, .. } => {
+                attributes.push(("type".to_string(), JValue::String("decode".to_string())));
+                attributes.push(("encoding".to_string(), JValue::String(encoding.to_string())));
+            }
             FilterValue::Format { fmt, .. } => {
                 attributes.push(("type".to_string(), JValue::String("format".to_string())));
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));

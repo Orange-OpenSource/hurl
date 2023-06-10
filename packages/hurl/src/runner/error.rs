@@ -67,6 +67,8 @@ impl Error for runner::Error {
             RunnerError::FilterMissingInput { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
             RunnerError::FilterRegexNoCapture { .. } => "Filter Error".to_string(),
+            RunnerError::FilterInvalidEncoding { .. } => "Filter Error".to_string(),
+            RunnerError::FilterDecode { .. } => "Filter Error".to_string(),
         }
     }
 
@@ -164,6 +166,12 @@ impl Error for runner::Error {
                 format!("invalid filter input: {message}")
             }
             RunnerError::FilterRegexNoCapture { .. } => "capture not found".to_string(),
+            RunnerError::FilterInvalidEncoding(encoding) => {
+                format!("<{encoding}> encoding is not supported")
+            }
+            RunnerError::FilterDecode(encoding) => {
+                format!("value can not be decoded with <{encoding}> encoding")
+            }
         }
     }
 }

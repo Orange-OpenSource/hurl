@@ -861,6 +861,10 @@ pub enum FilterValue {
     Count,
     DaysAfterNow,
     DaysBeforeNow,
+    Decode {
+        space0: Whitespace,
+        encoding: Template,
+    },
     Format {
         space0: Whitespace,
         fmt: Template,

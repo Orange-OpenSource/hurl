@@ -192,4 +192,6 @@ pub enum RunnerError {
     FilterMissingInput {},
     FilterInvalidInput(String),
     FilterRegexNoCapture {},
+    FilterInvalidEncoding(String),
+    FilterDecode(String),
 }

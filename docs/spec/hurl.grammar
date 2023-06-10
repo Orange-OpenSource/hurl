@@ -404,8 +404,9 @@ variable-name: [A-Za-z] [A-Za-z_-0-9]*
 
 filter:
     count-filter
-  | days-after-now
-  | days-before-now
+  | days-after-now-filter
+  | days-before-now-filter
+  | decode-filter
   | format-filter
   | html-escape-filter
   | html-unescape-filter
@@ -420,9 +421,11 @@ filter:
 
 count-filter: "count"
 
-days-after-now: "daysAfterNow"
+days-after-now-filter: "daysAfterNow"
 
-days-before-now: "daysBeforeNow"
+days-before-now-filter: "daysBeforeNow"
+
+decode-filter: "decode"
 
 format-filter: "format"
 

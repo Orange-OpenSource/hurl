@@ -18,6 +18,8 @@
 use std::collections::HashMap;
 
 use chrono::{NaiveDateTime, Utc};
+use encoding;
+use encoding::DecoderTrap;
 use hurl_core::ast::{Filter, FilterValue, RegexValue, SourceInfo, Template};
 use percent_encoding::AsciiSet;
 
@@ -51,6 +53,9 @@ fn eval_filter(
         FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, &filter.source_info, in_assert),
         FilterValue::DaysBeforeNow => eval_days_before_now(value, &filter.source_info, in_assert),
+        FilterValue::Decode { encoding, .. } => {
+            eval_decode(value, encoding, variables, &filter.source_info, in_assert)
+        }
         FilterValue::Format { fmt, .. } => {
             eval_format(value, fmt, variables, &filter.source_info, in_assert)
         }
@@ -162,6 +167,40 @@ fn eval_days_before_now(
         Value::Date(value) => {
             let diff = Utc::now().signed_duration_since(*value);
             Ok(Value::Integer(diff.num_days()))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+fn eval_decode(
+    value: &Value,
+    encoding_value: &Template,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Value, Error> {
+    let encoding_value = eval_template(encoding_value, variables)?;
+    match value {
+        Value::Bytes(value) => {
+            match encoding::label::encoding_from_whatwg_label(encoding_value.as_str()) {
+                None => Err(Error {
+                    source_info: source_info.clone(),
+                    inner: RunnerError::FilterInvalidEncoding(encoding_value),
+                    assert,
+                }),
+                Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
+                    Ok(decoded) => Ok(Value::String(decoded)),
+                    Err(_) => Err(Error {
+                        source_info: source_info.clone(),
+                        inner: RunnerError::FilterDecode(encoding_value),
+                        assert,
+                    }),
+                },
+            }
         }
         v => Err(Error {
             source_info: source_info.clone(),
