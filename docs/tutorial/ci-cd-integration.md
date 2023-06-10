@@ -215,8 +215,8 @@ jobs:
         run: echo "Building app..."
       - name: Integration test
         run: |
-          curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/3.0.0/hurl_3.0.0_amd64.deb
-          sudo dpkg -i hurl_3.0.0_amd64.deb
+          curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/3.0.1/hurl_3.0.1_amd64.deb
+          sudo dpkg -i hurl_3.0.1_amd64.deb
           bin/integration.sh
 ```
 
