@@ -26,6 +26,13 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
+    - name: Install python3 venv
+      run: |
+        bin/install_python3_venv.sh
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        which python3
+        python3 --version
+        pip --version
     - name: Install
       run: |
         bin/install_prerequisites_ubuntu.sh
@@ -77,20 +84,27 @@ jobs:
         run: |
           set -e
           echo "::group::Install system prerequisites"
-          bin/install_prerequisites_docker_ubuntu.sh
+            bin/install_prerequisites_docker_ubuntu.sh
+          echo "::endgroup::"
+          echo "::group::Install python3 venv"
+            bin/install_python3_venv.sh
+            export PATH=/tmp/hurl-python3-venv/bin:$PATH
+            which python3
+            python3 --version
+            pip --version
           echo "::endgroup::"
           echo "::group::Environment"
-          bin/environment.sh
+            bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install generic linux package"
-          bin/release/install_generic_linux_package.sh
+            bin/release/install_generic_linux_package.sh
           export PATH="/tmp/hurl-generic-linux:$PATH"
           echo "::endgroup::"
           echo "::group::Install tests prerequisites"
-          bin/test/test_prerequisites.sh
+            bin/test/test_prerequisites.sh
           echo "::endgroup::"
           echo "::group::Tests"
-          bin/test/test_integ.sh
+            bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -121,20 +135,27 @@ jobs:
         run: |
           set -e
           echo "::group::Install system prerequisites"
-          bin/install_prerequisites_docker_archlinux.sh
+            bin/install_prerequisites_docker_archlinux.sh
+          echo "::endgroup::"
+          echo "::group::Install python3 venv"
+            bin/install_python3_venv.sh
+            export PATH=/tmp/hurl-python3-venv/bin:$PATH
+            which python3
+            python3 --version
+            pip --version
           echo "::endgroup::"
           echo "::group::Environment"
-          bin/environment.sh
+            bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install generic linux package"
-          bin/release/install_generic_linux_package.sh
+            bin/release/install_generic_linux_package.sh
           export PATH="/tmp/hurl-generic-linux:$PATH"
           echo "::endgroup::"
           echo "::group::Install tests prerequisites"
-          bin/test/test_prerequisites.sh
+            bin/test/test_prerequisites.sh
           echo "::endgroup::"
           echo "::group::Tests"
-          bin/test/test_integ.sh
+            bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -165,20 +186,27 @@ jobs:
         run: |
           set -e
           echo "::group::Install system prerequisites"
-          bin/install_prerequisites_docker_fedora.sh
+            bin/install_prerequisites_docker_fedora.sh
+          echo "::endgroup::"
+          echo "::group::Install python3 venv"
+            bin/install_python3_venv.sh
+            export PATH=/tmp/hurl-python3-venv/bin:$PATH
+            which python3
+            python3 --version
+            pip --version
           echo "::endgroup::"
           echo "::group::Environment"
-          bin/environment.sh
+            bin/environment.sh
           echo "::endgroup::"
           echo "::group::Install generic linux package"
-          bin/release/install_generic_linux_package.sh
+            bin/release/install_generic_linux_package.sh
           export PATH="/tmp/hurl-generic-linux:$PATH"
           echo "::group::Install tests prerequisites"
           echo "::endgroup::"
-          bin/test/test_prerequisites.sh
+            bin/test/test_prerequisites.sh
           echo "::endgroup::"
           echo "::group::Tests"
-          bin/test/test_integ.sh || true # to be fixed => "error in stderr actual: <hurl: /lib64/libcurl.so.4: no version information available (required by hurl)"
+            bin/test/test_integ.sh || true # to be fixed => "error in stderr actual: <hurl: /lib64/libcurl.so.4: no version information available (required by hurl)"
           echo "::endgroup::"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -199,10 +227,17 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    - name: Install
+    - name: Install Prerequisites
+      run: bin/install_prerequisites_ubuntu.sh
+    - name: Install python3 venv
       run: |
-        bin/install_prerequisites_ubuntu.sh
-        bin/install_rust.sh
+        bin/install_python3_venv.sh
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        which python3
+        python3 --version
+        pip --version
+    - name: Install Rust
+      run: bin/install_rust.sh
     - name: Environment
       run: bin/environment.sh
     - name: Build
@@ -240,8 +275,17 @@ jobs:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
       run: bin/install_prerequisites_macos.sh
+    - name: Install python3 venv
+      run: |
+        bin/install_python3_venv.sh
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        which python3
+        python3 --version
+        pip --version
     - name: Install Rust
       run: bin/install_rust.sh
+    - name: Environment
+      run: bin/environment.sh
     - name: Build
       run: |
         bin/release/release.sh

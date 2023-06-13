@@ -43,6 +43,14 @@ jobs:
     - name: Install prerequisites
       run: bin/check/install_prerequisites.sh
 
+    - name: Install python3 venv
+      run: |
+        bin/install_python3_venv.sh
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
+        which python3
+        python3 --version
+        pip --version
+
     - name: Check Rust version
       run: bin/check/rust_version.py 7
     
