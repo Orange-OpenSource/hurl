@@ -418,6 +418,7 @@ filter:
   | to-int-filter
   | url-decode-filter
   | url-encode-filter
+  | xpath-filter
 
 count-filter: "count"
 
@@ -448,6 +449,8 @@ to-int-filter: "toInt"
 url-decode-filter: "urlDecode"
 
 url-encode-filter: "urlEncode"
+
+xpath-filter: "xpath" sp quoted-string
 
 
 # Lexical Grammar

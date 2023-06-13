@@ -26,6 +26,7 @@ use percent_encoding::AsciiSet;
 use crate::html;
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
+use crate::runner::xpath;
 use crate::runner::{Error, RunnerError, Value};
 
 /// Apply successive `filters` to an input `value`.
@@ -100,6 +101,9 @@ fn eval_filter(
         FilterValue::ToInt => eval_to_int(value, &filter.source_info, in_assert),
         FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info, in_assert),
         FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info, in_assert),
+        FilterValue::XPath { expr, .. } => {
+            eval_xpath(value, expr, variables, &filter.source_info, in_assert)
+        }
     }
 }
 
@@ -444,6 +448,63 @@ fn eval_to_int(
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),
+    }
+}
+
+pub fn eval_xpath(
+    value: &Value,
+    expr: &Template,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
+    match value {
+        Value::String(xml) => {
+            // The filter will use the HTML parser that should also work with XML input
+            let is_html = true;
+            eval_xpath_string(xml, expr, variables, source_info, is_html)
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+pub fn eval_xpath_string(
+    xml: &str,
+    expr_template: &Template,
+    variables: &HashMap<String, Value>,
+    source_info: &SourceInfo,
+    is_html: bool,
+) -> Result<Option<Value>, Error> {
+    let expr = eval_template(expr_template, variables)?;
+    let result = if is_html {
+        xpath::eval_html(xml, &expr)
+    } else {
+        xpath::eval_xml(xml, &expr)
+    };
+    match result {
+        Ok(value) => Ok(Some(value)),
+        Err(xpath::XpathError::InvalidXml {}) => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::QueryInvalidXml,
+            assert: false,
+        }),
+        Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::QueryInvalidXml,
+            assert: false,
+        }),
+        Err(xpath::XpathError::Eval {}) => Err(Error {
+            source_info: expr_template.source_info.clone(),
+            inner: RunnerError::QueryInvalidXpathEval,
+            assert: false,
+        }),
+        Err(xpath::XpathError::Unsupported {}) => {
+            panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproqduce this usecase myself
+        }
     }
 }
 

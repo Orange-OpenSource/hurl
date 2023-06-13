@@ -907,6 +907,10 @@ pub enum FilterValue {
     ToInt,
     UrlDecode,
     UrlEncode,
+    XPath {
+        space0: Whitespace,
+        expr: Template,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Copy)]

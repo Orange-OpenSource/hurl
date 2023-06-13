@@ -66,6 +66,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
             to_date_filter,
             url_decode_filter,
             url_encode_filter,
+            xpath_filter,
         ],
         reader,
     )
@@ -181,6 +182,13 @@ fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
 fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     try_literal("urlDecode", reader)?;
     Ok(FilterValue::UrlDecode)
+}
+
+fn xpath_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+    try_literal("xpath", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    Ok(FilterValue::XPath { space0, expr })
 }
 
 #[cfg(test)]

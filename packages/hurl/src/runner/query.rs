@@ -22,9 +22,10 @@ use regex::Regex;
 use sha2::Digest;
 
 use crate::runner::core::{Error, RunnerError};
+use crate::runner::filter;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
-use crate::runner::xpath;
+
 use crate::{http, jsonpath};
 
 pub type QueryResult = Result<Option<Value>, Error>;
@@ -130,43 +131,16 @@ fn eval_query_xpath(
     response: &http::Response,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    query_source_info: &SourceInfo,
+    source_info: &SourceInfo,
 ) -> QueryResult {
-    let expr_source_info = &expr.source_info;
-    let value = eval_template(expr, variables)?;
     match response.text() {
         Err(inner) => Err(Error {
-            source_info: query_source_info.clone(),
+            source_info: source_info.clone(),
             inner: RunnerError::from(inner),
             assert: false,
         }),
         Ok(xml) => {
-            let result = if response.is_html() {
-                xpath::eval_html(&xml, &value)
-            } else {
-                xpath::eval_xml(&xml, &value)
-            };
-            match result {
-                Ok(value) => Ok(Some(value)),
-                Err(xpath::XpathError::InvalidXml {}) => Err(Error {
-                    source_info: query_source_info.clone(),
-                    inner: RunnerError::QueryInvalidXml,
-                    assert: false,
-                }),
-                Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
-                    source_info: query_source_info.clone(),
-                    inner: RunnerError::QueryInvalidXml,
-                    assert: false,
-                }),
-                Err(xpath::XpathError::Eval {}) => Err(Error {
-                    source_info: expr_source_info.clone(),
-                    inner: RunnerError::QueryInvalidXpathEval,
-                    assert: false,
-                }),
-                Err(xpath::XpathError::Unsupported {}) => {
-                    panic!("Unsupported xpath {value}"); // good usecase for panic - I could nmot reporduce this usecase myself
-                }
-            }
+            filter::eval_xpath_string(&xml, expr, variables, source_info, response.is_html())
         }
     }
 }
