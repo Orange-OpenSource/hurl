@@ -67,7 +67,7 @@ by the tests suite:
 ```shell
 $ python3 -m venv .venv
 $ source .venv/bin/activate
-$ pip3 install --requirement bin/requirements-frozen.txt
+$ pip install --break-system-packages --requirement bin/requirements-frozen.txt 
 ```
 
 Then, you can launch our local server (used to test Hurl features):

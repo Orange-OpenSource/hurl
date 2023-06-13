@@ -7,7 +7,7 @@ $actual_dir=(Get-Location).Path
 $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
 
 # install python libs
-pip3 install --requirement $project_root_path\bin\requirements-frozen.txt
+pip install --break-system-packages --requirement $project_root_path\bin\requirements-frozen.txt
 if ($LASTEXITCODE) { Throw }
 
 # start mock servers

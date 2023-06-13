@@ -22,7 +22,7 @@ $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYN
 if ($LASTEXITCODE) { Throw }
 
 # update pip
-python -m pip install --upgrade pip --quiet
+python -m pip install --upgrade pip --break-system-packages --quiet
 if ($LASTEXITCODE) { Throw }
 
 # install proxy

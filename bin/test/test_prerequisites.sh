@@ -34,7 +34,7 @@ function cat_and_exit_err() {
 }
 
 echo "----- install servers prerequisites -----"
-pip3 install --requirement bin/requirements-frozen.txt
+pip install --break-system-packages --requirement bin/requirements-frozen.txt
 
 echo "----- start servers -----"
 cd integration
