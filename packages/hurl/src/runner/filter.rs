@@ -35,10 +35,18 @@ pub fn eval_filters(
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
-) -> Result<Value, Error> {
-    let mut value = value.clone();
+) -> Result<Option<Value>, Error> {
+    let mut value = Some(value.clone());
     for filter in filters {
-        value = eval_filter(filter, &value, variables, in_assert)?;
+        value = if let Some(value) = value {
+            eval_filter(filter, &value, variables, in_assert)?
+        } else {
+            return Err(Error {
+                source_info: filter.source_info.clone(),
+                inner: RunnerError::FilterMissingInput {},
+                assert: in_assert,
+            });
+        }
     }
     Ok(value)
 }
@@ -48,7 +56,7 @@ fn eval_filter(
     value: &Value,
     variables: &HashMap<String, Value>,
     in_assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match &filter.value {
         FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
         FilterValue::DaysAfterNow => eval_days_after_now(value, &filter.source_info, in_assert),
@@ -101,12 +109,12 @@ fn eval_regex(
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     let re = eval_regex_value(regex_value, variables)?;
     match value {
         Value::String(s) => match re.captures(s.as_str()) {
             Some(captures) => match captures.get(1) {
-                Some(v) => Ok(Value::String(v.as_str().to_string())),
+                Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
                 None => Err(Error {
                     source_info: source_info.clone(),
                     inner: RunnerError::FilterRegexNoCapture {},
@@ -127,11 +135,15 @@ fn eval_regex(
     }
 }
 
-fn eval_count(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
+fn eval_count(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
     match value {
-        Value::List(values) => Ok(Value::Integer(values.len() as i64)),
-        Value::Bytes(values) => Ok(Value::Integer(values.len() as i64)),
-        Value::Nodeset(size) => Ok(Value::Integer(*size as i64)),
+        Value::List(values) => Ok(Some(Value::Integer(values.len() as i64))),
+        Value::Bytes(values) => Ok(Some(Value::Integer(values.len() as i64))),
+        Value::Nodeset(size) => Ok(Some(Value::Integer(*size as i64))),
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -144,11 +156,11 @@ fn eval_days_after_now(
     value: &Value,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::Date(value) => {
             let diff = value.signed_duration_since(Utc::now());
-            Ok(Value::Integer(diff.num_days()))
+            Ok(Some(Value::Integer(diff.num_days())))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -162,11 +174,11 @@ fn eval_days_before_now(
     value: &Value,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::Date(value) => {
             let diff = Utc::now().signed_duration_since(*value);
-            Ok(Value::Integer(diff.num_days()))
+            Ok(Some(Value::Integer(diff.num_days())))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -182,7 +194,7 @@ fn eval_decode(
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     let encoding_value = eval_template(encoding_value, variables)?;
     match value {
         Value::Bytes(value) => {
@@ -193,7 +205,7 @@ fn eval_decode(
                     assert,
                 }),
                 Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
-                    Ok(decoded) => Ok(Value::String(decoded)),
+                    Ok(decoded) => Ok(Some(Value::String(decoded))),
                     Err(_) => Err(Error {
                         source_info: source_info.clone(),
                         inner: RunnerError::FilterDecode(encoding_value),
@@ -216,13 +228,13 @@ fn eval_format(
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     let fmt = eval_template(fmt, variables)?;
 
     match value {
         Value::Date(value) => {
             let formatted = format!("{}", value.format(fmt.as_str()));
-            Ok(Value::String(formatted))
+            Ok(Some(Value::String(formatted)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -234,7 +246,11 @@ fn eval_format(
 
 // does not encode "/"
 // like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
-fn eval_url_encode(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
+fn eval_url_encode(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(value) => {
             const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
@@ -244,7 +260,7 @@ fn eval_url_encode(value: &Value, source_info: &SourceInfo, assert: bool) -> Res
                 .remove(b'~')
                 .remove(b'/');
             let encoded = percent_encoding::percent_encode(value.as_bytes(), FRAGMENT).to_string();
-            Ok(Value::String(encoded))
+            Ok(Some(Value::String(encoded)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -254,11 +270,15 @@ fn eval_url_encode(value: &Value, source_info: &SourceInfo, assert: bool) -> Res
     }
 }
 
-fn eval_url_decode(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
+fn eval_url_decode(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(value) => {
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
-                Ok(decoded) => Ok(Value::String(decoded.to_string())),
+                Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 Err(_) => Err(Error {
                     source_info: source_info.clone(),
                     inner: RunnerError::FilterInvalidInput("Invalid UTF8 stream".to_string()),
@@ -274,7 +294,12 @@ fn eval_url_decode(value: &Value, source_info: &SourceInfo, assert: bool) -> Res
     }
 }
 
-fn eval_nth(value: &Value, source_info: &SourceInfo, assert: bool, n: u64) -> Result<Value, Error> {
+fn eval_nth(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+    n: u64,
+) -> Result<Option<Value>, Error> {
     match value {
         Value::List(values) => match values.get(n as usize) {
             None => Err(Error {
@@ -285,7 +310,7 @@ fn eval_nth(value: &Value, source_info: &SourceInfo, assert: bool, n: u64) -> Re
                 )),
                 assert,
             }),
-            Some(value) => Ok(value.clone()),
+            Some(value) => Ok(Some(value.clone())),
         },
         v => Err(Error {
             source_info: source_info.clone(),
@@ -295,11 +320,15 @@ fn eval_nth(value: &Value, source_info: &SourceInfo, assert: bool, n: u64) -> Re
     }
 }
 
-fn eval_html_escape(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
+fn eval_html_escape(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(value) => {
             let encoded = html::html_escape(value);
-            Ok(Value::String(encoded))
+            Ok(Some(Value::String(encoded)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -313,11 +342,11 @@ fn eval_html_unescape(
     value: &Value,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(value) => {
             let decoded = html::html_unescape(value);
-            Ok(Value::String(decoded))
+            Ok(Some(Value::String(decoded)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -334,13 +363,13 @@ fn eval_replace(
     assert: bool,
     old_value: &RegexValue,
     new_value: &Template,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(v) => {
             let re = eval_regex_value(old_value, variables)?;
             let new_value = eval_template(new_value, variables)?;
             let s = re.replace_all(v, new_value).to_string();
-            Ok(Value::String(s))
+            Ok(Some(Value::String(s)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -356,7 +385,7 @@ fn eval_split(
     source_info: &SourceInfo,
     assert: bool,
     sep: &Template,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     match value {
         Value::String(s) => {
             let sep = eval_template(sep, variables)?;
@@ -364,7 +393,7 @@ fn eval_split(
                 .split(&sep)
                 .map(|v| Value::String(v.to_string()))
                 .collect();
-            Ok(Value::List(values))
+            Ok(Some(Value::List(values)))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -380,12 +409,14 @@ fn eval_to_date(
     variables: &HashMap<String, Value>,
     source_info: &SourceInfo,
     assert: bool,
-) -> Result<Value, Error> {
+) -> Result<Option<Value>, Error> {
     let fmt = eval_template(fmt, variables)?;
 
     match value {
         Value::String(v) => match NaiveDateTime::parse_from_str(v, fmt.as_str()) {
-            Ok(v) => Ok(Value::Date(v.and_local_timezone(chrono::Utc).unwrap())),
+            Ok(v) => Ok(Some(Value::Date(
+                v.and_local_timezone(chrono::Utc).unwrap(),
+            ))),
             Err(_) => Err(Error {
                 source_info: source_info.clone(),
                 inner: RunnerError::FilterInvalidInput(value.display()),
@@ -400,12 +431,16 @@ fn eval_to_date(
     }
 }
 
-fn eval_to_int(value: &Value, source_info: &SourceInfo, assert: bool) -> Result<Value, Error> {
+fn eval_to_int(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
     match value {
-        Value::Integer(v) => Ok(Value::Integer(*v)),
-        Value::Float(v) => Ok(Value::Integer(*v as i64)),
+        Value::Integer(v) => Ok(Some(Value::Integer(*v))),
+        Value::Float(v) => Ok(Some(Value::Integer(*v as i64))),
         Value::String(v) => match v.parse::<i64>() {
-            Ok(i) => Ok(Value::Integer(i)),
+            Ok(i) => Ok(Some(Value::Integer(i))),
             Err(_) => Err(Error {
                 source_info: source_info.clone(),
                 inner: RunnerError::FilterInvalidInput(value.display()),
@@ -451,6 +486,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(3)
         );
@@ -471,6 +507,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(3)
         );
@@ -500,6 +537,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(0)
         );
@@ -515,6 +553,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(1)
         );
@@ -528,6 +567,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(-1)
         );
@@ -564,6 +604,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::String("02/04/2017 12:50".to_string())
         );
@@ -598,6 +639,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::String("Bob".to_string())
         );
@@ -659,6 +701,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::String(
                 "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B".to_string()
@@ -680,6 +723,7 @@ pub mod tests {
                 &variables,
                 false,
             )
+            .unwrap()
             .unwrap(),
             Value::String("https://mozilla.org/?x=шеллы".to_string())
         );
@@ -699,15 +743,20 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(123)
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Integer(123), &variables, false).unwrap(),
+            eval_filter(&filter, &Value::Integer(123), &variables, false)
+                .unwrap()
+                .unwrap(),
             Value::Integer(123)
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Float(1.6), &variables, false).unwrap(),
+            eval_filter(&filter, &Value::Float(1.6), &variables, false)
+                .unwrap()
+                .unwrap(),
             Value::Integer(1)
         );
     }
@@ -765,6 +814,7 @@ pub mod tests {
                     &variables,
                     false
                 )
+                .unwrap()
                 .unwrap(),
                 Value::String(output.to_string())
             );
@@ -796,6 +846,7 @@ pub mod tests {
                     &variables,
                     false
                 )
+                .unwrap()
                 .unwrap(),
                 Value::String(output.to_string())
             );
@@ -828,6 +879,7 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::Integer(2)
         );
@@ -888,6 +940,7 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::String("1,2,3,4".to_string())
         );
@@ -921,6 +974,7 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::List(vec![
                 Value::String("1".to_string()),
@@ -964,6 +1018,7 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::Date(datetime_utc)
         );
@@ -998,6 +1053,7 @@ pub mod tests {
                 &variables,
                 false
             )
+            .unwrap()
             .unwrap(),
             Value::Date(datetime_utc)
         );

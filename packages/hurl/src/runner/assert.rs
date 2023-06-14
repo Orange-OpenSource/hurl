@@ -153,7 +153,7 @@ pub fn eval_assert(
             Some(value) => {
                 let filters = assert.filters.iter().map(|(_, f)| f.clone()).collect();
                 match eval_filters(&filters, &value, variables, true) {
-                    Ok(value) => Ok(Some(value)),
+                    Ok(value) => Ok(value),
                     Err(e) => Err(e),
                 }
             }

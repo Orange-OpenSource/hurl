@@ -44,9 +44,19 @@ pub fn eval_capture(
         }
         Some(value) => {
             let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
-            eval_filters(&filters, &value, variables, false)?
+            match eval_filters(&filters, &value, variables, false)? {
+                None => {
+                    return Err(Error {
+                        source_info: capture.query.source_info.clone(),
+                        inner: RunnerError::NoQueryResult {},
+                        assert: false,
+                    })
+                }
+                Some(v) => v,
+            }
         }
     };
+
     Ok(CaptureResult {
         name: name.clone(),
         value,
