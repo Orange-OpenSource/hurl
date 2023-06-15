@@ -89,11 +89,11 @@ pub fn get_certinfo(easy: &Easy) -> Result<Option<CertInfo>, Error> {
 //            │                              │                                            │
 //            │                              │◄────────── ChangeCipherSpec ───────────────┤
 //            └     time_appconnect   2.256s │                Finished                    │
-//            ┌   time_pretransfert   2.259s ├─────────────── HTTP GET ──────────────────►│
+//            ┌   time_pretransfer    2.259s ├─────────────── HTTP GET ──────────────────►│
 //            │                              │                                            │
 //    Wait   <                               │                                            │
 //            │                              │                                            │
-//            └ time_starttransfert   2.506s │                                            │
+//            └ time_starttransfer    2.506s │                                            │
 //            ┌                              │◄───────────────────────────────────────────┤
 //    Data    │                              │◄─────────────── Response ──────────────────┤
 //  Transfer <                               │                   ...                      │

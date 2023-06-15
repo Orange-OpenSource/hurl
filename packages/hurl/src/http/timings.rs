@@ -23,8 +23,8 @@ use crate::http::easy_ext;
 
 /// Timing information for an HTTP transfer.
 // See [`easy_ext::namelookup_time_t`], [`easy_ext::connect_time_t`], [`easy_ext::app_connect_time_t`],
-// [`easy_ext::pre_transfert_time_t`], [`easy_ext::start_transfert_time_t`] and [`easy_ext::total_time_t`]
-// for [`TimingInfo`] fields definition.
+// [`easy_ext::pre_transfer_time_t`], [`easy_ext::start_transfer_time_t`] and [`easy_ext::total_time_t`]
+// for fields definition.
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct Timings {
     pub begin_call: DateTime<Utc>,
