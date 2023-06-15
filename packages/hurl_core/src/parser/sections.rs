@@ -364,6 +364,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_insecure,
             option_follow_location,
             option_max_redirect,
+            option_proxy,
             option_retry,
             option_retry_interval,
             option_variable,
@@ -528,6 +529,41 @@ fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, EntryOption>
     };
 
     Ok(EntryOption::MaxRedirect(option))
+}
+
+fn option_proxy(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("proxy", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = proxy(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+    let option = ProxyOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+    Ok(EntryOption::Proxy(option))
+}
+
+fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':');
+    if name.is_empty() {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "proxy name".to_string(),
+            },
+        });
+    }
+    Ok(name)
 }
 
 fn option_retry(reader: &mut Reader) -> ParseResult<'static, EntryOption> {

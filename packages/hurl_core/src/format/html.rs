@@ -209,6 +209,7 @@ impl HtmlFormatter {
             EntryOption::Insecure(option) => self.fmt_insecure_option(option),
             EntryOption::FollowLocation(option) => self.fmt_follow_location_option(option),
             EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
+            EntryOption::Proxy(option) => self.fmt_proxy_option(option),
             EntryOption::Retry(option) => self.fmt_retry_option(option),
             EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
             EntryOption::Variable(option) => self.fmt_variable_option(option),
@@ -304,6 +305,19 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_number(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_proxy_option(&mut self, option: &ProxyOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("proxy");
+        self.fmt_space(&option.space1);
+        self.buffer.push(':');
+        self.fmt_space(&option.space2);
+        self.fmt_string(&option.value);
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }

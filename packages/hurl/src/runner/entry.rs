@@ -334,6 +334,10 @@ pub fn get_entry_options(
                         runner_options.max_redirect = Some(option.value);
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
                     }
+                    EntryOption::Proxy(option) => {
+                        runner_options.proxy = Some(option.value.clone());
+                        logger.debug(format!("proxy: {}", option.value).as_str());
+                    }
                     EntryOption::Retry(option) => {
                         runner_options.retry = option.value;
                         logger.debug(format!("retry: {}", option.value).as_str());
