@@ -6,4 +6,4 @@ from flask import Response, request
 def post_large():
     data = request.data
     assert len(data) == 15728640
-    return Response("15728640", status=200)
+    return Response(f"{len(data)}", status=200)

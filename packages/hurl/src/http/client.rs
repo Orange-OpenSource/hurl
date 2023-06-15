@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use std::io::Read;
 use std::str;
 use std::str::FromStr;
 
@@ -170,7 +169,7 @@ impl Client {
         self.set_cookies(&request_spec.cookies);
         self.set_form(&request_spec.form);
         self.set_multipart(&request_spec.multipart);
-        let mut request_spec_body: &[u8] = &request_spec.body.bytes();
+        let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body);
         self.set_headers(request_spec, options);
 
@@ -196,11 +195,6 @@ impl Client {
         }
         {
             let mut transfer = self.handle.transfer();
-            if !request_spec_body.is_empty() {
-                transfer
-                    .read_function(|buf| Ok(request_spec_body.read(buf).unwrap_or(0)))
-                    .unwrap();
-            }
 
             transfer
                 .debug_function(|info_type, data| match info_type {
@@ -513,7 +507,7 @@ impl Client {
     fn set_body(&mut self, data: &[u8]) {
         if !data.is_empty() {
             self.handle.post(true).unwrap();
-            self.handle.post_field_size(data.len() as u64).unwrap();
+            self.handle.post_fields_copy(data).unwrap();
         }
     }
 
