@@ -370,6 +370,8 @@ impl Client {
             logger.info("<");
             if very_verbose {
                 response.log_body(true, logger);
+                logger.debug("");
+                timings.log(logger);
             }
         }
 

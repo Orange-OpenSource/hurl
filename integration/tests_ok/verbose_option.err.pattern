@@ -67,3 +67,13 @@
 * Response body:
 * Hello World!
 *
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
+*

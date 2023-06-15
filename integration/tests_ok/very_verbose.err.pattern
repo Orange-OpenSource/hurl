@@ -50,6 +50,16 @@
 * </body>
 * </html>
 *
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
+*
 * => Redirect to http://localhost:8000/very-verbose/redirected
 *
 ** Hostname localhost was found in DNS cache
@@ -76,6 +86,16 @@
 <
 * Response body:
 * Redirected.
+*
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 2
@@ -112,6 +132,16 @@
 <
 * Response body:
 * café
+*
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 3
@@ -160,6 +190,16 @@
 * Response body:
 * Hello World!
 *
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
+*
 * ------------------------------------------------------------------------------
 * Executing entry 4
 *
@@ -195,6 +235,16 @@
 <
 * Response body:
 * Bytes <f198388ba26c2c53005f24643826384f15ba905b8ca070a470b61885c6639f8bbfe63fcee5fb498a630249e499e4eddcc9ca793406c14d02c97107e09c7af57a...>
+*
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
 *
 * ------------------------------------------------------------------------------
 * Executing entry 5
@@ -239,6 +289,16 @@
 * Response body:
 *
 *
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
+*
 * ------------------------------------------------------------------------------
 * Executing entry 6
 *
@@ -276,4 +336,14 @@
 <
 * Response body:
 * Done
+*
+* Timings:
+* begin: ~~~ UTC
+* end: ~~~ UTC
+* namelookup: ~~~ µs
+* connect: ~~~ µs
+* app_connect: ~~~ µs
+* pre_transfer: ~~~ µs
+* start_transfer: ~~~ µs
+* total: ~~~ µs
 *
