@@ -115,17 +115,9 @@ fn eval_regex(
         Value::String(s) => match re.captures(s.as_str()) {
             Some(captures) => match captures.get(1) {
                 Some(v) => Ok(Some(Value::String(v.as_str().to_string()))),
-                None => Err(Error {
-                    source_info: source_info.clone(),
-                    inner: RunnerError::FilterRegexNoCapture {},
-                    assert,
-                }),
+                None => Ok(None),
             },
-            None => Err(Error {
-                source_info: source_info.clone(),
-                inner: RunnerError::FilterRegexNoCapture {},
-                assert,
-            }),
+            None => Ok(None),
         },
         v => Err(Error {
             source_info: source_info.clone(),
