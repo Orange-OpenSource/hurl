@@ -36,7 +36,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:5:6
+*   --> tests_failed/retry_option.hurl:5:6
 *    |
 *  5 | HTTP 200
 *    |      ^^^ actual value is <404>
@@ -75,7 +75,7 @@
 <
 *
 * Assert status code
-*   --> tests_failed/option_retry.hurl:5:6
+*   --> tests_failed/retry_option.hurl:5:6
 *    |
 *  5 | HTTP 200
 *    |      ^^^ actual value is <404>
@@ -116,7 +116,7 @@
 * Retry max count reached, no more retry
 *
 error: Assert status code
-  --> tests_failed/option_retry.hurl:5:6
+  --> tests_failed/retry_option.hurl:5:6
    |
  5 | HTTP 200
    |      ^^^ actual value is <404>
