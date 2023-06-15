@@ -375,6 +375,10 @@ fn glob_files(matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
                     }
                 }
             }
+            if filenames.is_empty() {
+                let message = format!("hurl: cannot access '{expr}': No such file or directory");
+                return Err(OptionsError::Error(message));
+            }
         }
     }
     Ok(filenames)
