@@ -61,7 +61,7 @@ impl Testcase {
 
         let margin_top = 50.px();
         let margin_bottom = 250.px();
-        let width = 938.px();
+        let width = 1138.px();
         let height = (CALL_HEIGHT * calls.len()) + margin_top + margin_bottom;
         let height = Pixel::max(100.px(), height);
 

@@ -12,6 +12,10 @@ body {
 }
 
 .timeline-container {
+    max-width: 1400px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     border: solid 1px #dcdcde;
     display: flex;
 }
