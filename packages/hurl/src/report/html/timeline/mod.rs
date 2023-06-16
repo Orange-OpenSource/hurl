@@ -82,7 +82,8 @@ impl Testcase {
         let mut calls_ctx = vec![];
         for (entry_index, e) in entries.iter().enumerate() {
             for (call_entry_index, _) in e.calls.iter().enumerate() {
-                let entry_src = hurl_file.entries.get(entry_index).unwrap();
+                let entry_src_index = e.entry_index - 1;
+                let entry_src = hurl_file.entries.get(entry_src_index).unwrap();
                 let line = entry_src.request.space0.source_info.start.line;
                 let ctx = CallContext {
                     success: e.errors.is_empty(),
