@@ -76,7 +76,28 @@ impl RequestSpec {
         }
 
         if !self.body.bytes().is_empty() {
-            arguments.push("--data".to_string());
+            // See <https://curl.se/docs/manpage.html#-d> and <https://curl.se/docs/manpage.html#--data-binary>:
+            //
+            // > -d, --data <data>
+            // > ...
+            // > If you start the data with the letter @, the rest should be a file name to read the
+            // > data from, or - if you want curl to read the data from stdin. Posting data from a
+            // > file named 'foobar' would thus be done with -d, --data @foobar. When -d, --data is
+            // > told to read from a file like that, carriage returns and newlines will be stripped
+            // > out. If you do not want the @ character to have a special interpretation use
+            // > --data-raw instead.
+            // > ...
+            // > --data-binary <data>
+            // >
+            // > (HTTP) This posts data exactly as specified with no extra processing whatsoever.
+            //
+            // In summary: if the payload is a file (@foo.bin), we must use --data-binary option in
+            // order to curl to not process the data sent.
+            let param = match self.body {
+                Body::File(_, _) => "--data-binary",
+                _ => "--data",
+            };
+            arguments.push(param.to_string());
             arguments.push(self.body.curl_arg(context_dir));
         }
 
@@ -237,7 +258,6 @@ pub mod tests {
     use std::path::Path;
 
     use super::*;
-    use crate::http;
 
     fn form_http_request() -> RequestSpec {
         RequestSpec {
@@ -347,7 +367,7 @@ pub mod tests {
     fn requests_curl_args() {
         let context_dir = &ContextDir::default();
         assert_eq!(
-            http::hello_http_request().curl_args(context_dir),
+            hello_http_request().curl_args(context_dir),
             vec!["'http://localhost:8000/hello'".to_string()]
         );
         assert_eq!(
@@ -376,6 +396,45 @@ pub mod tests {
                 "--data".to_string(),
                 "'param2=a%20b'".to_string(),
                 "'http://localhost/form-params'".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn post_data_curl_args() {
+        let context_dir = &ContextDir::default();
+        let req = RequestSpec {
+            method: Method("POST".to_string()),
+            url: "http://localhost:8000/hello".to_string(),
+            body: Body::Text("foo".to_string()),
+            ..Default::default()
+        };
+        assert_eq!(
+            req.curl_args(context_dir),
+            vec![
+                "--header",
+                "'Content-Type:'",
+                "--data",
+                "'foo'",
+                "'http://localhost:8000/hello'"
+            ]
+        );
+
+        let context_dir = &ContextDir::default();
+        let req = RequestSpec {
+            method: Method("POST".to_string()),
+            url: "http://localhost:8000/hello".to_string(),
+            body: Body::File(b"Hello World!".to_vec(), "foo.bin".to_string()),
+            ..Default::default()
+        };
+        assert_eq!(
+            req.curl_args(context_dir),
+            vec![
+                "--header",
+                "'Content-Type:'",
+                "--data-binary",
+                "'@foo.bin'",
+                "'http://localhost:8000/hello'"
             ]
         );
     }
