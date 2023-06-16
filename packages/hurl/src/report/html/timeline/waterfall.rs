@@ -237,43 +237,55 @@ fn new_call_timings(
 
     // TCP Handshake
     let tcp_x = to_pixel(call.timings.name_lookup, scale_x) + dns_x;
-    let tcp_width = to_pixel(call.timings.connect - call.timings.name_lookup, scale_x);
-    if tcp_width.0 > 0.0 {
-        let elt = svg::new_rect(tcp_x.0, y.0, tcp_width.0, height.0, "#fa7f03");
-        group.add_child(elt);
+    let tcp_width = call.timings.connect.checked_sub(call.timings.name_lookup);
+    if let Some(tcp_width) = tcp_width {
+        let tcp_width = to_pixel(tcp_width, scale_x);
+        if tcp_width.0 > 0.0 {
+            let elt = svg::new_rect(tcp_x.0, y.0, tcp_width.0, height.0, "#fa7f03");
+            group.add_child(elt);
+        }
     }
 
     // SSL
     let ssl_x = to_pixel(call.timings.connect, scale_x) + dns_x;
-    let ssl_width = to_pixel(call.timings.app_connect - call.timings.connect, scale_x);
-    if ssl_width.0 > 0.0 {
-        let elt = svg::new_rect(ssl_x.0, y.0, ssl_width.0, height.0, "#9933ff");
-        group.add_child(elt);
+    let ssl_width = call.timings.app_connect.checked_sub(call.timings.connect);
+    if let Some(ssl_width) = ssl_width {
+        let ssl_width = to_pixel(ssl_width, scale_x);
+        if ssl_width.0 > 0.0 {
+            let elt = svg::new_rect(ssl_x.0, y.0, ssl_width.0, height.0, "#9933ff");
+            group.add_child(elt);
+        }
     }
 
     // Wait
     let wait_x = to_pixel(call.timings.pre_transfer, scale_x) + dns_x;
-    let wait_width = to_pixel(
-        call.timings.start_transfer - call.timings.pre_transfer,
-        scale_x,
-    );
-    if wait_width.0 > 0.0 {
-        let elt = svg::new_rect(wait_x.0, y.0, wait_width.0, height.0, "#18c852");
-        group.add_child(elt);
+    let wait_width = call
+        .timings
+        .start_transfer
+        .checked_sub(call.timings.pre_transfer);
+    if let Some(wait_width) = wait_width {
+        let wait_width = to_pixel(wait_width, scale_x);
+        if wait_width.0 > 0.0 {
+            let elt = svg::new_rect(wait_x.0, y.0, wait_width.0, height.0, "#18c852");
+            group.add_child(elt);
+        }
     }
 
     // Data transfer
     let data_transfer_x = to_pixel(call.timings.start_transfer, scale_x) + dns_x;
-    let data_transfer_width = to_pixel(call.timings.total - call.timings.start_transfer, scale_x);
-    if data_transfer_width.0 > 0.0 {
-        let elt = svg::new_rect(
-            data_transfer_x.0,
-            y.0,
-            data_transfer_width.0,
-            height.0,
-            "#36a9f4",
-        );
-        group.add_child(elt);
+    let data_transfer_width = call.timings.total.checked_sub(call.timings.start_transfer);
+    if let Some(data_transfer_width) = data_transfer_width {
+        let data_transfer_width = to_pixel(data_transfer_width, scale_x);
+        if data_transfer_width.0 > 0.0 {
+            let elt = svg::new_rect(
+                data_transfer_x.0,
+                y.0,
+                data_transfer_width.0,
+                height.0,
+                "#36a9f4",
+            );
+            group.add_child(elt);
+        }
     }
 
     group
@@ -308,8 +320,8 @@ fn new_call_tooltip(
     let selection = new_call_sel(call, call_ctx, times, scale_x, pixels_y);
     group.add_child(selection);
 
-    let x = offset_x;
-    let y = offset_y;
+    let mut x = offset_x;
+    let mut y = offset_y;
 
     let mut elt = svg::new_rect(x.0, y.0, width.0, height.0, "white");
     elt.add_attr(Filter("url(#shadow)".to_string()));
@@ -317,8 +329,8 @@ fn new_call_tooltip(
     elt.add_attr(StrokeWidth(1.0));
     group.add_child(elt);
 
-    let x = x + 14.px();
-    let y = y + 14.px();
+    x += 14.px();
+    y += 14.px();
     let delta_y = 30.px();
 
     // Icon + URL + method
@@ -344,77 +356,86 @@ fn new_call_tooltip(
     elt.add_attr(FontWeight("bold".to_string()));
     group.add_child(elt);
 
-    let x = x + 12.px();
-    let y = y + 2.px();
+    x += 12.px();
+    y += 32.px();
 
     // DNS
-    let y = y + delta_y;
     let duration = call.timings.name_lookup.as_micros();
     let duration = Microsecond(duration as f64);
     let elt = new_legend(x, y, "DNS lookup", Some("#1d9688"), duration);
     group.add_child(elt);
+    y += delta_y;
 
     // TCP handshake
-    let y = y + delta_y;
-    let duration = (call.timings.connect - call.timings.name_lookup).as_micros();
-    let duration = Microsecond(duration as f64);
-    let elt = new_legend(x, y, "TCP handshake", Some("#fa7f03"), duration);
-    group.add_child(elt);
+    let duration = call.timings.connect.checked_sub(call.timings.name_lookup);
+    if let Some(duration) = duration {
+        let duration = Microsecond(duration.as_micros() as f64);
+        let elt = new_legend(x, y, "TCP handshake", Some("#fa7f03"), duration);
+        group.add_child(elt);
+        y += delta_y;
+    }
 
     // SSL handshake
-    let y = y + delta_y;
-    let duration = (call.timings.app_connect - call.timings.connect).as_micros();
-    let duration = Microsecond(duration as f64);
-    let elt = new_legend(x, y, "SSL handshake", Some("#9933ff"), duration);
-    group.add_child(elt);
+    let duration = call.timings.app_connect.checked_sub(call.timings.connect);
+    if let Some(duration) = duration {
+        let duration = Microsecond(duration.as_micros() as f64);
+        let elt = new_legend(x, y, "SSL handshake", Some("#9933ff"), duration);
+        group.add_child(elt);
+        y += delta_y;
+    }
 
     // Wait
-    let y = y + delta_y;
-    let duration = (call.timings.start_transfer - call.timings.pre_transfer).as_micros();
-    let duration = Microsecond(duration as f64);
-    let elt = new_legend(x, y, "Wait", Some("#18c852"), duration);
-    group.add_child(elt);
+    let duration = call
+        .timings
+        .start_transfer
+        .checked_sub(call.timings.pre_transfer);
+    if let Some(duration) = duration {
+        let duration = Microsecond(duration.as_micros() as f64);
+        let elt = new_legend(x, y, "Wait", Some("#18c852"), duration);
+        group.add_child(elt);
+        y += delta_y;
+    }
 
     // Data transfer
-    let y = y + delta_y;
-    let duration = (call.timings.total - call.timings.start_transfer).as_micros();
-    let duration = Microsecond(duration as f64);
-    let elt = new_legend(x, y, "Data transfer", Some("#36a9f4"), duration);
-    group.add_child(elt);
+    let duration = call.timings.total.checked_sub(call.timings.start_transfer);
+    if let Some(duration) = duration {
+        let duration = Microsecond(duration.as_micros() as f64);
+        let elt = new_legend(x, y, "Data transfer", Some("#36a9f4"), duration);
+        group.add_child(elt);
+        y += delta_y;
+    }
 
     // Total
-    let y = y + delta_y;
     let duration = call.timings.total.as_micros();
     let duration = Microsecond(duration as f64);
     let mut elt = new_legend(x, y, "Total", None, duration);
     elt.add_attr(FontWeight("bold".to_string()));
     group.add_child(elt);
-
-    let x = offset_x;
+    y += delta_y;
 
     // Start and stop timestamps
     let start = (call.timings.begin_call - times.start).to_std().unwrap();
     let end = (call.timings.end_call - times.start).to_std().unwrap();
-    let x = x + 380.px();
-    let y = offset_y + 64.px();
+    x = offset_x + 380.px();
+    y = offset_y + 64.px();
     let value = Microsecond(start.as_micros() as f64);
     let value = value.to_human_string();
     let elt = new_value("Start:", &value, x, y);
     group.add_child(elt);
-    let y = y + delta_y;
+    y += delta_y;
     let value = Microsecond(end.as_micros() as f64);
     let value = value.to_human_string();
     let elt = new_value("Stop:", &value, x, y);
     group.add_child(elt);
 
-    let y = y + delta_y;
+    y += delta_y;
     let value = Byte(call.response.body.len() as f64);
     let value = value.to_human_string();
     let elt = new_value("Transferred:", &value, x, y);
     group.add_child(elt);
 
     // Run URL
-    let y = y + 56.px();
+    y += 56.px();
     let run = format!(
         "{}#e{}:c{}",
         call_ctx.run_filename, call_ctx.entry_index, call_ctx.call_entry_index
@@ -427,7 +448,7 @@ fn new_call_tooltip(
     group.add_child(a);
 
     // Source URL
-    let y = y + delta_y;
+    y += delta_y;
     let run = format!("{}#l{}", call_ctx.source_filename, call_ctx.line);
     let mut elt = svg::new_text(x.0, y.0, "(view source)");
     elt.add_attr(Fill("royalblue".to_string()));
