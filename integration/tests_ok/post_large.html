@@ -1,0 +1,8 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Post a relatively large payload (~ 15M)</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/post_large</span></span>
+<span class="line"><span class="string">Content-Type</span>: <span class="string">application/octet-stream</span></span>
+<span class="line">file,<span class="filename">post_large.bin</span>;</span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">body</span> <span class="filter-type">toInt</span> <span class="predicate-type">==</span> <span class="number">15728640</span></span>
+</span></span></code></pre>

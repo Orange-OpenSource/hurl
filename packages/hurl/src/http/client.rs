@@ -219,8 +219,8 @@ impl Client {
                         }
 
                         // If we don't send any data, we log headers and empty body here
-                        // instead of relying on libcurl computing body in easy::InfoType::DataOut.
-                        // because libcurl dont call easy::InfoType::DataOut if there is no data
+                        // instead of relying on libcurl computing body in `easy::InfoType::DataOut`.
+                        // because libcurl dont call `easy::InfoType::DataOut` if there is no data
                         // to send.
                         if !has_body_data && verbose {
                             let debug_request = Request {
@@ -241,9 +241,11 @@ impl Client {
                     }
                     // We use this callback to get the real body bytes sent by libcurl.
                     easy::InfoType::DataOut => {
-                        // Extracts request body from libcurl debug info.
-                        request_body.extend(data);
-                        if verbose {
+                        // We log request headers with `easy::InfoType::DataOut` using libcurl
+                        // debug functions: there is no libcurl function to get the request headers.
+                        // As we can be called multiple times in this callback, we only log headers the
+                        // first time we send data (marked when the request body is empty).
+                        if verbose && request_body.is_empty() {
                             let debug_request = Request {
                                 url: url.to_string(),
                                 method: method.to_string(),
@@ -259,6 +261,9 @@ impl Client {
                                 debug_request.log_body(true, logger);
                             }
                         }
+
+                        // Extracts request body from libcurl debug info.
+                        request_body.extend(data);
                     }
                     // Curl debug logs
                     easy::InfoType::Text => {

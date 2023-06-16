@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"POST","url":"http://localhost:8000/post_large","headers":[{"name":"Content-Type","value":"application/octet-stream"}],"body":{"type":"file","filename":"post_large.bin"}},"response":{"status":200,"asserts":[{"query":{"type":"body"},"filters":[{"type":"toInt"}],"predicate":{"type":"equal","value":15728640}}]}}]}
