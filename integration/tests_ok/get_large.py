@@ -3,8 +3,8 @@ from flask import make_response
 from io import BytesIO
 
 
-@app.route("/large")
-def large():
+@app.route("/get_large")
+def get_large():
     result = BytesIO()
     for _ in range(1024 * 1024 * 32):
         result.write(b"0123456789abcdef")
