@@ -1,28 +1,51 @@
 [4.0.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.0.0)
 ========================================================================================================================
+
 Thanks to
+[@dross-carve](https://github.com/dross-carve),
 [@kaala](https://github.com/kaala),
 [@phaza](https://github.com/phaza),
 [@FiloSottile](https://github.com/FiloSottile),
+[@linker3000](https://github.com/linker3000),
+[@pfeiferj](https://github.com/pfeiferj),
 [@devnoname120](https://github.com/devnoname120),
+[@jasonkarns](https://github.com/jasonkarns),
 
 
 Enhancements:
 
+* Add timings info to very verbose mode [#1644](https://github.com/Orange-OpenSource/hurl/issues/1644)
+
+* Add waterfall to HTML report for a Hurl file [#1613](https://github.com/Orange-OpenSource/hurl/issues/1613)
+
+* Add proxy in Options section [#1602](https://github.com/Orange-OpenSource/hurl/issues/1602)
+
+* Add decode filter [#1560](https://github.com/Orange-OpenSource/hurl/issues/1560)
+
 * Add --error-format option to output HTTP context on errors [#1542](https://github.com/Orange-OpenSource/hurl/issues/1542)
+
+* Update --retry option to match curl option [#1475](https://github.com/Orange-OpenSource/hurl/issues/1475)
 
 * Add support for LINK, UNLINK, PURGE, LOCK, UNLOCK, PROPFIND and VIEW HTTP method [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
 
+* Support arbitrary HTTP methods [#967](https://github.com/Orange-OpenSource/hurl/issues/967)
+
 
 Bugs Fixed:
+
+* Use --data-binary for log curl command when posting file [#1654](https://github.com/Orange-OpenSource/hurl/issues/1654)
+
+* Fix extra request headers logs with large body. [#1651](https://github.com/Orange-OpenSource/hurl/issues/1651)
+
+* Print error message when no file is found with --glob option [#1638](https://github.com/Orange-OpenSource/hurl/issues/1638)
 
 * Support additional dot in jsonpath expression [#1555](https://github.com/Orange-OpenSource/hurl/issues/1555)
 
 * Make Call, Certificate, Cookie, Header, Request, Response, Timings, Version public [#1548](https://github.com/Orange-OpenSource/hurl/issues/1548)
 
-* Add quotes around certificate attribute in HTML export. [#1515](https://github.com/Orange-OpenSource/hurl/issues/1515)
+* Add quotes around certificate attribute in HTML export [#1515](https://github.com/Orange-OpenSource/hurl/issues/1515)
 
- 
+
 [3.0.1 (2023-06-01)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.1)
 ========================================================================================================================
 
