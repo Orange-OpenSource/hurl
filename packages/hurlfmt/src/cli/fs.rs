@@ -30,7 +30,19 @@ fn strip_bom(bytes: &mut Vec<u8>) {
 
 /// Similar to the standard read_to_string()
 /// But remove any existing BOM
+/// Support also input stream when filename = '-'
 pub fn read_to_string(filename: &str) -> Result<String, CliError> {
+    if filename == "-" {
+        let mut contents = String::new();
+        return if let Err(e) = std::io::stdin().read_to_string(&mut contents) {
+            Err(CliError {
+                message: format!("Input stream can not be read - {e}"),
+            })
+        } else {
+            return Ok(contents);
+        };
+    }
+
     let mut f = match File::open(filename) {
         Ok(f) => f,
         Err(e) => {

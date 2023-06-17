@@ -54,12 +54,12 @@ pub fn in_place() -> clap::Arg {
         .conflicts_with("color")
 }
 
-pub fn input_file() -> clap::Arg {
-    clap::Arg::new("input_file")
+pub fn input_files() -> clap::Arg {
+    clap::Arg::new("input_files")
         .help("Sets the input file to use")
         .required(false)
         .index(1)
-        .num_args(1)
+        .num_args(1..)
 }
 
 pub fn input_format() -> clap::Arg {

@@ -29,7 +29,7 @@ pub struct Options {
     pub check: bool,
     pub color: bool,
     pub in_place: bool,
-    pub input_file: Option<PathBuf>,
+    pub input_files: Vec<String>,
     pub input_format: InputFormat,
     pub output_file: Option<PathBuf>,
     pub output_format: OutputFormat,
@@ -74,7 +74,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::color())
         .arg(commands::format())
         .arg(commands::in_place())
-        .arg(commands::input_file())
+        .arg(commands::input_files())
         .arg(commands::input_format())
         .arg(commands::no_color())
         .arg(commands::output())
@@ -84,7 +84,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
 
-    if opts.input_file.is_none() && atty::is(Stream::Stdin) {
+    if opts.input_files.is_empty() && atty::is(Stream::Stdin) {
         let help = command.render_help().to_string();
         return Err(OptionsError::Error(help));
     }
@@ -95,7 +95,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let check = matches::check(arg_matches);
     let color = matches::color(arg_matches);
     let in_place = matches::in_place(arg_matches)?;
-    let input_file = matches::input_file(arg_matches)?;
+    let input_files = matches::input_files(arg_matches)?;
     let input_format = matches::input_format(arg_matches)?;
     let output_file = matches::output_file(arg_matches);
     let output_format = matches::output_format(arg_matches)?;
@@ -104,7 +104,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         check,
         color,
         in_place,
-        input_file,
+        input_files,
         input_format,
         output_file,
         output_format,

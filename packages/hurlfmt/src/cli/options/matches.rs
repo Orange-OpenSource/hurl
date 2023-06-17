@@ -70,7 +70,7 @@ pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
             Err(OptionsError::Error(
                 "You can use --in-place only hurl format!".to_string(),
             ))
-        } else if get_string(arg_matches, "input_file").is_none() {
+        } else if get_string(arg_matches, "input_files").is_none() {
             Err(OptionsError::Error(
                 "You can not use --in-place with standard input stream!".to_string(),
             ))
@@ -82,21 +82,26 @@ pub fn in_place(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
     }
 }
 
-pub fn input_file(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsError> {
-    match get_string(arg_matches, "input_file") {
-        None => Ok(None),
-        Some(s) => {
-            let path = Path::new(&s);
+/// Returns the input files from the positional arguments and input stream
+pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError> {
+    let mut files = vec![];
+    if let Some(filenames) = get_strings(arg_matches, "input_files") {
+        for filename in filenames {
+            let path = Path::new(&filename);
             if path.exists() {
-                Ok(Some(path.to_path_buf()))
+                files.push(filename);
             } else {
-                Err(OptionsError::Error(format!(
-                    "input file {} does not exist",
+                return Err(OptionsError::Error(format!(
+                    "hurl: cannot access '{}': No such file or directory",
                     path.display()
-                )))
+                )));
             }
         }
     }
+    if files.is_empty() && !atty::is(Stream::Stdin) {
+        files.push("-".to_string());
+    }
+    Ok(files)
 }
 
 pub fn output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
@@ -123,4 +128,11 @@ fn has_flag(matches: &ArgMatches, name: &str) -> bool {
 
 pub fn get_string(matches: &ArgMatches, name: &str) -> Option<String> {
     matches.get_one::<String>(name).map(|x| x.to_string())
+}
+
+/// Returns an optional list of `String` from the command line `matches` given the option `name`.
+pub fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
+    matches
+        .get_many::<String>(name)
+        .map(|v| v.map(|x| x.to_string()).collect())
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-use std::io::{self, Read, Write};
-use std::path::PathBuf;
+use std::io::{self, Write};
+use std::path::{Path, PathBuf};
 use std::process;
 
 use hurl_core::parser;
@@ -51,102 +51,88 @@ fn main() {
     init_colored();
 
     let log_error_message = cli::make_logger_error_message(opts.color);
-    let contents = if let Some(filename) = &opts.input_file {
-        match cli::read_to_string(&filename.display().to_string()) {
-            Ok(s) => s,
+    let mut output_all = "".to_string();
+    for input_file in &opts.input_files {
+        match cli::read_to_string(input_file) {
+            Ok(contents) => {
+                // parse input
+                let input = match opts.input_format {
+                    InputFormat::Hurl => contents.to_string(),
+                    InputFormat::Curl => match curl::parse(&contents) {
+                        Ok(s) => s,
+                        Err(e) => {
+                            eprintln!("{}", e);
+                            process::exit(2);
+                        }
+                    },
+                };
+                let input_path = Path::new(input_file).to_path_buf();
+                let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
+                    .unwrap()
+                    .split(&input)
+                    .collect();
+                let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
+                let log_parser_error = cli::make_logger_parser_error(
+                    lines.clone(),
+                    opts.color,
+                    Some(input_path.clone()),
+                );
+                let log_linter_error =
+                    cli::make_logger_linter_error(lines, opts.color, Some(input_path));
+
+                match parser::parse_hurl_file(&input) {
+                    Err(e) => {
+                        log_parser_error(&e, false);
+                        process::exit(2);
+                    }
+                    Ok(hurl_file) => {
+                        if opts.check {
+                            for e in linter::check_hurl_file(&hurl_file).iter() {
+                                log_linter_error(e, true);
+                            }
+                            process::exit(1);
+                        } else {
+                            let output = match opts.output_format {
+                                OutputFormat::Hurl => {
+                                    let hurl_file = linter::lint_hurl_file(&hurl_file);
+                                    format::format_text(hurl_file, opts.color)
+                                }
+                                OutputFormat::Json => format::format_json(&hurl_file),
+                                OutputFormat::Html => {
+                                    hurl_core::format::format_html(&hurl_file, opts.standalone)
+                                }
+                            };
+                            if opts.in_place {
+                                let output_file = Some(Path::new(input_file).to_path_buf());
+                                write_output(&output, output_file.clone());
+                            } else {
+                                output_all.push_str(&output);
+                            }
+                        }
+                    }
+                }
+            }
             Err(e) => {
                 log_error_message(
                     false,
-                    format!(
-                        "Input file {} can not be read - {}",
-                        filename.display(),
-                        e.message
-                    )
-                    .as_str(),
+                    format!("Input file {} can not be read - {}", input_file, e.message).as_str(),
                 );
                 process::exit(2);
             }
         }
-    } else {
-        let mut contents = String::new();
-        if let Err(e) = io::stdin().read_to_string(&mut contents) {
-            log_error_message(
-                false,
-                format!("Input stream can not be read - {e}").as_str(),
-            );
-            process::exit(2);
-        }
-        contents
-    };
-
-    let input = match opts.input_format {
-        InputFormat::Hurl => contents,
-        InputFormat::Curl => match curl::parse(&contents) {
-            Ok(s) => s,
-            Err(e) => {
-                eprintln!("{}", e);
-                process::exit(2);
-            }
-        },
-    };
-
-    let lines: Vec<&str> = regex::Regex::new(r"\n|\r\n")
-        .unwrap()
-        .split(&input)
-        .collect();
-    let lines: Vec<String> = lines.iter().map(|s| (*s).to_string()).collect();
-    let log_parser_error =
-        cli::make_logger_parser_error(lines.clone(), opts.color, opts.input_file.clone());
-    let log_linter_error =
-        cli::make_logger_linter_error(lines, opts.color, opts.input_file.clone());
-
-    match parser::parse_hurl_file(&input) {
-        Err(e) => {
-            log_parser_error(&e, false);
-            process::exit(2);
-        }
-        Ok(hurl_file) => {
-            if opts.check {
-                for e in linter::check_hurl_file(&hurl_file).iter() {
-                    log_linter_error(e, true);
-                }
-                process::exit(1);
-            } else {
-                let output = match opts.output_format {
-                    OutputFormat::Hurl => {
-                        let hurl_file = linter::lint_hurl_file(&hurl_file);
-                        format::format_text(hurl_file, opts.color)
-                    }
-                    OutputFormat::Json => format::format_json(&hurl_file),
-                    OutputFormat::Html => {
-                        hurl_core::format::format_html(&hurl_file, opts.standalone)
-                    }
-                };
-                let output = if !output.ends_with('\n') {
-                    format!("{output}\n")
-                } else {
-                    output
-                };
-                let output_file = match opts.output_file {
-                    None => {
-                        if opts.in_place {
-                            Some(
-                                opts.input_file
-                                    .expect("an input file when --in-place is set"),
-                            )
-                        } else {
-                            None
-                        }
-                    }
-                    v => v,
-                };
-                write_output(output.into_bytes(), output_file);
-            }
-        }
+    }
+    if !opts.in_place {
+        write_output(&output_all, opts.output_file);
     }
 }
 
-fn write_output(bytes: Vec<u8>, filename: Option<PathBuf>) {
+fn write_output(content: &str, filename: Option<PathBuf>) {
+    let content = if !content.ends_with('\n') {
+        format!("{content}\n")
+    } else {
+        content.to_string()
+    };
+    let bytes = content.into_bytes();
     match filename {
         None => {
             let stdout = io::stdout();
@@ -160,7 +146,7 @@ fn write_output(bytes: Vec<u8>, filename: Option<PathBuf>) {
             let mut file = match std::fs::File::create(&path_buf) {
                 Err(why) => {
                     eprintln!("Issue writing to {}: {:?}", path_buf.display(), why);
-                    std::process::exit(1);
+                    process::exit(1);
                 }
                 Ok(file) => file,
             };
