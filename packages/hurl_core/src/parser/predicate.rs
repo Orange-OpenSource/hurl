@@ -122,6 +122,9 @@ impl PredicateValue {
 
 fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("equals", "==", reader)? == "==";
+    if !operator {
+        eprintln!("'equals' predicate is now deprecated. Use '==' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
@@ -137,6 +140,9 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
 
 fn not_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("notEquals", "!=", reader)? == "!=";
+    if !operator {
+        eprintln!("'notEquals' predicate is now deprecated. Use '!=' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
@@ -152,6 +158,9 @@ fn not_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFun
 
 fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("greaterThan", ">", reader)? == ">";
+    if !operator {
+        eprintln!("'greaterThan' predicate is now deprecated. Use '>' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
@@ -176,6 +185,9 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
 
 fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("greaterThanOrEquals", ">=", reader)? == ">=";
+    if !operator {
+        eprintln!("'greaterThanOrEquals' predicate is now deprecated. Use '>=' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
@@ -200,6 +212,9 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
 
 fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("lessThan", "<", reader)? == "<";
+    if !operator {
+        eprintln!("'lessThan' predicate is now deprecated. Use '<' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
@@ -224,6 +239,9 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
 
 fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     let operator = try_literals("lessThanOrEquals", "<=", reader)? == "<=";
+    if !operator {
+        eprintln!("'lessThanOrEquals' predicate is now deprecated. Use '<=' instead");
+    }
     let space0 = if operator {
         zero_or_more_spaces(reader)?
     } else {
