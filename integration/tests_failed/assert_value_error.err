@@ -1,7 +1,7 @@
 error: Assert failure
   --> tests_failed/assert_value_error.hurl:4:0
    |
- 4 | header "content-type" equals "XXX"
+ 4 | header "content-type" == "XXX"
    |   actual:   string <text/html; charset=utf-8>
    |   expected: string <XXX>
    |
@@ -9,7 +9,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/assert_value_error.hurl:5:0
    |
- 5 | header "content-type" notEquals "text/html; charset=utf-8"
+ 5 | header "content-type" != "text/html; charset=utf-8"
    |   actual:   string <text/html; charset=utf-8>
    |   expected: string <text/html; charset=utf-8>
    |
@@ -17,7 +17,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/assert_value_error.hurl:6:0
    |
- 6 | jsonpath "$.id" equals "000001"
+ 6 | jsonpath "$.id" == "000001"
    |   actual:   none
    |   expected: string <000001>
    |
@@ -42,7 +42,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/assert_value_error.hurl:9:0
    |
- 9 | jsonpath "$.count" greaterThan 5
+ 9 | jsonpath "$.count" > 5
    |   actual:   int <2>
    |   expected: greater than int <5>
    |

@@ -1,12 +1,12 @@
 GET http://localhost:8000/predicate/error/type
 HTTP 200
 [Asserts]
-jsonpath "$.status" equals "true"
+jsonpath "$.status" == "true"
 #jsonpath "$.count" equals "0"
-jsonpath "$.count" equals 0
-jsonpath "$.message" equals 0
-jsonpath "$.empty" equals 0
-jsonpath "$.number" equals 1.1
+jsonpath "$.count" == 0
+jsonpath "$.message" == 0
+jsonpath "$.empty" == 0
+jsonpath "$.number" == 1.1
 jsonpath "$.message" startsWith "hi"
 jsonpath "$.message" endsWith "hi"
 jsonpath "$.message" contains "hi"

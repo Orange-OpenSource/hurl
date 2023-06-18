@@ -5,7 +5,7 @@ status: status
 length: header "content-length"
 type: header "content-type"
 [Asserts]
-variable "toto" equals "tata"
-variable "status" equals {{unknown}}
-variable "status" equals {{type}}
-variable "status" equals {{length}}
+variable "toto" == "tata"
+variable "status" == {{unknown}}
+variable "status" == {{type}}
+variable "status" == {{length}}

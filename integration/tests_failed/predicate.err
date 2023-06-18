@@ -1,7 +1,7 @@
 error: Assert failure
   --> tests_failed/predicate.hurl:4:0
    |
- 4 | jsonpath "$.status" equals "true"
+ 4 | jsonpath "$.status" == "true"
    |   actual:   bool <true>
    |   expected: string <true>
    |
@@ -9,7 +9,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/predicate.hurl:6:0
    |
- 6 | jsonpath "$.count" equals 0
+ 6 | jsonpath "$.count" == 0
    |   actual:   int <1>
    |   expected: int <0>
    |
@@ -17,7 +17,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/predicate.hurl:7:0
    |
- 7 | jsonpath "$.message" equals 0
+ 7 | jsonpath "$.message" == 0
    |   actual:   string <0>
    |   expected: int <0>
    |
@@ -25,7 +25,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/predicate.hurl:8:0
    |
- 8 | jsonpath "$.empty" equals 0
+ 8 | jsonpath "$.empty" == 0
    |   actual:   string <>
    |   expected: int <0>
    |
@@ -33,7 +33,7 @@ error: Assert failure
 error: Assert failure
   --> tests_failed/predicate.hurl:9:0
    |
- 9 | jsonpath "$.number" equals 1.1
+ 9 | jsonpath "$.number" == 1.1
    |   actual:   float <1.0>
    |   expected: float <1.1>
    |

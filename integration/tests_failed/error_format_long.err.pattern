@@ -18,7 +18,7 @@ error: Assert header value
 error: Assert failure
   --> tests_failed/error_format_long.hurl:5:0
    |
- 5 | xpath "string(//head/title)" equals "Welcome!"
+ 5 | xpath "string(//head/title)" == "Welcome!"
    |   actual:   string <Test>
    |   expected: string <Welcome!>
    |
