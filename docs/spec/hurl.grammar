@@ -42,7 +42,8 @@ body:
 # Sections
 
 request-section:
-    query-string-params-section
+    basic-auth-section
+  | query-string-params-section
   | form-params-section
   | multipart-form-data-section
   | cookies-section
@@ -81,6 +82,12 @@ asserts-section:
   lt*
   "[Asserts]" lt
   assert*
+
+basic-auth-section:
+  lt*
+  "[BasicAuth]" lt
+  key-value*
+
 
 options-section:
   lt*
