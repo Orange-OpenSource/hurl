@@ -36,6 +36,7 @@ pub struct RunnerOptionsBuilder {
     insecure: bool,
     max_redirect: Option<usize>,
     no_proxy: Option<String>,
+    path_as_is: bool,
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(Entry) -> bool>,
     proxy: Option<String>,
@@ -66,6 +67,7 @@ impl Default for RunnerOptionsBuilder {
             insecure: false,
             max_redirect: Some(50),
             no_proxy: None,
+            path_as_is: false,
             post_entry: None,
             pre_entry: None,
             proxy: None,
@@ -181,6 +183,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the path-as-is flag.
+    pub fn path_as_is(&mut self, path_as_is: bool) -> &mut Self {
+        self.path_as_is = path_as_is;
+        self
+    }
+
     /// Sets list of hosts which do not use a proxy.
     pub fn no_proxy(&mut self, no_proxy: Option<String>) -> &mut Self {
         self.no_proxy = no_proxy;
@@ -279,6 +287,7 @@ impl RunnerOptionsBuilder {
             insecure: self.insecure,
             max_redirect: self.max_redirect,
             no_proxy: self.no_proxy.clone(),
+            path_as_is: self.path_as_is,
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
             proxy: self.proxy.clone(),
@@ -310,6 +319,7 @@ pub struct RunnerOptions {
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,
     pub(crate) no_proxy: Option<String>,
+    pub(crate) path_as_is: bool,
     pub(crate) post_entry: Option<fn() -> bool>,
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,
     pub(crate) proxy: Option<String>,

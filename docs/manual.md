@@ -171,6 +171,7 @@ will follow a redirection only for the second entry.
 | <a href="#no-output" id="no-output"><code>--no-output</code></a> | Suppress output. By default, Hurl outputs the body of the last response.<br> |
 | <a href="#noproxy" id="noproxy"><code>--noproxy &lt;HOST(S)&gt;</code></a> | Comma-separated list of hosts which do not use a proxy.<br>Override value from Environment variable no_proxy.<br> |
 | <a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a> | Write output to FILE instead of stdout.<br> |
+| <a href="#path-as-is" id="path-as-is"><code>--path-as-is</code></a> | Tell curl to not handle sequences of /../ or /./ in the given URL path. Normally curl will squash or merge them according to standards but with this option set you tell it not to do that.<br> |
 | <a href="#proxy" id="proxy"><code>-x, --proxy &lt;[PROTOCOL://]HOST[:PORT]&gt;</code></a> | Use the specified proxy.<br> |
 | <a href="#report-junit" id="report-junit"><code>--report-junit &lt;FILE&gt;</code></a> | Generate JUnit File.<br><br>If the FILE report already exists, it will be updated with the new test results.<br> |
 | <a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a> | Generate HTML report in DIR.<br><br>If the HTML report already exists, it will be updated with the new test results.<br> |
@@ -223,4 +224,5 @@ Using an environment variable to set the proxy has the same effect as using the 
 ## See Also
 
 curl(1)  hurlfmt(1)
+
 

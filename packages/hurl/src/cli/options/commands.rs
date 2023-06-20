@@ -239,6 +239,13 @@ pub fn output() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn path_as_is() -> clap::Arg {
+    clap::Arg::new("path_as_is")
+        .long("path_as_is")
+        .help("Tell curl to not handle sequences of /../ or /./ in the given URL path")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn proxy() -> clap::Arg {
     clap::Arg::new("proxy")
         .short('x')

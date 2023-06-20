@@ -60,6 +60,7 @@ pub struct Options {
     pub no_proxy: Option<String>,
     pub output: Option<String>,
     pub output_type: OutputType,
+    pub path_as_is: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
@@ -148,6 +149,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::no_output())
         .arg(commands::noproxy())
         .arg(commands::output())
+        .arg(commands::path_as_is())
         .arg(commands::proxy())
         .arg(commands::report_html())
         .arg(commands::report_junit())
@@ -206,6 +208,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let max_redirect = matches::max_redirect(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches);
+    let path_as_is = matches::path_as_is(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
@@ -244,6 +247,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         junit_file,
         max_redirect,
         no_proxy,
+        path_as_is,
         progress_bar,
         proxy,
         output,
@@ -279,6 +283,7 @@ impl Options {
         let follow_location = self.follow_location;
         let insecure = self.insecure;
         let max_redirect = self.max_redirect;
+        let path_as_is = self.path_as_is.clone();
         let proxy = self.proxy.clone();
         let no_proxy = self.no_proxy.clone();
         let cookie_input_file = self.cookie_input_file.clone();
@@ -332,6 +337,7 @@ impl Options {
             .insecure(insecure)
             .max_redirect(max_redirect)
             .no_proxy(no_proxy)
+            .path_as_is(path_as_is)
             .post_entry(post_entry)
             .pre_entry(pre_entry)
             .proxy(proxy)

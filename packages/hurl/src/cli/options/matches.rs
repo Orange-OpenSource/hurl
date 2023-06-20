@@ -227,6 +227,10 @@ pub fn output_type(arg_matches: &ArgMatches) -> OutputType {
     }
 }
 
+pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "path_as_is")
+}
+
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
     let verbose = verbose(arg_matches) || very_verbose(arg_matches);
     test(arg_matches)

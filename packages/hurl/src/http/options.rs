@@ -31,6 +31,7 @@ pub struct ClientOptions {
     pub insecure: bool,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
+    pub path_as_is: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
     pub retry: Retry,
@@ -61,6 +62,7 @@ impl Default for ClientOptions {
             insecure: false,
             max_redirect: Some(50),
             no_proxy: None,
+            path_as_is: false,
             proxy: None,
             resolves: vec![],
             retry: Retry::None,
@@ -119,6 +121,9 @@ impl ClientOptions {
             arguments.push("--max-redirs".to_string());
             arguments.push(max_redirect.to_string());
         }
+        if self.path_as_is {
+            arguments.push("--path-as-is".to_string());
+        }
         if let Some(ref proxy) = self.proxy {
             arguments.push("--proxy".to_string());
             arguments.push(format!("'{proxy}'"));
@@ -160,6 +165,7 @@ mod tests {
                 follow_location: true,
                 max_redirect: Some(10),
                 cookie_input_file: Some("cookie_file".to_string()),
+                path_as_is: true,
                 proxy: Some("localhost:3128".to_string()),
                 no_proxy: None,
                 verbosity: None,
@@ -189,6 +195,7 @@ mod tests {
                 "--location".to_string(),
                 "--max-redirs".to_string(),
                 "10".to_string(),
+                "--path-as-is".to_string(),
                 "--proxy".to_string(),
                 "'localhost:3128'".to_string(),
                 "--resolve".to_string(),

@@ -209,6 +209,7 @@ impl HtmlFormatter {
             EntryOption::Insecure(option) => self.fmt_insecure_option(option),
             EntryOption::FollowLocation(option) => self.fmt_follow_location_option(option),
             EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
+            EntryOption::PathAsIs(option) => self.fmt_path_as_is_option(option),
             EntryOption::Proxy(option) => self.fmt_proxy_option(option),
             EntryOption::Retry(option) => self.fmt_retry_option(option),
             EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
@@ -305,6 +306,19 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&option.space2);
         self.fmt_number(option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_path_as_is_option(&mut self, option: &PathAsIsOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("path-as-is");
+        self.fmt_space(&option.space1);
+        self.buffer.push(':');
+        self.fmt_space(&option.space2);
+        self.fmt_bool(option.value);
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }

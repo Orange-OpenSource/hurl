@@ -149,6 +149,7 @@ impl Client {
             self.handle.ssl_key(client_key_file).unwrap();
             self.handle.ssl_cert_type("PEM").unwrap();
         }
+        self.handle.path_as_is(options.path_as_is).unwrap();
         if let Some(proxy) = options.proxy.clone() {
             self.handle.proxy(proxy.as_str()).unwrap();
         }

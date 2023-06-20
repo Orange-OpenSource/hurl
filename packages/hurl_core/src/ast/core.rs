@@ -706,6 +706,7 @@ pub enum EntryOption {
     Insecure(InsecureOption),
     FollowLocation(FollowLocationOption),
     MaxRedirect(MaxRedirectOption),
+    PathAsIs(PathAsIsOption),
     Proxy(ProxyOption),
     Retry(RetryOption),
     RetryInterval(RetryIntervalOption),
@@ -761,6 +762,16 @@ pub struct ClientKeyOption {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub filename: Filename,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PathAsIsOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: bool,
     pub line_terminator0: LineTerminator,
 }
 

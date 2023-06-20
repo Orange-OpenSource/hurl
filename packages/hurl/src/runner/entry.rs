@@ -227,6 +227,7 @@ impl ClientOptions {
             follow_location: runner_options.follow_location,
             max_redirect: runner_options.max_redirect,
             cookie_input_file: runner_options.cookie_input_file.clone(),
+            path_as_is: runner_options.path_as_is,
             proxy: runner_options.proxy.clone(),
             no_proxy: runner_options.no_proxy.clone(),
             verbosity: match verbosity {
@@ -333,6 +334,10 @@ pub fn get_entry_options(
                     EntryOption::MaxRedirect(option) => {
                         runner_options.max_redirect = Some(option.value);
                         logger.debug(format!("max-redirs: {}", option.value).as_str());
+                    }
+                    EntryOption::PathAsIs(option) => {
+                        runner_options.path_as_is = option.value;
+                        logger.debug(format!("path-as-is: {}", option.value).as_str());
                     }
                     EntryOption::Proxy(option) => {
                         runner_options.proxy = Some(option.value.clone());

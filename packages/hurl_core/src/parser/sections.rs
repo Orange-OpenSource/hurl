@@ -364,6 +364,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_insecure,
             option_follow_location,
             option_max_redirect,
+            option_path_as_is,
             option_proxy,
             option_retry,
             option_retry_interval,
@@ -529,6 +530,28 @@ fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, EntryOption>
     };
 
     Ok(EntryOption::MaxRedirect(option))
+}
+
+fn option_path_as_is(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("path-as-is", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = nonrecover(boolean, reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+
+    let option = PathAsIsOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+
+    Ok(EntryOption::PathAsIs(option))
 }
 
 fn option_proxy(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
