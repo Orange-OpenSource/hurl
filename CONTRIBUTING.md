@@ -67,9 +67,7 @@ by the tests suite:
 ```shell
 $ python3 -m venv .venv
 $ source .venv/bin/activate
-$ PATH=/tmp/hurl-python3-venv/bin:${PATH}
-$ export PATH
-$ pip install --break-system-packages --requirement bin/requirements-frozen.txt 
+$ pip install --requirement bin/requirements-frozen.txt 
 ```
 
 Then, you can launch our local server (used to test Hurl features):
@@ -86,7 +84,7 @@ $ jobs
 [3]  + running    echo "${squid_conf}" | squid -d 2 -N -f /dev/stdin > proxy.log 2>&1
 ```
 
-You can check [`bin/test/test_prerequisites.sh`] and [`bin/test/test_prerequisites.ps1`] for more details.
+You can check [the integration `README`] for more details
 
 Now, you can follow these steps when you make changes:
 
@@ -104,8 +102,7 @@ Et voilà 🎉!
 [More would be better!]: https://hurl.dev/docs/installation.html
 [Documentation]: https://hurl.dev
 [Hurl build documentation]: https://hurl.dev/docs/installation.html#building-from-sources
-[`bin/test/test_prerequisites.sh`]: /bin/test/test_prerequisites.sh
-[`bin/test/test_prerequisites.ps1`]: /bin/test/test_prerequisites.ps1
+[integration `README`]: integration/README.md
 [virtual environment]: https://docs.python.org/3/tutorial/venv.html
 [Hurl core values]: #hurl-core-values
 [a test suite]: https://github.com/Orange-OpenSource/hurl/actions
