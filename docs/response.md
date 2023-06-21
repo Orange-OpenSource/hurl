@@ -90,6 +90,30 @@ to request a compressed response and automatically get the decompressed body.
 Captures and asserts work automatically on the decompressed body, so you can request compressed data (using [`Accept-Encoding`]
 header by example) and add assert and captures on the decoded body as if there weren't any compression.
 
+## Timings
+
+HTTP response timings are exposed through Hurl structured output (see [`--json`]) and HTML report (see [`--report-html`]).
+On each response, libcurl response timings are available:
+
+- __time_namelookup__: the time it took from the start until the name resolving was completed. You can use
+  [`--resolve`] to exclude DNS performance from the measure.
+- __time_connect__:  The time it took from the start until the TCP connect to the remote host (or proxy) was completed.
+- __time_appconnect__: The time it took from the start until the SSL/SSH/etc connect/handshake to the remote host was
+  completed. The client is then ready to send its HTTP GET request.
+- __time_starttransfer__: The time it took from the start until the first byte was just about to be transferred
+  (just before Hurl reads the first byte from the network). This includes time_pretransfer and also the time the server
+  needed to calculate the result.
+- __time_total__: The total time that the full operation lasted.
+
+All timings are in microsecond.
+
+<div>
+    <img class="light-img u-drop-shadow u-border u-mt-4" src="/docs/assets/img/timings-light.svg" width="100%" alt="Response timings explanation"/>
+    <img class="dark-img u-drop-shadow u-border u-mt-4" src="/docs/assets/img/timings-dark.svg" width="100%" alt="Response timings explanation"/>
+</div>
+
+<a href="https://blog.cloudflare.com/a-question-of-timing/"><small>Courtesy of CloudFlare</small></a>
+
 
 [requests]: /docs/request.md
 [version and status]: /docs/asserting-response.md#version-status
@@ -102,3 +126,6 @@ header by example) and add assert and captures on the decoded body as if there w
 [br, gzip, deflate]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
 [`--compressed` option]: /docs/manual.md#compressed
 [`Accept-Encoding`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding
+[`--json`]: /docs/manual.md#json
+[`--report-html`]: /docs/manual.md#report-html
+[`--resolve`]: /docs/manual.md#resolve
