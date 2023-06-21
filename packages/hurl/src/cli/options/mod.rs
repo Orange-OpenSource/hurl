@@ -283,7 +283,7 @@ impl Options {
         let follow_location = self.follow_location;
         let insecure = self.insecure;
         let max_redirect = self.max_redirect;
-        let path_as_is = self.path_as_is.clone();
+        let path_as_is = self.path_as_is;
         let proxy = self.proxy.clone();
         let no_proxy = self.no_proxy.clone();
         let cookie_input_file = self.cookie_input_file.clone();
