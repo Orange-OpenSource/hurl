@@ -110,3 +110,4 @@ Et voilà 🎉!
 [Create a new Git branch]: https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-and-deleting-branches-within-your-repository
 [required to be signed]: https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification
 [integration tests]: https://github.com/Orange-OpenSource/hurl/tree/master/integration
+[the integration `README`]: /integration/README.md

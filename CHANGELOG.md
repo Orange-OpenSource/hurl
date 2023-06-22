@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@elbart](https://github.com/elbart),
 [@dross-carve](https://github.com/dross-carve),
 [@kaala](https://github.com/kaala),
 [@phaza](https://github.com/phaza),
@@ -13,6 +14,12 @@ Thanks to
 
 
 Enhancements:
+
+* Introduce curl --path-as-is option [#1669](https://github.com/Orange-OpenSource/hurl/issues/1669)
+
+* Deprecate word predicate when operator is available [#1662](https://github.com/Orange-OpenSource/hurl/issues/1662)
+
+* Make hurlfmt support several input files (like Hurl) [#1650](https://github.com/Orange-OpenSource/hurl/issues/1650)
 
 * Add timings info to very verbose mode [#1644](https://github.com/Orange-OpenSource/hurl/issues/1644)
 
