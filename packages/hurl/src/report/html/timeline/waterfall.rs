@@ -30,9 +30,9 @@ use crate::report::html::timeline::unit::{
     Byte, Interval, Microsecond, Millisecond, Pixel, Px, Scale, Second, TimeUnit,
 };
 use crate::report::html::timeline::util::{
-    new_failure_icon, new_stripes, new_success_icon, trunc_str,
+    new_failure_icon, new_retry_icon, new_stripes, new_success_icon, trunc_str,
 };
-use crate::report::html::timeline::{svg, CallContext, CALL_HEIGHT, CALL_INSET};
+use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT, CALL_INSET};
 use crate::report::html::Testcase;
 
 /// Returns the start and end date for these entries.
@@ -78,6 +78,8 @@ impl Testcase {
         let elt = new_success_icon("success");
         root.add_child(elt);
         let elt = new_failure_icon("failure");
+        root.add_child(elt);
+        let elt = new_retry_icon("retry");
         root.add_child(elt);
 
         // We add some space for the right last grid labels.
@@ -335,10 +337,10 @@ fn new_call_tooltip(
 
     // Icon + URL + method
     let mut elt = svg::new_use();
-    let icon = if call_ctx.success {
-        "#success"
-    } else {
-        "#failure"
+    let icon = match call_ctx.kind {
+        CallContextKind::Success => "#success",
+        CallContextKind::Failure => "#failure",
+        CallContextKind::Retry => "#retry",
     };
     elt.add_attr(Href(icon.to_string()));
     elt.add_attr(X(x.0));
@@ -351,7 +353,10 @@ fn new_call_tooltip(
     let text = trunc_str(&text, 54);
     let text = format!("{text}  {}", call.response.status);
     let mut elt = svg::new_text(x.0 + 30.0, y.0 + 16.0, &text);
-    let color = if call_ctx.success { "#555" } else { "red" };
+    let color = match call_ctx.kind {
+        CallContextKind::Success | CallContextKind::Retry => "#555",
+        CallContextKind::Failure => "red",
+    };
     elt.add_attr(Fill(color.to_string()));
     elt.add_attr(FontWeight("bold".to_string()));
     group.add_child(elt);
@@ -436,28 +441,38 @@ fn new_call_tooltip(
 
     // Run URL
     y += 56.px();
-    let run = format!(
+    let href = format!(
         "{}#e{}:c{}",
         call_ctx.run_filename, call_ctx.entry_index, call_ctx.call_entry_index
     );
-    let mut elt = svg::new_text(x.0, y.0, "(view run)");
-    elt.add_attr(Fill("royalblue".to_string()));
-    elt.add_attr(TextDecoration("underline".to_string()));
-    let mut a = new_a(&run);
-    a.add_child(elt);
-    group.add_child(a);
+    let elt = new_link(x, y, "(view run)", &href);
+    group.add_child(elt);
 
     // Source URL
+    let href = format!("{}#l{}", call_ctx.source_filename, call_ctx.line);
+    let elt = new_link(x + 90.px(), y, "(view source)", &href);
+    group.add_child(elt);
+
+    // Timings explanation
     y += delta_y;
-    let run = format!("{}#l{}", call_ctx.source_filename, call_ctx.line);
-    let mut elt = svg::new_text(x.0, y.0, "(view source)");
-    elt.add_attr(Fill("royalblue".to_string()));
-    elt.add_attr(TextDecoration("underline".to_string()));
-    let mut a = new_a(&run);
-    a.add_child(elt);
-    group.add_child(a);
+    let elt = new_link(
+        x,
+        y,
+        "Explanation",
+        "https://hurl.dev/docs/response.html#timings",
+    );
+    group.add_child(elt);
 
     group
+}
+
+fn new_link(x: Pixel, y: Pixel, text: &str, href: &str) -> Element {
+    let mut elt = svg::new_text(x.0, y.0, text);
+    elt.add_attr(Fill("royalblue".to_string()));
+    elt.add_attr(TextDecoration("underline".to_string()));
+    let mut a = new_a(href);
+    a.add_child(elt);
+    a
 }
 
 /// Returns the highlighted span time of a call.
@@ -472,8 +487,10 @@ fn new_call_sel(
     let offset_x_start = to_pixel(offset_x_start, scale_x);
     let offset_x_end = (call.timings.end_call - times.start).to_std().unwrap();
     let offset_x_end = to_pixel(offset_x_end, scale_x);
-
-    let color = if call_ctx.success { "green" } else { "red" };
+    let color = match call_ctx.kind {
+        CallContextKind::Success | CallContextKind::Retry => "green",
+        CallContextKind::Failure => "red",
+    };
     let mut elt = svg::new_rect(
         offset_x_start.0,
         0.0,

@@ -21,8 +21,10 @@ use crate::report::html::timeline::svg::Attribute::{
 };
 use crate::report::html::timeline::svg::{Element, ElementKind};
 use crate::report::html::timeline::unit::{Pixel, Px};
-use crate::report::html::timeline::util::{new_failure_icon, new_success_icon, trunc_str};
-use crate::report::html::timeline::{svg, CallContext, CALL_HEIGHT};
+use crate::report::html::timeline::util::{
+    new_failure_icon, new_retry_icon, new_success_icon, trunc_str,
+};
+use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT};
 use crate::report::html::Testcase;
 use std::iter::zip;
 
@@ -47,6 +49,8 @@ impl Testcase {
         root.add_child(symbol);
         let symbol = new_failure_icon("failure");
         root.add_child(symbol);
+        let symbol = new_retry_icon("retry");
+        root.add_child(symbol);
 
         // Add a flat background.
         let mut elt = Element::new(ElementKind::Rect);
@@ -57,15 +61,17 @@ impl Testcase {
         elt.add_attr(Fill("#fbfafd".to_string()));
         root.add_child(elt);
 
-        // Add horizontal lines
-        let x = 0.px();
-        let y = margin_top;
-        let elt = new_grid(calls, y, width, height);
-        root.add_child(elt);
+        if !calls.is_empty() {
+            // Add horizontal lines
+            let x = 0.px();
+            let y = margin_top;
+            let elt = new_grid(calls, y, width, height);
+            root.add_child(elt);
 
-        // Add calls info
-        let elt = new_calls(calls, call_ctxs, x, y);
-        root.add_child(elt);
+            // Add calls info
+            let elt = new_calls(calls, call_ctxs, x, y);
+            root.add_child(elt);
+        }
 
         root.to_string()
     }
@@ -96,10 +102,10 @@ fn new_calls(
 
             // Icon success / failure
             let mut elt = svg::new_use();
-            let icon = if call_ctx.success {
-                "#success"
-            } else {
-                "#failure"
+            let icon = match call_ctx.kind {
+                CallContextKind::Success => "#success",
+                CallContextKind::Failure => "#failure",
+                CallContextKind::Retry => "#retry",
             };
             elt.add_attr(Href(icon.to_string()));
             elt.add_attr(X(x.0 - 6.0));
@@ -117,7 +123,7 @@ fn new_calls(
             let text = format!("{} {url}", call.request.method);
             let text = trunc_str(&text, 24);
             let mut elt = svg::new_text(x.0, y.0, &text);
-            if !call_ctx.success {
+            if call_ctx.kind == CallContextKind::Failure {
                 elt.add_attr(Fill("red".to_string()));
             }
             group.add_child(elt);
@@ -126,7 +132,7 @@ fn new_calls(
             x += 180.px();
             let text = format!("{}", call.response.status);
             let mut elt = svg::new_text(x.0, y.0, &text);
-            if !call_ctx.success {
+            if call_ctx.kind == CallContextKind::Failure {
                 elt.add_attr(Fill("red".to_string()));
             }
             group.add_child(elt);

@@ -33,14 +33,20 @@ mod waterfall;
 const CALL_HEIGHT: Pixel = Pixel(24.0);
 const CALL_INSET: Pixel = Pixel(3.0);
 
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub enum CallContextKind {
+    Success, // call context parent entry is successful
+    Failure, // call context parent entry is in error and has not been retried
+    Retry,   // call context parent entry is in error and has been retried
+}
 /// A structure that holds information to construct a SVG view
 /// of a [`Call`]
 pub struct CallContext {
-    pub success: bool,           // If the parent entry is successful or not
-    pub line: usize,             // Line number of the source entry (1-based)
-    pub entry_index: usize,      // Index of the runtime EntryResult
+    pub kind: CallContextKind, // If the parent entry is successful, retried or in error.
+    pub line: usize,           // Line number of the source entry (1-based)
+    pub entry_index: usize,    // Index of the runtime EntryResult
     pub call_entry_index: usize, // Index of the runtime Call in the current entry
-    pub call_index: usize,       // Index of the runtime Call in the whole run
+    pub call_index: usize,     // Index of the runtime Call in the whole run
     pub source_filename: String,
     pub run_filename: String,
 }
@@ -80,13 +86,24 @@ impl Testcase {
     /// Constructs a list of call contexts to record source line code, runtime entry and call indices.
     fn get_call_contexts(&self, hurl_file: &HurlFile, entries: &[EntryResult]) -> Vec<CallContext> {
         let mut calls_ctx = vec![];
+
         for (entry_index, e) in entries.iter().enumerate() {
+            let next_e = entries.get(entry_index + 1);
+            let retry = match next_e {
+                None => false, // last entry of the whole run can't be retried
+                Some(next_e) => e.entry_index == next_e.entry_index,
+            };
+            let kind = match (e.errors.is_empty(), retry) {
+                (true, _) => CallContextKind::Success,
+                (false, true) => CallContextKind::Retry,
+                (false, false) => CallContextKind::Failure,
+            };
             for (call_entry_index, _) in e.calls.iter().enumerate() {
                 let entry_src_index = e.entry_index - 1;
                 let entry_src = hurl_file.entries.get(entry_src_index).unwrap();
                 let line = entry_src.request.space0.source_info.start.line;
                 let ctx = CallContext {
-                    success: e.errors.is_empty(),
+                    kind,
                     line,
                     entry_index: entry_index + 1,
                     call_entry_index: call_entry_index + 1,

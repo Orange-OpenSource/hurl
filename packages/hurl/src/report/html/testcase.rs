@@ -36,16 +36,13 @@ impl Testcase {
     /// Creates an HTML testcase.
     pub fn from(hurl_result: &HurlResult, filename: &str) -> Testcase {
         let id = Uuid::new_v4();
+        let errors = hurl_result.errors().into_iter().cloned().collect();
         Testcase {
             id: id.to_string(),
             filename: filename.to_string(),
             time_in_ms: hurl_result.time_in_ms,
             success: hurl_result.success,
-            errors: hurl_result
-                .entries
-                .iter()
-                .flat_map(|e| e.errors.clone())
-                .collect(),
+            errors,
         }
     }
 
