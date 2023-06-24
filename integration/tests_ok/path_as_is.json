@@ -1,1 +1,1 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/any/../hello"},"response":{"status":200,"body":{"type":"text","value":"Hello World!"}}},{"request":{"method":"GET","url":"http://localhost:8000/path-as-is/../resource"},"response":{"status":200}}]}
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/any/../hello"},"response":{"status":200,"body":{"type":"text","value":"Hello World!"}}},{"request":{"method":"GET","url":"http://localhost:8000/path-as-is/../resource","options":[{"name":"path-as-is","value":true}]},"response":{"status":200}}]}

@@ -158,6 +158,25 @@ impl fmt::Display for MultilineString {
     }
 }
 
+impl fmt::Display for VariableDefinition {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}={}", self.name, self.value)
+    }
+}
+
+impl fmt::Display for VariableValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            VariableValue::Null { .. } => "null".to_string(),
+            VariableValue::Bool(value) => value.to_string(),
+            VariableValue::Integer(n) => n.to_string(),
+            VariableValue::Float(x) => x.to_string(),
+            VariableValue::String(s) => s.to_string(),
+        };
+        write!(f, "{}", s)
+    }
+}
+
 impl PredicateFuncValue {
     pub fn name(&self) -> String {
         match self {

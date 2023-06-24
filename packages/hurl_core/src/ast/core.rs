@@ -89,6 +89,15 @@ impl Request {
         }
         None
     }
+
+    pub fn options(&self) -> Vec<EntryOption> {
+        for section in &self.sections {
+            if let SectionValue::Options(options) = &section.value {
+                return options.clone();
+            }
+        }
+        vec![]
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

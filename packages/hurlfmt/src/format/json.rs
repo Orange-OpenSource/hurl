@@ -83,6 +83,10 @@ impl ToJson for Request {
             let cookies = self.cookies().iter().map(|c| c.to_json()).collect();
             attributes.push(("cookies".to_string(), JValue::List(cookies)));
         }
+        if !self.options().is_empty() {
+            let options = self.options().iter().map(|c| c.to_json()).collect();
+            attributes.push(("options".to_string(), JValue::List(options)));
+        }
         if let Some(body) = &self.body {
             attributes.push(("body".to_string(), body.to_json()));
         }
@@ -261,6 +265,88 @@ impl ToJson for Cookie {
             ("name".to_string(), JValue::String(self.name.value.clone())),
             ("value".to_string(), JValue::String(self.value.to_string())),
         ];
+        JValue::Object(attributes)
+    }
+}
+
+impl ToJson for EntryOption {
+    fn to_json(&self) -> JValue {
+        let attributes = match self {
+            EntryOption::CaCertificate(value) => vec![
+                ("name".to_string(), JValue::String("cacert".to_string())),
+                (
+                    "value".to_string(),
+                    JValue::String(value.filename.value.clone()),
+                ),
+            ],
+            EntryOption::ClientCert(value) => vec![
+                ("name".to_string(), JValue::String("cert".to_string())),
+                (
+                    "value".to_string(),
+                    JValue::String(value.filename.value.clone()),
+                ),
+            ],
+            EntryOption::ClientKey(value) => vec![
+                ("name".to_string(), JValue::String("key".to_string())),
+                (
+                    "value".to_string(),
+                    JValue::String(value.filename.value.clone()),
+                ),
+            ],
+            EntryOption::Compressed(value) => vec![
+                ("name".to_string(), JValue::String("compressed".to_string())),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+            EntryOption::Insecure(value) => vec![
+                ("name".to_string(), JValue::String("insecure".to_string())),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+            EntryOption::FollowLocation(value) => vec![
+                ("name".to_string(), JValue::String("location".to_string())),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+            EntryOption::MaxRedirect(value) => vec![
+                ("name".to_string(), JValue::String("max-redirs".to_string())),
+                ("value".to_string(), JValue::Number(value.value.to_string())),
+            ],
+            EntryOption::PathAsIs(value) => vec![
+                ("name".to_string(), JValue::String("path-as-is".to_string())),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+            EntryOption::Proxy(value) => vec![
+                ("name".to_string(), JValue::String("proxy".to_string())),
+                ("value".to_string(), JValue::String(value.value.clone())),
+            ],
+            EntryOption::Retry(value) => vec![
+                ("name".to_string(), JValue::String("retry".to_string())),
+                ("value".to_string(), JValue::Number(value.value.to_string())),
+            ],
+            EntryOption::RetryInterval(value) => vec![
+                (
+                    "name".to_string(),
+                    JValue::String("retry-interval".to_string()),
+                ),
+                ("value".to_string(), JValue::Number(value.value.to_string())),
+            ],
+            EntryOption::Variable(value) => vec![
+                ("name".to_string(), JValue::String("variable".to_string())),
+                (
+                    "value".to_string(),
+                    JValue::String(format!("{}={}", value.value.name, value.value.value)),
+                ),
+            ],
+            EntryOption::Verbose(value) => vec![
+                ("name".to_string(), JValue::String("verbose".to_string())),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+            EntryOption::VeryVerbose(value) => vec![
+                (
+                    "name".to_string(),
+                    JValue::String("very-verbose".to_string()),
+                ),
+                ("value".to_string(), JValue::Boolean(value.value)),
+            ],
+        };
         JValue::Object(attributes)
     }
 }
