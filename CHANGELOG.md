@@ -1,4 +1,4 @@
-[4.0.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.0.0)
+[4.0.0 (2023-06-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.0.0)
 ========================================================================================================================
 
 Thanks to
@@ -40,6 +40,8 @@ Enhancements:
 
 Bugs Fixed:
 
+* Export [Options] to JSON [#1673](https://github.com/Orange-OpenSource/hurl/issues/1673)
+
 * Use --data-binary for log curl command when posting file [#1654](https://github.com/Orange-OpenSource/hurl/issues/1654)
 
 * Fix extra request headers logs with large body. [#1651](https://github.com/Orange-OpenSource/hurl/issues/1651)
@@ -51,6 +53,8 @@ Bugs Fixed:
 * Make Call, Certificate, Cookie, Header, Request, Response, Timings, Version public [#1548](https://github.com/Orange-OpenSource/hurl/issues/1548)
 
 * Add quotes around certificate attribute in HTML export [#1515](https://github.com/Orange-OpenSource/hurl/issues/1515)
+
+* Change API in jsonpath / remove single-entry coercion [#1469](https://github.com/Orange-OpenSource/hurl/issues/1469)
 
 
 [3.0.1 (2023-06-01)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#3.0.1)
