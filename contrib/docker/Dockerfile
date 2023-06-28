@@ -27,6 +27,7 @@ LABEL "com.orange.hurl.title"="Hurl"
 LABEL "com.orange.hurl.description"="Hurl is a command line tool that runs HTTP requests defined in a simple plain text format"
 LABEL "com.orange.hurl.base.name"="alpine:3.17"
 COPY --from=builder /tmp/hurl/target/release/hurl /usr/bin/
+COPY --from=builder /tmp/hurl/target/release/hurlfmt /usr/bin/
 COPY --from=builder /usr/lib/libcurl.so.4 /usr/lib/
 COPY --from=builder /usr/lib/libnghttp2.so.14 /usr/lib/
 COPY --from=builder /usr/lib/libbrotli*.so.1 /usr/lib/
