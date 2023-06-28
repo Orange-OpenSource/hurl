@@ -5,7 +5,7 @@ hurlfmt - format Hurl files
 
 ## SYNOPSIS
 
-**hurlfmt** [options] [FILE]
+**hurlfmt** [options] [FILE...]
 
 
 ## DESCRIPTION

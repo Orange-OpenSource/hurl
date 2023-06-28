@@ -1,4 +1,4 @@
-.TH hurl 1 "04 May 2023" "hurl 4.0.0-SNAPSHOT" " Hurl Manual"
+.TH hurl 1 "28 Jun 2023" "hurl 4.0.0-SNAPSHOT" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -168,6 +168,10 @@ The file will be written using the Netscape cookie file format.
 
 Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
 
+.IP "--error-format <FORMAT> "
+
+Control the format of error message (short by default or long)
+
 .IP "--fail-at-end "
 
 Continue executing requests to the end of the Hurl file even when an assert error occurs.
@@ -246,6 +250,10 @@ Override value from Environment variable no_proxy.
 
 Write output to FILE instead of stdout.
 
+.IP "--path-as-is "
+
+Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.
+
 .IP "-x, --proxy <[PROTOCOL://]HOST[:PORT]> "
 
 Use the specified proxy.
@@ -266,17 +274,13 @@ If the HTML report already exists, it will be updated with the new test results.
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
 
-.IP "--retry "
+.IP "--retry  <NUM> "
 
-Retry requests if any error occurs (asserts, captures, runtimes etc...).
+Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
 
 .IP "--retry-interval <MILLISECONDS> "
 
 Duration in milliseconds between each retry. Default is 1000 ms.
-
-.IP "--retry-max-count <NUM> "
-
-Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.
 
 .IP "--ssl-no-revoke "
 

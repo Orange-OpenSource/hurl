@@ -154,7 +154,7 @@ To support its development, [star Hurl on GitHub]!
 POST https://hurl.dev/api/feedback
 {
   "name": "John Doe",
-  "feedback": "Hurl is awesome !"
+  "feedback": "Hurl is awesome!"
 }
 HTTP 200
 ```
@@ -639,7 +639,7 @@ HTTP 200
 certificate "Subject" == "CN=example.org"
 certificate "Issuer" == "C=US, O=Let's Encrypt, CN=R3"
 certificate "Expire-Date" daysAfterNow > 15
-certificate "Serial-Number" matches "[0-9af]+"
+certificate "Serial-Number" matches /[\da-f]+/
 ```
 
 [Doc](https://hurl.dev/docs/asserting-response.html#ssl-certificate-assert)
@@ -676,7 +676,7 @@ jsonpath "$.state" == "RUNNING"
 # Pull job status until it is completed
 GET https://api.example.org/jobs/{{job_id}}
 [Options]
-retry: true
+retry: 10   # maximum number of retry, -1 for unlimited
 
 HTTP 200
 [Asserts]
@@ -907,6 +907,7 @@ will follow a redirection only for the second entry.
 | <a href="#connect-to" id="connect-to"><code>--connect-to &lt;HOST1:PORT1:HOST2:PORT2&gt;</code></a> | For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.<br><br>See also [`--resolve`](#resolve).<br> |
 | <a href="#cookie" id="cookie"><code>-b, --cookie &lt;FILE&gt;</code></a> | Read cookies from FILE (using the Netscape cookie file format).<br><br>Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.<br> |
 | <a href="#cookie-jar" id="cookie-jar"><code>-c, --cookie-jar &lt;FILE&gt;</code></a> | Write cookies to FILE after running the session (only for one session).<br>The file will be written using the Netscape cookie file format.<br><br>Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.<br> |
+| <a href="#error-format" id="error-format"><code>--error-format &lt;FORMAT&gt;</code></a> | Control the format of error message (short by default or long)<br> |
 | <a href="#fail-at-end" id="fail-at-end"><code>--fail-at-end</code></a> | Continue executing requests to the end of the Hurl file even when an assert error occurs.<br>By default, Hurl exits after an assert error in the HTTP response.<br><br>Note that this option does not affect the behavior with multiple input Hurl files.<br><br>All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.<br> |
 | <a href="#file-root" id="file-root"><code>--file-root &lt;DIR&gt;</code></a> | Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.<br>When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.<br> |
 | <a href="#location" id="location"><code>-L, --location</code></a> | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br> |
@@ -923,13 +924,13 @@ will follow a redirection only for the second entry.
 | <a href="#no-output" id="no-output"><code>--no-output</code></a> | Suppress output. By default, Hurl outputs the body of the last response.<br> |
 | <a href="#noproxy" id="noproxy"><code>--noproxy &lt;HOST(S)&gt;</code></a> | Comma-separated list of hosts which do not use a proxy.<br>Override value from Environment variable no_proxy.<br> |
 | <a href="#output" id="output"><code>-o, --output &lt;FILE&gt;</code></a> | Write output to FILE instead of stdout.<br> |
+| <a href="#path-as-is" id="path-as-is"><code>--path-as-is</code></a> | Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.<br> |
 | <a href="#proxy" id="proxy"><code>-x, --proxy &lt;[PROTOCOL://]HOST[:PORT]&gt;</code></a> | Use the specified proxy.<br> |
 | <a href="#report-junit" id="report-junit"><code>--report-junit &lt;FILE&gt;</code></a> | Generate JUnit File.<br><br>If the FILE report already exists, it will be updated with the new test results.<br> |
 | <a href="#report-html" id="report-html"><code>--report-html &lt;DIR&gt;</code></a> | Generate HTML report in DIR.<br><br>If the HTML report already exists, it will be updated with the new test results.<br> |
 | <a href="#resolve" id="resolve"><code>--resolve &lt;HOST:PORT:ADDR&gt;</code></a> | Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.<br> |
-| <a href="#retry" id="retry"><code>--retry</code></a> | Retry requests if any error occurs (asserts, captures, runtimes etc...).<br> |
+| <a href="#retry" id="retry"><code>--retry  &lt;NUM&gt;</code></a> | Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).<br> |
 | <a href="#retry-interval" id="retry-interval"><code>--retry-interval &lt;MILLISECONDS&gt;</code></a> | Duration in milliseconds between each retry. Default is 1000 ms.<br> |
-| <a href="#retry-max-count" id="retry-max-count"><code>--retry-max-count &lt;NUM&gt;</code></a> | Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.<br> |
 | <a href="#ssl-no-revoke" id="ssl-no-revoke"><code>--ssl-no-revoke</code></a> | (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.<br> |
 | <a href="#test" id="test"><code>--test</code></a> | Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.<br> |
 | <a href="#to-entry" id="to-entry"><code>--to-entry &lt;ENTRY_NUMBER&gt;</code></a> | Execute Hurl file to ENTRY_NUMBER (starting at 1).<br>Ignore the remaining of the file. It is useful for debugging a session.<br> |

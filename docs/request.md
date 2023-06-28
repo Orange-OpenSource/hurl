@@ -130,8 +130,10 @@ User-Agent: My User Agent
 
 ### Method
 
-Mandatory HTTP request method, one of `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`,
-`TRACE`, `PATCH`, `LINK`, `UNLINK`, `PURGE`, `LOCK`, `UNLOCK`, `PROPFIND`, `VIEW`.
+Mandatory HTTP request method, usually one of `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`,
+`TRACE` and `PATCH`. 
+
+> Other methods can be used like `QUERY` with the constraint of using only uppercase chars.
 
 ### URL
 

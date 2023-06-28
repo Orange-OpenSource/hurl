@@ -437,7 +437,7 @@ jsonpath "$.state" == "RUNNING"
 # Pull job status until it is completed
 GET https://api.example.org/jobs/{{job_id}}
 [Options]
-retry: true
+retry: 10   # maximum number of retry, -1 for unlimited
 
 HTTP 200
 [Asserts]

@@ -242,7 +242,7 @@ pub fn output() -> clap::Arg {
 pub fn path_as_is() -> clap::Arg {
     clap::Arg::new("path_as_is")
         .long("path_as_is")
-        .help("Tell curl to not handle sequences of /../ or /./ in the given URL path")
+        .help("Tell Hurl to not handle sequences of /../ or /./ in the given URL path")
         .action(ArgAction::SetTrue)
 }
 

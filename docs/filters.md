@@ -96,6 +96,22 @@ HTTP 200
 certificate "Start-Date" daysBeforeNow < 100
 ```
 
+### decode
+
+Decode bytes to string using encoding.
+
+```hurl
+# The 'Content-Type' HTTP response header does not precise the charset 'gb2312'
+# so body must be decoded explicitly by Hurl before processing any text based assert
+GET https://exapple.org/hello_china
+
+HTTP 200
+[Asserts]
+header "Content-Type" == "text/html"
+# Content-Type has no encoding clue, we must decode ourselves the body response.
+bytes decode "gb2312" xpath "string(//body)" == "你好世界"
+```
+
 ### format
 
 Formats a date to a string given [a specification format].

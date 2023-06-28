@@ -187,6 +187,10 @@ The file will be written using the Netscape cookie file format.
 
 Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
 
+### --error-format <FORMAT> {#error-format}
+
+Control the format of error message (short by default or long)
+
 ### --fail-at-end {#fail-at-end}
 
 Continue executing requests to the end of the Hurl file even when an assert error occurs.
@@ -265,6 +269,10 @@ Override value from Environment variable no_proxy.
 
 Write output to FILE instead of stdout.
 
+### --path-as-is {#path-as-is}
+
+Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.
+
 ### -x, --proxy <[PROTOCOL://]HOST[:PORT]> {#proxy}
 
 Use the specified proxy.
@@ -285,17 +293,13 @@ If the HTML report already exists, it will be updated with the new test results.
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
 
-### --retry {#retry}
+### --retry  <NUM> {#retry}
 
-Retry requests if any error occurs (asserts, captures, runtimes etc...).
+Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
 
 ### --retry-interval <MILLISECONDS> {#retry-interval}
 
 Duration in milliseconds between each retry. Default is 1000 ms.
-
-### --retry-max-count <NUM> {#retry-max-count}
-
-Maximum number of retries. Set this option to -1 to make it unlimited. Default is 10.
 
 ### --ssl-no-revoke {#ssl-no-revoke}
 
