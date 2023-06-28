@@ -216,6 +216,74 @@ jobs:
         path: |
           ./**/*.log
 
+
+  test-docker-x64-package:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Checkout repository
+     uses: actions/checkout@v3
+     with:
+       ref: ${{ inputs.branch }}
+   - name: Get actual branch
+     run: |
+       echo "ACTUAL_BRANCH=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')" | tee -a "${GITHUB_ENV}"
+   - name: Set up Docker Buildx
+     uses: docker/setup-buildx-action@v2
+   - name: Build docker image
+     run: |
+         echo "::group::Build docker hurl"
+           docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
+           docker builder prune \
+             --all \
+             --force
+           docker build . \
+             --file contrib/docker/Dockerfile \
+             --build-arg docker_build_date="${docker_build_date}" \
+             --build-arg hurl_branch=${ACTUAL_BRANCH} \
+             --tag local/hurl
+           docker inspect local/hurl
+           docker run --rm local/hurl --version
+         echo "::endgroup::"
+   - name: Integration tests
+     uses: addnab/docker-run-action@v3
+     with:
+       image: local/hurl
+       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh
+       run: |
+         echo "::group::Install system prerequisistes"
+           set -e
+           cat /etc/os-release
+           apk add sudo bash curl python3 py3-pip
+         echo "::endgroup::"
+         echo "::group::Install alpine prerequisistes"
+           bash bin/install_prerequisites_alpine.sh
+         echo "::endgroup::"
+         echo "::group::Install tests prerequisites"
+           bash bin/install_python3_venv.sh
+           export PATH=/tmp/hurl-python3-venv/bin:$PATH
+           which python3
+           python3 --version
+           pip --version
+           bash bin/test/test_prerequisites.sh
+         echo "::endgroup::"
+         echo "::group::Environment"
+           bash bin/environment.sh
+         echo "::endgroup::"
+         echo "::group::Integration tests"
+           bash bin/test/test_integ.sh
+         echo "::endgroup::"
+   - name: find artifacts
+     run: |
+       pwd
+       find . -name "*.log"
+   - name: Archive production artifacts
+     uses: actions/upload-artifact@v3
+     if: ${{ always() }}
+     with:
+       name: test-docker-x64-package-artifacts
+       path: |
+         ./**/*.log
+
   package-deb-x64:
     runs-on: ubuntu-20.04
     steps:
