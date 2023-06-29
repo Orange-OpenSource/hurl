@@ -351,7 +351,7 @@ jobs:
           GITHUB_TOKEN=${{ secrets.HURL_BOT_TOKEN }}
           {
           echo "⚠ This is a GitHub releasing PR."
-          echo "- Please use \`/accept --release\` if you want to automatically update master branch to next SNAPSHOT version"
+          echo "- Please use \`/accept\` as usual then run the \`update-branch-version\` github workflow if you want to automatically update master branch to next SNAPSHOT version"
           } > file-body.txt
           gh pr create \
             --title "Merge GitHub ${{ needs.set-context.outputs.release_branch }} into ${{ github.ref_name }}" \
