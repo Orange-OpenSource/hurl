@@ -108,7 +108,7 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
 HTTP 200
 ```
 
-Hurl can also be used to performance test HTTP endpoints:
+Hurl can also be used to test the <b>performance</b> of HTTP endpoints
 
 ```hurl
 GET https://example.org/api/v1/pets
@@ -118,7 +118,7 @@ HTTP 200
 duration < 1000  # Duration in ms
 ```
 
-And response bytes
+And check response bytes
 
 ```hurl
 GET https://example.org/data.tar.gz
@@ -128,6 +128,12 @@ HTTP 200
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
+Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
+
+<div class="home-html-report">
+    <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png" alt="HTML report"/>
+    <img class="dark-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-dark.png" alt="HTML report"/>
+</div>
 
 # Why Hurl?
 

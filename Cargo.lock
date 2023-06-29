@@ -507,7 +507,7 @@ checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 
 [[package]]
 name = "hurl"
-version = "4.0.0"
+version = "4.1.0-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
@@ -543,7 +543,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "4.0.0"
+version = "4.1.0-SNAPSHOT"
 dependencies = [
  "float-cmp",
  "regex",
@@ -552,7 +552,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "4.0.0"
+version = "4.1.0-SNAPSHOT"
 dependencies = [
  "atty",
  "base64",
@@ -839,9 +839,9 @@ checksum = "a1d01941d82fa2ab50be1e79e6714289dd7cde78eba4c074bc5a4374f650dfe0"
 
 [[package]]
 name = "quote"
-version = "1.0.28"
+version = "1.0.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b9ab9c7eadfd8df19006f1cf1a4aed13540ed5cbc047010ece5826e10825488"
+checksum = "573015e8ab27661678357f27dc26460738fd2b6c86e46f386fde94cb5d913105"
 dependencies = [
  "proc-macro2",
 ]
@@ -1311,9 +1311,9 @@ dependencies = [
 
 [[package]]
 name = "windows-targets"
-version = "0.48.0"
+version = "0.48.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b1eb6f0cd7c80c79759c929114ef071b87354ce476d9d94271031c0497adfd5"
+checksum = "05d4b17490f70499f20b9e791dcf6a299785ce8af4d709018206dc5b4953e95f"
 dependencies = [
  "windows_aarch64_gnullvm 0.48.0",
  "windows_aarch64_msvc 0.48.0",
