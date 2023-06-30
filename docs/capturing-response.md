@@ -145,7 +145,8 @@ same-site: cookie "LSID[SameSite]"
 
 ### Body capture
 
-Capture the entire body (decoded as text) from the received HTTP response
+Capture the entire body (decoded as text) from the received HTTP response. The encoding used to decode the body 
+is based on the `charset` value in the `Content-Type` header response.
 
 ```hurl
 GET https://example.org/home
@@ -154,6 +155,21 @@ HTTP 200
 [Captures]
 my_body: body
 ```
+
+If the `Content-Type` doesn't include any encoding hint, a [`decode` filter] can be used to explicitly decode the body response
+bytes.
+
+```hurl
+# Our HTML response is encoded using GB 2312.
+# But, the 'Content-Type' HTTP response header doesn't precise any charset,
+# so we decode explicitly the bytes.
+GET https://example.org/cn
+
+HTTP 200
+[Captures]
+my_body: bytes decode "gb2312"
+```
+
 
 ### Bytes capture
 
@@ -183,7 +199,6 @@ ped-id: xpath "normalize-space(//div[@id='pet0'])"
 
 # Open the captured page.
 GET https://example.org/home/pets/{{pet-id}}
-
 HTTP 200
 ```
 
@@ -199,6 +214,16 @@ HTTP 200
 pets: xpath "//pets"
 [Asserts]
 variable "pets" count == 200
+```
+
+XPath expression can also be evaluated against part of the body with a [`xpath` filter]:
+
+```hurl
+GET https://example.org/home_cn
+
+HTTP 200
+[Captures]
+ped-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 ```
 
 
@@ -331,3 +356,5 @@ cert_serial_number: certificate "Serial-Number"
 [options]: /docs/request.md#options
 [`--location` option]: /docs/manual.md#location
 [filters]: /docs/filters.md
+[`xpath` filter]: /docs/filters.md#xpath
+[`decode` filter]: /docs/filters.md#decode

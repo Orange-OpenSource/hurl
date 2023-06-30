@@ -262,7 +262,21 @@ HTTP 200
 jsonpath "$.url" urlEncode == "https%3A//mozilla.org/%3Fx%3D%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
 ```
 
+### xpath
+
+Evaluates a [XPath] expression.
+
+```hurl
+GET https://example.org/hello_gb2312
+
+HTTP 200
+[Asserts]
+bytes decode "gb2312" xpath "string(//body)" == "你好世界"
+```
+
+
 [Captures]: /docs/capturing-response.md
 [asserts]: /docs/asserting-response.md
 [RFC3986]: https://www.rfc-editor.org/rfc/rfc3986
 [a specification format]: https://docs.rs/chrono/latest/chrono/format/strftime/index.html
+[XPath]: https://en.wikipedia.org/wiki/XPath

@@ -241,7 +241,7 @@ xpath "string(//article/@data-visible)" == "true"
 In this case, the XPath query `string(//article/@data-visible)` returns a string, so the predicate value must be a
 string.
 
-The predicate function `equals` can be used with string, numbers or booleans; `startWith` and `contains` can only
+The predicate function `==` can be used with string, numbers or booleans; `startWith` and `contains` can only
 be used with strings and bytes, while `matches` only works on string. If a query returns a number, using a `matches` predicate will cause a runner error.
 
 ```hurl
@@ -408,6 +408,22 @@ HTTP 200
 header "Content-Type" == "text/html; charset=gb2312"
 bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB 2312
 body contains "你好世界"
+```
+
+If the `Content-Type` doesn't include any encoding hint, a [`decode` filter] can be used to explicitly decode the body response
+bytes.
+
+```hurl
+# Our HTML response is encoded using GB 2312.
+# But, the 'Content-Type' HTTP response header doesn't precise any charset,
+# so we decode explicitly the bytes.
+GET https://example.org/cn
+
+HTTP 200
+[Asserts]
+header "Content-Type" == "text/html"
+bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB2312
+bytes decode "gb2312" contains "你好世界"
 ```
 
 ### Bytes assert
@@ -840,3 +856,4 @@ of all file nodes.
 [multiline string body]: #multiline-string-body
 [filters]: /docs/filters.md
 [count]: /docs/filters.md#count
+[`decode` filter]: /docs/filters.md#decode
