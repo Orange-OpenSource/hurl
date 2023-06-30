@@ -15,6 +15,8 @@ Thanks to
 
 Enhancements:
 
+* Add xpath filter [#1698](https://github.com/Orange-OpenSource/hurl/issues/1698)
+
 * Introduce curl --path-as-is option [#1669](https://github.com/Orange-OpenSource/hurl/issues/1669)
 
 * Deprecate word predicate when operator is available [#1662](https://github.com/Orange-OpenSource/hurl/issues/1662)
