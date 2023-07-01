@@ -35,7 +35,7 @@ def check_archive(version: str):
         target = platform["rust_target"]
         extension = platform["archive_extension"]
         expected_checksum = platform["checksum"]
-        url = f"  https://github.com/Orange-OpenSource/hurl/releases/download/{version}/hurl-{version}-{target}{extension}"
+        url = f"https://github.com/Orange-OpenSource/hurl/releases/download/{version}/hurl-{version}-{target}{extension}"
         print(f"  Downloading: {bold(url)}")
         with request.urlopen(url) as response:
             if response.status != 200:
@@ -49,7 +49,11 @@ def check_archive(version: str):
         print(f"  Checksum:    {bold(actual_checksum)}")
 
         if actual_checksum != expected_checksum:
-            print(bold_red("  Checksum KO"))
+            print(
+                bold_red(
+                    f"  Checksum KO, please update {target} checksum in contrib/npm/hurl/platform.json"
+                )
+            )
             sys.exit(1)
         else:
             print(bold_green("  Checksum OK"))
@@ -65,7 +69,8 @@ def check_version(version: str):
     if actual_version != expected_version:
         print(
             bold_red(
-                f"  Version KO actual={actual_version} expected={expected_version}"
+                f"  Version KO actual={actual_version} expected={expected_version}, please update "
+                f"version in contrib/npm/hurl/package.json"
             )
         )
         sys.exit(1)
@@ -83,6 +88,8 @@ def main(version: str):
     check_version(version)
     check_manual(version)
     check_archive(version)
+
+    print(bold("Everything looks OK!"))
 
 
 if __name__ == "__main__":

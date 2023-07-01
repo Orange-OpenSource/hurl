@@ -8,7 +8,7 @@ Hurl is [distributed on npm] as a thin wrapper around the native binary.
 
 To publish a new version `x.y.z`:
 
-```
+```shell
 $ cp docs/manual/*.1 contrib/npm/hurl/docs/
 $ python3 ./contrib/npm/check_publish.py x.y.z
 $ npm publish --dry-run contrib/npm/hurl/
