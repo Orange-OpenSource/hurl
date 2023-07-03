@@ -17,9 +17,10 @@
  */
 use super::OptionsError;
 use crate::cli::options::{InputFormat, OutputFormat};
-use atty::Stream;
 use clap::parser::ValueSource;
 use clap::ArgMatches;
+use std::io;
+use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
 pub fn check(arg_matches: &ArgMatches) -> bool {
@@ -32,7 +33,7 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
     } else if has_flag(arg_matches, "no_color") || has_flag(arg_matches, "in_place") {
         false
     } else {
-        atty::is(Stream::Stdout)
+        io::stdout().is_terminal()
     }
 }
 
@@ -98,7 +99,7 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError
             }
         }
     }
-    if files.is_empty() && !atty::is(Stream::Stdin) {
+    if files.is_empty() && !io::stdin().is_terminal() {
         files.push("-".to_string());
     }
     Ok(files)

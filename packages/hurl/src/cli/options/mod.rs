@@ -20,11 +20,11 @@ mod matches;
 mod variables;
 
 use std::collections::HashMap;
-use std::env;
+use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
+use std::{env, io};
 
-use atty::Stream;
 use clap::ArgMatches;
 use hurl::libcurl_version_info;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
@@ -171,7 +171,7 @@ pub fn parse() -> Result<Options, OptionsError> {
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if opts.input_files.is_empty() && atty::is(Stream::Stdin) {
+    if opts.input_files.is_empty() && io::stdin().is_terminal() {
         let help = command.render_help().to_string();
         return Err(OptionsError::Error(help));
     }

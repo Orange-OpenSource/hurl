@@ -14,7 +14,6 @@ repository = "https://github.com/Orange-OpenSource/hurl"
 strict = []
 
 [dependencies]
-atty = "0.2.14"
 base64 = "0.21.2"
 clap = { version = "4.3.10", features = ["cargo", "wrap_help"] }
 colored = "2.0.3"

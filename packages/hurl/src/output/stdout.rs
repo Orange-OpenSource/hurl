@@ -19,7 +19,7 @@ use std::io;
 use std::io::Write;
 
 #[cfg(target_family = "windows")]
-use atty::Stream;
+use std::io::IsTerminal;
 
 use crate::output::Error;
 
@@ -34,12 +34,11 @@ pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
 
 #[cfg(target_family = "windows")]
 pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
-    if atty::is(Stream::Stdout) {
+    if io::stdout().is_terminal() {
         println!("{}", String::from_utf8_lossy(buf));
         Ok(())
     } else {
-        let stdout = io::stdout();
-        let mut handle = stdout.lock();
+        let mut handle = io::stdout().lock();
         handle.write_all(buf).map_err(|_| Error {
             message: "Error writing output".to_string(),
         })

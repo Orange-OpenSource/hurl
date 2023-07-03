@@ -19,10 +19,10 @@
 mod commands;
 mod matches;
 
-use atty::Stream;
 use clap::ArgMatches;
-use std::env;
+use std::io::IsTerminal;
 use std::path::PathBuf;
+use std::{env, io};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
@@ -84,7 +84,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
 
-    if opts.input_files.is_empty() && atty::is(Stream::Stdin) {
+    if opts.input_files.is_empty() && io::stdin().is_terminal() {
         let help = command.render_help().to_string();
         return Err(OptionsError::Error(help));
     }

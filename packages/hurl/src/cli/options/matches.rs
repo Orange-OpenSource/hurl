@@ -19,16 +19,15 @@ use super::variables::{parse as parse_variable, parse_value};
 use super::OptionsError;
 use crate::cli::options::ErrorFormat;
 use crate::cli::OutputType;
-use atty::Stream;
 use clap::ArgMatches;
 use hurl::runner::Value;
 use hurl_core::ast::Retry;
 use std::collections::HashMap;
-use std::env;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, IsTerminal};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
+use std::{env, io};
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
     match get_string(arg_matches, "cacert_file") {
@@ -88,7 +87,7 @@ pub fn color(arg_matches: &ArgMatches) -> bool {
             return false;
         }
     }
-    atty::is(Stream::Stdout)
+    io::stdout().is_terminal()
 }
 
 pub fn compressed(arg_matches: &ArgMatches) -> bool {
@@ -184,7 +183,7 @@ pub fn input_files(arg_matches: &ArgMatches) -> Result<Vec<String>, OptionsError
     for filename in glob_files(arg_matches)? {
         files.push(filename);
     }
-    if files.is_empty() && !atty::is(Stream::Stdin) {
+    if files.is_empty() && !io::stdin().is_terminal() {
         files.push("-".to_string());
     }
     Ok(files)
@@ -237,7 +236,7 @@ pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
         && !verbose
         && !interactive(arg_matches)
         && !is_ci()
-        && atty::is(Stream::Stderr)
+        && io::stderr().is_terminal()
 }
 
 pub fn proxy(arg_matches: &ArgMatches) -> Option<String> {
