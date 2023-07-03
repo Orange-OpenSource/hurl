@@ -12,6 +12,12 @@ Thanks to
 [@devnoname120](https://github.com/devnoname120),
 [@jasonkarns](https://github.com/jasonkarns),
 
+Breaking Changes:
+
+* The option [--retry](https://hurl.dev/docs/manual.html#retry) now takes a number that specifies the explicit number of retries (same behaviour than curl)
+* The `jsonpath` query/filter does not coerce single-entry collection any more [#1469](https://github.com/Orange-OpenSource/hurl/issues/1469)
+* `hurl` crate: `LoggerOptionsBuilder` replaces `LoggerOption`, retry option from `RunnerOptionsBuilder` have changed, and verbose option have been moved from `RunnerOptionsBuilder` to `LoggerOptionsBuilder`
+
 
 Enhancements:
 
