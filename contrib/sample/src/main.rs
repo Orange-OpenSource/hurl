@@ -16,16 +16,18 @@
  *
  */
 
-use std::{env, fs};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::process::exit;
 use std::time::Duration;
+use std::{env, fs};
 
 use hurl::runner;
-use hurl::runner::{AssertResult, CaptureResult, EntryResult, Error, HurlResult, Verbosity};
-use hurl::util::logger::LoggerBuilder;
+use hurl::runner::{AssertResult, CaptureResult, EntryResult, Error, HurlResult};
+use hurl::util::logger::{ErrorFormat, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
+use hurl_core::ast::Retry;
+use runner::RunnerOptionsBuilder;
 
 /// Run a Hurl file and dumps results.
 /// This sample is used to detect public APIs change for Hurl crates.
@@ -40,14 +42,16 @@ fn main() {
     let filename = &args[1];
     let content = fs::read_to_string(filename).expect("Should have been able to read the file");
 
-    let logger = LoggerBuilder::new()
+    let logger_opts = LoggerOptionsBuilder::new()
         .color(false)
-        .verbose(false)
+        .error_format(ErrorFormat::Short)
         .filename(filename)
+        .progress_bar(false)
+        .verbosity(Some(Verbosity::Verbose))
         .build();
 
     // Define runner options
-    let runner_options = runner::RunnerOptionsBuilder::new()
+    let runner_opts = RunnerOptionsBuilder::new()
         .cacert_file(None)
         .compressed(false)
         .connect_timeout(Duration::from_secs(300))
@@ -62,26 +66,19 @@ fn main() {
         .post_entry(None)
         .pre_entry(None)
         .proxy(None)
-        .retry(false)
+        .retry(Retry::None)
         .retry_interval(Duration::from_secs(1))
-        .retry_max_count(Some(10))
         .timeout(Duration::from_secs(300))
         .to_entry(None)
         .user(None)
         .user_agent(None)
-        .verbosity(Some(Verbosity::VeryVerbose))
         .build();
 
     // Set variables
     let variables = HashMap::default();
 
     // Run the hurl file
-    let result = runner::run(
-        &content,
-        &runner_options,
-        &variables,
-        &logger,
-    ).unwrap();
+    let result = runner::run(&content, &runner_opts, &variables, &logger_opts).unwrap();
 
     print_result(&result, filename);
 }
@@ -89,7 +86,7 @@ fn main() {
 /// Prints a Hurl result
 fn print_result(results: &HurlResult, filename: &str) {
     let level = 0;
-    print(level, "file", &filename);
+    print(level, "file", filename);
     print(level, "success", &results.success.to_string());
     print(level, "duration", &results.time_in_ms.to_string());
     if results.entries.is_empty() {
@@ -208,7 +205,6 @@ fn print_error(error: &Error) {
 //     print(level, "name", &header.name);
 //     print(level, "value", &header.value);
 // }
-
 
 fn print(level: usize, key: &str, value: &str) {
     let prefix = " ".repeat(level * 2);

@@ -6,6 +6,6 @@ edition = "2021"
 [workspace]
 
 [dependencies]
-hurl = "3.0.0"
-hurl_core = "3.0.0"
+hurl = "4.0.0"
+hurl_core = "4.0.0"
 
