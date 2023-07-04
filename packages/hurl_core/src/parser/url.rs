@@ -22,7 +22,7 @@ use crate::parser::reader::Reader;
 use crate::parser::{expr, ParseResult};
 
 pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
-    // Can not be json-encoded, nor empty.
+    // Can not be JSON-encoded, nor empty.
     // But more restrictive: whitelist characters, not empty
 
     let start = reader.state.clone();
@@ -37,13 +37,11 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
         });
     }
 
-    // Urls must begin with http/https or { (templates).
-    let first_char = reader.peek();
-    if first_char != Some('h') && first_char != Some('{') {
+    if !url_prefix_valid(reader) {
         return Err(Error {
             pos: reader.state.pos.clone(),
             recoverable: false,
-            inner: ParseError::UrlIllegalCharacter(first_char.unwrap()),
+            inner: ParseError::UrlInvalidStart,
         });
     }
 
@@ -110,7 +108,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
         });
     }
 
-    // url should be followed by a line terminator
+    // URLs should be followed by a line terminator
     let save = reader.state.clone();
     if line_terminator(reader).is_err() {
         reader.state = save;
@@ -131,6 +129,18 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
             end: reader.state.clone().pos,
         },
     })
+}
+
+/// Returns true if url starts with http://, https:// or {{
+fn url_prefix_valid(reader: &mut Reader) -> bool {
+    let prefixes = ["https://", "http://", "{{"];
+    for expected_p in prefixes.iter() {
+        let current_p = reader.peek_n(expected_p.len());
+        if &current_p == expected_p {
+            return true;
+        }
+    }
+    false
 }
 
 #[cfg(test)]
@@ -256,7 +266,7 @@ mod tests {
         let mut reader = Reader::new(" # eol");
         let error = url(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::UrlIllegalCharacter(' '));
+        assert_eq!(error.inner, ParseError::UrlInvalidStart);
     }
 
     #[test]
@@ -272,9 +282,11 @@ mod tests {
             "http://www.google.com/?q=go+language",
             "http://www.google.com/?q=go%20language",
             "http://www.google.com/a%20b?q=c+d",
-            "http:www.google.com/?q=go+language",
-            "http:www.google.com/?q=go+language",
-            "http:%2f%2fwww.google.com/?q=go+language",
+            // The following URLs are supported in the Go test file
+            // but are not considered as valid URLs by curl
+            // "http:www.google.com/?q=go+language",
+            // "http:www.google.com/?q=go+language",
+            // "http:%2f%2fwww.google.com/?q=go+language",
             "http://user:password@google.com",
             "http://user:password@google.com",
             "http://j@ne:password@google.com",
@@ -317,6 +329,24 @@ mod tests {
             //eprintln!("{}", s);
             let mut reader = Reader::new(s);
             assert!(url(&mut reader).is_ok());
+        }
+    }
+
+    #[test]
+    fn test_invalid_urls() {
+        // from official url_test.go file
+        let invalid_urls = [
+            "foo.com",
+            "httpfoo.com",
+            "http:foo.com",
+            "https:foo.com",
+            "https:/foo.com",
+            "{https://foo.com",
+        ];
+
+        for s in invalid_urls {
+            let mut reader = Reader::new(s);
+            assert!(url(&mut reader).is_err());
         }
     }
 }
