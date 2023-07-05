@@ -122,7 +122,6 @@ option:
   | max-redirs-option
   | retry-option
   | retry-interval-option
-  | retry-max-count-option
   | variable-option
   | verbose-option
   | very-verbose-option
@@ -139,8 +138,6 @@ max-redirs-option: "max-redirs" ":" integer lt
 retry-option: "retry" ":" boolean lt
 
 retry-interval-option: "retry-interval" ":" integer lt
-
-retry-max-count-option: "retry-max-count" ":" integer lt
 
 variable-option: "variable" ":" variable-definition lt
 
@@ -493,5 +490,3 @@ regex-content: (regex-text|regex-escaped-char)*
 regex-text: ~[\n\/]+
 
 regex-escaped-char: "\\" ~[\n]
-
-

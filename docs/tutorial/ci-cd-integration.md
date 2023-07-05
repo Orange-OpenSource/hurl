@@ -57,7 +57,7 @@ docker run --name quiz --rm --detach --publish 8080:8080 ghcr.io/jcamiel/quiz:la
 $ chmod u+x bin/integration.sh
 $ bin/integration.sh
 Starting Quiz container
-5d311561828d6078e84eb4b8b87dfd5d67bde6d9614ad83860b60cf310438d2a 
+5d311561828d6078e84eb4b8b87dfd5d67bde6d9614ad83860b60cf310438d2a
 ```
 
 4. Verify that our container is up and running, and stop it.
@@ -87,7 +87,7 @@ set -eu
 
 wait_for_url () {
     echo "Testing $1..."
-    echo -e "GET $1\nHTTP 200" | hurl --retry --retry-max-count "$2" > /dev/null;
+    echo -e "GET $1\nHTTP 200" | hurl --retry "$2" > /dev/null;
     return 0
 }
 
@@ -188,7 +188,7 @@ $ git push -u origin main
 Enumerating objects: 7, done.
 Counting objects: 100% (7/7), done.
 ...
-``` 
+```
 
 Next, we are going to add a GitHub Action to our repo. The purpose of this action
 will be to launch our integration script on each commit.
