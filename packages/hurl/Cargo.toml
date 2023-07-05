@@ -21,8 +21,8 @@ strict = []
 base64 = "0.21.2"
 brotli = "3.3.4"
 chrono = { version = "0.4.26", default-features = false, features = ["clock"] }
-clap = { version = "4.3.10", features = ["cargo", "string", "wrap_help"] }
-colored = "2.0.3"
+clap = { version = "4.3.11", features = ["cargo", "string", "wrap_help"] }
+colored = "2.0.4"
 curl = "0.4.44"
 curl-sys = "0.4.63"
 encoding = "0.2.33"
