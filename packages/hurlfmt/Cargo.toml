@@ -17,9 +17,9 @@ strict = []
 atty = "0.2.14"
 base64 = "0.21.2"
 clap = { version = "4.3.10", features = ["cargo", "wrap_help"] }
-colored = "2.0.2"
+colored = "2.0.3"
 hurl_core = { version = "4.1.0-SNAPSHOT", path = "../hurl_core" }
-regex = "1.8.4"
+regex = "1.9.0"
 
 [dev-dependencies]
 proptest = "1.2.0"
