@@ -24,7 +24,7 @@ use std::{env, process};
 
 use crate::cli::options::OptionsError;
 use colored::control;
-use hurl::report::{html, junit};
+use hurl::report::{html, junit, tap};
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerOptionsBuilder, Verbosity};
 use hurl::{output, runner};
@@ -145,6 +145,12 @@ fn main() {
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
+    if let Some(filename) = opts.tap_file {
+        base_logger.debug(format!("Writing TAP report to {filename}").as_str());
+        let result = create_tap_report(&runs, &filename);
+        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
+    }
+
     if let Some(dir) = opts.html_dir {
         base_logger.debug(format!("Writing HTML report to {}", dir.display()).as_str());
         let result = create_html_report(&runs, &dir);
@@ -216,6 +222,16 @@ fn create_junit_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
         .map(|r| junit::Testcase::from(&r.hurl_result, &r.content, &r.filename))
         .collect();
     junit::write_report(filename, &testcases)?;
+    Ok(())
+}
+
+/// Create a TAP report for this run.
+fn create_tap_report(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliError> {
+    let testcases: Vec<tap::Testcase> = runs
+        .iter()
+        .map(|r| tap::Testcase::from(&r.hurl_result, &r.filename))
+        .collect();
+    tap::write_report(filename, &testcases)?;
     Ok(())
 }
 

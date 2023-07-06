@@ -67,6 +67,7 @@ pub struct Options {
     pub retry: Retry,
     pub retry_interval: Duration,
     pub ssl_no_revoke: bool,
+    pub tap_file: Option<String>,
     pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
@@ -153,6 +154,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::proxy())
         .arg(commands::report_html())
         .arg(commands::report_junit())
+        .arg(commands::report_tap())
         .arg(commands::resolve())
         .arg(commands::retry())
         .arg(commands::retry_interval())
@@ -216,6 +218,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let retry = matches::retry(arg_matches);
     let retry_interval = matches::retry_interval(arg_matches);
     let ssl_no_revoke = matches::ssl_no_revoke(arg_matches);
+    let tap_file = matches::tap_file(arg_matches);
     let test = matches::test(arg_matches);
     let timeout = matches::timeout(arg_matches);
     let to_entry = matches::to_entry(arg_matches);
@@ -256,6 +259,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         retry,
         retry_interval,
         ssl_no_revoke,
+        tap_file,
         test,
         timeout,
         to_entry,

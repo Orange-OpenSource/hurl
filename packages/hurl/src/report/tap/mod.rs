@@ -16,30 +16,8 @@
  *
  */
 
-//! Various reports for Hurl runs (JUnit, HTML etc...) A report aggregates multiple runs into
-//! a single unit.
+mod report;
+mod testcase;
 
-use std::fmt;
-
-pub mod html;
-pub mod junit;
-pub mod tap;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error {
-    pub message: String,
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-
-impl From<std::io::Error> for Error {
-    fn from(e: std::io::Error) -> Self {
-        Self {
-            message: e.to_string(),
-        }
-    }
-}
+pub use self::report::write_report;
+pub use self::testcase::Testcase;

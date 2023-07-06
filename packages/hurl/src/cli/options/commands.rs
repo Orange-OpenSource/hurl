@@ -263,6 +263,14 @@ pub fn report_junit() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn report_tap() -> clap::Arg {
+    clap::Arg::new("tap")
+        .long("report-tap")
+        .value_name("FILE")
+        .help("Write a TAP report to FILE")
+        .num_args(1)
+}
+
 pub fn report_html() -> clap::Arg {
     clap::Arg::new("report_html")
         .long("report-html")

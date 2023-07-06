@@ -264,6 +264,10 @@ pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "ssl_no_revoke")
 }
 
+pub fn tap_file(arg_matches: &ArgMatches) -> Option<String> {
+    get::<String>(arg_matches, "tap")
+}
+
 pub fn test(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "test")
 }
