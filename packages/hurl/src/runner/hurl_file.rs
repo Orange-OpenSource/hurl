@@ -28,7 +28,7 @@ use crate::http;
 use crate::http::Call;
 use crate::runner::core::*;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, Value};
+use crate::runner::{entry, options, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
@@ -130,7 +130,7 @@ pub fn run(
         logger.test_progress(entry_index, n);
 
         // The real execution of the entry happens here, with the overridden entry options.
-        let options = entry::get_entry_options(entry, runner_options, &mut variables, &logger);
+        let options = options::get_entry_options(entry, runner_options, &mut variables, &logger);
         let entry_result = match &options {
             Ok(options) => entry::run(
                 entry,
@@ -366,7 +366,7 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
 /// Verbosity can be overridden at entry level with an Options section so each
 /// entry has its own logger.
 fn get_entry_logger(entry: &Entry, logger_options: &LoggerOptions) -> Logger {
-    let entry_verbosity = entry::get_entry_verbosity(entry, &logger_options.verbosity);
+    let entry_verbosity = options::get_entry_verbosity(entry, &logger_options.verbosity);
     let entry_logger_options = LoggerOptionsBuilder::new()
         .color(logger_options.color)
         .filename(&logger_options.filename)

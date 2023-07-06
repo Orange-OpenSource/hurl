@@ -211,6 +211,7 @@ impl HtmlFormatter {
             EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
             EntryOption::PathAsIs(option) => self.fmt_path_as_is_option(option),
             EntryOption::Proxy(option) => self.fmt_proxy_option(option),
+            EntryOption::Resolve(option) => self.fmt_resolve_option(option),
             EntryOption::Retry(option) => self.fmt_retry_option(option),
             EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
             EntryOption::Variable(option) => self.fmt_variable_option(option),
@@ -328,6 +329,19 @@ impl HtmlFormatter {
         self.fmt_span_open("line");
         self.fmt_space(&option.space0);
         self.fmt_string("proxy");
+        self.fmt_space(&option.space1);
+        self.buffer.push(':');
+        self.fmt_space(&option.space2);
+        self.fmt_string(&option.value);
+        self.fmt_span_close();
+        self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_resolve_option(&mut self, option: &ResolveOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string("resolve");
         self.fmt_space(&option.space1);
         self.buffer.push(':');
         self.fmt_space(&option.space2);

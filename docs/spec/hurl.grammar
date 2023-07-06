@@ -120,6 +120,7 @@ option:
   | follow-redirect-option
   | insecure-option
   | max-redirs-option
+  | resolve-option
   | retry-option
   | retry-interval-option
   | variable-option
@@ -134,6 +135,8 @@ follow-redirect-option: "location" ":" boolean lt
 insecure-option: "insecure" ":" boolean lt
 
 max-redirs-option: "max-redirs" ":" integer lt
+
+resolve-option: "resolve" ":" quoted-string lt
 
 retry-option: "retry" ":" boolean lt
 

@@ -717,6 +717,7 @@ pub enum EntryOption {
     MaxRedirect(MaxRedirectOption),
     PathAsIs(PathAsIsOption),
     Proxy(ProxyOption),
+    Resolve(ResolveOption),
     Retry(RetryOption),
     RetryInterval(RetryIntervalOption),
     Variable(VariableOption),
@@ -801,6 +802,16 @@ pub struct RetryIntervalOption {
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: u64,
+    pub line_terminator0: LineTerminator,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ResolveOption {
+    pub line_terminators: Vec<LineTerminator>,
+    pub space0: Whitespace,
+    pub space1: Whitespace,
+    pub space2: Whitespace,
+    pub value: String,
     pub line_terminator0: LineTerminator,
 }
 

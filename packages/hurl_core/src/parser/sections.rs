@@ -366,6 +366,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
             option_max_redirect,
             option_path_as_is,
             option_proxy,
+            option_resolve,
             option_retry,
             option_retry_interval,
             option_variable,
@@ -583,6 +584,50 @@ fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
             recoverable: false,
             inner: ParseError::Expecting {
                 value: "proxy name".to_string(),
+            },
+        });
+    }
+    Ok(name)
+}
+
+fn option_resolve(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+    let line_terminators = optional_line_terminators(reader)?;
+    let space0 = zero_or_more_spaces(reader)?;
+    try_literal("resolve", reader)?;
+    let space1 = zero_or_more_spaces(reader)?;
+    try_literal(":", reader)?;
+    let space2 = zero_or_more_spaces(reader)?;
+    let value = resolve(reader)?;
+    let line_terminator0 = line_terminator(reader)?;
+    let option = ResolveOption {
+        line_terminators,
+        space0,
+        space1,
+        space2,
+        value,
+        line_terminator0,
+    };
+    Ok(EntryOption::Resolve(option))
+}
+
+fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
+    if name.is_empty() {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "resolve".to_string(),
+            },
+        });
+    }
+    if !name.contains(':') {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "HOST:PORT:ADDR".to_string(),
             },
         });
     }
