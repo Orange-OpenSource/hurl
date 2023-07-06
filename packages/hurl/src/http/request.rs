@@ -68,17 +68,19 @@ impl Request {
             Ok(url) => url,
             Err(_) => return Err(HttpError::InvalidUrl(self.url.clone())),
         };
-        let base_url = format!(
-            "{}://{}{}",
-            url.scheme(),
-            url.host().unwrap(),
-            if let Some(port) = url.port() {
-                format!(":{port}")
-            } else {
-                "".to_string()
-            }
-        );
-        Ok(base_url)
+        let scheme = url.scheme();
+        if scheme != "http" && scheme != "https" {
+            return Err(HttpError::InvalidUrlPrefix(self.url.clone()));
+        }
+        let host = match url.host() {
+            Some(host) => host,
+            None => return Err(HttpError::InvalidUrl(self.url.clone())),
+        };
+        let port = match url.port() {
+            Some(port) => format!(":{port}"),
+            None => "".to_string(),
+        };
+        Ok(format!("{scheme}://{host}{port}"))
     }
 }
 

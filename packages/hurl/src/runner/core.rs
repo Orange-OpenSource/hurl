@@ -119,6 +119,7 @@ pub enum RunnerError {
         value: String,
     },
     InvalidUrl(String),
+    InvalidUrlPrefix(String),
 
     HttpConnection {
         url: String,

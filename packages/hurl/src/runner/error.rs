@@ -31,6 +31,7 @@ impl Error for runner::Error {
     fn description(&self) -> String {
         match &self.inner {
             RunnerError::InvalidUrl(..) => "Invalid URL".to_string(),
+            RunnerError::InvalidUrlPrefix(..) => "Invalid URL".to_string(),
             RunnerError::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
             RunnerError::VariableNotDefined { .. } => "Undefined variable".to_string(),
             RunnerError::HttpConnection { .. } => "HTTP connection".to_string(),
@@ -75,6 +76,9 @@ impl Error for runner::Error {
     fn fixme(&self) -> String {
         match &self.inner {
             RunnerError::InvalidUrl(url) => format!("invalid URL <{url}>"),
+            RunnerError::InvalidUrlPrefix(url) => {
+                format!("URL <{url}> must start with http:// or https://")
+            }
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("you must set the variable {name}")
             }
@@ -203,6 +207,7 @@ impl From<HttpError> for RunnerError {
                 RunnerError::UnsupportedContentEncoding(description)
             }
             HttpError::InvalidUrl(url) => RunnerError::InvalidUrl(url),
+            HttpError::InvalidUrlPrefix(url) => RunnerError::InvalidUrlPrefix(url),
         }
     }
 }

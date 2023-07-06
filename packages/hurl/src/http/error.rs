@@ -41,6 +41,7 @@ pub enum HttpError {
         description: String,
     },
     InvalidUrl(String),
+    InvalidUrlPrefix(String),
 }
 
 impl From<curl::Error> for HttpError {
