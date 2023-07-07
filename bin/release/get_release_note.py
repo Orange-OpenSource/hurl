@@ -178,13 +178,13 @@ def generate_md(
     for category in categories:
         category_pulls = [pull for pull in pulls if category in pull.tags]
         if len(category_pulls) > 0:
-            s += "\n\n\n" + categories[category] + ":"
+            s += "\n\n\n" + categories[category] + ":" + "\n\n"
         for pull in category_pulls:
             issues = " ".join(
                 "[#%s](%s/issues/%s)" % (issue, hurl_repo_url, issue)
                 for issue in pull.issues
             )
-            s += "\n\n* %s %s" % (pull.description, issues)
+            s += "* %s %s\n" % (pull.description, issues)
 
     s += "\n"
     return s
