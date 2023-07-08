@@ -32,7 +32,7 @@ hex = "0.4.3"
 hex-literal = "0.4.1"
 hurl_core = { version = "4.1.0-SNAPSHOT", path = "../hurl_core" }
 indexmap = "1.9.3"
-libflate = "1.4.0"
+libflate = "2.0.0"
 libxml = "0.3.2"
 md5 = "0.7.0"
 percent-encoding = "2.3.0"
