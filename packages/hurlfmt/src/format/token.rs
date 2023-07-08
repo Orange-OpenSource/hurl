@@ -855,259 +855,46 @@ impl Tokenizable for JsonObjectElement {
         tokens
     }
 }
-
 impl Tokenizable for EntryOption {
     fn tokenize(&self) -> Vec<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        tokens.append(
+            &mut self
+                .line_terminators
+                .iter()
+                .flat_map(|e| e.tokenize())
+                .collect(),
+        );
+        tokens.append(&mut self.space0.tokenize());
+        tokens.push(Token::String(self.kind.name().to_string()));
+        tokens.append(&mut self.space1.tokenize());
+        tokens.push(Token::Colon(String::from(":")));
+        tokens.append(&mut self.space2.tokenize());
+        tokens.append(&mut self.kind.tokenize());
+        tokens.append(&mut self.line_terminator0.tokenize());
+        tokens
+    }
+}
+
+impl Tokenizable for OptionKind {
+    fn tokenize(&self) -> Vec<Token> {
         match self {
-            EntryOption::CaCertificate(option) => option.tokenize(),
-            EntryOption::ClientCert(option) => option.tokenize(),
-            EntryOption::ClientKey(option) => option.tokenize(),
-            EntryOption::Compressed(option) => option.tokenize(),
-            EntryOption::Insecure(option) => option.tokenize(),
-            EntryOption::FollowLocation(option) => option.tokenize(),
-            EntryOption::MaxRedirect(option) => option.tokenize(),
-            EntryOption::PathAsIs(option) => option.tokenize(),
-            EntryOption::Proxy(option) => option.tokenize(),
-            EntryOption::Resolve(option) => option.tokenize(),
-            EntryOption::Retry(option) => option.tokenize(),
-            EntryOption::RetryInterval(option) => option.tokenize(),
-            EntryOption::Variable(option) => option.tokenize(),
-            EntryOption::Verbose(option) => option.tokenize(),
-            EntryOption::VeryVerbose(option) => option.tokenize(),
+            OptionKind::CaCertificate(filename) => filename.tokenize(),
+            OptionKind::ClientCert(filename) => filename.tokenize(),
+            OptionKind::ClientKey(filename) => filename.tokenize(),
+            OptionKind::Compressed(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::Insecure(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::FollowLocation(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::MaxRedirect(value) => vec![Token::Number(value.to_string())],
+            OptionKind::PathAsIs(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::Proxy(value) => vec![Token::FilterType(value.clone())],
+            OptionKind::Resolve(value) => vec![Token::FilterType(value.clone())],
+            OptionKind::Retry(value) => value.tokenize(),
+            OptionKind::RetryInterval(value) => vec![Token::Number(value.to_string())],
+            OptionKind::Variable(value) => value.tokenize(),
+            OptionKind::Verbose(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::VeryVerbose(value) => vec![Token::Boolean(value.to_string())],
         }
-    }
-}
-
-impl Tokenizable for CaCertificateOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("cacert".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.append(&mut self.filename.tokenize());
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for ClientCertOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("cert".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.append(&mut self.filename.tokenize());
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for ClientKeyOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("key".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.append(&mut self.filename.tokenize());
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for CompressedOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("compressed".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for InsecureOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("insecure".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for FollowLocationOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("location".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for MaxRedirectOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("max-redirs".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Number(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for PathAsIsOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("path-as-is".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for ProxyOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("proxy".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::String(self.value.clone()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for ResolveOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("resolve".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::String(self.value.clone()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for RetryOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        if !matches!(self.value, Retry::None) {
-            tokens.push(Token::String("retry".to_string()));
-            tokens.append(&mut self.space1.tokenize());
-            tokens.push(Token::Colon(String::from(":")));
-            tokens.append(&mut self.space2.tokenize());
-            tokens.append(&mut self.value.tokenize());
-        }
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
     }
 }
 
@@ -1118,48 +905,6 @@ impl Tokenizable for Retry {
             Retry::Finite(n) => vec![Token::Number(n.to_string())],
             Retry::Infinite => vec![Token::Number("-1".to_string())],
         }
-    }
-}
-
-impl Tokenizable for RetryIntervalOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("retry-interval".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Number(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for VariableOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("variable".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.append(&mut self.value.tokenize());
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
     }
 }
 
@@ -1183,48 +928,6 @@ impl Tokenizable for VariableValue {
             VariableValue::Float(v) => vec![Token::Number(v.to_string())],
             VariableValue::String(v) => v.tokenize(),
         }
-    }
-}
-
-impl Tokenizable for VerboseOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("verbose".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
-    }
-}
-
-impl Tokenizable for VeryVerboseOption {
-    fn tokenize(&self) -> Vec<Token> {
-        let mut tokens: Vec<Token> = vec![];
-        tokens.append(
-            &mut self
-                .line_terminators
-                .iter()
-                .flat_map(|e| e.tokenize())
-                .collect(),
-        );
-        tokens.append(&mut self.space0.tokenize());
-        tokens.push(Token::String("very-verbose".to_string()));
-        tokens.append(&mut self.space1.tokenize());
-        tokens.push(Token::Colon(String::from(":")));
-        tokens.append(&mut self.space2.tokenize());
-        tokens.push(Token::Boolean(self.value.to_string()));
-        tokens.append(&mut self.line_terminator0.tokenize());
-        tokens
     }
 }
 

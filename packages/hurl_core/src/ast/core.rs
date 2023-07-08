@@ -708,172 +708,76 @@ pub struct Variable {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum EntryOption {
-    CaCertificate(CaCertificateOption),
-    ClientCert(ClientCertOption),
-    ClientKey(ClientKeyOption),
-    Compressed(CompressedOption),
-    Insecure(InsecureOption),
-    FollowLocation(FollowLocationOption),
-    MaxRedirect(MaxRedirectOption),
-    PathAsIs(PathAsIsOption),
-    Proxy(ProxyOption),
-    Resolve(ResolveOption),
-    Retry(RetryOption),
-    RetryInterval(RetryIntervalOption),
-    Variable(VariableOption),
-    Verbose(VerboseOption),
-    VeryVerbose(VeryVerboseOption),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CompressedOption {
+pub struct EntryOption {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
     pub space1: Whitespace,
     pub space2: Whitespace,
-    pub value: bool,
+    pub kind: OptionKind,
     pub line_terminator0: LineTerminator,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct InsecureOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
+pub enum OptionKind {
+    CaCertificate(Filename),
+    ClientCert(Filename),
+    ClientKey(Filename),
+    Compressed(bool),
+    Insecure(bool),
+    FollowLocation(bool),
+    MaxRedirect(usize),
+    PathAsIs(bool),
+    Proxy(String),
+    Resolve(String),
+    Retry(Retry),
+    RetryInterval(u64),
+    Variable(VariableDefinition),
+    Verbose(bool),
+    VeryVerbose(bool),
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CaCertificateOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub filename: Filename,
-    pub line_terminator0: LineTerminator,
-}
+impl OptionKind {
+    pub fn name(&self) -> &'static str {
+        match self {
+            OptionKind::CaCertificate(_) => "cacert",
+            OptionKind::ClientCert(_) => "cert",
+            OptionKind::ClientKey(_) => "key",
+            OptionKind::Compressed(_) => "compressed",
+            OptionKind::Insecure(_) => "insecure",
+            OptionKind::FollowLocation(_) => "location",
+            OptionKind::MaxRedirect(_) => "max-redirs",
+            OptionKind::PathAsIs(_) => "path-as-is",
+            OptionKind::Proxy(_) => "proxy",
+            OptionKind::Resolve(_) => "resolve",
+            OptionKind::Retry(_) => "retry",
+            OptionKind::RetryInterval(_) => "retry-interval",
+            OptionKind::Variable(_) => "variable",
+            OptionKind::Verbose(_) => "verbose",
+            OptionKind::VeryVerbose(_) => "very-verbose",
+        }
+    }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ClientCertOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub filename: Filename,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ClientKeyOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub filename: Filename,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct PathAsIsOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ProxyOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: String,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RetryIntervalOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: u64,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ResolveOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: String,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RetryOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: Retry,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct VerboseOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct VeryVerboseOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct FollowLocationOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: bool,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct MaxRedirectOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: usize,
-    pub line_terminator0: LineTerminator,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct VariableOption {
-    pub line_terminators: Vec<LineTerminator>,
-    pub space0: Whitespace,
-    pub space1: Whitespace,
-    pub space2: Whitespace,
-    pub value: VariableDefinition,
-    pub line_terminator0: LineTerminator,
+    pub fn value_as_str(&self) -> String {
+        match self {
+            OptionKind::CaCertificate(filename) => filename.value.clone(),
+            OptionKind::ClientCert(filename) => filename.value.clone(),
+            OptionKind::ClientKey(filename) => filename.value.clone(),
+            OptionKind::Compressed(value) => value.to_string(),
+            OptionKind::Insecure(value) => value.to_string(),
+            OptionKind::FollowLocation(value) => value.to_string(),
+            OptionKind::MaxRedirect(value) => value.to_string(),
+            OptionKind::PathAsIs(value) => value.to_string(),
+            OptionKind::Proxy(value) => value.clone(),
+            OptionKind::Resolve(value) => value.clone(),
+            OptionKind::Retry(value) => value.to_string(),
+            OptionKind::RetryInterval(value) => value.to_string(),
+            OptionKind::Variable(VariableDefinition { name, value, .. }) => {
+                format!("{name}={value}")
+            }
+            OptionKind::Verbose(value) => value.to_string(),
+            OptionKind::VeryVerbose(value) => value.to_string(),
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

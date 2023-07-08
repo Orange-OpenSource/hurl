@@ -271,87 +271,35 @@ impl ToJson for Cookie {
 
 impl ToJson for EntryOption {
     fn to_json(&self) -> JValue {
-        let attributes = match self {
-            EntryOption::CaCertificate(value) => [
-                ("name".to_string(), JValue::String("cacert".to_string())),
-                (
-                    "value".to_string(),
-                    JValue::String(value.filename.value.clone()),
-                ),
-            ],
-            EntryOption::ClientCert(value) => [
-                ("name".to_string(), JValue::String("cert".to_string())),
-                (
-                    "value".to_string(),
-                    JValue::String(value.filename.value.clone()),
-                ),
-            ],
-            EntryOption::ClientKey(value) => [
-                ("name".to_string(), JValue::String("key".to_string())),
-                (
-                    "value".to_string(),
-                    JValue::String(value.filename.value.clone()),
-                ),
-            ],
-            EntryOption::Compressed(value) => [
-                ("name".to_string(), JValue::String("compressed".to_string())),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
-            EntryOption::Insecure(value) => [
-                ("name".to_string(), JValue::String("insecure".to_string())),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
-            EntryOption::FollowLocation(value) => [
-                ("name".to_string(), JValue::String("location".to_string())),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
-            EntryOption::MaxRedirect(value) => [
-                ("name".to_string(), JValue::String("max-redirs".to_string())),
-                ("value".to_string(), JValue::Number(value.value.to_string())),
-            ],
-            EntryOption::PathAsIs(value) => [
-                ("name".to_string(), JValue::String("path-as-is".to_string())),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
-            EntryOption::Proxy(value) => [
-                ("name".to_string(), JValue::String("proxy".to_string())),
-                ("value".to_string(), JValue::String(value.value.clone())),
-            ],
-            EntryOption::Resolve(value) => [
-                ("name".to_string(), JValue::String("resolve".to_string())),
-                ("value".to_string(), JValue::Number(value.value.to_string())),
-            ],
-            EntryOption::Retry(value) => [
-                ("name".to_string(), JValue::String("retry".to_string())),
-                ("value".to_string(), JValue::Number(value.value.to_string())),
-            ],
-            EntryOption::RetryInterval(value) => [
-                (
-                    "name".to_string(),
-                    JValue::String("retry-interval".to_string()),
-                ),
-                ("value".to_string(), JValue::Number(value.value.to_string())),
-            ],
-            EntryOption::Variable(value) => [
-                ("name".to_string(), JValue::String("variable".to_string())),
-                (
-                    "value".to_string(),
-                    JValue::String(format!("{}={}", value.value.name, value.value.value)),
-                ),
-            ],
-            EntryOption::Verbose(value) => [
-                ("name".to_string(), JValue::String("verbose".to_string())),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
-            EntryOption::VeryVerbose(value) => [
-                (
-                    "name".to_string(),
-                    JValue::String("very-verbose".to_string()),
-                ),
-                ("value".to_string(), JValue::Boolean(value.value)),
-            ],
+        let mut attributes = vec![];
+
+        let name = "name".to_string();
+        let value = JValue::String(self.kind.name().to_string());
+        attributes.push((name, value));
+
+        let name = "value".to_string();
+        let value = match &self.kind {
+            OptionKind::CaCertificate(filename) => JValue::String(filename.value.clone()),
+            OptionKind::ClientCert(filename) => JValue::String(filename.value.clone()),
+            OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),
+            OptionKind::Compressed(value) => JValue::Boolean(*value),
+            OptionKind::Insecure(value) => JValue::Boolean(*value),
+            OptionKind::FollowLocation(value) => JValue::Boolean(*value),
+            OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
+            OptionKind::PathAsIs(value) => JValue::Boolean(*value),
+            OptionKind::Proxy(value) => JValue::String(value.clone()),
+            OptionKind::Resolve(value) => JValue::String(value.clone()),
+            OptionKind::Retry(value) => JValue::Number(value.to_string()),
+            OptionKind::RetryInterval(value) => JValue::Number(value.to_string()),
+            OptionKind::Variable(value) => {
+                JValue::String(format!("{}={}", value.name, value.value))
+            }
+            OptionKind::Verbose(value) => JValue::Boolean(*value),
+            OptionKind::VeryVerbose(value) => JValue::Boolean(*value),
         };
-        JValue::Object(attributes.to_vec())
+        attributes.push((name, value));
+
+        JValue::Object(attributes)
     }
 }
 

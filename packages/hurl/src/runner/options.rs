@@ -20,7 +20,7 @@ use crate::runner::template;
 use crate::runner::{Error, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 use hurl_core::ast::{
-    Entry, EntryOption, Float, SectionValue, VariableDefinition, VariableOption, VariableValue,
+    Entry, EntryOption, Float, OptionKind, SectionValue, VariableDefinition, VariableValue,
 };
 use std::collections::HashMap;
 use std::time::Duration;
@@ -44,78 +44,53 @@ pub fn get_entry_options(
 
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
-            for option in options {
-                match option {
-                    EntryOption::CaCertificate(option) => {
-                        runner_options.cacert_file = Some(option.filename.value.clone());
-                        logger.debug(format!("cacert: {}", option.filename.value).as_str());
+            for option in options.iter() {
+                match &option.kind {
+                    OptionKind::CaCertificate(filename) => {
+                        runner_options.cacert_file = Some(filename.value.clone())
                     }
-                    EntryOption::ClientCert(option) => {
-                        runner_options.client_cert_file = Some(option.filename.value.clone());
-                        logger.debug(format!("cert: {}", option.filename.value).as_str());
+                    OptionKind::ClientCert(filename) => {
+                        runner_options.client_cert_file = Some(filename.value.clone())
                     }
-                    EntryOption::ClientKey(option) => {
-                        runner_options.client_key_file = Some(option.filename.value.clone());
-                        logger.debug(format!("key: {}", option.filename.value).as_str());
+                    OptionKind::ClientKey(filename) => {
+                        runner_options.client_key_file = Some(filename.value.clone())
                     }
-                    EntryOption::Compressed(option) => {
-                        runner_options.compressed = option.value;
-                        logger.debug(format!("compressed: {}", option.value).as_str());
-                    }
-                    EntryOption::FollowLocation(option) => {
-                        runner_options.follow_location = option.value;
-                        logger.debug(format!("location: {}", option.value).as_str());
-                    }
-                    EntryOption::Insecure(option) => {
-                        runner_options.insecure = option.value;
-                        logger.debug(format!("insecure: {}", option.value).as_str());
-                    }
-                    EntryOption::MaxRedirect(option) => {
-                        runner_options.max_redirect = Some(option.value);
-                        logger.debug(format!("max-redirs: {}", option.value).as_str());
-                    }
-                    EntryOption::PathAsIs(option) => {
-                        runner_options.path_as_is = option.value;
-                        logger.debug(format!("path-as-is: {}", option.value).as_str());
-                    }
-                    EntryOption::Proxy(option) => {
-                        runner_options.proxy = Some(option.value.clone());
-                        logger.debug(format!("proxy: {}", option.value).as_str());
-                    }
-                    EntryOption::Resolve(option) => {
+                    OptionKind::Compressed(value) => runner_options.compressed = *value,
+                    OptionKind::Insecure(value) => runner_options.insecure = *value,
+                    OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
+                    OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),
+                    OptionKind::PathAsIs(value) => runner_options.path_as_is = *value,
+                    OptionKind::Proxy(value) => runner_options.proxy = Some(value.clone()),
+                    OptionKind::Resolve(value) => {
                         let mut resolves = runner_options.resolves;
-                        resolves.push(option.value.clone());
+                        resolves.push(value.clone());
                         runner_options.resolves = resolves;
-                        logger.debug(format!("resolve: {}", option.value).as_str());
                     }
-                    EntryOption::Retry(option) => {
-                        runner_options.retry = option.value;
-                        logger.debug(format!("retry: {}", option.value).as_str());
+                    OptionKind::Retry(value) => runner_options.retry = *value,
+                    OptionKind::RetryInterval(value) => {
+                        runner_options.retry_interval = Duration::from_millis(*value)
                     }
-                    EntryOption::RetryInterval(option) => {
-                        runner_options.retry_interval = Duration::from_millis(option.value);
-                        logger.debug(format!("retry-interval: {}", option.value).as_str());
-                    }
-                    EntryOption::Variable(VariableOption {
-                        value: VariableDefinition { name, value, .. },
-                        ..
-                    }) => {
+                    OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
-                        logger.debug(format!("variable: {}={}", name, value).as_str());
                         variables.insert(name.clone(), value);
                     }
-                    EntryOption::Verbose(option) => {
-                        logger.debug(format!("verbose: {}", option.value).as_str());
-                    }
-
-                    EntryOption::VeryVerbose(option) => {
-                        logger.debug(format!("very-verbose: {}", option.value).as_str());
-                    }
+                    // verbose and very-verbose option have been previously processed as thy
+                    // can impact the logging.
+                    OptionKind::Verbose(_) => {}
+                    OptionKind::VeryVerbose(_) => {}
                 }
+                log_option(option, logger);
             }
         }
     }
     Ok(runner_options)
+}
+
+/// Logs an entry option.
+fn log_option(option: &EntryOption, logger: &Logger) {
+    let name = option.kind.name();
+    let value = option.kind.value_as_str();
+    logger.debug(&format!("{name}: {value}"));
 }
 
 /// Returns [`true`] if this `entry` has an Option section, [`false`] otherwise.
@@ -134,16 +109,16 @@ pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Opti
     for section in &entry.request.sections {
         if let SectionValue::Options(options) = &section.value {
             for option in options {
-                match option {
-                    EntryOption::Verbose(option) => {
-                        verbosity = if option.value {
+                match &option.kind {
+                    OptionKind::Verbose(value) => {
+                        verbosity = if *value {
                             Some(Verbosity::Verbose)
                         } else {
                             None
                         }
                     }
-                    EntryOption::VeryVerbose(option) => {
-                        verbosity = if option.value {
+                    OptionKind::VeryVerbose(value) => {
+                        verbosity = if *value {
                             Some(Verbosity::VeryVerbose)
                         } else {
                             None

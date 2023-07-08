@@ -200,193 +200,41 @@ impl HtmlFormatter {
         self.fmt_lt(&kv.line_terminator0);
     }
 
-    fn fmt_entry_option(&mut self, entry_option: &EntryOption) {
-        match entry_option {
-            EntryOption::CaCertificate(option) => self.fmt_ca_certificate_option(option),
-            EntryOption::ClientCert(option) => self.fmt_client_cert_option(option),
-            EntryOption::ClientKey(option) => self.fmt_client_key_option(option),
-            EntryOption::Compressed(option) => self.fmt_compressed_option(option),
-            EntryOption::Insecure(option) => self.fmt_insecure_option(option),
-            EntryOption::FollowLocation(option) => self.fmt_follow_location_option(option),
-            EntryOption::MaxRedirect(option) => self.fmt_max_redirect_option(option),
-            EntryOption::PathAsIs(option) => self.fmt_path_as_is_option(option),
-            EntryOption::Proxy(option) => self.fmt_proxy_option(option),
-            EntryOption::Resolve(option) => self.fmt_resolve_option(option),
-            EntryOption::Retry(option) => self.fmt_retry_option(option),
-            EntryOption::RetryInterval(option) => self.fmt_retry_interval_option(option),
-            EntryOption::Variable(option) => self.fmt_variable_option(option),
-            EntryOption::Verbose(option) => self.fmt_verbose_option(option),
-            EntryOption::VeryVerbose(option) => self.fmt_very_verbose_option(option),
+    fn fmt_entry_option(&mut self, option: &EntryOption) {
+        self.fmt_lts(&option.line_terminators);
+        self.fmt_span_open("line");
+        self.fmt_space(&option.space0);
+        self.fmt_string(option.kind.name());
+        self.fmt_space(&option.space1);
+        self.buffer.push(':');
+        self.fmt_space(&option.space2);
+        match &option.kind {
+            OptionKind::CaCertificate(filename) => self.fmt_filename(filename),
+            OptionKind::ClientCert(filename) => self.fmt_filename(filename),
+            OptionKind::ClientKey(filename) => self.fmt_filename(filename),
+            OptionKind::Compressed(value) => self.fmt_bool(*value),
+            OptionKind::Insecure(value) => self.fmt_bool(*value),
+            OptionKind::FollowLocation(value) => self.fmt_bool(*value),
+            OptionKind::MaxRedirect(value) => self.fmt_number(value),
+            OptionKind::PathAsIs(value) => self.fmt_bool(*value),
+            OptionKind::Proxy(value) => self.fmt_string(value),
+            OptionKind::Resolve(value) => self.fmt_string(value),
+            OptionKind::Retry(value) => self.fmt_retry(value),
+            OptionKind::RetryInterval(value) => self.fmt_number(value),
+            OptionKind::Variable(value) => self.fmt_variable_definition(value),
+            OptionKind::Verbose(value) => self.fmt_bool(*value),
+            OptionKind::VeryVerbose(value) => self.fmt_bool(*value),
         };
-    }
-
-    fn fmt_compressed_option(&mut self, option: &CompressedOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("compressed");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
     }
 
-    fn fmt_insecure_option(&mut self, option: &InsecureOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("insecure");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_ca_certificate_option(&mut self, option: &CaCertificateOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("cacert");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_filename(&option.filename);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_client_cert_option(&mut self, option: &ClientCertOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("cert");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_filename(&option.filename);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_client_key_option(&mut self, option: &ClientKeyOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("key");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_filename(&option.filename);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_follow_location_option(&mut self, option: &FollowLocationOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("location");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_max_redirect_option(&mut self, option: &MaxRedirectOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("max-redirs");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_number(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_path_as_is_option(&mut self, option: &PathAsIsOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("path-as-is");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_proxy_option(&mut self, option: &ProxyOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("proxy");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_string(&option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_resolve_option(&mut self, option: &ResolveOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("resolve");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_string(&option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_retry_option(&mut self, option: &RetryOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("retry");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_retry(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_retry_interval_option(&mut self, option: &RetryIntervalOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("retry-interval");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_number(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_variable_option(&mut self, option: &VariableOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("variable");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_variable_definition(&option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
+    fn fmt_retry(&mut self, retry: &Retry) {
+        match retry {
+            Retry::Finite(n) => self.fmt_number(n),
+            Retry::Infinite => self.fmt_number(-1),
+            _ => {}
+        };
     }
 
     fn fmt_variable_definition(&mut self, option: &VariableDefinition) {
@@ -404,32 +252,6 @@ impl HtmlFormatter {
             VariableValue::Float(v) => self.fmt_number(&v.encoded),
             VariableValue::String(t) => self.fmt_template(t),
         }
-    }
-
-    fn fmt_verbose_option(&mut self, option: &VerboseOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("verbose");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
-    }
-
-    fn fmt_very_verbose_option(&mut self, option: &VeryVerboseOption) {
-        self.fmt_lts(&option.line_terminators);
-        self.fmt_span_open("line");
-        self.fmt_space(&option.space0);
-        self.fmt_string("very-verbose");
-        self.fmt_space(&option.space1);
-        self.buffer.push(':');
-        self.fmt_space(&option.space2);
-        self.fmt_bool(option.value);
-        self.fmt_span_close();
-        self.fmt_lt(&option.line_terminator0);
     }
 
     fn fmt_multipart_param(&mut self, param: &MultipartParam) {
@@ -981,14 +803,6 @@ impl HtmlFormatter {
             self.fmt_span_close();
             self.fmt_lt(line_terminator);
         }
-    }
-
-    fn fmt_retry(&mut self, retry: Retry) {
-        match retry {
-            Retry::Finite(n) => self.fmt_span("number", &n.to_string()),
-            Retry::Infinite => self.fmt_span("number", "-1"),
-            _ => {}
-        };
     }
 }
 

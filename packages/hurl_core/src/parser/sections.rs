@@ -355,224 +355,125 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
 }
 
 fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    choice(
-        &[
-            option_cacert,
-            option_cert,
-            option_key,
-            option_compressed,
-            option_insecure,
-            option_follow_location,
-            option_max_redirect,
-            option_path_as_is,
-            option_proxy,
-            option_resolve,
-            option_retry,
-            option_retry_interval,
-            option_variable,
-            option_verbose,
-            option_very_verbose,
-        ],
-        reader,
-    )
-}
-
-fn option_cacert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    try_literal("cacert", reader)?;
+    let pos = reader.state.pos.clone();
+    let option = reader.read_while(|c| c.is_ascii_alphabetic() || *c == '-');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
-    let f = filename::parse(reader)?;
+    let kind = match option.as_str() {
+        "cacert" => option_cacert(reader)?,
+        "cert" => option_cert(reader)?,
+        "compressed" => option_compressed(reader)?,
+        "key" => option_key(reader)?,
+        "insecure" => option_insecure(reader)?,
+        "location" => option_follow_location(reader)?,
+        "max-redirs" => option_max_redirect(reader)?,
+        "path-as-is" => option_path_as_is(reader)?,
+        "proxy" => option_proxy(reader)?,
+        "resolve" => option_resolve(reader)?,
+        "retry" => option_retry(reader)?,
+        "retry-interval" => option_retry_interval(reader)?,
+        "variable" => option_variable(reader)?,
+        "verbose" => option_verbose(reader)?,
+        "very-verbose" => option_very_verbose(reader)?,
+        _ => {
+            return Err(Error {
+                pos,
+                recoverable: true,
+                inner: ParseError::InvalidOption,
+            });
+        }
+    };
     let line_terminator0 = line_terminator(reader)?;
 
-    let option = CaCertificateOption {
+    Ok(EntryOption {
         line_terminators,
         space0,
         space1,
         space2,
-        filename: f,
+        kind,
         line_terminator0,
-    };
-
-    Ok(EntryOption::CaCertificate(option))
+    })
 }
 
-fn option_cert(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("cert", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let f = filename::parse(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = ClientCertOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        filename: f,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::ClientCert(option))
+fn option_cacert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::CaCertificate(value))
 }
 
-fn option_key(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("key", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let f = filename::parse(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = ClientKeyOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        filename: f,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::ClientKey(option))
+fn option_cert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::ClientCert(value))
 }
 
-fn option_compressed(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("compressed", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_key(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::ClientKey(value))
+}
+
+fn option_compressed(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = CompressedOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::Compressed(option))
+    Ok(OptionKind::Compressed(value))
 }
 
-fn option_insecure(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("insecure", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_insecure(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = InsecureOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::Insecure(option))
+    Ok(OptionKind::Insecure(value))
 }
 
-fn option_follow_location(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("location", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_follow_location(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = FollowLocationOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::FollowLocation(option))
+    Ok(OptionKind::FollowLocation(value))
 }
 
-fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("max-redirs", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(natural, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
     // FIXME: try to not unwrap redirect value
     // and returns an error if not possible
-    let option = MaxRedirectOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value: usize::try_from(value).unwrap(),
-        line_terminator0,
-    };
-
-    Ok(EntryOption::MaxRedirect(option))
+    let value = usize::try_from(value).unwrap();
+    Ok(OptionKind::MaxRedirect(value))
 }
 
-fn option_path_as_is(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("path-as-is", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_path_as_is(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = PathAsIsOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::PathAsIs(option))
+    Ok(OptionKind::PathAsIs(value))
 }
 
-fn option_proxy(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("proxy", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
+fn option_proxy(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = proxy(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-    let option = ProxyOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-    Ok(EntryOption::Proxy(option))
+    Ok(OptionKind::Proxy(value))
+}
+
+fn option_resolve(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = resolve(reader)?;
+    Ok(OptionKind::Resolve(value))
+}
+
+fn option_retry(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = retry(reader)?;
+    Ok(OptionKind::Retry(value))
+}
+
+fn option_retry_interval(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = nonrecover(natural, reader)?;
+    Ok(OptionKind::RetryInterval(value))
+}
+
+fn option_variable(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = variable_definition(reader)?;
+    Ok(OptionKind::Variable(value))
+}
+
+fn option_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::Verbose(value))
+}
+
+fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::VeryVerbose(value))
 }
 
 fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
@@ -588,26 +489,6 @@ fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
         });
     }
     Ok(name)
-}
-
-fn option_resolve(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("resolve", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = resolve(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-    let option = ResolveOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-    Ok(EntryOption::Resolve(option))
 }
 
 fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
@@ -634,26 +515,6 @@ fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(name)
 }
 
-fn option_retry(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("retry", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = retry(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-    let option = RetryOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-    Ok(EntryOption::Retry(option))
-}
-
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
     let pos = reader.state.pos.clone();
     let value = nonrecover(integer, reader)?;
@@ -673,47 +534,6 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
         })
     }
 }
-fn option_retry_interval(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("retry-interval", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(natural, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = RetryIntervalOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-    Ok(EntryOption::RetryInterval(option))
-}
-
-fn option_variable(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("variable", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = variable_definition(reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-    let option = VariableOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-    Ok(EntryOption::Variable(option))
-}
-
 fn variable_definition(reader: &mut Reader) -> ParseResult<'static, VariableDefinition> {
     let name = variable_name(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -780,50 +600,6 @@ fn variable_value(reader: &mut Reader) -> ParseResult<'static, VariableValue> {
             value: "variable value".to_string(),
         },
     })
-}
-
-fn option_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("verbose", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = VerboseOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::Verbose(option))
-}
-
-fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
-    let line_terminators = optional_line_terminators(reader)?;
-    let space0 = zero_or_more_spaces(reader)?;
-    try_literal("very-verbose", reader)?;
-    let space1 = zero_or_more_spaces(reader)?;
-    try_literal(":", reader)?;
-    let space2 = zero_or_more_spaces(reader)?;
-    let value = nonrecover(boolean, reader)?;
-    let line_terminator0 = line_terminator(reader)?;
-
-    let option = VeryVerboseOption {
-        line_terminators,
-        space0,
-        space1,
-        space2,
-        value,
-        line_terminator0,
-    };
-
-    Ok(EntryOption::VeryVerbose(option))
 }
 
 #[cfg(test)]
@@ -980,10 +756,10 @@ mod tests {
     #[test]
     fn test_option_insecure() {
         let mut reader = Reader::new("insecure: true");
-        let option = option_insecure(&mut reader).unwrap();
+        let option = option(&mut reader).unwrap();
         assert_eq!(
             option,
-            EntryOption::Insecure(InsecureOption {
+            EntryOption {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: "".to_string(),
@@ -1012,7 +788,7 @@ mod tests {
                         },
                     },
                 },
-                value: true,
+                kind: OptionKind::Insecure(true),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: "".to_string(),
@@ -1042,24 +818,24 @@ mod tests {
                         },
                     },
                 },
-            })
+            }
         );
     }
 
     #[test]
     fn test_option_insecure_error() {
         let mut reader = Reader::new("insecure: error");
-        let error = option_insecure(&mut reader).err().unwrap();
+        let error = option(&mut reader).err().unwrap();
         assert!(!error.recoverable)
     }
 
     #[test]
     fn test_option_cacert() {
         let mut reader = Reader::new("cacert: /home/foo/cert.pem");
-        let option = option_cacert(&mut reader).unwrap();
+        let option = option(&mut reader).unwrap();
         assert_eq!(
             option,
-            EntryOption::CaCertificate(CaCertificateOption {
+            EntryOption {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: "".to_string(),
@@ -1082,7 +858,7 @@ mod tests {
                         end: Pos { line: 1, column: 9 },
                     },
                 },
-                filename: Filename {
+                kind: OptionKind::CaCertificate(Filename {
                     value: "/home/foo/cert.pem".to_string(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
@@ -1091,7 +867,7 @@ mod tests {
                             column: 27,
                         },
                     },
-                },
+                }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: "".to_string(),
@@ -1121,14 +897,14 @@ mod tests {
                         },
                     },
                 },
-            })
+            }
         );
     }
 
     #[test]
     fn test_option_cacert_error() {
         let mut reader = Reader::new("cacert: ###");
-        let error = option_cacert(&mut reader).err().unwrap();
+        let error = option(&mut reader).err().unwrap();
         assert!(!error.recoverable)
     }
 
