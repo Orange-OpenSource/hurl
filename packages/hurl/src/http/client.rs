@@ -86,6 +86,7 @@ impl Client {
             let call = self.execute(&request_spec, options, logger)?;
             let base_url = call.request.base_url()?;
             let redirect_url = self.get_follow_location(&call.response, &base_url);
+            let call_response_status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
                 break;
@@ -93,20 +94,52 @@ impl Client {
             let redirect_url = redirect_url.unwrap();
             logger.debug("");
             logger.debug(format!("=> Redirect to {redirect_url}").as_str());
-            logger.debug("");
             redirect_count += 1;
             if let Some(max_redirect) = options.max_redirect {
                 if redirect_count > max_redirect {
                     return Err(HttpError::TooManyRedirect);
                 }
             }
+            let new_request_method = self.get_redirected_request_method(
+                options,
+                logger,
+                call_response_status,
+                request_spec.method,
+            );
+            logger.debug("");
             request_spec = RequestSpec {
-                method: Method("GET".to_string()),
+                method: new_request_method,
                 url: redirect_url,
                 ..Default::default()
             };
         }
         Ok(calls)
+    }
+
+    pub fn get_redirected_request_method(
+        &self,
+        options: &ClientOptions,
+        logger: &Logger,
+        response_status: u32,
+        original_method: Method,
+    ) -> Method {
+        // this replicates curls behavior
+        return match response_status {
+            301 | 302 | 303 => {
+                // spaces at the start to align with the arrow used in a previous
+                // debug line
+                logger.debug(
+                    format!(
+                        "   Resending with method GET because response code was {response_status}"
+                    )
+                    .as_str(),
+                );
+                Method("GET".to_string())
+            }
+            // Could be only 307 and 308, but curl does this for all 3xx
+            // codes not converted to GET above.
+            _ => original_method,
+        };
     }
 
     /// Executes an HTTP request `request_spec`, without following redirection and returns a
