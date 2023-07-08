@@ -25,3 +25,13 @@ def following_redirect():
 @app.route("/followed-redirect")
 def followed_redirect():
     return "Followed redirect!"
+
+
+@app.route("/followed-redirect-post", methods=["POST"])
+def followed_redirect_post():
+    return "Followed redirect POST!"
+
+
+@app.route("/follow-redirect-308", methods=["POST"])
+def follow_redirect_308():
+    return redirect("http://localhost:8000/followed-redirect-post", code=308)
