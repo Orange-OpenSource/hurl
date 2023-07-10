@@ -265,6 +265,8 @@ string-predicate: "isString"
 
 collection-predicate: "isCollection"
 
+date-predicate: "isDate"
+
 predicate-value:
     null
   | boolean

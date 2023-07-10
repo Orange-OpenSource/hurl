@@ -229,6 +229,7 @@ fn expected(
         PredicateFuncValue::IsBoolean {} => Ok("boolean".to_string()),
         PredicateFuncValue::IsString {} => Ok("string".to_string()),
         PredicateFuncValue::IsCollection {} => Ok("collection".to_string()),
+        PredicateFuncValue::IsDate {} => Ok("date".to_string()),
         PredicateFuncValue::Exist {} => Ok("something".to_string()),
         PredicateFuncValue::IsEmpty {} => Ok("empty".to_string()),
     }
@@ -478,6 +479,12 @@ fn eval_something(
                 || matches!(value, Value::Object(_)),
             actual: value.display(),
             expected: "collection".to_string(),
+            type_mismatch: false,
+        }),
+        PredicateFuncValue::IsDate {} => Ok(AssertResult {
+            success: matches!(value, Value::Date(_)),
+            actual: value.display(),
+            expected: "date".to_string(),
             type_mismatch: false,
         }),
 
@@ -1660,6 +1667,40 @@ mod tests {
                 type_mismatch: true,
             }
         );
+    }
+
+    #[test]
+    fn test_date_predicate() {
+        let predicate = Predicate {
+            not: false,
+            space0: whitespace(),
+            predicate_func: PredicateFunc {
+                source_info: SourceInfo::new(0, 0, 0, 0),
+                value: PredicateFuncValue::IsDate {},
+            },
+        };
+
+        let variables = HashMap::new();
+        let result = eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Date(
+                chrono::TimeZone::with_ymd_and_hms(&chrono::Utc, 2002, 6, 16, 10, 10, 10).unwrap(),
+            )),
+        );
+
+        assert!(result.is_ok());
+
+        let error = eval_predicate(&predicate, &variables, &None).err().unwrap();
+
+        assert_eq!(
+            error.inner,
+            RunnerError::AssertFailure {
+                actual: "none".to_string(),
+                expected: "date".to_string(),
+                type_mismatch: false
+            }
+        )
     }
 
     #[test]

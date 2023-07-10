@@ -595,6 +595,9 @@ impl Tokenizable for PredicateFuncValue {
             PredicateFuncValue::IsCollection {} => {
                 tokens.push(Token::PredicateType(self.name()));
             }
+            PredicateFuncValue::IsDate {} => {
+                tokens.push(Token::PredicateType(self.name()));
+            }
             PredicateFuncValue::Exist {} => {
                 tokens.push(Token::PredicateType(self.name()));
             }
