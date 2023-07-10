@@ -18,7 +18,7 @@ For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in 
 
 ```shell
 $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl_4.0.0_amd64.deb
-$ sudo apt update && apt install ./hurl_4.0.0_amd64.deb
+$ sudo apt update && sudo apt install ./hurl_4.0.0_amd64.deb
 ```
 
 #### Arch Linux / Manjaro
