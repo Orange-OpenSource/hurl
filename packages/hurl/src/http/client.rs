@@ -86,7 +86,7 @@ impl Client {
             let call = self.execute(&request_spec, options, logger)?;
             let base_url = call.request.base_url()?;
             let redirect_url = self.get_follow_location(&call.response, &base_url);
-            let call_response_status = call.response.status;
+            let status = call.response.status;
             calls.push(call);
             if !options.follow_location || redirect_url.is_none() {
                 break;
@@ -94,52 +94,21 @@ impl Client {
             let redirect_url = redirect_url.unwrap();
             logger.debug("");
             logger.debug(format!("=> Redirect to {redirect_url}").as_str());
+            logger.debug("");
             redirect_count += 1;
             if let Some(max_redirect) = options.max_redirect {
                 if redirect_count > max_redirect {
                     return Err(HttpError::TooManyRedirect);
                 }
             }
-            let new_request_method = self.get_redirected_request_method(
-                options,
-                logger,
-                call_response_status,
-                request_spec.method,
-            );
-            logger.debug("");
+            let redirect_method = get_redirect_method(status, request_spec.method);
             request_spec = RequestSpec {
-                method: new_request_method,
+                method: redirect_method,
                 url: redirect_url,
                 ..Default::default()
             };
         }
         Ok(calls)
-    }
-
-    pub fn get_redirected_request_method(
-        &self,
-        options: &ClientOptions,
-        logger: &Logger,
-        response_status: u32,
-        original_method: Method,
-    ) -> Method {
-        // this replicates curls behavior
-        return match response_status {
-            301 | 302 | 303 => {
-                // spaces at the start to align with the arrow used in a previous
-                // debug line
-                logger.debug(
-                    format!(
-                        "   Resending with method GET because response code was {response_status}"
-                    )
-                    .as_str(),
-                );
-                Method("GET".to_string())
-            }
-            // Could be only 307 and 308, but curl does this for all 3xx
-            // codes not converted to GET above.
-            _ => original_method,
-        };
     }
 
     /// Executes an HTTP request `request_spec`, without following redirection and returns a
@@ -685,6 +654,17 @@ fn get_redirect_url(location: &str, base_url: &str) -> String {
     }
 }
 
+/// Returns the method used for redirecting a request/response with `response_status`.
+fn get_redirect_method(response_status: u32, original_method: Method) -> Method {
+    // This replicates curl's behavior
+    match response_status {
+        301 | 302 | 303 => Method("GET".to_string()),
+        // Could be only 307 and 308, but curl does this for all 3xx
+        // codes not converted to GET above.
+        _ => original_method,
+    }
+}
+
 /// Returns cookies from both cookies from the cookie storage and the request.
 pub fn all_cookies(cookie_storage: &[Cookie], request_spec: &RequestSpec) -> Vec<RequestCookie> {
     let mut cookies = request_spec.cookies.clone();
@@ -843,5 +823,33 @@ mod tests {
             get_redirect_url("/redirected", "http://localhost:8000"),
             "http://localhost:8000/redirected".to_string()
         );
+    }
+
+    #[test]
+    fn test_redirect_method() {
+        // Status of the response to be redirected | method of the original request | method of the new request
+        let datas = [
+            (301, "GET", "GET"),
+            (301, "POST", "GET"),
+            (301, "DELETE", "GET"),
+            (302, "GET", "GET"),
+            (302, "POST", "GET"),
+            (302, "DELETE", "GET"),
+            (303, "GET", "GET"),
+            (303, "POST", "GET"),
+            (303, "DELETE", "GET"),
+            (304, "GET", "GET"),
+            (304, "POST", "POST"),
+            (304, "DELETE", "DELETE"),
+            (308, "GET", "GET"),
+            (308, "POST", "POST"),
+            (308, "DELETE", "DELETE"),
+        ];
+        for (status, original, redirected) in datas {
+            assert_eq!(
+                get_redirect_method(status, Method(original.to_string())),
+                Method(redirected.to_string())
+            );
+        }
     }
 }

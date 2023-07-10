@@ -2,6 +2,12 @@
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">`Followed redirect!`</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span><span class="comment"># On 301, 302, 303, redirected request switch to GET.</span>
+<span class="line"></span><span class="comment"># Otherwise, method are untouched.</span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/follow-redirect</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">`Followed redirect!`</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
 <span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/follow-redirect-308</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">`Followed redirect POST!`</span></span>

@@ -1,2 +1,3 @@
 curl --location 'http://localhost:8000/follow-redirect'
-curl --location --request POST 'http://localhost:8000/follow-redirect-308'
+curl --request POST --location 'http://localhost:8000/follow-redirect'
+curl --request POST --location 'http://localhost:8000/follow-redirect-308'

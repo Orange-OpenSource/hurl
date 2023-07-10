@@ -2,7 +2,7 @@ from app import app
 from flask import redirect, Response
 
 
-@app.route("/follow-redirect")
+@app.route("/follow-redirect", methods=["GET", "POST"])
 def follow_redirect():
     return redirect("http://localhost:8000/following-redirect")
 
