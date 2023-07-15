@@ -366,6 +366,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
         "cacert" => option_cacert(reader)?,
         "cert" => option_cert(reader)?,
         "compressed" => option_compressed(reader)?,
+        "connect-to" => option_connect_to(reader)?,
         "key" => option_key(reader)?,
         "insecure" => option_insecure(reader)?,
         "location" => option_follow_location(reader)?,
@@ -406,6 +407,11 @@ fn option_cacert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
 fn option_cert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = filename::parse(reader)?;
     Ok(OptionKind::ClientCert(value))
+}
+
+fn option_connect_to(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = connect_to(reader)?;
+    Ok(OptionKind::ConnectTo(value))
 }
 
 fn option_key(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
@@ -509,6 +515,30 @@ fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
             recoverable: false,
             inner: ParseError::Expecting {
                 value: "HOST:PORT:ADDR".to_string(),
+            },
+        });
+    }
+    Ok(name)
+}
+
+fn connect_to(reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
+    if name.is_empty() {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "connect-to".to_string(),
+            },
+        });
+    }
+    if !name.contains(':') {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "HOST1:PORT1:HOST2:PORT2".to_string(),
             },
         });
     }

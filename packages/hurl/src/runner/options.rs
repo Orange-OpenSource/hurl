@@ -56,16 +56,13 @@ pub fn get_entry_options(
                         runner_options.client_key_file = Some(filename.value.clone())
                     }
                     OptionKind::Compressed(value) => runner_options.compressed = *value,
+                    OptionKind::ConnectTo(value) => runner_options.connects_to.push(value.clone()),
                     OptionKind::Insecure(value) => runner_options.insecure = *value,
                     OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
                     OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),
                     OptionKind::PathAsIs(value) => runner_options.path_as_is = *value,
                     OptionKind::Proxy(value) => runner_options.proxy = Some(value.clone()),
-                    OptionKind::Resolve(value) => {
-                        let mut resolves = runner_options.resolves;
-                        resolves.push(value.clone());
-                        runner_options.resolves = resolves;
-                    }
+                    OptionKind::Resolve(value) => runner_options.resolves.push(value.clone()),
                     OptionKind::Retry(value) => runner_options.retry = *value,
                     OptionKind::RetryInterval(value) => {
                         runner_options.retry_interval = Duration::from_millis(*value)

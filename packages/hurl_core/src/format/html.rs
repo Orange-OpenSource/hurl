@@ -213,6 +213,7 @@ impl HtmlFormatter {
             OptionKind::ClientCert(filename) => self.fmt_filename(filename),
             OptionKind::ClientKey(filename) => self.fmt_filename(filename),
             OptionKind::Compressed(value) => self.fmt_bool(*value),
+            OptionKind::ConnectTo(value) => self.fmt_string(value),
             OptionKind::Insecure(value) => self.fmt_bool(*value),
             OptionKind::FollowLocation(value) => self.fmt_bool(*value),
             OptionKind::MaxRedirect(value) => self.fmt_number(value),

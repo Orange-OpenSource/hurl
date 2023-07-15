@@ -1,0 +1,25 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://foo.com/connect-to</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">foo.com:80:localhost:8000</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">`Hello World!`</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://bar.com/connect-to</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"></span><span class="comment"># We test that we can define multiple connect-to options.</span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">foo.com:80:localhost:8000</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">bar.com:80:localhost:8000</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">baz.com:80:localhost:8000</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">`Hello World!`</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://baz.com/connect-to</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">foo.com:80:localhost:8000</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">bar.com:80:localhost:8000</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">baz.com:80:localhost:8000</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">`Hello World!`</span></span>
+</span></span></code></pre>

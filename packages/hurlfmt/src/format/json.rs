@@ -283,6 +283,7 @@ impl ToJson for EntryOption {
             OptionKind::ClientCert(filename) => JValue::String(filename.value.clone()),
             OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),
             OptionKind::Compressed(value) => JValue::Boolean(*value),
+            OptionKind::ConnectTo(value) => JValue::String(value.clone()),
             OptionKind::Insecure(value) => JValue::Boolean(*value),
             OptionKind::FollowLocation(value) => JValue::Boolean(*value),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
