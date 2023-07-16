@@ -1,0 +1,9 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Go through proxy</span>
+<span class="line"></span><span class="comment"># The proxy adds header "From-Proxy:Hello" for both request and response</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://127.0.0.1:8000/proxy</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">proxy</span>: <span class="string">localhost:3128</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">From-Proxy</span>: <span class="string">Hello</span></span>
+</span></span><span class="line"></span>
+</code></pre>
