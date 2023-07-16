@@ -9,25 +9,61 @@ Connection: close
 <html><head><title>Test</title></head></html>
 
 error: Assert header value
-  --> tests_failed/error_format_long.hurl:3:15
+  --> tests_failed/error_format_long.hurl:7:15
    |
- 3 | Content-Type: text/html
+ 7 | Content-Type: text/html
    |               ^^^^^^^^^ actual value is <text/html; charset=utf-8>
    |
 
 error: Assert failure
-  --> tests_failed/error_format_long.hurl:5:0
+  --> tests_failed/error_format_long.hurl:9:0
    |
- 5 | xpath "string(//head/title)" == "Welcome!"
+ 9 | xpath "string(//head/title)" == "Welcome!"
    |   actual:   string <Test>
    |   expected: string <Welcome!>
    |
 
 error: Assert failure
-  --> tests_failed/error_format_long.hurl:7:0
+  --> tests_failed/error_format_long.hurl:11:0
    |
- 7 | xpath "//title" count == 2
+11 | xpath "//title" count == 2
    |   actual:   int <1>
    |   expected: int <2>
+   |
+
+HTTP/1.1 200
+Server: Werkzeug/~~~ Python/~~~
+Date: ~~~
+Content-Type: application/json
+Content-Length: 115
+Server: Flask Server
+Connection: close
+
+{"books": [{"name": "Dune", "author": "Franck Herbert"}, {"name": "Les Mis\u00e9rables", "author": "Victor Hugo"}]}
+
+error: Assert failure
+  --> tests_failed/error_format_long.hurl:18:0
+   |
+18 | jsonpath "$.books" count == 12
+   |   actual:   int <2>
+   |   expected: int <12>
+   |
+
+HTTP/1.1 200
+Server: Werkzeug/~~~ Python/~~~
+Date: ~~~
+Content-Type: application/problem+json
+Content-Length: 258
+Server: Flask Server
+Connection: close
+
+{"type": "https://example.com/probs/out-of-credit", "title": "You do not have enough credit.", "detail": "Your current balance is 30, but that costs 50.", "instance": "/account/12345/msgs/abc", "balance": 30, "accounts": ["/account/12345", "/account/67890"]}
+
+error: Assert failure
+  --> tests_failed/error_format_long.hurl:26:0
+   |
+26 | jsonpath "$.title" == "You have enough credit."
+   |   actual:   string <You do not have enough credit.>
+   |   expected: string <You have enough credit.>
    |
 

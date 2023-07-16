@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl --error-format long tests_failed/error_format_long.hurl
+hurl --error-format long --fail-at-end tests_failed/error_format_long.hurl

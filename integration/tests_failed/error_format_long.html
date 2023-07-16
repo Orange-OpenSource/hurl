@@ -1,8 +1,27 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-assert-xpath</span></span>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Using --error-format long, the response body</span>
+<span class="line"></span><span class="comment"># is logged when there are errors. If the response is a kind of</span>
+<span class="line"></span><span class="comment"># text (like text/html or application/json), the body is logged as text,</span>
+<span class="line"></span><span class="comment"># otherwise as a binary.</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-format-long/html</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="string">Content-Type</span>: <span class="string">text/html</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"string(//head/title)"</span> <span class="predicate-type">==</span> <span class="string">"Welcome!"</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"//foo"</span> <span class="predicate-type">isEmpty</span></span>
 <span class="line"><span class="query-type">xpath</span> <span class="string">"//title"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-format-long/json</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Type</span>: <span class="string">application/json</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.books"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">12</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
+<span class="line"></span><span class="comment"># RFC-7807 application/problem+json is also supported</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/error-format-long/rfc-7807</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">Content-Type</span>: <span class="string">application/problem+json</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.title"</span> <span class="predicate-type">==</span> <span class="string">"You have enough credit."</span></span>
 </span></span></code></pre>

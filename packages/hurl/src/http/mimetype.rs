@@ -18,10 +18,15 @@
 
 /// Returns true if binary data with this `content_type` can be decoded as text.
 pub fn is_kind_of_text(content_type: &str) -> bool {
-    content_type.contains("text/")
-        || content_type.contains("application/json")
-        || content_type.contains("application/xml")
-        || content_type.contains("application/x-www-form-urlencoded")
+    let content_types = [
+        "text/",
+        "application/json",
+        "application/problem+json", // See https://datatracker.ietf.org/doc/html/rfc7807
+        "application/xml",
+        "application/x-www-form-urlencoded",
+    ];
+
+    content_types.iter().any(|c| content_type.contains(c))
 }
 
 /// Returns true if this `content_type` is HTML.
