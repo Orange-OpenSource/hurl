@@ -9,7 +9,6 @@ function check_listen_port(){
     # vars
     label="${1:-}"
     port="${2:-}"
-    wait=5
 
     # usage
     if [ -z "${label}" ] || [ -z "${port}" ] ; then
@@ -17,14 +16,20 @@ function check_listen_port(){
         return 1
     fi
 
-    sleep "${wait}"
-    if nc -zv 127.0.0.1 "${port}" ; then
-        echo "${color_green}${label} listening${color_reset} on ${port}"
-        return 0
-    else
-        echo "${color_red}${label} not listening${color_reset} on ${port}"
-        return 1
-    fi
+    for count in $(seq 30) ; do
+        if nc -zv 127.0.0.1 "${port}" ; then
+            exit_message="${color_green}$(date) - ${label} listening${color_reset} on ${port}"
+            exit_code=0
+            break
+        else
+            echo "$(date) - ${count} try - ${label} not listening${color_reset} on ${port} yet"
+            exit_message="${color_red}$(date) - ${label} not listening${color_reset} on ${port}"
+            exit_code=1
+        fi
+        sleep 1
+    done
+    echo "${exit_message}"
+    return "${exit_code}"
 }
 
 function cat_and_exit_err() {
@@ -65,4 +70,3 @@ fi
 squid_conf="cache deny all\ncache_log /dev/null\naccess_log /dev/null\nhttp_access allow all\nhttp_port 127.0.0.1:3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
 (echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee build/proxy.log 2>&1) &
 check_listen_port "squid" 3128 || cat_and_exit_err build/proxy.log
-
