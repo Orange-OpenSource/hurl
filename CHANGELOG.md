@@ -1,15 +1,32 @@
 [4.1.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
 
+Thanks to
+[@kallelindqvist](https://github.com/kallelindqvist),
+[@jlazic](https://github.com/jlazic),
+[@Lythenas](https://github.com/Lythenas),
+[@Jayshua](https://github.com/Jayshua),
+[@iredmail](https://github.com/iredmail),
+[@eirayuki](https://github.com/eirayuki),
+[@chenrui333](https://github.com/chenrui333),
+[@linker3000](https://github.com/linker3000),
+[@pfeiferj](https://github.com/pfeiferj),
+[@jasonkarns](https://github.com/jasonkarns),
+
+
 Enhancements:
 
+* Support RFC-7807 application/problem+json for response body logging as text [#1766](https://github.com/Orange-OpenSource/hurl/issues/1766)
+* Add connect-to per request option [#1736](https://github.com/Orange-OpenSource/hurl/issues/1736)
 * Add support for --resolve option per request [#1711](https://github.com/Orange-OpenSource/hurl/issues/1711)
+* Add TAP report [#1666](https://github.com/Orange-OpenSource/hurl/issues/1666) [#601](https://github.com/Orange-OpenSource/hurl/issues/601)
+* Implement isDate predicate [#1520](https://github.com/Orange-OpenSource/hurl/issues/1520)
 
 
 Bugs Fixed:
 
+* Reuse same HTTP method on redirect for appropriate HTTP status codes [#1719](https://github.com/Orange-OpenSource/hurl/issues/1719)
 * Fix URL runtime evaluation. [#1716](https://github.com/Orange-OpenSource/hurl/issues/1716)
-
 
 
 
