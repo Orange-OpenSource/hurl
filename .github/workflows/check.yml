@@ -25,12 +25,15 @@ jobs:
         ref: ${{ inputs.branch }}
 
     - name: Shellcheck
+      if: always()
       run: bin/check/shellcheck.sh
 
     - name: Check ad hoc
+      if: always()
       run: bin/check/ad_hoc.sh
 
     - name: Git leaks
+      if: always()
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/zricethezav/gitleaks:latest
@@ -38,13 +41,13 @@ jobs:
         run: gitleaks detect --verbose --config .github/workflows/config/gitleaks.toml
 
     - name: Hadolint
+      if: always()
       run: bin/check/hadolint.sh ./contrib/docker/Dockerfile
 
     - name: Install prerequisites
-      run: bin/check/install_prerequisites.sh
-
-    - name: Install python3 venv
+      if: always()
       run: |
+        bin/check/install_prerequisites.sh
         bin/install_python3_venv.sh
         export PATH=/tmp/hurl-python3-venv/bin:$PATH
         which python3
@@ -52,26 +55,33 @@ jobs:
         pip --version
 
     - name: Check Rust version
+      if: always()
       run: bin/check/rust_version.py 7
     
     - name: Rustfmt
+      if: always()
       run: bin/check/rustfmt.sh
 
     - name: Clippy
+      if: always()
       run: bin/check/clippy.sh
 
     - name: Black
+      if: always()
       run: bin/check/black.sh
 
     - name: Check XML/HTML files
+      if: always()
       run: bin/check/xmllint.sh
 
     - name: Run crates update
-      run: bin/check/crates.sh 
+      if: always()
+      run: bin/check/crates.sh
 
     - name: Check crates licence
+      if: always()
       run: python3 bin/check/license.py
 
     - name: Check hurl crate API changes
+      if: always()
       run: bin/check/compatibility.sh
-
