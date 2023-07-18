@@ -21,7 +21,7 @@ strict = []
 base64 = "0.21.2"
 brotli = "3.3.4"
 chrono = { version = "0.4.26", default-features = false, features = ["clock"] }
-clap = { version = "4.3.14", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.3.15", features = ["cargo", "string", "wrap_help"] }
 colored = "2.0.4"
 curl = "0.4.44"
 curl-sys = "0.4.63"
@@ -33,7 +33,7 @@ hex-literal = "0.4.1"
 hurl_core = { version = "4.1.0-SNAPSHOT", path = "../hurl_core" }
 indexmap = "1.9.3"
 libflate = "2.0.0"
-libxml = "0.3.2"
+libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.0"
 regex = "1.9.1"
