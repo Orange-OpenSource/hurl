@@ -21,7 +21,7 @@ strict = []
 base64 = "0.21.2"
 brotli = "3.3.4"
 chrono = { version = "0.4.26", default-features = false, features = ["clock"] }
-clap = { version = "4.3.16", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.3.17", features = ["cargo", "string", "wrap_help"] }
 colored = "2.0.4"
 curl = "0.4.44"
 curl-sys = "0.4.63"
@@ -37,7 +37,7 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.0"
 regex = "1.9.1"
-serde = "1.0.171"
+serde = "1.0.173"
 serde_json = "1.0.103"
 sha2 = "0.10.7"
 url = "2.4.0"
