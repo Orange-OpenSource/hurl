@@ -71,11 +71,15 @@ Hurl can generate an HTML report by using the [`--report-html HTML_DIR`] option.
 
 If the HTML report already exists, the test results will be appended to it.
 
-<img id="running-test-1" src="/docs/assets/img/hurl-html-report.png" alt="Hurl HTML Report">
+<div class="picture">
+    <img id="running-test-1" src="/docs/assets/img/hurl-html-report.png" alt="Hurl HTML Report">
+</div>
 
 The input Hurl files (HTML version) are also included and are easily accessed from the main page.
 
-<img id="running-test-2" src="/docs/assets/img/hurl-html-file.png" alt="Hurl HTML file">
+<div class="picture">
+    <img id="running-test-2" src="/docs/assets/img/hurl-html-file.png" alt="Hurl HTML file">
+</div>
 
 ### JUnit Report
 

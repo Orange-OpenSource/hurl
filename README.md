@@ -1,5 +1,8 @@
-<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" width="264px"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
-
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true" > 
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" > 
+    <img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" alt="Hurl Logo" width="264px">
+</picture>
 <br/>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
@@ -130,17 +133,24 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
 
-<div class="home-html-report">
-    <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png#gh-light-mode-only" alt="HTML report" width="480"/>
-    <img class="dark-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-dark.png#gh-dark-mode-only" alt="HTML report" width="480"/>
+<div class="picture home-html-report">
+    <picture>
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+    </picture>
 </div>
 
 # Why Hurl?
 
 <ul class="showcase-container">
- <li><b>Text Format:</b> for both devops and developers</li>
- <li><b>Fast CLI:</b> a command line for local dev and continuous integration</li>
- <li><b>Single Binary:</b> easy to install, with no runtime required</li>
+    <li><b>Text Format:</b> for both devops and developers</li>
+    <li><b>Fast CLI:</b> a command line for local dev and continuous integration</li>
+    <li><b>Single Binary:</b> easy to install, with no runtime required</li>
 </ul>
 
 # Powered by curl

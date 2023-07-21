@@ -128,17 +128,27 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
 
-<div class="home-html-report">
-    <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png" alt="HTML report"/>
-    <img class="dark-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-dark.png" alt="HTML report"/>
+<div class="picture home-html-report">
+    <picture>
+        <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png" alt="HTML report"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-dark.png" alt="HTML report"/>
+    </picture>
 </div>
 
 # Why Hurl?
 
 <ul class="showcase-container">
- <li class="showcase-item"><h2 class="showcase-item-title">Text Format</h2>For both devops and developers</li>
- <li class="showcase-item"><h2 class="showcase-item-title">Fast CLI</h2>A command line for local dev and continuous integration</li>
- <li class="showcase-item"><h2 class="showcase-item-title">Single Binary</h2>Easy to install, with no runtime required</li>
+    <li class="showcase-item"><h2 class="showcase-item-title">Text Format</h2>For both devops and developers</li>
+    <li class="showcase-item"><h2 class="showcase-item-title">Fast CLI</h2>A command line for local dev and continuous integration</li>
+    <li class="showcase-item"><h2 class="showcase-item-title">Single Binary</h2>Easy to install, with no runtime required</li>
 </ul>
 
 # Powered by curl
