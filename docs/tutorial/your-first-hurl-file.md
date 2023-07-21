@@ -1,14 +1,14 @@
 # Your First Hurl File
 
 Throughout this tutorial, we'll walk through the creation of multiple
-Hurl files to test a basic quiz application. We'll show how to test
+Hurl files to test a basic web application about movies called _Movies Box_. We'll show how to test
 this site locally, and how to automate these integration tests in a CI/CD
 chain like [GitHub Action] and [GitLab CI/CD].
 
-The quiz application consists of:
+Our Movies Box website consists of:
 
-- a website that lets people create or play a series of quizzes
-- a set of REST APIs to list, create and delete question and quiz
+- a website that lets people make list of favorite movies 
+- a set of REST APIs to search movies, add, remove favorites
 
 With Hurl, we're going to add tests for the website and the APIs.
 
@@ -24,50 +24,61 @@ $ hurl --version
 If Hurl is already installed, you should see the version of Hurl. If it isn't, you
 can check [Installation] to see how to install Hurl.
 
-Next, we’re going to install our quiz application locally, in order to test it. We are
-not going to build our application from scratch, in order to focus on how to test it.
+Next, we’re going to install our movies application locally, in order to test it.
 
 > Hurl being really language agnostic, you can use it to validate any type of application: in
-> this tutorial, our quiz application is built with [Spring Boot],
-> but this could as well be a [Node.js] or a [Flask] app.
+> this tutorial, our quiz application is built with [Express], a [Node.js] framework,
+> but this could as well be a [Spring Boot] or a [Flask] app.
 
-Our quiz application can be launched locally either:
+Our movies application can be launched locally either:
 
 - using a Docker image
-- directly using the jar of the application
+- using Node
 
 If you want to use the Docker image, you must have Docker installed locally. If it is the case,
 just run in a shell:
 
 ```shell
-$ docker pull ghcr.io/jcamiel/quiz:latest
-$ docker run --name quiz --rm --detach --publish 8080:8080 ghcr.io/jcamiel/quiz:latest
+$ docker pull ghcr.io/jcamiel/hurl-express-tutorial:latest
+$ docker run --name movies --rm --detach --publish 3000:3000 ghcr.io/jcamiel/hurl-express-tutorial:latest
 ```
 
 And check that the container is running with:
 
 ```shell
 $ docker ps
-CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS         PORTS                                       NAMES
-922d387923ec   ghcr.io/jcamiel/quiz:latest   "java -jar app/quiz.…"   8 seconds ago   Up 6 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   quiz
+CONTAINER ID   IMAGE                                          COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+4002ce42e507   ghcr.io/jcamiel/hurl-express-tutorial:latest   "node dist/bin/www.js"   3 seconds ago   Up 2 seconds   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   movies
 ```
 
-If you want to use the jar application, you must have Java installed locally. If it is the case, download
-the jar application from <https://github.com/jcamiel/quiz/releases/latest> and run in a shell:
+If you want to launch the Node application, you must have Node installed locally.
 
 ```shell
-$ java -jar quiz-0.0.2.jar 
+$ git clone https://github.com/jcamiel/hurl-express-tutorial.git && cd hurl-express-tutorial
+$ npm install
+$ npm start 
 ```
 
-Either you're using the Docker images or the jar app, you can open a browser and test the quiz application by
-typing the URL <http://localhost:8080>:
+Either you're using the Docker images or the Node app, you can open a browser and test the website by
+typing the URL <http://localhost:3000>:
 
-<div>
-     <img class="light-img" src="/docs/assets/img/quiz-light.png" width="400px" alt="Quiz home page"/>
-     <img class="dark-img" src="/docs/assets/img/quiz-dark.png" width="400px" alt="Quiz home page"/>
+<div class="picture">
+    <picture>
+        <source srcset="/docs/assets/img/movies-box-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/movies-box-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/movies-box-light.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-light.png" width="600" alt="Movies Box home page"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/movies-box-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/movies-box-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/movies-box-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-dark.png" width="600" alt="Movies Box home page"/>
+    </picture>
 </div>
 
-<small class="u-greyed">Our quiz app: we've only secured a budget for integration tests and nothing for the site design...</small>
+Play a little with the site. You can see details of each movie, search for movies (try "1982"), login to add favorites 
+(use username `fab` and password `12345678`).
 
 ## A Basic Test
 
@@ -76,13 +87,13 @@ Next, we’re going to write our first test.
 1. Open a text editor and create a file named `basic.hurl`. In this file, just type the following text and save:
 
 ```hurl
-GET http://localhost:8080
+GET http://localhost:3000
 ```
 
 This is your first Hurl file, and probably one of the simplest. It consists of only one [entry].
 
 > An entry has a mandatory [request specification]: in this case, we want to perform a
-> `GET` HTTP request on the endpoint <http://localhost:8080>. A request can be optionally followed by a [response
+> `GET` HTTP request on the endpoint <http://localhost:3000>. A request can be optionally followed by a [response
 > description], to add asserts on the HTTP response. For the moment, we don't have any response description.
 
 2. In a shell, execute `hurl` with `basic.hurl` as argument:
@@ -91,32 +102,35 @@ This is your first Hurl file, and probably one of the simplest. It consists of o
 $ hurl basic.hurl
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Welcome to Quiz!</title>
-<!--    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>-->
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Movies Box</title>
+        <link rel="icon" type="image/png" href="/img/favicon.png" />
+        <link rel="stylesheet" href="/css/style.css" />
+
+    </head>
+    <body>
 ....
 </html>
 ```
 
-If the quiz app is running, you should see the content of the html file at <http://localhost:8080>. If the quiz app
-is not running, you'll see an error:
+If the Movies Box website is running, you should see the content of the HTML file at <http://localhost:3000>. 
+
+If the website is not running, you'll see an error:
 
 ```shell
 $ hurl basic.hurl 
 [1;31merror[0m: [1mHTTP connection[0m
   [1;34m-->[0m basic.hurl:1:5
    [1;34m|[0m
-[1;34m 1[0m [1;34m|[0m GET http://localhost:8080
-   [1;34m|[0m     [1;31m^^^^^^^^^^^^^^^^^^^^^[0m [1;31m(7) Failed to connect to localhost port 8080: Connection refused[0m
+[1;34m 1[0m [1;34m|[0m GET http://localhost:3000
+   [1;34m|[0m     [1;31m^^^^^^^^^^^^^^^^^^^^^[0m [1;31m(7) Failed to connect to localhost port 3000 after 6 ms: Couldn't connect to server[0m
    [1;34m|[0m
 ```
 
 
 As there is no response description, this basic test only checks that an HTTP server is running at
-<http://localhost:8080> and responds with _something_. If the server had a problem on this endpoint, and had responded
+<http://localhost:3000> and responds with _something_. If the server had a problem on this endpoint, and had responded
 with a [`500 Internal Server Error`], Hurl would have just executed successfully the HTTP request,
 without checking the actual HTTP response.
 
@@ -126,7 +140,7 @@ the response and, at least, check that the HTTP response status code is [`200 OK
 3. Open `basic.hurl` and modify it to test the status code response:
 
 ```hurl
-GET http://localhost:8080
+GET http://localhost:3000
 HTTP 200
 ```
 
@@ -136,12 +150,14 @@ HTTP 200
 $ hurl basic.hurl
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Welcome to Quiz!</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Movies Box</title>
+        <link rel="icon" type="image/png" href="/img/favicon.png" />
+        <link rel="stylesheet" href="/css/style.css" />
+
+    </head>
+    <body>
 ....
 </html>
 ```
@@ -161,18 +177,18 @@ test output:
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 8 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 25 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        7 ms
+Duration:        27 ms
 ```
 
 6. Modify `basic.hurl` to test a different HTTP response status code:
 
 ```hurl
-GET http://localhost:8080
+GET http://localhost:3000
 HTTP 500
 ```
 
@@ -183,18 +199,18 @@ HTTP 500
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
 [1;31merror[0m: [1mAssert status code[0m
-  [1;34m-->[0m basic.hurl:2:10
+  [1;34m-->[0m basic.hurl:2:6
    [1;34m|[0m
-[1;34m 2[0m [1;34m|[0m HTTP/1.1 500
-   [1;34m|[0m          [1;31m^^^[0m [1;31mactual value is <200>[0m
+[1;34m 2[0m [1;34m|[0m HTTP 500
+   [1;34m|[0m      [1;31m^^^[0m [1;31mactual value is <200>[0m
    [1;34m|[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 8 ms)
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 20 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 0 (0.0%)
 Failed files:    1 (100.0%)
-Duration:        13 ms
+Duration:        21 ms
 ```
 
 8. Revert your changes and finally add a comment at the beginning of the file:
@@ -227,3 +243,4 @@ We're going to see in the next section how to improve our tests while keeping it
 [`200 OK`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
 [`--test`]: /docs/manual.md#test
 [curl]: https://curl.se
+[Express]: https://expressjs.com

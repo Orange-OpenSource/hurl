@@ -130,12 +130,12 @@ sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 
 Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
 
-<div class="picture home-html-report">
+<div class="picture">
     <picture>
         <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border" src="/docs/assets/img/home-waterfall-light.png" alt="HTML report"/>
+        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
     </picture>
 </div>
 

@@ -1,133 +1,116 @@
 # Captures
 
 We have seen how to chain requests in a Hurl file. In some use cases, you want
-to use data from one request and inject it in another one. That's what captures
+to use data from one request and inject it in another one. That's what [captures]
 are all about.
 
 ## Capturing a CSRF Token
 
-In our quiz application, a user can create a quiz at <http://localhost:8080/new-quiz>.
+In our website, a user can login at <http://localhost:3000/login>.
 The HTML page is a [form] where the user can input:
 
-- a required name
-- an optional email
-- the 5 questions that will form the new quiz
+- a required username
+- a required password
 
 If we look at the page HTML content, we can see an HTML form:
 
 ```html
-<form action="/new-quiz" method="POST">
+<form class="login-form" method="post" action="/login">
+    <input type="hidden" name="_csrf" value="0fSk7gRA-UTkS25Fbsyal0dgLPBjVy1YIoNg">
     ...
-    <input id="name" type="text" name="name" minlength="4" maxlength="32" value="" required>...
-    <input id="email" type="email" name="email" value="">...
-    <select name="question0" id="question0" required="">...
-        <option value="">--Please choose a question--</option>
-        <option value="0fec576c">Which astronaut did NOT walk on the moon?</option>
-        <option value="dd894cca">If you multiply the width of a rectangle by the height, what do you get?</option>
-        <option value="16f897ab">How far does the Moon move away from Earth each year?</option>
-        ...
-    </select>
-    <select name="question1" id="question1" required="">...
-    </select>
+    <input type="text" name="username" id="username" autocomplete="off" minlength="3" maxlength="32" pattern="[a-zA-Z0-9_-]{3,32}" title="Username must use a-z, A-Z and 0-9" required="">
+    ...
+    <input type="password" name="password" id="password" autocomplete="off" minlength="6" maxlength="32" required="">
+    ...
+    <input type="submit" value="Login">
     ...
 </form>
 ```
 
-When the user clicks on 'Create' button, a POST request is sent with form values for the newly
-created quiz: the author's name, an optional email and the list of 5 question ids. Our server implements a
-[_Post / Redirect / Get pattern_]: if the POST submission is successful, the user is redirected to a detail
-page of the new quiz, indicating creation success.
+When the user clicks on 'Login' button, a POST request is sent with form values: the username and a password. 
+Our server implements a [_Post / Redirect / Get pattern_]: if the POST submission is successful, the user is redirected 
+to his favorites movies page.
 
 Let's try to test it!
 
-Form values can be sent using a [Form parameters section], with each key followed by its
-corresponding value.
+Form values can be sent using a [Form parameters section], with each key followed by its corresponding value.
 
-1. Create a new file named `create-quiz.hurl`:
+1. Create a new file named `login.hurl`:
 
 ```hurl
-POST http://localhost:8080/new-quiz
+POST http://localhost:3000/login
 [FormParams]
-name: Simpson
-question0: 16f897ab
-question1: dd894cca
-question2: 4edc1fdb
-question3: 37b9eff3
-question4: 0fec576c
-
+username: fab
+password: 12345678
 HTTP 302
 ```
 
 > When sending form data with a Form parameters section, you don't need to set the
 > `Content-Type` HTTP header: Hurl infers that the content type of the request is `application/x-www-form-urlencoded`.
 
-2. Run `create-quiz.hurl`:
+2. Run `login.hurl`:
 
 ```shell
-$ hurl --test create-quiz.hurl
-[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
+[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
 [1;31merror[0m: [1mAssert status code[0m
-  [1;34m-->[0m create-quiz.hurl:6:10
+  [1;34m-->[0m login.hurl:5:6
    [1;34m|[0m
-[1;34m10[0m [1;34m|[0m HTTP 302
+[1;34m 5[0m [1;34m|[0m HTTP 302
    [1;34m|[0m      [1;31m^^^[0m [1;31mactual value is <403>[0m
    [1;34m|[0m
 
-[1mcreate-quiz.hurl[0m: [1;31mFailure[0m (1 request(s) in 5 ms)
+[1mlogin.hurl[0m: [1;31mFailure[0m (1 request(s) in 9 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 0 (0.0%)
 Failed files:    1 (100.0%)
-Duration:        5 ms
+Duration:        10 ms
 ```
 
-This is unexpected! Our test is failing, we're not redirected to the new quiz detail page.
+This is unexpected! Our test is failing, we're not redirected to the favorite movies page.
 
 The reason is quite simple, let's look more precisely at our HTML form:
 
 ```html
-<form action="/new-quiz" method="POST">
+<form class="login-form" method="post" action="/login">
+    <input type="hidden" name="_csrf" value="0fSk7gRA-UTkS25Fbsyal0dgLPBjVy1YIoNg">
     ...
-    <button type="submit">Create</button>
-    <input type="hidden" name="_csrf" value="7d4da7d7-2970-442a-adc3-55e5e6ba038a">
 </form>
 ```
 
-The server quiz creation endpoint is protected by a [CSRF token]. In a browser, when the user is creating a new quiz by
-sending a POST request, a token is sent along the new quiz values. This token is generated server-side, and embedded
-in the HTML. When the POST request is made, our quiz application expects that the request includes a valid token,
+The server login page is protected by a [CSRF token]. In a browser, when the user wants to log in by
+sending a POST request, a token is sent along the username/password values. This token is generated server-side, 
+and embedded in the HTML. When the POST request is made, our server expects that the request includes a valid token,
 and will reject the request if the token is missing or invalid.
 
 In our Hurl file, we're not sending any token, so the server is rejecting our request with a [`403 Forbidden`]
 HTTP response.
 
-Unfortunately, we can't hard code the value of a token in our
-Form parameters section because the token is dynamically generated on each request, and a certain fixed value
-would be valid only during a small period of time.
+Unfortunately, we can't hard code the value of a token in our `[FormParams]` section because the token is dynamically 
+generated on each request, and a certain fixed value would be valid only during a small period of time.
 
 We need to dynamically _capture_ the value of the CSRF token and pass it to our form. To do so, we are going to:
 
-- perform a first GET request to <http://localhost:8080/new-quiz> and capture the CSRF token
-- chain with a POST request that contains our quiz value, and our captured CSRF token
-- check that the POST response is a redirection, i.e. a [`302 Found`] to the quiz detail page
+- perform a first GET request to <http://localhost:3000/login> and capture the CSRF token
+- chain with a POST request that contains our username/password value, and our captured CSRF token
+- check that the POST response is a redirection, i.e. a [`302 Found`] to the favorites page
 
 So, let's go!
 
 ### How to capture values
 
-1. Modify `create-quiz.hurl`:
+1. Modify `login.hurl`:
 
 ```hurl
-# First, get the quiz creation page to capture
+# First, display the login page to capture
 # the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery)
-GET http://localhost:8080/new-quiz
-
+GET http://localhost:3000/login
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 ```
 
-Captures are defined in a Captures section. Captures are composed of a variable name and a query.
+Captures are defined in a `[Captures]` section. Captures are composed of a variable name and a query.
 We have already seen queries in [Adding asserts tutorial part]. Since we want to capture value from an HTML
 document, we can use a [XPath capture].
 
@@ -139,42 +122,37 @@ XPath query.
 
 Now that we have captured the CSRF token value, we can inject it in the POST request.
 
-2. Add a POST request using `csrf_token` variable in `create-quiz.hurl`:
+2. Add a POST request using `csrf_token` variable in `login.hurl`:
 
 ```hurl
-# First, get the quiz creation page to capture
-# the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery):
-GET http://localhost:8080/new-quiz
-
+# First, display the login page to capture
+# the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery)
+GET http://localhost:3000/login
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 
 
-# Create a new quiz, using the captured CSRF token:
-POST http://localhost:8080/new-quiz
+# Log in user, using the captured CSRF token:
+POST http://localhost:3000/login
 [FormParams]
-name: Simpson
-question0: 16f897ab
-question1: dd894cca
-question2: 4edc1fdb
-question3: 37b9eff3
-question4: 0fec576c
+username: fab
+password: 12345678
 _csrf: {{csrf_token}}
 HTTP 302
 ```
 
-3. Run `create-quiz.hurl` and verify everything is ok:
+3. Run `login.hurl` and verify everything is ok:
 
 ```shell
-$ hurl --test create-quiz.hurl
-[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (2 request(s) in 10 ms)
+$ hurl --test login.hurl
+[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
+[1mlogin.hurl[0m: [1;32mSuccess[0m (2 request(s) in 14 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        10 ms
+Duration:        16 ms
 ```
 
 ## Follow Redirections
@@ -183,129 +161,96 @@ Like its HTTP engine [curl], Hurl doesn't follow redirection by default: if a re
 Found`] status code, Hurl doesn't implicitly run requests until a `200 OK` is reached. This can be useful if you want
 to validate each redirection step.
 
-What if we want to follow redirections? We can simply use captures!
+After having logged it, we would like to test the page where the user has been redirected.
+This is really simple and can be achieved with a [header assert]: on the response to the POST creation request, we
+are going to assert the [`Location`] header, which indicates the redirection URL target.
 
-After having created a new quiz, we would like to test the page where the user has been redirected.
-This is really simple and can be achieved with a [header capture]: on the response to the POST creation request, we
-are going to capture the [`Location`] header, which indicates the redirection URL target, and use it to
-go to the next page.
-
-1. Add a new header capture to capture the `Location` header in a variable named `detail_url`:
+1. Add a new header assert to test the `Location` header:
 
 ```hurl
-# First, get the quiz creation page to capture
+# First, display the login page to capture
 # ...
 
-# Create a new quiz, using the captured CSRF token:
-POST http://localhost:8080/new-quiz
+# Log in user, using the captured CSRF token:
+POST http://localhost:3000/login
 [FormParams]
-name: Simpson
-question0: 16f897ab
-question1: dd894cca
-question2: 4edc1fdb
-question3: 37b9eff3
-question4: 0fec576c
+username: fab
+password: 12345678
 _csrf: {{csrf_token}}
-
 HTTP 302
-[Captures]
-detail_url: header "Location"
-```
-
-Captures and asserts can be mixed in the same response spec. For example, we can check that the redirection after
-the quiz creation matches a certain URL, and add a header assert with a matches predicate.
-
-2. Add a header assert on the POST response to check the redirection URL:
-
-```hurl
-# First, get the quiz creation page to capture
-# ...
-
-# Create a new quiz, using the captured CSRF token:
-POST http://localhost:8080/new-quiz
-[FormParams]
-name: Simpson
-question0: 16f897ab
-question1: dd894cca
-question2: 4edc1fdb
-question3: 37b9eff3
-question4: 0fec576c
-_csrf: {{csrf_token}}
-
-HTTP 302
-[Captures]
-detail_url: header "Location"
 [Asserts]
-header "Location" matches "/quiz/detail/[a-f0-9]{8}"
+header "Location" == "/my-movies"
 ```
 
-3. Add a request to get the detail page that the user has been redirected to:
+2. Add a request to get the favorites page that the user has been redirected to:
 
 ```hurl
-# First, get the quiz creation page to capture
+# First, display the login page to capture
 # ...
 
-# Create a new quiz, using the captured CSRF token:
+# Log in user, using the captured CSRF token:
 # ...
 
-# Open the newly created quiz detail page:
-GET {{detail_url}}
+# Follow redirection and open favorites:
+GET http://localhost:3000/my-movies
 HTTP 200
+[Asserts]
+xpath "string(//title)" == "My Movies"
 ```
 
-4. Run `create-quiz.hurl` and verify everything is ok:
+3. Run `login.hurl` and verify everything is ok:
 
 ```shell
-$ hurl --test create-quiz.hurl
-[1mcreate-quiz.hurl[0m: [1;36mRunning[0m [1/1]
-[1mcreate-quiz.hurl[0m: [1;32mSuccess[0m (3 request(s) in 39 ms)
+$ hurl --test login.hurl
+[1mlogin.hurl[0m: [1;36mRunning[0m [1/1]
+[1mlogin.hurl[0m: [1;32mSuccess[0m (3 request(s) in 17 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        46 ms
+Duration:        19 ms
 ```
-
 
 > You can force Hurl to follow redirection by using [`-L / --location` option] or using an [`[Options]` section][options].
 > In this case, asserts and captures will be run against the last redirection step.
 
+A login workflow is surprisingly hard to do well. You can try to add more test on our `login.hurl` test. With Hurl, try 
+now to test the following usecase:
+
+- when a user is not authenticated and goes to <http://localhost:3000/my-movies>, he is redirected to the login page,
+- what's happen if the user try to log in with a wrong password,
+- after a user log out, he can open the login page again.
+
+You can see a more complete `login.hurl` on [the GitHub repo]. 
+
 
 ## Recap
 
-So, our test file `create-quiz.hurl` is now:
+So, our test file `login.hurl` is now:
 
 ```hurl
-# First, get the quiz creation page to capture
+# First, display the login page to capture
 # the CSRF token (see https://en.wikipedia.org/wiki/Cross-site_request_forgery)
-GET http://localhost:8080/new-quiz
-
+GET http://localhost:3000/login
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//input[@name='_csrf']/@value)"
 
 
-# Create a new quiz, using the captured CSRF token.
-POST http://localhost:8080/new-quiz
+# Log in user, using the captured CSRF token:
+POST http://localhost:3000/login
 [FormParams]
-name: Simpson
-question0: 16f897ab
-question1: dd894cca
-question2: 4edc1fdb
-question3: 37b9eff3
-question4: 0fec576c
+username: fab
+password: 12345678
 _csrf: {{csrf_token}}
-
 HTTP 302
-[Captures]
-detail_url: header "Location"
-[Asserts]
-header "Location" matches "/quiz/detail/[a-f0-9]{8}"
 
 
-# Open the newly created quiz detail page:
-GET {{detail_url}}
+# Follow redirection and open favorites:
+GET http://localhost:3000/my-movies
 HTTP 200
+[Asserts]
+xpath "string(//title)" == "My Movies"
 ```
 
 We have seen how to [capture response data] in a variable and use it in others request.
@@ -328,5 +273,8 @@ of a redirection.
 [header capture]: /docs/capturing-response.md#header-capture
 [`Location`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
 [`-L / --location` option]: /docs/manual.md#location
-[capture response data]:  /docs/capturing-response.md
+[capture response data]: /docs/capturing-response.md
 [options]: /docs/request.md#options
+[captures]: /docs/capturing-response.md
+[header assert]: /docs/asserting-response.md#header-assert
+[the GitHub repo]: https://github.com/jcamiel/hurl-express-tutorial/tree/main/integration

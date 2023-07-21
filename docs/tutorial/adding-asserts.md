@@ -5,7 +5,7 @@ Our basic Hurl file is now:
 ```hurl
 # Our first Hurl file, just checking
 # that our server is up and running.
-GET http://localhost:8080
+GET http://localhost:3000
 HTTP 200
 ```
 
@@ -15,7 +15,7 @@ of an HTTP request with Hurl, we have to _describe_ tests that the response cont
 
 To do so, we're going to use [asserts].
 
-As our endpoint <http://localhost:8080> is serving HTML content, it makes sense to use [XPath asserts].
+As our endpoint <http://localhost:3000> is serving HTML content, it makes sense to use [XPath asserts].
 If we want to test a REST API or any sort of API that serves JSON content,
 we could use [JSONPath asserts] instead. There are other type of asserts but every one shares
 the same structure. So, let's look how to write a [XPath asserts].
@@ -35,16 +35,16 @@ the same structure. So, let's look how to write a [XPath asserts].
 An assert consists of a query and a predicate. As we want to test the value of the HTML title tag, we're
 going to use the [XPath expression] `string(//head/title)`.
 
-1. Asserts are written in an Asserts section, so modify `basic.hurl` file:
+1. Asserts are written in an `[Asserts]` section, so modify `basic.hurl` file:
 
 ```hurl
 # Our first Hurl file, just checking
 # that our server is up and running.
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
+xpath "string(//head/title)" == "Movies Box"
 ```
 
 2. Run `basic.hurl`:
@@ -52,26 +52,26 @@ xpath "string(//head/title)" == "Welcome to Quiz!"
 ```shell
 $ hurl --test basic.hurl
 [1mbasic.hurl[0m: [1;36mRunning[0m [1/1]
-[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 11 ms)
+[1mbasic.hurl[0m: [1;32mSuccess[0m (1 request(s) in 19 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        11 ms
+Duration:        19 ms
 ```
 
 There is no error so everything is good!
 
-3. Modify the predicate value to "Welcome to Quaz!"
+3. Modify the test value to "Movies Bax"
 
 ```hurl
 # Our first Hurl file, just checking
 # that our server is up and running.
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quaz!"
+xpath "string(//head/title)" == "Movies Bax"
 ```
 
 4. Run `basic.hurl`:
@@ -82,59 +82,65 @@ $ hurl --test basic.hurl
 [1;31merror[0m: [1mAssert failure[0m
   [1;34m-->[0m basic.hurl:7:0
    [1;34m|[0m
-[1;34m 7[0m [1;34m|[0m xpath "string(//head/title)" == "Welcome to Quaz!"
-   [1;34m|[0m   [1;31mactual:   string <Welcome to Quiz!>[0m
-   [1;34m|[0m   [1;31mexpected: string <Welcome to Quaz!>[0m
+[1;34m 7[0m [1;34m|[0m xpath "string(//head/title)" == "Movies Bax"
+   [1;34m|[0m   [1;31mactual:   string <Movies Box>[0m
+   [1;34m|[0m   [1;31mexpected: string <Movies Bax>[0m
    [1;34m|[0m
 
-[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 7 ms)
+[1mbasic.hurl[0m: [1;31mFailure[0m (1 request(s) in 22 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 0 (0.0%)
 Failed files:    1 (100.0%)
-Duration:        6 ms
+Duration:        23 ms
 ```
 
 Hurl has failed now and provides information on which assert is not valid.
 
 ### Typed predicate
 
-If we decompose our assert, `xpath "string(//head/title)"` is the XPath query and `== "Welcome to Quiz!"` is our
-predicate to test the query against. You can note that predicates values are typed:
+Decompose our assert:
 
-- `xpath "string(//head/title)" == "true"`    
-  tests that the XPath expression is returning a string, and
-- `xpath "boolean(//head/title)" == true`     
-  tests that the XPath expression is returning a boolean
+- __`xpath "string(//head/title)"`__    
+  is the XPath query 
+- __`== "Movies Box"`__    
+  is our predicate to test the query against
+
+You can note that tested values are typed:
+
+- `xpath "string(//head/title)" ==` __`"true"`__    
+  tests that the XPath expression is returning a string, and this string is equal to the string `true`
+- `xpath "boolean(//head/title)" ==` __`true`__    
+  tests that the XPath expression is returning a boolean, and the boolean is `true`
 
 Some queries can also return collections. For instance, the XPath expression `//button` is returning all the button
-elements present in the [DOM]. We can use it to ensure that we have exactly two buttons on our home page,
-with `count`:
+elements present in the [DOM]. We can use it to ensure that we have exactly two `<h3>` tag on our home page,
+with [`count`]:
 
-1. Add a new assert in `basic.hurl` to check the number of buttons:
+1. Add a new assert in `basic.hurl` to check the number of `<h3>` tags:
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
 ```
 
-2. We can also check each button's title:
+2. We can also check each `<h3>`'s content:
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
-xpath "string((//button)[1])" contains "Play"
-xpath "string((//button)[2])" contains "Create"
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
+xpath "string((//h3)[1])" contains "Popular"
+xpath "string((//h3)[2])" contains "Featured Today"
 ```
 
 > XPath queries can sometimes be a little tricky to write but modern browsers can help writing these expressions.
@@ -151,7 +157,7 @@ $ hurl --test basic.hurl
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        11 ms
+Duration:        15 ms
 ```
 
 
@@ -164,22 +170,22 @@ As our endpoint is serving UTF-8 encoded HTML content, we can check the value of
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
-xpath "string((//button)[1])" contains "Play"
-xpath "string((//button)[2])" contains "Create"
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
+xpath "string((//h3)[1])" contains "Popular"
+xpath "string((//h3)[2])" contains "Featured Today"
 # Testing HTTP response headers:
-header "Content-Type" == "text/html;charset=UTF-8"
+header "Content-Type" == "text/html; charset=utf-8"
 ```
 
 > Our HTTP response has only one `Content-Type` header, so we're testing this header value as string.
 > The same header could be present multiple times in an HTTP response, with different values.
 > In this case, the `header` query will return collections and could be tested with
-> `countEqual` or `include` predicates.
+> [`count`] or [`includes`].
 
 For HTTP headers, we can also use an [implicit header assert]. You can use either implicit or
 explicit header assert: the implicit one allows you to only check the exact value of the header,
@@ -189,43 +195,47 @@ while the explicit one allows you to use other [predicates] (like `contains`, `s
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 # Implicitly testing response headers:
-Content-Type: text/html;charset=UTF-8
+Content-Type: text/html; charset=utf-8
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
-xpath "string((//button)[1])" contains "Play"
-xpath "string((//button)[2])" contains "Create"
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
+xpath "string((//h3)[1])" contains "Popular"
+xpath "string((//h3)[2])" contains "Featured Today"
 ```
 
-The line `Content-Type: text/html;charset=UTF-8` is testing that the header `Content-Type` is present in the response,
-and its value must be exactly `text/html;charset=UTF-8`.
+The line 
+
+`Content-Type: text/html; charset=utf-8` 
+
+is testing that the header `Content-Type` is present in the response,
+and its value must be exactly `text/html; charset=utf-8`.
 
 > In the implicit assert, quotes in the header value are part of the value itself.
 
 Finally, we want to check that our server is creating a new session.
 
-When creating a new session, our Spring Boot application should return a [`Set-Cookie` HTTP response header].
+When creating a new session, our Express application returns a [`Set-Cookie` HTTP response header].
 So to test it, we can modify our Hurl file with another header assert.
 
 3. Add a header assert on `Set-Cookie` header:
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
-xpath "string((//button)[1])" contains "Play"
-xpath "string((//button)[2])" contains "Create"
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
+xpath "string((//h3)[1])" contains "Popular"
+xpath "string((//h3)[2])" contains "Featured Today"
 # Testing HTTP response headers:
-header "Content-Type" == "text/html;charset=UTF-8"
-header "Set-Cookie" startsWith "JSESSIONID="
+header "Content-Type" == "text/html; charset=utf-8"
+header "Set-Cookie" startsWith "x-session-id="
 ```
 
 For `Set-Cookie` header, we can use the specialized [Cookie assert].
@@ -233,28 +243,27 @@ Not only we'll be able to easily tests [cookie attributes] (like `HttpOnly`, or 
 it simplifies tests on cookies, particularly when there are multiple `Set-Cookie` header in the HTTP response.
 
 > Hurl is not a browser, one can see it as syntactic sugar over [curl]. Hurl
-> has no Javascript runtime and stays close to the HTTP layer. With others tools relying on headless browser, it can be
+> has no JavaScript runtime and stays close to the HTTP layer. With others tools relying on headless browser, it can be
 > difficult to access some HTTP requests attributes, like `Set-Cookie` header.
 
 So to test that our server is responding with a `HttpOnly` session cookie, we can modify our file and add cookie asserts.
 
-4. Add two cookie asserts on the cookie `JESSIONID`:
+4. Add two cookie asserts on the cookie `x-session-id`:
 
 ```hurl
 # Checking our home page:
-GET http://localhost:8080
+GET http://localhost:3000
 
 HTTP 200
 [Asserts]
-xpath "string(//head/title)" == "Welcome to Quiz!"
-xpath "//button" count == 2
-xpath "string((//button)[1])" contains "Play"
-xpath "string((//button)[2])" contains "Create"
-# Testing content type:
-header "Content-Type" == "text/html;charset=UTF-8"
-# Testing session cookie:
-cookie "JSESSIONID" exists
-cookie "JSESSIONID[HttpOnly]" exists
+xpath "string(//head/title)" == "Movies Box"
+xpath "//h3" count == 2
+xpath "string((//h3)[1])" contains "Popular"
+xpath "string((//h3)[2])" contains "Featured Today"
+# Testing HTTP response headers:
+header "Content-Type" == "text/html; charset=utf-8"
+cookie "x-session-id" exists
+cookie "x-session-id[HttpOnly]" exists
 ```
 
 5. Run `basic.hurl` and check that every assert has been successful:
@@ -267,7 +276,7 @@ $ hurl --test basic.hurl
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        11 ms
+Duration:        20 ms
 ```
 
 ## Performance Test
@@ -279,7 +288,7 @@ Duration:        11 ms
 Our Hurl file is now around 10 lines long, but we're already testing a lot on our home page:
 
 - we are testing that our home page is responding with a `200 OK`
-- we are checking the basic structure of our page: a title, 2 buttons
+- we are checking the basic structure of our page: a title, 2 `<h3>` tags
 - we are checking that the content type is UTF-8 HTML
 - we are checking that our server has created a session, and that the cookie session has the `HttpOnly` attribute
 
@@ -300,4 +309,6 @@ In the next session, we're going to see how we chain request tests, and how we a
 [Cookie assert]: /docs/asserting-response.md#cookie-assert
 [cookie attributes]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#attributes
 [curl]: https://curl.se
+[`count`]: /docs/filters.md#count
+[`includes`]: /docs/asserting-response.md#predicates
 
