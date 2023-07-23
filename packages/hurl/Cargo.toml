@@ -37,8 +37,9 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.0"
 regex = "1.9.1"
-serde = "1.0.174"
+serde = { version = "1.0.174", features = ["derive"] }
 serde_json = "1.0.103"
+serde_with = "3.1.0"
 sha2 = "0.10.7"
 url = "2.4.0"
 xmltree = { version = "0.10.3",  features = ["attribute-order"] }

@@ -25,15 +25,24 @@ use crate::http::easy_ext;
 // See [`easy_ext::namelookup_time_t`], [`easy_ext::connect_time_t`], [`easy_ext::app_connect_time_t`],
 // [`easy_ext::pre_transfer_time_t`], [`easy_ext::start_transfer_time_t`] and [`easy_ext::total_time_t`]
 // for fields definition.
-#[derive(Clone, Debug, PartialEq, Eq, Default)]
+#[serde_with::serde_as]
+#[derive(Clone, Debug, PartialEq, Eq, Default, serde::Serialize)]
 pub struct Timings {
+    #[serde_as(as = "serde_with::DisplayFromStr")]
     pub begin_call: DateTime<Utc>,
+    #[serde_as(as = "serde_with::DisplayFromStr")]
     pub end_call: DateTime<Utc>,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub name_lookup: Duration,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub connect: Duration,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub app_connect: Duration,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub pre_transfer: Duration,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub start_transfer: Duration,
+    #[serde_as(as = "serde_with::DurationMicroSeconds")]
     pub total: Duration,
 }
 

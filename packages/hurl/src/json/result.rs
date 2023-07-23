@@ -16,7 +16,6 @@
  *
  */
 use chrono::{DateTime, Utc};
-use serde_json::Number;
 
 use crate::http::{
     Call, Certificate, Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie,
@@ -268,46 +267,7 @@ impl Certificate {
 
 impl Timings {
     fn to_json(&self) -> serde_json::Value {
-        let mut map = serde_json::Map::new();
-        map.insert(
-            "begin_call".to_string(),
-            serde_json::Value::String(self.begin_call.to_string()),
-        );
-        map.insert(
-            "end_call".to_string(),
-            serde_json::Value::String(self.end_call.to_string()),
-        );
-        let value = self.name_lookup.as_micros() as u64;
-        map.insert(
-            "name_lookup".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        let value = self.connect.as_micros() as u64;
-        map.insert(
-            "connect".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        let value = self.app_connect.as_micros() as u64;
-        map.insert(
-            "app_connect".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        let value = self.pre_transfer.as_micros() as u64;
-        map.insert(
-            "pre_transfer".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        let value = self.start_transfer.as_micros() as u64;
-        map.insert(
-            "start_transfer".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        let value = self.total.as_micros() as u64;
-        map.insert(
-            "total".to_string(),
-            serde_json::Value::Number(Number::from(value)),
-        );
-        serde_json::Value::Object(map)
+        serde_json::to_value(self).expect("must succeed")
     }
 }
 
