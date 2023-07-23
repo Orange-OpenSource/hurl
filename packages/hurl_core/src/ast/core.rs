@@ -456,6 +456,8 @@ pub enum PredicateFuncValue {
         value: PredicateValue,
         operator: bool,
     },
+    // FIXME: `countEquals` predicate should be replace by `count` filter. This variant should be
+    // removed.
     CountEqual {
         space0: Whitespace,
         value: PredicateValue,
@@ -480,6 +482,7 @@ pub enum PredicateFuncValue {
         space0: Whitespace,
         value: PredicateValue,
     },
+    // FIXME: why use an empty struct here ?
     IsInteger {},
     IsFloat {},
     IsBoolean {},

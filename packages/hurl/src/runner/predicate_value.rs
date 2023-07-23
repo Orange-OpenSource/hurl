@@ -51,3 +51,15 @@ pub fn eval_predicate_value(
         PredicateValue::Regex(regex) => Ok(Value::Regex(regex.inner.clone())),
     }
 }
+
+pub fn eval_predicate_value_template(
+    predicate_value: &PredicateValue,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    match predicate_value {
+        PredicateValue::String(template) => eval_template(template, variables),
+        PredicateValue::Regex(regex) => Ok(regex.inner.to_string()),
+        // All others value should have failed in parsing:
+        _ => panic!("expect a string or a regex predicate value"),
+    }
+}
