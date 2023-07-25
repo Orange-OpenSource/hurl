@@ -1572,7 +1572,7 @@ mod tests {
         assert_eq!(assert_result.expected.as_str(), "count equals to 0");
 
         // predicate: `isEmpty`
-        // value: Nodeset(12)
+        // value: Nodeset(0)
         let value = Value::Nodeset(0);
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(assert_result.success);
