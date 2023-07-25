@@ -7,8 +7,7 @@
 <span class="line"><span class="string">variable</span>: five=<span class="number">5</span></span>
 <span class="line"><span class="string">variable</span>: foo=<span class="string">abc</span></span>
 <span class="line"><span class="string">insecure</span>: <span class="boolean">false</span></span>
-</span><span class="response"><span class="line"></span>
-<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
 <span class="line"><span class="name">count</span>: <span class="query-type">jsonpath</span> <span class="string">"$.count"</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
@@ -55,8 +54,10 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.tags[0]"</span> <span class="predicate-type">&gt;</span> <span class="string">"{{foo}}"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.profile-id"</span> <span class="predicate-type">==</span> <span class="string">"123abc"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$['profile-id']"</span> <span class="predicate-type">==</span> <span class="string">"123abc"</span></span>
-<span class="line"></span>
-<span class="line"></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="not">not</span> <span class="predicate-type">isEmpty</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.empty"</span> <span class="predicate-type">isEmpty</span></span>
+<span class="line"></span><span class="comment"># FIXME do we accept count filter on object?</span>
+<span class="line"></span><span class="comment"># jsonpath "$.empty" count == 0</span>
 <span class="json"><span class="line">{</span>
 <span class="line">  "count": 5,</span>
 <span class="line">  "success": false,</span>
@@ -66,14 +67,17 @@
 <span class="line">  "duration": 1.5,</span>
 <span class="line">  "tags": ["test"],</span>
 <span class="line">  "nullable": null,</span>
-<span class="line">  "profile-id": "123abc"</span>
+<span class="line">  "profile-id": "123abc",</span>
+<span class="line">  "empty": {}</span>
 <span class="line">}</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/index</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Captures]</span></span>
 <span class="line"><span class="name">index</span>: <span class="query-type">body</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
@@ -92,6 +96,7 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/filter</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>

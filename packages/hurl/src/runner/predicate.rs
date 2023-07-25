@@ -636,25 +636,31 @@ fn eval_is_empty(actual: &Value) -> Result<AssertResult, Error> {
     let expected_display = "count equals to 0".to_string();
     match actual {
         Value::List(values) => Ok(AssertResult {
-            success: values.len() as i64 == 0,
+            success: values.is_empty(),
             actual: format!("count equals to {}", values.len()),
             expected: expected_display,
             type_mismatch: false,
         }),
         Value::String(data) => Ok(AssertResult {
-            success: data.len() as i64 == 0,
+            success: data.is_empty(),
             actual: format!("count equals to {}", data.len()),
             expected: expected_display,
             type_mismatch: false,
         }),
         Value::Nodeset(count) => Ok(AssertResult {
-            success: *count as i64 == 0,
+            success: *count == 0,
             actual: format!("count equals to {count}"),
             expected: expected_display,
             type_mismatch: false,
         }),
+        Value::Object(props) => Ok(AssertResult {
+            success: props.is_empty(),
+            actual: format!("count equals to {}", props.len()),
+            expected: expected_display,
+            type_mismatch: false,
+        }),
         Value::Bytes(data) => Ok(AssertResult {
-            success: data.len() as i64 == 0,
+            success: data.is_empty(),
             actual: format!("count equals to {}", data.len()),
             expected: expected_display,
             type_mismatch: false,
@@ -1543,6 +1549,15 @@ mod tests {
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "count equals to 1");
         assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+
+        // predicate: `isEmpty`
+        // value: Nodeset(12)
+        let value = Value::Nodeset(12);
+        let assert_result = eval_is_empty(&value).unwrap();
+        assert!(!assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "count equals to 12");
+        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
     }
 
     #[test]
@@ -1550,6 +1565,15 @@ mod tests {
         // predicate: `isEmpty`
         // value: [1]
         let value = Value::List(vec![]);
+        let assert_result = eval_is_empty(&value).unwrap();
+        assert!(assert_result.success);
+        assert!(!assert_result.type_mismatch);
+        assert_eq!(assert_result.actual.as_str(), "count equals to 0");
+        assert_eq!(assert_result.expected.as_str(), "count equals to 0");
+
+        // predicate: `isEmpty`
+        // value: Nodeset(12)
+        let value = Value::Nodeset(0);
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);

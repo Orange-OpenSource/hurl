@@ -7,7 +7,6 @@ variable: four=4
 variable: five=5
 variable: foo=abc
 insecure: false
-
 HTTP 200
 [Captures]
 count: jsonpath "$.count"
@@ -55,8 +54,10 @@ jsonpath "$.tags[0]" <= "test"
 jsonpath "$.tags[0]" > "{{foo}}"
 jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
-
-
+jsonpath "$.errors[0]" not isEmpty
+jsonpath "$.empty" isEmpty
+# FIXME do we accept count filter on object?
+# jsonpath "$.empty" count == 0
 {
   "count": 5,
   "success": false,
@@ -66,13 +67,16 @@ jsonpath "$['profile-id']" == "123abc"
   "duration": 1.5,
   "tags": ["test"],
   "nullable": null,
-  "profile-id": "123abc"
+  "profile-id": "123abc",
+  "empty": {}
 }
+
 
 GET http://localhost:8000/assert-json/index
 HTTP 200
 [Captures]
 index: body
+
 
 GET http://localhost:8000/assert-json
 HTTP 200
@@ -91,6 +95,7 @@ jsonpath "$.[0].name" == "Bob"
 jsonpath "$[0].name" == "Bob"
 jsonpath "$.[?(@.id == 1)].name" nth 0 == "Bob"
 jsonpath "$[?(@.id == 1)].name" nth 0 == "Bob"
+
 
 GET http://localhost:8000/assert-json/filter
 HTTP 200
