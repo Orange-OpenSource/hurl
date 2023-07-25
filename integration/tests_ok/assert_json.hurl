@@ -36,6 +36,7 @@ jsonpath "$.warnings" exists
 jsonpath "$.errors[0]" exists
 jsonpath "$.errors[0]" isCollection
 jsonpath "$.errors[0].id" == "error1"
+jsonpath "$.errors[0].id" isString
 jsonpath "$.errors[0]['id']" == "error1"
 jsonpath "$.errors[*].id" includes "error1"
 jsonpath "$.errors[?(@.id=='error1')].id" nth 0 == "error1"

@@ -158,12 +158,8 @@ fn format_float(value: f64) -> String {
 }
 
 /// Returns a message formatting an expected value `predicate_func_value`, given
-/// a set of `variables`. This is the error message that will be display in case of
-/// assert error.
-///
-/// For instance, if the `predicate_func_value` is `startsWith "Dune"`, the expected string
-/// message will be "starts with string <Dune>".
-fn expected_to_string(
+/// a set of `variables`, when there is no actual value.
+fn expected_no_value(
     predicate_func_value: &PredicateFuncValue,
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
@@ -249,7 +245,7 @@ fn eval_predicate_func(
     let value = match value {
         Some(value) => value,
         None => {
-            let expected = expected_to_string(&predicate_func.value, variables)?;
+            let expected = expected_no_value(&predicate_func.value, variables)?;
             return Ok(AssertResult {
                 success: false,
                 actual: "none".to_string(),

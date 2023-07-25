@@ -7,97 +7,308 @@ error: Assert failure
    |
 
 error: Assert failure
+  --> tests_failed/predicate.hurl:5:0
+   |
+ 5 | jsonpath "$.count" == 0
+   |   actual:   int <1>
+   |   expected: int <0>
+   |
+
+error: Assert failure
   --> tests_failed/predicate.hurl:6:0
    |
- 6 | jsonpath "$.count" == 0
-   |   actual:   int <1>
+ 6 | jsonpath "$.message" == 0
+   |   actual:   string <0>
    |   expected: int <0>
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:7:0
    |
- 7 | jsonpath "$.message" == 0
-   |   actual:   string <0>
+ 7 | jsonpath "$.empty" == 0
+   |   actual:   string <>
    |   expected: int <0>
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:8:0
    |
- 8 | jsonpath "$.empty" == 0
-   |   actual:   string <>
-   |   expected: int <0>
-   |
-
-error: Assert failure
-  --> tests_failed/predicate.hurl:9:0
-   |
- 9 | jsonpath "$.number" == 1.1
+ 8 | jsonpath "$.number" == 1.1
    |   actual:   float <1.0>
    |   expected: float <1.1>
    |
 
 error: Assert failure
+  --> tests_failed/predicate.hurl:9:0
+   |
+ 9 | jsonpath "$.count" startsWith "0"
+   |   actual:   int <1>
+   |   expected: starts with string <0>
+   |   >>> types between actual and expected are not consistent
+   |
+
+error: Assert failure
   --> tests_failed/predicate.hurl:10:0
    |
-10 | jsonpath "$.message" startsWith "hi"
-   |   actual:   string <0>
-   |   expected: starts with string <hi>
+10 | jsonpath "$.count" endsWith "0"
+   |   actual:   int <1>
+   |   expected: ends with string <0>
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:11:0
    |
-11 | jsonpath "$.message" endsWith "hi"
-   |   actual:   string <0>
-   |   expected: ends with string <hi>
+11 | jsonpath "$.count" matches "hi"
+   |   actual:   int <1>
+   |   expected: matches regex <hi>
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:12:0
    |
-12 | jsonpath "$.message" contains "hi"
-   |   actual:   string <0>
-   |   expected: contains string <hi>
+12 | jsonpath "$.count" isEmpty
+   |   actual:   int <1>
+   |   expected: count equals to 0
+   |   >>> types between actual and expected are not consistent
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:13:0
    |
-13 | jsonpath "$.message" matches "hi"
-   |   actual:   string <0>
-   |   expected: matches regex <hi>
+13 | jsonpath "$.count" includes "foo"
+   |   actual:   int <1>
+   |   expected: includes string <foo>
+   |   >>> types between actual and expected are not consistent
    |
 
-error: Filter Error
-  --> tests_failed/predicate.hurl:14:22
+error: Assert failure
+  --> tests_failed/predicate.hurl:14:0
    |
-14 | jsonpath "$.message" count == 1
-   |                      ^^^^^ invalid filter input: string
+14 | jsonpath "$.message" startsWith "hi"
+   |   actual:   string <0>
+   |   expected: starts with string <hi>
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:15:0
    |
-15 | jsonpath "$.toto" exists
-   |   actual:   none
-   |   expected: something
+15 | jsonpath "$.message" endsWith "hi"
+   |   actual:   string <0>
+   |   expected: ends with string <hi>
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:16:0
    |
-16 | jsonpath "$.message" not exists
+16 | jsonpath "$.message" contains "hi"
    |   actual:   string <0>
-   |   expected: not something
+   |   expected: contains string <hi>
    |
 
 error: Assert failure
   --> tests_failed/predicate.hurl:17:0
    |
-17 | jsonpath "$.list" count == 2
+17 | jsonpath "$.message" matches "hi"
+   |   actual:   string <0>
+   |   expected: matches regex <hi>
+   |
+
+error: Invalid regex
+  --> tests_failed/predicate.hurl:18:22
+   |
+18 | jsonpath "$.message" matches "hi{"
+   |                      ^^^^^^^^^^^^^ regex expression is not valid
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:19:0
+   |
+19 | jsonpath "$.message" isEmpty
+   |   actual:   count equals to 1
+   |   expected: count equals to 0
+   |
+
+error: Filter Error
+  --> tests_failed/predicate.hurl:20:22
+   |
+20 | jsonpath "$.message" count == 1
+   |                      ^^^^^ invalid filter input: string
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:21:0
+   |
+21 | jsonpath "$.toto" exists
+   |   actual:   none
+   |   expected: something
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:22:0
+   |
+22 | jsonpath "$.message" not exists
+   |   actual:   string <0>
+   |   expected: not something
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:23:0
+   |
+23 | jsonpath "$.list" count == 2
    |   actual:   int <3>
    |   expected: int <2>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:24:0
+   |
+24 | jsonpath "$.not-exist" == 2
+   |   actual:   none
+   |   expected: integer <2>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:25:0
+   |
+25 | jsonpath "$.not-exist" > 3
+   |   actual:   none
+   |   expected: greater than <integer <3>>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:26:0
+   |
+26 | jsonpath "$.not-exist" >= 3
+   |   actual:   none
+   |   expected: greater than or equals to <integer <3>>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:27:0
+   |
+27 | jsonpath "$.not-exist" < 1
+   |   actual:   none
+   |   expected: less than <integer <1>>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:28:0
+   |
+28 | jsonpath "$.not-exist" <= 1
+   |   actual:   none
+   |   expected: less than or equals to <integer <1>>
+   |
+
+error: Filter Error
+  --> tests_failed/predicate.hurl:29:24
+   |
+29 | jsonpath "$.not-exist" count == 1
+   |                        ^^^^^ missing value to apply filter
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:30:0
+   |
+30 | jsonpath "$.not-exist" startsWith "foo"
+   |   actual:   none
+   |   expected: starts with string <foo>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:31:0
+   |
+31 | jsonpath "$.not-exist" endsWith "foo"
+   |   actual:   none
+   |   expected: ends with string <foo>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:32:0
+   |
+32 | jsonpath "$.not-exist" contains "foo"
+   |   actual:   none
+   |   expected: contains string <foo>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:33:0
+   |
+33 | jsonpath "$.not-exist" includes "foo"
+   |   actual:   none
+   |   expected: include string <foo>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:34:0
+   |
+34 | jsonpath "$.not-exist" matches /foo/
+   |   actual:   none
+   |   expected: matches regex <foo>
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:35:0
+   |
+35 | jsonpath "$.not-exist" isInteger
+   |   actual:   none
+   |   expected: integer
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:36:0
+   |
+36 | jsonpath "$.not-exist" isFloat
+   |   actual:   none
+   |   expected: float
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:37:0
+   |
+37 | jsonpath "$.not-exist" isBoolean
+   |   actual:   none
+   |   expected: boolean
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:38:0
+   |
+38 | jsonpath "$.not-exist" isString
+   |   actual:   none
+   |   expected: string
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:39:0
+   |
+39 | jsonpath "$.not-exist" isCollection
+   |   actual:   none
+   |   expected: collection
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:40:0
+   |
+40 | jsonpath "$.not-exist" isDate
+   |   actual:   none
+   |   expected: date
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:41:0
+   |
+41 | jsonpath "$.not-exist" exists
+   |   actual:   none
+   |   expected: something
+   |
+
+error: Assert failure
+  --> tests_failed/predicate.hurl:42:0
+   |
+42 | jsonpath "$.not-exist" isEmpty
+   |   actual:   none
+   |   expected: empty
    |
 

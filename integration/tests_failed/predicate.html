@@ -2,17 +2,42 @@
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.status"</span> <span class="predicate-type">==</span> <span class="string">"true"</span></span>
-<span class="line"></span><span class="comment">#jsonpath "$.count" equals "0"</span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">==</span> <span class="number">0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">==</span> <span class="number">0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.empty"</span> <span class="predicate-type">==</span> <span class="number">0</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.number"</span> <span class="predicate-type">==</span> <span class="number">1.1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">startsWith</span> <span class="string">"0"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">endsWith</span> <span class="string">"0"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">matches</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">isEmpty</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.count"</span> <span class="predicate-type">includes</span> <span class="string">"foo"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">startsWith</span> <span class="string">"hi"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">endsWith</span> <span class="string">"hi"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">contains</span> <span class="string">"hi"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">matches</span> <span class="string">"hi"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">matches</span> <span class="string">"hi{"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">isEmpty</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.toto"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.message"</span> <span class="not">not</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.list"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">&gt;</span> <span class="number">3</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">&gt;=</span> <span class="number">3</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">&lt;</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">&lt;=</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">startsWith</span> <span class="string">"foo"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">endsWith</span> <span class="string">"foo"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">contains</span> <span class="string">"foo"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">includes</span> <span class="string">"foo"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">matches</span> <span class="regex">/foo/</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isInteger</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isFloat</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isBoolean</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isString</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isCollection</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isDate</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.not-exist"</span> <span class="predicate-type">isEmpty</span></span>
 </span></span></code></pre>

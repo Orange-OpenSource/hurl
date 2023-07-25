@@ -36,6 +36,7 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="predicate-type">exists</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="predicate-type">isCollection</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">isString</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]['id']"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[*].id"</span> <span class="predicate-type">includes</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id=='error1')].id"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
