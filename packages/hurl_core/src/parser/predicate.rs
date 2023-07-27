@@ -76,7 +76,6 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFu
             greater_predicate,
             less_or_equal_predicate,
             less_predicate,
-            count_equal_predicate,
             start_with_predicate,
             end_with_predicate,
             contain_predicate,
@@ -265,21 +264,6 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predicat
     }
 }
 
-fn count_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
-    try_literal("countEquals", reader)?;
-    let space0 = one_or_more_spaces(reader)?;
-    let save = reader.state.clone();
-    let value = predicate_value(reader)?;
-    if !matches!(value, PredicateValue::Integer(_)) {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue {},
-        });
-    }
-    Ok(PredicateFuncValue::CountEqual { space0, value })
-}
-
 fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("startsWith", reader)?;
     let space0 = one_or_more_spaces(reader)?;
@@ -448,21 +432,6 @@ mod tests {
     }
 
     #[test]
-    fn test_predicate_error() {
-        let mut reader = Reader::new("countEquals true");
-        let error = predicate(&mut reader).err().unwrap();
-        assert_eq!(
-            error.pos,
-            Pos {
-                line: 1,
-                column: 13,
-            }
-        );
-        assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::PredicateValue {});
-    }
-
-    #[test]
     fn test_predicate_func() {
         let mut reader = Reader::new("tata equals 1");
         let error = predicate_func(&mut reader).err().unwrap();
@@ -577,33 +546,6 @@ mod tests {
                 operator: false,
             }
         );
-    }
-
-    #[test]
-    fn test_count_equal_predicate() {
-        let mut reader = Reader::new("countEquals 2");
-        assert_eq!(
-            count_equal_predicate(&mut reader).unwrap(),
-            PredicateFuncValue::CountEqual {
-                value: PredicateValue::Integer(2),
-                space0: Whitespace {
-                    value: String::from(" "),
-                    source_info: SourceInfo::new(1, 12, 1, 13),
-                },
-            }
-        );
-
-        let mut reader = Reader::new("countEquals true");
-        let error = count_equal_predicate(&mut reader).err().unwrap();
-        assert_eq!(
-            error.pos,
-            Pos {
-                line: 1,
-                column: 13,
-            }
-        );
-        assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::PredicateValue {});
     }
 
     #[test]

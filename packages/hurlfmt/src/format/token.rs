@@ -549,11 +549,6 @@ impl Tokenizable for PredicateFuncValue {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut value.tokenize());
             }
-            PredicateFuncValue::CountEqual { space0, value } => {
-                tokens.push(Token::PredicateType(self.name()));
-                tokens.append(&mut space0.tokenize());
-                tokens.append(&mut value.tokenize());
-            }
             PredicateFuncValue::StartWith { space0, value } => {
                 tokens.push(Token::PredicateType(self.name()));
                 tokens.append(&mut space0.tokenize());

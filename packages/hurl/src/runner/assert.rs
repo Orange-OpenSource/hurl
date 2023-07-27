@@ -183,7 +183,7 @@ pub mod tests {
     use super::*;
     use crate::http::xml_three_users_http_response;
 
-    // xpath //user countEquals 3
+    // `xpath "//user" count == 3`
     pub fn assert_count_user() -> Assert {
         let whitespace = Whitespace {
             value: String::from(" "),
@@ -193,10 +193,11 @@ pub mod tests {
             not: false,
             space0: whitespace.clone(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(1, 14, 1, 27),
-                value: PredicateFuncValue::CountEqual {
+                source_info: SourceInfo::new(1, 22, 1, 24),
+                value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
                     value: PredicateValue::Integer(3),
+                    operator: true,
                 },
             },
         };
@@ -204,7 +205,13 @@ pub mod tests {
             line_terminators: vec![],
             space0: whitespace.clone(),
             query: query::tests::xpath_users(),
-            filters: vec![],
+            filters: vec![(
+                whitespace.clone(),
+                Filter {
+                    source_info: SourceInfo::new(1, 16, 1, 21),
+                    value: FilterValue::Count,
+                },
+            )],
             space1: whitespace.clone(),
             predicate,
             line_terminator0: LineTerminator {
@@ -228,8 +235,8 @@ pub mod tests {
                 &xml_three_users_http_response(),
             ),
             AssertResult::Explicit {
-                actual: Ok(Some(Value::Nodeset(3))),
-                source_info: SourceInfo::new(1, 14, 1, 27),
+                actual: Ok(Some(Value::Integer(3))),
+                source_info: SourceInfo::new(1, 22, 1, 24),
                 predicate_result: Some(Ok(())),
             }
         );

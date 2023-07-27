@@ -456,12 +456,6 @@ pub enum PredicateFuncValue {
         value: PredicateValue,
         operator: bool,
     },
-    // FIXME: `countEquals` predicate should be replace by `count` filter. This variant should be
-    // removed.
-    CountEqual {
-        space0: Whitespace,
-        value: PredicateValue,
-    },
     StartWith {
         space0: Whitespace,
         value: PredicateValue,

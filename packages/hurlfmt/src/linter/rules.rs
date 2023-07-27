@@ -388,10 +388,6 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
             space0: one_whitespace(),
             value: lint_predicate_value(value),
         },
-        PredicateFuncValue::CountEqual { value, .. } => PredicateFuncValue::CountEqual {
-            space0: one_whitespace(),
-            value: value.clone(),
-        },
         PredicateFuncValue::IsInteger {} => PredicateFuncValue::IsInteger {},
         PredicateFuncValue::IsFloat {} => PredicateFuncValue::IsFloat {},
         PredicateFuncValue::IsBoolean {} => PredicateFuncValue::IsBoolean {},

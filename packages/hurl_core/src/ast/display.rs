@@ -222,7 +222,6 @@ impl PredicateFuncValue {
                     "lessThanOrEquals".to_string()
                 }
             }
-            PredicateFuncValue::CountEqual { .. } => "countEquals".to_string(),
             PredicateFuncValue::StartWith { .. } => "startsWith".to_string(),
             PredicateFuncValue::EndWith { .. } => "endsWith".to_string(),
             PredicateFuncValue::Contain { .. } => "contains".to_string(),

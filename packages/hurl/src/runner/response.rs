@@ -389,13 +389,13 @@ mod tests {
                 &context_dir,
             ),
             vec![AssertResult::Explicit {
-                actual: Ok(Some(Value::Nodeset(2))),
-                source_info: SourceInfo::new(1, 14, 1, 27),
+                actual: Ok(Some(Value::Integer(2))),
+                source_info: SourceInfo::new(1, 22, 1, 24),
                 predicate_result: Some(Err(Error {
                     source_info: SourceInfo::new(1, 0, 1, 0),
                     inner: RunnerError::AssertFailure {
-                        actual: "2".to_string(),
-                        expected: "3".to_string(),
+                        actual: "int <2>".to_string(),
+                        expected: "int <3>".to_string(),
                         type_mismatch: false,
                     },
                     assert: true,

@@ -453,10 +453,6 @@ impl HtmlFormatter {
         self.fmt_span_close();
 
         match value {
-            PredicateFuncValue::CountEqual { space0, value, .. } => {
-                self.fmt_space(space0);
-                self.fmt_predicate_value(value);
-            }
             PredicateFuncValue::Equal { space0, value, .. } => {
                 self.fmt_space(space0);
                 self.fmt_predicate_value(value);

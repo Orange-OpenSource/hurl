@@ -184,17 +184,6 @@ fn expected_no_value(
             let value = eval_predicate_value(value, variables)?;
             Ok(format!("less than or equals to <{}>", value.expected()))
         }
-        // FIXME: we should remove this variant and use `count` filter.
-        PredicateFuncValue::CountEqual {
-            value: expected, ..
-        } => {
-            let expected = if let PredicateValue::Integer(expected) = expected {
-                expected
-            } else {
-                panic!();
-            };
-            Ok(format!("count equals to <{expected}>"))
-        }
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => {
@@ -274,11 +263,6 @@ fn eval_predicate_func(
         PredicateFuncValue::LessThanOrEqual {
             value: expected, ..
         } => eval_less_than_or_equal(expected, variables, value),
-        PredicateFuncValue::CountEqual {
-            value: PredicateValue::Integer(expected),
-            ..
-        } => eval_count_equal(*expected, value),
-        PredicateFuncValue::CountEqual { .. } => panic!(), // should be catch by compilation
         PredicateFuncValue::StartWith {
             value: expected, ..
         } => eval_start_with(expected, variables, value),
@@ -363,36 +347,6 @@ fn eval_less_than_or_equal(
 ) -> Result<AssertResult, Error> {
     let expected = eval_predicate_value(expected, variables)?;
     Ok(assert_values_less_or_equal(actual, &expected))
-}
-
-/// Evaluates if an `expected` count is equal to the count of an `actual` value.
-fn eval_count_equal(expected: i64, actual: &Value) -> Result<AssertResult, Error> {
-    match actual {
-        Value::List(values) => Ok(AssertResult {
-            success: values.len() as i64 == expected,
-            actual: values.len().to_string(),
-            expected: expected.to_string(),
-            type_mismatch: false,
-        }),
-        Value::Nodeset(n) => Ok(AssertResult {
-            success: *n as i64 == expected,
-            actual: n.to_string(),
-            expected: expected.to_string(),
-            type_mismatch: false,
-        }),
-        Value::Bytes(data) => Ok(AssertResult {
-            success: data.len() as i64 == expected,
-            actual: data.len().to_string(),
-            expected: expected.to_string(),
-            type_mismatch: false,
-        }),
-        _ => Ok(AssertResult {
-            success: false,
-            actual: actual.display(),
-            expected: format!("count equals to <{expected}>"),
-            type_mismatch: true,
-        }),
-    }
 }
 
 /// Evaluates if an `expected` value (using a `variables` set) starts with an `actual` value.
@@ -1475,64 +1429,6 @@ mod tests {
                 expected: "greater than int <2>".to_string(),
             }
         );
-    }
-
-    #[test]
-    // FIXME: this test should be remove as `count` is now a filter
-    fn test_predicate_count_equals() {
-        // predicate: `count == 1`
-        // value: [42]
-        let expected = 1;
-        let value = Value::List(vec![Value::Integer(42)]);
-        let assert_result = eval_count_equal(expected, &value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "1");
-        assert_eq!(assert_result.expected.as_str(), "1");
-
-        // predicate: `count == 1`
-        // value: Nodeset(1)
-        let expected = 1;
-        let value = Value::Nodeset(1);
-        let assert_result = eval_count_equal(expected, &value).unwrap();
-        assert!(assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "1");
-        assert_eq!(assert_result.expected.as_str(), "1");
-    }
-
-    #[test]
-    // FIXME: this test should be remove as `count` is now a filter
-    fn test_predicate_count_equals_error() {
-        // predicate: `count == 10`
-        // value: true
-        let expected = 10;
-        let value = Value::Bool(true);
-        let assert_result = eval_count_equal(expected, &value).unwrap();
-        assert!(!assert_result.success);
-        assert!(assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "bool <true>");
-        assert_eq!(assert_result.expected.as_str(), "count equals to <10>");
-
-        // predicate: `count == 1`
-        // value: []
-        let expected = 1;
-        let value = Value::List(vec![]);
-        let assert_result = eval_count_equal(expected, &value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "0");
-        assert_eq!(assert_result.expected.as_str(), "1");
-
-        // predicate: `count == 1`
-        // value: Nodeset(3)
-        let expected = 1;
-        let value = Value::Nodeset(3);
-        let assert_result = eval_count_equal(expected, &value).unwrap();
-        assert!(!assert_result.success);
-        assert!(!assert_result.type_mismatch);
-        assert_eq!(assert_result.actual.as_str(), "3");
-        assert_eq!(assert_result.expected.as_str(), "1");
     }
 
     #[test]

@@ -468,10 +468,6 @@ impl ToJson for Predicate {
                 ));
                 add_predicate_value(&mut attributes, value);
             }
-            PredicateFuncValue::CountEqual { value, .. } => {
-                attributes.push(("type".to_string(), JValue::String("count".to_string())));
-                add_predicate_value(&mut attributes, value);
-            }
             PredicateFuncValue::StartWith { value, .. } => {
                 attributes.push(("type".to_string(), JValue::String("start-with".to_string())));
                 add_predicate_value(&mut attributes, value);
