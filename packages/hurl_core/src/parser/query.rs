@@ -76,7 +76,7 @@ fn cookie_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("cookie", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let start = reader.state.pos.clone();
-    let s = quoted_string(reader)?;
+    let s = quoted_oneline_string(reader)?;
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
 

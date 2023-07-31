@@ -142,9 +142,9 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
 
 // TODO: should return an EncodedString
 // (decoding escape sequence)
-pub fn quoted_string(reader: &mut Reader) -> ParseResult<'static, String> {
+pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<'static, String> {
     literal("\"", reader)?;
-    let s = reader.read_while(|c| *c != '"');
+    let s = reader.read_while(|c| *c != '"' && *c != '\n');
     literal("\"", reader)?;
     Ok(s)
 }
@@ -650,11 +650,11 @@ mod tests {
     #[test]
     fn test_quoted_string() {
         let mut reader = Reader::new("\"\"");
-        assert_eq!(quoted_string(&mut reader).unwrap(), "");
+        assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "");
         assert_eq!(reader.state.cursor, 2);
 
         let mut reader = Reader::new("\"Hello\"");
-        assert_eq!(quoted_string(&mut reader).unwrap(), "Hello");
+        assert_eq!(quoted_oneline_string(&mut reader).unwrap(), "Hello");
         assert_eq!(reader.state.cursor, 7);
     }
 
