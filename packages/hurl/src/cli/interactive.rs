@@ -76,7 +76,7 @@ fn log_request(request: Request) {
                     eprintln!("\r{}: {}", value.key.value, value.value);
                 }
             }
-            SectionValue::BasicAuth(key_value) => {
+            SectionValue::BasicAuth(Some(key_value)) => {
                 eprintln!("\r{}: {}", key_value.key.value, key_value.value);
             }
             SectionValue::FormParams(key_values) => {

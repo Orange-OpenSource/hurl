@@ -151,7 +151,9 @@ fn lint_section_value(section_value: &SectionValue) -> SectionValue {
         SectionValue::QueryParams(params) => {
             SectionValue::QueryParams(params.iter().map(lint_key_value).collect())
         }
-        SectionValue::BasicAuth(param) => SectionValue::BasicAuth(lint_key_value(param)),
+        SectionValue::BasicAuth(param) => {
+            SectionValue::BasicAuth(param.as_ref().map(lint_key_value))
+        }
         SectionValue::Captures(captures) => {
             SectionValue::Captures(captures.iter().map(lint_capture).collect())
         }

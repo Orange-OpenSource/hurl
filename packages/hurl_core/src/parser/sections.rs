@@ -132,8 +132,8 @@ fn section_value_query_params(reader: &mut Reader) -> ParseResult<'static, Secti
 }
 
 fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
-    let kv = key_value(reader)?;
-    Ok(SectionValue::BasicAuth(kv))
+    let v = optional(key_value, reader)?;
+    Ok(SectionValue::BasicAuth(v))
 }
 
 fn section_value_form_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
@@ -1260,5 +1260,100 @@ mod tests {
                 },
             }
         );
+    }
+
+    #[test]
+    fn test_basicauth_section() {
+        let mut reader = Reader::new("[BasicAuth]\nuser:password\n\nHTTP 200\n");
+
+        assert_eq!(
+            request_section(&mut reader).unwrap(),
+            Section {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                },
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: String::from(""),
+                        source_info: SourceInfo::new(1, 12, 1, 12),
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::from("\n"),
+                        source_info: SourceInfo::new(1, 12, 2, 1),
+                    },
+                },
+                value: SectionValue::BasicAuth(Some(KeyValue {
+                    line_terminators: vec![],
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::new(2, 1, 2, 1)
+                    },
+                    key: EncodedString {
+                        value: "user".to_string(),
+                        encoded: "user".to_string(),
+                        quotes: false,
+                        source_info: SourceInfo::new(2, 1, 2, 5),
+                    },
+                    space1: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::new(2, 5, 2, 5)
+                    },
+                    space2: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::new(2, 6, 2, 6)
+                    },
+                    value: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "password".to_string(),
+                            encoded: "password".to_string()
+                        }],
+                        source_info: SourceInfo::new(2, 6, 2, 14),
+                    },
+                    line_terminator0: LineTerminator {
+                        space0: Whitespace {
+                            value: "".to_string(),
+                            source_info: SourceInfo::new(2, 14, 2, 14)
+                        },
+                        comment: None,
+                        newline: Whitespace {
+                            value: "\n".to_string(),
+                            source_info: SourceInfo::new(2, 14, 3, 1)
+                        },
+                    },
+                })),
+                source_info: SourceInfo::new(1, 1, 1, 12),
+            }
+        );
+        assert_eq!(reader.state.pos, Pos { line: 3, column: 1 });
+
+        let mut reader = Reader::new("[BasicAuth]\nHTTP 200\n");
+        assert_eq!(
+            request_section(&mut reader).unwrap(),
+            Section {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::from(""),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                },
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: String::from(""),
+                        source_info: SourceInfo::new(1, 12, 1, 12),
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::from("\n"),
+                        source_info: SourceInfo::new(1, 12, 2, 1),
+                    },
+                },
+                value: SectionValue::BasicAuth(None),
+                source_info: SourceInfo::new(1, 1, 1, 12),
+            }
+        );
+        assert_eq!(reader.state.pos, Pos { line: 2, column: 1 });
     }
 }

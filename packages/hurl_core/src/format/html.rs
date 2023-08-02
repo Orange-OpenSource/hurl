@@ -174,7 +174,11 @@ impl HtmlFormatter {
         match section_value {
             SectionValue::Asserts(items) => items.iter().for_each(|item| self.fmt_assert(item)),
             SectionValue::QueryParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
-            SectionValue::BasicAuth(item) => self.fmt_kv(item),
+            SectionValue::BasicAuth(item) => {
+                if let Some(kv) = item {
+                    self.fmt_kv(kv)
+                }
+            }
             SectionValue::FormParams(items) => items.iter().for_each(|item| self.fmt_kv(item)),
             SectionValue::MultipartFormData(items) => {
                 items.iter().for_each(|item| self.fmt_multipart_param(item))

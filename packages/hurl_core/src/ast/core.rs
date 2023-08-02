@@ -84,7 +84,7 @@ impl Request {
     pub fn basic_auth(&self) -> Option<KeyValue> {
         for section in &self.sections {
             if let SectionValue::BasicAuth(kv) = &section.value {
-                return Some(kv.clone());
+                return kv.clone();
             }
         }
         None
@@ -208,7 +208,7 @@ impl Section {
 #[allow(clippy::large_enum_variant)]
 pub enum SectionValue {
     QueryParams(Vec<KeyValue>),
-    BasicAuth(KeyValue),
+    BasicAuth(Option<KeyValue>),
     FormParams(Vec<KeyValue>),
     MultipartFormData(Vec<MultipartParam>),
     Cookies(Vec<Cookie>),
