@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-#![cfg_attr(feature = "strict", deny(warnings))]
 
 //! This crate provides a function to run a Hurl formatted content.
 //! Hurl uses a plain text format to run and tests HTTP requests. The fully documented

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-#![cfg_attr(feature = "strict", deny(warnings))]
-
 pub mod ast;
 pub mod error;
 pub mod format;

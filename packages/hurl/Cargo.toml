@@ -14,8 +14,6 @@ rust-version = "1.71"
 name = "hurl"
 
 [features]
-# Treat warnings as a build error.
-strict = []
 vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
