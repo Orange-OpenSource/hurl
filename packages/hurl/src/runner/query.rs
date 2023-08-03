@@ -37,14 +37,14 @@ pub fn eval_query(
     http_response: &http::Response,
 ) -> QueryResult {
     match query.value.clone() {
-        QueryValue::Status {} => eval_query_status(http_response),
-        QueryValue::Url {} => eval_query_url(http_response),
+        QueryValue::Status => eval_query_status(http_response),
+        QueryValue::Url => eval_query_url(http_response),
         QueryValue::Header { name, .. } => eval_query_header(http_response, &name, variables),
         QueryValue::Cookie {
             expr: CookiePath { name, attribute },
             ..
         } => eval_query_cookie(http_response, &name, &attribute, variables),
-        QueryValue::Body {} => eval_query_body(http_response, &query.source_info),
+        QueryValue::Body => eval_query_body(http_response, &query.source_info),
         QueryValue::Xpath { expr, .. } => {
             eval_query_xpath(http_response, &expr, variables, &query.source_info)
         }
@@ -55,10 +55,10 @@ pub fn eval_query(
             eval_query_regex(http_response, &value, variables, &query.source_info)
         }
         QueryValue::Variable { name, .. } => eval_query_variable(&name, variables),
-        QueryValue::Duration {} => eval_query_duration(http_response),
-        QueryValue::Bytes {} => eval_query_bytes(http_response, &query.source_info),
-        QueryValue::Sha256 {} => eval_query_sha256(http_response, &query.source_info),
-        QueryValue::Md5 {} => eval_query_md5(http_response, &query.source_info),
+        QueryValue::Duration => eval_query_duration(http_response),
+        QueryValue::Bytes => eval_query_bytes(http_response, &query.source_info),
+        QueryValue::Sha256 => eval_query_sha256(http_response, &query.source_info),
+        QueryValue::Md5 => eval_query_md5(http_response, &query.source_info),
         QueryValue::Certificate {
             attribute_name: field,
             ..
@@ -219,7 +219,7 @@ fn eval_query_regex(
                     let source_info = t.source_info.clone();
                     return Err(Error {
                         source_info,
-                        inner: RunnerError::InvalidRegex(),
+                        inner: RunnerError::InvalidRegex,
                         assert: false,
                     });
                 }
@@ -559,7 +559,7 @@ pub mod tests {
             eval_query(
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
-                    value: QueryValue::Status {},
+                    value: QueryValue::Status,
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -834,7 +834,7 @@ pub mod tests {
             eval_query(
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
-                    value: QueryValue::Body {},
+                    value: QueryValue::Body,
                 },
                 &variables,
                 &http::hello_http_response(),
@@ -846,7 +846,7 @@ pub mod tests {
         let error = eval_query(
             &Query {
                 source_info: SourceInfo::new(1, 1, 1, 2),
-                value: QueryValue::Body {},
+                value: QueryValue::Body,
             },
             &variables,
             &http::bytes_http_response(),
@@ -1082,7 +1082,7 @@ pub mod tests {
             .err()
             .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 10));
-        assert_eq!(error.inner, RunnerError::InvalidRegex());
+        assert_eq!(error.inner, RunnerError::InvalidRegex);
     }
 
     #[test]
@@ -1092,7 +1092,7 @@ pub mod tests {
             eval_query(
                 &Query {
                     source_info: SourceInfo::new(0, 0, 0, 0),
-                    value: QueryValue::Bytes {},
+                    value: QueryValue::Bytes,
                 },
                 &variables,
                 &http::hello_http_response(),

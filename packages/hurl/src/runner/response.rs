@@ -84,7 +84,7 @@ pub fn eval_asserts(
                     asserts.push(AssertResult::Header {
                         actual: Err(Error {
                             source_info: header.key.source_info.clone(),
-                            inner: RunnerError::QueryHeaderNotFound {},
+                            inner: RunnerError::QueryHeaderNotFound,
                             assert: false,
                         }),
                         expected,

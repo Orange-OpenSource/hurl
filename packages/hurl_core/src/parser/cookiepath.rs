@@ -61,7 +61,7 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<'static, Cookie
         _ => Err(Error {
             pos: start,
             recoverable: false,
-            inner: ParseError::InvalidCookieAttribute {},
+            inner: ParseError::InvalidCookieAttribute,
         }),
     }
 }
@@ -166,13 +166,13 @@ mod tests {
         let mut reader = Reader::new("cookie1[");
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
-        assert_eq!(error.inner, ParseError::InvalidCookieAttribute {});
+        assert_eq!(error.inner, ParseError::InvalidCookieAttribute);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("cookie1[{{field]");
         let error = cookiepath(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 9 });
-        assert_eq!(error.inner, ParseError::InvalidCookieAttribute {});
+        assert_eq!(error.inner, ParseError::InvalidCookieAttribute);
         assert!(!error.recoverable);
     }
 
@@ -195,6 +195,6 @@ mod tests {
         let mut reader = Reader::new("unknown");
         let error = cookiepath_attribute_name(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::InvalidCookieAttribute {});
+        assert_eq!(error.inner, ParseError::InvalidCookieAttribute);
     }
 }

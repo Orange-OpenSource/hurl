@@ -147,7 +147,7 @@ pub fn eval_assert(
                     .1
                     .source_info
                     .clone(),
-                inner: RunnerError::FilterMissingInput {},
+                inner: RunnerError::FilterMissingInput,
                 assert: true,
             }),
             Some(value) => {

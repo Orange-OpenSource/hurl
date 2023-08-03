@@ -41,7 +41,7 @@ pub fn eval_predicate_value(
         PredicateValue::Integer(value) => Ok(Value::Integer(*value)),
         PredicateValue::Float(value) => Ok(Value::Float(value.value)),
         PredicateValue::Bool(value) => Ok(Value::Bool(*value)),
-        PredicateValue::Null {} => Ok(Value::Null {}),
+        PredicateValue::Null => Ok(Value::Null),
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Expression(expr) => {

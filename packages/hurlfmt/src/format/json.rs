@@ -340,13 +340,13 @@ impl ToJson for Query {
 fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
     let mut attributes = vec![];
     match query_value {
-        QueryValue::Status {} => {
+        QueryValue::Status => {
             attributes.push(("type".to_string(), JValue::String("status".to_string())));
         }
-        QueryValue::Url {} => {
+        QueryValue::Url => {
             attributes.push(("type".to_string(), JValue::String("url".to_string())));
         }
-        QueryValue::Body {} => {
+        QueryValue::Body => {
             attributes.push(("type".to_string(), JValue::String("body".to_string())));
         }
         QueryValue::Jsonpath { expr, .. } => {
@@ -373,16 +373,16 @@ fn query_value_attributes(query_value: &QueryValue) -> Vec<(String, JValue)> {
             attributes.push(("type".to_string(), JValue::String("variable".to_string())));
             attributes.push(("name".to_string(), JValue::String(name.to_string())));
         }
-        QueryValue::Duration {} => {
+        QueryValue::Duration => {
             attributes.push(("type".to_string(), JValue::String("duration".to_string())));
         }
-        QueryValue::Bytes {} => {
+        QueryValue::Bytes => {
             attributes.push(("type".to_string(), JValue::String("bytes".to_string())));
         }
-        QueryValue::Sha256 {} => {
+        QueryValue::Sha256 => {
             attributes.push(("type".to_string(), JValue::String("sha256".to_string())));
         }
-        QueryValue::Md5 {} => {
+        QueryValue::Md5 => {
             attributes.push(("type".to_string(), JValue::String("md5".to_string())));
         }
         QueryValue::Certificate {
@@ -488,31 +488,31 @@ impl ToJson for Predicate {
                 attributes.push(("type".to_string(), JValue::String("match".to_string())));
                 add_predicate_value(&mut attributes, value);
             }
-            PredicateFuncValue::IsInteger {} => {
+            PredicateFuncValue::IsInteger => {
                 attributes.push(("type".to_string(), JValue::String("isInteger".to_string())));
             }
-            PredicateFuncValue::IsFloat {} => {
+            PredicateFuncValue::IsFloat => {
                 attributes.push(("type".to_string(), JValue::String("isFloat".to_string())));
             }
-            PredicateFuncValue::IsBoolean {} => {
+            PredicateFuncValue::IsBoolean => {
                 attributes.push(("type".to_string(), JValue::String("isBoolean".to_string())));
             }
-            PredicateFuncValue::IsString {} => {
+            PredicateFuncValue::IsString => {
                 attributes.push(("type".to_string(), JValue::String("isString".to_string())));
             }
-            PredicateFuncValue::IsCollection {} => {
+            PredicateFuncValue::IsCollection => {
                 attributes.push((
                     "type".to_string(),
                     JValue::String("isCollection".to_string()),
                 ));
             }
-            PredicateFuncValue::IsDate {} => {
+            PredicateFuncValue::IsDate => {
                 attributes.push(("type".to_string(), JValue::String("isDate".to_string())));
             }
-            PredicateFuncValue::Exist {} => {
+            PredicateFuncValue::Exist => {
                 attributes.push(("type".to_string(), JValue::String("exist".to_string())));
             }
-            PredicateFuncValue::IsEmpty {} => {
+            PredicateFuncValue::IsEmpty => {
                 attributes.push(("type".to_string(), JValue::String("isEmpty".to_string())));
             }
         }
@@ -535,7 +535,7 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
         PredicateValue::Integer(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
-        PredicateValue::Null {} => (JValue::Null, None),
+        PredicateValue::Null => (JValue::Null, None),
         PredicateValue::Hex(value) => {
             let base64_string = general_purpose::STANDARD.encode(value.value);
             (JValue::String(base64_string), Some("base64".to_string()))
@@ -554,7 +554,7 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
 impl ToJson for JsonValue {
     fn to_json(&self) -> JValue {
         match self {
-            JsonValue::Null {} => JValue::Null {},
+            JsonValue::Null => JValue::Null,
             JsonValue::Number(s) => JValue::Number(s.to_string()),
             JsonValue::String(s) => JValue::String(s.to_string()),
             JsonValue::Boolean(v) => JValue::Boolean(*v),

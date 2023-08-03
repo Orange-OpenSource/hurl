@@ -40,12 +40,12 @@ pub fn eval_xml(xml: &str, expr: &str) -> Result<Value, XpathError> {
     match parse_html_string_patched(xml, &parser) {
         Ok(doc) => {
             if doc.get_root_element().is_none() {
-                Err(XpathError::InvalidXml {})
+                Err(XpathError::InvalidXml)
             } else {
                 eval(&doc, expr, true)
             }
         }
-        Err(_) => Err(XpathError::InvalidXml {}),
+        Err(_) => Err(XpathError::InvalidXml),
     }
 }
 
@@ -57,12 +57,12 @@ pub fn eval_html(html: &str, expr: &str) -> Result<Value, XpathError> {
             // You can have a doc structure even if the input xml is not valid
             // check that the root element exists
             if doc.get_root_element().is_none() {
-                Err(XpathError::InvalidHtml {})
+                Err(XpathError::InvalidHtml)
             } else {
                 eval(&doc, expr, false)
             }
         }
-        Err(_) => Err(XpathError::InvalidHtml {}),
+        Err(_) => Err(XpathError::InvalidHtml),
     }
 }
 
@@ -157,7 +157,7 @@ fn eval(doc: &Document, expr: &str, support_ns: bool) -> Result<Value, XpathErro
 
     let result = match context.evaluate(expr) {
         Ok(object) => object,
-        Err(_) => return Err(XpathError::Eval {}),
+        Err(_) => return Err(XpathError::Eval),
     };
 
     match unsafe { *result.ptr }.type_ {
@@ -180,7 +180,7 @@ fn eval(doc: &Document, expr: &str, support_ns: bool) -> Result<Value, XpathErro
         libxml::bindings::xmlXPathObjectType_XPATH_NODESET => {
             Ok(Value::Nodeset(result.get_number_of_nodes()))
         }
-        _ => Err(XpathError::Unsupported {}),
+        _ => Err(XpathError::Unsupported),
     }
 }
 
@@ -267,8 +267,8 @@ mod tests {
 
     #[test]
     fn test_error_eval() {
-        assert_eq!(eval_xml("<a/>", "^^^").err().unwrap(), XpathError::Eval {});
-        assert_eq!(eval_xml("<a/>", "//").err().unwrap(), XpathError::Eval {});
+        assert_eq!(eval_xml("<a/>", "^^^").err().unwrap(), XpathError::Eval);
+        assert_eq!(eval_xml("<a/>", "//").err().unwrap(), XpathError::Eval);
         // assert_eq!(1,2);
     }
 

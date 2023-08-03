@@ -26,61 +26,61 @@ pub struct EncodedString {
 
 pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<TemplateElement>> {
     enum State {
-        String {},
-        Template {},
-        FirstOpenBracket {},
-        FirstCloseBracket {},
+        String,
+        Template,
+        FirstOpenBracket,
+        FirstCloseBracket,
     }
 
     let mut elements = vec![];
 
     let mut value = "".to_string();
     let mut encoded = "".to_string();
-    let mut state = State::String {};
+    let mut state = State::String;
     let mut expression_start = None;
 
     for (c, s, pos) in encoded_string.chars {
         match state {
-            State::String {} => {
+            State::String => {
                 if s.as_str() == "{" {
-                    state = State::FirstOpenBracket {};
+                    state = State::FirstOpenBracket;
                 } else {
                     value.push(c);
                     encoded.push_str(&s.clone());
                 }
             }
 
-            State::FirstOpenBracket {} => {
+            State::FirstOpenBracket => {
                 if s.as_str() == "{" {
                     if !value.is_empty() {
                         elements.push(TemplateElement::String { value, encoded });
                         value = "".to_string();
                         encoded = "".to_string();
                     }
-                    state = State::Template {};
+                    state = State::Template;
                 } else {
                     value.push('{');
                     encoded.push('{');
 
                     value.push(c);
                     encoded.push_str(&s.clone());
-                    state = State::String {};
+                    state = State::String;
                 }
             }
 
-            State::Template {} => {
+            State::Template => {
                 if expression_start.is_none() {
                     expression_start = Some(pos);
                 }
                 if s.as_str() == "}" {
-                    state = State::FirstCloseBracket {};
+                    state = State::FirstCloseBracket;
                 } else {
                     value.push(c);
                     encoded.push_str(&s.clone());
                 }
             }
 
-            State::FirstCloseBracket {} => {
+            State::FirstCloseBracket => {
                 if s.as_str() == "}" {
                     let mut reader = Reader::new(encoded.as_str());
                     reader.state = ReaderState {
@@ -92,7 +92,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
                     value = "".to_string();
                     encoded = "".to_string();
                     expression_start = None;
-                    state = State::String {};
+                    state = State::String;
                 } else {
                     value.push('}');
                     value.push(c);
@@ -104,12 +104,12 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
     }
 
     match state {
-        State::String {} => {}
-        State::FirstOpenBracket {} => {
+        State::String => {}
+        State::FirstOpenBracket => {
             value.push('{');
             encoded.push('{');
         }
-        State::Template {} | State::FirstCloseBracket {} => {
+        State::Template | State::FirstCloseBracket => {
             return Err(error::Error {
                 pos: encoded_string.source_info.end,
                 recoverable: false,

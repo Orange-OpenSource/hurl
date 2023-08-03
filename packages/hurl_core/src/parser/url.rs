@@ -33,7 +33,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::Url {},
+            inner: ParseError::Url,
         });
     }
 
@@ -104,7 +104,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::Url {},
+            inner: ParseError::Url,
         });
     }
 

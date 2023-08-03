@@ -167,7 +167,7 @@ impl fmt::Display for VariableDefinition {
 impl fmt::Display for VariableValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            VariableValue::Null { .. } => "null".to_string(),
+            VariableValue::Null => "null".to_string(),
             VariableValue::Bool(value) => value.to_string(),
             VariableValue::Integer(n) => n.to_string(),
             VariableValue::Float(x) => x.to_string(),
@@ -227,14 +227,14 @@ impl PredicateFuncValue {
             PredicateFuncValue::Contain { .. } => "contains".to_string(),
             PredicateFuncValue::Include { .. } => "includes".to_string(),
             PredicateFuncValue::Match { .. } => "matches".to_string(),
-            PredicateFuncValue::IsInteger { .. } => "isInteger".to_string(),
-            PredicateFuncValue::IsFloat { .. } => "isFloat".to_string(),
-            PredicateFuncValue::IsBoolean { .. } => "isBoolean".to_string(),
-            PredicateFuncValue::IsString { .. } => "isString".to_string(),
-            PredicateFuncValue::IsCollection { .. } => "isCollection".to_string(),
-            PredicateFuncValue::IsDate { .. } => "isDate".to_string(),
-            PredicateFuncValue::Exist { .. } => "exists".to_string(),
-            PredicateFuncValue::IsEmpty { .. } => "isEmpty".to_string(),
+            PredicateFuncValue::IsInteger => "isInteger".to_string(),
+            PredicateFuncValue::IsFloat => "isFloat".to_string(),
+            PredicateFuncValue::IsBoolean => "isBoolean".to_string(),
+            PredicateFuncValue::IsString => "isString".to_string(),
+            PredicateFuncValue::IsCollection => "isCollection".to_string(),
+            PredicateFuncValue::IsDate => "isDate".to_string(),
+            PredicateFuncValue::Exist => "exists".to_string(),
+            PredicateFuncValue::IsEmpty => "isEmpty".to_string(),
         }
     }
 }

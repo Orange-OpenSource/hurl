@@ -40,14 +40,14 @@ pub enum Value {
         space0: String,
         elements: Vec<ObjectElement>,
     },
-    Null {},
+    Null,
 }
 
 impl Value {
     pub fn _type(&self) -> String {
         match self {
             Value::Number(_) => "number".to_string(),
-            Value::Null {} => "null".to_string(),
+            Value::Null => "null".to_string(),
             Value::Boolean(_) => "boolean".to_string(),
             Value::List { .. } => "list".to_string(),
             Value::Object { .. } => "object".to_string(),
@@ -101,7 +101,7 @@ impl fmt::Display for Value {
                     .collect::<Vec<String>>();
                 format!("{{{}{}}}", space0, elements.join(","))
             }
-            Value::Null { .. } => "null".to_string(),
+            Value::Null => "null".to_string(),
         };
         write!(f, "{s}")
     }
@@ -160,7 +160,7 @@ impl Value {
                     .collect::<Vec<String>>();
                 format!("{{{}{}}}", space0, elements.join(","))
             }
-            Value::Null { .. } => "null".to_string(),
+            Value::Null => "null".to_string(),
         }
     }
 }
@@ -314,7 +314,7 @@ mod tests {
             }
             .to_string()
         );
-        assert_eq!("null".to_string(), Value::Null {}.to_string());
+        assert_eq!("null".to_string(), Value::Null.to_string());
     }
 
     #[test]

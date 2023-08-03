@@ -34,7 +34,7 @@ pub fn eval_regex_value(
                 Ok(re) => Ok(re),
                 Err(_) => Err(Error {
                     source_info: t.source_info.clone(),
-                    inner: RunnerError::InvalidRegex(),
+                    inner: RunnerError::InvalidRegex,
                     assert: false,
                 }),
             }

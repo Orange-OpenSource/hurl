@@ -57,12 +57,12 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 
 fn status_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("status", reader)?;
-    Ok(QueryValue::Status {})
+    Ok(QueryValue::Status)
 }
 
 fn url_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("url", reader)?;
-    Ok(QueryValue::Url {})
+    Ok(QueryValue::Url)
 }
 
 fn header_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
@@ -92,7 +92,7 @@ fn cookie_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 
 fn body_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("body", reader)?;
-    Ok(QueryValue::Body {})
+    Ok(QueryValue::Body)
 }
 
 fn xpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
@@ -162,22 +162,22 @@ fn variable_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
 
 fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("duration", reader)?;
-    Ok(QueryValue::Duration {})
+    Ok(QueryValue::Duration)
 }
 
 fn bytes_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("bytes", reader)?;
-    Ok(QueryValue::Bytes {})
+    Ok(QueryValue::Bytes)
 }
 
 fn sha256_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("sha256", reader)?;
-    Ok(QueryValue::Sha256 {})
+    Ok(QueryValue::Sha256)
 }
 
 fn md5_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     try_literal("md5", reader)?;
-    Ok(QueryValue::Md5 {})
+    Ok(QueryValue::Md5)
 }
 
 fn certificate_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
@@ -227,7 +227,7 @@ mod tests {
             query(&mut reader).unwrap(),
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
-                value: QueryValue::Status {},
+                value: QueryValue::Status,
             }
         );
     }
@@ -239,7 +239,7 @@ mod tests {
             query(&mut reader).unwrap(),
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 7),
-                value: QueryValue::Status {},
+                value: QueryValue::Status,
             }
         );
     }
@@ -390,7 +390,7 @@ mod tests {
             query(&mut reader).unwrap(),
             Query {
                 source_info: SourceInfo::new(1, 1, 1, 5),
-                value: QueryValue::Body {},
+                value: QueryValue::Body,
             }
         );
         assert_eq!(

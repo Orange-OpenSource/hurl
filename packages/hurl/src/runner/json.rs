@@ -33,7 +33,7 @@ pub fn eval_json_value(
     keep_whitespace: bool,
 ) -> Result<String, Error> {
     match json_value {
-        JsonValue::Null {} => Ok("null".to_string()),
+        JsonValue::Null => Ok("null".to_string()),
         JsonValue::Number(s) => Ok(s.clone()),
         JsonValue::String(template) => {
             let s = eval_json_template(template, variables)?;
@@ -249,7 +249,7 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert("name".to_string(), Value::String("Bob".to_string()));
         assert_eq!(
-            eval_json_value(&JsonValue::Null {}, &variables, true).unwrap(),
+            eval_json_value(&JsonValue::Null, &variables, true).unwrap(),
             "null".to_string()
         );
         assert_eq!(

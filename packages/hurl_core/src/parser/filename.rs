@@ -32,7 +32,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::Filename {},
+            inner: ParseError::Filename,
         });
     }
 
@@ -90,7 +90,7 @@ mod tests {
     fn test_filename_error() {
         let mut reader = Reader::new("???");
         let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.inner, ParseError::Filename {});
+        assert_eq!(error.inner, ParseError::Filename);
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
     }
 }

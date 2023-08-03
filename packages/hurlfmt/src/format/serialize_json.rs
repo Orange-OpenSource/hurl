@@ -95,7 +95,7 @@ pub mod tests {
 
     #[test]
     pub fn format_scalars() {
-        assert_eq!(JValue::Null {}.format(), "null");
+        assert_eq!(JValue::Null.format(), "null");
         assert_eq!(JValue::Number("1.0".to_string()).format(), "1.0");
         assert_eq!(JValue::String("hello".to_string()).format(), "\"hello\"");
         assert_eq!(JValue::Boolean(true).format(), "true");

@@ -25,7 +25,7 @@ pub struct Error {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LinterError {
-    UnnecessarySpace {},
-    UnnecessaryJsonEncoding {},
-    OneSpace {},
+    UnnecessarySpace,
+    UnnecessaryJsonEncoding,
+    OneSpace,
 }

@@ -178,7 +178,7 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
         Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         })
     }
 }
@@ -205,7 +205,7 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
         Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         })
     }
 }
@@ -232,7 +232,7 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
         Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         })
     }
 }
@@ -259,7 +259,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predicat
         Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         })
     }
 }
@@ -273,7 +273,7 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFu
         return Err(Error {
             pos: save.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         });
     }
     Ok(PredicateFuncValue::StartWith { space0, value })
@@ -288,7 +288,7 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFunc
         return Err(Error {
             pos: save.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         });
     }
     Ok(PredicateFuncValue::EndWith { space0, value })
@@ -303,7 +303,7 @@ fn contain_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
         return Err(Error {
             pos: save.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         });
     }
     Ok(PredicateFuncValue::Contain { space0, value })
@@ -325,7 +325,7 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
         return Err(Error {
             pos: save.pos,
             recoverable: false,
-            inner: ParseError::PredicateValue {},
+            inner: ParseError::PredicateValue,
         });
     }
     Ok(PredicateFuncValue::Match { space0, value })
@@ -333,42 +333,42 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
 
 fn integer_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isInteger", reader)?;
-    Ok(PredicateFuncValue::IsInteger {})
+    Ok(PredicateFuncValue::IsInteger)
 }
 
 fn float_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isFloat", reader)?;
-    Ok(PredicateFuncValue::IsFloat {})
+    Ok(PredicateFuncValue::IsFloat)
 }
 
 fn boolean_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isBoolean", reader)?;
-    Ok(PredicateFuncValue::IsBoolean {})
+    Ok(PredicateFuncValue::IsBoolean)
 }
 
 fn string_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isString", reader)?;
-    Ok(PredicateFuncValue::IsString {})
+    Ok(PredicateFuncValue::IsString)
 }
 
 fn collection_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isCollection", reader)?;
-    Ok(PredicateFuncValue::IsCollection {})
+    Ok(PredicateFuncValue::IsCollection)
 }
 
 fn date_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isDate", reader)?;
-    Ok(PredicateFuncValue::IsDate {})
+    Ok(PredicateFuncValue::IsDate)
 }
 
 fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("exists", reader)?;
-    Ok(PredicateFuncValue::Exist {})
+    Ok(PredicateFuncValue::Exist)
 }
 
 fn is_empty_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
     try_literal("isEmpty", reader)?;
-    Ok(PredicateFuncValue::IsEmpty {})
+    Ok(PredicateFuncValue::IsEmpty)
 }
 
 #[cfg(test)]
@@ -437,7 +437,7 @@ mod tests {
         let error = predicate_func(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::Predicate {});
+        assert_eq!(error.inner, ParseError::Predicate);
     }
 
     #[test]
@@ -560,13 +560,13 @@ mod tests {
             }
         );
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::PredicateValue {});
+        assert_eq!(error.inner, ParseError::PredicateValue);
     }
 
     #[test]
     fn test_date_predicate() {
         let mut reader = Reader::new("isDate");
         let result = date_predicate(&mut reader);
-        assert_eq!(result.unwrap(), PredicateFuncValue::IsDate {});
+        assert_eq!(result.unwrap(), PredicateFuncValue::IsDate);
     }
 }

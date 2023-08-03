@@ -165,7 +165,7 @@ pub enum RunnerError {
         expected: String,
         type_mismatch: bool,
     },
-    InvalidRegex(),
+    InvalidRegex,
 
     AssertHeaderValueError {
         actual: String,
@@ -191,9 +191,9 @@ pub enum RunnerError {
     },
 
     // Filter
-    FilterMissingInput {},
+    FilterMissingInput,
     FilterInvalidInput(String),
-    FilterRegexNoCapture {},
+    FilterRegexNoCapture,
     FilterInvalidEncoding(String),
     FilterDecode(String),
 }

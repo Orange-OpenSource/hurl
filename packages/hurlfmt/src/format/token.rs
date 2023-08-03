@@ -401,8 +401,8 @@ impl Tokenizable for QueryValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         match self.clone() {
-            QueryValue::Status {} => tokens.push(Token::QueryType(String::from("status"))),
-            QueryValue::Url {} => tokens.push(Token::QueryType(String::from("url"))),
+            QueryValue::Status => tokens.push(Token::QueryType(String::from("status"))),
+            QueryValue::Url => tokens.push(Token::QueryType(String::from("url"))),
             QueryValue::Header { space0, name } => {
                 tokens.push(Token::QueryType(String::from("header")));
                 tokens.append(&mut space0.tokenize());
@@ -415,7 +415,7 @@ impl Tokenizable for QueryValue {
                 tokens.append(&mut expr.tokenize());
                 tokens.push(Token::CodeDelimiter("\"".to_string()));
             }
-            QueryValue::Body {} => tokens.push(Token::QueryType(String::from("body"))),
+            QueryValue::Body => tokens.push(Token::QueryType(String::from("body"))),
             QueryValue::Xpath { space0, expr } => {
                 tokens.push(Token::QueryType(String::from("xpath")));
                 tokens.append(&mut space0.tokenize());
@@ -436,10 +436,10 @@ impl Tokenizable for QueryValue {
                 tokens.append(&mut space0.tokenize());
                 tokens.append(&mut name.tokenize());
             }
-            QueryValue::Duration {} => tokens.push(Token::QueryType(String::from("duration"))),
-            QueryValue::Bytes {} => tokens.push(Token::QueryType(String::from("bytes"))),
-            QueryValue::Sha256 {} => tokens.push(Token::QueryType(String::from("sha256"))),
-            QueryValue::Md5 {} => tokens.push(Token::QueryType(String::from("md5"))),
+            QueryValue::Duration => tokens.push(Token::QueryType(String::from("duration"))),
+            QueryValue::Bytes => tokens.push(Token::QueryType(String::from("bytes"))),
+            QueryValue::Sha256 => tokens.push(Token::QueryType(String::from("sha256"))),
+            QueryValue::Md5 => tokens.push(Token::QueryType(String::from("md5"))),
             QueryValue::Certificate {
                 space0,
                 attribute_name: field,
@@ -575,28 +575,28 @@ impl Tokenizable for PredicateFuncValue {
                 tokens.append(&mut value.tokenize());
             }
 
-            PredicateFuncValue::IsInteger {} => {
+            PredicateFuncValue::IsInteger => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsFloat {} => {
+            PredicateFuncValue::IsFloat => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsBoolean {} => {
+            PredicateFuncValue::IsBoolean => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsString {} => {
+            PredicateFuncValue::IsString => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsCollection {} => {
+            PredicateFuncValue::IsCollection => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsDate {} => {
+            PredicateFuncValue::IsDate => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::Exist {} => {
+            PredicateFuncValue::Exist => {
                 tokens.push(Token::PredicateType(self.name()));
             }
-            PredicateFuncValue::IsEmpty {} => {
+            PredicateFuncValue::IsEmpty => {
                 tokens.push(Token::PredicateType(self.name()));
             }
         }
@@ -612,7 +612,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::Integer(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Float(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
-            PredicateValue::Null {} => vec![Token::Keyword("null".to_string())],
+            PredicateValue::Null => vec![Token::Keyword("null".to_string())],
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
             PredicateValue::Expression(value) => value.tokenize(),
@@ -816,7 +816,7 @@ impl Tokenizable for JsonValue {
                 }
                 tokens.push(Token::CodeDelimiter("}".to_string()));
             }
-            JsonValue::Null {} => {
+            JsonValue::Null => {
                 tokens.push(Token::Keyword("null".to_string()));
             }
             JsonValue::Expression(exp) => {
@@ -918,7 +918,7 @@ impl Tokenizable for VariableDefinition {
 impl Tokenizable for VariableValue {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            VariableValue::Null { .. } => vec![Token::Keyword("null".to_string())],
+            VariableValue::Null => vec![Token::Keyword("null".to_string())],
             VariableValue::Bool(v) => vec![Token::Boolean(v.to_string())],
             VariableValue::Integer(v) => vec![Token::Number(v.to_string())],
             VariableValue::Float(v) => vec![Token::Number(v.to_string())],

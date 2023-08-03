@@ -38,7 +38,7 @@ pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
     } else if s == "false" {
         Ok(Value::Bool(false))
     } else if s == "null" {
-        Ok(Value::Null {})
+        Ok(Value::Null)
     } else if let Ok(v) = s.parse::<i64>() {
         Ok(Value::Integer(v))
     } else if let Ok(v) = s.parse::<f64>() {
@@ -85,7 +85,7 @@ mod tests {
         );
         assert_eq!(
             parse("a_null=null").unwrap(),
-            ("a_null".to_string(), Value::Null {})
+            ("a_null".to_string(), Value::Null)
         );
     }
 
@@ -112,7 +112,7 @@ mod tests {
             parse_value("\"123\"").unwrap(),
             Value::String("123".to_string())
         );
-        assert_eq!(parse_value("null").unwrap(), Value::Null {});
+        assert_eq!(parse_value("null").unwrap(), Value::Null);
     }
 
     #[test]

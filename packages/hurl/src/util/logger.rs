@@ -726,7 +726,7 @@ xpath "strong(//head/title)" equals "Hello"
         let filename = "test.hurl";
         let error = runner::Error {
             source_info: SourceInfo::new(4, 7, 4, 29),
-            inner: runner::RunnerError::QueryInvalidXpathEval {},
+            inner: runner::RunnerError::QueryInvalidXpathEval,
             assert: true,
         };
         assert_eq!(

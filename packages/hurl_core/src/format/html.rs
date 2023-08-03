@@ -247,7 +247,7 @@ impl HtmlFormatter {
 
     fn fmt_variable_value(&mut self, option: &VariableValue) {
         match option {
-            VariableValue::Null { .. } => self.fmt_span("null", "null"),
+            VariableValue::Null => self.fmt_span("null", "null"),
             VariableValue::Bool(v) => self.fmt_bool(*v),
             VariableValue::Integer(v) => self.fmt_number(v),
             VariableValue::Float(v) => self.fmt_number(&v.encoded),
@@ -330,8 +330,8 @@ impl HtmlFormatter {
 
     fn fmt_query_value(&mut self, query_value: &QueryValue) {
         match query_value {
-            QueryValue::Status {} => self.fmt_span("query-type", "status"),
-            QueryValue::Url {} => self.fmt_span("query-type", "url"),
+            QueryValue::Status => self.fmt_span("query-type", "status"),
+            QueryValue::Url => self.fmt_span("query-type", "url"),
             QueryValue::Header { space0, name } => {
                 self.fmt_span("query-type", "header");
                 self.fmt_space(space0);
@@ -342,7 +342,7 @@ impl HtmlFormatter {
                 self.fmt_space(space0);
                 self.fmt_cookie_path(expr);
             }
-            QueryValue::Body {} => self.fmt_span("query-type", "body"),
+            QueryValue::Body => self.fmt_span("query-type", "body"),
             QueryValue::Xpath { space0, expr } => {
                 self.fmt_span("query-type", "xpath");
                 self.fmt_space(space0);
@@ -363,10 +363,10 @@ impl HtmlFormatter {
                 self.fmt_space(space0);
                 self.fmt_template(name);
             }
-            QueryValue::Duration {} => self.fmt_span("query-type", "duration"),
-            QueryValue::Bytes {} => self.fmt_span("query-type", "bytes"),
-            QueryValue::Sha256 {} => self.fmt_span("query-type", "sha256"),
-            QueryValue::Md5 {} => self.fmt_span("query-type", "md5"),
+            QueryValue::Duration => self.fmt_span("query-type", "duration"),
+            QueryValue::Bytes => self.fmt_span("query-type", "bytes"),
+            QueryValue::Sha256 => self.fmt_span("query-type", "sha256"),
+            QueryValue::Md5 => self.fmt_span("query-type", "md5"),
             QueryValue::Certificate {
                 space0,
                 attribute_name: field,
@@ -497,14 +497,14 @@ impl HtmlFormatter {
                 self.fmt_space(space0);
                 self.fmt_predicate_value(value);
             }
-            PredicateFuncValue::IsInteger {} => {}
-            PredicateFuncValue::IsFloat {} => {}
-            PredicateFuncValue::IsBoolean {} => {}
-            PredicateFuncValue::IsString {} => {}
-            PredicateFuncValue::IsCollection {} => {}
-            PredicateFuncValue::IsDate {} => {}
-            PredicateFuncValue::Exist {} => {}
-            PredicateFuncValue::IsEmpty {} => {}
+            PredicateFuncValue::IsInteger => {}
+            PredicateFuncValue::IsFloat => {}
+            PredicateFuncValue::IsBoolean => {}
+            PredicateFuncValue::IsString => {}
+            PredicateFuncValue::IsCollection => {}
+            PredicateFuncValue::IsDate => {}
+            PredicateFuncValue::Exist => {}
+            PredicateFuncValue::IsEmpty => {}
         }
     }
 
@@ -518,7 +518,7 @@ impl HtmlFormatter {
             PredicateValue::Hex(value) => self.fmt_hex(value),
             PredicateValue::Base64(value) => self.fmt_base64(value),
             PredicateValue::Expression(value) => self.fmt_expr(value),
-            PredicateValue::Null {} => self.fmt_span("null", "null"),
+            PredicateValue::Null => self.fmt_span("null", "null"),
             PredicateValue::Regex(value) => self.fmt_regex(value),
         };
     }

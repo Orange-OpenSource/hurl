@@ -27,7 +27,7 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateVal
     choice(
         &[
             |p1| match null(p1) {
-                Ok(()) => Ok(PredicateValue::Null {}),
+                Ok(()) => Ok(PredicateValue::Null),
                 Err(e) => Err(e),
             },
             |p1| match boolean(p1) {
@@ -115,7 +115,7 @@ mod tests {
         let mut reader = Reader::new("xx");
         let error = predicate_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::PredicateValue {});
+        assert_eq!(error.inner, ParseError::PredicateValue);
         assert!(!error.recoverable);
     }
 

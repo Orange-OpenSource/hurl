@@ -44,7 +44,7 @@ pub fn eval_filters(
         } else {
             return Err(Error {
                 source_info: filter.source_info.clone(),
-                inner: RunnerError::FilterMissingInput {},
+                inner: RunnerError::FilterMissingInput,
                 assert: in_assert,
             });
         }
@@ -487,22 +487,22 @@ pub fn eval_xpath_string(
     };
     match result {
         Ok(value) => Ok(Some(value)),
-        Err(xpath::XpathError::InvalidXml {}) => Err(Error {
+        Err(xpath::XpathError::InvalidXml) => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::QueryInvalidXml,
             assert: false,
         }),
-        Err(xpath::XpathError::InvalidHtml {}) => Err(Error {
+        Err(xpath::XpathError::InvalidHtml) => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::QueryInvalidXml,
             assert: false,
         }),
-        Err(xpath::XpathError::Eval {}) => Err(Error {
+        Err(xpath::XpathError::Eval) => Err(Error {
             source_info: expr_template.source_info.clone(),
             inner: RunnerError::QueryInvalidXpathEval,
             assert: false,
         }),
-        Err(xpath::XpathError::Unsupported {}) => {
+        Err(xpath::XpathError::Unsupported) => {
             panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproqduce this usecase myself
         }
     }
@@ -737,7 +737,7 @@ pub mod tests {
         .err()
         .unwrap();
         assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 20));
-        assert_eq!(error.inner, RunnerError::InvalidRegex {});
+        assert_eq!(error.inner, RunnerError::InvalidRegex);
     }
 
     #[test]

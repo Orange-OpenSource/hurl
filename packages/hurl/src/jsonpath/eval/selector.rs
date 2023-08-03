@@ -151,7 +151,7 @@ impl Predicate {
             serde_json::Value::Object(_) => {
                 if let Some(value) = extract_value(elem, self.key.clone()) {
                     match (value, self.func.clone()) {
-                        (_, PredicateFunc::KeyExist {}) => true,
+                        (_, PredicateFunc::KeyExist) => true,
                         (serde_json::Value::Number(v), PredicateFunc::Equal(ref num)) => {
                             approx_eq!(f64, v.as_f64().unwrap(), num.to_f64(), ulps = 2)
                         } //v.as_f64().unwrap() == num.to_f64(),
@@ -294,7 +294,7 @@ mod tests {
     #[test]
     pub fn test_selector_array_wildcard() {
         assert_eq!(
-            Selector::ArrayWildcard {}.eval(&json_books()).unwrap(),
+            Selector::ArrayWildcard.eval(&json_books()).unwrap(),
             JsonpathResult::Collection(vec![
                 json_first_book(),
                 json_second_book(),
@@ -350,7 +350,7 @@ mod tests {
     pub fn test_predicate() {
         assert!(Predicate {
             key: vec!["key".to_string()],
-            func: PredicateFunc::KeyExist {},
+            func: PredicateFunc::KeyExist,
         }
         .eval(json!({"key": "value"})));
         assert!(Predicate {

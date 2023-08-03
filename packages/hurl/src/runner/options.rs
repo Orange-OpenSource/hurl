@@ -134,7 +134,7 @@ fn eval_variable_value(
     variables: &mut HashMap<String, Value>,
 ) -> Result<Value, Error> {
     match variable_value {
-        VariableValue::Null {} => Ok(Value::Null),
+        VariableValue::Null => Ok(Value::Null),
         VariableValue::Bool(v) => Ok(Value::Bool(*v)),
         VariableValue::Integer(v) => Ok(Value::Integer(*v)),
         VariableValue::Float(Float { value, .. }) => Ok(Value::Float(*value)),

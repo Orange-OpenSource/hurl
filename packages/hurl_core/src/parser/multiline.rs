@@ -152,7 +152,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
         None => Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::Space {},
+            inner: ParseError::Space,
         }),
         Some(c) => {
             if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
@@ -169,7 +169,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
                 Err(Error {
                     pos: start.pos,
                     recoverable: true,
-                    inner: ParseError::Space {},
+                    inner: ParseError::Space,
                 })
             }
         }

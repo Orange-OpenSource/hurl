@@ -53,13 +53,13 @@ fn check_request(request: &Request) -> Vec<Error> {
     if !request.space0.value.is_empty() {
         errors.push(Error {
             source_info: request.space0.source_info.clone(),
-            inner: LinterError::UnnecessarySpace {},
+            inner: LinterError::UnnecessarySpace,
         });
     }
     if request.space1.value != " " {
         errors.push(Error {
             source_info: request.space1.source_info.clone(),
-            inner: LinterError::OneSpace {},
+            inner: LinterError::OneSpace,
         });
     }
     for error in check_line_terminator(&request.line_terminator0) {
@@ -101,7 +101,7 @@ fn check_response(response: &Response) -> Vec<Error> {
     if !response.space0.value.is_empty() {
         errors.push(Error {
             source_info: response.space0.source_info.clone(),
-            inner: LinterError::UnnecessarySpace {},
+            inner: LinterError::UnnecessarySpace,
         });
     }
     errors
@@ -232,8 +232,8 @@ fn lint_query(query: &Query) -> Query {
 
 fn lint_query_value(query_value: &QueryValue) -> QueryValue {
     match query_value {
-        QueryValue::Status {} => QueryValue::Status {},
-        QueryValue::Url {} => QueryValue::Url {},
+        QueryValue::Status => QueryValue::Status,
+        QueryValue::Url => QueryValue::Url,
         QueryValue::Header { name, .. } => QueryValue::Header {
             name: name.clone(),
             space0: one_whitespace(),
@@ -251,7 +251,7 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
                 },
             }
         }
-        QueryValue::Body {} => QueryValue::Body {},
+        QueryValue::Body => QueryValue::Body,
         QueryValue::Xpath { expr, .. } => QueryValue::Xpath {
             expr: expr.clone(),
             space0: one_whitespace(),
@@ -268,10 +268,10 @@ fn lint_query_value(query_value: &QueryValue) -> QueryValue {
             name: name.clone(),
             space0: one_whitespace(),
         },
-        QueryValue::Duration {} => QueryValue::Duration {},
-        QueryValue::Bytes {} => QueryValue::Bytes {},
-        QueryValue::Sha256 {} => QueryValue::Sha256 {},
-        QueryValue::Md5 {} => QueryValue::Md5 {},
+        QueryValue::Duration => QueryValue::Duration,
+        QueryValue::Bytes => QueryValue::Bytes,
+        QueryValue::Sha256 => QueryValue::Sha256,
+        QueryValue::Md5 => QueryValue::Md5,
         QueryValue::Certificate {
             attribute_name: field,
             ..
@@ -388,14 +388,14 @@ fn lint_predicate_func_value(predicate_func_value: &PredicateFuncValue) -> Predi
             space0: one_whitespace(),
             value: lint_predicate_value(value),
         },
-        PredicateFuncValue::IsInteger {} => PredicateFuncValue::IsInteger {},
-        PredicateFuncValue::IsFloat {} => PredicateFuncValue::IsFloat {},
-        PredicateFuncValue::IsBoolean {} => PredicateFuncValue::IsBoolean {},
-        PredicateFuncValue::IsString {} => PredicateFuncValue::IsString {},
-        PredicateFuncValue::IsCollection {} => PredicateFuncValue::IsCollection {},
-        PredicateFuncValue::IsDate {} => PredicateFuncValue::IsDate {},
-        PredicateFuncValue::Exist {} => PredicateFuncValue::Exist {},
-        PredicateFuncValue::IsEmpty {} => PredicateFuncValue::IsEmpty {},
+        PredicateFuncValue::IsInteger => PredicateFuncValue::IsInteger,
+        PredicateFuncValue::IsFloat => PredicateFuncValue::IsFloat,
+        PredicateFuncValue::IsBoolean => PredicateFuncValue::IsBoolean,
+        PredicateFuncValue::IsString => PredicateFuncValue::IsString,
+        PredicateFuncValue::IsCollection => PredicateFuncValue::IsCollection,
+        PredicateFuncValue::IsDate => PredicateFuncValue::IsDate,
+        PredicateFuncValue::Exist => PredicateFuncValue::Exist,
+        PredicateFuncValue::IsEmpty => PredicateFuncValue::IsEmpty,
     }
 }
 
@@ -408,7 +408,7 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
         PredicateValue::Integer(value) => PredicateValue::Integer(*value),
         PredicateValue::Float(value) => PredicateValue::Float(value.clone()),
         PredicateValue::Bool(value) => PredicateValue::Bool(*value),
-        PredicateValue::Null {} => PredicateValue::Null {},
+        PredicateValue::Null => PredicateValue::Null,
         PredicateValue::Hex(value) => PredicateValue::Hex(lint_hex(value)),
         PredicateValue::Base64(value) => PredicateValue::Base64(lint_base64(value)),
         PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),
@@ -574,7 +574,7 @@ fn check_line_terminator(line_terminator: &LineTerminator) -> Vec<Error> {
             if !line_terminator.space0.value.is_empty() {
                 errors.push(Error {
                     source_info: line_terminator.space0.source_info.clone(),
-                    inner: LinterError::UnnecessarySpace {},
+                    inner: LinterError::UnnecessarySpace,
                 });
             }
         }

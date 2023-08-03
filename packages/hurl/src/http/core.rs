@@ -95,7 +95,7 @@ impl fmt::Display for Param {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ParseCookieError {}
+pub struct ParseCookieError;
 
 impl FromStr for Cookie {
     type Err = ParseCookieError;
@@ -109,32 +109,32 @@ impl FromStr for Cookie {
                 (false, v.to_string())
             }
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let include_subdomain = if let Some(&v) = tokens.get(1) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let path = if let Some(&v) = tokens.get(2) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let https = if let Some(&v) = tokens.get(3) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let expires = if let Some(&v) = tokens.get(4) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let name = if let Some(&v) = tokens.get(5) {
             v.to_string()
         } else {
-            return Err(ParseCookieError {});
+            return Err(ParseCookieError);
         };
         let value = if let Some(&v) = tokens.get(6) {
             v.to_string()
@@ -187,6 +187,6 @@ mod tests {
             }
         );
 
-        assert_eq!(Cookie::from_str("xxx").err().unwrap(), ParseCookieError {});
+        assert_eq!(Cookie::from_str("xxx").err().unwrap(), ParseCookieError);
     }
 }

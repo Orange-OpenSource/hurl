@@ -31,7 +31,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
             return Err(Error {
                 pos: Pos { line: 1, column: 1 },
                 recoverable: true,
-                inner: ParseError::Xml {},
+                inner: ParseError::Xml,
             })
         }
     }
@@ -52,7 +52,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
     Err(Error {
         pos: start.pos,
         recoverable: false,
-        inner: ParseError::Xml {},
+        inner: ParseError::Xml,
     })
 }
 
@@ -69,30 +69,30 @@ mod tests {
         let mut reader = Reader::new("");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml {});
+        assert_eq!(error.inner, ParseError::Xml);
         assert!(error.recoverable);
 
         let mut reader = Reader::new("x");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml {});
+        assert_eq!(error.inner, ParseError::Xml);
         assert!(error.recoverable);
 
         let mut reader = Reader::new("<<");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml {});
+        assert_eq!(error.inner, ParseError::Xml);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("<users><user /></users");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml {});
+        assert_eq!(error.inner, ParseError::Xml);
 
         let mut reader = Reader::new("<users aa><user /></users");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::Xml {});
+        assert_eq!(error.inner, ParseError::Xml);
     }
 
     #[test]

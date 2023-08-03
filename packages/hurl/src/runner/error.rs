@@ -43,31 +43,31 @@ impl Error for runner::Error {
             RunnerError::CouldNotParseResponse => "HTTP connection".to_string(),
             RunnerError::SslCertificate { .. } => "SSL certificate".to_string(),
             RunnerError::PredicateValue { .. } => "Assert - predicate value failed".to_string(),
-            RunnerError::InvalidRegex {} => "Invalid regex".to_string(),
+            RunnerError::InvalidRegex => "Invalid regex".to_string(),
             RunnerError::FileReadAccess { .. } => "File read access".to_string(),
-            RunnerError::QueryInvalidXml { .. } => "Invalid XML".to_string(),
-            RunnerError::QueryInvalidXpathEval {} => "Invalid XPath expression".to_string(),
-            RunnerError::QueryHeaderNotFound {} => "Header not found".to_string(),
-            RunnerError::QueryCookieNotFound {} => "Cookie not found".to_string(),
+            RunnerError::QueryInvalidXml => "Invalid XML".to_string(),
+            RunnerError::QueryInvalidXpathEval => "Invalid XPath expression".to_string(),
+            RunnerError::QueryHeaderNotFound => "Header not found".to_string(),
+            RunnerError::QueryCookieNotFound => "Cookie not found".to_string(),
             RunnerError::AssertHeaderValueError { .. } => "Assert header value".to_string(),
             RunnerError::AssertBodyValueError { .. } => "Assert body value".to_string(),
             RunnerError::AssertVersion { .. } => "Assert HTTP version".to_string(),
             RunnerError::AssertStatus { .. } => "Assert status code".to_string(),
-            RunnerError::QueryInvalidJson { .. } => "Invalid JSON".to_string(),
+            RunnerError::QueryInvalidJson => "Invalid JSON".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid JSONPath".to_string(),
-            RunnerError::PredicateType { .. } => "Assert - inconsistent predicate type".to_string(),
+            RunnerError::PredicateType => "Assert - inconsistent predicate type".to_string(),
             RunnerError::InvalidDecoding { .. } => "Invalid decoding".to_string(),
             RunnerError::InvalidCharset { .. } => "Invalid charset".to_string(),
             RunnerError::AssertFailure { .. } => "Assert failure".to_string(),
             RunnerError::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
-            RunnerError::NoQueryResult { .. } => "No query result".to_string(),
+            RunnerError::NoQueryResult => "No query result".to_string(),
             RunnerError::UnsupportedContentEncoding(..) => "Decompression error".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
             RunnerError::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
-            RunnerError::FilterMissingInput { .. } => "Filter Error".to_string(),
+            RunnerError::FilterMissingInput => "Filter Error".to_string(),
             RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
-            RunnerError::FilterRegexNoCapture { .. } => "Filter Error".to_string(),
+            RunnerError::FilterRegexNoCapture => "Filter Error".to_string(),
             RunnerError::FilterInvalidEncoding { .. } => "Filter Error".to_string(),
             RunnerError::FilterDecode { .. } => "Filter Error".to_string(),
         }
@@ -95,33 +95,27 @@ impl Error for runner::Error {
             RunnerError::PredicateValue(value) => {
                 format!("actual value is <{value}>")
             }
-            RunnerError::InvalidRegex {} => "regex expression is not valid".to_string(),
+            RunnerError::InvalidRegex => "regex expression is not valid".to_string(),
             RunnerError::FileReadAccess { value } => format!("file {value} can not be read"),
-            RunnerError::QueryInvalidXml { .. } => {
-                "the HTTP response is not a valid XML".to_string()
-            }
-            RunnerError::QueryHeaderNotFound {} => {
+            RunnerError::QueryInvalidXml => "the HTTP response is not a valid XML".to_string(),
+            RunnerError::QueryHeaderNotFound => {
                 "this header has not been found in the response".to_string()
             }
-            RunnerError::QueryCookieNotFound {} => {
+            RunnerError::QueryCookieNotFound => {
                 "this cookie has not been found in the response".to_string()
             }
-            RunnerError::QueryInvalidXpathEval {} => {
-                "the XPath expression is not valid".to_string()
-            }
+            RunnerError::QueryInvalidXpathEval => "the XPath expression is not valid".to_string(),
             RunnerError::AssertHeaderValueError { actual } => {
                 format!("actual value is <{actual}>")
             }
             RunnerError::AssertBodyValueError { actual, .. } => {
                 format!("actual value is <{actual}>")
             }
-            RunnerError::QueryInvalidJson { .. } => {
-                "the HTTP response is not a valid JSON".to_string()
-            }
+            RunnerError::QueryInvalidJson => "the HTTP response is not a valid JSON".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { value } => {
                 format!("the JSONPath expression '{value}' is not valid")
             }
-            RunnerError::PredicateType { .. } => {
+            RunnerError::PredicateType => {
                 "predicate type inconsistent with value return by query".to_string()
             }
             RunnerError::InvalidDecoding { charset } => {
@@ -149,7 +143,7 @@ impl Error for runner::Error {
             RunnerError::UnrenderableVariable { name, value } => {
                 format!("variable <{name}> with value {value} can not be rendered")
             }
-            RunnerError::NoQueryResult { .. } => "The query didn't return any result".to_string(),
+            RunnerError::NoQueryResult => "The query didn't return any result".to_string(),
             RunnerError::UnsupportedContentEncoding(algorithm) => {
                 format!("compression {algorithm} is not supported")
             }
@@ -165,11 +159,11 @@ impl Error for runner::Error {
                     path.to_str().unwrap()
                 )
             }
-            RunnerError::FilterMissingInput { .. } => "missing value to apply filter".to_string(),
+            RunnerError::FilterMissingInput => "missing value to apply filter".to_string(),
             RunnerError::FilterInvalidInput(message) => {
                 format!("invalid filter input: {message}")
             }
-            RunnerError::FilterRegexNoCapture { .. } => "capture not found".to_string(),
+            RunnerError::FilterRegexNoCapture => "capture not found".to_string(),
             RunnerError::FilterInvalidEncoding(encoding) => {
                 format!("<{encoding}> encoding is not supported")
             }

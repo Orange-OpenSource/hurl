@@ -38,26 +38,26 @@ impl Error for parser::Error {
     fn description(&self) -> String {
         match self.clone().inner {
             ParseError::Method { .. } => "Parsing method".to_string(),
-            ParseError::Version { .. } => "Parsing version".to_string(),
-            ParseError::Status { .. } => "Parsing status code".to_string(),
-            ParseError::Filename { .. } => "Parsing filename".to_string(),
+            ParseError::Version => "Parsing version".to_string(),
+            ParseError::Status => "Parsing status code".to_string(),
+            ParseError::Filename => "Parsing filename".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),
-            ParseError::Space { .. } => "Parsing space".to_string(),
+            ParseError::Space => "Parsing space".to_string(),
             ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
             ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
-            ParseError::JsonpathExpr { .. } => "Parsing JSONPath expression".to_string(),
-            ParseError::XPathExpr { .. } => "Parsing XPath expression".to_string(),
-            ParseError::TemplateVariable { .. } => "Parsing template variable".to_string(),
-            ParseError::Json { .. } => "Parsing JSON".to_string(),
-            ParseError::Predicate { .. } => "Parsing predicate".to_string(),
-            ParseError::PredicateValue { .. } => "Parsing predicate value".to_string(),
+            ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
+            ParseError::XPathExpr => "Parsing XPath expression".to_string(),
+            ParseError::TemplateVariable => "Parsing template variable".to_string(),
+            ParseError::Json => "Parsing JSON".to_string(),
+            ParseError::Predicate => "Parsing predicate".to_string(),
+            ParseError::PredicateValue => "Parsing predicate value".to_string(),
             ParseError::RegexExpr { .. } => "Parsing regex".to_string(),
-            ParseError::DuplicateSection { .. } => "Parsing section".to_string(),
-            ParseError::RequestSection { .. } => "Parsing section".to_string(),
-            ParseError::ResponseSection { .. } => "Parsing section".to_string(),
-            ParseError::EscapeChar { .. } => "Parsing escape character".to_string(),
-            ParseError::InvalidCookieAttribute { .. } => "Parsing cookie attribute".to_string(),
-            ParseError::OddNumberOfHexDigits { .. } => "Parsing hex bytearray".to_string(),
+            ParseError::DuplicateSection => "Parsing section".to_string(),
+            ParseError::RequestSection => "Parsing section".to_string(),
+            ParseError::ResponseSection => "Parsing section".to_string(),
+            ParseError::EscapeChar => "Parsing escape character".to_string(),
+            ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
+            ParseError::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             ParseError::UrlInvalidStart => "Parsing URL".to_string(),
             ParseError::Multiline => "Parsing multiline".to_string(),
@@ -74,11 +74,11 @@ impl Error for parser::Error {
                 name.as_str(),
                 "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
             )),
-            ParseError::Version { .. } => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
-            ParseError::Status { .. } => "HTTP status code is not valid".to_string(),
-            ParseError::Filename { .. } => "expecting a filename".to_string(),
+            ParseError::Version => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
+            ParseError::Status => "HTTP status code is not valid".to_string(),
+            ParseError::Filename => "expecting a filename".to_string(),
             ParseError::Expecting { value } => format!("expecting '{value}'"),
-            ParseError::Space { .. } => "expecting a space".to_string(),
+            ParseError::Space => "expecting a space".to_string(),
             ParseError::RequestSectionName { name }
             => format!("the section is not valid. {}", did_you_mean(
                 &["QueryStringParams", "FormParams", "MultipartFormData", "Cookies", "Options"],
@@ -91,25 +91,25 @@ impl Error for parser::Error {
                 name.as_str(),
                 "Valid values are Captures or Asserts",
             )),
-            ParseError::JsonpathExpr { .. } => "expecting a JSONPath expression".to_string(),
-            ParseError::XPathExpr { .. } => "expecting a XPath expression".to_string(),
-            ParseError::TemplateVariable { .. } => "expecting a variable".to_string(),
-            ParseError::Json { .. } => "JSON error".to_string(),
-            ParseError::Predicate { .. } => "expecting a predicate".to_string(),
-            ParseError::PredicateValue { .. } => "invalid predicate value".to_string(),
+            ParseError::JsonPathExpr => "expecting a JSONPath expression".to_string(),
+            ParseError::XPathExpr => "expecting a XPath expression".to_string(),
+            ParseError::TemplateVariable => "expecting a variable".to_string(),
+            ParseError::Json => "JSON error".to_string(),
+            ParseError::Predicate => "expecting a predicate".to_string(),
+            ParseError::PredicateValue => "invalid predicate value".to_string(),
             ParseError::RegexExpr { message } => format!("invalid Regex expression: {message}"),
-            ParseError::DuplicateSection { .. } => "the section is already defined".to_string(),
-            ParseError::RequestSection { .. } => {
+            ParseError::DuplicateSection => "the section is already defined".to_string(),
+            ParseError::RequestSection => {
                 "this is not a valid section for a request".to_string()
             }
-            ParseError::ResponseSection { .. } => {
+            ParseError::ResponseSection => {
                 "this is not a valid section for a response".to_string()
             }
-            ParseError::EscapeChar { .. } => "the escaping sequence is not valid".to_string(),
-            ParseError::InvalidCookieAttribute { .. } => {
+            ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
+            ParseError::InvalidCookieAttribute => {
                 "the cookie attribute is not valid".to_string()
             }
-            ParseError::OddNumberOfHexDigits { .. } => {
+            ParseError::OddNumberOfHexDigits => {
                 "expecting an even number of hex digits".to_string()
             }
             ParseError::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),

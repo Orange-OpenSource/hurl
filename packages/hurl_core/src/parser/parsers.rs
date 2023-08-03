@@ -174,7 +174,7 @@ fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
             Err(Error {
                 pos: start.pos,
                 recoverable: false,
-                inner: ParseError::Version {},
+                inner: ParseError::Version,
             })
         }
         Some(' ') => Ok(Version {
@@ -189,7 +189,7 @@ fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
         _ => Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::Version {},
+            inner: ParseError::Version,
         }),
     }
 }
@@ -204,7 +204,7 @@ fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
                 return Err(Error {
                     pos: start,
                     recoverable: false,
-                    inner: ParseError::Status {},
+                    inner: ParseError::Status,
                 });
             }
         },

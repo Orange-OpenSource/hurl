@@ -38,7 +38,7 @@ pub fn eval_capture(
         None => {
             return Err(Error {
                 source_info: capture.query.source_info.clone(),
-                inner: RunnerError::NoQueryResult {},
+                inner: RunnerError::NoQueryResult,
                 assert: false,
             });
         }
@@ -48,7 +48,7 @@ pub fn eval_capture(
                 None => {
                     return Err(Error {
                         source_info: capture.query.source_info.clone(),
-                        inner: RunnerError::NoQueryResult {},
+                        inner: RunnerError::NoQueryResult,
                         assert: false,
                     })
                 }

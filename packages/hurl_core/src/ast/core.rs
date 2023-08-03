@@ -297,8 +297,8 @@ pub struct Query {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum QueryValue {
-    Status {},
-    Url {},
+    Status,
+    Url,
     Header {
         space0: Whitespace,
         name: Template,
@@ -307,7 +307,7 @@ pub enum QueryValue {
         space0: Whitespace,
         expr: CookiePath,
     },
-    Body {},
+    Body,
     Xpath {
         space0: Whitespace,
         expr: Template,
@@ -324,10 +324,10 @@ pub enum QueryValue {
         space0: Whitespace,
         name: Template,
     },
-    Duration {},
-    Bytes {},
-    Sha256 {},
-    Md5 {},
+    Duration,
+    Bytes,
+    Sha256,
+    Md5,
     Certificate {
         space0: Whitespace,
         attribute_name: CertificateAttributeName,
@@ -416,7 +416,7 @@ pub enum PredicateValue {
     Integer(i64),
     Float(Float),
     Bool(bool),
-    Null {},
+    Null,
     Hex(Hex),
     Base64(Base64),
     Expression(Expr),
@@ -476,15 +476,14 @@ pub enum PredicateFuncValue {
         space0: Whitespace,
         value: PredicateValue,
     },
-    // FIXME: why use an empty struct here ?
-    IsInteger {},
-    IsFloat {},
-    IsBoolean {},
-    IsString {},
-    IsCollection {},
-    IsDate {},
-    Exist {},
-    IsEmpty {},
+    IsInteger,
+    IsFloat,
+    IsBoolean,
+    IsString,
+    IsCollection,
+    IsDate,
+    Exist,
+    IsEmpty,
 }
 
 //
@@ -790,7 +789,7 @@ pub struct VariableDefinition {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum VariableValue {
-    Null {},
+    Null,
     Bool(bool),
     Integer(i64),
     Float(Float),

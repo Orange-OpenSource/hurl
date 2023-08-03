@@ -28,7 +28,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
         None => Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::Space {},
+            inner: ParseError::Space,
         }),
         Some(c) => {
             if c == ' ' || c == '\t' {
@@ -45,7 +45,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
                 Err(Error {
                     pos: start.pos,
                     recoverable: true,
-                    inner: ParseError::Space {},
+                    inner: ParseError::Space,
                 })
             }
         }
@@ -313,7 +313,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
         return Err(Error {
             pos: reader.state.pos.clone(),
             recoverable: false,
-            inner: ParseError::OddNumberOfHexDigits {},
+            inner: ParseError::OddNumberOfHexDigits,
         });
     }
     let encoded = reader.peek_back(start);
@@ -345,7 +345,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<'static, Regex> {
                 return Err(Error {
                     pos: reader.state.pos.clone(),
                     recoverable: false,
-                    inner: ParseError::Eof {},
+                    inner: ParseError::Eof,
                 })
             }
             Some('/') => break,
@@ -579,13 +579,13 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<'static, u32> {
             None => Err(Error {
                 pos: start.pos,
                 recoverable: true,
-                inner: ParseError::HexDigit {},
+                inner: ParseError::HexDigit,
             }),
         },
         None => Err(Error {
             pos: start.pos,
             recoverable: true,
-            inner: ParseError::HexDigit {},
+            inner: ParseError::HexDigit,
         }),
     }
 }
@@ -1069,7 +1069,7 @@ mod tests {
         let mut reader = Reader::new("x");
         let error = hex_digit(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, ParseError::HexDigit {});
+        assert_eq!(error.inner, ParseError::HexDigit);
         assert!(error.recoverable);
     }
 
@@ -1115,7 +1115,7 @@ mod tests {
         let mut reader = Reader::new("hex,012;");
         let error = hex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
-        assert_eq!(error.inner, ParseError::OddNumberOfHexDigits {});
+        assert_eq!(error.inner, ParseError::OddNumberOfHexDigits);
     }
 
     #[test]
@@ -1164,7 +1164,7 @@ mod tests {
         let error = regex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::Eof {});
+        assert_eq!(error.inner, ParseError::Eof);
 
         let mut reader = Reader::new("/x{a}/");
         let error = regex(&mut reader).err().unwrap();

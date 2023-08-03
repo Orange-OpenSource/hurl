@@ -182,7 +182,7 @@ mod tests {
             selectors: vec![
                 Selector::NameChild("store".to_string()),
                 Selector::NameChild("book".to_string()),
-                Selector::ArrayWildcard {},
+                Selector::ArrayWildcard,
                 Selector::NameChild("author".to_string()),
             ],
         };

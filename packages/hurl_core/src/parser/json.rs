@@ -39,7 +39,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
 
 pub fn null_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     try_literal("null", reader)?;
-    Ok(JsonValue::Null {})
+    Ok(JsonValue::Null)
 }
 
 pub fn boolean_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
@@ -136,7 +136,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
         _ => Err(error::Error {
             pos: start.pos,
             recoverable: false,
-            inner: error::ParseError::EscapeChar {},
+            inner: error::ParseError::EscapeChar,
         }),
     }
 }
@@ -148,7 +148,7 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
             return Err(error::Error {
                 pos: reader.clone().state.pos,
                 recoverable: false,
-                inner: error::ParseError::Unicode {},
+                inner: error::ParseError::Unicode,
             })
         }
         Some(c) => c,
@@ -270,7 +270,7 @@ fn list_element(reader: &mut Reader) -> ParseResult<'static, JsonListElement> {
             return Err(error::Error {
                 pos: save,
                 recoverable: false,
-                inner: error::ParseError::Json {},
+                inner: error::ParseError::Json,
             })
         }
     };
@@ -317,7 +317,7 @@ fn key(reader: &mut Reader) -> ParseResult<'static, Template> {
         Err(error::Error {
             pos: save.pos,
             recoverable: false,
-            inner: error::ParseError::Json {},
+            inner: error::ParseError::Json,
         })
     } else {
         Ok(name)
@@ -338,7 +338,7 @@ fn object_element(reader: &mut Reader) -> ParseResult<'static, JsonObjectElement
             return Err(error::Error {
                 pos: save,
                 recoverable: false,
-                inner: error::ParseError::Json {},
+                inner: error::ParseError::Json,
             })
         }
     };
@@ -367,20 +367,20 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json {});
+        assert_eq!(error.inner, error::ParseError::Json);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("[0,1,]");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
-        assert_eq!(error.inner, error::ParseError::Json {});
+        assert_eq!(error.inner, error::ParseError::Json);
         assert!(!error.recoverable);
     }
 
     #[test]
     fn test_null_value() {
         let mut reader = Reader::new("null");
-        assert_eq!(null_value(&mut reader).unwrap(), JsonValue::Null {});
+        assert_eq!(null_value(&mut reader).unwrap(), JsonValue::Null);
         assert_eq!(reader.state.cursor, 4);
 
         let mut reader = Reader::new("true");
@@ -762,7 +762,7 @@ mod tests {
         let mut reader = Reader::new("[1, 2,]");
         let error = list_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json {});
+        assert_eq!(error.inner, error::ParseError::Json);
         assert!(!error.recoverable);
     }
 
@@ -843,7 +843,7 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json {});
+        assert_eq!(error.inner, error::ParseError::Json);
         assert!(!error.recoverable);
     }
 
@@ -887,7 +887,7 @@ mod tests {
         let mut reader = Reader::new("\"name\":\n");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
-        assert_eq!(error.inner, error::ParseError::Json {});
+        assert_eq!(error.inner, error::ParseError::Json);
         assert!(!error.recoverable);
     }
 

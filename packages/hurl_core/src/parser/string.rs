@@ -290,7 +290,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
         _ => Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::EscapeChar {},
+            inner: ParseError::EscapeChar,
         }),
     }
 }
@@ -303,7 +303,7 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
             return Err(Error {
                 pos: reader.clone().state.pos,
                 recoverable: false,
-                inner: ParseError::Unicode {},
+                inner: ParseError::Unicode,
             });
         }
         Some(c) => c,
@@ -560,7 +560,7 @@ mod tests {
         let mut reader = Reader::new("\\l");
         let error = unquoted_string_key(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.inner, ParseError::EscapeChar {});
+        assert_eq!(error.inner, ParseError::EscapeChar);
 
         let mut reader = Reader::new(r#"{"id":1}"#);
         let error = unquoted_string_key(&mut reader).err().unwrap();

@@ -282,7 +282,7 @@ fn file_content_type(reader: &mut Reader) -> ParseResult<'static, String> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::FileContentType {},
+            inner: ParseError::FileContentType,
         });
     }
     Ok(buf)
@@ -597,7 +597,7 @@ fn variable_value(reader: &mut Reader) -> ParseResult<'static, VariableValue> {
     choice(
         &[
             |p1| match null(p1) {
-                Ok(()) => Ok(VariableValue::Null {}),
+                Ok(()) => Ok(VariableValue::Null),
                 Err(e) => Err(e),
             },
             |p1| match boolean(p1) {
@@ -967,7 +967,7 @@ mod tests {
     #[test]
     fn test_variable_value() {
         let mut reader = Reader::new("null");
-        assert_eq!(variable_value(&mut reader).unwrap(), VariableValue::Null {});
+        assert_eq!(variable_value(&mut reader).unwrap(), VariableValue::Null);
 
         let mut reader = Reader::new("true");
         assert_eq!(

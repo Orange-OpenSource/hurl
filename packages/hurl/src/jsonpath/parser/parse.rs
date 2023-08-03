@@ -106,7 +106,7 @@ fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
     try_left_bracket(reader)?;
     try_literal("*", reader)?;
     literal("]", reader)?;
-    Ok(Selector::ArrayWildcard {})
+    Ok(Selector::ArrayWildcard)
 }
 
 fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
@@ -191,12 +191,12 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
 
 fn selector_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
     try_literal(".*", reader)?;
-    Ok(Selector::Wildcard {})
+    Ok(Selector::Wildcard)
 }
 
 fn selector_recursive_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
     try_literal("..*", reader)?;
-    Ok(Selector::RecursiveWildcard {})
+    Ok(Selector::RecursiveWildcard)
 }
 
 fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, Error> {
@@ -231,7 +231,7 @@ fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
         Ok(f) => f,
         Err(_) => {
             reader.state = state;
-            PredicateFunc::KeyExist {}
+            PredicateFunc::KeyExist
         }
     };
     Ok(Predicate { key, func })
@@ -386,7 +386,7 @@ mod tests {
             selector(&mut reader).unwrap(),
             Selector::Filter(Predicate {
                 key: vec!["isbn".to_string()],
-                func: PredicateFunc::KeyExist {},
+                func: PredicateFunc::KeyExist,
             })
         );
         assert_eq!(reader.state.cursor, 11);
@@ -458,13 +458,13 @@ mod tests {
     #[test]
     pub fn test_selector_wildcard() {
         let mut reader = Reader::new("[*]");
-        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard);
         assert_eq!(reader.state.cursor, 3);
 
         // you don't need to keep the exact string
         // this is not part of the AST
         let mut reader = Reader::new(".[*]");
-        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard {});
+        assert_eq!(selector(&mut reader).unwrap(), Selector::ArrayWildcard);
         assert_eq!(reader.state.cursor, 4);
     }
 
@@ -539,7 +539,7 @@ mod tests {
             predicate(&mut Reader::new("@.isbn")).unwrap(),
             Predicate {
                 key: vec!["isbn".to_string()],
-                func: PredicateFunc::KeyExist {},
+                func: PredicateFunc::KeyExist,
             }
         );
 

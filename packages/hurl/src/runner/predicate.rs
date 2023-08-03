@@ -212,14 +212,14 @@ fn expected_no_value(
             let expected = eval_predicate_value_template(expected, variables)?;
             Ok(format!("matches regex <{expected}>"))
         }
-        PredicateFuncValue::IsInteger {} => Ok("integer".to_string()),
-        PredicateFuncValue::IsFloat {} => Ok("float".to_string()),
-        PredicateFuncValue::IsBoolean {} => Ok("boolean".to_string()),
-        PredicateFuncValue::IsString {} => Ok("string".to_string()),
-        PredicateFuncValue::IsCollection {} => Ok("collection".to_string()),
-        PredicateFuncValue::IsDate {} => Ok("date".to_string()),
-        PredicateFuncValue::Exist {} => Ok("something".to_string()),
-        PredicateFuncValue::IsEmpty {} => Ok("empty".to_string()),
+        PredicateFuncValue::IsInteger => Ok("integer".to_string()),
+        PredicateFuncValue::IsFloat => Ok("float".to_string()),
+        PredicateFuncValue::IsBoolean => Ok("boolean".to_string()),
+        PredicateFuncValue::IsString => Ok("string".to_string()),
+        PredicateFuncValue::IsCollection => Ok("collection".to_string()),
+        PredicateFuncValue::IsDate => Ok("date".to_string()),
+        PredicateFuncValue::Exist => Ok("something".to_string()),
+        PredicateFuncValue::IsEmpty => Ok("empty".to_string()),
     }
 }
 
@@ -278,14 +278,14 @@ fn eval_predicate_func(
         PredicateFuncValue::Match {
             value: expected, ..
         } => eval_match(expected, &predicate_func.source_info, variables, value),
-        PredicateFuncValue::IsInteger {} => eval_is_integer(value),
-        PredicateFuncValue::IsFloat {} => eval_is_float(value),
-        PredicateFuncValue::IsBoolean {} => eval_is_boolean(value),
-        PredicateFuncValue::IsString {} => eval_is_string(value),
-        PredicateFuncValue::IsCollection {} => eval_is_collection(value),
-        PredicateFuncValue::IsDate {} => eval_is_date(value),
-        PredicateFuncValue::Exist {} => eval_exist(value),
-        PredicateFuncValue::IsEmpty {} => eval_is_empty(value),
+        PredicateFuncValue::IsInteger => eval_is_integer(value),
+        PredicateFuncValue::IsFloat => eval_is_float(value),
+        PredicateFuncValue::IsBoolean => eval_is_boolean(value),
+        PredicateFuncValue::IsString => eval_is_string(value),
+        PredicateFuncValue::IsCollection => eval_is_collection(value),
+        PredicateFuncValue::IsDate => eval_is_date(value),
+        PredicateFuncValue::Exist => eval_exist(value),
+        PredicateFuncValue::IsEmpty => eval_is_empty(value),
     }
 }
 
@@ -471,7 +471,7 @@ fn eval_match(
                 Err(_) => {
                     return Err(Error {
                         source_info: source_info.clone(),
-                        inner: RunnerError::InvalidRegex(),
+                        inner: RunnerError::InvalidRegex,
                         assert: false,
                     });
                 }
@@ -628,7 +628,7 @@ fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
     let actual_display = actual.display();
     let expected_display = expected.display();
     match (actual, expected) {
-        (Value::Null {}, Value::Null {}) => AssertResult {
+        (Value::Null, Value::Null) => AssertResult {
             success: true,
             actual: actual_display,
             expected: expected_display,
@@ -703,7 +703,7 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
     let actual_display = actual.display();
     let expected_display = expected.display();
     match (actual, expected) {
-        (Value::Null {}, Value::Null {}) => AssertResult {
+        (Value::Null, Value::Null) => AssertResult {
             success: false,
             actual: actual_display,
             expected: expected_display,
@@ -1092,7 +1092,7 @@ mod tests {
         // predicate: `exist`
         // value: Some(Unit) | None
         let pred_func = PredicateFunc {
-            value: PredicateFuncValue::Exist {},
+            value: PredicateFuncValue::Exist,
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
 
@@ -1507,7 +1507,7 @@ mod tests {
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
-                    value: PredicateValue::Null {},
+                    value: PredicateValue::Null,
                 },
             },
         };
@@ -1585,7 +1585,7 @@ mod tests {
                 source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
-                    value: PredicateValue::Null {},
+                    value: PredicateValue::Null,
                     operator: false,
                 },
             },
@@ -1610,7 +1610,7 @@ mod tests {
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
-                    value: PredicateValue::Null {},
+                    value: PredicateValue::Null,
                 },
             },
         };

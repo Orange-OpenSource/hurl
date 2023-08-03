@@ -62,7 +62,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
         return Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: ParseError::TemplateVariable {},
+            inner: ParseError::TemplateVariable,
         });
     }
     Ok(Variable {
