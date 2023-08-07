@@ -1,9 +1,8 @@
 # CI/CD Integration
 
-Up until now, we have run our test files locally. Now, we want to integrate
-them in a CI/CD pipeline (like [GitHub Actions] or [GitLab CI/CD pipelines]). As
-Hurl is very fast, we're going to run our tests on each commit of our project,
-drastically improving the project quality.
+Up until now, we have run our test files locally. Now, we want to integrate them in a CI/CD pipeline 
+(like [GitHub Actions] or [GitLab CI/CD pipelines]). As Hurl is very fast, we're going to run our tests on each commit 
+of our project, drastically improving the project quality.
 
 A typical web project pipeline is:
 
@@ -11,23 +10,74 @@ A typical web project pipeline is:
 - publish the application image to a Docker registry,
 - pull the application image and run integration tests.
 
-In this workflow, we're testing the same image that will be used and deployed in
-production.
+In this workflow, we're testing the same image that will be used and deployed in production.
 
 > For the tutorial, we are skipping build and publication phases and
 > only run integration tests on a prebuilt Docker image. To check a complete
 > project with build, Docker upload/publish and integration tests, go to <https://github.com/jcamiel/hurl-express-tutorial>
 
-In a first step, we're going to write a bash script that will pull our Docker
-image, launch it and run Hurl tests against it. Once we have checked that this
-script runs locally, we'll see how to run it automatically in a CI/CD pipeline.
+In a first step, we're going to write a shell script that will pull our Docker image, launch it and run Hurl tests 
+against it. Once we have checked that this script runs locally, we'll see how to run it automatically in a CI/CD 
+pipeline.
+
+
+## Templating Tests
+
+Before writing our test script, we're going to template our Hurl files so we can run them more easily in various 
+configuration. One way to do this is to use [variables]. We've already seen variables when [chaining requests], 
+we're going to see how we can use them to inject data.
+
+In the file `basic.hurl`, we first test the home page:
+
+```hurl
+# Checking our home page:
+GET http://localhost:3000
+
+# ...
+```
+
+We've hardcoded our server's URL but what if we need to run the same test on another URL (against production 
+URL with HTTPS for example)? We can use a variable like this:
+
+```hurl
+# Checking our home page:
+GET {{host}}
+
+# ...
+```
+
+And run our file with [`--variable`] option:
+
+```shell
+$ hurl --variable host=http://localhost:3000 --test basic.hurl
+```
+
+This way, our host is not hardcoded any more and we can run our tests in various configurations.
+
+1. Replace `http://localhost:3000` by `{{host}}` in `basic.hurl`, `login.hurl` and `signup.hurl` and test that everything is ok  
+
+```shell
+$ hurl --variable host=http://localhost:3000 --test *.hurl
+Running Hurl tests
+[1mintegration/basic.hurl[0m: [1;36mRunning[0m [1/2]
+[1mintegration/basic.hurl[0m: [1;32mSuccess[0m (4 request(s) in 18 ms)
+[1mintegration/login.hurl[0m: [1;36mRunning[0m [2/2]
+[1mintegration/login.hurl[0m: [1;32mSuccess[0m (6 request(s) in 18 ms)
+--------------------------------------------------------------------------------
+Executed files:  2
+Succeeded files: 2 (100.0%)
+Failed files:    0 (0.0%)
+Duration:        48 ms
+```
+
+Now, we're ready to write our integration script.
 
 ## Integration Script
 
 1. First, create a directory name `movies-project`, add [`integration/basic.hurl`]
    and [`integration/create-quiz.hurl`] from the previous tutorial to the directory.
 
-<pre><code class="language-shell">$ mkdir movies-project
+<pre><code class="language-shell"><!-- no-escape -->$ mkdir movies-project
 $ cd movies-project
 $ mkdir integration
 $ vi integration/basic.hurl
@@ -36,15 +86,19 @@ $ vi integration/basic.hurl
 
 $ vi integration/login.hurl
 
-# Import <a href="https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/login.hurl">login.hurl</a> here!</code></pre>
+# Import <a href="https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/login.hurl">login.hurl</a> here!
+
+$ vi integration/signup.hurl
+
+# Import <a href="https://github.com/jcamiel/hurl-express-tutorial/raw/main/integration/signup.hurl">signup.hurl</a> here!</code></pre>
 
 Next, we are going to write the first version of our integration script that will
-just pull the Quiz image and run it:
+just pull the Quiz image and run it. This script will our server URl as argument
 
 2. Create a script named `bin/integration.sh` with the following content:
 
 ```bash
-#!/bin/bash
+#!/bin/sh
 set -eu
 
 echo "Starting container"
@@ -55,7 +109,7 @@ docker run --name movies --rm --detach --publish 3000:3000 ghcr.io/jcamiel/hurl-
 
 ```shell
 $ chmod u+x bin/integration.sh
-$ bin/integration.sh
+$ bin/integration.sh http://localhost:3000
 Starting container
 5d311561828d6078e84eb4b8b87dfd5d67bde6d9614ad83860b60cf310438d2a
 ```
@@ -70,9 +124,8 @@ $ docker stop movies
 movies
 ```
 
-Now, we have a basic script that starts our container. Before adding our
-integration tests, we need to ensure that our application server is ready: the
-container has started, but the application server can take a few seconds to be
+Now, we have a basic script that starts our container. Before adding our integration tests, we need to ensure that our 
+application server is ready: the container has started, but the application server can take a few seconds to be
 really ready to accept incoming HTTP requests.
 
 To do so, we can test our health API. With a function `wait_for_url`,
@@ -82,12 +135,12 @@ until the check succeeds with [`--retry`] Hurl option. Once the test has succeed
 5. Modify `bin/integration.sh` to wait for the application to be ready:
 
 ```bash
-#!/bin/bash
+#!/bin/sh
 set -eu
 
 wait_for_url () {
     echo "Testing $1..."
-    echo -e "GET $1\nHTTP 200" | hurl --retry "$2" > /dev/null;
+    printf 'GET %s\nHTTP 200' "$1" | hurl --retry "$2" > /dev/null;
     return 0
 }
 
@@ -95,21 +148,20 @@ echo "Starting container"
 docker run --name movies --rm --detach --publish 3000:3000 ghcr.io/jcamiel/hurl-express-tutorial:latest
 
 echo "Waiting server to be ready"
-wait_for_url 'http://localhost:3000' 60
+wait_for_url "$1" 60
 
 echo "Stopping container"
 docker stop movies
 ```
 
-We have now the simplest integration test script: it pulls our Docker image, then starts
-the container and waits for a `200 OK` response.
+We have now the simplest integration test script: it pulls our Docker image, then starts the container and waits for a `200 OK` response.
 
 Next, we're going to add our Hurl tests to the script.
 
 6. Modify `bin/integration.sh` to add integration tests:
 
 ```bash
-#!/bin/bash
+#!/bin/sh
 set -eu
 
 # ...
@@ -121,7 +173,7 @@ echo "Waiting server to be ready"
 # ...
 
 echo "Running Hurl tests"
-hurl --test integration/*.hurl
+hurl --variable host="$1" --test integration/*.hurl
 
 echo "Stopping container"
 # ...
@@ -130,7 +182,7 @@ echo "Stopping container"
 7. Run [`bin/integration.sh`] to check that our application passes all tests:
 
 ```shell
-$ bin/integration.sh
+$ bin/integration.sh http://localhost:3000
 Starting container
 48cf21d193a01651fc42b80648abdb51dc626f31c3f9c8917aea899c68eb4a12
 Waiting server to be ready
@@ -160,8 +212,18 @@ to create a [GitHub Action]. You can also see how to integrate your tests in [Gi
 1. Create a new empty repository in GitHub, named `movies-project`:
 
 <div class="picture">
-    <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-light.png" width="680" alt="Create new GitHub repository"/>
-    <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-dark.png" width="680" alt="Create new GitHub repository"/>
+    <picture>
+        <source srcset="/docs/assets/img/github-new-repository-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/github-new-repository-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/github-new-repository-light.png" type="image/png">
+       <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-light.png" width="680" alt="Create new GitHub repository"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/github-new-repository-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/github-new-repository-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/github-new-repository-dark.png" type="image/png">
+       <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-dark.png" width="680" alt="Create new GitHub repository"/>
+   </picture>
 </div>
 
 
@@ -178,7 +240,7 @@ $ git commit -m "Add integration tests."
  create mode 100755 bin/integration.sh
 ...
 $ git remote add origin https://github.com/jcamiel/movies-project.git
-$ git push -u origin main
+$ git push --set-upstream origin main
 Enumerating objects: 7, done.
 Counting objects: 100% (7/7), done.
 ...
@@ -187,7 +249,7 @@ Counting objects: 100% (7/7), done.
 Next, we are going to add a GitHub Action to our repo. The purpose of this action
 will be to launch our integration script on each commit.
 
-3. Create a  file in `.github/workflows/ci.yml`:
+3. Create a file in `.github/workflows/ci.yml`:
 
 ```yaml
 name: CI
@@ -211,7 +273,7 @@ jobs:
         run: |
           curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl_4.0.0_amd64.deb
           sudo dpkg -i hurl_4.0.0_amd64.deb
-          bin/integration.sh
+          bin/integration.sh http://localhost:3000
 ```
 
 4. Commit and push the new action:
@@ -231,13 +293,113 @@ Counting objects: 100% (6/6), done.
 Finally, you can check on GitHub that our action is running:
 
 <div class="picture">
-    <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-light.png" width="752" alt="GitHub Action"/>
-    <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-dark.png" width="752" alt="GitHub Action"/>
+    <picture>
+        <source srcset="/docs/assets/img/github-action-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/github-action-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/github-action-light.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-light.png" width="680" alt="GitHub Action"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/github-action-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/github-action-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/github-action-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-dark.png" width="680" alt="GitHub Action"/>
+   </picture>
 </div>
 
 ## Running Tests with GitLab CI/CD
 
-If you use [GitLab CI/CD], you can check [this detailed tutorial] on how to continuously run your Hurl test suite.
+1. Create a new empty repository in GitLab, named `movies-project`:
+
+<div class="picture">
+    <picture>
+        <source srcset="/docs/assets/img/gitlab-new-repository-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/gitlab-new-repository-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/gitlab-new-repository-light.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-light.png" width="680" alt="Create new GitLab repository"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/gitlab-new-repository-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/gitlab-new-repository-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/gitlab-new-repository-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-dark.png" width="680" alt="Create new GitLab repository"/>
+   </picture>
+</div>
+
+2. On your computer, create a git repo in `movies-project` directory and
+   commit the projects files:
+
+```shell
+$ git init
+Initialized empty Git repository in /Users/jc/Documents/Dev/movies-project/.git/
+$ git add .
+$ git commit -m "Add integration tests."
+[master (root-commit) ea3e5cd] Add integration tests.
+ 3 files changed, 146 insertions(+)
+ create mode 100755 bin/integration.sh
+...
+$ git remote add origin git@gitlab.com:jcamiel/movies-project.git
+$ git push --set-upstream origin main
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+...
+```
+
+Next, we are going to add a GitLab CI/CD pipeline. The purpose of this pipeline will be to launch our integration 
+script on each commit. We'll base our image on a Docker based image, with a [Docker-In-Docker service].
+
+3. Create a file `.gitlab-ci.yml`:
+
+```yaml
+image: docker:24
+
+build:
+   stage: build
+   services:
+      - docker:24-dind
+   before_script:
+      # Add Hurl on Alpine (testing channel)
+      - apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
+   script:
+      - bin/integration.sh http://docker:3000
+```
+
+> Because of Docker-In-Docker, our server is accessible with the `docker` hostname (and not `localhost`). As we have 
+> made our script configurable, we can just pass the hostname and don't modify our integration script
+
+
+4. Commit and push the new action:
+
+```shell
+$ git add .gitlab-ci.yml
+$ git commit -m "Add GitLab CI/CD pipeline."
+[main 11c4e7e] Add GitLab CI/CD pipeline.
+ 1 file changed, 13 insertions(+)
+ create mode 100644 .gitlab-ci.yml
+$ git push
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+...
+```
+
+Finally, you can check on GitLab that our pipeline is running:
+
+<div class="picture">
+    <picture>
+        <source srcset="/docs/assets/img/gitlab-pipeline-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/gitlab-pipeline-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/gitlab-pipeline-light.png" type="image/png">
+        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-light.png" width="680" alt="GitHub Action"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/gitlab-pipeline-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/gitlab-pipeline-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/gitlab-pipeline-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-dark.png" width="680" alt="GitHub Action"/>
+    </picture>
+</div>
+
+For a more complete [GitLab CI/CD] example, you can check [this detailed tutorial] on how to continuously run your Hurl test suite.
 
 
 ## Tests Report
@@ -259,3 +421,7 @@ Now, we can add more Hurl tests and start developing new features with confidenc
 [GitLab CI/CD]: https://about.gitlab.com/why-gitlab/
 [this detailed tutorial]: https://about.gitlab.com/blog/2022/12/14/how-to-continously-test-web-apps-apis-with-hurl-and-gitlab-ci-cd/
 [`--retry`]: /docs/manual.md#retry
+[variables]: /docs/templates.md#variables
+[chaining requests]: /docs/tutorial/chaining-requests.md
+[Docker-In-Docker service]: https://docs.gitlab.com/ee/ci/docker/
+[`--variable`]: /docs/manual.md#variable
