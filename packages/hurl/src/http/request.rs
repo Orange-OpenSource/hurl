@@ -78,7 +78,7 @@ impl Request {
         };
         let port = match url.port() {
             Some(port) => format!(":{port}"),
-            None => "".to_string(),
+            None => String::new(),
         };
         Ok(format!("{scheme}://{host}{port}"))
     }
@@ -96,7 +96,7 @@ fn parse_cookie(s: &str) -> RequestCookie {
         },
         None => RequestCookie {
             name: s.to_string(),
-            value: "".to_string(),
+            value: String::new(),
         },
     }
 }
@@ -149,7 +149,7 @@ mod tests {
                 },
                 Param {
                     name: "param2".to_string(),
-                    value: "".to_string(),
+                    value: String::new(),
                 },
                 Param {
                     name: "param3".to_string(),
@@ -214,7 +214,7 @@ mod tests {
         assert_eq!(
             Request {
                 url: "http://localhost".to_string(),
-                method: "".to_string(),
+                method: String::new(),
                 headers: vec![],
                 body: vec![],
             }
@@ -225,7 +225,7 @@ mod tests {
         assert_eq!(
             Request {
                 url: "http://localhost:8000/redirect-relative".to_string(),
-                method: "".to_string(),
+                method: String::new(),
                 headers: vec![],
                 body: vec![],
             }
@@ -236,7 +236,7 @@ mod tests {
         assert_eq!(
             Request {
                 url: "https://localhost:8000".to_string(),
-                method: "".to_string(),
+                method: String::new(),
                 headers: vec![],
                 body: vec![],
             }

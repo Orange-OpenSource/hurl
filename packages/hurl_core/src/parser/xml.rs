@@ -23,7 +23,7 @@ use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
-    let mut buf = String::from("");
+    let mut buf = String::new();
     let start = reader.state.clone();
     match reader.read() {
         Some('<') => buf.push('<'),

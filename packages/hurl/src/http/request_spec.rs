@@ -37,7 +37,7 @@ impl Default for RequestSpec {
     fn default() -> Self {
         RequestSpec {
             method: Method("GET".to_string()),
-            url: "".to_string(),
+            url: String::new(),
             headers: vec![],
             querystring: vec![],
             form: vec![],

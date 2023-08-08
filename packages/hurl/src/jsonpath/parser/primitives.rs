@@ -98,7 +98,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<'static, Number> {
 
 pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
     try_literal("'", reader)?;
-    let mut s = "".to_string();
+    let mut s = String::new();
     loop {
         match reader.read() {
             None => {

@@ -305,7 +305,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -354,7 +354,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Json(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 8, 1, 8),
                 },
                 newline: Whitespace {
@@ -380,7 +380,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::GraphQl(GraphQl {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 11, 1, 11),
                 },
                 newline: Whitespace {
@@ -454,7 +454,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -473,7 +473,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -528,7 +528,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -554,7 +554,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -578,7 +578,7 @@ mod tests {
             multiline_string(&mut reader).unwrap(),
             MultilineString::Text(Text {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
                 newline: Whitespace {
@@ -676,7 +676,7 @@ variables {
             multiline_string(&mut reader).unwrap(),
             MultilineString::GraphQl(GraphQl {
                 space: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 11, 1, 11),
                 },
                 newline: Whitespace {
@@ -700,7 +700,7 @@ variables {
                     value: JsonValue::Object {
                         space0: "\n  ".to_string(),
                         elements: vec![JsonObjectElement {
-                            space0: "".to_string(),
+                            space0: String::new(),
                             name: Template {
                                 delimiter: Some('"'),
                                 elements: vec![
@@ -711,7 +711,7 @@ variables {
                                 ],
                                 source_info: SourceInfo::new(9, 4, 9, 8)
                             },
-                            space1: "".to_string(),
+                            space1: String::new(),
                             space2: " ".to_string(),
                             value: JsonValue::String(Template {
                                 delimiter: Some('"'),

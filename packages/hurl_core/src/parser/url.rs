@@ -27,7 +27,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
 
     let start = reader.state.clone();
     let mut elements = vec![];
-    let mut buffer = String::from("");
+    let mut buffer = String::new();
 
     if reader.is_eof() {
         return Err(Error {
@@ -62,7 +62,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
                         value: buffer.clone(),
                         encoded: buffer.clone(),
                     });
-                    buffer = String::from("");
+                    buffer = String::new();
                 }
                 elements.push(TemplateElement::Expression(value));
             }
@@ -196,7 +196,7 @@ mod tests {
                     },
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 10, 1, 10),
                         },
                         variable: Variable {
@@ -204,7 +204,7 @@ mod tests {
                             source_info: SourceInfo::new(1, 10, 1, 14),
                         },
                         space1: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 14, 1, 14),
                         },
                     }),

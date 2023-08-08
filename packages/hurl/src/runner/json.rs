@@ -138,7 +138,7 @@ pub fn eval_json_template(
 ) -> Result<String, Error> {
     let Template { elements, .. } = template;
     {
-        let mut value = String::from("");
+        let mut value = String::new();
         for elem in elements {
             match eval_json_template_element(elem, variables) {
                 Ok(v) => value.push_str(v.as_str()),
@@ -195,7 +195,7 @@ mod tests {
                 },
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                     variable: Variable {
@@ -203,7 +203,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 15, 1, 19),
                     },
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 19, 1, 19),
                     },
                 }),
@@ -220,7 +220,7 @@ mod tests {
         JsonValue::Object {
             space0: "\n    ".to_string(),
             elements: vec![JsonObjectElement {
-                space0: "".to_string(),
+                space0: String::new(),
                 name: Template {
                     delimiter: None,
                     elements: vec![TemplateElement::String {
@@ -229,7 +229,7 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
-                space1: "".to_string(),
+                space1: String::new(),
                 space2: " ".to_string(),
                 value: JsonValue::String(Template {
                     delimiter: None,
@@ -288,7 +288,7 @@ mod tests {
         assert_eq!(
             eval_json_value(
                 &JsonValue::List {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     elements: vec![],
                 },
                 &variables,
@@ -301,22 +301,22 @@ mod tests {
         assert_eq!(
             eval_json_value(
                 &JsonValue::List {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     elements: vec![
                         JsonListElement {
-                            space0: "".to_string(),
+                            space0: String::new(),
                             value: JsonValue::Number("1".to_string()),
-                            space1: "".to_string(),
+                            space1: String::new(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: JsonValue::Number("-2".to_string()),
-                            space1: "".to_string(),
+                            space1: String::new(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: JsonValue::Number("3.0".to_string()),
-                            space1: "".to_string(),
+                            space1: String::new(),
                         },
                     ],
                 },
@@ -338,17 +338,17 @@ mod tests {
         assert_eq!(
             eval_json_value(
                 &JsonValue::List {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     elements: vec![
                         JsonListElement {
-                            space0: "".to_string(),
+                            space0: String::new(),
                             value: JsonValue::String(template),
-                            space1: "".to_string(),
+                            space1: String::new(),
                         },
                         JsonListElement {
                             space0: " ".to_string(),
                             value: json_hello_world_value(),
-                            space1: "".to_string(),
+                            space1: String::new(),
                         },
                     ],
                 },
@@ -366,7 +366,7 @@ mod tests {
         assert_eq!(
             eval_json_value(
                 &JsonValue::Object {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     elements: vec![],
                 },
                 &variables,
@@ -455,7 +455,7 @@ mod tests {
 
     fn whitespace() -> Whitespace {
         Whitespace {
-            value: "".to_string(),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }

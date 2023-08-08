@@ -556,7 +556,7 @@ fn lint_file_param(file_param: &FileParam) -> FileParam {
 
 fn empty_whitespace() -> Whitespace {
     Whitespace {
-        value: "".to_string(),
+        value: String::new(),
         source_info: SourceInfo::new(0, 0, 0, 0),
     }
 }
@@ -595,7 +595,7 @@ fn lint_line_terminator(line_terminator: &LineTerminator) -> LineTerminator {
     let comment = line_terminator.comment.as_ref().map(lint_comment);
     let newline = Whitespace {
         value: if line_terminator.newline.value.is_empty() {
-            "".to_string()
+            String::new()
         } else {
             "\n".to_string()
         },

@@ -107,12 +107,12 @@ mod tests {
                 },
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 9, 1, 9),
                     },
                     name: CookieAttributeName::Domain("Domain".to_string()),
                     space1: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                 }),
@@ -131,7 +131,7 @@ mod tests {
                     delimiter: None,
                     elements: vec![TemplateElement::Expression(Expr {
                         space0: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 3, 1, 3),
                         },
                         variable: Variable {
@@ -139,7 +139,7 @@ mod tests {
                             source_info: SourceInfo::new(1, 3, 1, 7),
                         },
                         space1: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 7, 1, 7),
                         },
                     })],
@@ -147,12 +147,12 @@ mod tests {
                 },
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 10, 1, 10),
                     },
                     name: CookieAttributeName::Domain("Domain".to_string()),
                     space1: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 16, 1, 16),
                     },
                 }),

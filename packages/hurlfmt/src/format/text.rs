@@ -21,7 +21,7 @@ use hurl_core::ast::*;
 use crate::format::token::*;
 
 pub fn format(hurl_file: HurlFile, color: bool) -> String {
-    let mut buffer = String::from("");
+    let mut buffer = String::new();
     for token in hurl_file.tokenize() {
         buffer.push_str(format_token(token, color).as_str());
     }

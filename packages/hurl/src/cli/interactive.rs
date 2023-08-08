@@ -95,7 +95,7 @@ fn log_request(request: Request) {
                                 if let Some(content_type) = file_param.value.content_type {
                                     format!("; {content_type}")
                                 } else {
-                                    "".to_string()
+                                    String::new()
                                 };
                             eprintln!(
                                 "\r{}: {}{}",

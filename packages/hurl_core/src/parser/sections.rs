@@ -234,7 +234,7 @@ fn file_value(reader: &mut Reader) -> ParseResult<'static, FileValue> {
         Ok(_) => {
             reader.state = save.clone();
             let space2 = Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo {
                     start: save.pos.clone(),
                     end: save.pos,
@@ -261,13 +261,13 @@ fn file_value(reader: &mut Reader) -> ParseResult<'static, FileValue> {
 
 fn file_content_type(reader: &mut Reader) -> ParseResult<'static, String> {
     let start = reader.state.clone();
-    let mut buf = "".to_string();
-    let mut spaces = "".to_string();
+    let mut buf = String::new();
+    let mut spaces = String::new();
     let mut save = reader.state.clone();
     while let Some(c) = reader.read() {
         if c.is_alphanumeric() || c == '/' || c == ';' || c == '=' || c == '-' {
             buf.push_str(spaces.as_str());
-            spaces = "".to_string();
+            spaces = String::new();
             buf.push(c);
             save = reader.state.clone();
         } else if c == ' ' {
@@ -656,12 +656,12 @@ mod tests {
             Section {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 10, 1, 10),
                     },
                     comment: None,
@@ -673,7 +673,7 @@ mod tests {
                 value: SectionValue::Asserts(vec![Assert {
                     line_terminators: vec![],
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(2, 1, 2, 1),
                     },
                     query: Query {
@@ -701,7 +701,7 @@ mod tests {
                     predicate: Predicate {
                         not: false,
                         space0: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(2, 19, 2, 19),
                         },
                         predicate_func: PredicateFunc {
@@ -725,7 +725,7 @@ mod tests {
                     },
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(2, 45, 2, 45),
                         },
                         comment: None,
@@ -792,14 +792,14 @@ mod tests {
             EntryOption {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 1 },
                         end: Pos { line: 1, column: 1 },
                     },
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
                         end: Pos { line: 1, column: 9 },
@@ -821,7 +821,7 @@ mod tests {
                 kind: OptionKind::Insecure(true),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
@@ -835,7 +835,7 @@ mod tests {
                     },
                     comment: None,
                     newline: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
@@ -868,14 +868,14 @@ mod tests {
             EntryOption {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 1 },
                         end: Pos { line: 1, column: 1 },
                     },
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 7 },
                         end: Pos { line: 1, column: 7 },
@@ -900,7 +900,7 @@ mod tests {
                 }),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
@@ -914,7 +914,7 @@ mod tests {
                     },
                     comment: None,
                     newline: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo {
                             start: Pos {
                                 line: 1,
@@ -946,14 +946,14 @@ mod tests {
             VariableDefinition {
                 name: "a".to_string(),
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 2 },
                         end: Pos { line: 1, column: 2 },
                     },
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 3 },
                         end: Pos { line: 1, column: 3 },
@@ -1040,7 +1040,7 @@ mod tests {
             file_value(&mut reader).unwrap(),
             FileValue {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 6, 1, 6),
                 },
                 filename: Filename {
@@ -1048,11 +1048,11 @@ mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 15),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 15, 1, 15),
                 },
                 space2: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 16, 1, 16),
                 },
                 content_type: None,
@@ -1063,7 +1063,7 @@ mod tests {
             file_value(&mut reader).unwrap(),
             FileValue {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 6, 1, 6),
                 },
                 filename: Filename {
@@ -1071,7 +1071,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 15),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 15, 1, 15),
                 },
                 space2: Whitespace {
@@ -1244,7 +1244,7 @@ mod tests {
             Predicate {
                 not: false,
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 21, 1, 21),
                 },
                 predicate_func: PredicateFunc {
@@ -1271,12 +1271,12 @@ mod tests {
             Section {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 12, 1, 12),
                     },
                     comment: None,
@@ -1288,7 +1288,7 @@ mod tests {
                 value: SectionValue::BasicAuth(Some(KeyValue {
                     line_terminators: vec![],
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(2, 1, 2, 1)
                     },
                     key: EncodedString {
@@ -1298,11 +1298,11 @@ mod tests {
                         source_info: SourceInfo::new(2, 1, 2, 5),
                     },
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(2, 5, 2, 5)
                     },
                     space2: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(2, 6, 2, 6)
                     },
                     value: Template {
@@ -1315,7 +1315,7 @@ mod tests {
                     },
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(2, 14, 2, 14)
                         },
                         comment: None,
@@ -1336,12 +1336,12 @@ mod tests {
             Section {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 12, 1, 12),
                     },
                     comment: None,

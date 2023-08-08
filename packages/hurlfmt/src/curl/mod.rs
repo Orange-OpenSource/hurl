@@ -48,7 +48,7 @@ pub fn parse(s: &str) -> Result<String, String> {
         .split(s)
         .filter(|s| !s.is_empty())
         .collect();
-    let mut s = "".to_string();
+    let mut s = String::new();
     for (i, line) in lines.iter().enumerate() {
         let hurl_str = parse_line(line).map_err(|message| {
             format!("Can not parse curl command at line {}: {message}", i + 1)

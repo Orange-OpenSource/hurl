@@ -1217,7 +1217,7 @@ mod tests {
             delimiter: Some('"'),
             elements: vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 11, 1, 11),
                 },
                 variable: Variable {
@@ -1225,7 +1225,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 11, 1, 19),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 19, 1, 19),
                 },
             })],

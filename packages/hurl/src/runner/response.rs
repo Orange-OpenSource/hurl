@@ -73,7 +73,7 @@ pub fn eval_asserts(
             Err(e) => {
                 asserts.push(AssertResult::Header {
                     actual: Err(e),
-                    expected: String::from(""),
+                    expected: String::new(),
                     source_info: header.key.clone().source_info,
                 });
             }

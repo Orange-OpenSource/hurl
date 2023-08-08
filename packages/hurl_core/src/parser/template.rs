@@ -34,8 +34,8 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
 
     let mut elements = vec![];
 
-    let mut value = "".to_string();
-    let mut encoded = "".to_string();
+    let mut value = String::new();
+    let mut encoded = String::new();
     let mut state = State::String;
     let mut expression_start = None;
 
@@ -54,8 +54,8 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
                 if s.as_str() == "{" {
                     if !value.is_empty() {
                         elements.push(TemplateElement::String { value, encoded });
-                        value = "".to_string();
-                        encoded = "".to_string();
+                        value = String::new();
+                        encoded = String::new();
                     }
                     state = State::Template;
                 } else {
@@ -89,8 +89,8 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<Tem
                     };
                     let expression = expr::parse2(&mut reader)?;
                     elements.push(TemplateElement::Expression(expression));
-                    value = "".to_string();
-                    encoded = "".to_string();
+                    value = String::new();
+                    encoded = String::new();
                     expression_start = None;
                     state = State::String;
                 } else {
@@ -225,7 +225,7 @@ mod tests {
                 },
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 11, 1, 11),
                     },
                     variable: Variable {
@@ -233,7 +233,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 11, 1, 15),
                     },
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                 }),
@@ -262,7 +262,7 @@ mod tests {
             templatize(encoded_string).unwrap(),
             vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 3, 1, 3),
                 },
                 variable: Variable {
@@ -270,7 +270,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 3, 1, 4),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4),
                 },
             }),]

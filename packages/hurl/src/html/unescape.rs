@@ -129,7 +129,7 @@ pub fn html_unescape(text: &str) -> String {
                         return "\u{FFFD}".to_string();
                     }
                     if INVALID_CODEPOINTS.contains(&num) {
-                        return "".to_string();
+                        return String::new();
                     }
                     char::from_u32(num).unwrap().to_string()
                 } else {

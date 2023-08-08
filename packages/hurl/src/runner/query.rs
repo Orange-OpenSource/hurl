@@ -453,7 +453,7 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 19),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 expr: Template {
@@ -474,7 +474,7 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 19),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 expr: Template {
@@ -495,7 +495,7 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 19),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 expr: Template {
@@ -516,7 +516,7 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 26),
             value: QueryValue::Regex {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 value: RegexValue::Template(Template {
@@ -537,7 +537,7 @@ pub mod tests {
             source_info: SourceInfo::new(1, 1, 1, 26),
             value: QueryValue::Regex {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 6, 1, 7),
                 },
                 value: RegexValue::Template(Template {
@@ -633,7 +633,7 @@ pub mod tests {
     fn test_query_cookie() {
         let variables = HashMap::new();
         let space = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let response = http::Response {
@@ -982,7 +982,7 @@ pub mod tests {
             source_info: SourceInfo::new(0, 0, 0, 0),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 9, 1, 10),
                 },
                 expr: Template {
@@ -1141,10 +1141,10 @@ pub mod tests {
                 &http::Response {
                     certificate: Some(http::Certificate {
                         subject: "A=B, C=D".to_string(),
-                        issuer: "".to_string(),
+                        issuer: String::new(),
                         start_date: Default::default(),
                         expire_date: Default::default(),
-                        serial_number: "".to_string()
+                        serial_number: String::new()
                     }),
                     ..Default::default()
                 },

@@ -78,7 +78,7 @@ pub fn write_body(
         }
     } else {
         let source = if filename_in == "-" {
-            "".to_string()
+            String::new()
         } else {
             format!("for file {filename_in}")
         };

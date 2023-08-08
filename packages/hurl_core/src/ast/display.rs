@@ -61,7 +61,7 @@ impl fmt::Display for StatusValue {
 
 impl fmt::Display for Template {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buffer = String::from("");
+        let mut buffer = String::new();
         for element in self.elements.iter() {
             buffer.push_str(element.to_string().as_str());
         }
@@ -143,7 +143,7 @@ impl fmt::Display for MultilineString {
             | MultilineString::Xml(text) => text.value.to_string(),
             MultilineString::GraphQl(graphql) => {
                 let var = match &graphql.variables {
-                    None => "".to_string(),
+                    None => String::new(),
                     Some(var) => {
                         format!(
                             "variables{}{}{}",
@@ -256,7 +256,7 @@ mod tests {
 
     fn whitespace() -> Whitespace {
         Whitespace {
-            value: "".to_string(),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }

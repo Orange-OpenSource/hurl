@@ -139,7 +139,7 @@ impl FromStr for Cookie {
         let value = if let Some(&v) = tokens.get(6) {
             v.to_string()
         } else {
-            "".to_string()
+            String::new()
         };
         Ok(Cookie {
             domain,
@@ -182,7 +182,7 @@ mod tests {
                 https: "FALSE".to_string(),
                 expires: "1".to_string(),
                 name: "cookie2".to_string(),
-                value: "".to_string(),
+                value: String::new(),
                 http_only: false,
             }
         );

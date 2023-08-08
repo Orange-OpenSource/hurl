@@ -96,7 +96,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 1, 8),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 8, 1, 8),
                 },
             }

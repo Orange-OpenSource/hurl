@@ -291,7 +291,7 @@ mod tests {
         let default_request = Request {
             line_terminators: vec![],
             space0: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(1, 1, 1, 1),
             },
             method: Method("GET".to_string()),
@@ -309,12 +309,12 @@ mod tests {
             },
             line_terminator0: LineTerminator {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 21, 1, 21),
                 },
                 comment: None,
                 newline: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 21, 1, 21),
                 },
             },
@@ -329,7 +329,7 @@ mod tests {
         let default_request = Request {
             line_terminators: vec![],
             space0: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(1, 1, 1, 1),
             },
             method: Method("GET".to_string()),
@@ -354,7 +354,7 @@ mod tests {
                     value: " comment".to_string(),
                 }),
                 newline: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 32, 1, 32),
                 },
             },
@@ -386,12 +386,12 @@ mod tests {
             Body {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(2, 1, 2, 1),
                 },
                 value: Bytes::MultilineString(MultilineString::Text(Text {
                     space: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(2, 4, 2, 4),
                     },
                     newline: Whitespace {
@@ -409,12 +409,12 @@ mod tests {
                 })),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(4, 4, 4, 4),
                     },
                     comment: None,
                     newline: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(4, 4, 4, 4),
                     },
                 },
@@ -430,22 +430,22 @@ mod tests {
         assert_eq!(
             r.body.unwrap().value,
             Bytes::Json(JsonValue::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("1".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("2".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("3".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                 ],
             })
@@ -546,22 +546,22 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json(JsonValue::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("1".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("2".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("3".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                 ],
             })
@@ -574,7 +574,7 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json(JsonValue::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![],
             })
         );
@@ -586,7 +586,7 @@ mod tests {
         assert_eq!(
             b.value,
             Bytes::Json(JsonValue::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![],
             })
         );

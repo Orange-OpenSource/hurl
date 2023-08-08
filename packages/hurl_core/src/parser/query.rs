@@ -287,12 +287,12 @@ mod tests {
                     },
                     attribute: Some(CookieAttribute {
                         space0: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 13, 1, 13),
                         },
                         name: CookieAttributeName::Domain("Domain".to_string()),
                         space1: Whitespace {
-                            value: String::from(""),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 19, 1, 19),
                         },
                     }),

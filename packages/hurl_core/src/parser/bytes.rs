@@ -84,22 +84,22 @@ mod tests {
         assert_eq!(
             bytes(&mut reader).unwrap(),
             Bytes::Json(JsonValue::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("1".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("2".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     JsonListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: JsonValue::Number("3".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                 ],
             })

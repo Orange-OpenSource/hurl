@@ -37,7 +37,7 @@ pub fn predicate(reader: &mut Reader) -> ParseResult<'static, Predicate> {
 fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
     let save = reader.state.clone();
     let no_whitespace = Whitespace {
-        value: "".to_string(),
+        value: String::new(),
         source_info: SourceInfo {
             start: save.pos.clone(),
             end: save.pos.clone(),
@@ -384,7 +384,7 @@ mod tests {
             (
                 false,
                 Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 }
             )
@@ -527,7 +527,7 @@ mod tests {
             PredicateFuncValue::Equal {
                 value: PredicateValue::Expression(Expr {
                     space0: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 10, 1, 10),
                     },
                     variable: Variable {
@@ -535,7 +535,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 10, 1, 15),
                     },
                     space1: Whitespace {
-                        value: String::from(""),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                 }),

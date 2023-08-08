@@ -788,10 +788,10 @@ mod tests {
             domain: "example.com".to_string(),
             include_subdomain: "FALSE".to_string(),
             path: "/".to_string(),
-            https: "".to_string(),
-            expires: "".to_string(),
-            name: "".to_string(),
-            value: "".to_string(),
+            https: String::new(),
+            expires: String::new(),
+            name: String::new(),
+            value: String::new(),
             http_only: false,
         };
         assert!(match_cookie(&cookie, "http://example.com/toto"));
@@ -802,10 +802,10 @@ mod tests {
             domain: "example.com".to_string(),
             include_subdomain: "TRUE".to_string(),
             path: "/toto".to_string(),
-            https: "".to_string(),
-            expires: "".to_string(),
-            name: "".to_string(),
-            value: "".to_string(),
+            https: String::new(),
+            expires: String::new(),
+            name: String::new(),
+            value: String::new(),
             http_only: false,
         };
         assert!(match_cookie(&cookie, "http://example.com/toto"));

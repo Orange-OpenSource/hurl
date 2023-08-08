@@ -109,7 +109,7 @@ impl fmt::Display for Value {
 
 impl fmt::Display for ListElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut s = "".to_string();
+        let mut s = String::new();
         s.push_str(self.space0.as_str());
         s.push_str(self.value.to_string().as_str());
         s.push_str(self.space1.as_str());
@@ -119,7 +119,7 @@ impl fmt::Display for ListElement {
 
 impl fmt::Display for ObjectElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut s = "".to_string();
+        let mut s = String::new();
         s.push_str(self.space0.as_str());
         s.push('"');
         s.push_str(self.name.to_string().as_str());
@@ -167,7 +167,7 @@ impl Value {
 
 impl ListElement {
     fn encoded(&self) -> String {
-        let mut s = "".to_string();
+        let mut s = String::new();
         s.push_str(self.space0.as_str());
         s.push_str(self.value.encoded().as_str());
         s.push_str(self.space1.as_str());
@@ -177,7 +177,7 @@ impl ListElement {
 
 impl ObjectElement {
     fn encoded(&self) -> String {
-        let mut s = "".to_string();
+        let mut s = String::new();
         s.push_str(self.space0.as_str());
         s.push_str(self.name.encoded().as_str());
         s.push_str(self.space1.as_str());
@@ -191,7 +191,7 @@ impl ObjectElement {
 
 impl Template {
     fn encoded(&self) -> String {
-        let mut s = "".to_string();
+        let mut s = String::new();
         if let Some(d) = self.delimiter {
             s.push(d)
         }
@@ -224,7 +224,7 @@ mod tests {
             "{{x}}".to_string(),
             Value::Expression(Expr {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 variable: Variable {
@@ -232,7 +232,7 @@ mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             })
@@ -255,7 +255,7 @@ mod tests {
         assert_eq!(
             "[]".to_string(),
             Value::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![],
             }
             .to_string()
@@ -263,22 +263,22 @@ mod tests {
         assert_eq!(
             "[1, 2, 3]".to_string(),
             Value::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![
                     ListElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         value: Value::Number("1".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     ListElement {
                         space0: " ".to_string(),
                         value: Value::Number("2".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     },
                     ListElement {
                         space0: " ".to_string(),
                         value: Value::Number("3".to_string()),
-                        space1: "".to_string(),
+                        space1: String::new(),
                     }
                 ],
             }
@@ -287,7 +287,7 @@ mod tests {
         assert_eq!(
             "{}".to_string(),
             Value::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![],
             }
             .to_string()
@@ -295,7 +295,7 @@ mod tests {
         assert_eq!(
             "{ \"id\": 123 }".to_string(),
             Value::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![ObjectElement {
                     space0: " ".to_string(),
                     name: Template {
@@ -306,7 +306,7 @@ mod tests {
                         }],
                         source_info: SourceInfo::new(1, 1, 1, 1),
                     },
-                    space1: "".to_string(),
+                    space1: String::new(),
                     space2: " ".to_string(),
                     value: Value::Number("123".to_string()),
                     space3: " ".to_string(),
@@ -322,7 +322,7 @@ mod tests {
         assert_eq!(
             TemplateElement::Expression(Expr {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 variable: Variable {
@@ -330,7 +330,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
             })
@@ -342,7 +342,7 @@ mod tests {
                 delimiter: None,
                 elements: vec![TemplateElement::Expression(Expr {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                     variable: Variable {
@@ -350,7 +350,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 1, 1, 1),
                     },
                 })],

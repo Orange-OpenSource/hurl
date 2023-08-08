@@ -192,7 +192,7 @@ impl Default for LoggerOptionsBuilder {
         LoggerOptionsBuilder {
             color: false,
             error_format: ErrorFormat::Short,
-            filename: "".to_string(),
+            filename: String::new(),
             progress_bar: false,
             test: false,
             verbosity: None,
@@ -518,7 +518,7 @@ fn progress_string(entry_index: usize, count: usize) -> String {
     let completed = if col > 0 {
         "=".repeat(col)
     } else {
-        "".to_string()
+        String::new()
     };
     let void = " ".repeat(WIDTH - col - 1);
     format!("[{completed}>{void}] {entry_index}/{count}")

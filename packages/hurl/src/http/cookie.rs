@@ -176,7 +176,7 @@ pub mod tests {
             }
         );
 
-        assert_eq!(CookieAttribute::parse("".to_string()), None);
+        assert_eq!(CookieAttribute::parse(String::new()), None);
     }
 
     #[test]
@@ -358,7 +358,7 @@ pub mod tests {
                 },
                 CookieAttribute {
                     name: "Max-Age".to_string(),
-                    value: Some("".to_string()),
+                    value: Some(String::new()),
                 },
             ],
         };

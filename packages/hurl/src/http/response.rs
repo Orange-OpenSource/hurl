@@ -42,7 +42,7 @@ impl Default for Response {
             headers: vec![],
             body: vec![],
             duration: Default::default(),
-            url: "".to_string(),
+            url: String::new(),
             certificate: None,
         }
     }

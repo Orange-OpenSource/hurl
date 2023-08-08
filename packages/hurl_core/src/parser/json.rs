@@ -169,7 +169,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     let start = reader.state.clone();
 
     let sign = match try_literal("-", reader) {
-        Err(_) => "".to_string(),
+        Err(_) => String::new(),
         Ok(_) => "-".to_string(),
     };
 
@@ -206,7 +206,7 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
                 format!(".{digits}")
             }
         }
-        Err(_) => "".to_string(),
+        Err(_) => String::new(),
     };
 
     let exponent = if reader.peek() == Some('e') || reader.peek() == Some('E') {
@@ -215,13 +215,13 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
             Ok(_) => "-".to_string(),
             Err(_) => match try_literal("+", reader) {
                 Ok(_) => "+".to_string(),
-                Err(_) => "".to_string(),
+                Err(_) => String::new(),
             },
         };
         let exponent_digits = reader.read_while(|c| c.is_ascii_digit());
         format!("e{exponent_sign}{exponent_digits}")
     } else {
-        "".to_string()
+        String::new()
     };
 
     Ok(JsonValue::Number(format!(
@@ -427,7 +427,7 @@ mod tests {
                 },
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 15, 1, 15),
                     },
                     variable: Variable {
@@ -435,7 +435,7 @@ mod tests {
                         source_info: SourceInfo::new(1, 15, 1, 19),
                     },
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 19, 1, 19),
                     },
                 }),
@@ -693,7 +693,7 @@ mod tests {
             expression_value(&mut reader).unwrap(),
             JsonValue::Expression(Expr {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 3, 1, 3)
                 },
                 variable: Variable {
@@ -701,7 +701,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 3, 1, 4)
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 4, 1, 4)
                 }
             })
@@ -715,7 +715,7 @@ mod tests {
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![]
             }
         );
@@ -735,11 +735,11 @@ mod tests {
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![JsonListElement {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     value: JsonValue::Boolean(true),
-                    space1: "".to_string(),
+                    space1: String::new(),
                 }],
             }
         );
@@ -772,9 +772,9 @@ mod tests {
         assert_eq!(
             list_element(&mut reader).unwrap(),
             JsonListElement {
-                space0: "".to_string(),
+                space0: String::new(),
                 value: JsonValue::Boolean(true),
-                space1: "".to_string(),
+                space1: String::new(),
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -786,7 +786,7 @@ mod tests {
         assert_eq!(
             object_value(&mut reader).unwrap(),
             JsonValue::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![]
             }
         );
@@ -808,7 +808,7 @@ mod tests {
             JsonValue::Object {
                 space0: "\n  ".to_string(),
                 elements: vec![JsonObjectElement {
-                    space0: "".to_string(),
+                    space0: String::new(),
                     name: Template {
                         delimiter: Some('"'),
                         elements: vec![TemplateElement::String {
@@ -817,7 +817,7 @@ mod tests {
                         }],
                         source_info: SourceInfo::new(2, 4, 2, 5)
                     },
-                    space1: "".to_string(),
+                    space1: String::new(),
                     space2: " ".to_string(),
                     value: JsonValue::Boolean(true),
                     space3: "\n".to_string(),
@@ -853,7 +853,7 @@ mod tests {
         assert_eq!(
             object_element(&mut reader).unwrap(),
             JsonObjectElement {
-                space0: "".to_string(),
+                space0: String::new(),
                 name: Template {
                     delimiter: Some('"'),
                     elements: vec![TemplateElement::String {
@@ -862,10 +862,10 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(1, 2, 1, 3)
                 },
-                space1: "".to_string(),
+                space1: String::new(),
                 space2: " ".to_string(),
                 value: JsonValue::Boolean(true),
-                space3: "".to_string(),
+                space3: String::new(),
             }
         );
         assert_eq!(reader.state.cursor, 9);
@@ -894,7 +894,7 @@ mod tests {
     #[test]
     fn test_whitespace() {
         let mut reader = Reader::new("");
-        assert_eq!(whitespace(&mut reader), "".to_string());
+        assert_eq!(whitespace(&mut reader), String::new());
         assert_eq!(reader.state.cursor, 0);
 
         let mut reader = Reader::new(" x");

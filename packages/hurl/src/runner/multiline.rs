@@ -126,10 +126,10 @@ mod tests {
         let graphql_variables = GraphQlVariables {
             space: whitespace(),
             value: JsonValue::Object {
-                space0: "".to_string(),
+                space0: String::new(),
                 elements: vec![
                     JsonObjectElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         name: Template {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
@@ -138,8 +138,8 @@ mod tests {
                             }],
                             source_info: empty_source_info(),
                         },
-                        space1: "".to_string(),
-                        space2: "".to_string(),
+                        space1: String::new(),
+                        space2: String::new(),
                         value: JsonValue::String(Template {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
@@ -148,10 +148,10 @@ mod tests {
                             }],
                             source_info: empty_source_info(),
                         }),
-                        space3: "".to_string(),
+                        space3: String::new(),
                     },
                     JsonObjectElement {
-                        space0: "".to_string(),
+                        space0: String::new(),
                         name: Template {
                             delimiter: Some('"'),
                             elements: vec![TemplateElement::String {
@@ -160,10 +160,10 @@ mod tests {
                             }],
                             source_info: empty_source_info(),
                         },
-                        space1: "".to_string(),
-                        space2: "".to_string(),
+                        space1: String::new(),
+                        space2: String::new(),
                         value: JsonValue::Boolean(false),
-                        space3: "".to_string(),
+                        space3: String::new(),
                     },
                 ],
             },

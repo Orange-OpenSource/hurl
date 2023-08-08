@@ -85,7 +85,7 @@ impl Parser {
         if self.end_of_string() {
             return Ok(None);
         }
-        let mut value = "".to_string();
+        let mut value = String::new();
         if let Some((delimiter, escaping)) = self.delimiter() {
             while let Some(c1) = self.read() {
                 if c1 == '\\' && escaping {

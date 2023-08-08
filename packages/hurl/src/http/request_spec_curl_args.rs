@@ -102,7 +102,7 @@ impl RequestSpec {
         }
 
         let querystring = if self.querystring.is_empty() {
-            "".to_string()
+            String::new()
         } else {
             let params = self
                 .querystring
@@ -243,7 +243,7 @@ fn escape_string(s: &str) -> String {
     escaped_sequences.insert('\'', "\\'");
     escaped_sequences.insert('\\', "\\\\");
 
-    let mut escaped = "".to_string();
+    let mut escaped = String::new();
     for c in s.chars() {
         match escaped_sequences.get(&c) {
             None => escaped.push(c),
@@ -340,7 +340,7 @@ pub mod tests {
         assert_eq!(
             Param {
                 name: "param2".to_string(),
-                value: "".to_string(),
+                value: String::new(),
             }
             .curl_arg(),
             "param2=".to_string()

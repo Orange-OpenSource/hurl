@@ -79,8 +79,8 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> 
 
 pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedString> {
     let start = reader.state.pos.clone();
-    let mut value = "".to_string();
-    let mut encoded = "".to_string();
+    let mut value = String::new();
+    let mut encoded = String::new();
     loop {
         let save = reader.state.clone();
         match escape_char(reader) {
@@ -409,7 +409,7 @@ mod tests {
                     },
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 14, 1, 14),
                         },
                         variable: Variable {
@@ -417,7 +417,7 @@ mod tests {
                             source_info: SourceInfo::new(1, 14, 1, 18),
                         },
                         space1: Whitespace {
-                            value: "".to_string(),
+                            value: String::new(),
                             source_info: SourceInfo::new(1, 18, 1, 18),
                         },
                     }),

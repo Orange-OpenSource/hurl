@@ -73,7 +73,7 @@ pub mod tests {
     pub fn user_count_capture() -> Capture {
         // non scalar value
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         Capture {
@@ -102,7 +102,7 @@ pub mod tests {
     pub fn duration_capture() -> Capture {
         // non scalar value
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         Capture {
@@ -132,7 +132,7 @@ pub mod tests {
     fn test_invalid_xpath() {
         let variables = HashMap::new();
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let capture = Capture {
@@ -167,7 +167,7 @@ pub mod tests {
     fn test_capture_unsupported() {
         // non scalar value
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let _capture = Capture {

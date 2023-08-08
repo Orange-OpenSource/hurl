@@ -28,7 +28,7 @@ pub fn eval_template(
     variables: &HashMap<String, Value>,
 ) -> Result<String, Error> {
     let Template { elements, .. } = template;
-    let mut value = String::from("");
+    let mut value = String::new();
     for elem in elements {
         match eval_template_element(elem, variables) {
             Ok(v) => value.push_str(v.as_str()),
@@ -93,7 +93,7 @@ mod tests {
         // {{name}}
         TemplateElement::Expression(Expr {
             space0: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(1, 3, 1, 3),
             },
             variable: Variable {
@@ -101,7 +101,7 @@ mod tests {
                 source_info: SourceInfo::new(1, 3, 1, 7),
             },
             space1: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(1, 7, 1, 7),
             },
         })

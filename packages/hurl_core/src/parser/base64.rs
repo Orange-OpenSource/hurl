@@ -140,7 +140,7 @@ fn value(c: char) -> Option<i32> {
 
 fn padding(reader: &mut Reader) -> String {
     // consume padding can not fail
-    let mut buf = String::from("");
+    let mut buf = String::new();
     loop {
         let save = reader.state.clone();
         match reader.read() {

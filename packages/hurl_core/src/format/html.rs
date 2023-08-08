@@ -815,7 +815,7 @@ fn escape_xml(s: &str) -> String {
 
 impl Template {
     fn to_encoded_string(&self) -> String {
-        let mut s = "".to_string();
+        let mut s = String::new();
         if let Some(d) = self.delimiter {
             s.push(d);
         }
@@ -863,7 +863,7 @@ mod tests {
         let multiline_string = MultilineString::OneLineText(Template {
             delimiter: None,
             elements: vec![TemplateElement::String {
-                value: "".to_string(),
+                value: String::new(),
                 encoded: "unused".to_string(),
             }],
             source_info: SourceInfo::new(0, 0, 0, 0),
@@ -906,7 +906,7 @@ mod tests {
         // ```
         let multiline_string = MultilineString::Text(Text {
             space: Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo {
                     start: Pos { line: 1, column: 4 },
                     end: Pos { line: 1, column: 4 },
@@ -981,7 +981,7 @@ mod tests {
     fn test_json() {
         let mut fmt = HtmlFormatter::new();
         let value = JsonValue::Object {
-            space0: "".to_string(),
+            space0: String::new(),
             elements: vec![JsonObjectElement {
                 space0: "\n   ".to_string(),
                 name: Template {
@@ -992,7 +992,7 @@ mod tests {
                     }],
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
-                space1: "".to_string(),
+                space1: String::new(),
                 space2: " ".to_string(),
                 value: JsonValue::Number("1".to_string()),
                 space3: "\n".to_string(),

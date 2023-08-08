@@ -97,7 +97,7 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminat
     let comment = optional(comment, reader)?;
     let nl = if reader.is_eof() {
         Whitespace {
-            value: "".to_string(),
+            value: String::new(),
             source_info: SourceInfo::new(
                 reader.state.pos.line,
                 reader.state.pos.column,
@@ -133,7 +133,7 @@ pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<'static, Ve
 
 pub fn comment(reader: &mut Reader) -> ParseResult<'static, Comment> {
     try_literal("#", reader)?;
-    let mut value = "".to_string();
+    let mut value = String::new();
     loop {
         if reader.is_eof() {
             break;
@@ -331,7 +331,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
 pub fn regex(reader: &mut Reader) -> ParseResult<'static, Regex> {
     try_literal("/", reader)?;
     let start = reader.state.pos.clone();
-    let mut s = String::from("");
+    let mut s = String::new();
 
     // Hurl escaping /
     // in order to avoid terminating the regex
@@ -645,7 +645,7 @@ mod tests {
         assert_eq!(
             zero_or_more_spaces(&mut reader),
             Ok(Whitespace {
-                value: "".to_string(),
+                value: String::new(),
                 source_info: SourceInfo::new(1, 1, 1, 1),
             })
         );
@@ -677,7 +677,7 @@ mod tests {
         assert_eq!(
             comment(&mut reader),
             Ok(Comment {
-                value: "".to_string()
+                value: String::new()
             })
         );
 
@@ -756,7 +756,7 @@ mod tests {
             KeyValue {
                 line_terminators: vec![],
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
                 key: EncodedString {
@@ -766,7 +766,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 1, 1, 8),
                 },
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 8, 1, 8),
                 },
                 space2: Whitespace {
@@ -782,7 +782,7 @@ mod tests {
                         },
                         TemplateElement::Expression(Expr {
                             space0: Whitespace {
-                                value: "".to_string(),
+                                value: String::new(),
                                 source_info: SourceInfo::new(1, 18, 1, 18),
                             },
                             variable: Variable {
@@ -790,7 +790,7 @@ mod tests {
                                 source_info: SourceInfo::new(1, 18, 1, 22),
                             },
                             space1: Whitespace {
-                                value: "".to_string(),
+                                value: String::new(),
                                 source_info: SourceInfo::new(1, 22, 1, 22),
                             },
                         }),
@@ -810,7 +810,7 @@ mod tests {
                         value: " comment".to_string()
                     }),
                     newline: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: SourceInfo::new(1, 35, 1, 35),
                     },
                 },
@@ -1086,7 +1086,7 @@ mod tests {
                 value: vec![255],
                 encoded: "ff".to_string(),
                 space1: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 8, 1, 8),
                 },
             }
@@ -1097,7 +1097,7 @@ mod tests {
             hex(&mut reader).unwrap(),
             Hex {
                 space0: Whitespace {
-                    value: "".to_string(),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 5, 1, 5),
                 },
                 value: vec![1, 2, 3],
@@ -1185,7 +1185,7 @@ mod tests {
             file(&mut reader).unwrap(),
             File {
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 6, 1, 6),
                 },
                 filename: Filename {
@@ -1193,7 +1193,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 6, 1, 14),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 14, 1, 14),
                 },
             }
@@ -1212,7 +1212,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 16),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 16, 1, 16),
                 },
             }
@@ -1231,7 +1231,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 20),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 20, 1, 20),
                 },
             }
@@ -1250,7 +1250,7 @@ mod tests {
                     source_info: SourceInfo::new(1, 7, 1, 37),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 37, 1, 37),
                 },
             }
@@ -1312,7 +1312,7 @@ mod tests {
                 value: vec![77, 97],
                 encoded: String::from("T WE="),
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(1, 15, 1, 15),
                 },
             }

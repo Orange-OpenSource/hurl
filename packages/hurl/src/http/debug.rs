@@ -44,7 +44,7 @@ pub fn log_bytes(bytes: &[u8], max: usize, debug: bool, logger: &Logger) {
     };
 
     let log = if bytes.is_empty() {
-        "".to_string()
+        String::new()
     } else {
         format!("Bytes <{}...>", hex::encode(bytes))
     };

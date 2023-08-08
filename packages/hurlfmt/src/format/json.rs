@@ -672,7 +672,7 @@ pub mod tests {
 
     fn whitespace() -> Whitespace {
         Whitespace {
-            value: "".to_string(),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         }
     }

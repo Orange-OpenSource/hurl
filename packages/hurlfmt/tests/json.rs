@@ -26,7 +26,7 @@ use proptest::prelude::*;
 
 fn whitespace() -> BoxedStrategy<String> {
     prop_oneof![
-        Just("".to_string()),
+        Just(String::new()),
         Just(" ".to_string()),
         Just("  ".to_string()),
     ]
@@ -81,12 +81,12 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                 },
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: source_info.clone()
                     },
                     variable,
                     space1: Whitespace {
-                        value: "".to_string(),
+                        value: String::new(),
                         source_info: source_info.clone()
                     },
                 })
@@ -119,7 +119,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                     JsonValue::List {
                         space0,
                         elements: vec![JsonListElement {
-                            space0: "".to_string(),
+                            space0: String::new(),
                             value,
                             space1,
                         }],
@@ -138,7 +138,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                             space0: space00,
                             elements: vec![
                                 JsonListElement {
-                                    space0: "".to_string(),
+                                    space0: String::new(),
                                     value: value0,
                                     space1: space01
                                 },
@@ -163,7 +163,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                             space0: space00,
                             elements: vec![
                                 JsonListElement {
-                                    space0: "".to_string(),
+                                    space0: String::new(),
                                     value: value0,
                                     space1: space01
                                 },
@@ -188,7 +188,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                             space0: space00,
                             elements: vec![
                                 JsonListElement {
-                                    space0: "".to_string(),
+                                    space0: String::new(),
                                     value: value0,
                                     space1: space01
                                 },
@@ -216,7 +216,7 @@ fn value() -> BoxedStrategy<JsonValue> {
                         JsonValue::Object {
                             space0,
                             elements: vec![JsonObjectElement {
-                                space0: "".to_string(),
+                                space0: String::new(),
                                 name: Template {
                                     delimiter: None,
                                     elements: vec![TemplateElement::String {

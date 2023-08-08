@@ -87,7 +87,7 @@ impl Reader {
     /// Returns `count` chars from the buffer advancing the internal state.
     /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
     pub fn read_n(&mut self, count: usize) -> String {
-        let mut s = String::from("");
+        let mut s = String::new();
         for _ in 0..count {
             match self.read() {
                 None => {}
@@ -99,7 +99,7 @@ impl Reader {
 
     /// Returns chars from the buffer while `predicate` is true, advancing the internal state.
     pub fn read_while(&mut self, predicate: fn(&char) -> bool) -> String {
-        let mut s = String::from("");
+        let mut s = String::new();
         loop {
             match self.peek() {
                 None => return s,
@@ -116,7 +116,7 @@ impl Reader {
 
     // only support escaped spaces for now
     pub fn read_while_escaping(&mut self, predicate: fn(&char) -> bool) -> String {
-        let mut s = String::from("");
+        let mut s = String::new();
         let mut escaped = false;
         loop {
             match self.peek() {

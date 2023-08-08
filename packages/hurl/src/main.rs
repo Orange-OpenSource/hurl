@@ -342,8 +342,8 @@ pub mod tests {
                 compressed: false,
             };
             HurlRun {
-                content: "".to_string(),
-                filename: "".to_string(),
+                content: String::new(),
+                filename: String::new(),
                 hurl_result: HurlResult {
                     entries: vec![dummy_entry; entries_count],
                     time_in_ms: 0,

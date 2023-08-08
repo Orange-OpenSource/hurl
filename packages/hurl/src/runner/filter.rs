@@ -633,7 +633,7 @@ pub mod tests {
 
         let variables = HashMap::new();
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let filter = Filter {
@@ -668,7 +668,7 @@ pub mod tests {
         // regex "Hello (.*)!"
         let variables = HashMap::new();
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let filter = Filter {
@@ -711,7 +711,7 @@ pub mod tests {
     fn eval_filter_invalid_regex() {
         let variables = HashMap::new();
         let whitespace = Whitespace {
-            value: String::from(""),
+            value: String::new(),
             source_info: SourceInfo::new(0, 0, 0, 0),
         };
         let filter = Filter {
@@ -914,7 +914,7 @@ pub mod tests {
             value: FilterValue::Nth {
                 n: 2,
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
@@ -976,11 +976,11 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
@@ -1014,7 +1014,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
@@ -1053,7 +1053,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },
@@ -1088,7 +1088,7 @@ pub mod tests {
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space0: Whitespace {
-                    value: String::from(""),
+                    value: String::new(),
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
             },

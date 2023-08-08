@@ -51,7 +51,7 @@ fn main() {
     init_colored();
 
     let log_error_message = cli::make_logger_error_message(opts.color);
-    let mut output_all = "".to_string();
+    let mut output_all = String::new();
     for input_file in &opts.input_files {
         match cli::read_to_string(input_file) {
             Ok(contents) => {

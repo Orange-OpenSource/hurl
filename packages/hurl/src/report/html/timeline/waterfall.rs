@@ -56,7 +56,7 @@ impl Testcase {
         let times = get_times_interval(calls);
         let times = match times {
             Some(t) => t,
-            None => return "".to_string(),
+            None => return String::new(),
         };
 
         let margin_top = 50.px();
