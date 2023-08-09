@@ -124,57 +124,55 @@ impl Client {
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
         // way to get access to the outgoing headers.
-        self.handle.verbose(true).unwrap();
+        self.handle.verbose(true)?;
 
         // Activates the access of certificates info chain after a transfer has been executed.
-        self.handle.certinfo(true).unwrap();
+        self.handle.certinfo(true)?;
 
         if !options.connects_to.is_empty() {
             let connects = to_list(&options.connects_to);
-            self.handle.connect_to(connects).unwrap();
+            self.handle.connect_to(connects)?;
         }
         if !options.resolves.is_empty() {
             let resolves = to_list(&options.resolves);
-            self.handle.resolve(resolves).unwrap();
+            self.handle.resolve(resolves)?;
         }
-        self.handle.ssl_verify_host(!options.insecure).unwrap();
-        self.handle.ssl_verify_peer(!options.insecure).unwrap();
+        self.handle.ssl_verify_host(!options.insecure)?;
+        self.handle.ssl_verify_peer(!options.insecure)?;
         if let Some(cacert_file) = options.cacert_file.clone() {
-            self.handle.cainfo(cacert_file).unwrap();
-            self.handle.ssl_cert_type("PEM").unwrap();
+            self.handle.cainfo(cacert_file)?;
+            self.handle.ssl_cert_type("PEM")?;
         }
         if let Some(client_cert_file) = options.client_cert_file.clone() {
-            self.handle.ssl_cert(client_cert_file).unwrap();
-            self.handle.ssl_cert_type("PEM").unwrap();
+            self.handle.ssl_cert(client_cert_file)?;
+            self.handle.ssl_cert_type("PEM")?;
         }
         if let Some(client_key_file) = options.client_key_file.clone() {
-            self.handle.ssl_key(client_key_file).unwrap();
-            self.handle.ssl_cert_type("PEM").unwrap();
+            self.handle.ssl_key(client_key_file)?;
+            self.handle.ssl_cert_type("PEM")?;
         }
-        self.handle.path_as_is(options.path_as_is).unwrap();
+        self.handle.path_as_is(options.path_as_is)?;
         if let Some(proxy) = options.proxy.clone() {
-            self.handle.proxy(proxy.as_str()).unwrap();
+            self.handle.proxy(proxy.as_str())?;
         }
         if let Some(s) = options.no_proxy.clone() {
-            self.handle.noproxy(s.as_str()).unwrap();
+            self.handle.noproxy(s.as_str())?;
         }
-        self.handle.timeout(options.timeout).unwrap();
-        self.handle
-            .connect_timeout(options.connect_timeout)
-            .unwrap();
+        self.handle.timeout(options.timeout)?;
+        self.handle.connect_timeout(options.connect_timeout)?;
 
-        self.set_ssl_options(options.ssl_no_revoke);
+        self.set_ssl_options(options.ssl_no_revoke)?;
 
         let url = self.generate_url(&request_spec.url, &request_spec.querystring);
-        self.handle.url(url.as_str()).unwrap();
+        self.handle.url(url.as_str())?;
         let method = &request_spec.method;
-        self.set_method(method);
-        self.set_cookies(&request_spec.cookies);
-        self.set_form(&request_spec.form);
-        self.set_multipart(&request_spec.multipart);
+        self.set_method(method)?;
+        self.set_cookies(&request_spec.cookies)?;
+        self.set_form(&request_spec.form)?;
+        self.set_multipart(&request_spec.multipart)?;
         let request_spec_body = &request_spec.body.bytes();
-        self.set_body(request_spec_body);
-        self.set_headers(request_spec, options);
+        self.set_body(request_spec_body)?;
+        self.set_headers(request_spec, options)?;
 
         let start = Utc::now();
         let verbose = options.verbosity.is_some();
@@ -194,106 +192,100 @@ impl Client {
         let mut response_body = Vec::<u8>::new();
 
         if *method == Method("HEAD".to_string()) {
-            self.handle.nobody(true).unwrap();
+            self.handle.nobody(true)?;
         }
         {
             let mut transfer = self.handle.transfer();
 
-            transfer
-                .debug_function(|info_type, data| match info_type {
-                    // Return all request headers (not one by one)
-                    easy::InfoType::HeaderOut => {
-                        let mut lines = split_lines(data);
-                        logger.debug_method_version_out(&lines[0]);
+            transfer.debug_function(|info_type, data| match info_type {
+                // Return all request headers (not one by one)
+                easy::InfoType::HeaderOut => {
+                    let mut lines = split_lines(data);
+                    logger.debug_method_version_out(&lines[0]);
 
-                        // Extracts request headers from libcurl debug info.
-                        lines.pop().unwrap(); // Remove last empty line.
-                        lines.remove(0); // Remove method/path/version line.
-                        for line in lines {
-                            if let Some(header) = Header::parse(&line) {
-                                request_headers.push(header);
-                            }
-                        }
-
-                        // If we don't send any data, we log headers and empty body here
-                        // instead of relying on libcurl computing body in `easy::InfoType::DataOut`.
-                        // because libcurl dont call `easy::InfoType::DataOut` if there is no data
-                        // to send.
-                        if !has_body_data && verbose {
-                            let debug_request = Request {
-                                url: url.to_string(),
-                                method: method.to_string(),
-                                headers: request_headers.clone(),
-                                body: Vec::new(),
-                            };
-                            for header in &debug_request.headers {
-                                logger.debug_header_out(&header.name, &header.value);
-                            }
-                            logger.info(">");
-
-                            if very_verbose {
-                                debug_request.log_body(true, logger);
-                            }
+                    // Extracts request headers from libcurl debug info.
+                    lines.pop().unwrap(); // Remove last empty line.
+                    lines.remove(0); // Remove method/path/version line.
+                    for line in lines {
+                        if let Some(header) = Header::parse(&line) {
+                            request_headers.push(header);
                         }
                     }
-                    // We use this callback to get the real body bytes sent by libcurl.
-                    easy::InfoType::DataOut => {
-                        // We log request headers with `easy::InfoType::DataOut` using libcurl
-                        // debug functions: there is no libcurl function to get the request headers.
-                        // As we can be called multiple times in this callback, we only log headers the
-                        // first time we send data (marked when the request body is empty).
-                        if verbose && request_body.is_empty() {
-                            let debug_request = Request {
-                                url: url.to_string(),
-                                method: method.to_string(),
-                                headers: request_headers.clone(),
-                                body: Vec::from(data),
-                            };
-                            for header in &debug_request.headers {
-                                logger.debug_header_out(&header.name, &header.value);
-                            }
-                            logger.info(">");
 
-                            if very_verbose {
-                                debug_request.log_body(true, logger);
-                            }
+                    // If we don't send any data, we log headers and empty body here
+                    // instead of relying on libcurl computing body in `easy::InfoType::DataOut`.
+                    // because libcurl dont call `easy::InfoType::DataOut` if there is no data
+                    // to send.
+                    if !has_body_data && verbose {
+                        let debug_request = Request {
+                            url: url.to_string(),
+                            method: method.to_string(),
+                            headers: request_headers.clone(),
+                            body: Vec::new(),
+                        };
+                        for header in &debug_request.headers {
+                            logger.debug_header_out(&header.name, &header.value);
                         }
+                        logger.info(">");
 
-                        // Extracts request body from libcurl debug info.
-                        request_body.extend(data);
-                    }
-                    // Curl debug logs
-                    easy::InfoType::Text => {
-                        let len = data.len();
-                        if very_verbose && len > 0 {
-                            let text = str::from_utf8(&data[..len - 1]);
-                            if let Ok(text) = text {
-                                logger.debug_curl(text);
-                            }
+                        if very_verbose {
+                            debug_request.log_body(true, logger);
                         }
                     }
-                    _ => {}
-                })
-                .unwrap();
-            transfer
-                .header_function(|h| {
-                    if let Some(s) = decode_header(h) {
-                        if s.starts_with("HTTP/") {
-                            status_lines.push(s);
-                        } else {
-                            response_headers.push(s)
+                }
+                // We use this callback to get the real body bytes sent by libcurl.
+                easy::InfoType::DataOut => {
+                    // We log request headers with `easy::InfoType::DataOut` using libcurl
+                    // debug functions: there is no libcurl function to get the request headers.
+                    // As we can be called multiple times in this callback, we only log headers the
+                    // first time we send data (marked when the request body is empty).
+                    if verbose && request_body.is_empty() {
+                        let debug_request = Request {
+                            url: url.to_string(),
+                            method: method.to_string(),
+                            headers: request_headers.clone(),
+                            body: Vec::from(data),
+                        };
+                        for header in &debug_request.headers {
+                            logger.debug_header_out(&header.name, &header.value);
+                        }
+                        logger.info(">");
+
+                        if very_verbose {
+                            debug_request.log_body(true, logger);
                         }
                     }
-                    true
-                })
-                .unwrap();
 
-            transfer
-                .write_function(|data| {
-                    response_body.extend(data);
-                    Ok(data.len())
-                })
-                .unwrap();
+                    // Extracts request body from libcurl debug info.
+                    request_body.extend(data);
+                }
+                // Curl debug logs
+                easy::InfoType::Text => {
+                    let len = data.len();
+                    if very_verbose && len > 0 {
+                        let text = str::from_utf8(&data[..len - 1]);
+                        if let Ok(text) = text {
+                            logger.debug_curl(text);
+                        }
+                    }
+                }
+                _ => {}
+            })?;
+            transfer.header_function(|h| {
+                if let Some(s) = decode_header(h) {
+                    if s.starts_with("HTTP/") {
+                        status_lines.push(s);
+                    } else {
+                        response_headers.push(s)
+                    }
+                }
+                true
+            })?;
+
+            transfer.write_function(|data| {
+                response_body.extend(data);
+                Ok(data.len())
+            })?;
 
             if let Err(e) = transfer.perform() {
                 let code = e.code() as i32; // due to windows build
@@ -309,7 +301,7 @@ impl Client {
             }
         }
 
-        let status = self.handle.response_code().unwrap();
+        let status = self.handle.response_code()?;
         // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {
             None => return Err(HttpError::StatuslineIsMissing { url }),
@@ -402,37 +394,39 @@ impl Client {
     }
 
     /// Sets HTTP method.
-    fn set_method(&mut self, method: &Method) {
-        self.handle
-            .custom_request(method.to_string().as_str())
-            .unwrap()
+    fn set_method(&mut self, method: &Method) -> Result<(), HttpError> {
+        self.handle.custom_request(method.to_string().as_str())?;
+        Ok(())
     }
 
     /// Sets HTTP headers.
-    fn set_headers(&mut self, request: &RequestSpec, options: &ClientOptions) {
-        let mut list = easy::List::new();
+    fn set_headers(
+        &mut self,
+        request: &RequestSpec,
+        options: &ClientOptions,
+    ) -> Result<(), HttpError> {
+        let mut list = List::new();
 
         for header in &request.headers {
-            list.append(format!("{}: {}", header.name, header.value).as_str())
-                .unwrap();
+            list.append(format!("{}: {}", header.name, header.value).as_str())?;
         }
 
         if request.get_header_values("Content-Type").is_empty() {
             if let Some(ref s) = request.content_type {
-                list.append(format!("Content-Type: {s}").as_str()).unwrap();
+                list.append(format!("Content-Type: {s}").as_str())?;
             } else {
                 // We remove default Content-Type headers added by curl because we want
                 // to explicitly manage this header.
                 // For instance, with --data option, curl will send a 'Content-type: application/x-www-form-urlencoded'
                 // header.
-                list.append("Content-Type:").unwrap();
+                list.append("Content-Type:")?;
             }
         }
 
         if request.get_header_values("Expect").is_empty() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
-            list.append("Expect:").unwrap(); // remove header Expect
+            list.append("Expect:")?; // remove header Expect
         }
 
         if request.get_header_values("User-Agent").is_empty() {
@@ -440,51 +434,53 @@ impl Client {
                 Some(ref u) => u.clone(),
                 None => format!("hurl/{}", clap::crate_version!()),
             };
-            list.append(format!("User-Agent: {user_agent}").as_str())
-                .unwrap();
+            list.append(format!("User-Agent: {user_agent}").as_str())?;
         }
 
         if let Some(ref user) = options.user {
             let user = user.as_bytes();
             let authorization = general_purpose::STANDARD.encode(user);
             if request.get_header_values("Authorization").is_empty() {
-                list.append(format!("Authorization: Basic {authorization}").as_str())
-                    .unwrap();
+                list.append(format!("Authorization: Basic {authorization}").as_str())?;
             }
         }
         if options.compressed && request.get_header_values("Accept-Encoding").is_empty() {
-            list.append("Accept-Encoding: gzip, deflate, br").unwrap();
+            list.append("Accept-Encoding: gzip, deflate, br")?;
         }
 
-        self.handle.http_headers(list).unwrap();
+        self.handle.http_headers(list)?;
+        Ok(())
     }
 
     /// Sets request cookies.
-    fn set_cookies(&mut self, cookies: &[RequestCookie]) {
+    fn set_cookies(&mut self, cookies: &[RequestCookie]) -> Result<(), HttpError> {
         let s = cookies
             .iter()
             .map(|c| c.to_string())
             .collect::<Vec<String>>()
             .join("; ");
         if !s.is_empty() {
-            self.handle.cookie(s.as_str()).unwrap();
+            self.handle.cookie(s.as_str())?;
         }
+        Ok(())
     }
 
     /// Sets form params.
-    fn set_form(&mut self, params: &[Param]) {
+    fn set_form(&mut self, params: &[Param]) -> Result<(), HttpError> {
         if !params.is_empty() {
             let s = self.url_encode_params(params);
-            self.handle.post_fields_copy(s.as_str().as_bytes()).unwrap();
-            //self.handle.write_function(sink);
+            self.handle.post_fields_copy(s.as_str().as_bytes())?;
         }
+        Ok(())
     }
 
     /// Sets multipart form data.
-    fn set_multipart(&mut self, params: &[MultipartParam]) {
+    fn set_multipart(&mut self, params: &[MultipartParam]) -> Result<(), HttpError> {
         if !params.is_empty() {
             let mut form = easy::Form::new();
             for param in params {
+                // TODO: we could remove these `unwrap` if we implement conversion
+                // from libcurl::FormError to HttpError
                 match param {
                     MultipartParam::Param(Param { name, value }) => {
                         form.part(name).contents(value.as_bytes()).add().unwrap()
@@ -502,23 +498,26 @@ impl Client {
                         .unwrap(),
                 }
             }
-            self.handle.httppost(form).unwrap();
+            self.handle.httppost(form)?;
         }
+        Ok(())
     }
 
     /// Sets request body.
-    fn set_body(&mut self, data: &[u8]) {
+    fn set_body(&mut self, data: &[u8]) -> Result<(), HttpError> {
         if !data.is_empty() {
-            self.handle.post(true).unwrap();
-            self.handle.post_fields_copy(data).unwrap();
+            self.handle.post(true)?;
+            self.handle.post_fields_copy(data)?;
         }
+        Ok(())
     }
 
     /// Sets SSL options
-    fn set_ssl_options(&mut self, no_revoke: bool) {
+    fn set_ssl_options(&mut self, no_revoke: bool) -> Result<(), HttpError> {
         let mut ssl_opt = SslOpt::new();
         ssl_opt.no_revoke(no_revoke);
-        self.handle.ssl_options(&ssl_opt).unwrap();
+        self.handle.ssl_options(&ssl_opt)?;
+        Ok(())
     }
 
     /// URL encodes parameters.
