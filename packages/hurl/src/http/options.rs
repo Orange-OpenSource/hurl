@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::http::HttpVersion;
 use hurl_core::ast::Retry;
 use std::time::Duration;
 
@@ -29,6 +30,7 @@ pub struct ClientOptions {
     pub connects_to: Vec<String>,
     pub cookie_input_file: Option<String>,
     pub follow_location: bool,
+    pub http_version: Option<HttpVersion>,
     pub insecure: bool,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
@@ -43,6 +45,7 @@ pub struct ClientOptions {
     pub verbosity: Option<Verbosity>,
 }
 
+// FIXME/ we could implement copy here
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
     Verbose,
@@ -61,6 +64,7 @@ impl Default for ClientOptions {
             connects_to: vec![],
             cookie_input_file: None,
             follow_location: false,
+            http_version: None,
             insecure: false,
             max_redirect: Some(50),
             no_proxy: None,
@@ -116,6 +120,9 @@ impl ClientOptions {
         if self.insecure {
             arguments.push("--insecure".to_string());
         }
+        if self.http_version == Some(HttpVersion::Http10) {
+            arguments.push("--http1.0".to_string());
+        }
         if self.follow_location {
             arguments.push("--location".to_string());
         }
@@ -168,15 +175,17 @@ mod tests {
                 cacert_file: None,
                 client_cert_file: None,
                 client_key_file: None,
+                compressed: true,
+                connect_timeout: Duration::from_secs(20),
                 connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
-                follow_location: true,
-                max_redirect: Some(10),
                 cookie_input_file: Some("cookie_file".to_string()),
+                follow_location: true,
+                http_version: Some(HttpVersion::Http10),
+                insecure: true,
+                max_redirect: Some(10),
                 path_as_is: true,
                 proxy: Some("localhost:3128".to_string()),
                 no_proxy: None,
-                verbosity: None,
-                insecure: true,
                 resolves: vec![
                     "foo.com:80:192.168.0.1".to_string(),
                     "bar.com:443:127.0.0.1".to_string()
@@ -184,10 +193,9 @@ mod tests {
                 retry: Retry::None,
                 ssl_no_revoke: false,
                 timeout: Duration::from_secs(10),
-                connect_timeout: Duration::from_secs(20),
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
-                compressed: true,
+                verbosity: None,
             }
             .curl_args(),
             [
@@ -199,6 +207,7 @@ mod tests {
                 "--cookie".to_string(),
                 "cookie_file".to_string(),
                 "--insecure".to_string(),
+                "--http1.0".to_string(),
                 "--location".to_string(),
                 "--max-redirs".to_string(),
                 "10".to_string(),

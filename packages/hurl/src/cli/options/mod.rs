@@ -52,6 +52,7 @@ pub struct Options {
     pub file_root: Option<String>,
     pub follow_location: bool,
     pub html_dir: Option<PathBuf>,
+    pub http_version: Option<HttpVersion>,
     pub ignore_asserts: bool,
     pub include: bool,
     pub input_files: Vec<String>,
@@ -102,6 +103,19 @@ pub enum ErrorFormat {
     Long,
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum HttpVersion {
+    V10,
+}
+
+impl From<HttpVersion> for http::HttpVersion {
+    fn from(value: HttpVersion) -> Self {
+        match value {
+            HttpVersion::V10 => http::HttpVersion::Http10,
+        }
+    }
+}
+
 impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
     fn from(value: ErrorFormat) -> Self {
         match value {
@@ -144,6 +158,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::file_root())
         .arg(commands::follow_location())
         .arg(commands::glob())
+        .arg(commands::http10())
         .arg(commands::ignore_asserts())
         .arg(commands::include())
         .arg(commands::input_files())
@@ -209,6 +224,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let file_root = matches::file_root(arg_matches);
     let follow_location = matches::follow_location(arg_matches);
     let html_dir = matches::html_dir(arg_matches)?;
+    let http_version = matches::http_version(arg_matches);
     let ignore_asserts = matches::ignore_asserts(arg_matches);
     let include = matches::include(arg_matches);
     let input_files = matches::input_files(arg_matches)?;
@@ -252,6 +268,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         file_root,
         follow_location,
         html_dir,
+        http_version,
         ignore_asserts,
         include,
         input_files,
@@ -297,6 +314,7 @@ impl Options {
         let connects_to = self.connects_to.clone();
         let follow_location = self.follow_location;
         let insecure = self.insecure;
+        let http_version = self.http_version.map(|v| v.into());
         let max_redirect = self.max_redirect;
         let path_as_is = self.path_as_is;
         let proxy = self.proxy.clone();
@@ -351,6 +369,7 @@ impl Options {
             .context_dir(&context_dir)
             .cookie_input_file(cookie_input_file)
             .follow_location(follow_location)
+            .http_version(http_version)
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)
             .max_redirect(max_redirect)

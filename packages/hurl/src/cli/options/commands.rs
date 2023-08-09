@@ -161,6 +161,14 @@ pub fn glob() -> clap::Arg {
         .number_of_values(1)
 }
 
+pub fn http10() -> clap::Arg {
+    clap::Arg::new("http10")
+        .short('0')
+        .long("http1.0")
+        .help("Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn include() -> clap::Arg {
     clap::Arg::new("include")
         .short('i')

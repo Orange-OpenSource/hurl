@@ -17,7 +17,7 @@
  */
 use super::variables::{parse as parse_variable, parse_value};
 use super::OptionsError;
-use crate::cli::options::ErrorFormat;
+use crate::cli::options::{ErrorFormat, HttpVersion};
 use crate::cli::OutputType;
 use clap::ArgMatches;
 use hurl::runner::Value;
@@ -166,6 +166,14 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsErro
         }
     } else {
         Ok(None)
+    }
+}
+
+pub fn http_version(arg_matches: &ArgMatches) -> Option<HttpVersion> {
+    if has_flag(arg_matches, "http10") {
+        Some(HttpVersion::V10)
+    } else {
+        None
     }
 }
 

@@ -160,6 +160,9 @@ impl Client {
         }
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
+        if let Some(version) = options.http_version {
+            self.handle.http_version(version.into())?;
+        }
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 
@@ -781,6 +784,17 @@ fn to_list(items: &[String]) -> List {
     let mut list = List::new();
     items.iter().for_each(|l| list.append(l).unwrap());
     list
+}
+
+impl From<HttpVersion> for easy::HttpVersion {
+    fn from(value: HttpVersion) -> Self {
+        match value {
+            HttpVersion::Http10 => easy::HttpVersion::V10,
+            HttpVersion::Http11 => easy::HttpVersion::V11,
+            HttpVersion::Http2 => easy::HttpVersion::V2,
+            HttpVersion::Http3 => easy::HttpVersion::V3,
+        }
+    }
 }
 
 #[cfg(test)]

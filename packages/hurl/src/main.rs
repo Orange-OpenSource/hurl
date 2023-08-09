@@ -94,15 +94,16 @@ fn main() {
             .verbosity(verbosity)
             .build();
         let logger = Logger::from(&logger_options);
-
         let total = opts.input_files.len();
         logger.test_running(current + 1, total);
+
         // Run our Hurl file now
         let hurl_result = execute(&content, filename, current_dir, &opts);
         let hurl_result = match hurl_result {
             Ok(h) => h,
             Err(_) => process::exit(EXIT_ERROR_PARSING),
         };
+
         logger.test_completed(&hurl_result);
         let success = hurl_result.success;
 
