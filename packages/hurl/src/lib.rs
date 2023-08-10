@@ -40,11 +40,10 @@
 //!
 //! This crate works on Windows, macOS and Linux.
 mod html;
-mod http;
+pub mod http;
 mod json;
 mod jsonpath;
 pub mod output;
 pub mod report;
 pub mod runner;
 pub mod util;
-pub use http::libcurl_version_info;

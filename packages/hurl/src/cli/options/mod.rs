@@ -26,7 +26,7 @@ use std::time::Duration;
 use std::{env, io};
 
 use clap::ArgMatches;
-use hurl::libcurl_version_info;
+use hurl::http;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::{Entry, Retry};
@@ -110,7 +110,7 @@ impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
 }
 
 fn get_version() -> String {
-    let libcurl_version = libcurl_version_info();
+    let libcurl_version = http::libcurl_version_info();
     format!(
         "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
         clap::crate_version!(),

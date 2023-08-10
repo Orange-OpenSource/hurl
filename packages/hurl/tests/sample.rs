@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
+use hurl::http::{Call, Request, Response, Version};
 use hurl::runner;
-use hurl::runner::{
-    Call, EntryResult, HurlResult, Request, Response, RunnerOptionsBuilder, Version,
-};
+use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Retry;

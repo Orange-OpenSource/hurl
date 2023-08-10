@@ -17,14 +17,14 @@
  */
 pub use self::call::Call;
 pub use self::certificate::Certificate;
-pub use self::client::Client;
+pub(crate) use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
-pub use self::core::{Cookie, Param, RequestCookie};
-pub use self::error::HttpError;
+pub(crate) use self::core::{Cookie, Param, RequestCookie};
+pub(crate) use self::error::HttpError;
 pub use self::header::Header;
-pub use self::options::{ClientOptions, Verbosity};
+pub(crate) use self::options::{ClientOptions, Verbosity};
 pub use self::request::Request;
-pub use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
+pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub use self::response::{Response, Version};
 #[cfg(test)]
 pub use self::tests::*;
