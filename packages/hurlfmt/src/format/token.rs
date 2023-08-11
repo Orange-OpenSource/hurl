@@ -882,6 +882,7 @@ impl Tokenizable for OptionKind {
             OptionKind::ClientKey(filename) => filename.tokenize(),
             OptionKind::Compressed(value) => vec![Token::Boolean(value.to_string())],
             OptionKind::ConnectTo(value) => vec![Token::String(value.clone())],
+            OptionKind::Delay(value) => vec![Token::Number(value.to_string())],
             OptionKind::Insecure(value) => vec![Token::Boolean(value.to_string())],
             OptionKind::FollowLocation(value) => vec![Token::Boolean(value.to_string())],
             OptionKind::MaxRedirect(value) => vec![Token::Number(value.to_string())],

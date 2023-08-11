@@ -285,6 +285,7 @@ impl ToJson for EntryOption {
             OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),
             OptionKind::Compressed(value) => JValue::Boolean(*value),
             OptionKind::ConnectTo(value) => JValue::String(value.clone()),
+            OptionKind::Delay(value) => JValue::Number(value.to_string()),
             OptionKind::Insecure(value) => JValue::Boolean(*value),
             OptionKind::FollowLocation(value) => JValue::Boolean(*value),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
