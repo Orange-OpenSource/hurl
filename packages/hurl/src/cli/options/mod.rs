@@ -43,10 +43,10 @@ pub struct Options {
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
+    pub continue_on_error: bool,
     pub cookie_input_file: Option<String>,
     pub cookie_output_file: Option<String>,
     pub error_format: ErrorFormat,
-    pub fail_fast: bool,
     pub file_root: Option<String>,
     pub follow_location: bool,
     pub html_dir: Option<PathBuf>,
@@ -131,6 +131,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::compressed())
         .arg(commands::connect_timeout())
         .arg(commands::connect_to())
+        .arg(commands::continue_on_error())
         .arg(commands::cookies_input_file())
         .arg(commands::cookies_output_file())
         .arg(commands::error_format())
@@ -194,10 +195,10 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let compressed = matches::compressed(arg_matches);
     let connect_timeout = matches::connect_timeout(arg_matches);
     let connects_to = matches::connects_to(arg_matches);
+    let continue_on_error = matches::continue_on_error(arg_matches);
     let cookie_input_file = matches::cookie_input_file(arg_matches);
     let cookie_output_file = matches::cookie_output_file(arg_matches);
     let error_format = matches::error_format(arg_matches);
-    let fail_fast = matches::fail_fast(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let follow_location = matches::follow_location(arg_matches);
     let html_dir = matches::html_dir(arg_matches)?;
@@ -235,10 +236,10 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         compressed,
         connect_timeout,
         connects_to,
+        continue_on_error,
         cookie_input_file,
         cookie_output_file,
         error_format,
-        fail_fast,
         file_root,
         follow_location,
         html_dir,
@@ -296,6 +297,7 @@ impl Options {
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
         let compressed = self.compressed;
+        let continue_on_error = self.continue_on_error;
         let file_root = match self.file_root {
             Some(ref filename) => Path::new(filename),
             None => {
@@ -318,7 +320,6 @@ impl Options {
         } else {
             None
         };
-        let fail_fast = self.fail_fast;
         let to_entry = self.to_entry;
         let resolves = self.resolves.clone();
         let retry = self.retry;
@@ -333,9 +334,9 @@ impl Options {
             .compressed(compressed)
             .connect_timeout(connect_timeout)
             .connects_to(&connects_to)
+            .continue_on_error(continue_on_error)
             .context_dir(&context_dir)
             .cookie_input_file(cookie_input_file)
-            .fail_fast(fail_fast)
             .follow_location(follow_location)
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)

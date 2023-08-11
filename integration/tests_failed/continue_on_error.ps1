@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_failed/file_unauthorized.hurl --continue-on-error
+hurl --continue-on-error tests_failed/continue_on_error.hurl

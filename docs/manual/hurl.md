@@ -174,6 +174,15 @@ For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. Thi
 
 See also [`--resolve`](#resolve).
 
+### --continue-on-error {#continue-on-error}
+
+Continue executing requests to the end of the Hurl file even when an assert error occurs.
+By default, Hurl exits after an assert error in the HTTP response.
+
+Note that this option does not affect the behavior with multiple input Hurl files.
+
+All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
+
 ### -b, --cookie <FILE> {#cookie}
 
 Read cookies from FILE (using the Netscape cookie file format).
@@ -191,14 +200,6 @@ Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage betwe
 
 Control the format of error message (short by default or long)
 
-### --fail-at-end {#fail-at-end}
-
-Continue executing requests to the end of the Hurl file even when an assert error occurs.
-By default, Hurl exits after an assert error in the HTTP response.
-
-Note that this option does not affect the behavior with multiple input Hurl files.
-
-All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
 ### --file-root <DIR> {#file-root}
 

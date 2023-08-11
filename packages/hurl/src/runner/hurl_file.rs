@@ -201,7 +201,7 @@ pub fn run(
                 break;
             }
         }
-        if runner_options.fail_fast && has_error {
+        if !runner_options.continue_on_error && has_error {
             break;
         }
 
@@ -315,7 +315,13 @@ fn log_run_info(
     logger: &Logger,
 ) {
     logger.debug_important("Options:");
-    logger.debug(format!("    fail fast: {}", runner_options.fail_fast).as_str());
+    logger.debug(
+        format!(
+            "    continue on error: {}",
+            runner_options.continue_on_error
+        )
+        .as_str(),
+    );
     logger.debug(format!("    follow redirect: {}", runner_options.follow_location).as_str());
     logger.debug(format!("    insecure: {}", runner_options.insecure).as_str());
     if let Some(n) = runner_options.max_redirect {

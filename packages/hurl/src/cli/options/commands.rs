@@ -77,6 +77,13 @@ pub fn connect_to() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn continue_on_error() -> clap::Arg {
+    clap::Arg::new("continue_on_error")
+        .long("continue-on-error")
+        .help("Continue executing requests even an error has occurs")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn cookies_input_file() -> clap::Arg {
     clap::Arg::new("cookies_input_file")
         .short('b')

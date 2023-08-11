@@ -29,8 +29,8 @@ pub struct RunnerOptionsBuilder {
     connect_timeout: Duration,
     connects_to: Vec<String>,
     context_dir: ContextDir,
+    continue_on_error: bool,
     cookie_input_file: Option<String>,
-    fail_fast: bool,
     follow_location: bool,
     ignore_asserts: bool,
     insecure: bool,
@@ -60,8 +60,8 @@ impl Default for RunnerOptionsBuilder {
             connect_timeout: Duration::from_secs(300),
             connects_to: vec![],
             context_dir: ContextDir::default(),
+            continue_on_error: false,
             cookie_input_file: None,
-            fail_fast: true,
             follow_location: false,
             ignore_asserts: false,
             insecure: false,
@@ -140,6 +140,15 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets stopping or continuing executing requests to the end of the Hurl file even when an  error occurs.
+    ///
+    /// By default, Hurl exits after an error in the HTTP response. Note that this option does
+    /// not affect the behavior with multiple input Hurl files.
+    pub fn continue_on_error(&mut self, continue_on_error: bool) -> &mut Self {
+        self.continue_on_error = continue_on_error;
+        self
+    }
+
     /// Reads cookies from this file (using the Netscape cookie file format).
     pub fn cookie_input_file(&mut self, cookie_input_file: Option<String>) -> &mut Self {
         self.cookie_input_file = cookie_input_file;
@@ -151,7 +160,7 @@ impl RunnerOptionsBuilder {
     /// By default, Hurl exits after an assert error in the HTTP response. Note that this option does
     /// not affect the behavior with multiple input Hurl files.
     pub fn fail_fast(&mut self, fail_fast: bool) -> &mut Self {
-        self.fail_fast = fail_fast;
+        self.continue_on_error = !fail_fast;
         self
     }
 
@@ -280,8 +289,8 @@ impl RunnerOptionsBuilder {
             connect_timeout: self.connect_timeout,
             connects_to: self.connects_to.clone(),
             context_dir: self.context_dir.clone(),
+            continue_on_error: self.continue_on_error,
             cookie_input_file: self.cookie_input_file.clone(),
-            fail_fast: self.fail_fast,
             follow_location: self.follow_location,
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
@@ -312,8 +321,8 @@ pub struct RunnerOptions {
     pub(crate) connect_timeout: Duration,
     pub(crate) connects_to: Vec<String>,
     pub(crate) context_dir: ContextDir,
+    pub(crate) continue_on_error: bool,
     pub(crate) cookie_input_file: Option<String>,
-    pub(crate) fail_fast: bool,
     pub(crate) follow_location: bool,
     pub(crate) ignore_asserts: bool,
     pub(crate) insecure: bool,

@@ -103,6 +103,14 @@ pub fn connects_to(arg_matches: &ArgMatches) -> Vec<String> {
     get_strings(arg_matches, "connect_to").unwrap_or_default()
 }
 
+pub fn continue_on_error(arg_matches: &ArgMatches) -> bool {
+    if has_flag(arg_matches, "fail_at_end") {
+        eprintln!("The option fail-at-end is deprecated. Use continue-on-error instead");
+        return true;
+    }
+    has_flag(arg_matches, "continue_on_error")
+}
+
 pub fn cookie_input_file(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "cookies_input_file")
 }
@@ -118,10 +126,6 @@ pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
         Some("short") => ErrorFormat::Short,
         _ => ErrorFormat::Short,
     }
-}
-
-pub fn fail_fast(arg_matches: &ArgMatches) -> bool {
-    !has_flag(arg_matches, "fail_at_end")
 }
 
 pub fn file_root(arg_matches: &ArgMatches) -> Option<String> {

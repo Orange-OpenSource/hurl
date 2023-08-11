@@ -1,5 +1,5 @@
 * Options:
-*     fail fast: true
+*     continue on error: false
 *     follow redirect: true
 *     insecure: false
 *     max redirect: 50
