@@ -132,14 +132,27 @@ pub fn run(
         // The real execution of the entry happens here, with the overridden entry options.
         let options = options::get_entry_options(entry, runner_options, &mut variables, &logger);
         let entry_result = match &options {
-            Ok(options) => entry::run(
-                entry,
-                entry_index,
-                &mut http_client,
-                &mut variables,
-                options,
-                &logger,
-            ),
+            Ok(options) => {
+                let delay = options.delay;
+                let delay_ms = delay.as_millis();
+                if delay_ms > 0 {
+                    logger.debug("");
+                    logger.debug_important(
+                        format!("Delay entry {entry_index} (x{retry_count} by {delay_ms} ms)")
+                            .as_str(),
+                    );
+                    thread::sleep(delay);
+                };
+
+                entry::run(
+                    entry,
+                    entry_index,
+                    &mut http_client,
+                    &mut variables,
+                    options,
+                    &logger,
+                )
+            }
             Err(error) => EntryResult {
                 entry_index,
                 calls: vec![],
