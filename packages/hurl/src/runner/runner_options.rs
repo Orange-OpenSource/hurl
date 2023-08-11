@@ -29,6 +29,7 @@ pub struct RunnerOptionsBuilder {
     compressed: bool,
     connect_timeout: Duration,
     connects_to: Vec<String>,
+    delay: Duration,
     context_dir: ContextDir,
     continue_on_error: bool,
     cookie_input_file: Option<String>,
@@ -61,6 +62,7 @@ impl Default for RunnerOptionsBuilder {
             compressed: false,
             connect_timeout: Duration::from_secs(300),
             connects_to: vec![],
+            delay: Duration::from_millis(0),
             context_dir: ContextDir::default(),
             continue_on_error: false,
             cookie_input_file: None,
@@ -137,6 +139,14 @@ impl RunnerOptionsBuilder {
     /// For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead.
     pub fn connects_to(&mut self, connects_to: &[String]) -> &mut Self {
         self.connects_to = connects_to.to_vec();
+        self
+    }
+
+    /// Sets delay (timeout) before the request.
+    ///
+    /// Default is 0 ms.
+    pub fn delay(&mut self, delay: Duration) -> &mut Self {
+        self.delay = delay;
         self
     }
 
@@ -297,6 +307,7 @@ impl RunnerOptionsBuilder {
             compressed: self.compressed,
             connect_timeout: self.connect_timeout,
             connects_to: self.connects_to.clone(),
+            delay: self.delay,
             context_dir: self.context_dir.clone(),
             continue_on_error: self.continue_on_error,
             cookie_input_file: self.cookie_input_file.clone(),
@@ -330,6 +341,7 @@ pub struct RunnerOptions {
     pub(crate) compressed: bool,
     pub(crate) connect_timeout: Duration,
     pub(crate) connects_to: Vec<String>,
+    pub(crate) delay: Duration,
     pub(crate) context_dir: ContextDir,
     pub(crate) continue_on_error: bool,
     pub(crate) cookie_input_file: Option<String>,

@@ -368,6 +368,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
         "cert" => option_cert(reader)?,
         "compressed" => option_compressed(reader)?,
         "connect-to" => option_connect_to(reader)?,
+        "delay" => option_delay(reader)?,
         "key" => option_key(reader)?,
         "insecure" => option_insecure(reader)?,
         "location" => option_follow_location(reader)?,
@@ -418,6 +419,11 @@ fn option_cert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
 fn option_connect_to(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = connect_to(reader)?;
     Ok(OptionKind::ConnectTo(value))
+}
+
+fn option_delay(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = nonrecover(natural, reader)?;
+    Ok(OptionKind::Delay(value))
 }
 
 fn option_key(reader: &mut Reader) -> ParseResult<'static, OptionKind> {

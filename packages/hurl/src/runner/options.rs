@@ -58,6 +58,9 @@ pub fn get_entry_options(
                     }
                     OptionKind::Compressed(value) => runner_options.compressed = *value,
                     OptionKind::ConnectTo(value) => runner_options.connects_to.push(value.clone()),
+                    OptionKind::Delay(value) => {
+                        runner_options.delay = Duration::from_millis(*value)
+                    }
                     OptionKind::Insecure(value) => runner_options.insecure = *value,
                     OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
                     OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),
