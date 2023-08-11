@@ -111,7 +111,7 @@ pub fn output_file(arg_matches: &ArgMatches) -> Option<PathBuf> {
 
 pub fn standalone(arg_matches: &ArgMatches) -> Result<bool, OptionsError> {
     if has_flag(arg_matches, "standalone") {
-        if get_string(arg_matches, "format") != Some("html".to_string()) {
+        if get_string(arg_matches, "output_format") != Some("html".to_string()) {
             Err(OptionsError::Error(
                 "use --standalone option only with html output".to_string(),
             ))
