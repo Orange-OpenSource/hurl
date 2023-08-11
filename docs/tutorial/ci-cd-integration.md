@@ -359,7 +359,7 @@ build:
       - docker:24-dind
    before_script:
       # Add Hurl on Alpine (testing channel)
-      - apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
+      - apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
    script:
       - bin/integration.sh http://docker:3000
 ```
