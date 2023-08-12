@@ -484,7 +484,8 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> 
 
 fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
     let start = reader.state.clone();
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':');
+    let name = reader
+        .read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.' || *c == '[' || *c == ']');
     if name.is_empty() {
         return Err(Error {
             pos: start.pos,
