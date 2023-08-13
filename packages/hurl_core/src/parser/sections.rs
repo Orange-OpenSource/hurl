@@ -358,7 +358,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let pos = reader.state.pos.clone();
-    let option = reader.read_while(|c| c.is_ascii_alphabetic() || *c == '-');
+    let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
