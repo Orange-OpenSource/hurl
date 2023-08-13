@@ -510,6 +510,21 @@ bytes startsWith hex,efbbbf;
 
 [Doc](/docs/asserting-response.md#bytes-assert)
 
+### AWS SigV4 requests
+
+Generate signed API requests with AWS SigV4, as used by several cloud providers.
+
+```hurl
+POST https://sts.eu-central-1.amazonaws.com/
+[Options]
+aws-sigv4: aws:amz:eu-central-1:sts
+[FormParams]
+Action: GetCallerIdentity
+Version: 2011-06-15
+```
+
+The Access Key is given per `--user`. [Doc](/docs/manual.md#aws-sigv4)
+
 
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body

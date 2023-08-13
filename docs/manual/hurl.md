@@ -143,6 +143,14 @@ HTTP 200
 
 will follow a redirection only for the second entry.
 
+### --aws-sigv4 <PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]> {#aws-sigv4}
+
+Generate an `Authorization` header with an AWS SigV4 signature.
+
+Use [`-u, --user`](#user) to specify Access Key Id (username) and Secret Key (password).
+
+To use temporary session credentials (e.g. for an AWS IAM Role), add the `X-Amz-Security-Token` header containing the session token.
+
 ### --cacert <FILE> {#cacert}
 
 Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
