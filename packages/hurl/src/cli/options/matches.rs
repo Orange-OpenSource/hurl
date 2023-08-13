@@ -46,6 +46,10 @@ pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsEr
     }
 }
 
+pub fn aws_sigv4(arg_matches: &ArgMatches) -> Option<String> {
+    get::<String>(arg_matches, "aws_sigv4")
+}
+
 pub fn client_cert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
     match get::<String>(arg_matches, "client_cert_file") {
         None => Ok(None),

@@ -279,6 +279,7 @@ impl ToJson for EntryOption {
 
         let name = "value".to_string();
         let value = match &self.kind {
+            OptionKind::AwsSigV4(value) => JValue::String(value.clone()),
             OptionKind::CaCertificate(filename) => JValue::String(filename.value.clone()),
             OptionKind::ClientCert(filename) => JValue::String(filename.value.clone()),
             OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),

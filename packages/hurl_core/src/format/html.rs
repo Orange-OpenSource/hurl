@@ -213,6 +213,7 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&option.space2);
         match &option.kind {
+            OptionKind::AwsSigV4(value) => self.fmt_string(value),
             OptionKind::CaCertificate(filename) => self.fmt_filename(filename),
             OptionKind::ClientCert(filename) => self.fmt_filename(filename),
             OptionKind::ClientKey(filename) => self.fmt_filename(filename),

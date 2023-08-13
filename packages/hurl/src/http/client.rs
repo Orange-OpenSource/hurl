@@ -139,6 +139,9 @@ impl Client {
         }
         self.handle.ssl_verify_host(!options.insecure)?;
         self.handle.ssl_verify_peer(!options.insecure)?;
+        if let Some(aws_sigv4) = options.aws_sigv4.clone() {
+            self.handle.aws_sigv4(aws_sigv4.as_str())?;
+        }
         if let Some(cacert_file) = options.cacert_file.clone() {
             self.handle.cainfo(cacert_file)?;
             self.handle.ssl_cert_type("PEM")?;
@@ -423,7 +426,11 @@ impl Client {
             }
         }
 
-        if request.get_header_values("Expect").is_empty() {
+        // Workaround for libcurl issue #11664: When hurl explicitly sets `Expect:` to remove the header,
+        // libcurl will generate `SignedHeaders` that include `expect` even though the header is not
+        // present, causing some APIs to reject the request.
+        // Therefore we only remove this header when not in aws_sigv4 mode.
+        if request.get_header_values("Expect").is_empty() && options.aws_sigv4.is_none() {
             // We remove default Expect headers added by curl because we want
             // to explicitly manage this header.
             list.append("Expect:")?; // remove header Expect
@@ -438,10 +445,20 @@ impl Client {
         }
 
         if let Some(ref user) = options.user {
-            let user = user.as_bytes();
-            let authorization = general_purpose::STANDARD.encode(user);
-            if request.get_header_values("Authorization").is_empty() {
-                list.append(format!("Authorization: Basic {authorization}").as_str())?;
+            if options.aws_sigv4.is_some() {
+                // curl's aws_sigv4 support needs to know the username and password for the
+                // request, as it uses those values to calculate the Authorization header for the
+                // AWS V4 signature.
+                if let Some((username, password)) = user.split_once(':') {
+                    self.handle.username(username)?;
+                    self.handle.password(password)?;
+                }
+            } else {
+                let user = user.as_bytes();
+                let authorization = general_purpose::STANDARD.encode(user);
+                if request.get_header_values("Authorization").is_empty() {
+                    list.append(format!("Authorization: Basic {authorization}").as_str())?;
+                }
             }
         }
         if options.compressed && request.get_header_values("Accept-Encoding").is_empty() {

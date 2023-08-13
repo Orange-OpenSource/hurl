@@ -363,6 +363,7 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
     let kind = match option.as_str() {
+        "aws-sigv4" => option_aws_sigv4(reader)?,
         "cacert" => option_cacert(reader)?,
         "cert" => option_cert(reader)?,
         "compressed" => option_compressed(reader)?,
@@ -397,6 +398,11 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
         kind,
         line_terminator0,
     })
+}
+
+fn option_aws_sigv4(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+    let value = aws_sigv4(reader)?;
+    Ok(OptionKind::AwsSigV4(value))
 }
 
 fn option_cacert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
@@ -480,6 +486,21 @@ fn option_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
 fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::VeryVerbose(value))
+}
+
+fn aws_sigv4(reader: &mut Reader) -> ParseResult<'static, String> {
+    let start = reader.state.clone();
+    let provider = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '-');
+    if provider.is_empty() {
+        return Err(Error {
+            pos: start.pos,
+            recoverable: false,
+            inner: ParseError::Expecting {
+                value: "aws-sigv4 provider".to_string(),
+            },
+        });
+    }
+    Ok(provider)
 }
 
 fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {

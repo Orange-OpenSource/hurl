@@ -17,6 +17,14 @@
  */
 use clap::{value_parser, ArgAction};
 
+pub fn aws_sigv4() -> clap::Arg {
+    clap::Arg::new("aws_sigv4")
+        .long("aws-sigv4")
+        .value_name("PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]")
+        .help("Use AWS V4 signature authentication in the transfer")
+        .num_args(1)
+}
+
 pub fn cacert_file() -> clap::Arg {
     clap::Arg::new("cacert_file")
         .long("cacert")

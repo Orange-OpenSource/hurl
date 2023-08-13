@@ -22,6 +22,7 @@ use hurl_core::ast::{Entry, Retry};
 use crate::util::path::ContextDir;
 
 pub struct RunnerOptionsBuilder {
+    aws_sigv4: Option<String>,
     cacert_file: Option<String>,
     client_cert_file: Option<String>,
     client_key_file: Option<String>,
@@ -53,6 +54,7 @@ pub struct RunnerOptionsBuilder {
 impl Default for RunnerOptionsBuilder {
     fn default() -> Self {
         RunnerOptionsBuilder {
+            aws_sigv4: None,
             cacert_file: None,
             client_cert_file: None,
             client_key_file: None,
@@ -87,6 +89,12 @@ impl RunnerOptionsBuilder {
     /// Returns a new Hurl runner options builder with a default values.
     pub fn new() -> Self {
         RunnerOptionsBuilder::default()
+    }
+
+    /// Specifies the AWS SigV4 option
+    pub fn aws_sigv4(&mut self, aws_sigv4: Option<String>) -> &mut Self {
+        self.aws_sigv4 = aws_sigv4;
+        self
     }
 
     /// Specifies the certificate file for peer verification.
@@ -282,6 +290,7 @@ impl RunnerOptionsBuilder {
     /// Create an instance of [`RunnerOptions`].
     pub fn build(&self) -> RunnerOptions {
         RunnerOptions {
+            aws_sigv4: self.aws_sigv4.clone(),
             cacert_file: self.cacert_file.clone(),
             client_cert_file: self.client_cert_file.clone(),
             client_key_file: self.client_key_file.clone(),
@@ -314,6 +323,7 @@ impl RunnerOptionsBuilder {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunnerOptions {
+    pub(crate) aws_sigv4: Option<String>,
     pub(crate) cacert_file: Option<String>,
     pub(crate) client_cert_file: Option<String>,
     pub(crate) client_key_file: Option<String>,

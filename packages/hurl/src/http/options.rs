@@ -20,6 +20,7 @@ use std::time::Duration;
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
+    pub aws_sigv4: Option<String>,
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
@@ -51,6 +52,7 @@ pub enum Verbosity {
 impl Default for ClientOptions {
     fn default() -> Self {
         ClientOptions {
+            aws_sigv4: None,
             cacert_file: None,
             client_cert_file: None,
             client_key_file: None,
@@ -80,6 +82,10 @@ impl ClientOptions {
     pub fn curl_args(&self) -> Vec<String> {
         let mut arguments = vec![];
 
+        if let Some(ref aws_sigv4) = self.aws_sigv4 {
+            arguments.push("--aws-sigv4".to_string());
+            arguments.push(aws_sigv4.clone());
+        }
         if let Some(ref cacert_file) = self.cacert_file {
             arguments.push("--cacert".to_string());
             arguments.push(cacert_file.clone());
@@ -158,6 +164,7 @@ mod tests {
 
         assert_eq!(
             ClientOptions {
+                aws_sigv4: None,
                 cacert_file: None,
                 client_cert_file: None,
                 client_key_file: None,

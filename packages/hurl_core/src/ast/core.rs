@@ -715,6 +715,7 @@ pub struct EntryOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OptionKind {
+    AwsSigV4(String),
     CaCertificate(Filename),
     ClientCert(Filename),
     ClientKey(Filename),
@@ -736,6 +737,7 @@ pub enum OptionKind {
 impl OptionKind {
     pub fn name(&self) -> &'static str {
         match self {
+            OptionKind::AwsSigV4(_) => "aws-sigv4",
             OptionKind::CaCertificate(_) => "cacert",
             OptionKind::ClientCert(_) => "cert",
             OptionKind::ClientKey(_) => "key",
@@ -757,6 +759,7 @@ impl OptionKind {
 
     pub fn value_as_str(&self) -> String {
         match self {
+            OptionKind::AwsSigV4(value) => value.clone(),
             OptionKind::CaCertificate(filename) => filename.value.clone(),
             OptionKind::ClientCert(filename) => filename.value.clone(),
             OptionKind::ClientKey(filename) => filename.value.clone(),

@@ -36,6 +36,7 @@ use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
+    pub aws_sigv4: Option<String>,
     pub cacert_file: Option<String>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
@@ -124,6 +125,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .version(get_version())
         .disable_colored_help(true)
         .about("Run Hurl file(s) or standard input")
+        .arg(commands::aws_sigv4())
         .arg(commands::cacert_file())
         .arg(commands::client_cert_file())
         .arg(commands::client_key_file())
@@ -188,6 +190,7 @@ pub fn parse() -> Result<Options, OptionsError> {
 }
 
 fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
+    let aws_sigv4 = matches::aws_sigv4(arg_matches);
     let cacert_file = matches::cacert_file(arg_matches)?;
     let client_cert_file = matches::client_cert_file(arg_matches)?;
     let client_key_file = matches::client_key_file(arg_matches)?;
@@ -229,6 +232,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
     Ok(Options {
+        aws_sigv4,
         cacert_file,
         client_cert_file,
         client_key_file,
@@ -281,6 +285,7 @@ pub enum OutputType {
 
 impl Options {
     pub fn to_runner_options(&self, filename: &str, current_dir: &Path) -> RunnerOptions {
+        let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();
         let client_cert_file = self.client_cert_file.clone();
         let client_key_file = self.client_key_file.clone();
@@ -328,6 +333,7 @@ impl Options {
         let ssl_no_revoke = self.ssl_no_revoke;
 
         RunnerOptionsBuilder::new()
+            .aws_sigv4(aws_sigv4)
             .cacert_file(cacert_file)
             .client_cert_file(client_cert_file)
             .client_key_file(client_key_file)

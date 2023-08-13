@@ -46,6 +46,7 @@ pub fn get_entry_options(
         if let SectionValue::Options(options) = &section.value {
             for option in options.iter() {
                 match &option.kind {
+                    OptionKind::AwsSigV4(value) => runner_options.aws_sigv4 = Some(value.clone()),
                     OptionKind::CaCertificate(filename) => {
                         runner_options.cacert_file = Some(filename.value.clone())
                     }

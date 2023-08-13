@@ -876,6 +876,7 @@ impl Tokenizable for EntryOption {
 impl Tokenizable for OptionKind {
     fn tokenize(&self) -> Vec<Token> {
         match self {
+            OptionKind::AwsSigV4(value) => vec![Token::String(value.clone())],
             OptionKind::CaCertificate(filename) => filename.tokenize(),
             OptionKind::ClientCert(filename) => filename.tokenize(),
             OptionKind::ClientKey(filename) => filename.tokenize(),

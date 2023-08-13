@@ -94,6 +94,7 @@ fn simple_sample() {
 
     // Define runner and logger options
     let runner_opts = RunnerOptionsBuilder::new()
+        .aws_sigv4(None)
         .cacert_file(None)
         .compressed(false)
         .connect_timeout(Duration::from_secs(300))
