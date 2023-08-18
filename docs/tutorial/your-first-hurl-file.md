@@ -219,7 +219,7 @@ Duration:        21 ms
 ```hurl
 # Our first Hurl file, just checking
 # that our server is up and running.
-GET http://localhost:8080
+GET http://localhost:3000
 HTTP 200
 ```
 
