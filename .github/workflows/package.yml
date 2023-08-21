@@ -63,7 +63,7 @@ jobs:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
 
-  test-generic-linux-docker-debian-x64:
+  test-generic-linux-on-docker-debian-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -114,7 +114,7 @@ jobs:
         path: |
           ./**/*.log
 
-  test-generic-linux-docker-archlinux-x64:
+  test-generic-linux-on-docker-archlinux-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -165,7 +165,7 @@ jobs:
         path: |
           ./**/*.log
 
-  test-generic-linux-docker-fedora-x64:
+  test-generic-linux-on-docker-fedora-x64:
     needs: package-generic-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -216,39 +216,116 @@ jobs:
         path: |
           ./**/*.log
 
+#  test-docker-arm64-packages:
+#   runs-on: ubuntu-latest
+#   steps:
+#   - name: Checkout repository
+#     uses: actions/checkout@v3
+#     with:
+#       ref: ${{ inputs.branch }}
+#   - name: Set up Docker Buildx
+#     uses: docker/setup-buildx-action@v2
+#   - name: Build docker images
+#     run: |
+#         echo "::group::Docker build prerequisistes"
+#           sudo apt-get install -y qemu-user-static
+#           sudo apt-get install -y binfmt-support
+#           sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+#           sudo docker buildx create --name mybuilder
+#           sudo docker buildx use mybuilder
+#           sudo docker buildx inspect --bootstrap
+#           sudo docker buildx ls
+#         echo "::endgroup::"
+#         echo "::group::Build docker hurl"
+#           docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
+#           docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
+#           sudo docker buildx build \
+#             --progress=plain \
+#             --file contrib/docker/Dockerfile \
+#             --platform linux/arm64 \
+#             --build-arg docker_build_date="${docker_build_date}" \
+#             --build-arg docker_build_tag="${docker_build_tag}" \
+#             --tag local/hurl:arm64 \
+#             --load .
+#           sudo docker inspect local/hurl:arm64
+#           sudo docker run --rm local/hurl:arm64 --version
+#         echo "::endgroup::"
+#   - name: Integration tests
+#     uses: addnab/docker-run-action@v3
+#     with:
+#       image: local/hurl:arm64
+#       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/arm64
+#       run: |
+#         echo "::group::Install system prerequisistes"
+#           set -e
+#           cat /etc/os-release
+#           apk add sudo bash curl python3 py3-pip
+#         echo "::endgroup::"
+#         echo "::group::Install alpine prerequisistes"
+#           bash bin/install_prerequisites_alpine.sh
+#         echo "::endgroup::"
+#         echo "::group::Install tests prerequisites"
+#           bash bin/install_python3_venv.sh
+#           export PATH=/tmp/hurl-python3-venv/bin:$PATH
+#           which python3
+#           python3 --version
+#           pip --version
+#           bash bin/test/test_prerequisites.sh
+#         echo "::endgroup::"
+#         echo "::group::Environment"
+#           bash bin/environment.sh
+#         echo "::endgroup::"
+#         echo "::group::Integration tests"
+#           bash bin/test/test_integ.sh
+#         echo "::endgroup::"
+#   - name: find artifacts
+#     run: |
+#       pwd
+#       find . -name "*.log"
+#   - name: Archive production artifacts
+#     uses: actions/upload-artifact@v3
+#     if: ${{ always() }}
+#     with:
+#       name: test-docker-arm64-package-artifacts
+#       path: |
+#         ./**/*.log
 
-  test-docker-x64-package:
+  test-docker-amd64-packages:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
      uses: actions/checkout@v3
      with:
        ref: ${{ inputs.branch }}
-   - name: Get actual branch
-     run: |
-       echo "ACTUAL_BRANCH=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')" | tee -a "${GITHUB_ENV}"
    - name: Set up Docker Buildx
      uses: docker/setup-buildx-action@v2
-   - name: Build docker image
+   - name: Build docker images
      run: |
+         echo "::group::Docker build prerequisistes"
+           sudo docker buildx create --name mybuilder
+           sudo docker buildx use mybuilder
+           sudo docker buildx inspect --bootstrap
+           sudo docker buildx ls
+         echo "::endgroup::"
          echo "::group::Build docker hurl"
            docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
-           docker builder prune \
-             --all \
-             --force
-           docker build . \
+           docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
+           sudo docker buildx build \
+             --progress=plain \
              --file contrib/docker/Dockerfile \
+             --platform linux/amd64 \
              --build-arg docker_build_date="${docker_build_date}" \
-             --build-arg hurl_branch=${ACTUAL_BRANCH} \
-             --tag local/hurl
-           docker inspect local/hurl
-           docker run --rm local/hurl --version
+             --build-arg docker_build_tag="${docker_build_tag}" \
+             --tag local/hurl:amd64 \
+             --load .
+           sudo docker inspect local/hurl:amd64
+           sudo docker run --rm local/hurl:amd64 --version
          echo "::endgroup::"
    - name: Integration tests
      uses: addnab/docker-run-action@v3
      with:
-       image: local/hurl
-       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh
+       image: local/hurl:amd64
+       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/amd64
        run: |
          echo "::group::Install system prerequisistes"
            set -e
@@ -280,7 +357,7 @@ jobs:
      uses: actions/upload-artifact@v3
      if: ${{ always() }}
      with:
-       name: test-docker-x64-package-artifacts
+       name: test-docker-amd64-package-artifacts
        path: |
          ./**/*.log
 

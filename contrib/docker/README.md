@@ -1,46 +1,140 @@
-# Connect to github container registry
+# Build amd64 image
+
+## Clone desired tag
+
+```
+tag=<desired tag, ex: 4.0.0>
+organisation=<desired organisation in lowercase, ex: orange-opensource>
+git clone --depth 1 https://github.com/"${organisation}"/hurl.git --branch "${tag}" /tmp/hurl-"${tag}"
+```
+
+## Prepare docker build env
+
+```
+docker rmi --force \
+  ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}" \
+  local/hurl
+```
+
+## Build
+
+```
+cd /tmp/hurl-"${tag}"
+docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
+echo "docker_build_tag=${docker_build_tag}"
+docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
+echo "docker_build_date=${docker_build_date}"
+docker build --file contrib/docker/Dockerfile --build-arg docker_build_date="${docker_build_date}" --build-arg docker_build_tag="${docker_build_tag}" --tag  local/hurl --tag ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}" .
+```
+
+## Get docker hurl version
+
+```
+docker run --rm local/hurl --version
+```
+
+## Run docker hurl from STDIN
+
+```
+echo -e "GET https://hurl.dev\n\nHTTP 200" | docker run --rm -i local/hurl --test --color --very-verbose
+```
+
+## Run docker hurl from FILE
+
+```
+echo -e "GET https://hurl.dev\n\nHTTP 200" > /tmp/test.hurl
+docker run --rm -v /tmp/test.hurl:/tmp/test.hurl local/hurl --test --color --very-verbose /tmp/test.hurl
+```
+
+## Connect to github container registry
 
 ```
 echo <hurl-bot github token> | docker login ghcr.io --username hurl-bot --password-stdin
 ```
-# Clone desired tag
+
+## Push to github registry
 
 ```
-git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch <desired tag> /tmp/hurl
+docker push ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}"
 ```
 
-# Build image
+# Build arm64 image
+
+## Clone desired tag
 
 ```
-cd /tmp/hurl
-tag=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+tag=<desired tag, ex: 4.0.0>
+organisation=<desired organisation in lowercase, ex: orange-opensource>
+git clone --depth 1 https://github.com/"${organisation}"/hurl.git --branch "${tag}" /tmp/hurl-"${tag}"
+```
+
+## Prepare docker build env
+
+```
+docker rmi --force \
+  ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}" \
+  local/hurl
+```
+
+## Build
+
+```
+cd /tmp/hurl-"${tag}"
+docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' --field 2 | tr -d '" ')
+echo "docker_build_tag=${docker_build_tag}"
 docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
-docker builder prune --all
-docker build . --file contrib/docker/Dockerfile --build-arg docker_build_date="${docker_build_date}" --build-arg hurl_branch=${tag} --tag ghcr.io/orange-opensource/hurl:latest --tag ghcr.io/orange-opensource/hurl:${tag}
+echo "docker_build_date=${docker_build_date}"
+docker build --file contrib/docker/Dockerfile --build-arg docker_build_date="${docker_build_date}" --build-arg docker_build_tag="${docker_build_tag}" --tag  local/hurl --tag ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}" .
 ```
 
-# Get docker hurl version
+## Get docker hurl version
 
 ```
-docker run --rm ghcr.io/orange-opensource/hurl:latest --version
+docker run --rm local/hurl --version
 ```
 
-# Run docker hurl from STDIN
+## Run docker hurl from STDIN
 
 ```
-echo -e "GET https://hurl.dev\n\nHTTP 200" | docker run --rm ghcr.io/orange-opensource/hurl:latest --test --color
+echo -e "GET https://hurl.dev\n\nHTTP 200" | docker run --rm -i local/hurl --test --color
 ```
 
-# Run docker hurl from FILE
+## Run docker hurl from FILE
 
 ```
 echo -e "GET https://hurl.dev\n\nHTTP 200" > /tmp/test.hurl
-docker run --rm -v /tmp/test.hurl:/tmp/test.hurl ghcr.io/orange-opensource/hurl:latest --test --color /tmp/test.hurl
+docker run --rm -v /tmp/test.hurl:/tmp/test.hurl local/hurl --test --color /tmp/test.hurl
 ```
 
-# Push to github container registry
+## Connect to github container registry
 
 ```
-docker push ghcr.io/orange-opensource/hurl:${tag}
-docker push ghcr.io/orange-opensource/hurl:latest
+echo <hurl-bot github token> | docker login ghcr.io --username hurl-bot --password-stdin
+```
+
+## Push to github registry
+
+```
+docker push ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}"
+```
+
+# When all architectures images are built
+## Create tag and latest manifest
+
+```
+docker manifest create \
+  ghcr.io/"${organisation}"/hurl:"${docker_build_tag}" \
+  --amend ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}" \
+  --amend ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}"
+docker manifest create \
+  ghcr.io/"${organisation}"/hurl:latest" \
+  --amend ghcr.io/"${organisation}"/hurl:amd64-"${docker_build_tag}" \
+  --amend ghcr.io/"${organisation}"/hurl:arm64-"${docker_build_tag}"
+```
+
+## Push new manifest
+
+```
+docker manifest push ghcr.io/"${organisation}"/hurl:"${docker_build_tag}"
+docker manifest push ghcr.io/"${organisation}"/hurl:latest
 ```
