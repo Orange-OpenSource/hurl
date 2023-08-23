@@ -33,6 +33,11 @@ pub enum HttpError {
         description: String,
         url: String,
     },
+    LibcurlUnknownOption {
+        option: String,
+        minimum_version: String,
+        url: String,
+    },
     StatuslineIsMissing {
         url: String,
     },
