@@ -139,9 +139,6 @@ impl Client {
         }
         self.handle.ssl_verify_host(!options.insecure)?;
         self.handle.ssl_verify_peer(!options.insecure)?;
-        if let Some(aws_sigv4) = options.aws_sigv4.clone() {
-            self.handle.aws_sigv4(aws_sigv4.as_str())?;
-        }
         if let Some(cacert_file) = options.cacert_file.clone() {
             self.handle.cainfo(cacert_file)?;
             self.handle.ssl_cert_type("PEM")?;
@@ -176,6 +173,19 @@ impl Client {
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
         self.set_headers(request_spec, options)?;
+
+        if let Some(aws_sigv4) = options.aws_sigv4.clone() {
+            if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
+                return match e.code() {
+                    curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
+                        option: "aws-sigv4".to_string(),
+                        minimum_version: "7.75.0".to_string(),
+                        url: url
+                    }),
+                    _ => Err(e.into()),
+                }
+            }
+        }
 
         let start = Utc::now();
         let verbose = options.verbosity.is_some();
