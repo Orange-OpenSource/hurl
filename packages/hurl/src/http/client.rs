@@ -180,10 +180,10 @@ impl Client {
                     curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
                         option: "aws-sigv4".to_string(),
                         minimum_version: "7.75.0".to_string(),
-                        url: url
+                        url,
                     }),
                     _ => Err(e.into()),
-                }
+                };
             }
         }
 

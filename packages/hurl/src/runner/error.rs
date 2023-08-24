@@ -192,8 +192,14 @@ impl From<HttpError> for RunnerError {
                 message: format!("({code}) {description}"),
                 url,
             },
-            HttpError::LibcurlUnknownOption { option, minimum_version, url } => RunnerError::HttpConnection {
-                message: format!("Option {option} requires libcurl version {minimum_version} or higher"),
+            HttpError::LibcurlUnknownOption {
+                option,
+                minimum_version,
+                url,
+            } => RunnerError::HttpConnection {
+                message: format!(
+                    "Option {option} requires libcurl version {minimum_version} or higher"
+                ),
                 url,
             },
             HttpError::StatuslineIsMissing { url } => RunnerError::HttpConnection {
