@@ -1,5 +1,4 @@
 POST http://localhost:8000/aws-sigv4
-X-Amz-Date: 20230813T061344Z
 [FormParams]
 test: test
 [Options]

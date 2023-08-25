@@ -8,7 +8,7 @@ set -Eeuo pipefail
 
 set +e
 output_curl=$(curl --aws-sigv4 2>&1)
-output_hurl=$(hurl --user-agent hurl-test --user someAccessKeyId:someSecretKey tests_ok/aws_sigv4.hurl 2>&1 )
+output_hurl=$(hurl --user someAccessKeyId:someSecretKey tests_ok/aws_sigv4.hurl 2>&1 )
 rc="$?"
 set -e
 
