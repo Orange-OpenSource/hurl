@@ -1,2 +1,2 @@
 # FIXME: missing --aws-sigv4 option to fool integration tests on older systems
-curl --header 'X-Amz-Date: 20230813T061344Z' --data 'test=test' --user 'someAccessKeyId:someSecretKey' 'http://localhost:8000/aws-sigv4'
+curl --header 'X-Amz-Date: 20230813T061344Z' --data 'test=test' --user-agent hurl-test --user 'someAccessKeyId:someSecretKey' 'http://localhost:8000/aws-sigv4'

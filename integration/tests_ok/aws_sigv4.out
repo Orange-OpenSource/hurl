@@ -1,1 +1,1 @@
-Received Authorization header: AWS4-HMAC-SHA256 Credential=someAccessKeyId/20230813/eu-central-1/hurltest/aws4_request, SignedHeaders=content-type;host;user-agent;x-amz-date, Signature=79d48c8a42b7c9cc66036296ebb1b7f4b11ebc8439497ca73179f4299d0d5e58
+Received Authorization header: AWS4-HMAC-SHA256 Credential=someAccessKeyId/20230813/eu-central-1/hurltest/aws4_request, SignedHeaders=content-type;host;user-agent;x-amz-date, Signature=12df762ad1cc454ccbd9721ce6a16d56491d59be2993210f65aa22bfd2d62b3f
