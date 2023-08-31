@@ -1,7 +1,7 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-if (Test-Path tests_ok/output.bin) {
-    Remove-Item tests_ok/output.bin
+if (Test-Path build/output.bin) {
+    Remove-Item build/output.bin
 }
-hurl --output tests_ok/output.bin tests_ok/output.hurl
-Write-Host (Get-Content tests_ok/output.bin -Raw) -NoNewLine
+hurl --output build/output.bin tests_ok/output.hurl
+Write-Host (Get-Content build/output.bin -Raw) -NoNewLine
