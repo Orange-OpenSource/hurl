@@ -1,7 +1,7 @@
 # Security
 
 In the [previous part], we have tested our login workflow. So far, we have tested a "simple" form creation: each value of 
-the form is valid and sanitized, but what if the user put invalid data? We're going to test a user acount creation and see
+the form is valid and sanitized, but what if the user put invalid data? We're going to test a user account creation and see
 how we can check that our signup workflow is secure.
 
 
@@ -36,7 +36,7 @@ But server-side validation is critical to secure your app. You must always valid
 and try to test it.
 
 As Hurl is not a browser, but merely an HTTP runner on top of [curl], sending and testing invalid data is easy.
-To do so, we're going to test the _nominal_ user account creation case, then we'll see how to test with invalid datas. 
+To do so, we're going to test the _nominal_ user account creation case, then we'll see how to test with invalid data. 
 
 ### Valid user creation
 

@@ -69,10 +69,10 @@ integration tests that we want to execute.
 - a Flask endpoint (`foo.py`). This is the server side used by the Hurl file. You can add as many assert as you want 
 to test that our Hurl client conforms to what is expected. Generally, each integration test has its own Flask endpoint, 
 even if there is some duplication between tests.
-- an expected stdout file (`foo.out`). This file is the expected value for stdout. This file is not dependant from the OS, as we
-want a Hurl file to have the same stdout on any OS. If the stdout have some variant datas (like timestamp for instance), one 
+- an expected stdout file (`foo.out`). This file is the expected value for stdout. This file is not dependent from the OS, as we
+want a Hurl file to have the same stdout on any OS. If the stdout have some variant data (like timestamp for instance), one 
 can use a patterned expected file, with `~~~` for wildcard matching (`foo.out.pattern`)
-- an expected stderr file (`foo.err`). This file is the expected value for stderr. This file is not dependant from the OS, as we
+- an expected stderr file (`foo.err`). This file is the expected value for stderr. This file is not dependent from the OS, as we
   want a Hurl file to have the same stderr on any OS. Like stdout, stderr expected file can be patterned (`foo.err.pattern`)
 - an expected exit code (`foo.exit`). This file is the expected value of the script. If absent, the default exit code is 0.
 - an expected HTML export of the Hurl source file (`foo.html`)

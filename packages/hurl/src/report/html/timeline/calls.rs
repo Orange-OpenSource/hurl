@@ -44,7 +44,7 @@ impl Testcase {
         root.add_attr(Width(width.0.to_string()));
         root.add_attr(Height(height.0.to_string()));
 
-        // Add symbols fo success and failure icons:
+        // Add symbols for success and failure icons:
         let symbol = new_success_icon("success");
         root.add_child(symbol);
         let symbol = new_failure_icon("failure");

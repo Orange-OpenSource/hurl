@@ -854,7 +854,7 @@ mod tests {
     #[test]
     fn test_redirect_method() {
         // Status of the response to be redirected | method of the original request | method of the new request
-        let datas = [
+        let data = [
             (301, "GET", "GET"),
             (301, "POST", "GET"),
             (301, "DELETE", "GET"),
@@ -871,7 +871,7 @@ mod tests {
             (308, "POST", "POST"),
             (308, "DELETE", "DELETE"),
         ];
-        for (status, original, redirected) in datas {
+        for (status, original, redirected) in data {
             assert_eq!(
                 get_redirect_method(status, Method(original.to_string())),
                 Method(redirected.to_string())

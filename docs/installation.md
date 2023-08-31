@@ -23,7 +23,7 @@ $ sudo apt update && sudo apt install ./hurl_4.0.0_amd64.deb
 
 #### Alpine
 
-Hurl is available on `testing` chanel.
+Hurl is available on `testing` channel.
 
 ```shell
 $ apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl

@@ -70,7 +70,7 @@ impl Testcase {
         root.add_attr(Width(width.0.to_string()));
         root.add_attr(Height(height.0.to_string()));
 
-        // Add styles, filters, symbols fo success and failure icons:
+        // Add styles, filters, symbols for success and failure icons:
         let elt = svg::new_style(include_str!("../resources/waterfall.css"));
         root.add_child(elt);
         let elt = new_filters();
@@ -315,7 +315,7 @@ fn new_call_tooltip(
     let offset_y = CALL_HEIGHT * (call_ctx.call_index - 1) + pixels_y.start;
     let offset_y = offset_y + CALL_HEIGHT - CALL_INSET;
     let max_width = pixels_x.end - pixels_x.start;
-    // We bound the tooltip background to the overall bouding box.
+    // We bound the tooltip background to the overall bounding box.
     let offset_x = Pixel::max(offset_x, 6.px());
     let offset_x = Pixel::min(offset_x, max_width - width - 6.px());
 
@@ -572,7 +572,7 @@ fn new_filters() -> Element {
 }
 
 impl Microsecond {
-    /// Returns a human readable sting of a microsecond.
+    /// Returns a human readable string of a microsecond.
     fn to_human_string(self) -> String {
         match self.0 {
             d if d < 0.0 => "_".to_string(),
@@ -584,7 +584,7 @@ impl Microsecond {
 }
 
 impl Byte {
-    /// Returns a human readable sting of a byte.
+    /// Returns a human readable string of a byte.
     fn to_human_string(self) -> String {
         match self.0 {
             d if d < 0.0 => "_".to_string(),
@@ -606,7 +606,7 @@ mod tests {
     fn legend_svg() {
         let x = 20.px();
         let y = 30.px();
-        let text = "Hellow world";
+        let text = "Hello world";
         let color = "red";
         let duration = Microsecond(2000.0);
 
@@ -615,7 +615,7 @@ mod tests {
             elt.to_string(),
             "<g>\
                 <rect x=\"20\" y=\"30\" width=\"20\" height=\"20\" fill=\"red\" />\
-                <text x=\"56\" y=\"47\" fill=\"#555\">Hellow world</text>\
+                <text x=\"56\" y=\"47\" fill=\"#555\">Hello world</text>\
                 <text x=\"200\" y=\"47\" fill=\"#333\">2.0 ms</text>\
             </g>"
         );
