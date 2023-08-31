@@ -41,7 +41,7 @@ mod tests {
 
     #[test]
     fn eval_html_escape() {
-        let tests = vec![
+        let tests = [
             ("foo", "foo"),
             ("<tag>", "&lt;tag&gt;"),
             ("foo & bar", "foo &amp; bar"),

@@ -684,7 +684,7 @@ fn get_redirect_url(location: &str, base_url: &str) -> String {
 fn get_redirect_method(response_status: u32, original_method: Method) -> Method {
     // This replicates curl's behavior
     match response_status {
-        301 | 302 | 303 => Method("GET".to_string()),
+        301..=303 => Method("GET".to_string()),
         // Could be only 307 and 308, but curl does this for all 3xx
         // codes not converted to GET above.
         _ => original_method,

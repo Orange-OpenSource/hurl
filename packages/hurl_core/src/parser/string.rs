@@ -251,7 +251,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (cha
                     }),
                     Some(c) => {
                         if except.contains(&c)
-                            || vec!['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
+                            || ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
                         {
                             Err(Error {
                                 pos: start.pos,

@@ -100,7 +100,7 @@ fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
                         },
                     }),
                     Some(c) => {
-                        if vec!['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c) {
+                        if ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c) {
                             Err(error::Error {
                                 pos: start.pos,
                                 recoverable: true,

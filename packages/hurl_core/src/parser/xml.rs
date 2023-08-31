@@ -57,7 +57,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
 }
 
 fn is_valid(s: &str) -> bool {
-    matches!(parser::parse(s), Ok(_))
+    parser::parse(s).is_ok()
 }
 
 #[cfg(test)]

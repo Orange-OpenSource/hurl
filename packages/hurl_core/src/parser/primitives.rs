@@ -1128,7 +1128,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::new(r#"/a\/b/"#);
+        let mut reader = Reader::new(r"/a\/b/");
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
@@ -1136,19 +1136,19 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::new(r#"/a\.b/"#);
+        let mut reader = Reader::new(r"/a\.b/");
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r#"a\.b"#).unwrap()
+                inner: regex::Regex::new(r"a\.b").unwrap()
             }
         );
 
-        let mut reader = Reader::new(r#"/\d{4}-\d{2}-\d{2}/"#);
+        let mut reader = Reader::new(r"/\d{4}-\d{2}-\d{2}/");
         assert_eq!(
             regex(&mut reader).unwrap(),
             Regex {
-                inner: regex::Regex::new(r#"\d{4}-\d{2}-\d{2}"#).unwrap()
+                inner: regex::Regex::new(r"\d{4}-\d{2}-\d{2}").unwrap()
             }
         );
     }
@@ -1237,7 +1237,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::new(r#"file, tmp/filename\ with\ spaces.txt;"#);
+        let mut reader = Reader::new(r"file, tmp/filename\ with\ spaces.txt;");
         assert_eq!(
             file(&mut reader).unwrap(),
             File {
@@ -1281,7 +1281,7 @@ mod tests {
             }
         );
 
-        let mut reader = Reader::new(r#"file, tmp/filename\ with\ unescaped .txt;"#);
+        let mut reader = Reader::new(r"file, tmp/filename\ with\ unescaped .txt;");
         let error = file(&mut reader).err().unwrap();
         assert_eq!(
             error.pos,

@@ -850,7 +850,7 @@ pub mod tests {
             value: FilterValue::HtmlEscape,
         };
 
-        let tests = vec![
+        let tests = [
             ("foo", "foo"),
             ("<tag>", "&lt;tag&gt;"),
             ("foo & bar", "foo &amp; bar"),
@@ -882,7 +882,7 @@ pub mod tests {
             value: FilterValue::HtmlUnescape,
         };
 
-        let tests = vec![
+        let tests = [
             ("foo", "foo"),
             ("&lt;tag&gt;", "<tag>"),
             ("foo &amp; bar", "foo & bar"),

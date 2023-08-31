@@ -143,7 +143,7 @@ mod test {
         assert_eq!(args::split(r#"AAA $'BBB'"#).unwrap(), expected);
 
         let expected = vec!["'".to_string()];
-        assert_eq!(args::split(r#"$'\''"#).unwrap(), expected);
+        assert_eq!(args::split(r"$'\''").unwrap(), expected);
     }
 
     #[test]
