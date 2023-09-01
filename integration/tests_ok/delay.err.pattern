@@ -1,0 +1,65 @@
+* Options:
+*     continue on error: false
+*     follow redirect: false
+*     insecure: false
+*     max redirect: 50
+*     retry: 0
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/delay-init
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/delay-init'
+*
+> GET /delay-init HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 0 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 0
+< Server: Flask Server
+< Connection: close
+<
+*
+* ------------------------------------------------------------------------------
+* Executing entry 2
+*
+* Entry options:
+* delay: 1000
+*
+* Delay entry 2 (x1 by 1000 ms)
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/delay
+*
+* Request can be run with the following curl command:
+* curl 'http://localhost:8000/delay'
+*
+> GET /delay HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 0 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: ~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 0
+< Server: Flask Server
+< Connection: close
+<
+*
