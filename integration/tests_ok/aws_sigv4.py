@@ -10,4 +10,4 @@ def aws_sigv4():
         r"^AWS4-HMAC-SHA256 Credential=someAccessKeyId/\d+/eu-central-1/hurltest/aws4_request, SignedHeaders=\S+, Signature=[a-f0-9]+$",
         auth,
     )
-    return "Received SigV4 Authorization header"
+    return ""
