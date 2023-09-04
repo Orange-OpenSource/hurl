@@ -18,7 +18,7 @@ base64 = "0.21.3"
 clap = { version = "4.4.2", features = ["cargo", "wrap_help"] }
 colored = "2.0.4"
 hurl_core = { version = "4.1.0-SNAPSHOT", path = "../hurl_core" }
-regex = "1.9.4"
+regex = "1.9.5"
 
 [dev-dependencies]
 proptest = "1.2.0"
