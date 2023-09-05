@@ -1,13 +1,18 @@
-FROM alpine:3.17 AS builder
+FROM --platform=$TARGETPLATFORM alpine:3.17 AS builder
+ARG TARGETPLATFORM
 WORKDIR /tmp/hurl-docker
 COPY . /tmp/hurl-docker
 # hadolint ignore=DL3018
 RUN apk add --no-cache bash git && \
+    if [ "${TARGETPLATFORM}" = "linux/arm64" ] ; then \
+        apk add --no-cache -y g++-aarch64-linux-gnu libc6-dev-arm64-cross ; \
+        export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER="aarch64-linux-gnu-gcc CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++" ; \
+    fi ; \
     bash -c bin/install_prerequisites_alpine.sh && \
     bash -c bin/install_rust.sh && \
     bash -c ./bin/release/release.sh
 
-FROM alpine:3.17 AS runner
+FROM --platform=$TARGETPLATFORM alpine:3.17 AS runner
 ARG docker_build_date
 ARG docker_build_tag
 LABEL "org.opencontainers.image.source"="https://github.com/Orange-OpenSource/hurl"
@@ -34,3 +39,4 @@ COPY --from=builder /usr/lib/libgcc_s.so.* /usr/lib/
 COPY --from=builder /usr/lib/liblzma.so.* /usr/lib/
 COPY --from=builder /usr/lib/libidn2.so.* /usr/lib/
 ENTRYPOINT ["/usr/bin/hurl"]
+
