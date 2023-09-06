@@ -1,10 +1,10 @@
 [workspace]
-members =[
+members = [
     "packages/hurl",
     "packages/hurlfmt",
     "packages/hurl_core",
 ]
-
+resolver = "2"
 
 [profile.release]
 lto = true          # Enable Link Time Optimization
