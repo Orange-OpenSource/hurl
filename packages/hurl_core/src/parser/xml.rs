@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-use sxd_document::parser;
 
 use crate::ast::Pos;
 use crate::parser::error::*;
@@ -57,7 +56,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, String> {
 }
 
 fn is_valid(s: &str) -> bool {
-    parser::parse(s).is_ok()
+    libxml::parser::Parser::default().parse_string(s).is_ok()
 }
 
 #[cfg(test)]
