@@ -20,6 +20,7 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CurlVersionInfo {
+    pub host: String,
     pub libraries: Vec<String>,
     pub features: Vec<String>,
 }
@@ -31,6 +32,7 @@ pub struct CurlVersionInfo {
 /// - <https://github.com/curl/curl/blob/master/src/tool_help.c>
 pub fn libcurl_version_info() -> CurlVersionInfo {
     let version = curl::Version::get();
+    let host = version.host().to_string();
     let mut libraries = vec![format!("libcurl/{}", version.version())];
     if let Some(s) = version.ssl_version() {
         libraries.push(s.to_string());
@@ -117,6 +119,7 @@ pub fn libcurl_version_info() -> CurlVersionInfo {
     features.sort_by_key(|k| k.to_lowercase());
 
     CurlVersionInfo {
+        host,
         libraries,
         features,
     }

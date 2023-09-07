@@ -113,8 +113,9 @@ impl From<ErrorFormat> for hurl::util::logger::ErrorFormat {
 fn get_version() -> String {
     let libcurl_version = http::libcurl_version_info();
     format!(
-        "{} {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
+        "{} ({}) {}\nFeatures (libcurl):  {}\nFeatures (built-in): brotli",
         clap::crate_version!(),
+        libcurl_version.host,
         libcurl_version.libraries.join(" "),
         libcurl_version.features.join(" ")
     )
