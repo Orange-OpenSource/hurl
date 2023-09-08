@@ -407,7 +407,7 @@ mod tests {
 
     #[test]
     fn test_predicate() {
-        let mut reader = Reader::new("not equals true");
+        let mut reader = Reader::new("not == true");
         assert_eq!(
             predicate(&mut reader).unwrap(),
             Predicate {
@@ -417,14 +417,14 @@ mod tests {
                     source_info: SourceInfo::new(1, 4, 1, 5),
                 },
                 predicate_func: PredicateFunc {
-                    source_info: SourceInfo::new(1, 5, 1, 16),
+                    source_info: SourceInfo::new(1, 5, 1, 12),
                     value: PredicateFuncValue::Equal {
                         space0: Whitespace {
                             value: String::from(" "),
-                            source_info: SourceInfo::new(1, 11, 1, 12),
+                            source_info: SourceInfo::new(1, 7, 1, 8),
                         },
                         value: PredicateValue::Bool(true),
-                        operator: false,
+                        operator: true,
                     },
                 },
             }
@@ -433,7 +433,7 @@ mod tests {
 
     #[test]
     fn test_predicate_func() {
-        let mut reader = Reader::new("tata equals 1");
+        let mut reader = Reader::new("tata == 1");
         let error = predicate_func(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert!(!error.recoverable);
@@ -442,21 +442,21 @@ mod tests {
 
     #[test]
     fn test_equal_predicate() {
-        let mut reader = Reader::new("equals  true");
+        let mut reader = Reader::new("==  true");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
                 value: PredicateValue::Bool(true),
                 space0: Whitespace {
                     value: String::from("  "),
-                    source_info: SourceInfo::new(1, 7, 1, 9),
+                    source_info: SourceInfo::new(1, 3, 1, 5),
                 },
 
-                operator: false,
+                operator: true,
             }
         );
 
-        let mut reader = Reader::new("equals 1.1");
+        let mut reader = Reader::new("== 1.1");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -466,23 +466,10 @@ mod tests {
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 3, 1, 4),
                 },
-                operator: false,
+                operator: true,
             }
-        );
-
-        let mut reader = Reader::new("equals 2");
-        assert_eq!(
-            equal_predicate(&mut reader).unwrap(),
-            PredicateFuncValue::Equal {
-                value: PredicateValue::Integer(2),
-                space0: Whitespace {
-                    value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
-                },
-                operator: false,
-            },
         );
 
         let mut reader = Reader::new("== 2");
@@ -498,7 +485,7 @@ mod tests {
             },
         );
 
-        let mut reader = Reader::new("equals \"Bob\"");
+        let mut reader = Reader::new("== \"Bob\"");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
@@ -508,42 +495,42 @@ mod tests {
                         value: "Bob".to_string(),
                         encoded: "Bob".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 8, 1, 13),
+                    source_info: SourceInfo::new(1, 4, 1, 9),
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 3, 1, 4),
                 },
-                operator: false,
+                operator: true,
             }
         );
     }
 
     #[test]
     fn test_equal_expression_predicate() {
-        let mut reader = Reader::new("equals {{count}}");
+        let mut reader = Reader::new("== {{count}}");
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
                 value: PredicateValue::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 10, 1, 10),
+                        source_info: SourceInfo::new(1, 6, 1, 6),
                     },
                     variable: Variable {
                         name: "count".to_string(),
-                        source_info: SourceInfo::new(1, 10, 1, 15),
+                        source_info: SourceInfo::new(1, 6, 1, 11),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 15, 1, 15),
+                        source_info: SourceInfo::new(1, 11, 1, 11),
                     },
                 }),
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(1, 3, 1, 4),
                 },
-                operator: false,
+                operator: true,
             }
         );
     }

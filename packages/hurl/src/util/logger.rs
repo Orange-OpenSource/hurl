@@ -721,7 +721,7 @@ HTTP/1.0 200
         let content = r#"GET http://example.com
 HTTP/1.0 200
 [Asserts]
-xpath "strong(//head/title)" equals "Hello"
+xpath "strong(//head/title)" == "Hello"
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
@@ -734,7 +734,7 @@ xpath "strong(//head/title)" equals "Hello"
             r#"Invalid XPath expression
   --> test.hurl:4:7
    |
- 4 | xpath "strong(//head/title)" equals "Hello"
+ 4 | xpath "strong(//head/title)" == "Hello"
    |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid
    |"#
         )

@@ -676,8 +676,7 @@ mod tests {
 
     #[test]
     fn test_asserts_section() {
-        let mut reader =
-            Reader::new("[Asserts]\nheader \"Location\" equals \"https://google.fr\"\n");
+        let mut reader = Reader::new("[Asserts]\nheader \"Location\" == \"https://google.fr\"\n");
 
         assert_eq!(
             response_section(&mut reader).unwrap(),
@@ -733,11 +732,11 @@ mod tests {
                             source_info: SourceInfo::new(2, 19, 2, 19),
                         },
                         predicate_func: PredicateFunc {
-                            source_info: SourceInfo::new(2, 19, 2, 45),
+                            source_info: SourceInfo::new(2, 19, 2, 41),
                             value: PredicateFuncValue::Equal {
                                 space0: Whitespace {
                                     value: String::from(" "),
-                                    source_info: SourceInfo::new(2, 25, 2, 26),
+                                    source_info: SourceInfo::new(2, 21, 2, 22),
                                 },
                                 value: PredicateValue::String(Template {
                                     delimiter: Some('"'),
@@ -745,21 +744,21 @@ mod tests {
                                         value: "https://google.fr".to_string(),
                                         encoded: "https://google.fr".to_string(),
                                     }],
-                                    source_info: SourceInfo::new(2, 26, 2, 45),
+                                    source_info: SourceInfo::new(2, 22, 2, 41),
                                 }),
-                                operator: false,
+                                operator: true,
                             },
                         },
                     },
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(2, 45, 2, 45),
+                            source_info: SourceInfo::new(2, 41, 2, 41),
                         },
                         comment: None,
                         newline: Whitespace {
                             value: String::from("\n"),
-                            source_info: SourceInfo::new(2, 45, 3, 1),
+                            source_info: SourceInfo::new(2, 41, 3, 1),
                         },
                     },
                 }]),
@@ -770,7 +769,7 @@ mod tests {
 
     #[test]
     fn test_asserts_section_error() {
-        let mut reader = Reader::new("x[Assertsx]\nheader Location equals \"https://google.fr\"\n");
+        let mut reader = Reader::new("x[Assertsx]\nheader Location == \"https://google.fr\"\n");
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
@@ -781,7 +780,7 @@ mod tests {
         );
         assert!(error.recoverable);
 
-        let mut reader = Reader::new("[Assertsx]\nheader Location equals \"https://google.fr\"\n");
+        let mut reader = Reader::new("[Assertsx]\nheader Location == \"https://google.fr\"\n");
         let error = response_section(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(
@@ -1238,7 +1237,7 @@ mod tests {
 
     #[test]
     fn test_assert() {
-        let mut reader = Reader::new("header \"Location\" equals \"https://google.fr\"");
+        let mut reader = Reader::new("header \"Location\" == \"https://google.fr\"");
         let assert0 = assert(&mut reader).unwrap();
 
         assert_eq!(
@@ -1265,7 +1264,7 @@ mod tests {
 
     #[test]
     fn test_assert_jsonpath() {
-        let mut reader = Reader::new("jsonpath \"$.errors\" equals 5");
+        let mut reader = Reader::new("jsonpath \"$.errors\" == 5");
 
         assert_eq!(
             assert(&mut reader).unwrap().predicate,
@@ -1276,14 +1275,14 @@ mod tests {
                     source_info: SourceInfo::new(1, 21, 1, 21),
                 },
                 predicate_func: PredicateFunc {
-                    source_info: SourceInfo::new(1, 21, 1, 29),
+                    source_info: SourceInfo::new(1, 21, 1, 25),
                     value: PredicateFuncValue::Equal {
                         space0: Whitespace {
                             value: String::from(" "),
-                            source_info: SourceInfo::new(1, 27, 1, 28),
+                            source_info: SourceInfo::new(1, 23, 1, 24),
                         },
                         value: PredicateValue::Integer(5),
-                        operator: false,
+                        operator: true,
                     },
                 },
             }
