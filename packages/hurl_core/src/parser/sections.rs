@@ -26,17 +26,17 @@ use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{filename, ParseResult};
 
-pub fn request_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
+pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;
     Ok(sections)
 }
 
-pub fn response_sections(reader: &mut Reader) -> ParseResult<'static, Vec<Section>> {
+pub fn response_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(response_section, reader)?;
     Ok(sections)
 }
 
-fn request_section(reader: &mut Reader) -> ParseResult<'static, Section> {
+fn request_section(reader: &mut Reader) -> ParseResult<Section> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let start = reader.state.clone();
@@ -74,7 +74,7 @@ fn request_section(reader: &mut Reader) -> ParseResult<'static, Section> {
     })
 }
 
-fn response_section(reader: &mut Reader) -> ParseResult<'static, Section> {
+fn response_section(reader: &mut Reader) -> ParseResult<Section> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let start = reader.state.clone();
@@ -108,7 +108,7 @@ fn response_section(reader: &mut Reader) -> ParseResult<'static, Section> {
     })
 }
 
-fn section_name(reader: &mut Reader) -> ParseResult<'static, String> {
+fn section_name(reader: &mut Reader) -> ParseResult<String> {
     let pos = reader.state.pos.clone();
     try_literal("[", reader)?;
     let name = reader.read_while(|c| c.is_alphanumeric());
@@ -126,47 +126,47 @@ fn section_name(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(name)
 }
 
-fn section_value_query_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_query_params(reader: &mut Reader) -> ParseResult<SectionValue> {
     let items = zero_or_more(key_value, reader)?;
     Ok(SectionValue::QueryParams(items))
 }
 
-fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_basic_auth(reader: &mut Reader) -> ParseResult<SectionValue> {
     let v = optional(key_value, reader)?;
     Ok(SectionValue::BasicAuth(v))
 }
 
-fn section_value_form_params(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_form_params(reader: &mut Reader) -> ParseResult<SectionValue> {
     let items = zero_or_more(key_value, reader)?;
     Ok(SectionValue::FormParams(items))
 }
 
-fn section_value_multipart_form_data(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_multipart_form_data(reader: &mut Reader) -> ParseResult<SectionValue> {
     let items = zero_or_more(multipart_param, reader)?;
     Ok(SectionValue::MultipartFormData(items))
 }
 
-fn section_value_cookies(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_cookies(reader: &mut Reader) -> ParseResult<SectionValue> {
     let items = zero_or_more(cookie, reader)?;
     Ok(SectionValue::Cookies(items))
 }
 
-fn section_value_captures(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_captures(reader: &mut Reader) -> ParseResult<SectionValue> {
     let items = zero_or_more(capture, reader)?;
     Ok(SectionValue::Captures(items))
 }
 
-fn section_value_asserts(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_asserts(reader: &mut Reader) -> ParseResult<SectionValue> {
     let asserts = zero_or_more(assert, reader)?;
     Ok(SectionValue::Asserts(asserts))
 }
 
-fn section_value_options(reader: &mut Reader) -> ParseResult<'static, SectionValue> {
+fn section_value_options(reader: &mut Reader) -> ParseResult<SectionValue> {
     let options = zero_or_more(option, reader)?;
     Ok(SectionValue::Options(options))
 }
 
-fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
+fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {
     // let start = reader.state.clone();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -187,7 +187,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<'static, Cookie> {
     })
 }
 
-fn multipart_param(reader: &mut Reader) -> ParseResult<'static, MultipartParam> {
+fn multipart_param(reader: &mut Reader) -> ParseResult<MultipartParam> {
     let save = reader.state.clone();
     match file_param(reader) {
         Ok(f) => Ok(MultipartParam::FileParam(f)),
@@ -203,7 +203,7 @@ fn multipart_param(reader: &mut Reader) -> ParseResult<'static, MultipartParam> 
     }
 }
 
-fn file_param(reader: &mut Reader) -> ParseResult<'static, FileParam> {
+fn file_param(reader: &mut Reader) -> ParseResult<FileParam> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let key = recover(unquoted_string_key, reader)?;
@@ -223,7 +223,7 @@ fn file_param(reader: &mut Reader) -> ParseResult<'static, FileParam> {
     })
 }
 
-fn file_value(reader: &mut Reader) -> ParseResult<'static, FileValue> {
+fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
     try_literal("file,", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let f = filename::parse(reader)?;
@@ -259,7 +259,7 @@ fn file_value(reader: &mut Reader) -> ParseResult<'static, FileValue> {
     })
 }
 
-fn file_content_type(reader: &mut Reader) -> ParseResult<'static, String> {
+fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let mut buf = String::new();
     let mut spaces = String::new();
@@ -288,7 +288,7 @@ fn file_content_type(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(buf)
 }
 
-fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
+fn capture(reader: &mut Reader) -> ParseResult<Capture> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let name = unquoted_string_key(reader)?;
@@ -310,7 +310,7 @@ fn capture(reader: &mut Reader) -> ParseResult<'static, Capture> {
     })
 }
 
-fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
+fn assert(reader: &mut Reader) -> ParseResult<Assert> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let query0 = query(reader)?;
@@ -354,7 +354,7 @@ fn assert(reader: &mut Reader) -> ParseResult<'static, Assert> {
     })
 }
 
-fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
+fn option(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let pos = reader.state.pos.clone();
@@ -401,52 +401,52 @@ fn option(reader: &mut Reader) -> ParseResult<'static, EntryOption> {
     })
 }
 
-fn option_aws_sigv4(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_aws_sigv4(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = aws_sigv4(reader)?;
     Ok(OptionKind::AwsSigV4(value))
 }
 
-fn option_cacert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_cacert(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = filename::parse(reader)?;
     Ok(OptionKind::CaCertificate(value))
 }
 
-fn option_cert(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_cert(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = filename::parse(reader)?;
     Ok(OptionKind::ClientCert(value))
 }
 
-fn option_connect_to(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_connect_to(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = connect_to(reader)?;
     Ok(OptionKind::ConnectTo(value))
 }
 
-fn option_delay(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural, reader)?;
     Ok(OptionKind::Delay(value))
 }
 
-fn option_key(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = filename::parse(reader)?;
     Ok(OptionKind::ClientKey(value))
 }
 
-fn option_compressed(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::Compressed(value))
 }
 
-fn option_insecure(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::Insecure(value))
 }
 
-fn option_follow_location(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::FollowLocation(value))
 }
 
-fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural, reader)?;
     // FIXME: try to not unwrap redirect value
     // and returns an error if not possible
@@ -454,47 +454,47 @@ fn option_max_redirect(reader: &mut Reader) -> ParseResult<'static, OptionKind> 
     Ok(OptionKind::MaxRedirect(value))
 }
 
-fn option_path_as_is(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_path_as_is(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::PathAsIs(value))
 }
 
-fn option_proxy(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_proxy(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = proxy(reader)?;
     Ok(OptionKind::Proxy(value))
 }
 
-fn option_resolve(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_resolve(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = resolve(reader)?;
     Ok(OptionKind::Resolve(value))
 }
 
-fn option_retry(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = retry(reader)?;
     Ok(OptionKind::Retry(value))
 }
 
-fn option_retry_interval(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural, reader)?;
     Ok(OptionKind::RetryInterval(value))
 }
 
-fn option_variable(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = variable_definition(reader)?;
     Ok(OptionKind::Variable(value))
 }
 
-fn option_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::Verbose(value))
 }
 
-fn option_very_verbose(reader: &mut Reader) -> ParseResult<'static, OptionKind> {
+fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::VeryVerbose(value))
 }
 
-fn aws_sigv4(reader: &mut Reader) -> ParseResult<'static, String> {
+fn aws_sigv4(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let provider = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '-');
     if provider.is_empty() {
@@ -509,7 +509,7 @@ fn aws_sigv4(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(provider)
 }
 
-fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
+fn proxy(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let name = reader
         .read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.' || *c == '[' || *c == ']');
@@ -525,7 +525,7 @@ fn proxy(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(name)
 }
 
-fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
+fn resolve(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
     if name.is_empty() {
@@ -549,7 +549,7 @@ fn resolve(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(name)
 }
 
-fn connect_to(reader: &mut Reader) -> ParseResult<'static, String> {
+fn connect_to(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
     if name.is_empty() {
@@ -592,7 +592,7 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
         })
     }
 }
-fn variable_definition(reader: &mut Reader) -> ParseResult<'static, VariableDefinition> {
+fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
     let name = variable_name(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     literal("=", reader)?;
@@ -606,7 +606,7 @@ fn variable_definition(reader: &mut Reader) -> ParseResult<'static, VariableDefi
     })
 }
 
-fn variable_name(reader: &mut Reader) -> ParseResult<'static, String> {
+fn variable_name(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
@@ -621,7 +621,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<'static, String> {
     Ok(name)
 }
 
-fn variable_value(reader: &mut Reader) -> ParseResult<'static, VariableValue> {
+fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
     choice(
         &[
             |p1| match null(p1) {

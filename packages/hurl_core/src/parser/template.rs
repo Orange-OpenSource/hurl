@@ -24,7 +24,7 @@ pub struct EncodedString {
     pub chars: Vec<(char, String, Pos)>,
 }
 
-pub fn templatize(encoded_string: EncodedString) -> ParseResult<'static, Vec<TemplateElement>> {
+pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElement>> {
     enum State {
         String,
         Template,

@@ -26,7 +26,7 @@ use crate::parser::sections::*;
 use crate::parser::url::url;
 use crate::parser::ParseResult;
 
-pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
+pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
     let entries = zero_or_more(entry, reader)?;
     let line_terminators = optional_line_terminators(reader)?;
     eof(reader)?;
@@ -36,7 +36,7 @@ pub fn hurl_file(reader: &mut Reader) -> ParseResult<'static, HurlFile> {
     })
 }
 
-fn entry(reader: &mut Reader) -> ParseResult<'static, Entry> {
+fn entry(reader: &mut Reader) -> ParseResult<Entry> {
     let req = request(reader)?;
     let resp = optional(response, reader)?;
     Ok(Entry {
@@ -45,7 +45,7 @@ fn entry(reader: &mut Reader) -> ParseResult<'static, Entry> {
     })
 }
 
-fn request(reader: &mut Reader) -> ParseResult<'static, Request> {
+fn request(reader: &mut Reader) -> ParseResult<Request> {
     let start = reader.state.clone();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -92,7 +92,7 @@ fn request(reader: &mut Reader) -> ParseResult<'static, Request> {
     })
 }
 
-fn response(reader: &mut Reader) -> ParseResult<'static, Response> {
+fn response(reader: &mut Reader) -> ParseResult<Response> {
     let start = reader.state.clone();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -122,7 +122,7 @@ fn response(reader: &mut Reader) -> ParseResult<'static, Response> {
     })
 }
 
-fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
+fn method(reader: &mut Reader) -> ParseResult<Method> {
     if reader.is_eof() {
         return Err(Error {
             pos: reader.state.pos.clone(),
@@ -145,7 +145,7 @@ fn method(reader: &mut Reader) -> ParseResult<'static, Method> {
     }
 }
 
-fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
+fn version(reader: &mut Reader) -> ParseResult<Version> {
     let start = reader.state.clone();
     try_literal("HTTP", reader)?;
 
@@ -194,7 +194,7 @@ fn version(reader: &mut Reader) -> ParseResult<'static, Version> {
     }
 }
 
-fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
+fn status(reader: &mut Reader) -> ParseResult<Status> {
     let start = reader.state.pos.clone();
     let value = match try_literal("*", reader) {
         Ok(_) => StatusValue::Any,
@@ -216,7 +216,7 @@ fn status(reader: &mut Reader) -> ParseResult<'static, Status> {
     })
 }
 
-fn body(reader: &mut Reader) -> ParseResult<'static, Body> {
+fn body(reader: &mut Reader) -> ParseResult<Body> {
     //  let start = reader.state.clone();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;

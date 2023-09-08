@@ -22,7 +22,7 @@ use crate::parser::query::regex_value;
 use crate::parser::string::quoted_template;
 use crate::parser::{Error, ParseError, ParseResult, Reader};
 
-pub fn filters(reader: &mut Reader) -> ParseResult<'static, Vec<(Whitespace, Filter)>> {
+pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];
     loop {
         let save = reader.state.clone();
@@ -47,7 +47,7 @@ pub fn filters(reader: &mut Reader) -> ParseResult<'static, Vec<(Whitespace, Fil
     Ok(filters)
 }
 
-pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
+pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
     let start = reader.state.pos.clone();
     let value = choice(
         &[
@@ -88,60 +88,60 @@ pub fn filter(reader: &mut Reader) -> ParseResult<'static, Filter> {
     Ok(Filter { source_info, value })
 }
 
-fn count_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn count_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("count", reader)?;
     Ok(FilterValue::Count)
 }
 
-fn days_after_now_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn days_after_now_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("daysAfterNow", reader)?;
     Ok(FilterValue::DaysAfterNow)
 }
 
-fn days_before_now_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn days_before_now_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("daysBeforeNow", reader)?;
     Ok(FilterValue::DaysBeforeNow)
 }
 
-fn decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("decode", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let encoding = quoted_template(reader)?;
     Ok(FilterValue::Decode { space0, encoding })
 }
 
-fn format_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn format_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("format", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let fmt = quoted_template(reader)?;
     Ok(FilterValue::Format { space0, fmt })
 }
 
-fn html_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn html_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("htmlEscape", reader)?;
     Ok(FilterValue::HtmlEscape)
 }
 
-fn html_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn html_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("htmlUnescape", reader)?;
     Ok(FilterValue::HtmlUnescape)
 }
 
-fn nth_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn nth_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("nth", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let n = natural(reader)?;
     Ok(FilterValue::Nth { space0, n })
 }
 
-fn regex_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn regex_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let value = regex_value(reader)?;
     Ok(FilterValue::Regex { space0, value })
 }
 
-fn replace_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn replace_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("replace", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let old_value = regex_value(reader)?;
@@ -155,36 +155,36 @@ fn replace_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
     })
 }
 
-fn split_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn split_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("split", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let sep = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(FilterValue::Split { space0, sep })
 }
 
-fn to_date_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn to_date_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("toDate", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let fmt = quoted_template(reader)?;
     Ok(FilterValue::ToDate { space0, fmt })
 }
 
-fn to_int_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn to_int_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("toInt", reader)?;
     Ok(FilterValue::ToInt)
 }
 
-fn url_encode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn url_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("urlEncode", reader)?;
     Ok(FilterValue::UrlEncode)
 }
 
-fn url_decode_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn url_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("urlDecode", reader)?;
     Ok(FilterValue::UrlDecode)
 }
 
-fn xpath_filter(reader: &mut Reader) -> ParseResult<'static, FilterValue> {
+fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;

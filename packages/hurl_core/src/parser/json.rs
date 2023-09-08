@@ -22,7 +22,7 @@ use crate::parser::reader::*;
 use crate::parser::template::*;
 use crate::parser::{error, expr, ParseResult};
 
-pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     choice(
         &[
             null_value,
@@ -37,22 +37,22 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     )
 }
 
-pub fn null_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn null_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     try_literal("null", reader)?;
     Ok(JsonValue::Null)
 }
 
-pub fn boolean_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn boolean_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let value = boolean(reader)?;
     Ok(JsonValue::Boolean(value))
 }
 
-fn string_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+fn string_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let template = string_template(reader)?;
     Ok(JsonValue::String(template))
 }
 
-fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
+fn string_template(reader: &mut Reader) -> ParseResult<Template> {
     try_literal("\"", reader)?;
     let delimiter = Some('"');
     let mut chars = vec![];
@@ -84,7 +84,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     Ok(template)
 }
 
-fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
+fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
     let start = reader.state.clone();
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.peek_back(start.cursor), start.pos)),
@@ -120,7 +120,7 @@ fn any_char(reader: &mut Reader) -> ParseResult<'static, (char, String, Pos)> {
     }
 }
 
-fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
+fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
     let start = reader.state.clone();
     match reader.read() {
@@ -141,7 +141,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
     }
 }
 
-fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
+fn unicode(reader: &mut Reader) -> ParseResult<char> {
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
         None => {
@@ -156,7 +156,7 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
     Ok(c)
 }
 
-fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
+fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
     let digit1 = nonrecover(hex_digit, reader)?;
     let digit2 = nonrecover(hex_digit, reader)?;
     let digit3 = nonrecover(hex_digit, reader)?;
@@ -165,7 +165,7 @@ fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
     Ok(value)
 }
 
-pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let start = reader.state.clone();
 
     let sign = match try_literal("-", reader) {
@@ -229,12 +229,12 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     )))
 }
 
-fn expression_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     let exp = expr::parse(reader)?;
     Ok(JsonValue::Expression(exp))
 }
 
-fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     try_literal("[", reader)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];
@@ -261,7 +261,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     Ok(JsonValue::List { space0, elements })
 }
 
-fn list_element(reader: &mut Reader) -> ParseResult<'static, JsonListElement> {
+fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
     let save = reader.state.pos.clone();
     let space0 = whitespace(reader);
     let value = match parse(reader) {
@@ -282,7 +282,7 @@ fn list_element(reader: &mut Reader) -> ParseResult<'static, JsonListElement> {
     })
 }
 
-pub fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
+pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     try_literal("{", reader)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];
@@ -310,7 +310,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<'static, JsonValue> {
     Ok(JsonValue::Object { space0, elements })
 }
 
-fn key(reader: &mut Reader) -> ParseResult<'static, Template> {
+fn key(reader: &mut Reader) -> ParseResult<Template> {
     let save = reader.state.clone();
     let name = string_template(reader).map_err(|e| e.non_recoverable())?;
     if name.elements.is_empty() {
@@ -323,7 +323,7 @@ fn key(reader: &mut Reader) -> ParseResult<'static, Template> {
         Ok(name)
     }
 }
-fn object_element(reader: &mut Reader) -> ParseResult<'static, JsonObjectElement> {
+fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     let space0 = whitespace(reader);
     //literal("\"", reader)?;
     let name = key(reader)?;

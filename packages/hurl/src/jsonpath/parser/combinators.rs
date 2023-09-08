@@ -19,7 +19,7 @@ use super::error::*;
 use super::reader::Reader;
 use super::{ParseFunc, ParseResult};
 
-pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'a, Vec<T>> {
+pub fn zero_or_more<T>(f: ParseFunc<T>, p: &mut Reader) -> ParseResult<Vec<T>> {
     let _start = p.state.clone();
 
     let mut v: Vec<T> = Vec::new();
@@ -48,7 +48,7 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, p: &mut Reader) -> ParseResult<'
 
 /// Tries to apply the list of parser functions `fs` until one of them succeeds.
 /// Typically this should be recoverable
-pub fn choice<'a, T>(fs: &[ParseFunc<'a, T>], reader: &mut Reader) -> ParseResult<'a, T> {
+pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
     for (pos, f) in fs.iter().enumerate() {
         let start = reader.state.clone();
         if pos == fs.len() - 1 {

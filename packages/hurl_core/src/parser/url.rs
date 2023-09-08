@@ -21,7 +21,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::{expr, ParseResult};
 
-pub fn url(reader: &mut Reader) -> ParseResult<'static, Template> {
+pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     // Can not be JSON-encoded, nor empty.
     // But more restrictive: whitelist characters, not empty
 

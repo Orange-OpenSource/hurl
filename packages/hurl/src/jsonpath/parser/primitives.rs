@@ -19,7 +19,7 @@ use super::super::ast::*;
 use super::error::{Error, ParseError};
 use super::{ParseResult, Reader};
 
-pub fn natural(reader: &mut Reader) -> ParseResult<'static, usize> {
+pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
     let start = reader.state.clone();
 
     if reader.is_eof() {
@@ -58,13 +58,13 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, usize> {
     Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
-pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
+pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
     let sign = if reader.try_literal("-") { -1 } else { 1 };
     let nat = natural(reader)?;
     Ok(sign * (nat as i64))
 }
 
-pub fn number(reader: &mut Reader) -> ParseResult<'static, Number> {
+pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     let int = integer(reader)?;
 
     let decimal = if reader.try_literal(".") {
@@ -183,7 +183,7 @@ pub fn key_path(reader: &mut Reader) -> Result<Vec<String>, Error> {
     Ok(path)
 }
 
-pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
+pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
     // non recoverable reader
     // => use combinator recover to make it recoverable
@@ -228,7 +228,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
     Ok(())
 }
 
-pub fn try_literal(s: &str, p: &mut Reader) -> ParseResult<'static, ()> {
+pub fn try_literal(s: &str, p: &mut Reader) -> ParseResult<()> {
     match literal(s, p) {
         Ok(_) => Ok(()),
         Err(Error { pos, inner, .. }) => Err(Error {

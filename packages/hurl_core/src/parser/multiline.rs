@@ -22,7 +22,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::{template, Error, ParseError, ParseResult};
 
-pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;
     let save = reader.state.clone();
 
@@ -53,7 +53,7 @@ pub fn multiline_string(reader: &mut Reader) -> ParseResult<'static, MultilineSt
     }
 }
 
-fn text(lang: &str, reader: &mut Reader) -> ParseResult<'static, Text> {
+fn text(lang: &str, reader: &mut Reader) -> ParseResult<Text> {
     try_literal(lang, reader)?;
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
@@ -65,17 +65,17 @@ fn text(lang: &str, reader: &mut Reader) -> ParseResult<'static, Text> {
     })
 }
 
-fn json_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+fn json_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let text = text("json", reader)?;
     Ok(MultilineString::Json(text))
 }
 
-fn xml_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+fn xml_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let text = text("xml", reader)?;
     Ok(MultilineString::Xml(text))
 }
 
-fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("graphql", reader)?;
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
@@ -146,7 +146,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     }))
 }
 
-fn whitespace(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
+fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match reader.read() {
         None => Err(Error {
@@ -176,7 +176,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     }
 }
 
-fn zero_or_more_whitespaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace> {
+fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match zero_or_more(whitespace, reader) {
         Ok(v) => {
@@ -195,7 +195,7 @@ fn zero_or_more_whitespaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespa
     }
 }
 
-fn graphql_variables(reader: &mut Reader) -> ParseResult<'static, GraphQlVariables> {
+fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
     try_literal("variables", reader)?;
     let space = zero_or_more_spaces(reader)?;
     let start = reader.state.clone();
@@ -218,7 +218,7 @@ fn graphql_variables(reader: &mut Reader) -> ParseResult<'static, GraphQlVariabl
     })
 }
 
-fn plain_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
+fn plain_text(reader: &mut Reader) -> ParseResult<MultilineString> {
     let space = zero_or_more_spaces(reader)?;
     let newline = newline(reader)?;
     let value = multiline_string_value(reader)?;
@@ -229,7 +229,7 @@ fn plain_text(reader: &mut Reader) -> ParseResult<'static, MultilineString> {
     }))
 }
 
-fn multiline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
+fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
     let start = reader.state.pos.clone();
@@ -258,7 +258,7 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<'static, Template>
     })
 }
 
-fn oneline_string_value(reader: &mut Reader) -> ParseResult<'static, Template> {
+fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
     let start = reader.state.pos.clone();

@@ -19,7 +19,7 @@ use crate::parser::error::*;
 use crate::parser::reader::Reader;
 use crate::parser::{ParseFunc, ParseResult};
 
-pub fn optional<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Option<T>> {
+pub fn optional<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Option<T>> {
     let start = reader.state.clone();
     match f(reader) {
         Ok(r) => Ok(Some(r)),
@@ -34,7 +34,7 @@ pub fn optional<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<
     }
 }
 
-pub fn recover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, T> {
+pub fn recover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
     // make an error recoverable
     // but does not reset cursor
     match f(reader) {
@@ -47,7 +47,7 @@ pub fn recover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'
     }
 }
 
-pub fn nonrecover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, T> {
+pub fn nonrecover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
     match f(reader) {
         Ok(r) => Ok(r),
         Err(e) => Err(Error {
@@ -58,7 +58,7 @@ pub fn nonrecover<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResul
     }
 }
 
-pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Vec<T>> {
+pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
     let _start = reader.state.clone();
 
     let mut v: Vec<T> = Vec::new();
@@ -85,7 +85,7 @@ pub fn zero_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseRes
     }
 }
 
-pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResult<'a, Vec<T>> {
+pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
     let _initial_state = reader.state.clone();
     match f(reader) {
         Ok(first) => {
@@ -121,7 +121,7 @@ pub fn one_or_more<'a, T>(f: ParseFunc<'a, T>, reader: &mut Reader) -> ParseResu
 
 /// Tries to apply the list of parser functions `fs` until one of them succeeds.
 /// Typically this should be recoverable
-pub fn choice<'a, T>(fs: &[ParseFunc<'a, T>], reader: &mut Reader) -> ParseResult<'a, T> {
+pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
     for (pos, f) in fs.iter().enumerate() {
         let start = reader.state.clone();
         if pos == fs.len() - 1 {

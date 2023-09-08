@@ -25,8 +25,8 @@ pub struct Pos {
     pub column: usize,
 }
 
-pub type ParseResult<'a, T> = std::result::Result<T, Error>;
-pub type ParseFunc<'a, T> = fn(&mut Reader) -> ParseResult<'a, T>;
+pub type ParseResult<T> = Result<T, Error>;
+pub type ParseFunc<T> = fn(&mut Reader) -> ParseResult<T>;
 
 pub use self::parse::parse;
 

@@ -20,7 +20,7 @@ use crate::parser::error::*;
 use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<'static, Filename> {
+pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
     // This is an absolute file
     // that you have to write with a relative name
     // default root_dir is the hurl directory

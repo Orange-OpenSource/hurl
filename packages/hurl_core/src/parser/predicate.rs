@@ -23,7 +23,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
-pub fn predicate(reader: &mut Reader) -> ParseResult<'static, Predicate> {
+pub fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     let (not, space0) = predicate_not(reader);
     let func = predicate_func(reader)?;
     Ok(Predicate {
@@ -56,7 +56,7 @@ fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
     }
 }
 
-fn predicate_func(reader: &mut Reader) -> ParseResult<'static, PredicateFunc> {
+fn predicate_func(reader: &mut Reader) -> ParseResult<PredicateFunc> {
     let start = reader.state.clone().pos;
     let value = predicate_func_value(reader)?;
     let end = reader.state.clone().pos;
@@ -66,7 +66,7 @@ fn predicate_func(reader: &mut Reader) -> ParseResult<'static, PredicateFunc> {
     })
 }
 
-fn predicate_func_value(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let start = reader.state.clone();
     match choice(
         &[
@@ -120,7 +120,7 @@ impl PredicateValue {
     }
 }
 
-fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("equals", "==", reader)? == "==";
     if !operator {
         eprintln!("'equals' predicate is now deprecated. Use '==' instead");
@@ -138,7 +138,7 @@ fn equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
     })
 }
 
-fn not_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn not_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("notEquals", "!=", reader)? == "!=";
     if !operator {
         eprintln!("'notEquals' predicate is now deprecated. Use '!=' instead");
@@ -156,7 +156,7 @@ fn not_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFun
     })
 }
 
-fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("greaterThan", ">", reader)? == ">";
     if !operator {
         eprintln!("'greaterThan' predicate is now deprecated. Use '>' instead");
@@ -183,7 +183,7 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
     }
 }
 
-fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("greaterThanOrEquals", ">=", reader)? == ">=";
     if !operator {
         eprintln!("'greaterThanOrEquals' predicate is now deprecated. Use '>=' instead");
@@ -210,7 +210,7 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predi
     }
 }
 
-fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("lessThan", "<", reader)? == "<";
     if !operator {
         eprintln!("'lessThan' predicate is now deprecated. Use '<' instead");
@@ -237,7 +237,7 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValu
     }
 }
 
-fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let operator = try_literals("lessThanOrEquals", "<=", reader)? == "<=";
     if !operator {
         eprintln!("'lessThanOrEquals' predicate is now deprecated. Use '<=' instead");
@@ -264,7 +264,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<'static, Predicat
     }
 }
 
-fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn start_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("startsWith", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
@@ -279,7 +279,7 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFu
     Ok(PredicateFuncValue::StartWith { space0, value })
 }
 
-fn end_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("endsWith", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
@@ -294,7 +294,7 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFunc
     Ok(PredicateFuncValue::EndWith { space0, value })
 }
 
-fn contain_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn contain_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("contains", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
@@ -309,14 +309,14 @@ fn contain_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncV
     Ok(PredicateFuncValue::Contain { space0, value })
 }
 
-fn include_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn include_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("includes", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let value = predicate_value(reader)?;
     Ok(PredicateFuncValue::Include { space0, value })
 }
 
-fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn match_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("matches", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let save = reader.state.clone();
@@ -331,42 +331,42 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncVal
     Ok(PredicateFuncValue::Match { space0, value })
 }
 
-fn integer_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn integer_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isInteger", reader)?;
     Ok(PredicateFuncValue::IsInteger)
 }
 
-fn float_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn float_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isFloat", reader)?;
     Ok(PredicateFuncValue::IsFloat)
 }
 
-fn boolean_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn boolean_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isBoolean", reader)?;
     Ok(PredicateFuncValue::IsBoolean)
 }
 
-fn string_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn string_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isString", reader)?;
     Ok(PredicateFuncValue::IsString)
 }
 
-fn collection_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn collection_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isCollection", reader)?;
     Ok(PredicateFuncValue::IsCollection)
 }
 
-fn date_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn date_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isDate", reader)?;
     Ok(PredicateFuncValue::IsDate)
 }
 
-fn exist_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn exist_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("exists", reader)?;
     Ok(PredicateFuncValue::Exist)
 }
 
-fn is_empty_predicate(reader: &mut Reader) -> ParseResult<'static, PredicateFuncValue> {
+fn is_empty_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     try_literal("isEmpty", reader)?;
     Ok(PredicateFuncValue::IsEmpty)
 }

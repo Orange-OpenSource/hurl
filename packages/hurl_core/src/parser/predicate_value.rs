@@ -23,7 +23,7 @@ use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, Error, ParseError, ParseResult};
 
-pub fn predicate_value(reader: &mut Reader) -> ParseResult<'static, PredicateValue> {
+pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(
         &[
             |p1| match null(p1) {

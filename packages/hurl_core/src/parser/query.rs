@@ -23,7 +23,7 @@ use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{Error, ParseError, ParseResult};
 
-pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
+pub fn query(reader: &mut Reader) -> ParseResult<Query> {
     let start = reader.state.pos.clone();
     let value = query_value(reader)?;
     let end = reader.state.pos.clone();
@@ -33,7 +33,7 @@ pub fn query(reader: &mut Reader) -> ParseResult<'static, Query> {
     })
 }
 
-fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn query_value(reader: &mut Reader) -> ParseResult<QueryValue> {
     choice(
         &[
             status_query,
@@ -55,24 +55,24 @@ fn query_value(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     )
 }
 
-fn status_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn status_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("status", reader)?;
     Ok(QueryValue::Status)
 }
 
-fn url_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn url_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("url", reader)?;
     Ok(QueryValue::Url)
 }
 
-fn header_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn header_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("header", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Header { space0, name })
 }
 
-fn cookie_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn cookie_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("cookie", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let start = reader.state.pos.clone();
@@ -90,19 +90,19 @@ fn cookie_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     Ok(QueryValue::Cookie { space0, expr })
 }
 
-fn body_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn body_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("body", reader)?;
     Ok(QueryValue::Body)
 }
 
-fn xpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn xpath_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("xpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Xpath { space0, expr })
 }
 
-fn jsonpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn jsonpath_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("jsonpath", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     //let expr = jsonpath_expr(reader)?;
@@ -123,14 +123,14 @@ fn jsonpath_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     Ok(QueryValue::Jsonpath { space0, expr })
 }
 
-fn regex_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn regex_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("regex", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let value = regex_value(reader)?;
     Ok(QueryValue::Regex { space0, value })
 }
 
-pub fn regex_value(reader: &mut Reader) -> ParseResult<'static, RegexValue> {
+pub fn regex_value(reader: &mut Reader) -> ParseResult<RegexValue> {
     choice(
         &[
             |p1| match quoted_template(p1) {
@@ -153,34 +153,34 @@ pub fn regex_value(reader: &mut Reader) -> ParseResult<'static, RegexValue> {
     })
 }
 
-fn variable_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn variable_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("variable", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let name = quoted_template(reader).map_err(|e| e.non_recoverable())?;
     Ok(QueryValue::Variable { space0, name })
 }
 
-fn duration_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn duration_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("duration", reader)?;
     Ok(QueryValue::Duration)
 }
 
-fn bytes_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn bytes_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("bytes", reader)?;
     Ok(QueryValue::Bytes)
 }
 
-fn sha256_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn sha256_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("sha256", reader)?;
     Ok(QueryValue::Sha256)
 }
 
-fn md5_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn md5_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("md5", reader)?;
     Ok(QueryValue::Md5)
 }
 
-fn certificate_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
+fn certificate_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("certificate", reader)?;
     let space0 = one_or_more_spaces(reader)?;
     let field = certificate_field(reader)?;
@@ -190,7 +190,7 @@ fn certificate_query(reader: &mut Reader) -> ParseResult<'static, QueryValue> {
     })
 }
 
-fn certificate_field(reader: &mut Reader) -> ParseResult<'static, CertificateAttributeName> {
+fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeName> {
     literal("\"", reader)?;
     if try_literal(r#"Subject""#, reader).is_ok() {
         Ok(CertificateAttributeName::Subject)

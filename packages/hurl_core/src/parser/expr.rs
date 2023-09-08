@@ -21,7 +21,7 @@ use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<'static, Expr> {
+pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
     // let start = p.state.clone();
 
     try_literal("{{", reader)?;
@@ -41,7 +41,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<'static, Expr> {
     })
 }
 
-pub fn parse2(reader: &mut Reader) -> ParseResult<'static, Expr> {
+pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
     // let start = p.state.clone();
 
     let space0 = zero_or_more_spaces(reader)?;
@@ -55,7 +55,7 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<'static, Expr> {
     })
 }
 
-fn variable_name(reader: &mut Reader) -> ParseResult<'static, Variable> {
+fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
     let start = reader.state.clone();
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {

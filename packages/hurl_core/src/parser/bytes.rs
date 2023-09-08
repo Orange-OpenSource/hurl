@@ -24,7 +24,7 @@ use crate::parser::reader::Reader;
 use crate::parser::string::backtick_template;
 use crate::parser::{xml, ParseResult};
 
-pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+pub fn bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     choice(
         &[
             multiline_string_bytes,
@@ -39,37 +39,37 @@ pub fn bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
     )
 }
 
-fn xml_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn xml_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     match xml::parse(reader) {
         Err(e) => Err(e),
         Ok(value) => Ok(Bytes::Xml(value)),
     }
 }
 
-fn json_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn json_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     match parse_json(reader) {
         Err(e) => Err(e),
         Ok(value) => Ok(Bytes::Json(value)),
     }
 }
 
-fn file_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn file_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     file(reader).map(Bytes::File)
 }
 
-fn base64_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn base64_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     base64(reader).map(Bytes::Base64)
 }
 
-fn hex_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn hex_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     hex(reader).map(Bytes::Hex)
 }
 
-pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+pub fn multiline_string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     multiline_string(reader).map(Bytes::MultilineString)
 }
 
-fn string_bytes(reader: &mut Reader) -> ParseResult<'static, Bytes> {
+fn string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     backtick_template(reader).map(Bytes::OnelineString)
 }
 

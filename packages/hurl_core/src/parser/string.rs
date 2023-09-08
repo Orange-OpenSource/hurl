@@ -26,7 +26,7 @@ use crate::parser::{template, ParseResult};
 /// 1- parse String until end of stream or end of line or #
 ///    the string does not contain trailing space
 /// 2- templatize
-pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
+pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.state.clone();
     let mut chars = vec![];
     let mut spaces = vec![];
@@ -77,7 +77,7 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<'static, Template> 
     })
 }
 
-pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedString> {
+pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<EncodedString> {
     let start = reader.state.pos.clone();
     let mut value = String::new();
     let mut encoded = String::new();
@@ -142,14 +142,14 @@ pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<'static, EncodedS
 
 // TODO: should return an EncodedString
 // (decoding escape sequence)
-pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<'static, String> {
+pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<String> {
     literal("\"", reader)?;
     let s = reader.read_while(|c| *c != '"' && *c != '\n');
     literal("\"", reader)?;
     Ok(s)
 }
 
-pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
+pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.state.clone().pos;
     let mut end = start.clone();
     try_literal("\"", reader)?;
@@ -191,7 +191,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<'static, Template> {
     })
 }
 
-pub fn backtick_template(reader: &mut Reader) -> ParseResult<'static, Template> {
+pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     let delimiter = Some('`');
     let start = reader.state.clone().pos;
     let mut end = start.clone();
@@ -234,7 +234,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<'static, Template> 
     })
 }
 
-fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (char, String)> {
+fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String)> {
     let start = reader.state.clone();
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.peek_back(start.cursor))),
@@ -272,7 +272,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<'static, (cha
     }
 }
 
-fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
+fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
     let start = reader.state.clone();
     match reader.read() {
@@ -295,7 +295,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<'static, char> {
     }
 }
 
-fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
+fn unicode(reader: &mut Reader) -> ParseResult<char> {
     literal("{", reader)?;
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
@@ -312,7 +312,7 @@ fn unicode(reader: &mut Reader) -> ParseResult<'static, char> {
     Ok(c)
 }
 
-fn hex_value(reader: &mut Reader) -> ParseResult<'static, u32> {
+fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
     let mut digits = one_or_more(hex_digit, reader)?;
     let mut v = 0;
     let mut weight = 1;

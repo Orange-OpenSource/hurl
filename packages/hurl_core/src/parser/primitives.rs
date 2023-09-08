@@ -22,7 +22,7 @@ use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{base64, filename, ParseResult};
 
-pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
+pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match reader.read() {
         None => Err(Error {
@@ -52,7 +52,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     }
 }
 
-pub fn one_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace> {
+pub fn one_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match one_or_more(space, reader) {
         Ok(v) => {
@@ -71,7 +71,7 @@ pub fn one_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace
     }
 }
 
-pub fn zero_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespace> {
+pub fn zero_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match zero_or_more(space, reader) {
         //Ok(v) => return Ok(v.join("")),
@@ -91,7 +91,7 @@ pub fn zero_or_more_spaces<'a>(reader: &mut Reader) -> ParseResult<'a, Whitespac
     }
 }
 
-pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminator> {
+pub fn line_terminator(reader: &mut Reader) -> ParseResult<LineTerminator> {
     // let start = p.state.clone();
     let space0 = zero_or_more_spaces(reader)?;
     let comment = optional(comment, reader)?;
@@ -127,11 +127,11 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<'static, LineTerminat
     })
 }
 
-pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<'static, Vec<LineTerminator>> {
+pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<Vec<LineTerminator>> {
     zero_or_more(|p2| recover(line_terminator, p2), reader)
 }
 
-pub fn comment(reader: &mut Reader) -> ParseResult<'static, Comment> {
+pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
     try_literal("#", reader)?;
     let mut value = String::new();
     loop {
@@ -155,7 +155,7 @@ pub fn comment(reader: &mut Reader) -> ParseResult<'static, Comment> {
     Ok(Comment { value })
 }
 
-pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
+pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
     // non recoverable parser
     // => use combinator recover to make it recoverable
@@ -191,7 +191,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
     Ok(())
 }
 
-pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
+pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // recoverable version which reset the cursor
     // meant to be combined with following action
     let save_state = reader.state.clone();
@@ -209,7 +209,7 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<'static, ()> {
 }
 
 // return the literal string
-pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<'static, String> {
+pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
     match literal(s1, reader) {
         Ok(_) => Ok(s1.to_string()),
@@ -232,7 +232,7 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<'sta
     }
 }
 
-pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
+pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
     match try_literal("\r\n", reader) {
         Ok(_) => Ok(Whitespace {
@@ -265,7 +265,7 @@ pub fn newline(reader: &mut Reader) -> ParseResult<'static, Whitespace> {
     }
 }
 
-pub fn key_value(reader: &mut Reader) -> ParseResult<'static, KeyValue> {
+pub fn key_value(reader: &mut Reader) -> ParseResult<KeyValue> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let key = recover(unquoted_string_key, reader)?;
@@ -285,7 +285,7 @@ pub fn key_value(reader: &mut Reader) -> ParseResult<'static, KeyValue> {
     })
 }
 
-pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
+pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
     try_literal("hex", reader)?;
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -328,7 +328,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<'static, Hex> {
     })
 }
 
-pub fn regex(reader: &mut Reader) -> ParseResult<'static, Regex> {
+pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     try_literal("/", reader)?;
     let start = reader.state.pos.clone();
     let mut s = String::new();
@@ -393,11 +393,11 @@ pub fn regex(reader: &mut Reader) -> ParseResult<'static, Regex> {
     }
 }
 
-pub fn null(reader: &mut Reader) -> ParseResult<'static, ()> {
+pub fn null(reader: &mut Reader) -> ParseResult<()> {
     try_literal("null", reader)
 }
 
-pub fn boolean(reader: &mut Reader) -> ParseResult<'static, bool> {
+pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
     let start = reader.state.clone();
     match try_literal("true", reader) {
         Ok(_) => Ok(true),
@@ -414,7 +414,7 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<'static, bool> {
     }
 }
 
-pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
+pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let start = reader.state.clone();
 
     if reader.is_eof() {
@@ -453,7 +453,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<'static, u64> {
     Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
-pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
+pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
     let sign = match try_literal("-", reader) {
         Err(_) => 1,
         Ok(_) => -1,
@@ -462,7 +462,7 @@ pub fn integer(reader: &mut Reader) -> ParseResult<'static, i64> {
     Ok(sign * (nat as i64))
 }
 
-pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
+pub fn float(reader: &mut Reader) -> ParseResult<Float> {
     // non recoverable after the dot
     // an integer is parsed ok as float => no like a computer language
     let start = reader.state.cursor;
@@ -498,7 +498,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<'static, Float> {
     Ok(Float { value, encoded })
 }
 
-pub(crate) fn file(reader: &mut Reader) -> ParseResult<'static, File> {
+pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
     let _start = reader.state.clone();
     try_literal("file", reader)?;
     literal(",", reader)?;
@@ -513,7 +513,7 @@ pub(crate) fn file(reader: &mut Reader) -> ParseResult<'static, File> {
     })
 }
 
-pub(crate) fn base64(reader: &mut Reader) -> ParseResult<'static, Base64> {
+pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     // base64 => can have whitespace
     // support pqrser position
     let _start = reader.state.clone();
@@ -535,7 +535,7 @@ pub(crate) fn base64(reader: &mut Reader) -> ParseResult<'static, Base64> {
     })
 }
 
-pub fn eof(reader: &mut Reader) -> ParseResult<'static, ()> {
+pub fn eof(reader: &mut Reader) -> ParseResult<()> {
     if reader.is_eof() {
         Ok(())
     } else {
@@ -571,7 +571,7 @@ pub fn hex_digit_value(c: char) -> Option<u32> {
     }
 }
 
-pub fn hex_digit(reader: &mut Reader) -> ParseResult<'static, u32> {
+pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
     let start = reader.clone().state;
     match reader.read() {
         Some(c) => match hex_digit_value(c) {
