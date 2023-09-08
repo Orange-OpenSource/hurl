@@ -42,8 +42,7 @@ docker run --platform linux/arm64 --volume /tmp/hurl-"${tag}":/hurl --workdir /h
 uname -m
 export DEBIAN_FRONTEND=noninteractive
 apt update
-apt install -y sudo curl g++-aarch64-linux-gnu libc6-dev-arm64-cross libxml2-dev librust-openssl-dev pkg-config
-bin/install_prerequisites_ubuntu.sh
+bin/install_prerequisites_docker_ubuntu.sh
 bin/install_rust.sh
 export PKG_CONFIG_ALLOW_CROSS=1
 export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
@@ -58,7 +57,7 @@ bin/release/release.sh
 export PATH="${PWD}/target/release:${PATH}"
 export VERSION=$(bin/release/get_version.sh)
 bin/release/man.sh
-bin/release/create_tarball.sh linux
+bin/release/create_tarball.sh linux arm64
 ```
 
 ## Test generic linux arm64 package

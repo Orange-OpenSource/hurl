@@ -48,7 +48,7 @@ jobs:
     - name: Create generic linux package
       run: |
         bin/release/man.sh
-        bin/release/create_tarball.sh linux
+        bin/release/create_tarball.sh
     - name: Install package
       run: |
         bin/release/install_generic_linux_package.sh
@@ -290,7 +290,7 @@ jobs:
 #       path: |
 #         ./**/*.log
 
-  test-docker-amd64-packages:
+  test-docker-x64-packages:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
@@ -442,7 +442,7 @@ jobs:
     - name: Create generic macos package
       run: |
         bin/release/man.sh
-        bin/release/create_tarball.sh macos
+        bin/release/create_tarball.sh
     - name: Install package
       run: |
         bin/release/install_generic_macos_package.sh

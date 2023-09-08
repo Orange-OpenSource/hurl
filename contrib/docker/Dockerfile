@@ -6,7 +6,7 @@ COPY . /tmp/hurl-docker
 RUN apk add --no-cache bash git && \
     if [ "${TARGETPLATFORM}" = "linux/arm64" ] ; then \
         apk add --no-cache -y g++-aarch64-linux-gnu libc6-dev-arm64-cross ; \
-        export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER="aarch64-linux-gnu-gcc CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++" ; \
+        source bin/export_cross_compile_env.sh ; \
     fi ; \
     bash -c bin/install_prerequisites_alpine.sh && \
     bash -c bin/install_rust.sh && \

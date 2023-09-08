@@ -4,7 +4,11 @@ set -Eeuo pipefail
 echo "----- install generic macos package -----"
 
 # install
-generic_macos_package=$(ls target/upload/hurl-*-x86_64-macos.tar.gz)
+os=$(uname -a | cut -d ' ' -f 1 | tr "[:upper:]" "[:lower:]")
+echo "os=${os}"
+arch="$(uname -m)"
+echo "arch=${arch}"
+generic_macos_package=$(ls target/upload/hurl-*-"${arch}"-"${os}".tar.gz)
 
 install_dir="/tmp/hurl-generic-macos"
 mkdir -p "${install_dir}"
