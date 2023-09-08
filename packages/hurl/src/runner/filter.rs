@@ -1059,11 +1059,11 @@ pub mod tests {
             },
         };
 
-        let naivedatetime_utc = NaiveDate::from_ymd_opt(1983, 4, 13)
+        let naive_datetime_utc = NaiveDate::from_ymd_opt(1983, 4, 13)
             .unwrap()
             .and_hms_micro_opt(12, 9, 14, 274000)
             .unwrap();
-        let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(naive_datetime_utc, Utc);
         assert_eq!(
             eval_filter(
                 &filter,
@@ -1098,7 +1098,7 @@ pub mod tests {
             .unwrap()
             .and_hms_opt(7, 28, 0)
             .unwrap();
-        let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+        let datetime_utc = DateTime::<Utc>::from_naive_utc_and_offset(naivedatetime_utc, Utc);
         assert_eq!(
             eval_filter(
                 &filter,
