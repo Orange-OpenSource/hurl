@@ -61,6 +61,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, Error> {
+    let initial_state = reader.state.clone();
     try_left_bracket(reader)?;
     let mut indexes = vec![];
     let i = match natural(reader) {
@@ -93,7 +94,16 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
             break;
         }
     }
-    literal("]", reader)?;
+    // you will have a ':' for a slice
+    // TODO: combine array index, indices and slice in the same function
+    if let Err(e) = try_literal("]", reader) {
+        reader.state = initial_state;
+        return Err(Error {
+            pos: reader.state.pos.clone(),
+            recoverable: true,
+            inner: e.inner,
+        });
+    }
     let selector = if indexes.len() == 1 {
         Selector::ArrayIndex(*indexes.first().unwrap())
     } else {
@@ -470,6 +480,16 @@ mod tests {
 
     #[test]
     pub fn test_selector_array_slice() {
+        let mut reader = Reader::new("[1:]");
+        assert_eq!(
+            selector(&mut reader).unwrap(),
+            Selector::ArraySlice(Slice {
+                start: Some(1),
+                end: None
+            })
+        );
+        assert_eq!(reader.state.cursor, 4);
+
         let mut reader = Reader::new("[-1:]");
         assert_eq!(
             selector(&mut reader).unwrap(),
