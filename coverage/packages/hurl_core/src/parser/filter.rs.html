@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn filters(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, Vec&lt;(Whitespace, Filter)&gt;&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn filters(reader: &amp;mut Reader) -&gt; ParseResult&lt;Vec&lt;(Whitespace, Filter)&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, Filter&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;Filter&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1493,7 +1493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn count_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn count_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1573,7 +1573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn days_after_now_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn days_after_now_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1653,7 +1653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn days_before_now_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn days_before_now_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1733,7 +1733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1845,7 +1845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn format_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn format_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn html_encode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn html_encode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2037,7 +2037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn html_decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn html_decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2117,7 +2117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn nth_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn nth_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2229,7 +2229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn regex_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn regex_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn replace_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn replace_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn split_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn split_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2677,7 +2677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn to_date_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn to_date_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2789,7 +2789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn to_int_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn to_int_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2869,7 +2869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn url_encode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn url_encode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2949,7 +2949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn url_decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn url_decode_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3029,7 +3029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">fn xpath_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;static, FilterValue&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">fn xpath_filter(reader: &amp;mut Reader) -&gt; ParseResult&lt;FilterValue&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3819,7 +3819,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-09-08 08:13</p>
+                <p class="heading">Date: 2023-09-09 08:10</p>
             </div>
         </footer>
     </body>

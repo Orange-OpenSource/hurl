@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn optional&lt;&#x27;a, T&gt;(f: ParseFunc&lt;&#x27;a, T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, Option&lt;T&gt;&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn optional&lt;T&gt;(f: ParseFunc&lt;T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;Option&lt;T&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn recover&lt;&#x27;a, T&gt;(f: ParseFunc&lt;&#x27;a, T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, T&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn recover&lt;T&gt;(f: ParseFunc&lt;T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;T&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -837,7 +837,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn nonrecover&lt;&#x27;a, T&gt;(f: ParseFunc&lt;&#x27;a, T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, T&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn nonrecover&lt;T&gt;(f: ParseFunc&lt;T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;T&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1013,7 +1013,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn zero_or_more&lt;&#x27;a, T&gt;(f: ParseFunc&lt;&#x27;a, T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, Vec&lt;T&gt;&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn zero_or_more&lt;T&gt;(f: ParseFunc&lt;T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;Vec&lt;T&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1445,7 +1445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn one_or_more&lt;&#x27;a, T&gt;(f: ParseFunc&lt;&#x27;a, T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, Vec&lt;T&gt;&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn one_or_more&lt;T&gt;(f: ParseFunc&lt;T&gt;, reader: &amp;mut Reader) -&gt; ParseResult&lt;Vec&lt;T&gt;&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn choice&lt;&#x27;a, T&gt;(fs: &amp;[ParseFunc&lt;&#x27;a, T&gt;], reader: &amp;mut Reader) -&gt; ParseResult&lt;&#x27;a, T&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn choice&lt;T&gt;(fs: &amp;[ParseFunc&lt;T&gt;], reader: &amp;mut Reader) -&gt; ParseResult&lt;T&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2299,7 +2299,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-09-08 08:13</p>
+                <p class="heading">Date: 2023-09-09 08:10</p>
             </div>
         </footer>
     </body>
