@@ -39,6 +39,10 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0].id"</span> <span class="predicate-type">isString</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]['id']"</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[*].id"</span> <span class="predicate-type">includes</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0,1].id"</span> <span class="predicate-type">includes</span> <span class="string">"error1"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[:2].id"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0:].id"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id)].id"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[?(@.id=='error1')].id"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"error1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.failures[*].id"</span> <span class="predicate-type">includes</span> <span class="string">"failure1"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.duration"</span> <span class="predicate-type">==</span> <span class="number">1.5</span></span>
@@ -57,6 +61,10 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$['profile-id']"</span> <span class="predicate-type">==</span> <span class="string">"123abc"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors[0]"</span> <span class="not">not</span> <span class="predicate-type">isEmpty</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.empty"</span> <span class="predicate-type">isEmpty</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.*"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">10</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.errors..*"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">4</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$..id"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
+<span class="line"></span>
 <span class="line"></span><span class="comment"># FIXME do we accept count filter on object?</span>
 <span class="line"></span><span class="comment"># jsonpath "$.empty" count == 0</span>
 <span class="json"><span class="line">{</span>

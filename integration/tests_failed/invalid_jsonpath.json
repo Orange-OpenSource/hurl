@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-invalid-jsonpath"},"response":{"status":200,"asserts":[{"query":{"type":"jsonpath","expr":""},"predicate":{"type":"equal","value":false}}]}}]}

@@ -39,6 +39,10 @@ jsonpath "$.errors[0].id" == "error1"
 jsonpath "$.errors[0].id" isString
 jsonpath "$.errors[0]['id']" == "error1"
 jsonpath "$.errors[*].id" includes "error1"
+jsonpath "$.errors[0,1].id" includes "error1"
+jsonpath "$.errors[:2].id" count == 2
+jsonpath "$.errors[0:].id" count == 2
+jsonpath "$.errors[?(@.id)].id" nth 0 == "error1"
 jsonpath "$.errors[?(@.id=='error1')].id" nth 0 == "error1"
 jsonpath "$.failures[*].id" includes "failure1"
 jsonpath "$.duration" == 1.5
@@ -57,6 +61,10 @@ jsonpath "$.profile-id" == "123abc"
 jsonpath "$['profile-id']" == "123abc"
 jsonpath "$.errors[0]" not isEmpty
 jsonpath "$.empty" isEmpty
+jsonpath "$.*" count == 10
+jsonpath "$.errors..*" count == 4
+jsonpath "$..id" count == 3
+
 # FIXME do we accept count filter on object?
 # jsonpath "$.empty" count == 0
 {
