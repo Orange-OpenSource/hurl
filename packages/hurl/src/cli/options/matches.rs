@@ -146,7 +146,7 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsErro
         if !path.exists() {
             match std::fs::create_dir(path) {
                 Err(_) => Err(OptionsError::Error(format!(
-                    "Html dir {} can not be created",
+                    "HTML dir {} can not be created",
                     path.display()
                 ))),
                 Ok(_) => Ok(Some(path.to_path_buf())),
