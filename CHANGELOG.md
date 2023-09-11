@@ -2,32 +2,40 @@
 ========================================================================================================================
 
 Thanks to
+[@ppaulweber](https://github.com/ppaulweber),
+[@taigrr](https://github.com/taigrr),
 [@kallelindqvist](https://github.com/kallelindqvist),
 [@jlazic](https://github.com/jlazic),
 [@Lythenas](https://github.com/Lythenas),
 [@Jayshua](https://github.com/Jayshua),
-[@iredmail](https://github.com/iredmail),
-[@eirayuki](https://github.com/eirayuki),
 [@chenrui333](https://github.com/chenrui333),
-[@linker3000](https://github.com/linker3000),
-[@pfeiferj](https://github.com/pfeiferj),
+[@nikeee](https://github.com/nikeee),
 [@jasonkarns](https://github.com/jasonkarns),
+[@humphd](https://github.com/humphd),
 
 
 Enhancements:
 
+* Print host architecture with --version [#1893](https://github.com/Orange-OpenSource/hurl/issues/1893)
+* Add --delay Option [#1832](https://github.com/Orange-OpenSource/hurl/issues/1832)
 * Support RFC-7807 application/problem+json for response body logging as text [#1766](https://github.com/Orange-OpenSource/hurl/issues/1766)
+* Rename fail-at-end option with continue-on-error option [#1739](https://github.com/Orange-OpenSource/hurl/issues/1739)
 * Add connect-to per request option [#1736](https://github.com/Orange-OpenSource/hurl/issues/1736)
 * Add support for --resolve option per request [#1711](https://github.com/Orange-OpenSource/hurl/issues/1711)
 * Add TAP report [#1666](https://github.com/Orange-OpenSource/hurl/issues/1666) [#601](https://github.com/Orange-OpenSource/hurl/issues/601)
 * Implement isDate predicate [#1520](https://github.com/Orange-OpenSource/hurl/issues/1520)
+* Add docker arm64 build [#536](https://github.com/Orange-OpenSource/hurl/issues/536)
+
 
 
 Bugs Fixed:
 
+* IsEmpty doesn't seem to work on object collections [#1788](https://github.com/Orange-OpenSource/hurl/issues/1788)
+* Fix Cookie Query Parsing error [#1784](https://github.com/Orange-OpenSource/hurl/issues/1784)
+* Fix standalone option for hurlfmt HTML output [#1759](https://github.com/Orange-OpenSource/hurl/issues/1759)
+* Support IPv4/IPv6 address in proxy [Options] [#1756](https://github.com/Orange-OpenSource/hurl/issues/1756)
 * Reuse same HTTP method on redirect for appropriate HTTP status codes [#1719](https://github.com/Orange-OpenSource/hurl/issues/1719)
-* Fix URL runtime evaluation. [#1716](https://github.com/Orange-OpenSource/hurl/issues/1716)
-
+* Fix URL runtime evaluation [#1716](https://github.com/Orange-OpenSource/hurl/issues/1716)
 
 
 [4.0.0 (2023-06-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.0.0)
