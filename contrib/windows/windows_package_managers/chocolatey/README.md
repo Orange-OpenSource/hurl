@@ -7,10 +7,10 @@ $hurl_latest_version=((Invoke-WebRequest -UseBasicParsing https://api.github.com
 echo ${hurl_latest_version}
 ```
 
-Get latest released hurl-x.y.z-win64.zip file's sha256 sum
+Get latest released hurl-x.y.z-x86_64-pc-windows-msvc.zip file's sha256 sum
 
 ```
-Invoke-WebRequest -UseBasicParsing https://github.com/Orange-OpenSource/hurl/releases/download/${hurl_latest_version}/hurl-${hurl_latest_version}-win64.zip -OutFile C:\Windows\Temp\hurl-latest-win64.zip
+Invoke-WebRequest -UseBasicParsing https://github.com/Orange-OpenSource/hurl/releases/download/${hurl_latest_version}/hurl-${hurl_latest_version}-x86_64-pc-windows-msvc.zip -OutFile C:\Windows\Temp\hurl-latest-win64.zip
 $hurl_latest_sha=(Get-FileHash C:\Windows\Temp\hurl-latest-win64.zip).Hash
 echo ${hurl_latest_sha}
 ```

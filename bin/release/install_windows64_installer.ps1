@@ -8,7 +8,7 @@ $project_root_path=(Resolve-Path -LiteralPath $PSScriptRoot\..\..).path
 
 # install windows64 installer
 $package_dir="$project_root_path\target\win-package"
-Start-Process powershell "$package_dir\*win64-installer.exe /S" -NoNewWindow -Wait -PassThru
+Start-Process powershell "$package_dir\*installer.exe /S" -NoNewWindow -Wait -PassThru
 if ($LASTEXITCODE) { Throw }
 
 # refresh env

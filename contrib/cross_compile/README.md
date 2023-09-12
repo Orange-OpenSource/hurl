@@ -57,7 +57,7 @@ bin/release/release.sh
 export PATH="${PWD}/target/release:${PATH}"
 export VERSION=$(bin/release/get_version.sh)
 bin/release/man.sh
-bin/release/create_tarball.sh linux arm64
+bin/release/create_tarball.sh linux
 ```
 
 ## Test generic linux arm64 package

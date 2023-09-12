@@ -4,7 +4,7 @@ set -Eeuo pipefail
 echo "----- install deb package -----"
 
 # install
-deb_package=$(ls target/upload/hurl_*_amd64.deb)
+deb_package=$(ls target/upload/hurl_*.deb)
 echo "$deb_package"
 install_dir="/tmp/hurl-deb-package"
 mkdir -p "${install_dir}"

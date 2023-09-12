@@ -2,15 +2,14 @@ FROM --platform=$TARGETPLATFORM alpine:3.17 AS builder
 ARG TARGETPLATFORM
 WORKDIR /tmp/hurl-docker
 COPY . /tmp/hurl-docker
-# hadolint ignore=DL3018
 RUN apk add --no-cache bash git && \
     if [ "${TARGETPLATFORM}" = "linux/arm64" ] ; then \
         apk add --no-cache -y g++-aarch64-linux-gnu libc6-dev-arm64-cross ; \
         source bin/export_cross_compile_env.sh ; \
     fi ; \
-    bash -c bin/install_prerequisites_alpine.sh && \
-    bash -c bin/install_rust.sh && \
-    bash -c ./bin/release/release.sh
+    bash -c "bin/install_prerequisites_alpine.sh" && \
+    bash -c "bin/install_rust.sh" && \
+    bash -c "./bin/release/release.sh"
 
 FROM --platform=$TARGETPLATFORM alpine:3.17 AS runner
 ARG docker_build_date

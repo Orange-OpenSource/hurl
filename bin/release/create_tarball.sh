@@ -1,11 +1,10 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-os=$(uname -a | cut -d ' ' -f 1 | tr "[:upper:]" "[:lower:]")
-echo "os=${os}"
-arch="$(uname -m)"
-echo "arch=${arch}"
-package_signature="${VERSION}-${arch}-${os}"
+toolchain=$(bin/release/get_active_toolchain.sh)
+echo "toolchain=${toolchain}"
+package_signature="${VERSION}-${toolchain}"
+echo "package_signature=${package_signature=}"
 package_dir="target/tarball/hurl-${package_signature}"
 echo "package_dir=${package_dir}"
 tarball_file="hurl-${package_signature}.tar.gz"

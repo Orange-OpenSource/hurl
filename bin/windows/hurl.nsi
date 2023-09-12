@@ -19,7 +19,7 @@ Name "hurl ${VERSION}"
 
 ; The file to write
 
-OutFile "hurl-${VERSION}-win64-installer.exe"
+OutFile "hurl-${VERSION}-x86_64-pc-windows-msvc-installer.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin

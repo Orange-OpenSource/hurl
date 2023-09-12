@@ -4,12 +4,10 @@ set -Eeuo pipefail
 echo "----- install generic linux package -----"
 
 # install
-os=$(uname -a | cut --delimiter ' ' --field 1 | tr "[:upper:]" "[:lower:]")
-echo "os=${os}"
-arch="$(uname -m)"
-echo "arch=${arch}"
-generic_linux_package=$(ls target/upload/hurl-*-"${arch}"-"${os}".tar.gz)
+generic_linux_package=$(ls target/upload/hurl-*-*.tar.gz)
+echo "generic_linux_package=${generic_linux_package}"
 install_dir="/tmp/hurl-generic-linux"
+echo "install_dir=${install_dir}"
 mkdir -p "${install_dir}"
 tar xvf "${generic_linux_package}" -C "${install_dir}" --strip-components=1
 

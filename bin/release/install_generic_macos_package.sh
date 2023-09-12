@@ -4,13 +4,13 @@ set -Eeuo pipefail
 echo "----- install generic macos package -----"
 
 # install
-os=$(uname -a | cut -d ' ' -f 1 | tr "[:upper:]" "[:lower:]")
-echo "os=${os}"
-arch="$(uname -m)"
-echo "arch=${arch}"
-generic_macos_package=$(ls target/upload/hurl-*-"${arch}"-"${os}".tar.gz)
+toolchain=$(bin/release/get_active_toolchain.sh)
+echo "toolchain=${toolchain}"
+generic_macos_package=$(ls target/upload/hurl-*-"${toolchain}".tar.gz)
+echo "generic_macos_package=${generic_macos_package}"
 
 install_dir="/tmp/hurl-generic-macos"
+echo "install_dir=${install_dir}"
 mkdir -p "${install_dir}"
 tar xvf "${generic_macos_package}" -C "${install_dir}" --strip-components=1
 
