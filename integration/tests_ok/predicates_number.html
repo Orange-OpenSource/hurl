@@ -1,0 +1,31 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># testing predicates</span>
+<span class="line"></span><span class="comment"># on the number types: integer and float</span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/predicates-number</span></span>
+</span><span class="response"><span class="line"></span>
+<span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="section-header">[Asserts]</span></span>
+<span class="line"></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">isInteger</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="not">not</span> <span class="predicate-type">isFloat</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">==</span> <span class="number">1</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">&lt;=</span> <span class="number">2</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">&gt;</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">&gt;</span> <span class="number">0.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.integer"</span> <span class="predicate-type">!=</span> <span class="null">null</span></span>
+<span class="line"></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">exists</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">isFloat</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="not">not</span> <span class="predicate-type">isInteger</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">==</span> <span class="number">1.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">&lt;=</span> <span class="number">2.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">&gt;</span> <span class="number">0.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">&gt;</span> <span class="number">0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.float"</span> <span class="predicate-type">!=</span> <span class="null">null</span></span>
+<span class="line"></span>
+<span class="json"><span class="line">{</span>
+<span class="line">  "integer": 1,</span>
+<span class="line">  "float": 1.0</span>
+<span class="line">}</span></span>
+</span></span><span class="line"></span>
+</code></pre>
