@@ -1,18 +1,20 @@
 from app import app
 from datetime import datetime
 
-init = None
+last = None
 
 
 @app.route("/delay-init")
 def delay_init():
-    global init
-    init = datetime.now()
+    global last
+    last = datetime.now()
     return ""
 
 
 @app.route("/delay")
 def delay():
-    diff = (datetime.now() - init).total_seconds()
+    global last
+    diff = (datetime.now() - last).total_seconds()
     assert diff > 1
+    last = datetime.now()
     return ""

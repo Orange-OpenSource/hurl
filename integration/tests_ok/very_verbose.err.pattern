@@ -1,5 +1,6 @@
 * Options:
 *     continue on error: false
+*     delay: 0ms
 *     follow redirect: true
 *     insecure: false
 *     max redirect: 50

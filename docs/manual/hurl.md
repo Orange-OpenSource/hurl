@@ -204,6 +204,11 @@ The file will be written using the Netscape cookie file format.
 
 Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
 
+### --delay <milliseconds> {#delay}
+
+Sets delay before each request.
+
+
 ### --error-format <FORMAT> {#error-format}
 
 Control the format of error message (short by default or long)

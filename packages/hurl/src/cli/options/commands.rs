@@ -110,6 +110,16 @@ pub fn cookies_output_file() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn delay() -> clap::Arg {
+    clap::Arg::new("delay")
+        .long("delay")
+        .value_name("milliseconds")
+        .help("Sets delay before each request.")
+        .default_value("0")
+        .value_parser(value_parser!(u64))
+        .num_args(1)
+}
+
 pub fn error_format() -> clap::Arg {
     clap::Arg::new("error_format")
         .long("error-format")

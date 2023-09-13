@@ -68,11 +68,9 @@ fn main() {
     // We'll use a more advanced logger for rich error report when running Hurl files.
     let verbose = opts.verbose || opts.very_verbose || opts.interactive;
     let base_logger = BaseLogger::new(opts.color, verbose);
-
     let current_dir = env::current_dir();
     let current_dir = unwrap_or_exit(current_dir, EXIT_ERROR_UNDEFINED, &base_logger);
     let current_dir = current_dir.as_path();
-
     let start = Instant::now();
     let mut runs = vec![];
 
@@ -99,7 +97,6 @@ fn main() {
 
         let total = opts.input_files.len();
         logger.test_running(current + 1, total);
-
         // Run our Hurl file now
         let hurl_result = execute(&content, filename, current_dir, &opts);
         let hurl_result = match hurl_result {
@@ -125,7 +122,6 @@ fn main() {
             );
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
-
         if matches!(opts.output_type, cli::OutputType::Json) {
             let result = output::write_json(&hurl_result, &content, filename, &opts.output);
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);

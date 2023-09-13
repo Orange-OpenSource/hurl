@@ -335,6 +335,11 @@ fn log_run_info(
         )
         .as_str(),
     );
+    // FIXME: the cast to u64 seems not necessary.
+    //  If we dont cast from u128 and try to format! or println!
+    //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
+    //  ok with Rust >= 1.67.0.
+    logger.debug(format!("    delay: {}ms", runner_options.delay.as_millis() as u64).as_str());
     logger.debug(format!("    follow redirect: {}", runner_options.follow_location).as_str());
     logger.debug(format!("    insecure: {}", runner_options.insecure).as_str());
     if let Some(n) = runner_options.max_redirect {

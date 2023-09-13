@@ -1,5 +1,6 @@
 [1;34m*[0m [1mOptions:[0m
 [1;34m*[0m     continue on error: false
+[1;34m*[0m     delay: 0ms
 [1;34m*[0m     follow redirect: false
 [1;34m*[0m     insecure: false
 [1;34m*[0m     max redirect: 50

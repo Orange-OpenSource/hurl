@@ -47,6 +47,7 @@ pub struct Options {
     pub continue_on_error: bool,
     pub cookie_input_file: Option<String>,
     pub cookie_output_file: Option<String>,
+    pub delay: Duration,
     pub error_format: ErrorFormat,
     pub file_root: Option<String>,
     pub follow_location: bool,
@@ -137,6 +138,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::continue_on_error())
         .arg(commands::cookies_input_file())
         .arg(commands::cookies_output_file())
+        .arg(commands::delay())
         .arg(commands::error_format())
         .arg(commands::fail_at_end())
         .arg(commands::file_root())
@@ -202,6 +204,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let continue_on_error = matches::continue_on_error(arg_matches);
     let cookie_input_file = matches::cookie_input_file(arg_matches);
     let cookie_output_file = matches::cookie_output_file(arg_matches);
+    let delay = matches::delay(arg_matches);
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
     let follow_location = matches::follow_location(arg_matches);
@@ -244,6 +247,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         continue_on_error,
         cookie_input_file,
         cookie_output_file,
+        delay,
         error_format,
         file_root,
         follow_location,
@@ -304,6 +308,7 @@ impl Options {
         let user_agent = self.user_agent.clone();
         let compressed = self.compressed;
         let continue_on_error = self.continue_on_error;
+        let delay = self.delay;
         let file_root = match self.file_root {
             Some(ref filename) => Path::new(filename),
             None => {
@@ -338,6 +343,7 @@ impl Options {
             .cacert_file(cacert_file)
             .client_cert_file(client_cert_file)
             .client_key_file(client_key_file)
+            .delay(delay)
             .compressed(compressed)
             .connect_timeout(connect_timeout)
             .connects_to(&connects_to)

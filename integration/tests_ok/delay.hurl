@@ -2,8 +2,10 @@
 GET http://localhost:8000/delay-init
 HTTP 200
 
-# This request must reach the server at least 1000ms after the first request
+# This request must reach the server at least 1000ms after the previous request
 GET http://localhost:8000/delay
-[Options]
-delay: 1000
+HTTP 200
+
+# This request must reach the server at least 1000ms after the previous request
+GET http://localhost:8000/delay
 HTTP 200

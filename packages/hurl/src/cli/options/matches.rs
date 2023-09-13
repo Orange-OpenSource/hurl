@@ -123,6 +123,11 @@ pub fn cookie_output_file(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "cookies_output_file")
 }
 
+pub fn delay(arg_matches: &ArgMatches) -> Duration {
+    let millis = get::<u64>(arg_matches, "delay").unwrap();
+    Duration::from_millis(millis)
+}
+
 pub fn error_format(arg_matches: &ArgMatches) -> ErrorFormat {
     let error_format = get::<String>(arg_matches, "error_format");
     match error_format.as_deref() {
