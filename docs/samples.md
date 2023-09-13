@@ -523,7 +523,9 @@ Action: GetCallerIdentity
 Version: 2011-06-15
 ```
 
-The Access Key is given per `--user`. [Doc](/docs/manual.md#aws-sigv4)
+The Access Key is given per [`--user`]. 
+
+[Doc](/docs/manual.md#aws-sigv4)
 
 
 [JSON body]: /docs/request.md#json-body
@@ -540,4 +542,5 @@ The Access Key is given per `--user`. [Doc](/docs/manual.md#aws-sigv4)
 [curl]: https://curl.se
 [entry]: /docs/entry.md
 [`--test` option]: /docs/manual.md#test
+[`--user`]: /docs/manual.md#user
 [Hurl templates]: /docs/templates.md

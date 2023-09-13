@@ -60,8 +60,8 @@ The Hurl file format is fully documented in [https://hurl.dev/docs/hurl-file.htm
 It consists of one or several HTTP requests
 
 ```hurl
-GET http:/example.org/endpoint1
-GET http:/example.org/endpoint2
+GET http://example.org/endpoint1
+GET http://example.org/endpoint2
 ```
 
 
@@ -92,14 +92,14 @@ The HTTP response defined in the Hurl file are used to make asserts. Responses a
 At the minimum, response includes assert on the HTTP status code.
 
 ```hurl
-GET http:/example.org
+GET http://example.org
 HTTP 301
 ```
 
 It can also include asserts on the response headers
 
 ```hurl
-GET http:/example.org
+GET http://example.org
 HTTP 301
 Location: http://www.example.org
 ```
@@ -107,7 +107,7 @@ Location: http://www.example.org
 Explicit asserts can be included by combining a query and a predicate
 
 ```hurl
-GET http:/example.org
+GET http://example.org
 HTTP 301
 [Asserts]
 xpath "string(//title)" == "301 Moved"
@@ -204,7 +204,7 @@ The file will be written using the Netscape cookie file format.
 
 Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.
 
-### --delay <milliseconds> {#delay}
+### --delay <MILLISECONDS> {#delay}
 
 Sets delay before each request.
 

@@ -637,7 +637,7 @@ to the command line), while other requests are unaffected.
 GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
-aws-sigv4: aws:amz:...  # generate AWS SigV4 Authorization header
+aws-sigv4: aws:amz:sts  # generate AWS SigV4 Authorization header
 cacert: /etc/cert.pem   # a custom certificate file
 compressed: true        # request a compressed response
 insecure: true          # allows insecure SSL connections and transfers
