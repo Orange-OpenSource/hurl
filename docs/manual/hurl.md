@@ -303,6 +303,12 @@ Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
 
+### --report-tap <FILE> {#report-tap}
+
+Generate TAP report.
+
+If the FILE report already exists, it will be updated with the new test results.
+
 ### --resolve <HOST:PORT:ADDR> {#resolve} <HOST:PORT:ADDR>
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
