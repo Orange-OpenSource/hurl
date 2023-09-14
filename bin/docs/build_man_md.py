@@ -21,6 +21,7 @@ from markdown import (
     Paragraph,
     Whitespace,
     Node,
+    Table,
 )
 
 
@@ -43,10 +44,7 @@ def process_table(doc: MarkdownDoc, nodes: List[Node], col_name: str) -> None:
     def escape(s):
         return s.replace("<", "&lt;").replace(">", "&gt;")
 
-    new_nodes = [
-        Whitespace(content="\n"),
-        Paragraph(content=f"| {col_name} | Description |\n| --- | --- |\n"),
-    ]
+    table = f"| {col_name} | Description |\n| --- | --- |\n"
 
     h3s = [n for n in nodes if isinstance(n, Header)]
     for h3 in h3s:
@@ -80,13 +78,16 @@ def process_table(doc: MarkdownDoc, nodes: List[Node], col_name: str) -> None:
         description = "".join(paragraphs_contents)
         description = description.replace("\n", "<br>")
 
-        new_node = Paragraph(content=f"| {name} | {description} |\n")
-        new_nodes.append(new_node)
+        table += f"| {name} | {description} |\n"
+
+    table_node = Table(content=table)
+    table_node.reformat()
 
     # Delete all previous options:
     previous_node = doc.previous_node(nodes[0])
     assert previous_node is not None
-    doc.insert_nodes(start=previous_node, nodes=new_nodes)
+    doc.insert_node(start=previous_node, node=Whitespace(content="\n"))
+    doc.insert_node(start=previous_node, node=table_node)
     doc.remove_nodes(nodes)
 
 

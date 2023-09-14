@@ -93,6 +93,62 @@ class RefLink(Node):
         self.content = f"[{self.ref}]: {self.link}\n"
 
 
+class Table(Node):
+    """A table"""
+
+    def reformat(self) -> None:
+        """
+        Format a Markdown table so all colum are maximized.
+
+        Example:
+
+        ```markdown
+        | a | b | c|
+        |---|---|--|
+        | aaaaa | bbbbb | cccc |
+        | dd | ee | f |
+        ```
+
+        is reformatted to
+
+        ```markdown
+        | a     | b     | c    |
+        |-------|-------|------|
+        | aaaaa | bbbbb | cccc |
+        | dd    | ee    | f    |
+        ```
+        """
+        # Convert our content to an array of strings
+        lines = self.content.splitlines()
+        rows = [line.split("|")[1:-1] for line in lines]
+        rows_count = len(rows)
+        cols_count = len(rows[0])
+        cells = [
+            [rows[r][c].strip() for c in range(cols_count)] for r in range(rows_count)
+        ]
+        max_lengths = [
+            max([len(cells[r][c]) for r in range(rows_count)])
+            for c in range(cols_count)
+        ]
+        cells_normalized = [["" for _ in range(cols_count)] for _ in range(rows_count)]
+        for c in range(cols_count):
+            max_length = max_lengths[c]
+            for r in range(rows_count):
+                cell = cells[r][c]
+                if r == 1:
+                    pad_char = "-"
+                else:
+                    pad_char = " "
+                cell_normalized = cell.ljust(max_length, pad_char).center(
+                    max_length + 2, pad_char
+                )
+                cells_normalized[r][c] = cell_normalized
+        # Reconstruct content
+        self.content = "".join(
+            ["|" + "|".join(row) + "|\n" for row in cells_normalized]
+        )
+
+
 def parse_paragraph(parser: Parser) -> Paragraph:
     content = ""
     while parser.peek() != "":

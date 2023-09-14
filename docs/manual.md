@@ -200,24 +200,24 @@ Environment variables can only be specified in lowercase.
 
 Using an environment variable to set the proxy has the same effect as using the [`-x, --proxy`](#proxy) option.
 
-| Variable | Description |
-| --- | --- |
-| `http_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use for HTTP.<br> |
-| `https_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use for HTTPS.<br> |
-| `all_proxy [PROTOCOL://]<HOST>[:PORT]` | Sets the proxy server to use if no protocol-specific proxy is set.<br> |
-| `no_proxy <comma-separated list of hosts>` | List of host names that shouldn't go through any proxy.<br> |
-| `HURL_name value` | Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.<br> |
-| `NO_COLOR` | When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).<br> |
+| Variable                                   | Description                                                                                                                                                      |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `http_proxy [PROTOCOL://]<HOST>[:PORT]`    | Sets the proxy server to use for HTTP.<br>                                                                                                                       |
+| `https_proxy [PROTOCOL://]<HOST>[:PORT]`   | Sets the proxy server to use for HTTPS.<br>                                                                                                                      |
+| `all_proxy [PROTOCOL://]<HOST>[:PORT]`     | Sets the proxy server to use if no protocol-specific proxy is set.<br>                                                                                           |
+| `no_proxy <comma-separated list of hosts>` | List of host names that shouldn't go through any proxy.<br>                                                                                                      |
+| `HURL_name value`                          | Define variable (name/value) to be used in Hurl templates. This is similar than [`--variable`](#variable) and [`--variables-file`](#variables-file) options.<br> |
+| `NO_COLOR`                                 | When set to a non-empty string, do not colorize output (see [`--no-color`](#no-color) option).<br>                                                               |
 
 ## Exit Codes
 
-| Value | Description |
-| --- | --- |
-| `0` | Success.<br> |
-| `1` | Failed to parse command-line options.<br> |
-| `2` | Input File Parsing Error.<br> |
-| `3` | Runtime error (such as failure to connect to host).<br> |
-| `4` | Assert Error.<br> |
+| Value | Description                                             |
+|-------|---------------------------------------------------------|
+| `0`   | Success.<br>                                            |
+| `1`   | Failed to parse command-line options.<br>               |
+| `2`   | Input File Parsing Error.<br>                           |
+| `3`   | Runtime error (such as failure to connect to host).<br> |
+| `4`   | Assert Error.<br>                                       |
 
 ## WWW
 
