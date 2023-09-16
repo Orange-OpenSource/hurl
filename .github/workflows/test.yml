@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -27,10 +27,10 @@ jobs:
     - name: Install python3 venv
       run: |
         bin/install_python3_venv.sh
-        export PATH=/tmp/hurl-python3-venv/bin:$PATH 
+        export PATH=/tmp/hurl-python3-venv/bin:$PATH
         which python3
         python3 --version
-        pip --version 
+        pip --version
     - name: Install Rust
       run: bin/install_rust.sh
     - name: Environment
@@ -56,12 +56,12 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
-    - name: Install Python 3.10                                   
-      uses: actions/setup-python@v4                               
-      with:                                                       
+    - name: Install Python 3.10
+      uses: actions/setup-python@v4
+      with:
         python-version: '3.10'
     - name: Install Prerequisites
       run: bin/install_prerequisites_ubuntu.sh
@@ -102,7 +102,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -145,7 +145,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -186,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -231,7 +231,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Build, Test units and Integration tests
@@ -281,7 +281,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -332,7 +332,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Manage vcpkg cache
@@ -350,7 +350,7 @@ jobs:
       run: .\bin\environment.ps1
     - name: Install Prerequisites
       run: .\bin\install_prerequisites_windows.ps1
-    - name: Build and test 
+    - name: Build and test
       run: .\bin\test\test.ps1
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
@@ -359,4 +359,3 @@ jobs:
         name: tests-win64-${{ matrix.rust }}-artifacts
         path: |
           ./**/*.log
-

@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
 
@@ -124,4 +124,3 @@ jobs:
             echo "  - ❌ A problem occurs when attempting to add labels into new pull request n°${NEW_PR_NUMBER}."
             exit 1
           fi
-

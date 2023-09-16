@@ -16,7 +16,7 @@ jobs:
         rust: [stable]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Environment
       run: bin/environment.sh
@@ -42,7 +42,7 @@ jobs:
         export PATH="$PWD/target/debug:$PATH"
         bin/test/test_integ.sh
     - name: Build Report
-      run: | 
+      run: |
         grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
 
     - name: Init git bot context
@@ -73,4 +73,3 @@ jobs:
         path: |
           coverage
           *.profraw
-

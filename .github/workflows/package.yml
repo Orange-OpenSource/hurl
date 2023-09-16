@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -170,7 +170,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
@@ -220,7 +220,7 @@ jobs:
 #   runs-on: ubuntu-latest
 #   steps:
 #   - name: Checkout repository
-#     uses: actions/checkout@v3
+#     uses: actions/checkout@v4
 #     with:
 #       ref: ${{ inputs.branch }}
 #   - name: Set up Docker Buildx
@@ -294,7 +294,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
    - name: Checkout repository
-     uses: actions/checkout@v3
+     uses: actions/checkout@v4
      with:
        ref: ${{ inputs.branch }}
    - name: Set up Docker Buildx
@@ -365,7 +365,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Python 3.10
@@ -415,7 +415,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Install Prerequisites
@@ -456,7 +456,7 @@ jobs:
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
- 
+
   package-windows-x64:
     runs-on: windows-latest
     env:
@@ -467,7 +467,7 @@ jobs:
         git config --global core.autocrlf false
         git config --global core.eol lf
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - name: Manage vcpkg cache
@@ -509,4 +509,3 @@ jobs:
         path: |
           .\target\win-package\hurl-*-installer.exe
           .\target\win-package\hurl-*-win64.zip
-

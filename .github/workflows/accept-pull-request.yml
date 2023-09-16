@@ -11,7 +11,7 @@ jobs:
   accept-pull-request:
     if: ${{ github.event.issue.pull_request && (github.event.comment.body == '/accept' || github.event.comment.body == '/accept --force') }}
     env:
-      GITHUB_CONTEXT: ${{ toJson(github) }}    
+      GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
       OWNER: ${{ github.repository_owner }}
       REPO: ${{ github.event.repository.name }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Init all internal env vars
         id: init-all-internal-env-vars
-        env: 
+        env:
              TITLE: ${{ github.event.issue.title }}
         run: |
           pr_detail_file="pr_detail.json"
@@ -53,7 +53,7 @@ jobs:
             HEAD_TYPE=origin
           else
             HEAD_TYPE=fork
-          fi        
+          fi
           echo "HEAD_REPO_FULL_NAME=${HEAD_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
           echo "BASE_REPO_FULL_NAME=${BASE_REPO_FULL_NAME}" | tee -a "${GITHUB_ENV}"
           echo "HEAD_TYPE=${HEAD_TYPE}" | tee -a "${GITHUB_ENV}"
@@ -62,12 +62,12 @@ jobs:
           echo "PR_STATE=$(jq -rc .state ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
           echo "PR_DRAFT=$(jq -rc .draft ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
           echo "PR_MERGEABLE=$(jq -rc .mergeable ${pr_detail_file})" | tee -a "${GITHUB_ENV}"
-          echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"           
+          echo "REMAINING_COMMITS_FILE=remaining_commits.txt" | tee -a "${GITHUB_ENV}"
           echo "NEW_COMMITS_FILE=new_commits.txt" | tee -a "${GITHUB_ENV}"
           echo "base_ref=$(jq -rc .base.ref ${pr_detail_file})" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.BASE_REF }}
           token: ${{ secrets.HURL_BOT_TOKEN }}
@@ -119,7 +119,7 @@ jobs:
             comment="❌ Can not merge this pull request because it is still in draft."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
-            exit 1         
+            exit 1
           fi
 
       - name: Check if pull request is mergeable
@@ -130,7 +130,7 @@ jobs:
             comment="❌ Pull request is not mergeable, please check unresolved discussions and pull request messages."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
-            exit 1         
+            exit 1
           fi
 
       - name: Check GitHub release
@@ -159,7 +159,7 @@ jobs:
             fi
           fi
 
-      - name: Check if source branch is rebased from target branch 
+      - name: Check if source branch is rebased from target branch
         run: |
           git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 1 ] ; then
@@ -175,7 +175,7 @@ jobs:
             if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
               comment="❌ You have to rebase \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch because there are new commits pending on target \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch (sorry i can't auto rebase from a fork):<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"              
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
               exit 1
             fi
             git fetch
@@ -186,8 +186,8 @@ jobs:
             if [ ${exit_code} -eq 1 ] ; then
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}" 
-              exit 1  
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
+              exit 1
             fi
             git push --force && exit_code=0 || exit_code=1
             if [ ${exit_code} -eq 0 ] ; then
@@ -205,7 +205,7 @@ jobs:
             else
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails on `git push --force`. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"  
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
             fi
             git switch ${{ env.BASE_REF }}
           fi
@@ -223,7 +223,7 @@ jobs:
             exit 1
           fi
 
-      - name: Check if source branch is rebased from target branch 
+      - name: Check if source branch is rebased from target branch
         run: |
           git pull
           git log --oneline --cherry ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}...origin/${{ env.BASE_REF }} > "${{ env.REMAINING_COMMITS_FILE }}" && exit_code=0 || exit_code=1
@@ -240,7 +240,7 @@ jobs:
             if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
               comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You have to rebase \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch by yourself because i can't auto rebase from a fork.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"              
+              gh pr comment "${PR_NUMBER}" --body "${comment}"
               exit 1
             else
               comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
@@ -254,7 +254,7 @@ jobs:
         run: |
           git log --oneline --cherry origin/${{ env.BASE_REF }}...${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} | tee ${{ env.NEW_COMMITS_FILE }}
 
-      - name: Merge fast forward head ref to base ref 
+      - name: Merge fast forward head ref to base ref
         run: |
           git merge ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }} --ff-only && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
@@ -263,7 +263,7 @@ jobs:
             comment="❌ Merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
-            exit 1         
+            exit 1
           fi
           git push && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
@@ -272,22 +272,22 @@ jobs:
             comment="❌ Push merge fast forward fails. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
             echo "  - ${comment}"
             gh pr comment "${PR_NUMBER}" --body "${comment}"
-            exit 1         
+            exit 1
           fi
 
       - name: Close pull request
         run: |
           if [[ "${PR_COMMENT}" =~ "--force" ]] ; then
-            comment="✅ Pull request merged without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."          
+            comment="✅ Pull request merged without waiting for checks and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
           else
             comment="✅ Pull request merged and closed by \`${COMMENT_USER_LOGIN}\` with fast forward merge."
           fi
           gh pr close "${PR_NUMBER}" --delete-branch --comment "${comment}.<br><br>\# List of commits merged from \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch into \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch:<br>$(echo ; sed "s/+/-/g" ${{ env.NEW_COMMITS_FILE }})" && exit_code=0 || exit_code=1
           if [ ${exit_code} -eq 0 ] ; then
-            echo "  - ${comment}"     
+            echo "  - ${comment}"
           else
             comment="❌ A problem occurred when closing pull request and/or deleting branch."
             echo "  - ${comment}"
             #gh pr comment "${PR_NUMBER}" --body "${comment} Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
-            #exit 1       
+            #exit 1
           fi

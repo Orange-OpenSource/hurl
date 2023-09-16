@@ -20,7 +20,7 @@ jobs:
     steps:
 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
 
@@ -57,7 +57,7 @@ jobs:
     - name: Check Rust version
       if: always()
       run: bin/check/rust_version.py 7
-    
+
     - name: Rustfmt
       if: always()
       run: bin/check/rustfmt.sh

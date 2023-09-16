@@ -1,7 +1,7 @@
 # CI/CD Integration
 
-Up until now, we have run our test files locally. Now, we want to integrate them in a CI/CD pipeline 
-(like [GitHub Actions] or [GitLab CI/CD pipelines]). As Hurl is very fast, we're going to run our tests on each commit 
+Up until now, we have run our test files locally. Now, we want to integrate them in a CI/CD pipeline
+(like [GitHub Actions] or [GitLab CI/CD pipelines]). As Hurl is very fast, we're going to run our tests on each commit
 of our project, drastically improving the project quality.
 
 A typical web project pipeline is:
@@ -16,15 +16,15 @@ In this workflow, we're testing the same image that will be used and deployed in
 > only run integration tests on a prebuilt Docker image. To check a complete
 > project with build, Docker upload/publish and integration tests, go to <https://github.com/jcamiel/hurl-express-tutorial>
 
-In a first step, we're going to write a shell script that will pull our Docker image, launch it and run Hurl tests 
-against it. Once we have checked that this script runs locally, we'll see how to run it automatically in a CI/CD 
+In a first step, we're going to write a shell script that will pull our Docker image, launch it and run Hurl tests
+against it. Once we have checked that this script runs locally, we'll see how to run it automatically in a CI/CD
 pipeline.
 
 
 ## Templating Tests
 
-Before writing our test script, we're going to template our Hurl files so we can run them more easily in various 
-configuration. One way to do this is to use [variables]. We've already seen variables when [chaining requests], 
+Before writing our test script, we're going to template our Hurl files so we can run them more easily in various
+configuration. One way to do this is to use [variables]. We've already seen variables when [chaining requests],
 we're going to see how we can use them to inject data.
 
 In the file `basic.hurl`, we first test the home page:
@@ -36,7 +36,7 @@ GET http://localhost:3000
 # ...
 ```
 
-We've hardcoded our server's URL but what if we need to run the same test on another URL (against production 
+We've hardcoded our server's URL but what if we need to run the same test on another URL (against production
 URL with HTTPS for example)? We can use a variable like this:
 
 ```hurl
@@ -54,7 +54,7 @@ $ hurl --variable host=http://localhost:3000 --test basic.hurl
 
 This way, our host is not hardcoded any more and we can run our tests in various configurations.
 
-1. Replace `http://localhost:3000` by `{{host}}` in `basic.hurl`, `login.hurl` and `signup.hurl` and test that everything is ok  
+1. Replace `http://localhost:3000` by `{{host}}` in `basic.hurl`, `login.hurl` and `signup.hurl` and test that everything is ok
 
 ```shell
 $ hurl --variable host=http://localhost:3000 --test *.hurl
@@ -124,7 +124,7 @@ $ docker stop movies
 movies
 ```
 
-Now, we have a basic script that starts our container. Before adding our integration tests, we need to ensure that our 
+Now, we have a basic script that starts our container. Before adding our integration tests, we need to ensure that our
 application server is ready: the container has started, but the application server can take a few seconds to be
 really ready to accept incoming HTTP requests.
 
@@ -266,7 +266,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build
         run: echo "Building app..."
       - name: Integration test
@@ -345,7 +345,7 @@ Counting objects: 100% (7/7), done.
 ...
 ```
 
-Next, we are going to add a GitLab CI/CD pipeline. The purpose of this pipeline will be to launch our integration 
+Next, we are going to add a GitLab CI/CD pipeline. The purpose of this pipeline will be to launch our integration
 script on each commit. We'll base our image on a Docker based image, with a [Docker-In-Docker service].
 
 3. Create a file `.gitlab-ci.yml`:
@@ -364,7 +364,7 @@ build:
       - bin/integration.sh http://docker:3000
 ```
 
-> Because of Docker-In-Docker, our server is accessible with the `docker` hostname (and not `localhost`). As we have 
+> Because of Docker-In-Docker, our server is accessible with the `docker` hostname (and not `localhost`). As we have
 > made our script configurable, we can just pass the hostname and don't modify our integration script
 
 

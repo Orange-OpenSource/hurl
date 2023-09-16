@@ -47,11 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
 
-      - name: Init bot branch name    
+      - name: Init bot branch name
         run: |
           base=$(echo "${{ github.ref }}" | sed "s#refs/heads/##g" | tr '/' '-')
           echo "BOT_UPDATE_VERSION_BRANCHE_NAME=bot/update-branch-version-${base}" | tee -a $GITHUB_ENV
@@ -66,7 +66,7 @@ jobs:
             echo "  > package version for ${cargo_toml}"
             echo "      $(grep "^version =" "${cargo_toml}")"
             for dep_package in ${hurl_packages} ; do
-              if [  $(grep -c "^${dep_package} =" "${cargo_toml}") -gt 0 ] ; then 
+              if [  $(grep -c "^${dep_package} =" "${cargo_toml}") -gt 0 ] ; then
                 sed -i "s/^${dep_package} = { version .*/${dep_package} = { version = \"${{ inputs.new_version }}\", path = \"..\/${dep_package}\" }/" "${cargo_toml}"
                 echo "  > ${dep_package} dep package version for ${cargo_toml}"
                 echo "      $(grep "^${dep_package} =" "${cargo_toml}")"
@@ -127,4 +127,3 @@ jobs:
             echo "  - ❌ A problem occurs when attempting to create new pull request."
             exit 1
           fi
-
