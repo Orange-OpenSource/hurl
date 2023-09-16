@@ -51,7 +51,7 @@ hurl --test \
   tests_ok/post_large.hurl \
   tests_ok/post_multilines.hurl \
   tests_ok/post_xml.hurl \
-  tests_ok/predicates-string.hurl \
+  tests_ok/predicates_string.hurl \
   tests_ok/proxy_option.hurl \
   tests_ok/put.hurl \
   tests_ok/querystring_params.hurl \

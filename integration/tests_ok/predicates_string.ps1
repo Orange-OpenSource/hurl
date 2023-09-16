@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_ok/predicates-string.hurl --verbose
+hurl tests_ok/predicates_string.hurl --verbose
