@@ -215,7 +215,7 @@ Table of Contents
          * [Using SOAP APIs](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
          * [Checking Byte Order Mark (BOM) in Response Body](#checking-byte-order-mark-bom-in-response-body)
-         * [AWS SigV4 requests](#aws-sigv4-requests)
+         * [AWS Signature Version 4 Requests](#aws-signature-version-4-requests)
    * [Manual](#manual)
       * [Name](#name)
       * [Synopsis](#synopsis)
@@ -767,9 +767,9 @@ bytes startsWith hex,efbbbf;
 
 [Doc](https://hurl.dev/docs/asserting-response.html#bytes-assert)
 
-### AWS SigV4 requests
+### AWS Signature Version 4 Requests
 
-Generate signed API requests with AWS SigV4, as used by several cloud providers.
+Generate signed API requests with [AWS Signature Version 4], as used by several cloud providers.
 
 ```hurl
 POST https://sts.eu-central-1.amazonaws.com/
@@ -1210,6 +1210,7 @@ Please follow the [contrib on Windows section].
 [`--test` option]: https://hurl.dev/docs/manual.html#test
 [`--user`]: https://hurl.dev/docs/manual.html#user
 [Hurl templates]: https://hurl.dev/docs/templates.html
+[AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 [GitHub]: https://github.com/Orange-OpenSource/hurl
 [hurl-4.0.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-win64.zip
 [hurl-4.0.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-win64-installer.exe

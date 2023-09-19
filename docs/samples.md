@@ -510,9 +510,9 @@ bytes startsWith hex,efbbbf;
 
 [Doc](/docs/asserting-response.md#bytes-assert)
 
-### AWS SigV4 requests
+### AWS Signature Version 4 Requests
 
-Generate signed API requests with AWS SigV4, as used by several cloud providers.
+Generate signed API requests with [AWS Signature Version 4], as used by several cloud providers.
 
 ```hurl
 POST https://sts.eu-central-1.amazonaws.com/
@@ -544,3 +544,4 @@ The Access Key is given per [`--user`].
 [`--test` option]: /docs/manual.md#test
 [`--user`]: /docs/manual.md#user
 [Hurl templates]: /docs/templates.md
+[AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html

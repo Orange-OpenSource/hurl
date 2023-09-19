@@ -183,12 +183,13 @@ Predicates consist of a predicate function and a predicate value. Predicate func
 | __`includes`__     | Query collections includes the predicate value                                      | `jsonpath "$.nooks" includes "Dune"`                                                  |
 | __`matches`__      | Part of the query string matches the regex pattern described by the predicate value | `jsonpath "$.release" matches "\\d{4}"`<br><br>`jsonpath "$.release" matches /\d{4}/` |
 | __`exists`__       | Query returns a value                                                               | `jsonpath "$.book" exists`                                                            |
-| __`isEmpty`__      | Query returns an empty collection                                                   | `jsonpath "$.movies" isEmpty`                                                         |
-| __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
-| __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
 | __`isBoolean`__    | Query returns a boolean                                                             | `jsonpath "$.succeeded" isBoolean`                                                    |
-| __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
 | __`isCollection`__ | Query returns a collection                                                          | `jsonpath "$.books" isCollection`                                                     |
+| __`isDate`__       | Query returns a date                                                                | `jsonpath "$.publication_date" isDate`                                                |
+| __`isEmpty`__      | Query returns an empty collection                                                   | `jsonpath "$.movies" isEmpty`                                                         |
+| __`isFloat`__      | Query returns a float                                                               | `jsonpath "$.height" isFloat`                                                         |
+| __`isInteger`__    | Query returns an integer                                                            | `jsonpath "$.count" isInteger`                                                        |
+| __`isString`__     | Query returns a string                                                              | `jsonpath "$.name" isString`                                                          |
 
 
 Each predicate can be negated by prefixing it with `not` (for instance, `not contains` or `not exists`)
