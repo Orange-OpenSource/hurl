@@ -335,10 +335,10 @@ jobs:
             --title ${{ needs.set-context.outputs.release_version }} \
             --draft \
             artifacts/release-deb-x64-artifacts/hurl_"${{ needs.set-context.outputs.release_version }}"_amd64.deb \
-            artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-linux.tar.gz \
-            artifacts/release-macos-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-macos.tar.gz \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-win64-installer.exe \
-            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-win64.zip && gh_exit_code=0 || gh_exit_code=$?
+            artifacts/release-generic-linux-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-unknown-linux-gnu.tar.gz \
+            artifacts/release-macos-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-apple-darwin.tar.gz \
+            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe \
+            artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
             echo "  - ✅ Github release ${{ needs.set-context.outputs.release_version }} created."
           else

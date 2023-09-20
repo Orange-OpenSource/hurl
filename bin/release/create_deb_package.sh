@@ -42,7 +42,5 @@ sudo apt-get install -y lintian
 lintian --verbose target/debian.deb
 
 mkdir -p target/upload
-toolchain=$(bin/release/get_active_toolchain.sh)
-echo "toolchain=${toolchain}"
-cp target/debian.deb "target/upload/hurl_${VERSION}_${toolchain}.deb"
+cp target/debian.deb "target/upload/hurl_${VERSION}_amd64.deb"
 
