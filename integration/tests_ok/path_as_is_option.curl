@@ -1,1 +1,2 @@
+curl http://localhost:8000/any/../hello
 curl --path-as-is http://localhost:8000/path-as-is/../resource

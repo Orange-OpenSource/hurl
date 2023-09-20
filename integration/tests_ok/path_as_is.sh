@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_ok/path_as_is.hurl --verbose
+hurl --path-as-is tests_ok/path_as_is.hurl --verbose

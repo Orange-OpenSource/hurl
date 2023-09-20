@@ -1,15 +1,6 @@
-<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Dot segments are removed by default</span>
-<span class="line"></span><span class="comment"># the sequence "any/../" evaluate to nothing</span>
-<span class="line"></span><span class="comment"># therefore the url sent is http://localhost:8000/hello</span>
-<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/any/../hello</span></span>
-</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
-<span class="line"><span class="string">`Hello World!`</span></span>
-</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"></span><span class="comment"># Setting the option path-as-is</span>
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Setting the option path-as-is</span>
 <span class="line"></span><span class="comment"># the path is sent as it is (provided in the url)</span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/path-as-is/../resource</span></span>
-<span class="line"><span class="section-header">[Options]</span></span>
-<span class="line"><span class="string">path-as-is</span>: <span class="boolean">true</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 </span></span><span class="line"></span>
 <span class="line"></span>
