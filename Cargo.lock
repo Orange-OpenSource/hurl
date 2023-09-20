@@ -21,9 +21,9 @@ dependencies = [
 
 [[package]]
 name = "aho-corasick"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f2135563fb5c609d2b2b87c1e8ce7bc41b0b45430fa9661f457981503dd5bf0"
+checksum = "ea5d730647d4fadd988536d06fecce94b7b4f2a7efdae548f1cf4b63205518ab"
 dependencies = [
  "memchr",
 ]
@@ -525,7 +525,7 @@ checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 
 [[package]]
 name = "hurl"
-version = "4.1.0-SNAPSHOT"
+version = "4.1.0"
 dependencies = [
  "base64",
  "brotli",
@@ -560,7 +560,7 @@ dependencies = [
 
 [[package]]
 name = "hurl_core"
-version = "4.1.0-SNAPSHOT"
+version = "4.1.0"
 dependencies = [
  "float-cmp",
  "libxml",
@@ -569,7 +569,7 @@ dependencies = [
 
 [[package]]
 name = "hurlfmt"
-version = "4.1.0-SNAPSHOT"
+version = "4.1.0"
 dependencies = [
  "base64",
  "clap",
