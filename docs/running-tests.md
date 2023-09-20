@@ -89,7 +89,7 @@ If the JUnit report already exists, it will be updated with the new test results
 
 ### TAP Report
 
-A TAP ([Test Anything Protocol]) report can be produced by using the [`--report-tap FILE`] option.
+A TAP report ([Test Anything Protocol]) can be produced by using the [`--report-tap FILE`] option.
 
 If the TAP report already exists, it will be updated with the new test results.
 
@@ -107,6 +107,7 @@ You will find a detailed description in the [Injecting Variables] section of the
 [`--test`]: /docs/manual.md#test
 [`--report-html HTML_DIR`]: /docs/manual.md#report-html
 [`--report-junit FILE`]: /docs/manual.md#report-junit
+[`--report-tap FILE`]: /docs/manual.md#report-tap
 [`--test` option]: /docs/manual.md#test
 [`--glob` option]: /docs/manual.md#glob
 [`--variable` option]: /docs/manual.md#variable
