@@ -85,8 +85,13 @@ The input Hurl files (HTML version) are also included and are easily accessed fr
 
 A JUnit report can be produced by using the [`--report-junit FILE`] option.
 
-If the JUnit file already exists, it will be updated with the new test results.
+If the JUnit report already exists, it will be updated with the new test results.
 
+### TAP Report
+
+A TAP ([Test Anything Protocol]) report can be produced by using the [`--report-tap FILE`] option.
+
+If the TAP report already exists, it will be updated with the new test results.
 
 ## Use Variables in Tests
 
@@ -107,3 +112,4 @@ You will find a detailed description in the [Injecting Variables] section of the
 [`--variable` option]: /docs/manual.md#variable
 [`--variables-file` option]: /docs/manual.md#variables-file
 [Injecting Variables]: /docs/templates.md#injecting-variables
+[Test Anything Protocol]: https://testanything.org
