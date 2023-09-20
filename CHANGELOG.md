@@ -1,4 +1,4 @@
-[4.1.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
+[4.1.0 (2023-09-20)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
 
 Thanks to
@@ -17,6 +17,7 @@ Thanks to
 Enhancements:
 
 * Print host architecture with --version [#1893](https://github.com/Orange-OpenSource/hurl/issues/1893)
+* Add delay CLI option [#1832](https://github.com/Orange-OpenSource/hurl/issues/1832)
 * Add --delay Option [#1832](https://github.com/Orange-OpenSource/hurl/issues/1832)
 * Support RFC-7807 application/problem+json for response body logging as text [#1766](https://github.com/Orange-OpenSource/hurl/issues/1766)
 * Rename fail-at-end option with continue-on-error option [#1739](https://github.com/Orange-OpenSource/hurl/issues/1739)
@@ -25,7 +26,6 @@ Enhancements:
 * Add TAP report [#1666](https://github.com/Orange-OpenSource/hurl/issues/1666) [#601](https://github.com/Orange-OpenSource/hurl/issues/601)
 * Implement isDate predicate [#1520](https://github.com/Orange-OpenSource/hurl/issues/1520)
 * Add docker arm64 build [#536](https://github.com/Orange-OpenSource/hurl/issues/536)
-
 
 
 Bugs Fixed:
