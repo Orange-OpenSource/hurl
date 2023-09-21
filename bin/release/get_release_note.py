@@ -173,12 +173,16 @@ def generate_md(
     for author in authors:
         s += "\n[@%s](https://github.com/%s)," % (author, author)
 
-    categories = {"enhancement": "Enhancements", "bug": "Bugs Fixed"}
+    categories = {
+        "breaking": "Breaking Changes",
+        "enhancement": "Enhancements",
+        "bug": "Bugs Fixed",
+    }
 
     for category in categories:
         category_pulls = [pull for pull in pulls if category in pull.tags]
         if len(category_pulls) > 0:
-            s += "\n\n\n" + categories[category] + ":" + "\n\n"
+            s += "\n\n" + categories[category] + ":" + "\n\n"
         for pull in category_pulls:
             issues = " ".join(
                 "[#%s](%s/issues/%s)" % (issue, hurl_repo_url, issue)
