@@ -1,7 +1,8 @@
-[4.1.0 (2023-09-20)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
+[4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
 
 Thanks to
+[@apparentorder](https://github.com/apparentorder),
 [@ppaulweber](https://github.com/ppaulweber),
 [@taigrr](https://github.com/taigrr),
 [@kallelindqvist](https://github.com/kallelindqvist),
@@ -13,10 +14,15 @@ Thanks to
 [@jasonkarns](https://github.com/jasonkarns),
 [@humphd](https://github.com/humphd),
 
+Breaking Changes:
+
+* Fix published release packages names [#1951](https://github.com/Orange-OpenSource/hurl/issues/1951)
+
 
 Enhancements:
 
 * Print host architecture with --version [#1893](https://github.com/Orange-OpenSource/hurl/issues/1893)
+* Add the aws-sigv4 option to generate AWS SigV4 signed requests [#1840](https://github.com/Orange-OpenSource/hurl/issues/1840)
 * Add delay CLI option [#1832](https://github.com/Orange-OpenSource/hurl/issues/1832)
 * Add --delay Option [#1832](https://github.com/Orange-OpenSource/hurl/issues/1832)
 * Support RFC-7807 application/problem+json for response body logging as text [#1766](https://github.com/Orange-OpenSource/hurl/issues/1766)
