@@ -4,12 +4,13 @@
 
 ### Linux
 
-Precompiled binary is available at [hurl-4.1.0-x86_64-linux.tar.gz]:
+Precompiled binary is available at [Hurl latest GitHub release]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -silent --location https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-4.1.0:$PATH
+$ VERSION=4.1.0
+$ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-$VERSION:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -17,8 +18,9 @@ $ export PATH=$INSTALL_DIR/hurl-4.1.0:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl_4.1.0_amd64.deb
-$ sudo apt update && sudo apt install ./hurl_4.1.0_amd64.deb
+$ VERSION=4.1.0
+$ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl_$VERSION_amd64.deb
+$ sudo apt update && sudo apt install ./hurl_$VERSION_amd64.deb
 ```
 
 #### Alpine
@@ -39,7 +41,7 @@ $ apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
 
 ### macOS
 
-Precompiled binary is available at [hurl-4.1.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-4.1.0-arm64-macos.tar.gz] for ARM CPUS.
+Precompiled binaries for Intel and ARM CPUs are available at [Hurl latest GitHub release].
 
 #### Homebrew
 
@@ -63,11 +65,11 @@ $ sudo pkg install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-4.1.0-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file at [Hurl latest GitHub release]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-4.1.0-win64-installer.exe] is also available.
+An executable installer is also available at [Hurl latest GitHub release].
 
 #### Chocolatey
 
@@ -164,11 +166,7 @@ $ ./target/release/hurl --version
 Please follow the [contrib on Windows section].
 
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-4.1.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-win64.zip
-[hurl-4.1.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-win64-installer.exe
-[hurl-4.1.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-macos.tar.gz
-[hurl-4.1.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-arm64-macos.tar.gz
-[hurl-4.1.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-linux.tar.gz
+[Hurl latest GitHub release]: https://github.com/Orange-OpenSource/hurl/releases/latest
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
