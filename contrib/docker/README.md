@@ -182,7 +182,7 @@ docker_build_tag=$(grep ^version packages/hurl/Cargo.toml | cut --delimiter '=' 
 echo "docker_build_tag=${docker_build_tag}"
 docker_build_date=$(date "+%Y-%m-%d %H-%M-%S")
 echo "docker_build_date=${docker_build_date}"
-docker buildx build --platform linux/amd64,linux/arm64 --file contrib/docker/Dockerfile --build-arg docker_build_date="${docker_build_date}" --build-arg docker_build_tag="${docker_build_tag}" --tag ghcr.io/"${organisation}"/hurl:"${docker_build_tag}" --push .
+docker buildx build --platform linux/amd64,linux/arm64 --file contrib/docker/Dockerfile --build-arg docker_build_date="${docker_build_date}" --build-arg docker_build_tag="${docker_build_tag}" --tag ghcr.io/"${organisation}"/hurl:"${docker_build_tag}" --tag ghcr.io/"${organisation}"/hurl:latest --push .
 ```
 
 ## Get docker hurl version
