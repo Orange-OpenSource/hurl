@@ -1,8 +1,5 @@
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true" > 
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" > 
-    <img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" alt="Hurl Logo" width="264px">
-</picture>
+<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" width="264px"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
+
 <br/>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
@@ -135,13 +132,16 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML re
 
 <div class="picture">
     <picture>
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
+        <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
+        <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
+        <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
         <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+    </picture>
+    <picture>
+        <source srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
+        <source srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
+        <source srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
+        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
     </picture>
 </div>
 
@@ -1021,12 +1021,12 @@ curl(1)  hurlfmt(1)
 
 ### Linux
 
-Precompiled binary is available at [hurl-4.0.0-x86_64-linux.tar.gz]:
+Precompiled binary is available at [hurl-4.1.0-x86_64-linux.tar.gz]:
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ curl -silent --location https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
-$ export PATH=$INSTALL_DIR/hurl-4.0.0:$PATH
+$ curl -silent --location https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-linux.tar.gz | tar xvz -C $INSTALL_DIR
+$ export PATH=$INSTALL_DIR/hurl-4.1.0:$PATH
 ```
 
 #### Debian / Ubuntu
@@ -1034,8 +1034,8 @@ $ export PATH=$INSTALL_DIR/hurl-4.0.0:$PATH
 For Debian / Ubuntu, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl_4.0.0_amd64.deb
-$ sudo apt update && sudo apt install ./hurl_4.0.0_amd64.deb
+$ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl_4.1.0_amd64.deb
+$ sudo apt update && sudo apt install ./hurl_4.1.0_amd64.deb
 ```
 
 #### Alpine
@@ -1056,7 +1056,7 @@ $ apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing hurl
 
 ### macOS
 
-Precompiled binary is available at [hurl-4.0.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-4.0.0-arm64-macos.tar.gz] for ARM CPUS.
+Precompiled binary is available at [hurl-4.1.0-x86_64-macos.tar.gz] for x86 CPUs and [hurl-4.1.0-arm64-macos.tar.gz] for ARM CPUS.
 
 #### Homebrew
 
@@ -1080,11 +1080,11 @@ $ sudo pkg install hurl
 
 #### Zip File
 
-Hurl can be installed from a standalone zip file [hurl-4.0.0-win64.zip]. You will need to update your `PATH` variable.
+Hurl can be installed from a standalone zip file [hurl-4.1.0-win64.zip]. You will need to update your `PATH` variable.
 
 #### Installer
 
-An installer [hurl-4.0.0-win64-installer.exe] is also available.
+An installer [hurl-4.1.0-win64-installer.exe] is also available.
 
 #### Chocolatey
 
@@ -1212,11 +1212,11 @@ Please follow the [contrib on Windows section].
 [Hurl templates]: https://hurl.dev/docs/templates.html
 [AWS Signature Version 4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 [GitHub]: https://github.com/Orange-OpenSource/hurl
-[hurl-4.0.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-win64.zip
-[hurl-4.0.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-win64-installer.exe
-[hurl-4.0.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-x86_64-macos.tar.gz
-[hurl-4.0.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-arm64-macos.tar.gz
-[hurl-4.0.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.0.0/hurl-4.0.0-x86_64-linux.tar.gz
+[hurl-4.1.0-win64.zip]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-win64.zip
+[hurl-4.1.0-win64-installer.exe]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-win64-installer.exe
+[hurl-4.1.0-x86_64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-macos.tar.gz
+[hurl-4.1.0-arm64-macos.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-arm64-macos.tar.gz
+[hurl-4.1.0-x86_64-linux.tar.gz]: https://github.com/Orange-OpenSource/hurl/releases/download/4.1.0/hurl-4.1.0-x86_64-linux.tar.gz
 [AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [`hurl-bin` package]: https://aur.archlinux.org/packages/hurl-bin/
 [install]: https://www.rust-lang.org/tools/install
