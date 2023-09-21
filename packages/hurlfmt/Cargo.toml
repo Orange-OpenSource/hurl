@@ -1,6 +1,6 @@
 [package]
 name = "hurlfmt"
-version = "4.1.0"
+version = "4.2.0-SNAPSHOT"
 authors = ["Fabrice Reix <fabrice.reix@orange.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -17,7 +17,7 @@ strict = []
 base64 = "0.21.4"
 clap = { version = "4.4.4", features = ["cargo", "wrap_help"] }
 colored = "2.0.4"
-hurl_core = { version = "4.1.0", path = "../hurl_core" }
+hurl_core = { version = "4.2.0-SNAPSHOT", path = "../hurl_core" }
 regex = "1.9.5"
 
 [dev-dependencies]
