@@ -2,6 +2,7 @@
 ========================================================================================================================
 
 Thanks to
+[@danielzfranklin](https://github.com/danielzfranklin),
 [@apparentorder](https://github.com/apparentorder),
 [@ppaulweber](https://github.com/ppaulweber),
 [@taigrr](https://github.com/taigrr),
@@ -38,6 +39,7 @@ Bugs Fixed:
 
 * IsEmpty doesn't seem to work on object collections [#1788](https://github.com/Orange-OpenSource/hurl/issues/1788)
 * Fix Cookie Query Parsing error [#1784](https://github.com/Orange-OpenSource/hurl/issues/1784)
+* Support empty BasicAuth section [#1772](https://github.com/Orange-OpenSource/hurl/issues/1772)
 * Fix standalone option for hurlfmt HTML output [#1759](https://github.com/Orange-OpenSource/hurl/issues/1759)
 * Support IPv4/IPv6 address in proxy [Options] [#1756](https://github.com/Orange-OpenSource/hurl/issues/1756)
 * Reuse same HTTP method on redirect for appropriate HTTP status codes [#1719](https://github.com/Orange-OpenSource/hurl/issues/1719)
