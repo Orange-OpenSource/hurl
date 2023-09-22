@@ -1,4 +1,4 @@
-.TH hurl 1 "29 Jun 2023" "hurl 4.0.0" " Hurl Manual"
+.TH hurl 1 "21 Sep 2023" "hurl 4.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -54,8 +54,8 @@ The Hurl file format is fully documented in \fIhttps://hurl.dev/docs/hurl-file.h
 
 It consists of one or several HTTP requests
 
-    GET http:/example.org/endpoint1
-    GET http:/example.org/endpoint2
+    GET http://example.org/endpoint1
+    GET http://example.org/endpoint2
 
 
 .IP "Capturing values"
@@ -82,18 +82,18 @@ The HTTP response defined in the Hurl file are used to make asserts. Responses a
 
 At the minimum, response includes assert on the HTTP status code.
 
-    GET http:/example.org
+    GET http://example.org
     HTTP 301
 
 It can also include asserts on the response headers
 
-    GET http:/example.org
+    GET http://example.org
     HTTP 301
     Location: http://www.example.org
 
 Explicit asserts can be included by combining a query and a predicate
 
-    GET http:/example.org
+    GET http://example.org
     HTTP 301
     [Asserts]
     xpath "string(//title)" == "301 Moved"
@@ -123,6 +123,14 @@ will follow redirection for each entry in `foo.hurl`. You can also define an opt
     HTTP 200
 
 will follow a redirection only for the second entry.
+
+.IP "--aws-sigv4 <PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]> "
+
+Generate an `Authorization` header with an AWS SigV4 signature.
+
+Use \fI-u, --user\fP to specify Access Key Id (username) and Secret Key (password).
+
+To use temporary session credentials (e.g. for an AWS IAM Role), add the `X-Amz-Security-Token` header containing the session token.
 
 .IP "--cacert <FILE> "
 
@@ -155,6 +163,15 @@ For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. Thi
 
 See also \fI--resolve\fP.
 
+.IP "--continue-on-error "
+
+Continue executing requests to the end of the Hurl file even when an assert error occurs.
+By default, Hurl exits after an assert error in the HTTP response.
+
+Note that this option does not affect the behavior with multiple input Hurl files.
+
+All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
+
 .IP "-b, --cookie <FILE> "
 
 Read cookies from FILE (using the Netscape cookie file format).
@@ -168,18 +185,15 @@ The file will be written using the Netscape cookie file format.
 
 Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between successive Hurl runs.
 
+.IP "--delay <MILLISECONDS> "
+
+Sets delay before each request.
+
+
 .IP "--error-format <FORMAT> "
 
 Control the format of error message (short by default or long)
 
-.IP "--fail-at-end "
-
-Continue executing requests to the end of the Hurl file even when an assert error occurs.
-By default, Hurl exits after an assert error in the HTTP response.
-
-Note that this option does not affect the behavior with multiple input Hurl files.
-
-All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.
 
 .IP "--file-root <DIR> "
 
@@ -269,6 +283,12 @@ If the FILE report already exists, it will be updated with the new test results.
 Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
+
+.IP "--report-tap <FILE> "
+
+Generate TAP report.
+
+If the FILE report already exists, it will be updated with the new test results.
 
 .IP "--resolve <HOST:PORT:ADDR>  <HOST:PORT:ADDR>"
 
