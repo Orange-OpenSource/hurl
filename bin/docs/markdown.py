@@ -98,7 +98,7 @@ class Table(Node):
 
     def reformat(self) -> None:
         """
-        Format a Markdown table so all colum are maximized.
+        Format a Markdown table so all column are maximized.
 
         Example:
 
