@@ -1,4 +1,8 @@
-<img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true#gh-dark-mode-only" alt="Hurl Logo" width="264px"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" > 
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true" > 
+    <img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" alt="Hurl Logo" width="264px">
+</picture>
 
 <br/>
 
@@ -132,16 +136,13 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML re
 
 <div class="picture">
     <picture>
-        <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
-        <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
-        <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
+        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
         <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
-    </picture>
-    <picture>
-        <source srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
-        <source srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
-        <source srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
     </picture>
 </div>
 
