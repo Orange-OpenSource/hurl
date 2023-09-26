@@ -38,7 +38,7 @@ percent-encoding = "2.3.0"
 regex = "1.9.5"
 serde = "1.0.188"
 serde_json = "1.0.107"
-sha2 = "0.10.7"
+sha2 = "0.10.8"
 url = "2.4.1"
 xmltree = { version = "0.10.3",  features = ["attribute-order"] }
 lazy_static = "1.4.0"
