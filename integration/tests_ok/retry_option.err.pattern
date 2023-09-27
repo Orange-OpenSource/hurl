@@ -1,10 +1,4 @@
 * Options:
-*     continue on error: false
-*     delay: 0ms
-*     follow redirect: false
-*     insecure: false
-*     max redirect: 50
-*     retry: 0
 * ------------------------------------------------------------------------------
 * Executing entry 1
 *
