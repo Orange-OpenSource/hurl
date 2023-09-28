@@ -515,7 +515,7 @@ pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
 
 pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     // base64 => can have whitespace
-    // support pqrser position
+    // support parser position
     let _start = reader.state.clone();
     try_literal("base64", reader)?;
     literal(",", reader)?;
