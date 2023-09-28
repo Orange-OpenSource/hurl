@@ -470,7 +470,7 @@ mod tests {
             check(e, e)
         }
 
-        // Check that non-existent named entities are returned unchanged
+        // Check that nonexistent named entities are returned unchanged
         check("&svadilfari;", "&svadilfari;");
 
         // The following examples are in the html5 specs
