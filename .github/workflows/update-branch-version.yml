@@ -122,7 +122,7 @@ jobs:
           if [ ${gh_exit_code} -eq 0 ] ; then
             NEW_PR_NUMBER=$(gh pr list --repo "${REPO}" --head "${BOT_UPDATE_VERSION_BRANCHE_NAME}" --state "open" --json number --jq .[].number)
             echo "  - ✅ Creation of pull request n°${NEW_PR_NUMBER} succeeds."
-            echo "pr_bumber=${NEW_PR_NUMBER}" | tee -a $GITHUB_OUTPUT
+            echo "pr_number=${NEW_PR_NUMBER}" | tee -a $GITHUB_OUTPUT
           else
             echo "  - ❌ A problem occurs when attempting to create new pull request."
             exit 1
