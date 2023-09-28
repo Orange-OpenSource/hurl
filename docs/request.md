@@ -367,7 +367,7 @@ you can use [`-u/--user` option].
 Optional HTTP body request.
 
 If the body of the request is a [JSON] string or a [XML] string, the value can be
-directly inserted without any modification. For a text based body that is not JSON nor XML,
+directly inserted without any modification. For a text based body that is neither JSON nor XML,
 one can use [multiline string body] that starts with <code>&#96;&#96;&#96;</code> and ends
 with <code>&#96;&#96;&#96;</code>. Multiline string body support "language hint" and can be used
 to create [GraphQL queries].
@@ -532,7 +532,7 @@ POST https://example.org/starwars/graphql
 
 #### Multiline string body
 
-For text based body that are not JSON nor XML, one can use multiline string, started and ending with
+For text based body that are neither JSON nor XML, one can use multiline string, started and ending with
 <code>&#96;&#96;&#96;</code>.
 
 ~~~hurl
