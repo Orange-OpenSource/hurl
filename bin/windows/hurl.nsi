@@ -11,7 +11,7 @@
 ; define version
 !define /file VERSION "version.txt"
 
-; define windows uninstall panel regestry path
+; define windows uninstall panel registry path
 !define UNINSTALLPANELKEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Hurl"
 
 ; The name of the installer
