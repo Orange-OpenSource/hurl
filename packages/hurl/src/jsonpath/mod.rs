@@ -45,7 +45,7 @@
 //!   - _ (underscore)
 //!
 //! Filters can be applied to element of an array with the `?(@.key PREDICATE)` notation.
-//! The key can can specify one or more levels.
+//! The key can specify one or more levels.
 //! For example, `.price.US` specify field 'US' in an object for the field price.
 //! The predicate if not present just checks the key existence.
 //!
