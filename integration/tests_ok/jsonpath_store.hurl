@@ -26,7 +26,7 @@ jsonpath "$..book[:2].title" nth 1 == "Sword of Honour"
 jsonpath "$..book[?(@.isbn)]" count == 2                                   # filter all books with isbn number
 jsonpath "$..book[?(@.isbn)].title" nth 0 == "Moby Dick"
 jsonpath "$..book[?(@.isbn)].title" nth 1 == "The Lord of the Rings"
-jsonpath "$..book[?(@.price<10)]" count == 2                               # filter all books cheapier than 10
+jsonpath "$..book[?(@.price<10)]" count == 2                               # filter all books cheaper than 10
 jsonpath "$..book[?(@.price<10)].title" nth 0 == "Sayings of the Century"
 jsonpath "$..book[?(@.price<10)].title" nth 1 == "Moby Dick"
 jsonpath "$..*" count == 27             	                               # all Elements in XML document. All members of JSON structure.
