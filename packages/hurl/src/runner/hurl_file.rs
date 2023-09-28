@@ -200,7 +200,7 @@ pub fn run(
             );
             retry_count += 1;
             // If we retry the entry, we do not want to display a 'blank' progress bar
-            // during the sleep delay. During the pause, we artificially show the previsoulsy
+            // during the sleep delay. During the pause, we artificially show the previously
             // erased progress line.
             logger.test_progress(entry_index, n);
             thread::sleep(retry_interval);
