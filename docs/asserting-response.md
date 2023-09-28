@@ -574,7 +574,7 @@ jsonpath "$.slideshow.slides[*].title" includes "Mind Blowing!"
 > one node is selected.
 
 In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped.
-Alternatively, `matches` predicate support [Javascript-like Regular expression syntax] to enhance
+Alternatively, `matches` predicate support [JavaScript-like Regular expression syntax] to enhance
 the readability:
 
 ```hurl
@@ -849,7 +849,7 @@ of all file nodes.
 [XML]: https://en.wikipedia.org/wiki/XML
 [Base64]: https://en.wikipedia.org/wiki/Base64
 [`--file-root` option]: /docs/manual.md#file-root
-[Javascript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+[JavaScript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [MD5]: https://en.wikipedia.org/wiki/MD5
 [SHA-256]: https://en.wikipedia.org/wiki/SHA-2
 [options]: /docs/request.md#options

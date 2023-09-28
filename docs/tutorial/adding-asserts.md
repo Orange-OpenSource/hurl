@@ -144,7 +144,7 @@ xpath "string((//h3)[2])" contains "Featured Today"
 ```
 
 > XPath queries can sometimes be a little tricky to write but modern browsers can help writing these expressions.
-> Try open the Javascript console of your browser (Firefox, Safari or Chrome) and type `$x("string(//head/title)")`
+> Try open the JavaScript console of your browser (Firefox, Safari or Chrome) and type `$x("string(//head/title)")`
 > then press Return. You should see the result of your XPath query.
 
 3. Run `basic.hurl` and check that every assert has been successful:

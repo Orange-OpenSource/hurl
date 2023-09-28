@@ -75,7 +75,7 @@ GET http://myshost.com/v1/cats/{{cat_id}}
 HTTP 200
 ```
 
-A key point of Hurl is to work on the HTTP domain. In particular, there is no Javascript runtime, Hurl works on the
+A key point of Hurl is to work on the HTTP domain. In particular, there is no JavaScript runtime, Hurl works on the
 raw HTTP requests/responses, and not on a DOM managed by a HTML engine. For security, this can be seen as a feature:
 let's say you want to test backend validation, you want to be able to bypass the browser or javascript validations and
 directly test a backend endpoint.

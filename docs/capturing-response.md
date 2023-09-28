@@ -352,7 +352,7 @@ cert_serial_number: certificate "Serial-Number"
 [XPath]: https://en.wikipedia.org/wiki/XPath
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [XPath captures]: #xpath-capture
-[Javascript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+[JavaScript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [options]: /docs/request.md#options
 [`--location` option]: /docs/manual.md#location
 [filters]: /docs/filters.md
