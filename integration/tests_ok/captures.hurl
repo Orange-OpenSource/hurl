@@ -6,7 +6,7 @@ param1: header "header1"
 param2: header "header2" regex "Hello (.*)!"
 param3: header "header2" regex /Hello (.*)!/
 # With the next captures, we test that the captured variable
-# can be immediatlety used in the next captures + asserts
+# can be immediately used in the next captures + asserts
 data1: body
 data2: variable "data1"
 [Asserts]
