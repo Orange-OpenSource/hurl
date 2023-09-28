@@ -29,7 +29,7 @@ use crate::http::Call;
 use crate::runner::core::*;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, Value};
-use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder, Verbosity};
+use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -372,86 +372,14 @@ fn log_run_info(
     variables: &HashMap<String, Value>,
     logger: &Logger,
 ) {
-    // Log only non-default options in verbose mode.
-    // This would be better as a closure to avoid passing `is_very_verbose` as a parameter,
-    // but we cannot define a closure with generic arguments bounded by a trait.
-    fn should_log<T: PartialEq>(is_very_verbose: bool, current: T, default: T) -> bool {
-        is_very_verbose || current != default
-    }
-
-    let default_runner_options = RunnerOptions::default();
-    let is_very_verbose = logger.verbosity == Some(Verbosity::VeryVerbose);
-
-    logger.debug_important("Options:");
-
-    if should_log(
-        is_very_verbose,
-        runner_options.continue_on_error,
-        default_runner_options.continue_on_error,
-    ) {
-        logger.debug(
-            format!(
-                "    continue on error: {}",
-                runner_options.continue_on_error
-            )
-            .as_str(),
-        );
-    }
-
-    if should_log(
-        is_very_verbose,
-        runner_options.delay,
-        default_runner_options.delay,
-    ) {
-        // FIXME: the cast to u64 seems not necessary.
-        //  If we dont cast from u128 and try to format! or println!
-        //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
-        //  ok with Rust >= 1.67.0.
-        logger.debug(format!("    delay: {}ms", runner_options.delay.as_millis() as u64).as_str());
-    }
-
-    if should_log(
-        is_very_verbose,
-        runner_options.follow_location,
-        default_runner_options.follow_location,
-    ) {
-        logger.debug(format!("    follow redirect: {}", runner_options.follow_location).as_str());
-    }
-
-    if should_log(
-        is_very_verbose,
-        runner_options.insecure,
-        default_runner_options.insecure,
-    ) {
-        logger.debug(format!("    insecure: {}", runner_options.insecure).as_str());
-    }
-
-    if should_log(
-        is_very_verbose,
-        runner_options.max_redirect,
-        default_runner_options.max_redirect,
-    ) {
-        if let Some(n) = runner_options.max_redirect {
-            logger.debug(format!("    max redirect: {n}").as_str());
+    if logger.verbosity.is_some() {
+        let non_default_options = get_non_default_options(runner_options);
+        if !non_default_options.is_empty() {
+            logger.debug_important("Options:");
+            for (name, value) in non_default_options.iter() {
+                logger.debug(format!("    {name}: {value}").as_str());
+            }
         }
-    }
-
-    if should_log(
-        is_very_verbose,
-        &runner_options.proxy,
-        &default_runner_options.proxy,
-    ) {
-        if let Some(proxy) = &runner_options.proxy {
-            logger.debug(format!("    proxy: {proxy}").as_str());
-        }
-    }
-
-    if should_log(
-        is_very_verbose,
-        runner_options.retry,
-        default_runner_options.retry,
-    ) {
-        logger.debug(format!("    retry: {}", runner_options.retry).as_str());
     }
 
     if !variables.is_empty() {
