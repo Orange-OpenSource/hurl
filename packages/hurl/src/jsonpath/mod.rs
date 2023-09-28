@@ -38,7 +38,7 @@
 //! - `$['*']` selects the element with key '*'. It is different from `$[*]` which selects all elements
 //! - `$['.']` selects the element with key '.'.
 //!
-//! The dot notation is usually more readable the the bracket notation
+//! The dot notation is usually more readable the bracket notation
 //! but it is more limited in terms of allowed characters.
 //! The following characters are allowed:
 //!   - alphanumeric
