@@ -503,7 +503,7 @@ pub fn eval_xpath_string(
             assert: false,
         }),
         Err(xpath::XpathError::Unsupported) => {
-            panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproqduce this usecase myself
+            panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproduce this usecase myself
         }
     }
 }
