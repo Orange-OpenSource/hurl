@@ -90,10 +90,10 @@ jobs:
           escaped_version=$(echo "${{ needs.set-context.outputs.release_version }}" | sed "s#\.#\\\.#g")
           github_release_exists=$(gh release list | (grep -c "${escaped_version}" || true))
           if [ ${github_release_exists} -eq 0 ] ; then
-            echo "  - ✅ Github release  ${{ needs.set-context.outputs.release_version }} does not exist."
+            echo "  - ✅ GitHub release  ${{ needs.set-context.outputs.release_version }} does not exist."
             echo "github_release_exists=false" | tee -a $GITHUB_OUTPUT
           else
-            echo "  - ✅ Github release  ${{ needs.set-context.outputs.release_version }} already exists on remote."
+            echo "  - ✅ GitHub release  ${{ needs.set-context.outputs.release_version }} already exists on remote."
             echo "github_release_exists=true" | tee -a $GITHUB_OUTPUT
           fi
 
@@ -340,7 +340,7 @@ jobs:
             artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc-installer.exe \
             artifacts/release-windows-x64-artifacts/hurl-"${{ needs.set-context.outputs.release_version }}"-x86_64-pc-windows-msvc.zip && gh_exit_code=0 || gh_exit_code=$?
           if [ ${gh_exit_code} -eq 0 ] ; then
-            echo "  - ✅ Github release ${{ needs.set-context.outputs.release_version }} created."
+            echo "  - ✅ GitHub release ${{ needs.set-context.outputs.release_version }} created."
           else
             echo "  - ❌ A problem occurs when attempting to create GitHub release ${{ needs.set-context.outputs.release_version }}."
             exit 1

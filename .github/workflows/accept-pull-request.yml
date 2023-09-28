@@ -150,10 +150,10 @@ jobs:
             gh_result=$(gh api repos/"${OWNER}"/"${REPO}"/releases/tags/"${tag_version}" | tr ":" "=" | tr -d '"' | tr -d " ")
             echo "gh_result=${gh_result}"
             if [ $(echo "${gh_result}" | grep -Ec "message=NotFound|prerelease=true") -eq 0 ] ; then
-              comment="✅ Github release ${tag_version}  is published."
+              comment="✅ GitHub release ${tag_version}  is published."
               echo "  - ${comment}"
             else
-              comment="👁‍🗨 Github release ${tag_version} is still in draft/prerelease. Please don't forget to publish it after merging this release PR."
+              comment="👁‍🗨 GitHub release ${tag_version} is still in draft/prerelease. Please don't forget to publish it after merging this release PR."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
             fi

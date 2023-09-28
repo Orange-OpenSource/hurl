@@ -477,7 +477,7 @@ Bugs Fixes:
 Changes:
 
 * Update hurlfmt usage [#81](https://github.com/Orange-OpenSource/hurl/issues/81)
-* Migrate fully to Github Actions [#69](https://github.com/Orange-OpenSource/hurl/issues/69)
+* Migrate fully to GitHub Actions [#69](https://github.com/Orange-OpenSource/hurl/issues/69)
 * Add Hurl File JSON export  [#65](https://github.com/Orange-OpenSource/hurl/issues/65)
 * Support wildcard value in implicit status code response [#55](https://github.com/Orange-OpenSource/hurl/issues/55)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create Release note from Github Issues and Pull Requests for a given version
+"""Create Release note from GitHub Issues and Pull Requests for a given version
 
 Example:
     $ python3 bin/release/get_release_note.py 1.7.0
