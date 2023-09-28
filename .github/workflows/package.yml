@@ -227,7 +227,7 @@ jobs:
 #     uses: docker/setup-buildx-action@v2
 #   - name: Build docker images
 #     run: |
-#         echo "::group::Docker build prerequisistes"
+#         echo "::group::Docker build prerequisites"
 #           sudo apt-get install -y qemu-user-static
 #           sudo apt-get install -y binfmt-support
 #           sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -256,12 +256,12 @@ jobs:
 #       image: local/hurl:arm64
 #       options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/arm64
 #       run: |
-#         echo "::group::Install system prerequisistes"
+#         echo "::group::Install system prerequisites"
 #           set -e
 #           cat /etc/os-release
 #           apk add sudo bash curl python3 py3-pip
 #         echo "::endgroup::"
-#         echo "::group::Install alpine prerequisistes"
+#         echo "::group::Install alpine prerequisites"
 #           bash bin/install_prerequisites_alpine.sh
 #         echo "::endgroup::"
 #         echo "::group::Install tests prerequisites"
@@ -301,7 +301,7 @@ jobs:
      uses: docker/setup-buildx-action@v2
    - name: Build docker images
      run: |
-         echo "::group::Docker build prerequisistes"
+         echo "::group::Docker build prerequisites"
            sudo docker buildx create --name mybuilder
            sudo docker buildx use mybuilder
            sudo docker buildx inspect --bootstrap
@@ -327,12 +327,12 @@ jobs:
        image: local/hurl:amd64
        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged --env CARGO_TERM_COLOR=always --entrypoint sh --platform=linux/amd64
        run: |
-         echo "::group::Install system prerequisistes"
+         echo "::group::Install system prerequisites"
            set -e
            cat /etc/os-release
            apk add sudo bash curl python3 py3-pip
          echo "::endgroup::"
-         echo "::group::Install alpine prerequisistes"
+         echo "::group::Install alpine prerequisites"
            bash bin/install_prerequisites_alpine.sh
          echo "::endgroup::"
          echo "::group::Install tests prerequisites"

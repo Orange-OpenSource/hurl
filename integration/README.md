@@ -34,7 +34,7 @@ Some integration tests need a proxy. You can use [mitmproxy] or [squid].
 
 ### Start local server
 
-You can use the scripts [`bin/test/test_prerequites.sh`] / [`bin/test/test_prerequites.ps1`] depending on your OS to start the 
+You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the 
 local test server and proxy. Once launch, there is:
 
 - a Flask server instance listening on <http://localhost:8000>
@@ -181,8 +181,8 @@ curl 'http://localhost:8000/include'
 [mitmproxy]: https://mitmproxy.org
 [squid]: http://www.squid-cache.org
 [`--json`]: /docs/manual.md#json
-[`bin/test/test_prerequites.sh`]: /bin/test/test_prerequisites.sh
-[`bin/test/test_prerequites.ps1`]: /bin/test/test_prerequisites.ps1
+[`bin/test/test_prerequisites.sh`]: /bin/test/test_prerequisites.sh
+[`bin/test/test_prerequisites.ps1`]: /bin/test/test_prerequisites.ps1
 [`tests_ok`]: /integration/tests_ok
 [`tests_ok_not_linted`]: /integration/tests_ok_not_linted
 [`tests_failed`]: /integration/tests_failed
