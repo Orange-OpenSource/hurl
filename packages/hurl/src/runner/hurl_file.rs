@@ -320,6 +320,51 @@ fn warn_deprecated(entry: &Entry, logger: &Logger) {
     }
 }
 
+// Returns the list of options that have non-default values.
+fn get_non_default_options(options: &RunnerOptions) -> Vec<(&'static str, String)> {
+    let default_options = RunnerOptions::default();
+
+    let mut non_default_options = vec![];
+
+    if options.continue_on_error != default_options.continue_on_error {
+        non_default_options.push(("continue_on_error", options.continue_on_error.to_string()));
+    }
+
+    if options.delay != default_options.delay {
+        // FIXME: the cast to u64 seems not necessary.
+        //  If we dont cast from u128 and try to format! or println!
+        //  we have a segfault on Alpine Docker images and Rust 1.68.0, whereas it was
+        //  ok with Rust >= 1.67.0.
+        non_default_options.push(("delay", format!("{}ms", options.delay.as_millis() as u64)));
+    }
+
+    if options.follow_location != default_options.follow_location {
+        non_default_options.push(("follow redirect", options.follow_location.to_string()));
+    }
+
+    if options.insecure != default_options.insecure {
+        non_default_options.push(("insecure", options.insecure.to_string()));
+    }
+
+    if options.max_redirect != default_options.max_redirect {
+        if let Some(n) = options.max_redirect {
+            non_default_options.push(("max redirect", n.to_string()));
+        }
+    }
+
+    if options.proxy != default_options.proxy {
+        if let Some(proxy) = &options.proxy {
+            non_default_options.push(("proxy", proxy.to_string()));
+        }
+    }
+
+    if options.retry != default_options.retry {
+        non_default_options.push(("retry", options.retry.to_string()));
+    }
+
+    non_default_options
+}
+
 /// Logs various debug information at the start of `hurl_file` run.
 fn log_run_info(
     hurl_file: &HurlFile,
@@ -460,4 +505,31 @@ fn get_entry_logger(entry: &Entry, logger_options: &LoggerOptions) -> Logger {
         .test(logger_options.test)
         .build();
     Logger::from(&entry_logger_options)
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::runner::RunnerOptionsBuilder;
+
+    #[test]
+    fn get_non_default_options_returns_empty_when_default() {
+        let options = RunnerOptions::default();
+        assert!(get_non_default_options(&options).is_empty());
+    }
+
+    #[test]
+    fn get_non_default_options_returns_only_non_default_options() {
+        let options = RunnerOptionsBuilder::new()
+            .delay(std::time::Duration::from_millis(500))
+            .build();
+
+        let non_default_options = get_non_default_options(&options);
+        assert_eq!(non_default_options.len(), 1);
+
+        let first_non_default = non_default_options.get(0).unwrap();
+
+        assert_eq!(first_non_default.0, "delay");
+        assert_eq!(first_non_default.1, "500ms");
+    }
 }
