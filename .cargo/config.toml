@@ -1,10 +1,10 @@
-# On platforms with musl, we desactivate static linking
+# On platforms with musl, we deactivate static linking
 # with CRT: on Alpine for instance, we must compile Hurl with this flag
 # in order to produce a valid binary (mainly because of curl crate)
 [target.'cfg(target_env = "musl")']
 rustflags = ["-Ctarget-feature=-crt-static"]
 
-# Desactivate static linking for `cargo test --doc`
+# Deactivate static linking for `cargo test --doc`
 # Should be only activated for Alpine but I don't know how to set it...
 [build]
 rustdocflags = ["-Ctarget-feature=-crt-static"]
