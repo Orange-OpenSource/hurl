@@ -258,7 +258,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets suration between each retry.
+    /// Sets duration between each retry.
     ///
     /// Default is 1000 ms.
     pub fn retry_interval(&mut self, retry_interval: Duration) -> &mut Self {
