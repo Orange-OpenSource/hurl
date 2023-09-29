@@ -7,9 +7,9 @@ set +eo pipefail
 # simply  ignore test if option is available on the system
 # FIXME: remove this test once all integration test targets have aws-sigv4 support in libcurl
 if curl --aws-sigv4 2>&1 | grep -qv 'option --aws-sigv4: is unknown'; then
-    cat tests_failed/aws_sigv4.err >&2
+    cat tests_failed/aws_sigv4_option.err >&2
     exit 3
 fi
 
 set -Eeuo pipefail
-hurl --user someAccessKeyId:someSecretKey tests_ok/aws_sigv4.hurl
+hurl --user someAccessKeyId:someSecretKey tests_ok/aws_sigv4_option.hurl
