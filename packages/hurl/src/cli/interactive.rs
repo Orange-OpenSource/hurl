@@ -117,7 +117,7 @@ fn log_request(request: Request) {
 
 #[cfg(target_family = "windows")]
 pub fn pre_entry(_: Entry) -> bool {
-    eprintln!("interactive not supported yet in windows!");
+    eprintln!("Interactive not supported yet in windows!");
     true
 }
 

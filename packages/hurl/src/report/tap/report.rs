@@ -24,7 +24,6 @@ use std::io::Write;
 
 /// Creates/Append a Tap report from a list of `testcases`
 pub fn write_report(filename: &str, new_testcases: &[Testcase]) -> Result<(), Error> {
-    eprintln!("write tap report {filename}");
     let mut testcases = vec![];
 
     let existing_testcases = parse_tap_file(filename)?;

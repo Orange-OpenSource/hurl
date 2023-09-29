@@ -158,7 +158,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    /// Sets stopping or continuing executing requests to the end of the Hurl file even when an  error occurs.
+    /// Sets stopping or continuing executing requests to the end of the Hurl file even when an error occurs.
     ///
     /// By default, Hurl exits after an error in the HTTP response. Note that this option does
     /// not affect the behavior with multiple input Hurl files.

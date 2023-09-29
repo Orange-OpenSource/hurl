@@ -88,7 +88,7 @@ pub fn connect_to() -> clap::Arg {
 pub fn continue_on_error() -> clap::Arg {
     clap::Arg::new("continue_on_error")
         .long("continue-on-error")
-        .help("Continue executing requests even an error has occurs")
+        .help("Continue executing requests even if an error occurs")
         .action(ArgAction::SetTrue)
 }
 
@@ -284,7 +284,7 @@ pub fn report_junit() -> clap::Arg {
     clap::Arg::new("junit")
         .long("report-junit")
         .value_name("FILE")
-        .help("Write a Junit XML report to FILE")
+        .help("Write a JUnit XML report to FILE")
         .num_args(1)
 }
 
