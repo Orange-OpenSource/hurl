@@ -115,6 +115,9 @@ main() {
     arg="${1:-}"
     check_args "${arg}"
     updated_count=0
+
+    # xmltree-rs crate v0.10.3 doesn't build with the latest indexmap crates
+    # see <https://github.com/eminence/xmltree-rs/issues/39>
     blacklisted="indexmap"
 
     # update toml
