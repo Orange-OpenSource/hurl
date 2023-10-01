@@ -19,8 +19,8 @@ use chrono::{DateTime, Utc};
 use serde_json::Number;
 
 use crate::http::{
-    Call, Certificate, Cookie, Header, Param, Request, RequestCookie, Response, ResponseCookie,
-    Timings, Version,
+    Call, Certificate, Cookie, Header, HttpVersion, Param, Request, RequestCookie, Response,
+    ResponseCookie, Timings,
 };
 use crate::runner::{AssertResult, CaptureResult, EntryResult, HurlResult};
 use crate::util::logger;
@@ -152,12 +152,13 @@ impl Header {
     }
 }
 
-impl Version {
-    fn to_json(&self) -> serde_json::Value {
+impl HttpVersion {
+    fn to_json(self) -> serde_json::Value {
         let value = match self {
-            Version::Http10 => "HTTP/1.0",
-            Version::Http11 => "HTTP/1.1",
-            Version::Http2 => "HTTP/2",
+            HttpVersion::Http10 => "HTTP/1.0",
+            HttpVersion::Http11 => "HTTP/1.1",
+            HttpVersion::Http2 => "HTTP/2",
+            HttpVersion::Http3 => "HTTP/3",
         };
         serde_json::Value::String(value.to_string())
     }

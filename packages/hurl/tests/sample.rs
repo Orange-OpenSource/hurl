@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl::http::{Call, Request, Response, Version};
+use hurl::http::{Call, HttpVersion, Request, Response};
 use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
@@ -63,7 +63,7 @@ fn simple_sample() {
     }
 
     fn check_response(response: &Response) {
-        assert_eq!(response.version, Version::Http11);
+        assert_eq!(response.version, HttpVersion::Http11);
         assert_eq!(response.status, 200);
         assert_eq!(response.headers.len(), 6);
         let header_names = response

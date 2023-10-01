@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-use core::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
-use crate::http::{header, Header};
+use crate::http::{header, Header, HttpVersion};
 
 /// Represents an HTTP response.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
-    pub version: Version,
+    pub version: HttpVersion,
     pub status: u32,
     pub headers: Vec<Header>,
     pub body: Vec<u8>,
@@ -37,7 +36,7 @@ pub struct Response {
 impl Default for Response {
     fn default() -> Self {
         Response {
-            version: Version::Http10,
+            version: HttpVersion::Http10,
             status: 200,
             headers: vec![],
             body: vec![],
@@ -45,24 +44,6 @@ impl Default for Response {
             url: String::new(),
             certificate: None,
         }
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Version {
-    Http10,
-    Http11,
-    Http2,
-}
-
-impl fmt::Display for Version {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let value = match self {
-            Version::Http10 => "HTTP/1.0",
-            Version::Http11 => "HTTP/1.1",
-            Version::Http2 => "HTTP/2",
-        };
-        write!(f, "{value}")
     }
 }
 

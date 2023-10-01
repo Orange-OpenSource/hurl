@@ -560,13 +560,15 @@ impl Client {
     }
 
     /// Parses HTTP response version.
-    fn parse_response_version(&mut self, line: &str) -> Result<Version, HttpError> {
+    fn parse_response_version(&mut self, line: &str) -> Result<HttpVersion, HttpError> {
         if line.starts_with("HTTP/1.0") {
-            Ok(Version::Http10)
+            Ok(HttpVersion::Http10)
         } else if line.starts_with("HTTP/1.1") {
-            Ok(Version::Http11)
+            Ok(HttpVersion::Http11)
         } else if line.starts_with("HTTP/2") {
-            Ok(Version::Http2)
+            Ok(HttpVersion::Http2)
+        } else if line.starts_with("HTTP/3") {
+            Ok(HttpVersion::Http3)
         } else {
             Err(HttpError::CouldNotParseResponse)
         }
