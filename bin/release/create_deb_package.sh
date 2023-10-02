@@ -12,7 +12,7 @@ cp target/man/hurl.1.gz target/man/hurlfmt.1.gz target/debian/usr/share/man/man1
 gzip -9 -n --stdout CHANGELOG.md > target/debian/usr/share/doc/hurl/changelog.Debian.gz
 cat >target/debian/usr/share/doc/hurl/copyright <<END
 Files: *
-Copyright: 2020, Orange
+Copyright: 2023, Orange
 License: http://www.apache.org/licenses/LICENSE-2.0
 END
 
