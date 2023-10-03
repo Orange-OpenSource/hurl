@@ -50,17 +50,8 @@ pub struct Client {
 
 impl Client {
     /// Creates HTTP Hurl client.
-    pub fn new(cookie_input_file: Option<String>) -> Client {
-        let mut h = easy::Easy::new();
-
-        // Set handle attributes
-        // that are not affected by reset
-
-        // Activate cookie storage
-        // with or without persistence (empty string)
-        h.cookie_file(cookie_input_file.unwrap_or_default())
-            .unwrap();
-
+    pub fn new() -> Client {
+        let h = easy::Easy::new();
         Client {
             handle: Box::new(h),
         }
@@ -119,7 +110,19 @@ impl Client {
         options: &ClientOptions,
         logger: &Logger,
     ) -> Result<Call, HttpError> {
-        // Set handle attributes that have not been set or reset.
+        // The handle can be mutated in this function: to start from a clean state, we reset it
+        // prior to everything.
+        self.handle.reset();
+
+        // Activates cookie engine.
+        // See <https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html>
+        // > It also enables the cookie engine, making libcurl parse and send cookies on subsequent
+        // > requests with this handle.
+        // > By passing the empty string ("") to this option, you enable the cookie
+        // > engine without reading any initial cookies.
+        self.handle
+            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())
+            .unwrap();
 
         // We force libcurl verbose mode regardless of Hurl verbose option to be able
         // to capture HTTP request headers in libcurl `debug_function`. That's the only
@@ -339,7 +342,6 @@ impl Client {
         let stop = Utc::now();
         let duration = (stop - start).to_std().unwrap();
         let timings = Timings::new(&mut self.handle, start, stop);
-        self.handle.reset();
 
         let request = Request {
             url: url.clone(),

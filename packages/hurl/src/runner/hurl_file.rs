@@ -90,8 +90,7 @@ pub fn run(
     log_run_info(&hurl_file, runner_options, variables, &logger);
 
     // Now, we have a syntactically correct HurlFile instance, we can run it.
-    let cookie_input_file = runner_options.cookie_input_file.clone();
-    let mut http_client = http::Client::new(cookie_input_file);
+    let mut http_client = http::Client::new();
     let mut entries = vec![];
     let mut variables = variables.clone();
     let mut entry_index = 1;
