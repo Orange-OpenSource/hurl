@@ -358,7 +358,7 @@ fn option(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let pos = reader.state.pos.clone();
-    let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-');
+    let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -369,8 +369,9 @@ fn option(reader: &mut Reader) -> ParseResult<EntryOption> {
         "compressed" => option_compressed(reader)?,
         "connect-to" => option_connect_to(reader)?,
         "delay" => option_delay(reader)?,
-        "key" => option_key(reader)?,
         "insecure" => option_insecure(reader)?,
+        "http1.0" => option_http_10(reader)?,
+        "key" => option_key(reader)?,
         "location" => option_follow_location(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
@@ -416,6 +417,11 @@ fn option_cert(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::ClientCert(value))
 }
 
+fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::Compressed(value))
+}
+
 fn option_connect_to(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = connect_to(reader)?;
     Ok(OptionKind::ConnectTo(value))
@@ -426,14 +432,14 @@ fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::Delay(value))
 }
 
-fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = filename::parse(reader)?;
-    Ok(OptionKind::ClientKey(value))
+fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::FollowLocation(value))
 }
 
-fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
+fn option_http_10(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
-    Ok(OptionKind::Compressed(value))
+    Ok(OptionKind::Http10(value))
 }
 
 fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
@@ -441,9 +447,9 @@ fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
     Ok(OptionKind::Insecure(value))
 }
 
-fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
-    Ok(OptionKind::FollowLocation(value))
+fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::ClientKey(value))
 }
 
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
