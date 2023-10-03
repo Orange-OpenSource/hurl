@@ -106,12 +106,14 @@ pub enum ErrorFormat {
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum HttpVersion {
     V10,
+    V11,
 }
 
 impl From<HttpVersion> for http::HttpVersion {
     fn from(value: HttpVersion) -> Self {
         match value {
             HttpVersion::V10 => http::HttpVersion::Http10,
+            HttpVersion::V11 => http::HttpVersion::Http11,
         }
     }
 }
@@ -159,6 +161,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::follow_location())
         .arg(commands::glob())
         .arg(commands::http10())
+        .arg(commands::http11())
         .arg(commands::ignore_asserts())
         .arg(commands::include())
         .arg(commands::input_files())

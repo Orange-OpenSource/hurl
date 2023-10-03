@@ -120,8 +120,10 @@ impl ClientOptions {
         if self.insecure {
             arguments.push("--insecure".to_string());
         }
-        if self.http_version == Some(HttpVersion::Http10) {
-            arguments.push("--http1.0".to_string());
+        match self.http_version {
+            Some(HttpVersion::Http10) => arguments.push("--http1.0".to_string()),
+            Some(HttpVersion::Http11) => arguments.push("--http1.1".to_string()),
+            _ => {}
         }
         if self.follow_location {
             arguments.push("--location".to_string());
