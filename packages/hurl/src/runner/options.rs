@@ -67,6 +67,11 @@ pub fn get_entry_options(
                             runner_options.http_version = Some(HttpVersion::Http10)
                         }
                     }
+                    OptionKind::Http11(value) => {
+                        if *value {
+                            runner_options.http_version = Some(HttpVersion::Http11)
+                        }
+                    }
                     OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
                     OptionKind::Insecure(value) => runner_options.insecure = *value,
                     OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),

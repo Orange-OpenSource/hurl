@@ -19,5 +19,28 @@ HTTP 200
 
 GET http://localhost:8000/http_version/11
 [Options]
+http1.1: true
+HTTP 200
+
+# The last option win
+GET http://localhost:8000/http_version/11
+[Options]
+http1.0: true
+http1.1: true
+HTTP 200
+
+GET http://localhost:8000/http_version/11
+[Options]
 http1.0: false
 HTTP 200
+
+# Live test on google.fr
+HEAD https://google.com
+[Options]
+http1.0: true
+HTTP/1.0 *
+
+HEAD https://google.com
+[Options]
+http1.1: true
+HTTP/1.1 *

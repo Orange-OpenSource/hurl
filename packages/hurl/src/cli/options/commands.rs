@@ -172,7 +172,7 @@ pub fn http10() -> clap::Arg {
 pub fn http11() -> clap::Arg {
     clap::Arg::new("http11")
         .long("http1.1")
-        .help("Tells curl to use HTTP version 1.1")
+        .help("Tells Hurl to use HTTP version 1.1")
         .action(ArgAction::SetTrue)
 }
 
