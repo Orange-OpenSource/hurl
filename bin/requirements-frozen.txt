@@ -18,5 +18,5 @@ requests==2.31.0
 soupsieve==2.4.1
 tomli==2.0.1
 typing_extensions==4.5.0
-urllib3==1.26.15
+urllib3==1.26.17
 Werkzeug==2.3.3
