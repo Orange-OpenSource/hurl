@@ -176,7 +176,7 @@ jobs:
               git remote -v
               git fetch fork
               git branch -va
-              git git checkout -b fork-branch remotes/fork/${{ env.HEAD_REF }}
+              git checkout -b fork-branch remotes/fork/${{ env.HEAD_REF }}
               git status -sb
               git rebase origin/${{ env.BASE_REF }} 
               git push fork fork-branch --force
