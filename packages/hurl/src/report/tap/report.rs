@@ -23,7 +23,7 @@ use std::fs::File;
 use std::io::Write;
 
 // https://testanything.org/tap-version-13-specification.html
-const TAP_REPORT_VERSION_MARKER: &'static str = "TAP Report 13";
+const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";
 
 /// Creates/Append a Tap report from a list of `testcases`
 pub fn write_report(filename: &str, new_testcases: &[Testcase]) -> Result<(), Error> {
@@ -174,7 +174,7 @@ nok 3 - tests_ok/test.3.hurl
 
     #[test]
     fn test_parse_tap_report_with_version() {
-        let s = r#"TAP Report 13
+        let s = r#"TAP version 13
 1..3
 ok 1 - tests_ok/test.1.hurl
  ok 2  -tests_ok/test.2.hurl
