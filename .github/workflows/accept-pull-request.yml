@@ -96,7 +96,7 @@ jobs:
       - name: Add fork source branch
         if: env.HEAD_TYPE == 'fork'
         run: |
-          git remote add fork https://github.com/${{ env.HEAD_REPO_FULL_NAME}}
+          git remote add fork https://${{ secrets.HURL_BOT_USER }}:${{ secrets.HURL_BOT_TOKEN }}@github.com/${{ env.HEAD_REPO_FULL_NAME}}
           git remote --verbose
           git fetch --all
 
@@ -179,7 +179,9 @@ jobs:
               git checkout -b fork-branch remotes/fork/${{ env.HEAD_REF }}
               git status -sb
               git rebase origin/${{ env.BASE_REF }} 
+              git log --oneline -n 20 
               git push fork fork-branch --force
+              exit 1
             else
               git fetch
               git checkout ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}
