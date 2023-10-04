@@ -22,6 +22,9 @@ use super::Testcase;
 use std::fs::File;
 use std::io::Write;
 
+// https://testanything.org/tap-version-13-specification.html
+const TAP_REPORT_VERSION_MARKER: &'static str = "TAP Report 13";
+
 /// Creates/Append a Tap report from a list of `testcases`
 pub fn write_report(filename: &str, new_testcases: &[Testcase]) -> Result<(), Error> {
     let mut testcases = vec![];
@@ -48,7 +51,10 @@ fn write_tap_file(filename: &str, testcases: &[&Testcase]) -> Result<(), Error> 
     };
     let start = 1;
     let end = testcases.len();
-    let mut s = format!("{start}..{end}\n");
+
+    let mut s = format!("{}\n", TAP_REPORT_VERSION_MARKER);
+    s.push_str(format!("{start}..{end}\n").as_str());
+
     for (i, testcase) in testcases.iter().enumerate() {
         let success = if testcase.success { "" } else { "not " };
         let number = i + 1;
@@ -86,7 +92,13 @@ fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, Error> {
     let mut testcases = vec![];
     let mut lines: Vec<&str> = s.lines().collect::<Vec<&str>>();
     if !lines.is_empty() {
-        let header = lines.remove(0);
+
+        let mut header = lines.remove(0);
+        // A tap report may have a protocol version header as per TAP
+        if header.eq_ignore_ascii_case(TAP_REPORT_VERSION_MARKER) {
+            header = lines.remove(0);
+        }
+
         let header_tokens = header.split("..").collect::<Vec<&str>>();
         match header_tokens.first() {
             None => {
@@ -136,6 +148,34 @@ mod tests {
     #[test]
     fn test_parse_tap_report() {
         let s = r#"1..3
+ok 1 - tests_ok/test.1.hurl
+ ok 2  -tests_ok/test.2.hurl
+nok 3 - tests_ok/test.3.hurl
+
+"#;
+        assert_eq!(
+            parse_tap_report(s).unwrap(),
+            vec![
+                Testcase {
+                    description: "tests_ok/test.1.hurl".to_string(),
+                    success: true
+                },
+                Testcase {
+                    description: "tests_ok/test.2.hurl".to_string(),
+                    success: true
+                },
+                Testcase {
+                    description: "tests_ok/test.3.hurl".to_string(),
+                    success: false
+                }
+            ]
+        )
+    }
+
+    #[test]
+    fn test_parse_tap_report_with_version() {
+        let s = r#"TAP Report 13
+1..3
 ok 1 - tests_ok/test.1.hurl
  ok 2  -tests_ok/test.2.hurl
 nok 3 - tests_ok/test.3.hurl
