@@ -49,19 +49,62 @@ jobs:
       run: |
         bin/release/man.sh
         bin/release/create_tarball.sh
-    - name: Install package
-      run: |
-        bin/release/install_generic_linux_package.sh
-        echo "PATH=/tmp/hurl-generic-linux:$PATH" >> "${GITHUB_ENV}"
-    - name: Test integ
-      run: |
-        bin/test/test_prerequisites.sh
-        bin/test/test_integ.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
+
+  test-generic-linux-on-docker-ubuntu-x64:
+    needs: package-generic-linux-x64
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
+    - name: Retrieve release-generic-linux-x64-artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-generic-linux-x64-artifacts
+        path: target/upload
+    - name: Install package and tests integ
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ubuntu
+        options: --volume ${{ github.workspace }}:/work --workdir /work --privileged
+        run: |
+          set -e
+          echo "::group::Install system prerequisites"
+            bin/install_prerequisites_docker_ubuntu.sh
+          echo "::endgroup::"
+          echo "::group::Install python3 venv"
+            bin/install_python3_venv.sh
+            export PATH=/tmp/hurl-python3-venv/bin:$PATH
+            which python3
+            python3 --version
+            pip --version
+          echo "::endgroup::"
+          echo "::group::Environment"
+            bin/environment.sh
+          echo "::endgroup::"
+          echo "::group::Install generic linux package"
+            bin/release/install_generic_linux_package.sh
+          export PATH="/tmp/hurl-generic-linux:$PATH"
+          echo "::endgroup::"
+          echo "::group::Install tests prerequisites"
+            bin/test/test_prerequisites.sh
+          echo "::endgroup::"
+          echo "::group::Tests"
+            bin/test/test_integ.sh
+          echo "::endgroup::"
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: test-generic-linux-package-docker-ubuntu-x64-artifacts
+        path: |
+          ./**/*.log
 
   test-generic-linux-on-docker-debian-x64:
     needs: package-generic-linux-x64
