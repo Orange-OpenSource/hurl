@@ -24,7 +24,7 @@ use crate::parser::primitives::*;
 use crate::parser::query::query;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{filename, ParseResult};
+use crate::parser::{filename, key_string, ParseResult};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
     let sections = zero_or_more(request_section, reader)?;
@@ -170,7 +170,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {
     // let start = reader.state.clone();
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let name = unquoted_string_key(reader)?;
+    let name = recover(key_string::parse, reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -206,7 +206,7 @@ fn multipart_param(reader: &mut Reader) -> ParseResult<MultipartParam> {
 fn file_param(reader: &mut Reader) -> ParseResult<FileParam> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let key = recover(unquoted_string_key, reader)?;
+    let key = recover(key_string::parse, reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     recover(|reader1| literal(":", reader1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -291,7 +291,7 @@ fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
 fn capture(reader: &mut Reader) -> ParseResult<Capture> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let name = unquoted_string_key(reader)?;
+    let name = recover(key_string::parse, reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     recover(|p1| literal(":", p1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -808,7 +808,7 @@ mod tests {
     fn test_cookie() {
         let mut reader = Reader::new("Foo: Bar");
         let c = cookie(&mut reader).unwrap();
-        assert_eq!(c.name.value, String::from("Foo"));
+        assert_eq!(c.name.to_string(), String::from("Foo"));
         assert_eq!(
             c.value,
             Template {
@@ -1153,12 +1153,14 @@ mod tests {
 
         assert_eq!(
             capture0.name,
-            EncodedString {
-                quotes: false,
-                value: String::from("url"),
-                encoded: String::from("url"),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "url".to_string(),
+                    encoded: "url".to_string(),
+                }],
                 source_info: SourceInfo::new(1, 1, 1, 4),
-            }
+            },
         );
         assert_eq!(
             capture0.query,
@@ -1330,10 +1332,12 @@ mod tests {
                         value: String::new(),
                         source_info: SourceInfo::new(2, 1, 2, 1)
                     },
-                    key: EncodedString {
-                        value: "user".to_string(),
-                        encoded: "user".to_string(),
-                        quotes: false,
+                    key: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "user".to_string(),
+                            encoded: "user".to_string()
+                        }],
                         source_info: SourceInfo::new(2, 1, 2, 5),
                     },
                     space1: Whitespace {

@@ -262,7 +262,7 @@ mod tests {
         // A valid complete XML
         let input = xml;
         let output = xml;
-        let mut reader = Reader::new(&input);
+        let mut reader = Reader::new(input);
         assert_eq!(parse(&mut reader).unwrap(), String::from(output),);
         assert_eq!(reader.state.cursor, 520);
 

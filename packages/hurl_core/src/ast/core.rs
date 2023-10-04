@@ -221,7 +221,7 @@ pub enum SectionValue {
 pub struct Cookie {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
-    pub name: EncodedString,
+    pub name: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: Template,
@@ -232,7 +232,7 @@ pub struct Cookie {
 pub struct KeyValue {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
-    pub key: EncodedString,
+    pub key: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: Template,
@@ -249,7 +249,7 @@ pub enum MultipartParam {
 pub struct FileParam {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
-    pub key: EncodedString,
+    pub key: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub value: FileValue,
@@ -269,7 +269,7 @@ pub struct FileValue {
 pub struct Capture {
     pub line_terminators: Vec<LineTerminator>,
     pub space0: Whitespace,
-    pub name: EncodedString,
+    pub name: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub query: Query,

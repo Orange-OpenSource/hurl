@@ -15,13 +15,21 @@
  * limitations under the License.
  *
  */
-use crate::ast::{Pos, SourceInfo, TemplateElement};
+use crate::ast::{Expr, Pos, SourceInfo, TemplateElement};
+use crate::parser::primitives::{literal, try_literal};
 use crate::parser::reader::*;
 use crate::parser::{error, expr, ParseResult};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,
     pub chars: Vec<(char, String, Pos)>,
+}
+
+pub fn template(reader: &mut Reader) -> ParseResult<Expr> {
+    try_literal("{{", reader)?;
+    let expression = expr::parse2(reader)?;
+    literal("}}", reader)?;
+    Ok(expression)
 }
 
 pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElement>> {

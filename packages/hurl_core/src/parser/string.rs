@@ -23,7 +23,7 @@ use crate::parser::reader::Reader;
 use crate::parser::{template, ParseResult};
 
 /// Steps:
-/// 1- parse String until end of stream or end of line or #
+/// 1- parse String until end of stream, end of line
 ///    the string does not contain trailing space
 /// 2- templatize
 pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
@@ -74,69 +74,6 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
             start: start.pos,
             end: end.pos,
         },
-    })
-}
-
-pub fn unquoted_string_key(reader: &mut Reader) -> ParseResult<EncodedString> {
-    let start = reader.state.pos.clone();
-    let mut value = String::new();
-    let mut encoded = String::new();
-    loop {
-        let save = reader.state.clone();
-        match escape_char(reader) {
-            Ok(c) => {
-                value.push(c);
-                encoded.push_str(reader.peek_back(save.cursor).as_str())
-            }
-            Err(e) => {
-                if e.recoverable {
-                    reader.state = save.clone();
-                    match reader.read() {
-                        None => break,
-                        Some(c) => {
-                            if c.is_alphanumeric()
-                                || c == '_'
-                                || c == '-'
-                                || c == '.'
-                                || c == '['
-                                || c == ']'
-                                || c == '@'
-                                || c == '$'
-                            {
-                                value.push(c);
-                                encoded.push_str(reader.peek_back(save.cursor).as_str())
-                            } else {
-                                reader.state = save;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    return Err(e);
-                }
-            }
-        }
-    }
-
-    // check nonempty/ starts with [
-    if value.is_empty() || encoded.starts_with('[') {
-        return Err(Error {
-            pos: start,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: "key string".to_string(),
-            },
-        });
-    }
-
-    let quotes = false;
-    let end = reader.state.pos.clone();
-    let source_info = SourceInfo { start, end };
-    Ok(EncodedString {
-        value,
-        encoded,
-        quotes,
-        source_info,
     })
 }
 
@@ -295,7 +232,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     }
 }
 
-fn unicode(reader: &mut Reader) -> ParseResult<char> {
+pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
     literal("{", reader)?;
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
@@ -430,147 +367,6 @@ mod tests {
             }
         );
         assert_eq!(reader.state.cursor, 20);
-    }
-
-    #[test]
-    fn test_unquoted_template_trailing_space() {
-        let mut reader = Reader::new("hello world # comment");
-        assert_eq!(
-            unquoted_template(&mut reader).unwrap(),
-            Template {
-                delimiter: None,
-                elements: vec![TemplateElement::String {
-                    value: "hello world".to_string(),
-                    encoded: "hello world".to_string(),
-                },],
-                source_info: SourceInfo::new(1, 1, 1, 12),
-            }
-        );
-        assert_eq!(reader.state.cursor, 11);
-        assert_eq!(
-            reader.state.pos,
-            Pos {
-                line: 1,
-                column: 12
-            }
-        );
-    }
-
-    #[test]
-    fn test_unquoted_key() {
-        let mut reader = Reader::new("key");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "key".to_string(),
-                encoded: "key".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 4),
-            }
-        );
-        assert_eq!(reader.state.cursor, 3);
-
-        let mut reader = Reader::new("key\\u{20}\\u{3a} :");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "key :".to_string(),
-                encoded: "key\\u{20}\\u{3a}".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 16),
-            }
-        );
-        assert_eq!(reader.state.cursor, 15);
-
-        let mut reader = Reader::new("$top:");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "$top".to_string(),
-                encoded: "$top".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 5),
-            }
-        );
-        assert_eq!(reader.state.cursor, 4);
-    }
-
-    #[test]
-    fn test_unquoted_key_with_square_bracket() {
-        let mut reader = Reader::new("values\\u{5b}0\\u{5d} :");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "values[0]".to_string(),
-                encoded: "values\\u{5b}0\\u{5d}".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 20),
-            }
-        );
-        assert_eq!(reader.state.cursor, 19);
-
-        let mut reader = Reader::new("values[0] :");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "values[0]".to_string(),
-                encoded: "values[0]".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 10),
-            }
-        );
-        assert_eq!(reader.state.cursor, 9);
-    }
-
-    #[test]
-    fn test_unquoted_keys_ignore_start_square_bracket() {
-        let mut reader = Reader::new("[0]:");
-        let error = unquoted_string_key(&mut reader).err().unwrap();
-        assert!(error.recoverable);
-        assert_eq!(reader.state.cursor, 3);
-    }
-
-    #[test]
-    fn test_unquoted_keys_accept_start_escape_square_bracket() {
-        let mut reader = Reader::new("\\u{5b}0\\u{5d}");
-        assert_eq!(
-            unquoted_string_key(&mut reader).unwrap(),
-            EncodedString {
-                value: "[0]".to_string(),
-                encoded: "\\u{5b}0\\u{5d}".to_string(),
-                quotes: false,
-                source_info: SourceInfo::new(1, 1, 1, 14),
-            }
-        );
-        assert_eq!(reader.state.cursor, 13);
-    }
-
-    #[test]
-    fn test_unquoted_key_error() {
-        let mut reader = Reader::new("");
-        let error = unquoted_string_key(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: "key string".to_string()
-            }
-        );
-
-        let mut reader = Reader::new("\\l");
-        let error = unquoted_string_key(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 2 });
-        assert_eq!(error.inner, ParseError::EscapeChar);
-
-        let mut reader = Reader::new(r#"{"id":1}"#);
-        let error = unquoted_string_key(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: "key string".to_string()
-            }
-        );
     }
 
     #[test]

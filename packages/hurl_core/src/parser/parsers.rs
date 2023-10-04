@@ -323,7 +323,8 @@ mod tests {
             body: None,
             source_info: SourceInfo::new(1, 1, 1, 21),
         };
-        assert_eq!(request(&mut reader), Ok(default_request));
+        assert_eq!(request(&mut reader).unwrap(), default_request);
+        assert_eq!(reader.state.cursor, 20);
 
         let mut reader = Reader::new("GET  http://google.fr # comment");
         let default_request = Request {
@@ -363,11 +364,12 @@ mod tests {
             body: None,
             source_info: SourceInfo::new(1, 1, 1, 32),
         };
-        assert_eq!(request(&mut reader), Ok(default_request));
+        assert_eq!(request(&mut reader).unwrap(), default_request);
+        assert_eq!(reader.state.cursor, 31);
 
         let mut reader = Reader::new("GET http://google.fr\nGET http://google.fr");
-        let r = request(&mut reader);
-        assert_eq!(r.unwrap().method, Method("GET".to_string()));
+        let r = request(&mut reader).unwrap();
+        assert_eq!(r.method, Method("GET".to_string()));
         assert_eq!(reader.state.cursor, 21);
         let r = request(&mut reader).unwrap();
         assert_eq!(r.method, Method("GET".to_string()));

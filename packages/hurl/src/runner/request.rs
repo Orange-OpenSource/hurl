@@ -41,16 +41,17 @@ pub fn eval_request(
     // Headers
     let mut headers: Vec<http::Header> = vec![];
     for header in &request.headers {
-        let name = &header.key.value;
+        let name = eval_template(&header.key, variables)?;
         let value = eval_template(&header.value, variables)?;
-        let header = http::Header::new(name, &value);
+        let header = http::Header::new(&name, &value);
         headers.push(header);
     }
 
     // Basic auth
     if let Some(kv) = &request.basic_auth() {
+        let name = eval_template(&kv.key, variables)?;
         let value = eval_template(&kv.value, variables)?;
-        let user_password = format!("{}:{}", kv.key.value, value);
+        let user_password = format!("{}:{}", name, value);
         let user_password = user_password.as_bytes();
         let authorization = general_purpose::STANDARD.encode(user_password);
         let value = format!("Basic {authorization}");
@@ -61,7 +62,7 @@ pub fn eval_request(
     // Query string params
     let mut querystring: Vec<http::Param> = vec![];
     for param in &request.querystring_params() {
-        let name = param.key.value.clone();
+        let name = eval_template(&param.key, variables)?;
         let value = eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
         querystring.push(param);
@@ -70,7 +71,7 @@ pub fn eval_request(
     // Form params
     let mut form: Vec<http::Param> = vec![];
     for param in &request.form_params() {
-        let name = param.key.value.clone();
+        let name = eval_template(&param.key, variables)?;
         let value = eval_template(&param.value, variables)?;
         let param = http::Param { name, value };
         form.push(param);
@@ -79,8 +80,8 @@ pub fn eval_request(
     // Cookies
     let mut cookies = vec![];
     for cookie in &request.cookies() {
+        let name = eval_template(&cookie.name, variables)?;
         let value = eval_template(&cookie.value, variables)?;
-        let name = cookie.name.value.clone();
         let cookie = http::RequestCookie { name, value };
         cookies.push(cookie);
     }
@@ -215,7 +216,7 @@ mod tests {
         }
     }
 
-    fn simple_key_value(key: EncodedString, value: Template) -> KeyValue {
+    fn simple_key_value(key: Template, value: Template) -> KeyValue {
         let line_terminator = LineTerminator {
             space0: whitespace(),
             comment: None,
@@ -259,10 +260,12 @@ mod tests {
                 line_terminator0: line_terminator,
                 value: SectionValue::QueryParams(vec![
                     simple_key_value(
-                        EncodedString {
-                            quotes: false,
-                            value: "param1".to_string(),
-                            encoded: "param1".to_string(),
+                        Template {
+                            delimiter: None,
+                            elements: vec![TemplateElement::String {
+                                value: "param1".to_string(),
+                                encoded: "param1".to_string(),
+                            }],
                             source_info: SourceInfo::new(0, 0, 0, 0),
                         },
                         Template {
@@ -279,10 +282,12 @@ mod tests {
                         },
                     ),
                     simple_key_value(
-                        EncodedString {
-                            quotes: false,
-                            value: "param2".to_string(),
-                            encoded: "param2".to_string(),
+                        Template {
+                            delimiter: None,
+                            elements: vec![TemplateElement::String {
+                                value: "param2".to_string(),
+                                encoded: "param2".to_string(),
+                            }],
                             source_info: SourceInfo::new(0, 0, 0, 0),
                         },
                         Template {

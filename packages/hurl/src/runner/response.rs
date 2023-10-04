@@ -78,48 +78,58 @@ pub fn eval_asserts(
                 });
             }
             Ok(expected) => {
-                let header_name = &header.key.value;
-                let actuals = http_response.get_header_values(header_name);
-                if actuals.is_empty() {
-                    asserts.push(AssertResult::Header {
-                        actual: Err(Error {
-                            source_info: header.key.source_info.clone(),
-                            inner: RunnerError::QueryHeaderNotFound,
-                            assert: false,
-                        }),
-                        expected,
-                        source_info: header.key.source_info.clone(),
-                    });
-                } else if actuals.len() == 1 {
-                    let actual = actuals.first().unwrap().to_string();
-                    asserts.push(AssertResult::Header {
-                        actual: Ok(actual),
-                        expected,
-                        source_info: header.value.clone().source_info,
-                    });
-                } else {
-                    // failure by default
-                    // expected value not found in the list
-                    // actual is therefore the full list
-                    let mut actual = format!(
-                        "[{}]",
-                        actuals
-                            .iter()
-                            .map(|v| format!("\"{v}\""))
-                            .collect::<Vec<String>>()
-                            .join(", ")
-                    );
-                    for value in actuals {
-                        if value == expected {
-                            actual = value;
-                            break;
+                match eval_template(&header.key, variables) {
+                    Ok(header_name) => {
+                        let actuals = http_response.get_header_values(&header_name);
+                        if actuals.is_empty() {
+                            asserts.push(AssertResult::Header {
+                                actual: Err(Error {
+                                    source_info: header.key.source_info.clone(),
+                                    inner: RunnerError::QueryHeaderNotFound,
+                                    assert: false,
+                                }),
+                                expected,
+                                source_info: header.key.source_info.clone(),
+                            });
+                        } else if actuals.len() == 1 {
+                            let actual = actuals.first().unwrap().to_string();
+                            asserts.push(AssertResult::Header {
+                                actual: Ok(actual),
+                                expected,
+                                source_info: header.value.clone().source_info,
+                            });
+                        } else {
+                            // failure by default
+                            // expected value not found in the list
+                            // actual is therefore the full list
+                            let mut actual = format!(
+                                "[{}]",
+                                actuals
+                                    .iter()
+                                    .map(|v| format!("\"{v}\""))
+                                    .collect::<Vec<String>>()
+                                    .join(", ")
+                            );
+                            for value in actuals {
+                                if value == expected {
+                                    actual = value;
+                                    break;
+                                }
+                            }
+                            asserts.push(AssertResult::Header {
+                                actual: Ok(actual),
+                                expected,
+                                source_info: header.value.clone().source_info,
+                            });
                         }
                     }
-                    asserts.push(AssertResult::Header {
-                        actual: Ok(actual),
-                        expected,
-                        source_info: header.value.clone().source_info,
-                    });
+                    Err(e) => {
+                        asserts.push(AssertResult::Header {
+                            actual: Err(e),
+                            expected,
+                            source_info: header.value.clone().source_info,
+                        });
+                    }
                 }
             }
         }

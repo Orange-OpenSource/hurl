@@ -20,7 +20,7 @@ use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{base64, filename, ParseResult};
+use crate::parser::{base64, filename, key_string, ParseResult};
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state.clone();
@@ -268,7 +268,7 @@ pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
 pub fn key_value(reader: &mut Reader) -> ParseResult<KeyValue> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let key = recover(unquoted_string_key, reader)?;
+    let key = recover(key_string::parse, reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     recover(|reader1| literal(":", reader1), reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -759,10 +759,12 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(1, 1, 1, 1),
                 },
-                key: EncodedString {
-                    quotes: false,
-                    value: "message".to_string(),
-                    encoded: "message".to_string(),
+                key: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "message".to_string(),
+                        encoded: "message".to_string(),
+                    }],
                     source_info: SourceInfo::new(1, 1, 1, 8),
                 },
                 space1: Whitespace {
@@ -816,6 +818,82 @@ mod tests {
                 },
             }
         );
+    }
+
+    #[test]
+    fn test_key_value_template() {
+        let mut reader = Reader::new("{{key}}: value");
+        assert_eq!(
+            key_value(&mut reader).unwrap(),
+            KeyValue {
+                line_terminators: vec![],
+                space0: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(1, 1, 1, 1),
+                },
+                key: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::Expression(Expr {
+                        space0: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(1, 3, 1, 3),
+                        },
+                        variable: Variable {
+                            name: "key".to_string(),
+                            source_info: SourceInfo::new(1, 3, 1, 6)
+                        },
+                        space1: Whitespace {
+                            value: String::new(),
+                            source_info: SourceInfo::new(1, 6, 1, 6),
+                        },
+                    })],
+                    source_info: SourceInfo::new(1, 1, 1, 8),
+                },
+                space1: Whitespace {
+                    value: String::new(),
+                    source_info: SourceInfo::new(1, 8, 1, 8),
+                },
+                space2: Whitespace {
+                    value: " ".to_string(),
+                    source_info: SourceInfo::new(1, 9, 1, 10),
+                },
+                value: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "value".to_string(),
+                        encoded: "value".to_string(),
+                    }],
+                    source_info: SourceInfo::new(1, 10, 1, 15),
+                },
+                line_terminator0: LineTerminator {
+                    space0: Whitespace {
+                        value: "".to_string(),
+                        source_info: SourceInfo::new(1, 15, 1, 15),
+                    },
+                    comment: None,
+                    newline: Whitespace {
+                        value: String::new(),
+                        source_info: SourceInfo::new(1, 15, 1, 15),
+                    },
+                },
+            }
+        );
+        assert_eq!(reader.state.cursor, 14);
+    }
+
+    #[test]
+    fn test_key_value_recover() {
+        let mut reader = Reader::new("{{key");
+        let error = key_value(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 6 });
+        assert!(error.recoverable);
+        assert_eq!(reader.state.cursor, 5); // does not reset cursor
+
+        let mut reader = Reader::new("GET http://google.fr");
+        let error = key_value(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 5 });
+        assert!(error.recoverable);
+        assert_eq!(reader.state.cursor, 5); // does not reset cursor
     }
 
     #[test]

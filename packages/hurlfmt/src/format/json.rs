@@ -227,7 +227,7 @@ fn get_json_version(version_value: &VersionValue) -> Option<String> {
 impl ToJson for KeyValue {
     fn to_json(&self) -> JValue {
         let attributes = vec![
-            ("name".to_string(), JValue::String(self.key.value.clone())),
+            ("name".to_string(), JValue::String(self.key.to_string())),
             ("value".to_string(), JValue::String(self.value.to_string())),
         ];
         JValue::Object(attributes)
@@ -246,7 +246,7 @@ impl ToJson for MultipartParam {
 impl ToJson for FileParam {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![
-            ("name".to_string(), JValue::String(self.key.value.clone())),
+            ("name".to_string(), JValue::String(self.key.to_string())),
             (
                 "filename".to_string(),
                 JValue::String(self.value.filename.value.clone()),
@@ -262,7 +262,7 @@ impl ToJson for FileParam {
 impl ToJson for Cookie {
     fn to_json(&self) -> JValue {
         let attributes = vec![
-            ("name".to_string(), JValue::String(self.name.value.clone())),
+            ("name".to_string(), JValue::String(self.name.to_string())),
             ("value".to_string(), JValue::String(self.value.to_string())),
         ];
         JValue::Object(attributes)
@@ -311,7 +311,7 @@ impl ToJson for EntryOption {
 impl ToJson for Capture {
     fn to_json(&self) -> JValue {
         let mut attributes = vec![
-            ("name".to_string(), JValue::String(self.name.value.clone())),
+            ("name".to_string(), JValue::String(self.name.to_string())),
             ("query".to_string(), self.query.to_json()),
         ];
         if !self.filters.is_empty() {
@@ -709,10 +709,12 @@ pub mod tests {
                 headers: vec![KeyValue {
                     line_terminators: vec![],
                     space0: whitespace(),
-                    key: EncodedString {
-                        value: "Foo".to_string(),
-                        encoded: "unused".to_string(),
-                        quotes: false,
+                    key: Template {
+                        delimiter: None,
+                        elements: vec![TemplateElement::String {
+                            value: "Foo".to_string(),
+                            encoded: "unused".to_string(),
+                        }],
                         source_info: SourceInfo::new(0, 0, 0, 0),
                     },
                     space1: whitespace(),
@@ -824,10 +826,12 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace(),
-            name: EncodedString {
-                value: "size".to_string(),
-                encoded: "unused".to_string(),
-                quotes: false,
+            name: Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "size".to_string(),
+                    encoded: "unused".to_string(),
+                }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace(),

@@ -195,7 +195,7 @@ impl HtmlFormatter {
         self.fmt_lts(&kv.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&kv.space0);
-        self.fmt_string(&kv.key.encoded);
+        self.fmt_template(&kv.key);
         self.fmt_space(&kv.space1);
         self.buffer.push(':');
         self.fmt_space(&kv.space2);
@@ -274,7 +274,7 @@ impl HtmlFormatter {
         self.fmt_lts(&param.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&param.space0);
-        self.fmt_string(&param.key.encoded);
+        self.fmt_template(&param.key);
         self.fmt_space(&param.space1);
         self.buffer.push(':');
         self.fmt_space(&param.space2);
@@ -306,7 +306,7 @@ impl HtmlFormatter {
         self.fmt_lts(&cookie.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&cookie.space0);
-        self.fmt_span("name", &cookie.name.value);
+        self.fmt_template(&cookie.name);
         self.fmt_space(&cookie.space1);
         self.buffer.push(':');
         self.fmt_space(&cookie.space2);
@@ -319,7 +319,7 @@ impl HtmlFormatter {
         self.fmt_lts(&capture.line_terminators);
         self.fmt_span_open("line");
         self.fmt_space(&capture.space0);
-        self.fmt_span("name", &capture.name.value);
+        self.fmt_template(&capture.name);
         self.fmt_space(&capture.space1);
         self.buffer.push(':');
         self.fmt_space(&capture.space2);

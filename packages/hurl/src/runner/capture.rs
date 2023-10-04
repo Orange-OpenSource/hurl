@@ -23,6 +23,7 @@ use crate::http;
 use crate::runner::core::{CaptureResult, Error, RunnerError};
 use crate::runner::filter::eval_filters;
 use crate::runner::query::eval_query;
+use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 
 /// Evaluates a `capture` with `variables` map and `http_response`, returns a
@@ -32,7 +33,7 @@ pub fn eval_capture(
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
 ) -> Result<CaptureResult, Error> {
-    let name = &capture.name.value;
+    let name = eval_template(&capture.name, variables)?;
     let value = eval_query(&capture.query, variables, http_response)?;
     let value = match value {
         None => {
@@ -79,10 +80,12 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: EncodedString {
-                quotes: false,
-                value: "UserCount".to_string(),
-                encoded: "UserCount".to_string(),
+            name: Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "UserCount".to_string(),
+                    encoded: "UserCount".to_string(),
+                }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace.clone(),
@@ -108,10 +111,12 @@ pub mod tests {
         Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: EncodedString {
-                quotes: false,
-                value: "duration".to_string(),
-                encoded: "duration".to_string(),
+            name: Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "duration".to_string(),
+                    encoded: "duration".to_string(),
+                }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace.clone(),
@@ -138,10 +143,12 @@ pub mod tests {
         let capture = Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: EncodedString {
-                quotes: false,
-                value: "count".to_string(),
-                encoded: "count".to_string(),
+            name: Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "count".to_string(),
+                    encoded: "count".to_string(),
+                }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             filters: vec![],
@@ -173,10 +180,12 @@ pub mod tests {
         let _capture = Capture {
             line_terminators: vec![],
             space0: whitespace.clone(),
-            name: EncodedString {
-                quotes: false,
-                value: "???".to_string(),
-                encoded: "???".to_string(),
+            name: Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "???".to_string(),
+                    encoded: "???".to_string(),
+                }],
                 source_info: SourceInfo::new(0, 0, 0, 0),
             },
             space1: whitespace.clone(),

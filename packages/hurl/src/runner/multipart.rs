@@ -35,12 +35,12 @@ pub fn eval_multipart_param(
 ) -> Result<http::MultipartParam, Error> {
     match multipart_param {
         MultipartParam::Param(KeyValue { key, value, .. }) => {
-            let name = key.value.clone();
+            let name = eval_template(key, variables)?;
             let value = eval_template(value, variables)?;
             Ok(http::MultipartParam::Param(http::Param { name, value }))
         }
         MultipartParam::FileParam(param) => {
-            let file_param = eval_file_param(param, context_dir)?;
+            let file_param = eval_file_param(param, context_dir, variables)?;
             Ok(http::MultipartParam::FileParam(file_param))
         }
     }
@@ -49,8 +49,9 @@ pub fn eval_multipart_param(
 pub fn eval_file_param(
     file_param: &FileParam,
     context_dir: &ContextDir,
+    variables: &HashMap<String, Value>,
 ) -> Result<http::FileParam, Error> {
-    let name = file_param.key.value.clone();
+    let name = eval_template(&file_param.key, variables)?;
     let filename = file_param.value.filename.clone();
     let data = eval_file(&filename, context_dir)?;
     let content_type = file_value_content_type(&file_param.value);
@@ -107,14 +108,17 @@ mod tests {
         let current_dir = std::env::current_dir().unwrap();
         let file_root = Path::new("tests");
         let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+        let variables = HashMap::default();
         let param = eval_file_param(
             &FileParam {
                 line_terminators: vec![],
                 space0: whitespace(),
-                key: EncodedString {
-                    value: "upload1".to_string(),
-                    encoded: "upload1".to_string(),
-                    quotes: false,
+                key: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "upload1".to_string(),
+                        encoded: "upload1".to_string(),
+                    }],
                     source_info: SourceInfo::new(0, 0, 0, 0),
                 },
                 space1: whitespace(),
@@ -132,6 +136,7 @@ mod tests {
                 line_terminator0: line_terminator,
             },
             &context_dir,
+            &variables,
         )
         .unwrap();
         assert_eq!(
