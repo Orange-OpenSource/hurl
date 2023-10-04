@@ -99,6 +99,9 @@ jobs:
           git remote add fork https://${{ secrets.HURL_BOT_USER }}:${{ secrets.HURL_BOT_TOKEN }}@github.com/${{ env.HEAD_REPO_FULL_NAME}}
           git remote --verbose
           git fetch --all
+          git remote -v
+          git fetch fork
+          git branch -va
 
       - name: Check if pull request state is open
         run: |
@@ -172,30 +175,22 @@ jobs:
           if [ ${diff_count} -eq 0 ] ; then
             echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
           else
-            if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
-              git remote -v
-              git fetch fork
-              git branch -va
-              git checkout -b fork-branch remotes/fork/${{ env.HEAD_REF }}
-              git status -sb
-              git rebase origin/${{ env.BASE_REF }} 
-              git log --oneline -n 20 
-              git push fork fork-branch --force
-              exit 1
-            else
-              git fetch
-              git checkout ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}
-              git switch ${{ env.HEAD_REF }}
-              git pull
-              git rebase origin/${{ env.BASE_REF }} && exit_code=0 || exit_code=1
-            fi
+            git fetch --all
+            git switch ${{ env.HEAD_REF }}
+            git pull
+            git rebase origin/${{ env.BASE_REF }} && exit_code=0 || exit_code=1
+            git log --oneline -n 20
             if [ ${exit_code} -eq 1 ] ; then
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
               gh pr comment "${PR_NUMBER}" --body "${comment}"
               exit 1
             fi
-            git push --force && exit_code=0 || exit_code=1
+            if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
+              git push fork ${{ env.BASE_REF }} --force && exit_code=0 || exit_code=1
+            else
+              git push --force && exit_code=0 || exit_code=1
+            fi
             if [ ${exit_code} -eq 0 ] ; then
               comment="🔨 Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` succeeds, \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` now embeds these commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
               echo "  - ${comment}"
