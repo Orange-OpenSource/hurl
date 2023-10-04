@@ -173,16 +173,19 @@ jobs:
             echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
           else
             if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
-              comment="❌ You have to rebase \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch because there are new commits pending on target \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` branch (sorry i can't auto rebase from a fork):<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
-              echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"
-              exit 1
+              git remote -v
+              git fetch fork
+              git branch -va
+              git switch fork/${{ env.HEAD_REF }}
+              git rebase origin/${{ env.BASE_REF }} 
+              git push fork fork/${{ env.HEAD_REF }} --force
+            else
+              git fetch
+              git checkout ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}
+              git switch ${{ env.HEAD_REF }}
+              git pull
+              git rebase origin/${{ env.BASE_REF }} && exit_code=0 || exit_code=1
             fi
-            git fetch
-            git checkout ${{ env.HEAD_TYPE }}/${{ env.HEAD_REF }}
-            git switch ${{ env.HEAD_REF }}
-            git pull
-            git rebase origin/${{ env.BASE_REF }} && exit_code=0 || exit_code=1
             if [ ${exit_code} -eq 1 ] ; then
               comment="❌ Auto rebase from \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` fails due to conflicts. Sorry but you have to manage this manually. Please refer to ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} logs."
               echo "  - ${comment}"
