@@ -187,7 +187,7 @@ jobs:
               exit 1
             fi
             if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
-              git push fork ${{ env.BASE_REF }} --force && exit_code=0 || exit_code=1
+              git push fork ${{ env.HEAD_REF }} --force && exit_code=0 || exit_code=1
             else
               git push --force && exit_code=0 || exit_code=1
             fi
@@ -238,17 +238,10 @@ jobs:
           if [ ${diff_count} -eq 0 ] ; then
             echo "  - ✅ ${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }} is already rebased from ${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}."
           else
-            if [ ${{ env.HEAD_TYPE }} == "fork" ] ; then
-              comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You have to rebase \`${{ env.HEAD_REPO_FULL_NAME}}/${{ env.HEAD_REF }}\` branch by yourself because i can't auto rebase from a fork.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
-              echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"
-              exit 1
-            else
-              comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
-              echo "  - ${comment}"
-              gh pr comment "${PR_NUMBER}" --body "${comment}"
-              exit 1
-            fi
+            comment="❌ New commits have been pushed to \`${{ env.BASE_REPO_FULL_NAME}}/${{ env.BASE_REF }}\` since you accept this PR. You can rebase it by yourself or simply re-accept this PR to execute an auto rebase.<br>Pending commits:<br>$(echo ; sed "s/+/-/g" ${{ env.REMAINING_COMMITS_FILE }})"
+            echo "  - ${comment}"
+            gh pr comment "${PR_NUMBER}" --body "${comment}"
+            exit 1
           fi
 
       - name: Get new commits list
