@@ -3,7 +3,7 @@
 Get latest released version
 
 ```
-$hurl_latest_version=((Invoke-WebRequest -UseBasicParsing https://api.github.com/repos/Orange-OpenSource/hurl/releases/latest).content | ConvertFrom-Json | Select -exp tag_name)
+$hurl_latest_version=((Invoke-WebRequest -Headers @{'Authorisation' = '<github token>'} -UseBasicParsing https://api.github.com/repos/Orange-OpenSource/hurl/releases/latest).content | ConvertFrom-Json | Select -exp tag_name)
 echo ${hurl_latest_version}
 ```
 
