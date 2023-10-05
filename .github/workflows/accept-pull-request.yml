@@ -103,6 +103,14 @@ jobs:
           git fetch fork
           git branch -va
 
+      - name: Check if PR source branch is not master
+        if: env.HEAD_REF == 'master'
+        run: |
+          comment="❌ Can not merge this pull request because your working branch is master, please create a new branch as requested in [CONTRIBUTING.md](https://github.com/Orange-OpenSource/hurl/blob/master/CONTRIBUTING.md)."
+          echo "  - ${comment}"
+          gh pr comment "${PR_NUMBER}" --body "${comment}"
+          exit 1
+
       - name: Check if pull request state is open
         run: |
           if [ "${{ env.PR_STATE }}" = "open" ] ; then
