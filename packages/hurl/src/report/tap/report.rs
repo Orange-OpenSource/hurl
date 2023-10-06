@@ -92,7 +92,6 @@ fn parse_tap_report(s: &str) -> Result<Vec<Testcase>, Error> {
     let mut testcases = vec![];
     let mut lines: Vec<&str> = s.lines().collect::<Vec<&str>>();
     if !lines.is_empty() {
-
         let mut header = lines.remove(0);
         // A tap report may have a protocol version header as per TAP
         if header.eq_ignore_ascii_case(TAP_REPORT_VERSION_MARKER) {
