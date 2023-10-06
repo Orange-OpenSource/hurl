@@ -20,10 +20,9 @@ mod matches;
 mod variables;
 
 use std::collections::HashMap;
-use std::io::IsTerminal;
+use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
-use std::{env, io};
 
 use clap::ArgMatches;
 use hurl::http;
@@ -197,7 +196,7 @@ pub fn parse() -> Result<Options, OptionsError> {
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if opts.input_files.is_empty() && io::stdin().is_terminal() {
+    if opts.input_files.is_empty() {
         let help = command.render_help().to_string();
         return Err(OptionsError::Error(help));
     }
