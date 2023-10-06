@@ -133,6 +133,7 @@ pub fn fail_at_end() -> clap::Arg {
     clap::Arg::new("fail_at_end")
         .long("fail-at-end")
         .help("Fail at end")
+        .hide(true)
         .action(ArgAction::SetTrue)
 }
 
