@@ -166,7 +166,7 @@ pub fn http10() -> clap::Arg {
     clap::Arg::new("http10")
         .short('0')
         .long("http1.0")
-        .help("Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version")
+        .help("Tells Hurl to use HTTP version 1.0")
         .action(ArgAction::SetTrue)
 }
 
@@ -174,6 +174,13 @@ pub fn http11() -> clap::Arg {
     clap::Arg::new("http11")
         .long("http1.1")
         .help("Tells Hurl to use HTTP version 1.1")
+        .action(ArgAction::SetTrue)
+}
+
+pub fn http2() -> clap::Arg {
+    clap::Arg::new("http2")
+        .long("http2")
+        .help("Tells Hurl to use HTTP version 2")
         .action(ArgAction::SetTrue)
 }
 

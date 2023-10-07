@@ -62,6 +62,30 @@ pub fn get_entry_options(
                     OptionKind::Delay(value) => {
                         runner_options.delay = Duration::from_millis(*value)
                     }
+                    // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
+                    // through a flag. In an `[Options]` section, the signification of such a flag is:
+                    //
+                    // - when set to `true`, it's equivalent as using this option on command line
+                    //
+                    // ```hurl
+                    // # Shell equivalent command:
+                    // # $ hurl --http1.1 foo.hurl
+                    // GET https://foo.com
+                    // [Options]
+                    // http1.1: true
+                    // ```
+                    //
+                    // - when set to `false`, it's as if the user do not want to use such a version.
+                    // So, if such a flag is explicitly set to `false`, we downgrade to the lower
+                    // HTTP version:
+                    //
+                    // ```hurl
+                    // # Shell equivalent command:
+                    // # $ hurl --http1.1 foo.hurl
+                    // GET https://foo.com
+                    // [Options]
+                    // http2: false
+                    // ```
                     OptionKind::Http10(value) => {
                         if *value {
                             runner_options.http_version = Some(HttpVersion::Http10)
@@ -69,6 +93,15 @@ pub fn get_entry_options(
                     }
                     OptionKind::Http11(value) => {
                         if *value {
+                            runner_options.http_version = Some(HttpVersion::Http11)
+                        } else {
+                            runner_options.http_version = Some(HttpVersion::Http10)
+                        }
+                    }
+                    OptionKind::Http2(value) => {
+                        if *value {
+                            runner_options.http_version = Some(HttpVersion::Http2)
+                        } else {
                             runner_options.http_version = Some(HttpVersion::Http11)
                         }
                     }

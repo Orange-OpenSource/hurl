@@ -223,6 +223,7 @@ impl HtmlFormatter {
             OptionKind::FollowLocation(value) => self.fmt_bool(*value),
             OptionKind::Http10(value) => self.fmt_bool(*value),
             OptionKind::Http11(value) => self.fmt_bool(*value),
+            OptionKind::Http2(value) => self.fmt_bool(*value),
             OptionKind::Insecure(value) => self.fmt_bool(*value),
             OptionKind::MaxRedirect(value) => self.fmt_number(value),
             OptionKind::PathAsIs(value) => self.fmt_bool(*value),

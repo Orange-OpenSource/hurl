@@ -289,6 +289,7 @@ impl ToJson for EntryOption {
             OptionKind::FollowLocation(value) => JValue::Boolean(*value),
             OptionKind::Http10(value) => JValue::Boolean(*value),
             OptionKind::Http11(value) => JValue::Boolean(*value),
+            OptionKind::Http2(value) => JValue::Boolean(*value),
             OptionKind::Insecure(value) => JValue::Boolean(*value),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
             OptionKind::PathAsIs(value) => JValue::Boolean(*value),
