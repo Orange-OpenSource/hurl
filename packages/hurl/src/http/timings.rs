@@ -44,22 +44,22 @@ impl Timings {
         // if *_t are not available.
         let name_lookup = easy_ext::namelookup_time_t(easy)
             .or(easy.namelookup_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         let connect = easy_ext::connect_time_t(easy)
             .or(easy.connect_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         let app_connect = easy_ext::appconnect_time_t(easy)
             .or(easy.appconnect_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         let pre_transfer = easy_ext::pretransfer_time_t(easy)
             .or(easy.pretransfer_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         let start_transfer = easy_ext::starttransfer_time_t(easy)
             .or(easy.starttransfer_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         let total = easy_ext::total_time_t(easy)
             .or(easy.total_time())
-            .unwrap_or(Duration::default());
+            .unwrap_or_default();
         Timings {
             begin_call,
             end_call,

@@ -272,8 +272,8 @@ pub fn resolves(arg_matches: &ArgMatches) -> Vec<String> {
 
 pub fn retry(arg_matches: &ArgMatches) -> Retry {
     match get::<i32>(arg_matches, "retry").unwrap() {
-        r if r == -1 => Retry::Infinite,
-        r if r == 0 => Retry::None,
+        -1 => Retry::Infinite,
+        0 => Retry::None,
         r => Retry::Finite(r as usize),
     }
 }
