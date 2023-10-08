@@ -373,6 +373,7 @@ fn option(reader: &mut Reader) -> ParseResult<EntryOption> {
         "http1.0" => option_http_10(reader)?,
         "http1.1" => option_http_11(reader)?,
         "http2" => option_http_2(reader)?,
+        "http3" => option_http_3(reader)?,
         "key" => option_key(reader)?,
         "location" => option_follow_location(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
@@ -452,6 +453,11 @@ fn option_http_11(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_http_2(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::Http2(value))
+}
+
+fn option_http_3(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::Http3(value))
 }
 
 fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {

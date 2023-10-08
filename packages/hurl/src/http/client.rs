@@ -164,6 +164,13 @@ impl Client {
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
         if let Some(version) = options.http_version {
+            // FIXME: libcurl will try to reuse connections as much as possible.
+            // That's why an `handle` initiated with a HTTP 2 version may
+            // keep using HTTP 2 protocol even if we ask to switch to HTTP 3
+            // in the same session (using `[Options]` section for instance).
+            // We could improve this behaviour by forcing libcurl to create a new
+            // connection if we detect a change of HTTP version.
+            // see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>
             self.handle.http_version(version.into())?;
         }
 

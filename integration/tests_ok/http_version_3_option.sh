@@ -2,10 +2,10 @@
 set -Eeuo pipefail
 
 set +eo pipefail
-curl --version | grep Features | grep -q HTTP2
+curl --version | grep Features | grep -q HTTP3
 if [ $? -eq 1 ]; then
   exit 0
 fi
 set -Eeuo pipefail
 
-hurl tests_ok/http_version_2_option.hurl
+hurl tests_ok/http_version_3_option.hurl

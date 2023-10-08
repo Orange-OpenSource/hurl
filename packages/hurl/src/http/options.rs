@@ -124,7 +124,8 @@ impl ClientOptions {
             Some(HttpVersion::Http10) => arguments.push("--http1.0".to_string()),
             Some(HttpVersion::Http11) => arguments.push("--http1.1".to_string()),
             Some(HttpVersion::Http2) => arguments.push("--http2".to_string()),
-            _ => {}
+            Some(HttpVersion::Http3) => arguments.push("--http3".to_string()),
+            None => {}
         }
         if self.follow_location {
             arguments.push("--location".to_string());

@@ -219,6 +219,7 @@ fn get_json_version(version_value: &VersionValue) -> Option<String> {
         VersionValue::Version1 => Some("HTTP/1.0".to_string()),
         VersionValue::Version11 => Some("HTTP/1.1".to_string()),
         VersionValue::Version2 => Some("HTTP/2".to_string()),
+        VersionValue::Version3 => Some("HTTP/3".to_string()),
         VersionValue::VersionAny => None,
         VersionValue::VersionAnyLegacy => None,
     }
@@ -290,6 +291,7 @@ impl ToJson for EntryOption {
             OptionKind::Http10(value) => JValue::Boolean(*value),
             OptionKind::Http11(value) => JValue::Boolean(*value),
             OptionKind::Http2(value) => JValue::Boolean(*value),
+            OptionKind::Http3(value) => JValue::Boolean(*value),
             OptionKind::Insecure(value) => JValue::Boolean(*value),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
             OptionKind::PathAsIs(value) => JValue::Boolean(*value),

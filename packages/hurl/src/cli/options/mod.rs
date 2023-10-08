@@ -108,6 +108,7 @@ pub enum HttpVersion {
     V10,
     V11,
     V2,
+    V3,
 }
 
 impl From<HttpVersion> for http::HttpVersion {
@@ -116,6 +117,7 @@ impl From<HttpVersion> for http::HttpVersion {
             HttpVersion::V10 => http::HttpVersion::Http10,
             HttpVersion::V11 => http::HttpVersion::Http11,
             HttpVersion::V2 => http::HttpVersion::Http2,
+            HttpVersion::V3 => http::HttpVersion::Http3,
         }
     }
 }
@@ -165,6 +167,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::http10())
         .arg(commands::http11())
         .arg(commands::http2())
+        .arg(commands::http3())
         .arg(commands::ignore_asserts())
         .arg(commands::include())
         .arg(commands::input_files())

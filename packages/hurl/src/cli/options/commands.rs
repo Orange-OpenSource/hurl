@@ -184,6 +184,13 @@ pub fn http2() -> clap::Arg {
         .action(ArgAction::SetTrue)
 }
 
+pub fn http3() -> clap::Arg {
+    clap::Arg::new("http3")
+        .long("http3")
+        .help("Tells Hurl to use HTTP version 3")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn include() -> clap::Arg {
     clap::Arg::new("include")
         .short('i')

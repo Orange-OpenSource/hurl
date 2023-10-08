@@ -170,7 +170,9 @@ pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsErro
 }
 
 pub fn http_version(arg_matches: &ArgMatches) -> Option<HttpVersion> {
-    if has_flag(arg_matches, "http2") {
+    if has_flag(arg_matches, "http3") {
+        Some(HttpVersion::V3)
+    } else if has_flag(arg_matches, "http2") {
         Some(HttpVersion::V2)
     } else if has_flag(arg_matches, "http11") {
         Some(HttpVersion::V11)

@@ -37,6 +37,7 @@ impl fmt::Display for VersionValue {
             VersionValue::Version1 => "HTTP/1.0",
             VersionValue::Version11 => "HTTP/1.1",
             VersionValue::Version2 => "HTTP/2",
+            VersionValue::Version3 => "HTTP/3",
             VersionValue::VersionAny => "HTTP",
             VersionValue::VersionAnyLegacy => "HTTP/*",
         };

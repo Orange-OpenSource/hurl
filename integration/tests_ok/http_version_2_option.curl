@@ -1,1 +1,0 @@
-curl --head --http2 'https://google.com'
