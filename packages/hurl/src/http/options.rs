@@ -123,6 +123,7 @@ impl ClientOptions {
         match self.http_version {
             Some(HttpVersion::Http10) => arguments.push("--http1.0".to_string()),
             Some(HttpVersion::Http11) => arguments.push("--http1.1".to_string()),
+            Some(HttpVersion::Http2) => arguments.push("--http2".to_string()),
             _ => {}
         }
         if self.follow_location {

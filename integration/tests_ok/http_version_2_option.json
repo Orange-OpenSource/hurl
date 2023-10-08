@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"HEAD","url":"https://google.com","options":[{"name":"http2","value":true}]},"response":{"version":"HTTP/2"}}]}
