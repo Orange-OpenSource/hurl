@@ -28,6 +28,7 @@ pub struct HurlResult {
     pub time_in_ms: u128,
     pub success: bool,
     pub cookies: Vec<Cookie>,
+    pub timestamp: i64,
 }
 
 impl HurlResult {

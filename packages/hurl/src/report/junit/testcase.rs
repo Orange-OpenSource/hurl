@@ -121,6 +121,7 @@ mod test {
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
 
         let mut buffer = Vec::new();
@@ -161,6 +162,7 @@ HTTP/1.0 200
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
         let mut buffer = Vec::new();
         Testcase::from(&hurl_result, content, filename)
@@ -202,6 +204,7 @@ HTTP/1.0 200
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
         let mut buffer = Vec::new();
         Testcase::from(&hurl_result, content, filename)

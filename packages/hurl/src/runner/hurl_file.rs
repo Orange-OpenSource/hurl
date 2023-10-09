@@ -19,6 +19,8 @@ use std::collections::HashMap;
 use std::thread;
 use std::time::Instant;
 
+use chrono::Utc;
+
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 use hurl_core::error::Error;
@@ -101,6 +103,7 @@ pub fn run(
         hurl_file.entries.len()
     };
     let start = Instant::now();
+    let timestamp = Utc::now().timestamp();
 
     loop {
         if entry_index > n {
@@ -230,6 +233,7 @@ pub fn run(
         time_in_ms,
         success,
         cookies,
+        timestamp,
     })
 }
 

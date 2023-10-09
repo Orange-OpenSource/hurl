@@ -30,6 +30,7 @@ pub struct Testcase {
     pub success: bool,
     pub time_in_ms: u128,
     pub errors: Vec<Error>,
+    pub timestamp: i64,
 }
 
 impl Testcase {
@@ -43,6 +44,7 @@ impl Testcase {
             time_in_ms: hurl_result.time_in_ms,
             success: hurl_result.success,
             errors,
+            timestamp: hurl_result.timestamp,
         }
     }
 

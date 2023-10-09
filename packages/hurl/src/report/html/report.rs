@@ -18,7 +18,7 @@
 use std::io::Write;
 use std::path::Path;
 
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Local, NaiveDateTime};
 
 use crate::report::html::{HTMLResult, Testcase};
 use crate::report::Error;
@@ -106,6 +106,8 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
         data-filename="(?P<filename>[A-Za-z0-9_./-]+)"
         \s+
         data-id="(?P<id>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
+        (\s+
+        data-timestamp="(?P<timestamp>[0-9]{1,10})")?
     "#,
     )
     .unwrap();
@@ -115,11 +117,18 @@ fn parse_html_report(html: &str) -> Vec<HTMLResult> {
             let id = cap["id"].to_string();
             let time_in_ms = cap["time_in_ms"].to_string().parse().unwrap();
             let success = &cap["status"] == "success";
+
+            // Older reports won't have this so make it optional
+            let timestamp: i64 = cap
+                .name("timestamp")
+                .map_or(0, |m| m.as_str().parse().unwrap());
+
             HTMLResult {
                 filename,
                 id,
                 time_in_ms,
                 success,
+                timestamp,
             }
         })
         .collect::<Vec<HTMLResult>>()
@@ -140,11 +149,22 @@ fn create_html_table_row(result: &HTMLResult) -> String {
         filename
     };
     let id = &result.id;
+    let timestamp = result.timestamp;
+    let displayed_time = if timestamp == 0 {
+        "-".to_string()
+    } else {
+        NaiveDateTime::from_timestamp_opt(timestamp, 0)
+            .unwrap()
+            .and_local_timezone(Local)
+            .unwrap()
+            .to_rfc3339()
+    };
 
     format!(
-        r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}">
+        r#"<tr class="{status}" data-duration="{duration_in_ms}" data-status="{status}" data-filename="{filename}" data-id="{id}" data-timestamp="{timestamp}">
     <td><a href="store/{id}-timeline.html">{displayed_filename}</a></td>
     <td>{status}</td>
+    <td>{displayed_time}</td>
     <td>{duration_in_s}</td>
 </tr>
 "#
@@ -179,9 +199,10 @@ mod tests {
                   <td>success</td>
                   <td>0.1s</td>
                 </tr>
-                <tr class="failure" data-duration="200" data-status="failure" data-filename="tests/failure.hurl" data-id="a6641ae3-8ce0-4d9f-80c5-3e23e032e055">
+                <tr class="failure" data-duration="200" data-status="failure" data-filename="tests/failure.hurl" data-id="a6641ae3-8ce0-4d9f-80c5-3e23e032e055" data-timestamp="1696473444">
                   <td><a href="tests/failure.hurl.html">tests/failure.hurl</a></td>
                   <td>failure</td>
+                  <td>2023-10-05T02:37:24Z</td>
                   <td>0.2s</td>
                 </tr>
                 </tbody>
@@ -197,12 +218,14 @@ mod tests {
                     id: "08aad14a-8d10-4ecc-892e-a72703c5b494".to_string(),
                     time_in_ms: 100,
                     success: true,
+                    timestamp: 0,
                 },
                 HTMLResult {
                     filename: "tests/failure.hurl".to_string(),
                     id: "a6641ae3-8ce0-4d9f-80c5-3e23e032e055".to_string(),
                     time_in_ms: 200,
                     success: false,
+                    timestamp: 1696473444,
                 }
             ]
         );

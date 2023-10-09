@@ -346,6 +346,7 @@ pub mod tests {
                     time_in_ms: 0,
                     success,
                     cookies: vec![],
+                    timestamp: 1,
                 },
             }
         }

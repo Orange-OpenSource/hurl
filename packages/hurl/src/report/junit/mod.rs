@@ -161,6 +161,7 @@ mod tests {
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
         let tc = Testcase::from(&res, content, filename);
         testcases.push(tc);
@@ -184,6 +185,7 @@ mod tests {
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
         let tc = Testcase::from(&res, content, filename);
         testcases.push(tc);
@@ -208,6 +210,7 @@ mod tests {
             time_in_ms: 230,
             success: true,
             cookies: vec![],
+            timestamp: 1,
         };
         let tc = Testcase::from(&res, content, filename);
         testcases.push(tc);

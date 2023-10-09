@@ -36,6 +36,7 @@ struct HTMLResult {
     pub id: String,
     pub time_in_ms: u128,
     pub success: bool,
+    pub timestamp: i64,
 }
 
 impl HTMLResult {
@@ -46,6 +47,7 @@ impl HTMLResult {
             id: testcase.id.clone(),
             time_in_ms: testcase.time_in_ms,
             success: testcase.success,
+            timestamp: testcase.timestamp,
         }
     }
 }
