@@ -20,9 +20,8 @@ mod commands;
 mod matches;
 
 use clap::ArgMatches;
-use std::io::IsTerminal;
+use std::env;
 use std::path::PathBuf;
-use std::{env, io};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {
@@ -69,7 +68,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let mut command = clap::Command::new("hurlfmt")
         .version(clap::crate_version!())
         .disable_colored_help(true)
-        .about("Format hurl FILE")
+        .about("Format Hurl files")
         .arg(commands::check())
         .arg(commands::color())
         .arg(commands::format())
@@ -84,7 +83,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
 
-    if opts.input_files.is_empty() && io::stdin().is_terminal() {
+    if opts.input_files.is_empty() {
         let help = command.render_help().to_string();
         return Err(OptionsError::Error(help));
     }

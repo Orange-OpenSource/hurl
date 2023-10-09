@@ -56,6 +56,7 @@ pub fn in_place() -> clap::Arg {
 
 pub fn input_files() -> clap::Arg {
     clap::Arg::new("input_files")
+        .value_name("FILES")
         .help("Sets the input file to use")
         .required(false)
         .index(1)
@@ -101,6 +102,6 @@ pub fn output_format() -> clap::Arg {
 pub fn standalone() -> clap::Arg {
     clap::Arg::new("standalone")
         .long("standalone")
-        .help("Standalone Html")
+        .help("Standalone HTML")
         .action(ArgAction::SetTrue)
 }

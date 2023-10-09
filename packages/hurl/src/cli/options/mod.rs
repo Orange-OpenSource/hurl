@@ -20,10 +20,9 @@ mod matches;
 mod variables;
 
 use std::collections::HashMap;
-use std::io::IsTerminal;
+use std::env;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
-use std::{env, io};
 
 use clap::ArgMatches;
 use hurl::http;
@@ -84,6 +83,7 @@ pub struct Options {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OptionsError {
     Info(String),
+    NoInput(String),
     Error(String),
 }
 
@@ -146,7 +146,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let mut command = clap::Command::new("hurl")
         .version(get_version())
         .disable_colored_help(true)
-        .about("Run Hurl file(s) or standard input")
+        .about("Hurl, run and test HTTP requests with plain text")
         .arg(commands::aws_sigv4())
         .arg(commands::cacert_file())
         .arg(commands::client_cert_file())
@@ -203,9 +203,9 @@ pub fn parse() -> Result<Options, OptionsError> {
 
     // If we've no file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
-    if opts.input_files.is_empty() && io::stdin().is_terminal() {
+    if opts.input_files.is_empty() {
         let help = command.render_help().to_string();
-        return Err(OptionsError::Error(help));
+        return Err(OptionsError::NoInput(help));
     }
 
     if opts.cookie_output_file.is_some() && opts.input_files.len() > 1 {

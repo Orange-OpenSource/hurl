@@ -57,6 +57,10 @@ fn main() {
                 print!("{message}");
                 process::exit(EXIT_OK);
             }
+            OptionsError::NoInput(message) => {
+                eprintln!("{message}");
+                process::exit(EXIT_ERROR_COMMANDLINE);
+            }
             OptionsError::Error(message) => {
                 eprintln!("error: {message}");
                 process::exit(EXIT_ERROR_COMMANDLINE);

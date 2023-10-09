@@ -166,28 +166,28 @@ pub fn http10() -> clap::Arg {
     clap::Arg::new("http10")
         .short('0')
         .long("http1.0")
-        .help("Tells Hurl to use HTTP version 1.0")
+        .help("Tell Hurl to use HTTP version 1.0")
         .action(ArgAction::SetTrue)
 }
 
 pub fn http11() -> clap::Arg {
     clap::Arg::new("http11")
         .long("http1.1")
-        .help("Tells Hurl to use HTTP version 1.1")
+        .help("Tell Hurl to use HTTP version 1.1")
         .action(ArgAction::SetTrue)
 }
 
 pub fn http2() -> clap::Arg {
     clap::Arg::new("http2")
         .long("http2")
-        .help("Tells Hurl to use HTTP version 2")
+        .help("Tell Hurl to use HTTP version 2")
         .action(ArgAction::SetTrue)
 }
 
 pub fn http3() -> clap::Arg {
     clap::Arg::new("http3")
         .long("http3")
-        .help("Tells Hurl to use HTTP version 3")
+        .help("Tell Hurl to use HTTP version 3")
         .action(ArgAction::SetTrue)
 }
 
@@ -208,7 +208,8 @@ pub fn ignore_asserts() -> clap::Arg {
 
 pub fn input_files() -> clap::Arg {
     clap::Arg::new("input_files")
-        .help("Sets the input file to use")
+        .value_name("FILES")
+        .help("Set the input file to use")
         .required(false)
         .index(1)
         .num_args(1..)
@@ -306,7 +307,7 @@ pub fn proxy() -> clap::Arg {
         .short('x')
         .long("proxy")
         .value_name("[PROTOCOL://]HOST[:PORT]")
-        .help("Use proxy on given protocol/host/port")
+        .help("Use proxy on given PROTOCOL/HOST/PORT")
         .num_args(1)
 }
 
@@ -338,7 +339,7 @@ pub fn resolve() -> clap::Arg {
     clap::Arg::new("resolve")
         .long("resolve")
         .value_name("HOST:PORT:ADDR")
-        .help("Provide a custom address for a specific host and port pair")
+        .help("Provide a custom address for a specific HOST and PORT pair")
         .action(ArgAction::Append)
         .number_of_values(1)
         .num_args(1)
@@ -368,7 +369,7 @@ pub fn retry_interval() -> clap::Arg {
 pub fn ssl_no_revoke() -> clap::Arg {
     clap::Arg::new("ssl_no_revoke")
         .long("ssl-no-revoke")
-        .help("(Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
+        .help("(Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
         .action(ArgAction::SetTrue)
 }
 
@@ -430,7 +431,7 @@ pub fn variables_file() -> clap::Arg {
 pub fn verbose() -> clap::Arg {
     clap::Arg::new("verbose")
         .long("verbose")
-        .help("Turn verbose")
+        .help("Turn on verbose")
         .action(ArgAction::SetTrue)
 }
 
