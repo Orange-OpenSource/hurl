@@ -46,6 +46,33 @@ use crate::util::path::ContextDir;
 pub struct Client {
     /// The handle to libcurl binding
     handle: Box<easy::Easy>,
+    /// Current State
+    state: ClientState,
+}
+
+/// Represents the state of the HTTP client.
+/// We only keep the last requested HTTP version because it's the only property which change
+/// must trigger a connection reset on the libcurl handle. The state can be queried to check
+/// if there has been change from the previous HTTP request.
+#[derive(Copy, Clone, Eq, PartialEq, Default, Debug)]
+struct ClientState {
+    changed: bool,
+    last_requested_http_version: Option<RequestedHttpVersion>,
+}
+
+impl ClientState {
+    /// Set a new requested HTTP version.
+    pub fn set_requested_http_version(&mut self, version: RequestedHttpVersion) {
+        if let Some(prev_version) = self.last_requested_http_version {
+            self.changed = prev_version != version;
+        }
+        self.last_requested_http_version = Some(version);
+    }
+
+    /// Returns true if state has changed from the previous request.
+    pub fn has_changed(&self) -> bool {
+        self.changed
+    }
 }
 
 impl Client {
@@ -54,6 +81,7 @@ impl Client {
         let h = easy::Easy::new();
         Client {
             handle: Box::new(h),
+            state: ClientState::default(),
         }
     }
 
@@ -164,13 +192,21 @@ impl Client {
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
 
-        // FIXME: libcurl will try to reuse connections as much as possible.
-        // That's why an `handle` initiated with a HTTP 2 version may
-        // keep using HTTP 2 protocol even if we ask to switch to HTTP 3
-        // in the same session (using `[Options]` section for instance).
-        // We could improve this behaviour by forcing libcurl to create a new
-        // connection if we detect a change of HTTP version.
-        // see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>
+        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
+        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
+        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
+        // instance).
+        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
+        // > existing connections so it might then reuse a connection using a HTTP version you
+        // > have not asked for.
+        //
+        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
+        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
+        self.state.set_requested_http_version(options.http_version);
+        if self.state.has_changed() {
+            logger.debug("Force refreshing connections because requested HTTP version change");
+            self.handle.fresh_connect(true)?;
+        }
         self.handle.http_version(options.http_version.into())?;
 
         self.set_ssl_options(options.ssl_no_revoke)?;
@@ -902,5 +938,65 @@ mod tests {
                 Method(redirected.to_string())
             );
         }
+    }
+
+    #[test]
+    fn http_client_state_always_http2() {
+        let mut state = ClientState::default();
+        assert!(!state.has_changed());
+
+        // Client set HTTP 2 on all request, client state never changed
+
+        // - => HTTP/2: no change
+        state.set_requested_http_version(RequestedHttpVersion::Http2);
+        assert!(!state.has_changed());
+
+        // HTTP/2 => HTTP/2: no change
+        state.set_requested_http_version(RequestedHttpVersion::Http2);
+        assert!(!state.has_changed());
+    }
+
+    #[test]
+    fn http_client_state_always_default() {
+        let mut state = ClientState::default();
+        assert!(!state.has_changed());
+
+        // Client doesn't set HTTP version, client state never changed
+
+        // - => Default: no change
+        state.set_requested_http_version(RequestedHttpVersion::Default);
+        assert!(!state.has_changed());
+
+        // Default => Default: no change
+        state.set_requested_http_version(RequestedHttpVersion::Default);
+        assert!(!state.has_changed());
+    }
+
+    #[test]
+    fn http_client_state_changes() {
+        let mut state = ClientState::default();
+        assert!(!state.has_changed());
+
+        // Client set HTTP 2 on all request, client state never changed
+
+        // - => HTTP/2: no change
+        state.set_requested_http_version(RequestedHttpVersion::Http2);
+        assert!(!state.has_changed());
+
+        // HTTP/2 => HTTP/1.1: change
+        state.set_requested_http_version(RequestedHttpVersion::Http11);
+        assert!(state.has_changed());
+
+        // HTTP/1.1 => HTTP/1.1: no change
+        state.set_requested_http_version(RequestedHttpVersion::Http11);
+        assert!(!state.has_changed());
+
+        // HTTP/1.1 => Default: change
+        state.set_requested_http_version(RequestedHttpVersion::Default);
+        assert!(state.has_changed());
+
+        // Default => Default: no change
+        state.set_requested_http_version(RequestedHttpVersion::Default);
+        assert!(!state.has_changed());
     }
 }
