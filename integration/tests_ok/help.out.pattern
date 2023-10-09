@@ -1,6 +1,6 @@
 Hurl, run and test HTTP requests with plain text
 
-Usage: hurl [OPTIONS] [FILES]...
+Usage: hurl~~~ [OPTIONS] [FILES]...
 
 Arguments:
   [FILES]...  Set the input file to use
@@ -85,8 +85,8 @@ Options:
       --retry-interval <MILLISECONDS>
           Interval in milliseconds before a retry [default: 1000]
       --ssl-no-revoke
-          (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security,
-          and by using this flag you ask for exactly that.
+          (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens
+          the SSL security, and by using this flag you ask for exactly that.
       --test
           Activate test mode
       --to-entry <ENTRY_NUMBER>
