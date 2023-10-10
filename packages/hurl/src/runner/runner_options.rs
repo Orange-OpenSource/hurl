@@ -17,7 +17,7 @@
  */
 use std::time::Duration;
 
-use crate::http::HttpVersion;
+use crate::http::RequestedHttpVersion;
 use hurl_core::ast::{Entry, Retry};
 
 use crate::util::path::ContextDir;
@@ -35,7 +35,7 @@ pub struct RunnerOptionsBuilder {
     cookie_input_file: Option<String>,
     delay: Duration,
     follow_location: bool,
-    http_version: Option<HttpVersion>,
+    http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
     max_redirect: Option<usize>,
@@ -69,7 +69,7 @@ impl Default for RunnerOptionsBuilder {
             cookie_input_file: None,
             delay: Duration::from_millis(0),
             follow_location: false,
-            http_version: None,
+            http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
             max_redirect: Some(50),
@@ -193,7 +193,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
-    pub fn http_version(&mut self, version: Option<HttpVersion>) -> &mut Self {
+    pub fn http_version(&mut self, version: RequestedHttpVersion) -> &mut Self {
         self.http_version = version;
         self
     }
@@ -355,7 +355,7 @@ pub struct RunnerOptions {
     pub(crate) continue_on_error: bool,
     pub(crate) cookie_input_file: Option<String>,
     pub(crate) follow_location: bool,
-    pub(crate) http_version: Option<HttpVersion>,
+    pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,

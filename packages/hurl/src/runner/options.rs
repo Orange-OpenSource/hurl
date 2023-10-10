@@ -16,7 +16,7 @@
  *
  */
 
-use crate::http::HttpVersion;
+use crate::http::RequestedHttpVersion;
 use crate::runner::template;
 use crate::runner::{Error, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
@@ -88,28 +88,28 @@ pub fn get_entry_options(
                     // ```
                     OptionKind::Http10(value) => {
                         if *value {
-                            runner_options.http_version = Some(HttpVersion::Http10)
+                            runner_options.http_version = RequestedHttpVersion::Http10
                         }
                     }
                     OptionKind::Http11(value) => {
                         if *value {
-                            runner_options.http_version = Some(HttpVersion::Http11)
+                            runner_options.http_version = RequestedHttpVersion::Http11
                         } else {
-                            runner_options.http_version = Some(HttpVersion::Http10)
+                            runner_options.http_version = RequestedHttpVersion::Http10
                         }
                     }
                     OptionKind::Http2(value) => {
                         if *value {
-                            runner_options.http_version = Some(HttpVersion::Http2)
+                            runner_options.http_version = RequestedHttpVersion::Http2
                         } else {
-                            runner_options.http_version = Some(HttpVersion::Http11)
+                            runner_options.http_version = RequestedHttpVersion::Http11
                         }
                     }
                     OptionKind::Http3(value) => {
                         if *value {
-                            runner_options.http_version = Some(HttpVersion::Http3)
+                            runner_options.http_version = RequestedHttpVersion::Http3
                         } else {
-                            runner_options.http_version = Some(HttpVersion::Http2)
+                            runner_options.http_version = RequestedHttpVersion::Http2
                         }
                     }
                     OptionKind::FollowLocation(value) => runner_options.follow_location = *value,

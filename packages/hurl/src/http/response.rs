@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use std::fmt;
 use std::time::Duration;
 
 use crate::http::certificate::Certificate;
-use crate::http::{header, Header, HttpVersion};
+use crate::http::{header, Header};
 
 /// Represents an HTTP response.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -58,6 +59,28 @@ impl Response {
         header::get_values(&self.headers, "Content-Type")
             .get(0)
             .cloned()
+    }
+}
+
+/// Represents the HTTP version of a HTTP transaction.
+/// See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP>
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum HttpVersion {
+    Http10,
+    Http11,
+    Http2,
+    Http3,
+}
+
+impl fmt::Display for HttpVersion {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let value = match self {
+            HttpVersion::Http10 => "HTTP/1.0",
+            HttpVersion::Http11 => "HTTP/1.1",
+            HttpVersion::Http2 => "HTTP/2",
+            HttpVersion::Http3 => "HTTP/3",
+        };
+        write!(f, "{value}")
     }
 }
 

@@ -19,13 +19,14 @@ pub use self::call::Call;
 pub use self::certificate::Certificate;
 pub(crate) use self::client::Client;
 pub use self::cookie::{CookieAttribute, ResponseCookie};
-pub use self::core::HttpVersion;
 pub(crate) use self::core::{Cookie, Param, RequestCookie};
 pub(crate) use self::error::HttpError;
 pub use self::header::Header;
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub use self::request::Request;
+pub use self::request::RequestedHttpVersion;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
+pub use self::response::HttpVersion;
 pub use self::response::Response;
 #[cfg(test)]
 pub use self::tests::*;

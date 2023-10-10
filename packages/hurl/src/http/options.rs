@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use crate::http::HttpVersion;
+use crate::http::request::RequestedHttpVersion;
 use hurl_core::ast::Retry;
 use std::time::Duration;
 
@@ -30,7 +30,7 @@ pub struct ClientOptions {
     pub connects_to: Vec<String>,
     pub cookie_input_file: Option<String>,
     pub follow_location: bool,
-    pub http_version: Option<HttpVersion>,
+    pub http_version: RequestedHttpVersion,
     pub insecure: bool,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
@@ -64,7 +64,7 @@ impl Default for ClientOptions {
             connects_to: vec![],
             cookie_input_file: None,
             follow_location: false,
-            http_version: None,
+            http_version: RequestedHttpVersion::default(),
             insecure: false,
             max_redirect: Some(50),
             no_proxy: None,
@@ -121,11 +121,11 @@ impl ClientOptions {
             arguments.push("--insecure".to_string());
         }
         match self.http_version {
-            Some(HttpVersion::Http10) => arguments.push("--http1.0".to_string()),
-            Some(HttpVersion::Http11) => arguments.push("--http1.1".to_string()),
-            Some(HttpVersion::Http2) => arguments.push("--http2".to_string()),
-            Some(HttpVersion::Http3) => arguments.push("--http3".to_string()),
-            None => {}
+            RequestedHttpVersion::Default => {}
+            RequestedHttpVersion::Http10 => arguments.push("--http1.0".to_string()),
+            RequestedHttpVersion::Http11 => arguments.push("--http1.1".to_string()),
+            RequestedHttpVersion::Http2 => arguments.push("--http2".to_string()),
+            RequestedHttpVersion::Http3 => arguments.push("--http3".to_string()),
         }
         if self.follow_location {
             arguments.push("--location".to_string());
@@ -184,7 +184,7 @@ mod tests {
                 connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
                 cookie_input_file: Some("cookie_file".to_string()),
                 follow_location: true,
-                http_version: Some(HttpVersion::Http10),
+                http_version: RequestedHttpVersion::Http10,
                 insecure: true,
                 max_redirect: Some(10),
                 path_as_is: true,

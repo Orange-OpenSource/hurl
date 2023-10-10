@@ -28,6 +28,16 @@ pub struct Request {
     pub body: Vec<u8>,
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
+pub enum RequestedHttpVersion {
+    #[default]
+    Default, // The effective HTTP version will be chosen by libcurl
+    Http10,
+    Http11,
+    Http2,
+    Http3,
+}
+
 impl Request {
     /// Extracts query string params from the url of the request.
     pub fn query_string_params(&self) -> Vec<Param> {

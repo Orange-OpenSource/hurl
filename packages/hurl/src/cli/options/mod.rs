@@ -26,6 +26,7 @@ use std::time::Duration;
 
 use clap::ArgMatches;
 use hurl::http;
+use hurl::http::RequestedHttpVersion;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::{Entry, Retry};
@@ -111,13 +112,13 @@ pub enum HttpVersion {
     V3,
 }
 
-impl From<HttpVersion> for http::HttpVersion {
+impl From<HttpVersion> for http::RequestedHttpVersion {
     fn from(value: HttpVersion) -> Self {
         match value {
-            HttpVersion::V10 => http::HttpVersion::Http10,
-            HttpVersion::V11 => http::HttpVersion::Http11,
-            HttpVersion::V2 => http::HttpVersion::Http2,
-            HttpVersion::V3 => http::HttpVersion::Http3,
+            HttpVersion::V10 => http::RequestedHttpVersion::Http10,
+            HttpVersion::V11 => http::RequestedHttpVersion::Http11,
+            HttpVersion::V2 => http::RequestedHttpVersion::Http2,
+            HttpVersion::V3 => http::RequestedHttpVersion::Http3,
         }
     }
 }
@@ -323,7 +324,10 @@ impl Options {
         let connects_to = self.connects_to.clone();
         let follow_location = self.follow_location;
         let insecure = self.insecure;
-        let http_version = self.http_version.map(|v| v.into());
+        let http_version = match self.http_version {
+            Some(version) => version.into(),
+            None => RequestedHttpVersion::default(),
+        };
         let max_redirect = self.max_redirect;
         let path_as_is = self.path_as_is;
         let proxy = self.proxy.clone();
