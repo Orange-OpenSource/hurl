@@ -187,7 +187,7 @@ impl Client {
         self.set_body(request_spec_body)?;
         self.set_headers(request_spec, options)?;
 
-        if let Some(aws_sigv4) = options.aws_sigv4.clone() {
+        if let Some(aws_sigv4) = &options.aws_sigv4 {
             if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
                 return match e.code() {
                     curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
