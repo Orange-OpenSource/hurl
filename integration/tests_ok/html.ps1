@@ -2,11 +2,11 @@ Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
 hurl --test `
-  --report-html C:\tmp\ `
+  --report-html build\tmp\ `
   --glob "tests_ok\test.*.hurl"
 
 hurl --test `
-  --report-html C:\tmp\ `
+  --report-html build\tmp\ `
   tests_ok\assert_base64.hurl `
   tests_ok\assert_header.hurl `
   tests_ok\assert_json.hurl `

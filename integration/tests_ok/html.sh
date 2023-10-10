@@ -2,11 +2,11 @@
 set -Eeuo pipefail
 
 hurl --test \
-  --report-html /tmp/ \
+  --report-html build/ \
   --glob "tests_ok/test.*.hurl"
 
 hurl --test \
-  --report-html /tmp/ \
+  --report-html build/ \
   tests_ok/assert_base64.hurl \
   tests_ok/assert_header.hurl \
   tests_ok/assert_json.hurl \
