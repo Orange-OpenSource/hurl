@@ -86,12 +86,12 @@ def test_stdout_pattern(f, result):
 
     # curl debug logs are too dependent on the context, so we filter
     # them and not take them into account for testing differences.
-    expected = remove_curl_debug_lines(expected)
+    expected = ignore_lines(expected)
     expected_lines = expected.split("\n")
     expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
 
     actual = decode_string(result.stdout)
-    actual = remove_curl_debug_lines(actual)
+    actual = ignore_lines(actual)
     actual_lines = re.split(r"\r?\n", actual)
 
     if len(actual_lines) != len(expected_pattern_lines):
@@ -127,8 +127,8 @@ def test_stderr(f, result):
     if not os.path.exists(f):
         return
 
-    expected = open(f, encoding="utf-8").read()
-    actual = decode_string(result.stderr)
+    expected = ignore_lines(open(f, encoding="utf-8").read())
+    actual = ignore_lines(decode_string(result.stderr))
     if actual != expected:
         print(">>> error in stderr")
         print(f"actual  : <{actual}>\nexpected: <{expected}>")
@@ -145,12 +145,12 @@ def test_stderr_pattern(f, result):
 
     # curl debug logs are too dependent on the context, so we filter
     # them and not take them into account for testing differences.
-    expected = remove_curl_debug_lines(expected)
+    expected = ignore_lines(expected)
     expected_lines = expected.split("\n")
     expected_pattern_lines = [parse_pattern(line) for line in expected_lines]
 
     actual = decode_string(result.stderr)
-    actual = remove_curl_debug_lines(actual)
+    actual = ignore_lines(actual)
     actual_lines = re.split(r"\r?\n", actual)
 
     if len(actual_lines) != len(expected_pattern_lines):
@@ -190,10 +190,16 @@ def parse_pattern(s: str) -> str:
     return s
 
 
-def remove_curl_debug_lines(text: str) -> str:
+def ignore_lines(text: str) -> str:
     """Removes curl debug logs from text and returns the new text."""
-    lines = text.split("\n")
-    lines = [line for line in lines if not line.startswith("**")]
+    lines = []
+    for line in text.split("\n"):
+        if line.startswith("**"):  # curl debug info
+            continue
+        if "/lib64/libcurl.so.4: no version information available" in line:
+            continue
+        lines.append(line)
+
     return "\n".join(lines)
 
 

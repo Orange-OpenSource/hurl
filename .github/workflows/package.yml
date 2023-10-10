@@ -249,7 +249,7 @@ jobs:
             bin/test/test_prerequisites.sh
           echo "::endgroup::"
           echo "::group::Tests"
-            bin/test/test_integ.sh || true # to be fixed => "error in stderr actual: <hurl: /lib64/libcurl.so.4: no version information available (required by hurl)"
+            bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
