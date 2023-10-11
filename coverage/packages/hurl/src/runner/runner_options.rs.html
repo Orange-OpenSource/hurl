@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::http::HttpVersion;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::http::RequestedHttpVersion;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -645,7 +645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    http_version: Option&lt;HttpVersion&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    http_version: RequestedHttpVersion,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1189,7 +1189,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            http_version: None,</pre>
+                <pre class="has-background-success-light py-0 px-2">            http_version: RequestedHttpVersion::default(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3173,7 +3173,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn http_version(&amp;mut self, version: Option&lt;HttpVersion&gt;) -&gt; &amp;mut Self {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn http_version(&amp;mut self, version: RequestedHttpVersion) -&gt; &amp;mut Self {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5765,7 +5765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    pub(crate) http_version: Option&lt;HttpVersion&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    pub(crate) http_version: RequestedHttpVersion,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6139,7 +6139,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-10-10 08:10</p>
+                <p class="heading">Date: 2023-10-11 08:11</p>
             </div>
         </footer>
     </body>
