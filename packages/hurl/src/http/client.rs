@@ -57,16 +57,16 @@ pub struct Client {
 #[derive(Copy, Clone, Eq, PartialEq, Default, Debug)]
 struct ClientState {
     changed: bool,
-    last_requested_http_version: Option<RequestedHttpVersion>,
+    requested_http_version: Option<RequestedHttpVersion>,
 }
 
 impl ClientState {
     /// Set a new requested HTTP version.
     pub fn set_requested_http_version(&mut self, version: RequestedHttpVersion) {
-        if let Some(prev_version) = self.last_requested_http_version {
+        if let Some(prev_version) = self.requested_http_version {
             self.changed = prev_version != version;
         }
-        self.last_requested_http_version = Some(version);
+        self.requested_http_version = Some(version);
     }
 
     /// Returns true if state has changed from the previous request.
