@@ -4,7 +4,7 @@ set -Eeuo pipefail
 set +eo pipefail
 curl --version | grep Features | grep -q HTTP3
 if [ $? -eq 1 ]; then
-  exit 0
+  exit 255
 fi
 set -Eeuo pipefail
 

@@ -6,7 +6,7 @@ set +eo pipefail
 # simply ignore test
 # FIXME: remove this workaround once all integration test targets have aws-sigv4 support in libcurl
 if curl --aws-sigv4 2>&1 | grep -q 'option --aws-sigv4: is unknown'; then
-    exit 0
+    exit 255
 fi
 set -Eeuo pipefail
 

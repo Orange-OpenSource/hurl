@@ -35,22 +35,32 @@ def test(script_file: str):
     print(cmd)
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    test_exit_code(os.path.splitext(script_file)[0] + ".exit", result)
-    test_stdout(os.path.splitext(script_file)[0] + ".out", result)
-    test_stdout_pattern(os.path.splitext(script_file)[0] + ".out.pattern", result)
-    test_stderr(os.path.splitext(script_file)[0] + ".err", result)
-    test_stderr_pattern(os.path.splitext(script_file)[0] + ".err.pattern", result)
+    basename = os.path.splitext(script_file)[0]
+
+    _continue = test_exit_code(f"{basename}.exit", result)
+    if not _continue:
+        print(f"{cmd} - skipped")
+        return
+    test_stdout(f"{basename}.out", result)
+    test_stdout_pattern(f"{basename}.out.pattern", result)
+    test_stderr(f"{basename}.err", result)
+    test_stderr_pattern(f"{basename}.err.pattern", result)
 
 
-def test_exit_code(f, result) -> int:
-    """test exit code"""
+def test_exit_code(f: str, result: subprocess.CompletedProcess) -> bool:
+    """Test actual exit code `result` against an expected exit code in file `f`"""
     if os.path.exists(f):
         expected = int(open(f, encoding="utf-8").read().strip())
     else:
         expected = 0
-    if result.returncode != expected:
+    actual = result.returncode
+    # Exit code 255 is the signal to skip test.
+    if actual == 255:
+        return False
+
+    if actual != expected:
         print(">>> error in return code")
-        print(f"expected: {expected}  actual:{result.returncode}")
+        print(f"expected: {expected}  actual:{actual}")
         stderr = decode_string(result.stderr).strip()
         if stderr != "":
             print(stderr)
@@ -60,7 +70,7 @@ def test_exit_code(f, result) -> int:
 
         sys.exit(1)
 
-    return expected
+    return True
 
 
 def test_stdout(f, result):
