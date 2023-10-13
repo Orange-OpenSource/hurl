@@ -21,8 +21,8 @@ use std::str::FromStr;
 use base64::engine::general_purpose;
 use base64::Engine;
 use chrono::Utc;
-use curl::easy;
 use curl::easy::{List, SslOpt};
+use curl::{easy, Version};
 use encoding::all::ISO_8859_1;
 use encoding::{DecoderTrap, Encoding};
 use url::Url;
@@ -48,6 +48,9 @@ pub struct Client {
     handle: Box<easy::Easy>,
     /// Current State
     state: ClientState,
+    /// HTTP version support
+    http2: bool,
+    http3: bool,
 }
 
 /// Represents the state of the HTTP client.
@@ -78,10 +81,13 @@ impl ClientState {
 impl Client {
     /// Creates HTTP Hurl client.
     pub fn new() -> Client {
-        let h = easy::Easy::new();
+        let handle = easy::Easy::new();
+        let version = Version::get();
         Client {
-            handle: Box::new(h),
+            handle: Box::new(handle),
             state: ClientState::default(),
+            http2: version.feature_http2(),
+            http3: version.feature_http3(),
         }
     }
 
@@ -157,6 +163,31 @@ impl Client {
         // way to get access to the outgoing headers.
         self.handle.verbose(true)?;
 
+        // We checks libcurl HTTP version support.
+        let http_version = options.http_version;
+        if (http_version == RequestedHttpVersion::Http2 && !self.http2)
+            || (http_version == RequestedHttpVersion::Http3 && !self.http3)
+        {
+            return Err(HttpError::UnsupportedHttpVersion(http_version));
+        }
+
+        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
+        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
+        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
+        // instance).
+        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
+        // > existing connections so it might then reuse a connection using a HTTP version you
+        // > have not asked for.
+        //
+        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
+        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
+        self.state.set_requested_http_version(http_version);
+        if self.state.has_changed() {
+            logger.debug("Force refreshing connections because requested HTTP version change");
+            self.handle.fresh_connect(true)?;
+        }
+        self.handle.http_version(options.http_version.into())?;
+
         // Activates the access of certificates info chain after a transfer has been executed.
         self.handle.certinfo(true)?;
 
@@ -191,23 +222,6 @@ impl Client {
         }
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
-
-        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
-        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
-        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
-        // instance).
-        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
-        // > existing connections so it might then reuse a connection using a HTTP version you
-        // > have not asked for.
-        //
-        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
-        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
-        self.state.set_requested_http_version(options.http_version);
-        if self.state.has_changed() {
-            logger.debug("Force refreshing connections because requested HTTP version change");
-            self.handle.fresh_connect(true)?;
-        }
-        self.handle.http_version(options.http_version.into())?;
 
         self.set_ssl_options(options.ssl_no_revoke)?;
 

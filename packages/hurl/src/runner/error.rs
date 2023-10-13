@@ -61,6 +61,7 @@ impl Error for runner::Error {
             RunnerError::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
             RunnerError::NoQueryResult => "No query result".to_string(),
             RunnerError::UnsupportedContentEncoding(..) => "Decompression error".to_string(),
+            RunnerError::UnsupportedHttpVersion(..) => "Unsupported HTTP version".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
             RunnerError::InvalidJson { .. } => "Invalid JSON".to_string(),
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
@@ -143,6 +144,10 @@ impl Error for runner::Error {
             RunnerError::UnsupportedContentEncoding(algorithm) => {
                 format!("compression {algorithm} is not supported")
             }
+            RunnerError::UnsupportedHttpVersion(version) => {
+                format!("{version} is not supported, check --version")
+            }
+
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("could not uncompress response with {algorithm}")
             }
@@ -205,6 +210,9 @@ impl From<HttpError> for RunnerError {
             HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
             HttpError::UnsupportedContentEncoding { description } => {
                 RunnerError::UnsupportedContentEncoding(description)
+            }
+            HttpError::UnsupportedHttpVersion(version) => {
+                RunnerError::UnsupportedHttpVersion(version)
             }
             HttpError::InvalidUrl(url) => RunnerError::InvalidUrl(url),
             HttpError::InvalidUrlPrefix(url) => RunnerError::InvalidUrlPrefix(url),

@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 use hurl_core::ast::SourceInfo;
 
-use crate::http::{Call, Cookie};
+use crate::http::{Call, Cookie, RequestedHttpVersion};
 use crate::runner::value::Value;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -132,6 +132,7 @@ pub enum RunnerError {
     SslCertificate(String),
 
     UnsupportedContentEncoding(String),
+    UnsupportedHttpVersion(RequestedHttpVersion),
     CouldNotUncompressResponse(String),
 
     FileReadAccess {
