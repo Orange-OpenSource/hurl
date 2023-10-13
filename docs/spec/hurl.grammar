@@ -130,25 +130,29 @@ option:
 
 ca-certificate-option: "cacert" ":" filename lt
 
-follow-redirect-option: "location" ":" boolean lt
+follow-redirect-option: "location" ":" boolean-option lt
 
-insecure-option: "insecure" ":" boolean lt
+insecure-option: "insecure" ":" boolean-option lt
 
-max-redirs-option: "max-redirs" ":" integer lt
+max-redirs-option: "max-redirs" ":" integer-option lt
 
-resolve-option: "resolve" ":" quoted-string lt
+resolve-option: "resolve" ":" value-string lt
 
-retry-option: "retry" ":" boolean lt
+retry-option: "retry" ":" boolean-option lt
 
-retry-interval-option: "retry-interval" ":" integer lt
+retry-interval-option: "retry-interval" ":" integer-option lt
 
 variable-option: "variable" ":" variable-definition lt
 
-verbose-option: "verbose" ":" boolean lt
+verbose-option: "verbose" ":" boolean-option lt
 
-very-verbose-option: "very-verbose" ":" boolean lt
+very-verbose-option: "very-verbose" ":" boolean-option lt
 
 variable-definition: variable-name "=" variable-value
+
+boolean-option: boolean | template
+
+integer-option: integer | template
 
 variable-value:
     null
