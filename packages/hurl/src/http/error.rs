@@ -16,6 +16,8 @@
 *
 */
 
+use crate::http::RequestedHttpVersion;
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HttpError {
     CouldNotParseResponse,
@@ -45,6 +47,7 @@ pub enum HttpError {
     UnsupportedContentEncoding {
         description: String,
     },
+    UnsupportedHttpVersion(RequestedHttpVersion),
     InvalidUrl(String),
     InvalidUrlPrefix(String),
 }

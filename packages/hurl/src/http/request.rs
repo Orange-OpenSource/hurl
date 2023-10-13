@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::fmt;
 use url::Url;
 
 use crate::http::core::*;
@@ -36,6 +37,19 @@ pub enum RequestedHttpVersion {
     Http11,
     Http2,
     Http3,
+}
+
+impl fmt::Display for RequestedHttpVersion {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let value = match self {
+            RequestedHttpVersion::Default => "HTTP (default)",
+            RequestedHttpVersion::Http10 => "HTTP/1.0",
+            RequestedHttpVersion::Http11 => "HTTP/1.1",
+            RequestedHttpVersion::Http2 => "HTTP/2",
+            RequestedHttpVersion::Http3 => "HTTP/3",
+        };
+        write!(f, "{value}")
+    }
 }
 
 impl Request {

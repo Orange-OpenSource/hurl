@@ -1,0 +1,7 @@
+error: Unsupported HTTP version
+  --> tests_failed/http_version_not_supported.hurl:4:5
+   |
+ 4 | GET https://google.com
+   |     ^^^^^^^^^^^^^^^^^^ HTTP/3 is not supported, check --version
+   |
+
