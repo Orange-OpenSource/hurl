@@ -119,10 +119,7 @@ pub enum RunnerError {
     InvalidUrl(String),
     InvalidUrlPrefix(String),
 
-    HttpConnection {
-        url: String,
-        message: String,
-    },
+    HttpConnection(String),
     CouldNotResolveProxyName,
     CouldNotResolveHost(String),
     FailToConnect,

@@ -242,7 +242,6 @@ impl Client {
                     curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
                         option: "aws-sigv4".to_string(),
                         minimum_version: "7.75.0".to_string(),
-                        url,
                     }),
                     _ => Err(e.into()),
                 };
@@ -368,18 +367,14 @@ impl Client {
                     None => e.description().to_string(),
                     Some(s) => s.to_string(),
                 };
-                return Err(HttpError::Libcurl {
-                    code,
-                    description,
-                    url: url.to_string(),
-                });
+                return Err(HttpError::Libcurl { code, description });
             }
         }
 
         let status = self.handle.response_code()?;
         // TODO: explain why status_lines is Vec ?
         let version = match status_lines.last() {
-            None => return Err(HttpError::StatuslineIsMissing { url }),
+            None => return Err(HttpError::StatuslineIsMissing),
             Some(status_line) => self.parse_response_version(status_line)?,
         };
         let headers = self.parse_response_headers(&response_headers);

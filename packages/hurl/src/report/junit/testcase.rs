@@ -192,10 +192,9 @@ HTTP/1.0 200
                 asserts: vec![],
                 errors: vec![Error {
                     source_info: SourceInfo::new(1, 5, 1, 19),
-                    inner: RunnerError::HttpConnection {
-                        url: "http://unknown".to_string(),
-                        message: "(6) Could not resolve host: unknown".to_string(),
-                    },
+                    inner: RunnerError::HttpConnection(
+                        "(6) Could not resolve host: unknown".to_string(),
+                    ),
                     assert: false,
                 }],
                 time_in_ms: 0,

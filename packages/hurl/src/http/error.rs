@@ -33,16 +33,12 @@ pub enum HttpError {
     Libcurl {
         code: i32,
         description: String,
-        url: String,
     },
     LibcurlUnknownOption {
         option: String,
         minimum_version: String,
-        url: String,
     },
-    StatuslineIsMissing {
-        url: String,
-    },
+    StatuslineIsMissing,
     TooManyRedirect,
     UnsupportedContentEncoding {
         description: String,
@@ -56,11 +52,6 @@ impl From<curl::Error> for HttpError {
     fn from(err: curl::Error) -> Self {
         let code = err.code() as i32;
         let description = err.description().to_string();
-        let url = String::new();
-        HttpError::Libcurl {
-            code,
-            description,
-            url,
-        }
+        HttpError::Libcurl { code, description }
     }
 }

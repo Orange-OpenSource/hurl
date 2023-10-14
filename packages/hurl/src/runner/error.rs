@@ -82,7 +82,7 @@ impl Error for runner::Error {
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("you must set the variable {name}")
             }
-            RunnerError::HttpConnection { message, .. } => message.to_string(),
+            RunnerError::HttpConnection(message) => message.to_string(),
             RunnerError::CouldNotResolveProxyName => "could not resolve proxy name".to_string(),
             RunnerError::CouldNotResolveHost(host) => format!("could not resolve host <{host}>"),
             RunnerError::FailToConnect => "fail to connect".to_string(),
@@ -185,28 +185,18 @@ impl From<HttpError> for RunnerError {
             }
             HttpError::InvalidCharset { charset } => RunnerError::InvalidCharset { charset },
             HttpError::InvalidDecoding { charset } => RunnerError::InvalidDecoding { charset },
-            HttpError::Libcurl {
-                code,
-                description,
-                url,
-            } => RunnerError::HttpConnection {
-                message: format!("({code}) {description}"),
-                url,
-            },
+            HttpError::Libcurl { code, description } => {
+                RunnerError::HttpConnection(format!("({code}) {description}"))
+            }
             HttpError::LibcurlUnknownOption {
                 option,
                 minimum_version,
-                url,
-            } => RunnerError::HttpConnection {
-                message: format!(
-                    "Option {option} requires libcurl version {minimum_version} or higher"
-                ),
-                url,
-            },
-            HttpError::StatuslineIsMissing { url } => RunnerError::HttpConnection {
-                message: "status line is missing".to_string(),
-                url,
-            },
+            } => RunnerError::HttpConnection(format!(
+                "Option {option} requires libcurl version {minimum_version} or higher"
+            )),
+            HttpError::StatuslineIsMissing => {
+                RunnerError::HttpConnection("status line is missing".to_string())
+            }
             HttpError::TooManyRedirect => RunnerError::TooManyRedirect,
             HttpError::UnsupportedContentEncoding { description } => {
                 RunnerError::UnsupportedContentEncoding(description)
