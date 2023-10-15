@@ -159,6 +159,33 @@ impl fmt::Display for MultilineString {
     }
 }
 
+impl fmt::Display for BooleanOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            BooleanOption::Literal(v) => write!(f, "{}", v),
+            BooleanOption::Expression(v) => write!(f, "{}", v),
+        }
+    }
+}
+
+impl fmt::Display for NaturalOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            NaturalOption::Literal(v) => write!(f, "{}", v),
+            NaturalOption::Expression(v) => write!(f, "{}", v),
+        }
+    }
+}
+
+impl fmt::Display for RetryOption {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            RetryOption::Literal(v) => write!(f, "{}", v),
+            RetryOption::Expression(v) => write!(f, "{}", v),
+        }
+    }
+}
+
 impl fmt::Display for VariableDefinition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}={}", self.name, self.value)

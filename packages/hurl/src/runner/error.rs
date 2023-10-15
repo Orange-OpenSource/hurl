@@ -33,6 +33,7 @@ impl Error for runner::Error {
             RunnerError::InvalidUrl(..) => "Invalid URL".to_string(),
             RunnerError::InvalidUrlPrefix(..) => "Invalid URL".to_string(),
             RunnerError::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
+            RunnerError::TemplateVariableInvalidType { .. } => "Invalid variable type".to_string(),
             RunnerError::HttpConnection { .. } => "HTTP connection".to_string(),
             RunnerError::CouldNotResolveProxyName => "HTTP connection".to_string(),
             RunnerError::CouldNotResolveHost(_) => "HTTP connection".to_string(),
@@ -81,6 +82,11 @@ impl Error for runner::Error {
             }
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("you must set the variable {name}")
+            }
+            RunnerError::TemplateVariableInvalidType {
+                value, expecting, ..
+            } => {
+                format!("expecting {expecting}, actual value is <{value}>")
             }
             RunnerError::HttpConnection(message) => message.to_string(),
             RunnerError::CouldNotResolveProxyName => "could not resolve proxy name".to_string(),

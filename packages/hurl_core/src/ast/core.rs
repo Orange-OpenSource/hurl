@@ -716,30 +716,30 @@ pub struct EntryOption {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OptionKind {
-    AwsSigV4(String),
+    AwsSigV4(Template),
     CaCertificate(Filename),
     ClientCert(Filename),
     ClientKey(Filename),
-    Compressed(bool),
-    ConnectTo(String),
-    Delay(u64),
-    Http10(bool),
-    Http11(bool),
-    Http2(bool),
-    Http3(bool),
-    Insecure(bool),
-    IpV4(bool),
-    IpV6(bool),
-    FollowLocation(bool),
-    MaxRedirect(usize),
-    PathAsIs(bool),
-    Proxy(String),
-    Resolve(String),
-    Retry(Retry),
-    RetryInterval(u64),
+    Compressed(BooleanOption),
+    ConnectTo(Template),
+    Delay(NaturalOption),
+    Http10(BooleanOption),
+    Http11(BooleanOption),
+    Http2(BooleanOption),
+    Http3(BooleanOption),
+    Insecure(BooleanOption),
+    IpV4(BooleanOption),
+    IpV6(BooleanOption),
+    FollowLocation(BooleanOption),
+    MaxRedirect(NaturalOption),
+    PathAsIs(BooleanOption),
+    Proxy(Template),
+    Resolve(Template),
+    Retry(RetryOption),
+    RetryInterval(NaturalOption),
     Variable(VariableDefinition),
-    Verbose(bool),
-    VeryVerbose(bool),
+    Verbose(BooleanOption),
+    VeryVerbose(BooleanOption),
 }
 
 impl OptionKind {
@@ -774,12 +774,12 @@ impl OptionKind {
 
     pub fn value_as_str(&self) -> String {
         match self {
-            OptionKind::AwsSigV4(value) => value.clone(),
+            OptionKind::AwsSigV4(value) => value.to_string(),
             OptionKind::CaCertificate(filename) => filename.value.clone(),
             OptionKind::ClientCert(filename) => filename.value.clone(),
             OptionKind::ClientKey(filename) => filename.value.clone(),
             OptionKind::Compressed(value) => value.to_string(),
-            OptionKind::ConnectTo(value) => value.clone(),
+            OptionKind::ConnectTo(value) => value.to_string(),
             OptionKind::Delay(value) => value.to_string(),
             OptionKind::FollowLocation(value) => value.to_string(),
             OptionKind::Http10(value) => value.to_string(),
@@ -791,8 +791,8 @@ impl OptionKind {
             OptionKind::IpV6(value) => value.to_string(),
             OptionKind::MaxRedirect(value) => value.to_string(),
             OptionKind::PathAsIs(value) => value.to_string(),
-            OptionKind::Proxy(value) => value.clone(),
-            OptionKind::Resolve(value) => value.clone(),
+            OptionKind::Proxy(value) => value.to_string(),
+            OptionKind::Resolve(value) => value.to_string(),
             OptionKind::Retry(value) => value.to_string(),
             OptionKind::RetryInterval(value) => value.to_string(),
             OptionKind::Variable(VariableDefinition { name, value, .. }) => {
@@ -802,6 +802,24 @@ impl OptionKind {
             OptionKind::VeryVerbose(value) => value.to_string(),
         }
     }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BooleanOption {
+    Literal(bool),
+    Expression(Expr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum NaturalOption {
+    Literal(u64),
+    Expression(Expr),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum RetryOption {
+    Literal(Retry),
+    Expression(Expr),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

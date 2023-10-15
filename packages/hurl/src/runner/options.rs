@@ -17,11 +17,13 @@
  */
 
 use crate::http::{IpResolve, RequestedHttpVersion};
-use crate::runner::template;
+use crate::runner::template::{eval_expression, eval_template};
+use crate::runner::{template, RunnerError};
 use crate::runner::{Error, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 use hurl_core::ast::{
-    Entry, EntryOption, Float, OptionKind, SectionValue, VariableDefinition, VariableValue,
+    BooleanOption, Entry, EntryOption, Float, NaturalOption, OptionKind, Retry, RetryOption,
+    SectionValue, VariableDefinition, VariableValue,
 };
 use std::collections::HashMap;
 use std::time::Duration;
@@ -47,7 +49,10 @@ pub fn get_entry_options(
         if let SectionValue::Options(options) = &section.value {
             for option in options.iter() {
                 match &option.kind {
-                    OptionKind::AwsSigV4(value) => runner_options.aws_sigv4 = Some(value.clone()),
+                    OptionKind::AwsSigV4(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.aws_sigv4 = Some(value)
+                    }
                     OptionKind::CaCertificate(filename) => {
                         runner_options.cacert_file = Some(filename.value.clone())
                     }
@@ -57,10 +62,17 @@ pub fn get_entry_options(
                     OptionKind::ClientKey(filename) => {
                         runner_options.client_key_file = Some(filename.value.clone())
                     }
-                    OptionKind::Compressed(value) => runner_options.compressed = *value,
-                    OptionKind::ConnectTo(value) => runner_options.connects_to.push(value.clone()),
+                    OptionKind::Compressed(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.compressed = value
+                    }
+                    OptionKind::ConnectTo(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.connects_to.push(value)
+                    }
                     OptionKind::Delay(value) => {
-                        runner_options.delay = Duration::from_millis(*value)
+                        let value = eval_natural_option(value, variables)?;
+                        runner_options.delay = Duration::from_millis(value)
                     }
                     // HTTP version options (such as http1.0, http1.1, http2 etc...) are activated
                     // through a flag. In an `[Options]` section, the signification of such a flag is:
@@ -87,54 +99,82 @@ pub fn get_entry_options(
                     // http2: false
                     // ```
                     OptionKind::Http10(value) => {
-                        if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        if value {
                             runner_options.http_version = RequestedHttpVersion::Http10
                         }
                     }
                     OptionKind::Http11(value) => {
-                        if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        if value {
                             runner_options.http_version = RequestedHttpVersion::Http11
                         } else {
                             runner_options.http_version = RequestedHttpVersion::Http10
                         }
                     }
                     OptionKind::Http2(value) => {
-                        if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        if value {
                             runner_options.http_version = RequestedHttpVersion::Http2
                         } else {
                             runner_options.http_version = RequestedHttpVersion::Http11
                         }
                     }
                     OptionKind::Http3(value) => {
-                        if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        if value {
                             runner_options.http_version = RequestedHttpVersion::Http3
                         } else {
                             runner_options.http_version = RequestedHttpVersion::Http2
                         }
                     }
-                    OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
-                    OptionKind::Insecure(value) => runner_options.insecure = *value,
+                    OptionKind::FollowLocation(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.follow_location = value;
+                    }
+                    OptionKind::Insecure(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.insecure = value
+                    }
                     OptionKind::IpV4(value) => {
-                        if *value {
-                            runner_options.ip_resolve = IpResolve::IpV4
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.ip_resolve = if value {
+                            IpResolve::IpV4
                         } else {
-                            runner_options.ip_resolve = IpResolve::IpV6
+                            IpResolve::IpV6
                         }
                     }
                     OptionKind::IpV6(value) => {
-                        if *value {
-                            runner_options.ip_resolve = IpResolve::IpV6
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.ip_resolve = if value {
+                            IpResolve::IpV6
                         } else {
-                            runner_options.ip_resolve = IpResolve::IpV4
+                            IpResolve::IpV4
                         }
                     }
-                    OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),
-                    OptionKind::PathAsIs(value) => runner_options.path_as_is = *value,
-                    OptionKind::Proxy(value) => runner_options.proxy = Some(value.clone()),
-                    OptionKind::Resolve(value) => runner_options.resolves.push(value.clone()),
-                    OptionKind::Retry(value) => runner_options.retry = *value,
+                    OptionKind::MaxRedirect(value) => {
+                        let value = eval_natural_option(value, variables)?;
+                        runner_options.max_redirect = Some(value as usize)
+                    }
+                    OptionKind::PathAsIs(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.path_as_is = value
+                    }
+                    OptionKind::Proxy(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.proxy = Some(value.to_string())
+                    }
+                    OptionKind::Resolve(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.resolves.push(value)
+                    }
+                    OptionKind::Retry(value) => {
+                        let value = eval_retry_option(value, variables)?;
+                        runner_options.retry = value
+                    }
                     OptionKind::RetryInterval(value) => {
-                        runner_options.retry_interval = Duration::from_millis(*value)
+                        let value = eval_natural_option(value, variables)?;
+                        runner_options.retry_interval = Duration::from_millis(value)
                     }
                     OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
@@ -169,7 +209,11 @@ fn has_options(entry: &Entry) -> bool {
 }
 
 /// Returns the overridden `entry` verbosity, or the default `verbosity` file.
-pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Option<Verbosity> {
+pub fn get_entry_verbosity(
+    entry: &Entry,
+    verbosity: &Option<Verbosity>,
+    variables: &HashMap<String, Value>,
+) -> Result<Option<Verbosity>, Error> {
     let mut verbosity = *verbosity;
 
     for section in &entry.request.sections {
@@ -177,14 +221,16 @@ pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Opti
             for option in options {
                 match &option.kind {
                     OptionKind::Verbose(value) => {
-                        verbosity = if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        verbosity = if value {
                             Some(Verbosity::Verbose)
                         } else {
                             None
                         }
                     }
                     OptionKind::VeryVerbose(value) => {
-                        verbosity = if *value {
+                        let value = eval_boolean_option(value, variables)?;
+                        verbosity = if value {
                             Some(Verbosity::VeryVerbose)
                         } else {
                             None
@@ -195,7 +241,102 @@ pub fn get_entry_verbosity(entry: &Entry, verbosity: &Option<Verbosity>) -> Opti
             }
         }
     }
-    verbosity
+    Ok(verbosity)
+}
+
+fn eval_boolean_option(
+    boolean_value: &BooleanOption,
+    variables: &HashMap<String, Value>,
+) -> Result<bool, Error> {
+    match boolean_value {
+        BooleanOption::Literal(value) => Ok(*value),
+        BooleanOption::Expression(expr) => match eval_expression(expr, variables)? {
+            Value::Bool(value) => Ok(value),
+            v => Err(Error {
+                source_info: expr.variable.source_info.clone(),
+                inner: RunnerError::TemplateVariableInvalidType {
+                    name: expr.variable.name.clone(),
+                    value: v.to_string(),
+                    expecting: "boolean".to_string(),
+                },
+                assert: false,
+            }),
+        },
+    }
+}
+
+fn eval_natural_option(
+    natural_value: &NaturalOption,
+    variables: &HashMap<String, Value>,
+) -> Result<u64, Error> {
+    match natural_value {
+        NaturalOption::Literal(value) => Ok(*value),
+        NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
+            Value::Integer(value) => {
+                if value < 0 {
+                    Err(Error {
+                        source_info: expr.variable.source_info.clone(),
+                        inner: RunnerError::TemplateVariableInvalidType {
+                            name: expr.variable.name.clone(),
+                            value: value.to_string(),
+                            expecting: "positive integer".to_string(),
+                        },
+                        assert: false,
+                    })
+                } else {
+                    Ok(value as u64)
+                }
+            }
+            v => Err(Error {
+                source_info: expr.variable.source_info.clone(),
+                inner: RunnerError::TemplateVariableInvalidType {
+                    name: expr.variable.name.clone(),
+                    value: v.to_string(),
+                    expecting: "positive integer".to_string(),
+                },
+                assert: false,
+            }),
+        },
+    }
+}
+
+fn eval_retry_option(
+    retry_option_value: &RetryOption,
+    variables: &HashMap<String, Value>,
+) -> Result<Retry, Error> {
+    match retry_option_value {
+        RetryOption::Literal(retry) => Ok(*retry),
+        RetryOption::Expression(expr) => match eval_expression(expr, variables)? {
+            Value::Integer(value) => {
+                if value == -1 {
+                    Ok(Retry::Infinite)
+                } else if value == 0 {
+                    Ok(Retry::None)
+                } else if value > 0 {
+                    Ok(Retry::Finite(value as usize))
+                } else {
+                    Err(Error {
+                        source_info: expr.variable.source_info.clone(),
+                        inner: RunnerError::TemplateVariableInvalidType {
+                            name: expr.variable.name.clone(),
+                            value: value.to_string(),
+                            expecting: "integer".to_string(),
+                        },
+                        assert: false,
+                    })
+                }
+            }
+            v => Err(Error {
+                source_info: expr.variable.source_info.clone(),
+                inner: RunnerError::TemplateVariableInvalidType {
+                    name: expr.variable.name.clone(),
+                    value: v.to_string(),
+                    expecting: "integer".to_string(),
+                },
+                assert: false,
+            }),
+        },
+    }
 }
 
 fn eval_variable_value(
@@ -211,5 +352,100 @@ fn eval_variable_value(
             let s = template::eval_template(template, variables)?;
             Ok(Value::String(s))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::runner::RunnerError;
+    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
+
+    fn verbose_option_template() -> BooleanOption {
+        // {{verbose}}
+        BooleanOption::Expression(Expr {
+            space0: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            variable: Variable {
+                name: "verbose".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            space1: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+        })
+    }
+
+    fn retry_option_template() -> NaturalOption {
+        // {{retry}}
+        NaturalOption::Expression(Expr {
+            space0: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            variable: Variable {
+                name: "retry".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            space1: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+        })
+    }
+
+    #[test]
+    fn test_eval_boolean_option() {
+        let mut variables = HashMap::default();
+        assert!(eval_boolean_option(&BooleanOption::Literal(true), &variables).unwrap());
+
+        variables.insert("verbose".to_string(), Value::Bool(true));
+        assert!(eval_boolean_option(&verbose_option_template(), &variables).unwrap());
+    }
+
+    #[test]
+    fn test_eval_boolean_option_error() {
+        let mut variables = HashMap::default();
+        let error = eval_boolean_option(&verbose_option_template(), &variables)
+            .err()
+            .unwrap();
+        assert!(!error.assert);
+        assert_eq!(
+            error.inner,
+            RunnerError::TemplateVariableNotDefined {
+                name: "verbose".to_string()
+            }
+        );
+
+        variables.insert("verbose".to_string(), Value::Integer(10));
+        let error = eval_boolean_option(&verbose_option_template(), &variables)
+            .err()
+            .unwrap();
+        assert_eq!(
+            error.inner,
+            RunnerError::TemplateVariableInvalidType {
+                name: "verbose".to_string(),
+                value: "10".to_string(),
+                expecting: "boolean".to_string()
+            }
+        );
+    }
+
+    #[test]
+    fn test_eval_natural_option() {
+        let mut variables = HashMap::default();
+        assert_eq!(
+            eval_natural_option(&NaturalOption::Literal(1), &variables).unwrap(),
+            1
+        );
+
+        variables.insert("retry".to_string(), Value::Integer(10));
+        assert_eq!(
+            eval_natural_option(&retry_option_template(), &variables).unwrap(),
+            10
+        );
     }
 }

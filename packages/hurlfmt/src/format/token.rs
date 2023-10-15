@@ -876,30 +876,57 @@ impl Tokenizable for EntryOption {
 impl Tokenizable for OptionKind {
     fn tokenize(&self) -> Vec<Token> {
         match self {
-            OptionKind::AwsSigV4(value) => vec![Token::String(value.clone())],
+            OptionKind::AwsSigV4(value) => value.tokenize(),
             OptionKind::CaCertificate(filename) => filename.tokenize(),
             OptionKind::ClientCert(filename) => filename.tokenize(),
             OptionKind::ClientKey(filename) => filename.tokenize(),
-            OptionKind::Compressed(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::ConnectTo(value) => vec![Token::String(value.clone())],
-            OptionKind::Delay(value) => vec![Token::Number(value.to_string())],
-            OptionKind::FollowLocation(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Http10(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Http11(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Http2(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Http3(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Insecure(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::IpV4(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::IpV6(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::MaxRedirect(value) => vec![Token::Number(value.to_string())],
-            OptionKind::PathAsIs(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::Proxy(value) => vec![Token::String(value.clone())],
-            OptionKind::Resolve(value) => vec![Token::String(value.clone())],
+            OptionKind::Compressed(value) => value.tokenize(),
+            OptionKind::ConnectTo(value) => value.tokenize(),
+            OptionKind::Delay(value) => value.tokenize(),
+            OptionKind::FollowLocation(value) => value.tokenize(),
+            OptionKind::Http10(value) => value.tokenize(),
+            OptionKind::Http11(value) => value.tokenize(),
+            OptionKind::Http2(value) => value.tokenize(),
+            OptionKind::Http3(value) => value.tokenize(),
+            OptionKind::Insecure(value) => value.tokenize(),
+            OptionKind::IpV4(value) => value.tokenize(),
+            OptionKind::IpV6(value) => value.tokenize(),
+            OptionKind::MaxRedirect(value) => value.tokenize(),
+            OptionKind::PathAsIs(value) => value.tokenize(),
+            OptionKind::Proxy(value) => value.tokenize(),
+            OptionKind::Resolve(value) => value.tokenize(),
             OptionKind::Retry(value) => value.tokenize(),
-            OptionKind::RetryInterval(value) => vec![Token::Number(value.to_string())],
+            OptionKind::RetryInterval(value) => value.tokenize(),
             OptionKind::Variable(value) => value.tokenize(),
-            OptionKind::Verbose(value) => vec![Token::Boolean(value.to_string())],
-            OptionKind::VeryVerbose(value) => vec![Token::Boolean(value.to_string())],
+            OptionKind::Verbose(value) => value.tokenize(),
+            OptionKind::VeryVerbose(value) => value.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for BooleanOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            BooleanOption::Literal(value) => vec![Token::Boolean(value.to_string())],
+            BooleanOption::Expression(expr) => expr.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for NaturalOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            NaturalOption::Literal(value) => vec![Token::Number(value.to_string())],
+            NaturalOption::Expression(expr) => expr.tokenize(),
+        }
+    }
+}
+
+impl Tokenizable for RetryOption {
+    fn tokenize(&self) -> Vec<Token> {
+        match self {
+            RetryOption::Literal(retry) => retry.tokenize(),
+            RetryOption::Expression(expr) => expr.tokenize(),
         }
     }
 }

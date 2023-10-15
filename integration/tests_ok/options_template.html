@@ -1,0 +1,23 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"></span><span class="comment"># Reuse existing tests with options</span>
+<span class="line"></span><span class="comment"># using template</span>
+<span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/redirect-absolute</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">variable</span>: redirect=<span class="boolean">true</span></span>
+<span class="line"><span class="string">location</span>: <span class="expr">{{redirect}}</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/delay-init</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/delay</span></span> <span class="comment"># This request must reach the server at least 1000ms after the previous request</span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">variable</span>: duration=<span class="number">1000</span></span>
+<span class="line"><span class="string">delay</span>: <span class="expr">{{duration}}</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://bar.com:8000/resolve</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">variable</span>: port=<span class="number">8000</span></span>
+<span class="line"><span class="string">resolve</span>: <span class="string">bar.com:{{port}}:127.0.0.1</span></span>
+</span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
+<span class="line"><span class="string">`Hello World!`</span></span>
+</span></span></code></pre>

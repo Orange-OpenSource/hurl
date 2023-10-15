@@ -113,6 +113,11 @@ pub enum RunnerError {
     TemplateVariableNotDefined {
         name: String,
     },
+    TemplateVariableInvalidType {
+        name: String,
+        value: String,
+        expecting: String,
+    },
     InvalidJson {
         value: String,
     },

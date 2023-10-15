@@ -26,12 +26,12 @@ use hurl_core::ast::*;
 use hurl_core::error::Error;
 use hurl_core::parser;
 
-use crate::http;
 use crate::http::Call;
 use crate::runner::core::*;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
+use crate::{http, runner};
 
 /// Runs a Hurl `content` and returns a [`HurlResult`] upon completion.
 ///
@@ -114,7 +114,8 @@ pub fn run(
         // We compute the new logger for this entry, before entering into the `run`
         // function because entry options can modify the logger and we want the preamble
         // "Executing entry..." to be displayed based on the entry level verbosity.
-        let logger = get_entry_logger(entry, logger_options);
+        let logger =
+            get_entry_logger(entry, logger_options, &variables).map_err(|e| e.description())?;
         if let Some(pre_entry) = runner_options.pre_entry {
             let exit = pre_entry(entry.clone());
             if exit {
@@ -425,8 +426,13 @@ fn log_errors(entry_result: &EntryResult, content: &str, retry: bool, logger: &L
 /// Creates a new logger for this entry.
 /// Verbosity can be overridden at entry level with an Options section so each
 /// entry has its own logger.
-fn get_entry_logger(entry: &Entry, logger_options: &LoggerOptions) -> Logger {
-    let entry_verbosity = options::get_entry_verbosity(entry, &logger_options.verbosity);
+fn get_entry_logger(
+    entry: &Entry,
+    logger_options: &LoggerOptions,
+    variables: &HashMap<String, Value>,
+) -> Result<Logger, runner::Error> {
+    let entry_verbosity =
+        options::get_entry_verbosity(entry, &logger_options.verbosity, variables)?;
     let entry_logger_options = LoggerOptionsBuilder::new()
         .color(logger_options.color)
         .filename(&logger_options.filename)
@@ -435,7 +441,7 @@ fn get_entry_logger(entry: &Entry, logger_options: &LoggerOptions) -> Logger {
         .verbosity(entry_verbosity)
         .test(logger_options.test)
         .build();
-    Logger::from(&entry_logger_options)
+    Ok(Logger::from(&entry_logger_options))
 }
 
 #[cfg(test)]

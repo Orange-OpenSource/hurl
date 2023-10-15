@@ -213,33 +213,40 @@ impl HtmlFormatter {
         self.buffer.push(':');
         self.fmt_space(&option.space2);
         match &option.kind {
-            OptionKind::AwsSigV4(value) => self.fmt_string(value),
+            OptionKind::AwsSigV4(value) => self.fmt_template(value),
             OptionKind::CaCertificate(filename) => self.fmt_filename(filename),
             OptionKind::ClientCert(filename) => self.fmt_filename(filename),
             OptionKind::ClientKey(filename) => self.fmt_filename(filename),
-            OptionKind::Compressed(value) => self.fmt_bool(*value),
-            OptionKind::ConnectTo(value) => self.fmt_string(value),
-            OptionKind::Delay(value) => self.fmt_number(value),
-            OptionKind::FollowLocation(value) => self.fmt_bool(*value),
-            OptionKind::Http10(value) => self.fmt_bool(*value),
-            OptionKind::Http11(value) => self.fmt_bool(*value),
-            OptionKind::Http2(value) => self.fmt_bool(*value),
-            OptionKind::Http3(value) => self.fmt_bool(*value),
-            OptionKind::Insecure(value) => self.fmt_bool(*value),
-            OptionKind::IpV4(value) => self.fmt_bool(*value),
-            OptionKind::IpV6(value) => self.fmt_bool(*value),
-            OptionKind::MaxRedirect(value) => self.fmt_number(value),
-            OptionKind::PathAsIs(value) => self.fmt_bool(*value),
-            OptionKind::Proxy(value) => self.fmt_string(value),
-            OptionKind::Resolve(value) => self.fmt_string(value),
-            OptionKind::Retry(value) => self.fmt_retry(value),
-            OptionKind::RetryInterval(value) => self.fmt_number(value),
+            OptionKind::Compressed(value) => self.fmt_bool_option(value),
+            OptionKind::ConnectTo(value) => self.fmt_template(value),
+            OptionKind::Delay(value) => self.fmt_natural_option(value),
+            OptionKind::FollowLocation(value) => self.fmt_bool_option(value),
+            OptionKind::Http10(value) => self.fmt_bool_option(value),
+            OptionKind::Http11(value) => self.fmt_bool_option(value),
+            OptionKind::Http2(value) => self.fmt_bool_option(value),
+            OptionKind::Http3(value) => self.fmt_bool_option(value),
+            OptionKind::Insecure(value) => self.fmt_bool_option(value),
+            OptionKind::IpV4(value) => self.fmt_bool_option(value),
+            OptionKind::IpV6(value) => self.fmt_bool_option(value),
+            OptionKind::MaxRedirect(value) => self.fmt_natural_option(value),
+            OptionKind::PathAsIs(value) => self.fmt_bool_option(value),
+            OptionKind::Proxy(value) => self.fmt_template(value),
+            OptionKind::Resolve(value) => self.fmt_template(value),
+            OptionKind::Retry(value) => self.fmt_retry_option(value),
+            OptionKind::RetryInterval(value) => self.fmt_natural_option(value),
             OptionKind::Variable(value) => self.fmt_variable_definition(value),
-            OptionKind::Verbose(value) => self.fmt_bool(*value),
-            OptionKind::VeryVerbose(value) => self.fmt_bool(*value),
+            OptionKind::Verbose(value) => self.fmt_bool_option(value),
+            OptionKind::VeryVerbose(value) => self.fmt_bool_option(value),
         };
         self.fmt_span_close();
         self.fmt_lt(&option.line_terminator0);
+    }
+
+    fn fmt_retry_option(&mut self, retry_option: &RetryOption) {
+        match retry_option {
+            RetryOption::Literal(retry) => self.fmt_retry(retry),
+            RetryOption::Expression(expr) => self.fmt_expr(expr),
+        };
     }
 
     fn fmt_retry(&mut self, retry: &Retry) {
@@ -663,6 +670,20 @@ impl HtmlFormatter {
 
     fn fmt_bool(&mut self, value: bool) {
         self.fmt_span("boolean", &value.to_string());
+    }
+
+    fn fmt_bool_option(&mut self, value: &BooleanOption) {
+        match value {
+            BooleanOption::Literal(value) => self.fmt_span("boolean", &value.to_string()),
+            BooleanOption::Expression(value) => self.fmt_expr(value),
+        }
+    }
+
+    fn fmt_natural_option(&mut self, value: &NaturalOption) {
+        match value {
+            NaturalOption::Literal(value) => self.fmt_span("number", &value.to_string()),
+            NaturalOption::Expression(value) => self.fmt_expr(value),
+        }
     }
 
     fn fmt_number<T: Sized + Display>(&mut self, value: T) {

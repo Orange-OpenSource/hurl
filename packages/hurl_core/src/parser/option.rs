@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
+
 use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-use crate::parser::{filename, ParseResult};
+use crate::parser::{expr, filename, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
@@ -77,7 +78,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
 }
 
 fn option_aws_sigv4(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = aws_sigv4(reader)?;
+    let value = unquoted_template(reader)?;
     Ok(OptionKind::AwsSigV4(value))
 }
 
@@ -92,57 +93,57 @@ fn option_cert(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_compressed(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Compressed(value))
 }
 
 fn option_connect_to(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = connect_to(reader)?;
+    let value = unquoted_template(reader)?;
     Ok(OptionKind::ConnectTo(value))
 }
 
 fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(natural, reader)?;
+    let value = natural_option(reader)?;
     Ok(OptionKind::Delay(value))
 }
 
 fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::FollowLocation(value))
 }
 
 fn option_http_10(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Http10(value))
 }
 
 fn option_http_11(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Http11(value))
 }
 
 fn option_http_2(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Http2(value))
 }
 
 fn option_http_3(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Http3(value))
 }
 
 fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Insecure(value))
 }
 
 fn option_ipv4(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::IpV4(value))
 }
 
 fn option_ipv6(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::IpV6(value))
 }
 
@@ -152,35 +153,32 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(natural, reader)?;
-    // FIXME: try to not unwrap redirect value
-    // and returns an error if not possible
-    let value = usize::try_from(value).unwrap();
+    let value = nonrecover(natural_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
 }
 
 fn option_path_as_is(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::PathAsIs(value))
 }
 
 fn option_proxy(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = proxy(reader)?;
+    let value = unquoted_template(reader)?;
     Ok(OptionKind::Proxy(value))
 }
 
 fn option_resolve(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = resolve(reader)?;
+    let value = unquoted_template(reader)?;
     Ok(OptionKind::Resolve(value))
 }
 
 fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = retry(reader)?;
+    let value = retry_option(reader)?;
     Ok(OptionKind::Retry(value))
 }
 
 fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(natural, reader)?;
+    let value = nonrecover(natural_option, reader)?;
     Ok(OptionKind::RetryInterval(value))
 }
 
@@ -190,92 +188,13 @@ fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn option_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Verbose(value))
 }
 
 fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
-    let value = nonrecover(boolean, reader)?;
+    let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::VeryVerbose(value))
-}
-
-fn aws_sigv4(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
-    let provider = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '-');
-    if provider.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "aws-sigv4 provider".to_string(),
-            },
-        });
-    }
-    Ok(provider)
-}
-
-fn proxy(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
-    let name = reader
-        .read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.' || *c == '[' || *c == ']');
-    if name.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "proxy name".to_string(),
-            },
-        });
-    }
-    Ok(name)
-}
-
-fn resolve(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
-    if name.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "resolve".to_string(),
-            },
-        });
-    }
-    if !name.contains(':') {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "HOST:PORT:ADDR".to_string(),
-            },
-        });
-    }
-    Ok(name)
-}
-
-fn connect_to(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
-    let name = reader.read_while(|c| c.is_alphanumeric() || *c == ':' || *c == '.');
-    if name.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "connect-to".to_string(),
-            },
-        });
-    }
-    if !name.contains(':') {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "HOST1:PORT1:HOST2:PORT2".to_string(),
-            },
-        });
-    }
-    Ok(name)
 }
 
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
@@ -297,6 +216,61 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
         })
     }
 }
+
+fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
+    let start = reader.state.clone();
+    match boolean(reader) {
+        Ok(v) => Ok(BooleanOption::Literal(v)),
+        Err(_) => {
+            reader.state = start;
+            let exp = expr::parse(reader).map_err(|e| Error {
+                pos: e.pos,
+                recoverable: false,
+                inner: ParseError::Expecting {
+                    value: "true|false".to_string(),
+                },
+            })?;
+            Ok(BooleanOption::Expression(exp))
+        }
+    }
+}
+
+fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
+    let start = reader.state.clone();
+    match natural(reader) {
+        Ok(v) => Ok(NaturalOption::Literal(v)),
+        Err(_) => {
+            reader.state = start;
+            let exp = expr::parse(reader).map_err(|e| Error {
+                pos: e.pos,
+                recoverable: false,
+                inner: ParseError::Expecting {
+                    value: "integer".to_string(),
+                },
+            })?;
+            Ok(NaturalOption::Expression(exp))
+        }
+    }
+}
+
+fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
+    let start = reader.state.clone();
+    match retry(reader) {
+        Ok(v) => Ok(RetryOption::Literal(v)),
+        Err(_) => {
+            reader.state = start;
+            let exp = expr::parse(reader).map_err(|e| Error {
+                pos: e.pos,
+                recoverable: false,
+                inner: ParseError::Expecting {
+                    value: "integer".to_string(),
+                },
+            })?;
+            Ok(RetryOption::Expression(exp))
+        }
+    }
+}
+
 fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
     let name = variable_name(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -405,7 +379,7 @@ mod tests {
                         },
                     },
                 },
-                kind: OptionKind::Insecure(true),
+                kind: OptionKind::Insecure(BooleanOption::Literal(true)),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
@@ -523,6 +497,20 @@ mod tests {
         let mut reader = Reader::new("cacert: ###");
         let error = parse(&mut reader).err().unwrap();
         assert!(!error.recoverable)
+    }
+
+    #[test]
+    fn test_option_retry_error() {
+        let mut reader = Reader::new("retry: ###");
+        let error = parse(&mut reader).err().unwrap();
+        assert!(!error.recoverable);
+        assert_eq!(error.pos, Pos { line: 1, column: 8 });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "integer".to_string()
+            }
+        );
     }
 
     #[test]

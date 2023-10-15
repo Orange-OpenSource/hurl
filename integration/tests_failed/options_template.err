@@ -1,0 +1,7 @@
+error: Invalid variable type
+  --> tests_failed/options_template.hurl:6:13
+   |
+ 6 | location: {{redirect}}
+   |             ^^^^^^^^ expecting boolean, actual value is <10>
+   |
+

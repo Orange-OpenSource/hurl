@@ -280,36 +280,54 @@ impl ToJson for EntryOption {
 
         let name = "value".to_string();
         let value = match &self.kind {
-            OptionKind::AwsSigV4(value) => JValue::String(value.clone()),
+            OptionKind::AwsSigV4(value) => JValue::String(value.to_string()),
             OptionKind::CaCertificate(filename) => JValue::String(filename.value.clone()),
             OptionKind::ClientCert(filename) => JValue::String(filename.value.clone()),
             OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),
-            OptionKind::Compressed(value) => JValue::Boolean(*value),
-            OptionKind::ConnectTo(value) => JValue::String(value.clone()),
-            OptionKind::Delay(value) => JValue::Number(value.to_string()),
-            OptionKind::FollowLocation(value) => JValue::Boolean(*value),
-            OptionKind::Http10(value) => JValue::Boolean(*value),
-            OptionKind::Http11(value) => JValue::Boolean(*value),
-            OptionKind::Http2(value) => JValue::Boolean(*value),
-            OptionKind::Http3(value) => JValue::Boolean(*value),
-            OptionKind::Insecure(value) => JValue::Boolean(*value),
-            OptionKind::IpV4(value) => JValue::Boolean(*value),
-            OptionKind::IpV6(value) => JValue::Boolean(*value),
+            OptionKind::Compressed(value) => value.to_json(),
+            OptionKind::ConnectTo(value) => JValue::String(value.to_string()),
+            OptionKind::Delay(value) => value.to_json(),
+            OptionKind::FollowLocation(value) => value.to_json(),
+            OptionKind::Http10(value) => value.to_json(),
+            OptionKind::Http11(value) => value.to_json(),
+            OptionKind::Http2(value) => value.to_json(),
+            OptionKind::Http3(value) => value.to_json(),
+            OptionKind::Insecure(value) => value.to_json(),
+            OptionKind::IpV4(value) => value.to_json(),
+            OptionKind::IpV6(value) => value.to_json(),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
-            OptionKind::PathAsIs(value) => JValue::Boolean(*value),
-            OptionKind::Proxy(value) => JValue::String(value.clone()),
-            OptionKind::Resolve(value) => JValue::String(value.clone()),
+            OptionKind::PathAsIs(value) => value.to_json(),
+            OptionKind::Proxy(value) => JValue::String(value.to_string()),
+            OptionKind::Resolve(value) => JValue::String(value.to_string()),
             OptionKind::Retry(value) => JValue::Number(value.to_string()),
             OptionKind::RetryInterval(value) => JValue::Number(value.to_string()),
             OptionKind::Variable(value) => {
                 JValue::String(format!("{}={}", value.name, value.value))
             }
-            OptionKind::Verbose(value) => JValue::Boolean(*value),
-            OptionKind::VeryVerbose(value) => JValue::Boolean(*value),
+            OptionKind::Verbose(value) => value.to_json(),
+            OptionKind::VeryVerbose(value) => value.to_json(),
         };
         attributes.push((name, value));
 
         JValue::Object(attributes)
+    }
+}
+
+impl ToJson for BooleanOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            BooleanOption::Literal(value) => JValue::Boolean(*value),
+            BooleanOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
+
+impl ToJson for NaturalOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            NaturalOption::Literal(value) => JValue::Number(value.to_string()),
+            NaturalOption::Expression(expr) => expr.to_json(),
+        }
     }
 }
 
@@ -672,6 +690,12 @@ impl ToJson for FilterValue {
             }
         }
         JValue::Object(attributes)
+    }
+}
+
+impl ToJson for Expr {
+    fn to_json(&self) -> JValue {
+        JValue::String(format!("{{{{{}}}}}", self))
     }
 }
 
