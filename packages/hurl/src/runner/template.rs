@@ -44,28 +44,33 @@ fn eval_template_element(
 ) -> Result<String, Error> {
     match template_element {
         TemplateElement::String { value, .. } => Ok(value.clone()),
-        TemplateElement::Expression(expr) => eval_expression(expr, variables),
+        TemplateElement::Expression(expr) => render_expression(expr, variables),
     }
 }
 
-pub fn eval_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String, Error> {
+pub fn render_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Result<String, Error> {
+    let source_info = &expr.variable.source_info;
+    let name = &expr.variable.name;
+    let value = eval_expression(expr, variables)?;
+    if value.is_renderable() {
+        Ok(value.clone().to_string())
+    } else {
+        Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::UnrenderableVariable {
+                name: name.to_string(),
+                value: value.to_string(),
+            },
+            assert: false,
+        })
+    }
+}
+
+pub fn eval_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Value, Error> {
     let source_info = &expr.variable.source_info;
     let name = &expr.variable.name;
     match variables.get(name.as_str()) {
-        Some(value) => {
-            if value.is_renderable() {
-                Ok(value.clone().to_string())
-            } else {
-                Err(Error {
-                    source_info: source_info.clone(),
-                    inner: RunnerError::UnrenderableVariable {
-                        name: name.to_string(),
-                        value: value.to_string(),
-                    },
-                    assert: false,
-                })
-            }
-        }
+        Some(value) => Ok(value.clone()),
         _ => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::TemplateVariableNotDefined { name: name.clone() },
@@ -148,5 +153,30 @@ mod tests {
                 value: "[1,2]".to_string()
             }
         );
+    }
+
+    #[test]
+    fn test_render_expression() {
+        let mut variables = HashMap::new();
+        variables.insert("status".to_string(), Value::Bool(true));
+        let expr = Expr {
+            space0: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            variable: Variable {
+                name: "status".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+            space1: Whitespace {
+                value: "".to_string(),
+                source_info: SourceInfo::new(0, 0, 0, 0),
+            },
+        };
+        assert_eq!(
+            eval_expression(&expr, &variables).unwrap(),
+            Value::Bool(true)
+        );
+        assert_eq!(render_expression(&expr, &variables).unwrap(), "true");
     }
 }

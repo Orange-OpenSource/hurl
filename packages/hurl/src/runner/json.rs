@@ -21,7 +21,7 @@ use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, Te
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
 use crate::runner::core::{Error, RunnerError};
-use crate::runner::template::eval_expression;
+use crate::runner::template::render_expression;
 use crate::runner::value::Value;
 
 /// Evaluates a JSON value to a string given a set of `variables`.
@@ -65,7 +65,7 @@ pub fn eval_json_value(
             }
         }
         JsonValue::Expression(exp) => {
-            let s = eval_expression(exp, variables)?;
+            let s = render_expression(exp, variables)?;
 
             // The String can only be null, a bool, a number
             // It will be easier when your variables value have a type
@@ -156,7 +156,7 @@ fn eval_json_template_element(
     match template_element {
         TemplateElement::String { encoded, .. } => Ok(encoded.clone()),
         TemplateElement::Expression(expr) => {
-            let s = eval_expression(expr, variables)?;
+            let s = render_expression(expr, variables)?;
             Ok(encode_json_string(&s))
         }
     }
