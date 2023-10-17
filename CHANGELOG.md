@@ -2,18 +2,24 @@
 ========================================================================================================================
 
 Thanks to
-[@softprops](https://github.com/softprops),
+[@smokedlinq](https://github.com/smokedlinq),
+[@RickMoynihan](https://github.com/RickMoynihan),
+[@pit1sIBM](https://github.com/pit1sIBM),
 [@kidbrax](https://github.com/kidbrax),
 [@janwytze](https://github.com/janwytze),
 [@kingluo](https://github.com/kingluo),
+[@Lythenas](https://github.com/Lythenas),
 [@teto](https://github.com/teto),
 [@khimaros](https://github.com/khimaros),
 [@iredmail](https://github.com/iredmail),
+[@tnicolaisen-snabble](https://github.com/tnicolaisen-snabble),
 [@tpluscode](https://github.com/tpluscode),
+[@ecolinet](https://github.com/ecolinet),
 [@nikeee](https://github.com/nikeee),
 
 Enhancements:
 
+* Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
 * Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
 * Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
 * Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
