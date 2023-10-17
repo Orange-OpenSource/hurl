@@ -1,3 +1,27 @@
+[4.2.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)
+========================================================================================================================
+
+Thanks to
+[@softprops](https://github.com/softprops),
+[@kidbrax](https://github.com/kidbrax),
+[@janwytze](https://github.com/janwytze),
+[@kingluo](https://github.com/kingluo),
+[@teto](https://github.com/teto),
+[@khimaros](https://github.com/khimaros),
+[@iredmail](https://github.com/iredmail),
+[@tpluscode](https://github.com/tpluscode),
+[@nikeee](https://github.com/nikeee),
+
+Enhancements:
+
+* Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
+* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
+* Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
+* Add --http2 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
+* Add --http1.0/-0 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
+* Add --http1.1 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
+
+
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
 
