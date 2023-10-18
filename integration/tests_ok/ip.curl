@@ -1,0 +1,5 @@
+curl 'http://localhost:8000/ip'
+curl --ipv4 'http://localhost:8000/check-ipv4'
+curl --ipv6 'http://localhost:8000/check-ipv4'
+curl --ipv6 'http://localhost:8000/check-ipv6'
+curl --ipv4 'http://localhost:8000/check-ipv6'
