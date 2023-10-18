@@ -35,11 +35,12 @@ Some integration tests need a proxy. You can use [mitmproxy] or [squid].
 ### Start local server
 
 You can use the scripts [`bin/test/test_prerequisites.sh`] / [`bin/test/test_prerequisites.ps1`] depending on your OS to start the 
-local test server and proxy. Once launch, there is:
+local test server and proxy. Once launch, there are:
 
-- a Flask server instance listening on <http://localhost:8000>
-- a Flask server instance listening on <https://localhost:8001>
-- a Flask server instance listening on <https://localhost:8002>
+- a Flask server instance listening on <http://localhost:8000> (using IPv4 localhost address)
+- a Flask server instance listening on <http://localhost:8000> (using IPv6 localhost address)
+- a Flask server instance listening on <https://localhost:8001> (using IPv4 localhost address)
+- a Flask server instance listening on <https://localhost:8002> (using IPv4 localhost address)
 - a HTTP proxy listening on <http://localhost:8888>
 
 Now, everything is ready to run the integration tests!
