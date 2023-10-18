@@ -23,6 +23,7 @@ pub(crate) use self::core::{Cookie, Param, RequestCookie};
 pub(crate) use self::error::HttpError;
 pub use self::header::Header;
 pub(crate) use self::options::{ClientOptions, Verbosity};
+pub use self::request::IpResolve;
 pub use self::request::Request;
 pub use self::request::RequestedHttpVersion;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};

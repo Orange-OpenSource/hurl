@@ -43,6 +43,8 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "http1.1" => option_http_11(reader)?,
         "http2" => option_http_2(reader)?,
         "http3" => option_http_3(reader)?,
+        "ipv4" => option_ipv4(reader)?,
+        "ipv6" => option_ipv6(reader)?,
         "key" => option_key(reader)?,
         "location" => option_follow_location(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
@@ -132,6 +134,16 @@ fn option_http_3(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_insecure(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean, reader)?;
     Ok(OptionKind::Insecure(value))
+}
+
+fn option_ipv4(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::IpV4(value))
+}
+
+fn option_ipv6(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean, reader)?;
+    Ok(OptionKind::IpV6(value))
 }
 
 fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {

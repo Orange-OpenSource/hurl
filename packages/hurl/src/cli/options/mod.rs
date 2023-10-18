@@ -58,6 +58,7 @@ pub struct Options {
     pub input_files: Vec<String>,
     pub insecure: bool,
     pub interactive: bool,
+    pub ip_resolve: Option<IpResolve>,
     pub junit_file: Option<String>,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
@@ -112,13 +113,28 @@ pub enum HttpVersion {
     V3,
 }
 
-impl From<HttpVersion> for http::RequestedHttpVersion {
+impl From<HttpVersion> for RequestedHttpVersion {
     fn from(value: HttpVersion) -> Self {
         match value {
-            HttpVersion::V10 => http::RequestedHttpVersion::Http10,
-            HttpVersion::V11 => http::RequestedHttpVersion::Http11,
-            HttpVersion::V2 => http::RequestedHttpVersion::Http2,
-            HttpVersion::V3 => http::RequestedHttpVersion::Http3,
+            HttpVersion::V10 => RequestedHttpVersion::Http10,
+            HttpVersion::V11 => RequestedHttpVersion::Http11,
+            HttpVersion::V2 => RequestedHttpVersion::Http2,
+            HttpVersion::V3 => RequestedHttpVersion::Http3,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum IpResolve {
+    IpV4,
+    IpV6,
+}
+
+impl From<IpResolve> for http::IpResolve {
+    fn from(value: IpResolve) -> Self {
+        match value {
+            IpResolve::IpV4 => http::IpResolve::IpV4,
+            IpResolve::IpV6 => http::IpResolve::IpV6,
         }
     }
 }
@@ -174,6 +190,8 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::input_files())
         .arg(commands::insecure())
         .arg(commands::interactive())
+        .arg(commands::ipv4())
+        .arg(commands::ipv6())
         .arg(commands::json())
         .arg(commands::max_redirects())
         .arg(commands::max_time())
@@ -240,6 +258,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let input_files = matches::input_files(arg_matches)?;
     let insecure = matches::insecure(arg_matches);
     let interactive = matches::interactive(arg_matches);
+    let ip_resolve = matches::ip_resolve(arg_matches);
     let junit_file = matches::junit_file(arg_matches);
     let max_redirect = matches::max_redirect(arg_matches);
     let no_proxy = matches::no_proxy(arg_matches);
@@ -284,6 +303,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         input_files,
         insecure,
         interactive,
+        ip_resolve,
         junit_file,
         max_redirect,
         no_proxy,
@@ -323,11 +343,15 @@ impl Options {
         let client_key_file = self.client_key_file.clone();
         let connects_to = self.connects_to.clone();
         let follow_location = self.follow_location;
-        let insecure = self.insecure;
         let http_version = match self.http_version {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),
         };
+        let ip_resolve = match self.ip_resolve {
+            Some(ip) => ip.into(),
+            None => http::IpResolve::default(),
+        };
+        let insecure = self.insecure;
         let max_redirect = self.max_redirect;
         let path_as_is = self.path_as_is;
         let proxy = self.proxy.clone();
@@ -385,6 +409,7 @@ impl Options {
             .http_version(http_version)
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)
+            .ip_resolve(ip_resolve)
             .max_redirect(max_redirect)
             .no_proxy(no_proxy)
             .path_as_is(path_as_is)

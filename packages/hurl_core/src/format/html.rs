@@ -226,6 +226,8 @@ impl HtmlFormatter {
             OptionKind::Http2(value) => self.fmt_bool(*value),
             OptionKind::Http3(value) => self.fmt_bool(*value),
             OptionKind::Insecure(value) => self.fmt_bool(*value),
+            OptionKind::IpV4(value) => self.fmt_bool(*value),
+            OptionKind::IpV6(value) => self.fmt_bool(*value),
             OptionKind::MaxRedirect(value) => self.fmt_number(value),
             OptionKind::PathAsIs(value) => self.fmt_bool(*value),
             OptionKind::Proxy(value) => self.fmt_string(value),

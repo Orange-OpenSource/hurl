@@ -52,6 +52,14 @@ impl fmt::Display for RequestedHttpVersion {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
+pub enum IpResolve {
+    #[default]
+    Default, // Default, can use addresses of all IP versions that your system allows.
+    IpV4,
+    IpV6,
+}
+
 impl Request {
     /// Extracts query string params from the url of the request.
     pub fn query_string_params(&self) -> Vec<Param> {

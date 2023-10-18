@@ -17,7 +17,7 @@
  */
 use std::time::Duration;
 
-use crate::http::RequestedHttpVersion;
+use crate::http::{IpResolve, RequestedHttpVersion};
 use hurl_core::ast::{Entry, Retry};
 
 use crate::util::path::ContextDir;
@@ -38,6 +38,7 @@ pub struct RunnerOptionsBuilder {
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
+    ip_resolve: IpResolve,
     max_redirect: Option<usize>,
     no_proxy: Option<String>,
     path_as_is: bool,
@@ -72,6 +73,7 @@ impl Default for RunnerOptionsBuilder {
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
+            ip_resolve: IpResolve::default(),
             max_redirect: Some(50),
             no_proxy: None,
             path_as_is: false,
@@ -193,6 +195,7 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Set requested HTTP version (can be different of the effective HTTP version).
     pub fn http_version(&mut self, version: RequestedHttpVersion) -> &mut Self {
         self.http_version = version;
         self
@@ -207,6 +210,12 @@ impl RunnerOptionsBuilder {
     /// Allows Hurl to perform “insecure” SSL connections and transfers.
     pub fn insecure(&mut self, insecure: bool) -> &mut Self {
         self.insecure = insecure;
+        self
+    }
+
+    /// Set IP version.
+    pub fn ip_resolve(&mut self, ip_resolve: IpResolve) -> &mut Self {
+        self.ip_resolve = ip_resolve;
         self
     }
 
@@ -323,6 +332,7 @@ impl RunnerOptionsBuilder {
             http_version: self.http_version,
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
+            ip_resolve: self.ip_resolve,
             max_redirect: self.max_redirect,
             no_proxy: self.no_proxy.clone(),
             path_as_is: self.path_as_is,
@@ -357,6 +367,7 @@ pub struct RunnerOptions {
     pub(crate) follow_location: bool,
     pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,
+    pub(crate) ip_resolve: IpResolve,
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,
     pub(crate) no_proxy: Option<String>,

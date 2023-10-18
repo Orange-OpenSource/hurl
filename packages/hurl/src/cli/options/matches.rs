@@ -17,7 +17,7 @@
  */
 use super::variables::{parse as parse_variable, parse_value};
 use super::OptionsError;
-use crate::cli::options::{ErrorFormat, HttpVersion};
+use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve};
 use crate::cli::OutputType;
 use clap::ArgMatches;
 use hurl::runner::Value;
@@ -222,6 +222,16 @@ pub fn insecure(arg_matches: &ArgMatches) -> bool {
 
 pub fn interactive(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "interactive")
+}
+
+pub fn ip_resolve(arg_matches: &ArgMatches) -> Option<IpResolve> {
+    if has_flag(arg_matches, "ipv6") {
+        Some(IpResolve::IpV6)
+    } else if has_flag(arg_matches, "ipv4") {
+        Some(IpResolve::IpV4)
+    } else {
+        None
+    }
 }
 
 pub fn junit_file(arg_matches: &ArgMatches) -> Option<String> {

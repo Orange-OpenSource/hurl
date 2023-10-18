@@ -16,6 +16,7 @@
  *
  */
 use crate::http::request::RequestedHttpVersion;
+use crate::http::IpResolve;
 use hurl_core::ast::Retry;
 use std::time::Duration;
 
@@ -32,6 +33,7 @@ pub struct ClientOptions {
     pub follow_location: bool,
     pub http_version: RequestedHttpVersion,
     pub insecure: bool,
+    pub ip_resolve: IpResolve,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
     pub path_as_is: bool,
@@ -66,6 +68,7 @@ impl Default for ClientOptions {
             follow_location: false,
             http_version: RequestedHttpVersion::default(),
             insecure: false,
+            ip_resolve: IpResolve::default(),
             max_redirect: Some(50),
             no_proxy: None,
             path_as_is: false,
@@ -117,15 +120,20 @@ impl ClientOptions {
             arguments.push("--cookie".to_string());
             arguments.push(cookie_file.clone());
         }
-        if self.insecure {
-            arguments.push("--insecure".to_string());
-        }
         match self.http_version {
             RequestedHttpVersion::Default => {}
             RequestedHttpVersion::Http10 => arguments.push("--http1.0".to_string()),
             RequestedHttpVersion::Http11 => arguments.push("--http1.1".to_string()),
             RequestedHttpVersion::Http2 => arguments.push("--http2".to_string()),
             RequestedHttpVersion::Http3 => arguments.push("--http3".to_string()),
+        }
+        if self.insecure {
+            arguments.push("--insecure".to_string());
+        }
+        match self.ip_resolve {
+            IpResolve::Default => {}
+            IpResolve::IpV4 => arguments.push("--ipv4".to_string()),
+            IpResolve::IpV6 => arguments.push("--ipv6".to_string()),
         }
         if self.follow_location {
             arguments.push("--location".to_string());
@@ -186,6 +194,7 @@ mod tests {
                 follow_location: true,
                 http_version: RequestedHttpVersion::Http10,
                 insecure: true,
+                ip_resolve: IpResolve::IpV6,
                 max_redirect: Some(10),
                 path_as_is: true,
                 proxy: Some("localhost:3128".to_string()),
@@ -203,32 +212,34 @@ mod tests {
             }
             .curl_args(),
             [
-                "--compressed".to_string(),
-                "--connect-timeout".to_string(),
-                "20".to_string(),
-                "--connect-to".to_string(),
-                "example.com:443:host-47.example.com:443".to_string(),
-                "--cookie".to_string(),
-                "cookie_file".to_string(),
-                "--insecure".to_string(),
-                "--http1.0".to_string(),
-                "--location".to_string(),
-                "--max-redirs".to_string(),
-                "10".to_string(),
-                "--path-as-is".to_string(),
-                "--proxy".to_string(),
-                "'localhost:3128'".to_string(),
-                "--resolve".to_string(),
-                "foo.com:80:192.168.0.1".to_string(),
-                "--resolve".to_string(),
-                "bar.com:443:127.0.0.1".to_string(),
-                "--timeout".to_string(),
-                "10".to_string(),
-                "--user".to_string(),
-                "'user:password'".to_string(),
-                "--user-agent".to_string(),
-                "'my-useragent'".to_string(),
+                "--compressed",
+                "--connect-timeout",
+                "20",
+                "--connect-to",
+                "example.com:443:host-47.example.com:443",
+                "--cookie",
+                "cookie_file",
+                "--http1.0",
+                "--insecure",
+                "--ipv6",
+                "--location",
+                "--max-redirs",
+                "10",
+                "--path-as-is",
+                "--proxy",
+                "'localhost:3128'",
+                "--resolve",
+                "foo.com:80:192.168.0.1",
+                "--resolve",
+                "bar.com:443:127.0.0.1",
+                "--timeout",
+                "10",
+                "--user",
+                "'user:password'",
+                "--user-agent",
+                "'my-useragent'",
             ]
+            .map(|a| a.to_string())
         );
     }
 }

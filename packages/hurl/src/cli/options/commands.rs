@@ -231,6 +231,22 @@ pub fn interactive() -> clap::Arg {
         .action(ArgAction::SetTrue)
 }
 
+pub fn ipv4() -> clap::Arg {
+    clap::Arg::new("ipv4")
+        .long("ipv4")
+        .short('4')
+        .help("Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6")
+        .action(ArgAction::SetTrue)
+}
+
+pub fn ipv6() -> clap::Arg {
+    clap::Arg::new("ipv6")
+        .long("ipv6")
+        .short('6')
+        .help("Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn json() -> clap::Arg {
     clap::Arg::new("json")
         .long("json")

@@ -188,6 +188,8 @@ impl Client {
         }
         self.handle.http_version(options.http_version.into())?;
 
+        self.handle.ip_resolve(options.ip_resolve.into())?;
+
         // Activates the access of certificates info chain after a transfer has been executed.
         self.handle.certinfo(true)?;
 
@@ -847,6 +849,16 @@ impl From<RequestedHttpVersion> for easy::HttpVersion {
             RequestedHttpVersion::Http11 => easy::HttpVersion::V11,
             RequestedHttpVersion::Http2 => easy::HttpVersion::V2,
             RequestedHttpVersion::Http3 => easy::HttpVersion::V3,
+        }
+    }
+}
+
+impl From<IpResolve> for easy::IpResolve {
+    fn from(value: IpResolve) -> Self {
+        match value {
+            IpResolve::Default => easy::IpResolve::Any,
+            IpResolve::IpV4 => easy::IpResolve::V4,
+            IpResolve::IpV6 => easy::IpResolve::V6,
         }
     }
 }

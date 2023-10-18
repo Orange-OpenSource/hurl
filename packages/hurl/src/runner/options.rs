@@ -16,7 +16,7 @@
  *
  */
 
-use crate::http::RequestedHttpVersion;
+use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template;
 use crate::runner::{Error, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
@@ -114,6 +114,20 @@ pub fn get_entry_options(
                     }
                     OptionKind::FollowLocation(value) => runner_options.follow_location = *value,
                     OptionKind::Insecure(value) => runner_options.insecure = *value,
+                    OptionKind::IpV4(value) => {
+                        if *value {
+                            runner_options.ip_resolve = IpResolve::IpV4
+                        } else {
+                            runner_options.ip_resolve = IpResolve::IpV6
+                        }
+                    }
+                    OptionKind::IpV6(value) => {
+                        if *value {
+                            runner_options.ip_resolve = IpResolve::IpV6
+                        } else {
+                            runner_options.ip_resolve = IpResolve::IpV4
+                        }
+                    }
                     OptionKind::MaxRedirect(value) => runner_options.max_redirect = Some(*value),
                     OptionKind::PathAsIs(value) => runner_options.path_as_is = *value,
                     OptionKind::Proxy(value) => runner_options.proxy = Some(value.clone()),

@@ -293,6 +293,8 @@ impl ToJson for EntryOption {
             OptionKind::Http2(value) => JValue::Boolean(*value),
             OptionKind::Http3(value) => JValue::Boolean(*value),
             OptionKind::Insecure(value) => JValue::Boolean(*value),
+            OptionKind::IpV4(value) => JValue::Boolean(*value),
+            OptionKind::IpV6(value) => JValue::Boolean(*value),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
             OptionKind::PathAsIs(value) => JValue::Boolean(*value),
             OptionKind::Proxy(value) => JValue::String(value.clone()),
