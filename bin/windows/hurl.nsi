@@ -104,11 +104,6 @@ SectionGroup "dlls"
     SetOutPath $INSTDIR
     File "libxml2.dll"
   SectionEnd
-  Section "liblzma.dll"
-    SectionIn RO
-    SetOutPath $INSTDIR
-    File "liblzma.dll"
-  SectionEnd
   Section "zlib1.dll"
     SectionIn RO
     SetOutPath $INSTDIR
