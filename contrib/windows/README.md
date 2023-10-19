@@ -57,8 +57,8 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 Install build libs requirement
 
 ```pwsh
-vcpkg install curl:x64-windows
-vcpkg install libxml2[core,iconv]:x64-windows
+vcpkg install --recurse --x-use-aria2 curl:x64-windows
+vcpkg install --recurse --x-use-aria2 libxml2[core,iconv]:x64-windows
 vcpkg integrate install
 Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
 $env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")
