@@ -230,6 +230,24 @@ Specify input files that match the given glob pattern.
 Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
+### -0, --http1.0 {#http10}
+
+Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.
+
+### --http1.1 {#http11}
+
+Tells Hurl to use HTTP version 1.1.
+
+### --http2 {#http2}
+
+Tells Hurl to use HTTP version 2.
+For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.
+For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.
+
+### --http3 {#http3}
+
+Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
+
 ### -i, --include {#include}
 
 Include the HTTP headers in the output (last entry).
@@ -246,6 +264,14 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 
 Stop between requests.
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+
+### -4, --ipv4 {#ipv4}
+
+This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.
+
+### -6, --ipv6 {#ipv6}
+
+This option tells Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4.
 
 ### --json {#json}
 
