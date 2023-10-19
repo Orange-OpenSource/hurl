@@ -57,7 +57,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 Install build libs requirement
 
 ```pwsh
-vcpkg install curl:x64-windows
+vcpkg install curl[core,non-http,schannel,ssl,sspi,http2]:x64-windows
 vcpkg install libxml2[core,iconv]:x64-windows
 vcpkg integrate install
 Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
