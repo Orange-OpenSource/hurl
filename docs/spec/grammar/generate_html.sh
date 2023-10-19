@@ -13,7 +13,7 @@ if [ "$actual_version" != "$expected_version" ] ; then
 fi
 
 
-cat <<END >../grammar.md
+cat <<END >../../grammar.md
 # Grammar
 
 ## Definitions
@@ -27,4 +27,4 @@ Short description:
 ## Syntax Grammar
 
 END
-grammar --section-header h3 --section-id <hurl.grammar >>../grammar.md
+grammar --section-header h3 --section-id <hurl.grammar >>../../grammar.md
