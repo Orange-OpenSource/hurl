@@ -737,6 +737,7 @@ pub enum OptionKind {
     Resolve(Template),
     Retry(RetryOption),
     RetryInterval(NaturalOption),
+    Skip(BooleanOption),
     Variable(VariableDefinition),
     Verbose(BooleanOption),
     VeryVerbose(BooleanOption),
@@ -766,6 +767,7 @@ impl OptionKind {
             OptionKind::Resolve(_) => "resolve",
             OptionKind::Retry(_) => "retry",
             OptionKind::RetryInterval(_) => "retry-interval",
+            OptionKind::Skip(_) => "skip",
             OptionKind::Variable(_) => "variable",
             OptionKind::Verbose(_) => "verbose",
             OptionKind::VeryVerbose(_) => "very-verbose",
@@ -795,6 +797,7 @@ impl OptionKind {
             OptionKind::Resolve(value) => value.to_string(),
             OptionKind::Retry(value) => value.to_string(),
             OptionKind::RetryInterval(value) => value.to_string(),
+            OptionKind::Skip(value) => value.to_string(),
             OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                 format!("{name}={value}")
             }

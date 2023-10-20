@@ -54,6 +54,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "resolve" => option_resolve(reader)?,
         "retry" => option_retry(reader)?,
         "retry-interval" => option_retry_interval(reader)?,
+        "skip" => option_skip(reader)?,
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
@@ -180,6 +181,11 @@ fn option_retry(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural_option, reader)?;
     Ok(OptionKind::RetryInterval(value))
+}
+
+fn option_skip(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean_option, reader)?;
+    Ok(OptionKind::Skip(value))
 }
 
 fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {

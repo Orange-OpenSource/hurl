@@ -301,6 +301,7 @@ impl ToJson for EntryOption {
             OptionKind::Resolve(value) => JValue::String(value.to_string()),
             OptionKind::Retry(value) => JValue::Number(value.to_string()),
             OptionKind::RetryInterval(value) => JValue::Number(value.to_string()),
+            OptionKind::Skip(value) => value.to_json(),
             OptionKind::Variable(value) => {
                 JValue::String(format!("{}={}", value.name, value.value))
             }

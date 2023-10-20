@@ -136,6 +136,14 @@ pub fn run(
         let options = options::get_entry_options(entry, runner_options, &mut variables, &logger);
         let entry_result = match &options {
             Ok(options) => {
+                if options.skip {
+                    logger
+                        .debug_important(format!("Entry {entry_index} has been skipped").as_str());
+                    logger.debug("");
+                    entry_index += 1;
+                    continue;
+                }
+
                 let delay = options.delay;
                 let delay_ms = delay.as_millis();
                 if delay_ms > 0 {

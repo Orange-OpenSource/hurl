@@ -234,6 +234,7 @@ impl HtmlFormatter {
             OptionKind::Resolve(value) => self.fmt_template(value),
             OptionKind::Retry(value) => self.fmt_retry_option(value),
             OptionKind::RetryInterval(value) => self.fmt_natural_option(value),
+            OptionKind::Skip(value) => self.fmt_bool_option(value),
             OptionKind::Variable(value) => self.fmt_variable_definition(value),
             OptionKind::Verbose(value) => self.fmt_bool_option(value),
             OptionKind::VeryVerbose(value) => self.fmt_bool_option(value),

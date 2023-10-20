@@ -176,6 +176,10 @@ pub fn get_entry_options(
                         let value = eval_natural_option(value, variables)?;
                         runner_options.retry_interval = Duration::from_millis(value)
                     }
+                    OptionKind::Skip(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        runner_options.skip = value
+                    }
                     OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
                         variables.insert(name.clone(), value);
