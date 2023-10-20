@@ -9,7 +9,7 @@ git -C ((Get-command vcpkg).Source | Split-Path) pull
 # install libxml and libcurl[openssl]
 $vcpkg_dir=(Get-command vcpkg).Source
 
-vcpkg install --recurse --x-use-aria2 curl:x64-windows  || true
+vcpkg install --recurse --x-use-aria2 curl[core,non-http,schannel,ssl,sspi,http2]:x64-windows  || true
 vcpkg install --recurse --x-use-aria2 libxml2[core,iconv]:x64-windows || true
 
 vcpkg update

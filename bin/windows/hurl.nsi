@@ -89,11 +89,6 @@ SectionGroup "executables"
 SectionGroupEnd
 
 SectionGroup "dlls"
-  Section "charset-1.dll"
-    SectionIn RO
-    SetOutPath $INSTDIR
-    File "charset-1.dll"
-  SectionEnd
   Section "iconv-2.dll"
     SectionIn RO
     SetOutPath $INSTDIR
@@ -113,6 +108,11 @@ SectionGroup "dlls"
     SectionIn RO
     SetOutPath $INSTDIR
     File "libcurl.dll"
+  SectionEnd
+  Section "nghttp2.dll"
+    SectionIn RO
+    SetOutPath $INSTDIR
+    File "nghttp2.dll"
   SectionEnd
 SectionGroupEnd
 
