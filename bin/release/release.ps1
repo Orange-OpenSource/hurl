@@ -11,11 +11,17 @@ cargo build --release --verbose --locked
 if ($LASTEXITCODE) { Throw }
 
 # create final package
+$lib_dir=((Get-Command vcpkg).Source | Split-path) + "\installed\x64-windows\bin"
 $release_dir="$project_root_path\target\release"
 $package_dir="$project_root_path\target\win-package"
 New-Item -ItemType Directory -Force -Path $package_dir
-Get-ChildItem -Path $release_dir -Recurse -Include *.dll -File | Copy-Item -Destination "$package_dir"
-Get-ChildItem -Path $release_dir -Recurse -Include hurl*.exe -File | Copy-Item -Destination "$package_dir"
+Copy-Item -Path $lib_dir\libcurl.dll -Destination $package_dir
+Copy-Item -Path $lib_dir\zlib1.dll -Destination $package_dir
+Copy-Item -Path $lib_dir\nghttp2.dll -Destination $package_dir
+Copy-Item -Path $lib_dir\libxml2.dll -Destination $package_dir
+Copy-Item -Path $lib_dir\iconv-2.dll -Destination $package_dir
+Copy-Item -Path $release_dir\hurl.exe -Destination $package_dir
+Copy-Item -Path $release_dir\hurlfmt.exe -Destination $package_dir
 ((& $package_dir\hurl --version) -Split " ")[1] > $package_dir\version.txt
 Get-Content $package_dir\version.txt
 

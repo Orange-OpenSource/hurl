@@ -54,16 +54,6 @@ Set-ItemProperty -Path HKCU:\Environment -Name Path -Value $newpath
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
 ```
 
-Install build libs requirement
-
-```pwsh
-vcpkg install --recurse --x-use-aria2 curl:x64-windows
-vcpkg install --recurse --x-use-aria2 libxml2[core,iconv]:x64-windows
-vcpkg integrate install
-Set-ItemProperty -Path HKCU:\Environment -Name VCPKGRS_DYNAMIC -Value "1"
-$env:VCPKGRS_DYNAMIC = [System.Environment]::GetEnvironmentVariable("VCPKGRS_DYNAMIC","User")
-```
-
 # Clone hurl project
 
 ```pwsh
@@ -71,18 +61,18 @@ cd c:\
 git.exe clone https://github.com/Orange-OpenSource/hurl.git
 ```
 
-# Test your app
+# Build
 
 ```pwsh
 cd c:\hurl
-.\bin\test\test.ps1
+.\bin\install_prerequisites_windows.ps1
+.\bin\release\release.ps1
 ```
 
 # Create a simple zip package
 
 ```pwsh
 cd c:\hurl
-.\bin\release\release.ps1
 .\bin\release\create_windows64_zip_package.ps1
 ```
 
@@ -90,7 +80,6 @@ cd c:\hurl
 
 ```pwsh
 cd c:\hurl
-.\bin\release\release.ps1
 .\bin\release\create_windows64_installer.ps1
 ```
 
