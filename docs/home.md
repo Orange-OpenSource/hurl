@@ -1,9 +1,7 @@
 <div class="home-logo">
-    <img class="light-img" src="/docs/assets/img/logo-light.svg" width="277px" height="72px" alt="Hurl logo"/>
-    <img class="dark-img" src="/docs/assets/img/logo-dark.svg" width="277px" height="72px" alt="Hurl logo"/>
+    <img class="u-theme-light" src="/docs/assets/img/logo-light.svg" width="277px" height="72px" alt="Hurl logo"/>
+    <img class="u-theme-dark" src="/docs/assets/img/logo-dark.svg" width="277px" height="72px" alt="Hurl logo"/>
 </div>
-
-
 
 # What's Hurl?
 
@@ -44,7 +42,7 @@ Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
-<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+<div id="home-demo"></div>
 
 It is well adapted for <b>REST / JSON APIs</b>
 
@@ -126,7 +124,7 @@ HTTP 200
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
-Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
+Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit, TAP and HTML reports
 
 <div class="picture">
     <picture>
@@ -156,7 +154,7 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML re
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
 powered by [libcurl], one of the most powerful and reliable file transfer libraries.
 With its text file format, Hurl adds syntactic sugar to run and test HTTP requests,
-but it's still the [curl] that we love.
+but it's still the [curl] that we love: __fast__, __efficient__ and __HTTP/3 ready__.
 
 # Feedbacks
 

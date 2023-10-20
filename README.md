@@ -1,10 +1,8 @@
 <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" > 
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-dark.svg?sanitize=true" > 
-    <img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/art/logo-full-light.svg?sanitize=true" alt="Hurl Logo" width="264px">
+    <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/logo-light.svg?sanitize=true" > 
+    <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/logo-dark.svg?sanitize=true" > 
+    <img src="/docs/assets/img/logo-light.svg?sanitize=true" width="264px" alt="Hurl Logo">
 </picture>
-
-<br/>
 
 [![deploy status](https://github.com/Orange-OpenSource/hurl/workflows/test/badge.svg)](https://github.com/Orange-OpenSource/hurl/actions)
 [![coverage](https://Orange-OpenSource.github.io/hurl/coverage/badges/flat.svg)](https://Orange-OpenSource.github.io/hurl/coverage)
@@ -50,7 +48,8 @@ Hurl can run HTTP requests but can also be used to <b>test HTTP responses</b>.
 Different types of queries and predicates are supported, from [XPath] and [JSONPath] on body response,
 to assert on status code and response headers.
 
-<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="https://raw.githubusercontent.com/Orange-OpenSource/hurl/master/docs/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+<a href="https://hurl.dev/player.html?id=hurl&speed=3"><img src="/docs/assets/img/poster-hurl.png" width="100%" alt="Hurl Demo"/></a>
+
 
 It is well adapted for <b>REST / JSON APIs</b>
 
@@ -132,19 +131,13 @@ HTTP 200
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
 ```
 
-Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML reports
+Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit, TAP and HTML reports
 
-<div class="picture">
-    <picture>
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
-        <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
-        <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
-    </picture>
-</div>
+<picture>
+    <source media="(prefers-color-scheme: light)" srcset="/docs/assets/img/home-waterfall-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="/docs/assets/img/home-waterfall-dark.png">
+    <img src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+</picture>
 
 # Why Hurl?
 
@@ -159,7 +152,7 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit and HTML re
 Hurl is a lightweight binary written in [Rust]. Under the hood, Hurl HTTP engine is
 powered by [libcurl], one of the most powerful and reliable file transfer libraries.
 With its text file format, Hurl adds syntactic sugar to run and test HTTP requests,
-but it's still the [curl] that we love.
+but it's still the [curl] that we love: __fast__, __efficient__ and __HTTP/3 ready__.
 
 # Feedbacks
 
