@@ -19,13 +19,21 @@ Thanks to
 
 Enhancements:
 
+* Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
 * Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
-* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
+* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710) [#464](https://github.com/Orange-OpenSource/hurl/issues/464)
+* Add skip option [#1815](https://github.com/Orange-OpenSource/hurl/issues/1815)
+* Add --ipv4/--ipv6 option [#1727](https://github.com/Orange-OpenSource/hurl/issues/1727)
 * Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http2 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http1.0/-0 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http1.1 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
+
+
+Bugs Fixed:
+
+* Support HTTP/2 on windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
