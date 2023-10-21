@@ -148,107 +148,7 @@ impl Client {
         // prior to everything.
         self.handle.reset();
 
-        // Activates cookie engine.
-        // See <https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html>
-        // > It also enables the cookie engine, making libcurl parse and send cookies on subsequent
-        // > requests with this handle.
-        // > By passing the empty string ("") to this option, you enable the cookie
-        // > engine without reading any initial cookies.
-        self.handle
-            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())
-            .unwrap();
-
-        // We force libcurl verbose mode regardless of Hurl verbose option to be able
-        // to capture HTTP request headers in libcurl `debug_function`. That's the only
-        // way to get access to the outgoing headers.
-        self.handle.verbose(true)?;
-
-        // We checks libcurl HTTP version support.
-        let http_version = options.http_version;
-        if (http_version == RequestedHttpVersion::Http2 && !self.http2)
-            || (http_version == RequestedHttpVersion::Http3 && !self.http3)
-        {
-            return Err(HttpError::UnsupportedHttpVersion(http_version));
-        }
-
-        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
-        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
-        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
-        // instance).
-        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
-        // > existing connections so it might then reuse a connection using a HTTP version you
-        // > have not asked for.
-        //
-        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
-        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
-        self.state.set_requested_http_version(http_version);
-        if self.state.has_changed() {
-            logger.debug("Force refreshing connections because requested HTTP version change");
-            self.handle.fresh_connect(true)?;
-        }
-        self.handle.http_version(options.http_version.into())?;
-
-        self.handle.ip_resolve(options.ip_resolve.into())?;
-
-        // Activates the access of certificates info chain after a transfer has been executed.
-        self.handle.certinfo(true)?;
-
-        if !options.connects_to.is_empty() {
-            let connects = to_list(&options.connects_to);
-            self.handle.connect_to(connects)?;
-        }
-        if !options.resolves.is_empty() {
-            let resolves = to_list(&options.resolves);
-            self.handle.resolve(resolves)?;
-        }
-        self.handle.ssl_verify_host(!options.insecure)?;
-        self.handle.ssl_verify_peer(!options.insecure)?;
-        if let Some(cacert_file) = options.cacert_file.clone() {
-            self.handle.cainfo(cacert_file)?;
-            self.handle.ssl_cert_type("PEM")?;
-        }
-        if let Some(client_cert_file) = options.client_cert_file.clone() {
-            self.handle.ssl_cert(client_cert_file)?;
-            self.handle.ssl_cert_type("PEM")?;
-        }
-        if let Some(client_key_file) = options.client_key_file.clone() {
-            self.handle.ssl_key(client_key_file)?;
-            self.handle.ssl_cert_type("PEM")?;
-        }
-        self.handle.path_as_is(options.path_as_is)?;
-        if let Some(proxy) = options.proxy.clone() {
-            self.handle.proxy(proxy.as_str())?;
-        }
-        if let Some(s) = options.no_proxy.clone() {
-            self.handle.noproxy(s.as_str())?;
-        }
-        self.handle.timeout(options.timeout)?;
-        self.handle.connect_timeout(options.connect_timeout)?;
-
-        self.set_ssl_options(options.ssl_no_revoke)?;
-
-        let url = self.generate_url(&request_spec.url, &request_spec.querystring);
-        self.handle.url(url.as_str())?;
-        let method = &request_spec.method;
-        self.set_method(method)?;
-        self.set_cookies(&request_spec.cookies)?;
-        self.set_form(&request_spec.form)?;
-        self.set_multipart(&request_spec.multipart)?;
-        let request_spec_body = &request_spec.body.bytes();
-        self.set_body(request_spec_body)?;
-        self.set_headers(request_spec, options)?;
-
-        if let Some(aws_sigv4) = &options.aws_sigv4 {
-            if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
-                return match e.code() {
-                    curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
-                        option: "aws-sigv4".to_string(),
-                        minimum_version: "7.75.0".to_string(),
-                    }),
-                    _ => Err(e.into()),
-                };
-            }
-        }
+        let (url, method) = self.configure(request_spec, options, logger)?;
 
         let start = Utc::now();
         let verbose = options.verbosity.is_some();
@@ -256,7 +156,7 @@ impl Client {
         let mut request_headers: Vec<Header> = vec![];
         let mut status_lines = vec![];
         let mut response_headers = vec![];
-        let has_body_data = !request_spec_body.is_empty()
+        let has_body_data = !request_spec.body.bytes().is_empty()
             || !request_spec.form.is_empty()
             || !request_spec.multipart.is_empty();
 
@@ -267,9 +167,6 @@ impl Client {
         let mut request_body = Vec::<u8>::new();
         let mut response_body = Vec::<u8>::new();
 
-        if *method == Method("HEAD".to_string()) {
-            self.handle.nobody(true)?;
-        }
         {
             let mut transfer = self.handle.transfer();
 
@@ -445,6 +342,120 @@ impl Client {
             response,
             timings,
         })
+    }
+
+    /// Configure libcurl handle to send a `request_spec`, using `options`.
+    /// If configuration is successful, returns a tuple of the concrete requested URL and method.
+    fn configure(
+        &mut self,
+        request_spec: &RequestSpec,
+        options: &ClientOptions,
+        logger: &Logger,
+    ) -> Result<(String, Method), HttpError> {
+        // Activates cookie engine.
+        // See <https://curl.se/libcurl/c/CURLOPT_COOKIEFILE.html>
+        // > It also enables the cookie engine, making libcurl parse and send cookies on subsequent
+        // > requests with this handle.
+        // > By passing the empty string ("") to this option, you enable the cookie
+        // > engine without reading any initial cookies.
+        self.handle
+            .cookie_file(options.cookie_input_file.clone().unwrap_or_default())
+            .unwrap();
+
+        // We force libcurl verbose mode regardless of Hurl verbose option to be able
+        // to capture HTTP request headers in libcurl `debug_function`. That's the only
+        // way to get access to the outgoing headers.
+        self.handle.verbose(true)?;
+
+        // We checks libcurl HTTP version support.
+        let http_version = options.http_version;
+        if (http_version == RequestedHttpVersion::Http2 && !self.http2)
+            || (http_version == RequestedHttpVersion::Http3 && !self.http3)
+        {
+            return Err(HttpError::UnsupportedHttpVersion(http_version));
+        }
+
+        // libcurl tries to reuse connections as much as possible (see <https://curl.se/libcurl/c/CURLOPT_HTTP_VERSION.html>)
+        // That's why an `handle` initiated with a HTTP 2 version may keep using HTTP 2 protocol
+        // even if we ask to switch to HTTP 3 in the same session (using `[Options]` section for
+        // instance).
+        // > Note that the HTTP version is just a request. libcurl still prioritizes to reuse
+        // > existing connections so it might then reuse a connection using a HTTP version you
+        // > have not asked for.
+        //
+        // So, if we detect a change of requested HTTP version, we force libcurl to refresh its
+        // connections (see <https://curl.se/libcurl/c/CURLOPT_FRESH_CONNECT.html>)
+        self.state.set_requested_http_version(http_version);
+        if self.state.has_changed() {
+            logger.debug("Force refreshing connections because requested HTTP version change");
+            self.handle.fresh_connect(true)?;
+        }
+        self.handle.http_version(options.http_version.into())?;
+
+        self.handle.ip_resolve(options.ip_resolve.into())?;
+
+        // Activates the access of certificates info chain after a transfer has been executed.
+        self.handle.certinfo(true)?;
+
+        if !options.connects_to.is_empty() {
+            let connects = to_list(&options.connects_to);
+            self.handle.connect_to(connects)?;
+        }
+        if !options.resolves.is_empty() {
+            let resolves = to_list(&options.resolves);
+            self.handle.resolve(resolves)?;
+        }
+        self.handle.ssl_verify_host(!options.insecure)?;
+        self.handle.ssl_verify_peer(!options.insecure)?;
+        if let Some(cacert_file) = options.cacert_file.clone() {
+            self.handle.cainfo(cacert_file)?;
+            self.handle.ssl_cert_type("PEM")?;
+        }
+        if let Some(client_cert_file) = options.client_cert_file.clone() {
+            self.handle.ssl_cert(client_cert_file)?;
+            self.handle.ssl_cert_type("PEM")?;
+        }
+        if let Some(client_key_file) = options.client_key_file.clone() {
+            self.handle.ssl_key(client_key_file)?;
+            self.handle.ssl_cert_type("PEM")?;
+        }
+        self.handle.path_as_is(options.path_as_is)?;
+        if let Some(proxy) = options.proxy.clone() {
+            self.handle.proxy(proxy.as_str())?;
+        }
+        if let Some(s) = options.no_proxy.clone() {
+            self.handle.noproxy(s.as_str())?;
+        }
+        self.handle.timeout(options.timeout)?;
+        self.handle.connect_timeout(options.connect_timeout)?;
+
+        self.set_ssl_options(options.ssl_no_revoke)?;
+
+        let url = self.generate_url(&request_spec.url, &request_spec.querystring);
+        self.handle.url(url.as_str())?;
+        let method = &request_spec.method;
+        self.set_method(method)?;
+        self.set_cookies(&request_spec.cookies)?;
+        self.set_form(&request_spec.form)?;
+        self.set_multipart(&request_spec.multipart)?;
+        let request_spec_body = &request_spec.body.bytes();
+        self.set_body(request_spec_body)?;
+        self.set_headers(request_spec, options)?;
+        if let Some(aws_sigv4) = &options.aws_sigv4 {
+            if let Err(e) = self.handle.aws_sigv4(aws_sigv4.as_str()) {
+                return match e.code() {
+                    curl_sys::CURLE_UNKNOWN_OPTION => Err(HttpError::LibcurlUnknownOption {
+                        option: "aws-sigv4".to_string(),
+                        minimum_version: "7.75.0".to_string(),
+                    }),
+                    _ => Err(e.into()),
+                };
+            }
+        }
+        if *method == Method("HEAD".to_string()) {
+            self.handle.nobody(true)?;
+        }
+        Ok((url, method.clone()))
     }
 
     /// Generates URL.
