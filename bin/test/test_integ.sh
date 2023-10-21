@@ -26,6 +26,16 @@ if [[ "$(uname -s)" = "Linux*" ]]; then
     fi
 fi
 
+if [[ "$(uname -s)" = "Darwin" ]]; then
+  echo ">>>>>>>>>>>>>>>>>>>"
+  /usr/local/opt/curl/bin/curl --version
+  /usr/bin/curl --version
+  hurl --version
+  /usr/local/opt/curl/bin/curl --ipv6 --verbose https://google.com
+  /usr/bin/curl --ipv6 --verbose https://google.com
+  echo 'GET https://google.com' | hurl --ipv6 --very-verbose
+  echo ">>>>>>>>>>>>>>>>>>>"
+fi
 
 # integration tests
 cd integration

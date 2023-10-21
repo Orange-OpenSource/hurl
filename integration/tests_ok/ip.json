@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"https://google.com","options":[{"name":"ipv4","value":true}]}},{"request":{"method":"GET","url":"https://google.com","options":[{"name":"ipv6","value":true}]}}]}
