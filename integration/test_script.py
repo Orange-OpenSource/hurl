@@ -206,7 +206,7 @@ def ignore_lines(text: str) -> str:
     for line in text.split("\n"):
         if line.startswith("**"):  # curl debug info
             continue
-        if "/lib64/libcurl.so.4: no version information available" in line:
+        if "libcurl.so.4: no version information available" in line:
             continue
         lines.append(line)
 
