@@ -25,7 +25,7 @@ jsonpath "$.cats[0].lives" == 9
 
 Expected protocol version and status code of the HTTP response.
 
-Protocol version is one of `HTTP/1.0`, `HTTP/1.1`, `HTTP/2` or
+Protocol version is one of `HTTP/1.0`, `HTTP/1.1`, `HTTP/2`, `HTTP/3` or
 `HTTP`; `HTTP` describes any version. Note that there are no status text following the status code.
 
 ```hurl
@@ -45,7 +45,7 @@ status > 400
 status <= 500
 ```
 
-While `HTTP/1.0`, `HTTP/1.1` and `HTTP/2` explicitly check HTTP version:
+While `HTTP/1.0`, `HTTP/1.1`, `HTTP/2` and `HTTP/3` explicitly check HTTP version:
 
 ```hurl
 # Check that our server responds with HTTP/2

@@ -410,11 +410,11 @@ certificate "Serial-Number" matches /[\da-f]+/
 
 ### HTTP Version
 
-Testing HTTP version (1.0, 1.1 or 2):
+Testing HTTP version (1.0, 1.1, 2 or 3):
 
 ```hurl
 GET https://example.org/order/435
-HTTP/2 200
+HTTP/3 200
 ```
 
 [Doc](/docs/asserting-response.md#version-status)
