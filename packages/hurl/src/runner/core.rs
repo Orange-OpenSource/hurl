@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 /*
  * Hurl (https://hurl.dev)
  * Copyright (C) 2023 Orange
@@ -28,6 +29,7 @@ pub struct HurlResult {
     pub time_in_ms: u128,
     pub success: bool,
     pub cookies: Vec<Cookie>,
+    pub variables: HashMap<String, Value>,
     pub timestamp: i64,
 }
 

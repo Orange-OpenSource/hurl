@@ -17,6 +17,7 @@
  */
 mod cli;
 
+use std::collections::HashMap;
 use std::io::prelude::*;
 use std::path::Path;
 use std::time::Instant;
@@ -50,7 +51,7 @@ struct HurlRun {
 fn main() {
     init_colored();
 
-    let opts = match cli::options::parse() {
+    let mut opts = match cli::options::parse() {
         Ok(v) => v,
         Err(e) => match e {
             OptionsError::Info(message) => {
@@ -132,6 +133,8 @@ fn main() {
             unwrap_or_exit(result, EXIT_ERROR_RUNTIME, &base_logger);
         }
 
+        opts.variables = hurl_result.variables.clone();
+
         let run = HurlRun {
             content,
             filename: filename.to_string(),
@@ -161,6 +164,13 @@ fn main() {
     if let Some(filename) = opts.cookie_output_file {
         base_logger.debug(format!("Writing cookies to {filename}").as_str());
         let result = create_cookies_file(&runs, &filename);
+        unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
+    }
+
+    if opts.persist {
+        let variables_file = opts.variables_file.as_deref().unwrap_or("vars");
+        base_logger.debug(format!("Writing variables to {variables_file}").as_str());
+        let result = create_variables_file(&opts.variables, &variables_file);
         unwrap_or_exit(result, EXIT_ERROR_UNDEFINED, &base_logger);
     }
 
@@ -301,6 +311,33 @@ fn create_cookies_file(runs: &[HurlRun], filename: &str) -> Result<(), cli::CliE
         }
     }
 
+    if let Err(why) = file.write_all(s.as_bytes()) {
+        return Err(cli::CliError {
+            message: format!("Issue writing to {filename}: {why:?}"),
+        });
+    }
+    Ok(())
+}
+
+fn create_variables_file(
+    variables: &HashMap<String, runner::Value>,
+    filename: &str,
+) -> Result<(), cli::CliError> {
+    let mut file = match std::fs::File::create(filename) {
+        Err(why) => {
+            return Err(cli::CliError {
+                message: format!("Issue writing to {filename}: {why:?}"),
+            });
+        }
+        Ok(file) => file,
+    };
+    let mut s = String::new();
+    for (key, value) in variables {
+        s.push_str(key);
+        s.push('=');
+        s.push_str(&value.to_string());
+        s.push('\n');
+    }
     if let Err(why) = file.write_all(s.as_bytes()) {
         return Err(cli::CliError {
             message: format!("Issue writing to {filename}: {why:?}"),

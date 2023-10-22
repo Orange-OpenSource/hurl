@@ -267,6 +267,10 @@ pub fn path_as_is(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "path_as_is")
 }
 
+pub fn persist(arg_matches: &ArgMatches) -> bool {
+    has_flag(arg_matches, "persist")
+}
+
 pub fn progress_bar(arg_matches: &ArgMatches) -> bool {
     let verbose = verbose(arg_matches) || very_verbose(arg_matches);
     test(arg_matches)
@@ -379,6 +383,10 @@ pub fn variables(matches: &ArgMatches) -> Result<HashMap<String, Value>, Options
     }
 
     Ok(variables)
+}
+
+pub fn variables_file(arg_matches: &ArgMatches) -> Option<String> {
+    get_string(arg_matches, "varables_file")
 }
 
 pub fn verbose(arg_matches: &ArgMatches) -> bool {

@@ -457,3 +457,11 @@ pub fn very_verbose() -> clap::Arg {
         .help("Turn on verbose output, including HTTP response and libcurl logs")
         .action(ArgAction::SetTrue)
 }
+
+pub fn persist() -> clap::Arg {
+    clap::Arg::new("persist")
+        .long("persist")
+        .short('p')
+        .help("Persist changed variables in the variable file")
+        .action(ArgAction::SetTrue)
+}

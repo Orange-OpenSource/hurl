@@ -65,6 +65,7 @@ pub struct Options {
     pub output: Option<String>,
     pub output_type: OutputType,
     pub path_as_is: bool,
+    pub persist: bool,
     pub progress_bar: bool,
     pub proxy: Option<String>,
     pub resolves: Vec<String>,
@@ -78,6 +79,7 @@ pub struct Options {
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
+    pub variables_file: Option<String>,
     pub verbose: bool,
     pub very_verbose: bool,
 }
@@ -200,6 +202,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::noproxy())
         .arg(commands::output())
         .arg(commands::path_as_is())
+        .arg(commands::persist())
         .arg(commands::proxy())
         .arg(commands::report_html())
         .arg(commands::report_junit())
@@ -220,7 +223,7 @@ pub fn parse() -> Result<Options, OptionsError> {
     let arg_matches = command.try_get_matches_from_mut(env::args_os())?;
     let opts = parse_matches(&arg_matches)?;
 
-    // If we've no file input (either from the standard input or from the command line arguments),
+    // If don't have file input (either from the standard input or from the command line arguments),
     // we just print help and exit.
     if opts.input_files.is_empty() {
         let help = command.render_help().to_string();
@@ -264,6 +267,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let no_proxy = matches::no_proxy(arg_matches);
     let progress_bar = matches::progress_bar(arg_matches);
     let path_as_is = matches::path_as_is(arg_matches);
+    let persist = matches::persist(arg_matches);
     let proxy = matches::proxy(arg_matches);
     let output = matches::output(arg_matches);
     let output_type = matches::output_type(arg_matches);
@@ -278,6 +282,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let user = matches::user(arg_matches);
     let user_agent = matches::user_agent(arg_matches);
     let variables = matches::variables(arg_matches)?;
+    let variables_file = matches::variables_file(arg_matches);
     let verbose = matches::verbose(arg_matches);
     let very_verbose = matches::very_verbose(arg_matches);
     Ok(Options {
@@ -308,6 +313,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         max_redirect,
         no_proxy,
         path_as_is,
+        persist,
         progress_bar,
         proxy,
         output,
@@ -323,6 +329,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         user,
         user_agent,
         variables,
+        variables_file,
         verbose,
         very_verbose,
     })

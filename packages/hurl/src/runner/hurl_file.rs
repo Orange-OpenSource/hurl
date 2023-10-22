@@ -234,6 +234,7 @@ pub fn run(
         success,
         cookies,
         timestamp,
+        variables,
     })
 }
 
