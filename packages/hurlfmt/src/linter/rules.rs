@@ -615,6 +615,7 @@ fn lint_comment(comment: &Comment) -> Comment {
         } else {
             format!(" {}", comment.value)
         },
+        source_info: SourceInfo::new(0, 0, 0, 0),
     }
 }
 

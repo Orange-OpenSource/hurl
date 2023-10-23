@@ -359,7 +359,8 @@ mod tests {
             line_terminators: vec![LineTerminator {
                 space0: whitespace(),
                 comment: Some(Comment {
-                    value: "@cookie_storage_clear".to_string()
+                    value: "@cookie_storage_clear".to_string(),
+                    source_info: SourceInfo::new(0, 0, 0, 0),
                 }),
                 newline: whitespace(),
             }],
@@ -399,7 +400,8 @@ mod tests {
                     comment: Some(Comment {
                         value:
                             "@cookie_storage_set: localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA"
-                                .to_string()
+                                .to_string(),
+                        source_info: SourceInfo::new(0, 0, 0, 0),
                     }),
                     newline: whitespace(),
                 }],

@@ -133,6 +133,7 @@ pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<Vec<LineTer
 
 pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
     try_literal("#", reader)?;
+    let start = reader.state.clone();
     let mut value = String::new();
     loop {
         if reader.is_eof() {
@@ -152,7 +153,13 @@ pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
             }
         }
     }
-    Ok(Comment { value })
+    Ok(Comment {
+        value,
+        source_info: SourceInfo {
+            start: start.pos,
+            end: reader.state.clone().pos,
+        },
+    })
 }
 
 pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
@@ -677,7 +684,8 @@ mod tests {
         assert_eq!(
             comment(&mut reader),
             Ok(Comment {
-                value: String::new()
+                value: String::new(),
+                source_info: SourceInfo::new(1, 2, 1, 2),
             })
         );
 
@@ -685,7 +693,8 @@ mod tests {
         assert_eq!(
             comment(&mut reader),
             Ok(Comment {
-                value: " comment".to_string()
+                value: " comment".to_string(),
+                source_info: SourceInfo::new(1, 2, 1, 10),
             })
         );
         assert_eq!(reader.state.cursor, 9);
@@ -809,7 +818,8 @@ mod tests {
                         source_info: SourceInfo::new(1, 25, 1, 26),
                     },
                     comment: Some(Comment {
-                        value: " comment".to_string()
+                        value: " comment".to_string(),
+                        source_info: SourceInfo::new(1, 27, 1, 35),
                     }),
                     newline: Whitespace {
                         value: String::new(),

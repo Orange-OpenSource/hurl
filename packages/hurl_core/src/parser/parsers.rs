@@ -354,6 +354,7 @@ mod tests {
                 },
                 comment: Some(Comment {
                     value: " comment".to_string(),
+                    source_info: SourceInfo::new(1, 24, 1, 32),
                 }),
                 newline: Whitespace {
                     value: String::new(),

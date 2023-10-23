@@ -575,6 +575,7 @@ pub enum TemplateElement {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Comment {
     pub value: String,
+    pub source_info: SourceInfo,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
