@@ -11,7 +11,15 @@ def main():
 
 
 def is_authorized(license: str) -> bool:
-    for l in ["MIT", "Apache-2.0", "Zlib", "CC0-1.0", "MPL-2.0", "BSD-3-Clause"]:
+    for l in [
+        "MIT",
+        "Apache-2.0",
+        "Zlib",
+        "CC0-1.0",
+        "MPL-2.0",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+    ]:
         if l in license:
             return True
     return False
