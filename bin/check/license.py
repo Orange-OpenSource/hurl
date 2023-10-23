@@ -49,14 +49,18 @@ def check_licenses(deps: List[Tuple[str, str, str, str]]):
         print(f"  {name_str} {version} {repository}: {lic_str}")
 
     print("Unknown:")
-    for (name, repository, version, lic) in forbidden:
+    for (name, repository, version, lic) in unknown:
         name_str = f"\x1b[1;34m{name}\x1b[0m"
         lic_str = f"\x1b[1;33m{lic}\x1b[0m"
         print(f"  {name_str} {version} {repository}: {lic_str}")
 
-    if len(forbidden) > 0 or len(unknown) > 0:
-        print("There are not authorized licenses")
+    if len(forbidden) > 0:
+        print("There are forbidden licenses")
         exit(1)
+
+    if len(unknown) > 0:
+        print("There are unknown licenses")
+        exit(2)
 
 
 def get_deps() -> List[Tuple[str, str, str, str]]:
