@@ -44,8 +44,8 @@ impl Testcase {
         let success = if line.starts_with("ok") {
             line = &line[2..];
             true
-        } else if line.starts_with("nok") {
-            line = &line[3..];
+        } else if line.starts_with("not ok") {
+            line = &line[6..];
             false
         } else {
             return Err(Error {

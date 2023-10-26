@@ -56,10 +56,10 @@ fn write_tap_file(filename: &str, testcases: &[&Testcase]) -> Result<(), Error> 
     s.push_str(format!("{start}..{end}\n").as_str());
 
     for (i, testcase) in testcases.iter().enumerate() {
-        let success = if testcase.success { "" } else { "not " };
+        let state = if testcase.success { "ok" } else { "not ok" };
         let number = i + 1;
         let description = &testcase.description;
-        s.push_str(format!("{success}ok {number} - {description}\n").as_str());
+        s.push_str(format!("{state} {number} - {description}\n").as_str());
     }
     match file.write_all(s.as_bytes()) {
         Ok(_) => Ok(()),
