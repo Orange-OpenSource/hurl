@@ -55,7 +55,7 @@
 //! ```
 //!
 mod testcase;
-
+mod xml;
 use std::fs::File;
 
 use indexmap::IndexMap;

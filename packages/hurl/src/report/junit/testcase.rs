@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-use indexmap::map::IndexMap;
-use xmltree::{Element, XMLNode};
-
+use super::xml::XmlDocument;
 use crate::runner::HurlResult;
 use crate::util::logger;
+use indexmap::map::IndexMap;
+use xmltree::{Element, XMLNode};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {

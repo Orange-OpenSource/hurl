@@ -41,6 +41,7 @@ serde_json = "1.0.108"
 sha2 = "0.10.8"
 url = "2.4.1"
 xmltree = { version = "0.10.3",  features = ["attribute-order"] }
+xml-rs = { version = "0.8.19"}
 lazy_static = "1.4.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.5.0", features = ["v4" , "fast-rng"] }
