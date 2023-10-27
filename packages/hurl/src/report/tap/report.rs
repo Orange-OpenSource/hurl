@@ -149,7 +149,7 @@ mod tests {
         let s = r#"1..3
 ok 1 - tests_ok/test.1.hurl
  ok 2  -tests_ok/test.2.hurl
-nok 3 - tests_ok/test.3.hurl
+not ok 3 - tests_ok/test.3.hurl
 
 "#;
         assert_eq!(
@@ -177,7 +177,7 @@ nok 3 - tests_ok/test.3.hurl
 1..3
 ok 1 - tests_ok/test.1.hurl
  ok 2  -tests_ok/test.2.hurl
-nok 3 - tests_ok/test.3.hurl
+not ok 3 - tests_ok/test.3.hurl
 
 "#;
         assert_eq!(

@@ -1,6 +1,8 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
 
+# Some tests are failing but we want to continue until the end
+$ErrorActionPreference = "Continue"
 hurl --test `
   --report-html build\tmp\ `
   --glob "tests_ok\test.*.hurl"

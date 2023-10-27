@@ -1,6 +1,8 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+# Some tests are failing but we want to continue until the end
+set +euo pipefail
 hurl --test \
   --report-html build/ \
   --glob "tests_ok/test.*.hurl"
