@@ -140,6 +140,8 @@ def webscrapping_linked_pulls(html) -> List[Pull]:
     pulls = []
     for link in links:
         url = link["href"]
+        if not isinstance(url, str):
+            continue
         if url == "/Orange-OpenSource/hurl":
             continue
         description = "".join(link.getText()).strip()

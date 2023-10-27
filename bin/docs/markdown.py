@@ -119,6 +119,8 @@ class Table(Node):
         ```
         """
         # Convert our content to an array of strings
+        if not self.content:
+            return
         lines = self.content.splitlines()
         rows = [line.split("|")[1:-1] for line in lines]
         rows_count = len(rows)
