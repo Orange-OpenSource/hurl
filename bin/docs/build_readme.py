@@ -24,6 +24,7 @@ from markdown import parse_markdown, MarkdownDoc
 
 def build_home_md(text: str) -> MarkdownDoc:
     """Returns the MarkDown representation of the Home"""
+
     # We adapt the "Why Hurl" part to transform h2 tag back to markdown
     def showcase_rep(m):
         return f"<li><b>{m.group(1)}:</b> {m.group(2).lower()}</li>"
@@ -125,7 +126,7 @@ def replace(text: str, dest: str) -> str:
 """,
         ),
     ]
-    for (old, new_for_github, new_for_crates) in snippets:
+    for old, new_for_github, new_for_crates in snippets:
         if dest == "github":
             new = new_for_github
         else:

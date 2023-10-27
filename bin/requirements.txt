@@ -1,6 +1,6 @@
-black==22.6.0
-beautifulsoup4==4.11.1
+black==23.10.1
+beautifulsoup4==4.12.2
 Flask==3.0.0
-lxml==4.9.1
-mypy==0.971
+lxml==4.9.3
 requests==2.31.0
+mypy==1.6.1

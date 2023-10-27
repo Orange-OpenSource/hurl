@@ -51,7 +51,6 @@ def process_code_block(s):
 
 
 def convert_md(s):
-
     p = re.compile("^###\s+(.*)")
     s = p.sub('.IP "\\1"', s)
 

@@ -45,19 +45,19 @@ def check_licenses(deps: List[Tuple[str, str, str, str]]):
         else:
             unknown.append(dep)
     print("Authorized:")
-    for (name, repository, version, lic) in authorized:
+    for name, repository, version, lic in authorized:
         name_str = f"\x1b[1;34m{name}\x1b[0m"
         lic_str = f"\x1b[1;32m{lic}\x1b[0m"
         print(f"  {name_str} {version} {repository}: {lic_str}")
 
     print("Forbidden:")
-    for (name, repository, version, lic) in forbidden:
+    for name, repository, version, lic in forbidden:
         name_str = f"\x1b[1;34m{name}\x1b[0m"
         lic_str = f"\x1b[1;31m{lic}\x1b[0m"
         print(f"  {name_str} {version} {repository}: {lic_str}")
 
     print("Unknown:")
-    for (name, repository, version, lic) in unknown:
+    for name, repository, version, lic in unknown:
         name_str = f"\x1b[1;34m{name}\x1b[0m"
         lic_str = f"\x1b[1;33m{lic}\x1b[0m"
         print(f"  {name_str} {version} {repository}: {lic_str}")
