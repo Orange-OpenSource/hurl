@@ -17,6 +17,7 @@
  */
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, Pos, SourceInfo, Template};
 use crate::parser::combinators::*;
+use crate::parser::error::*;
 use crate::parser::primitives::*;
 use crate::parser::reader::*;
 use crate::parser::template::*;
@@ -248,10 +249,26 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             if reader.peek() == Some(']') {
                 break;
             }
+            // Reports "expecting ']'" in case the user forgot to add the last ']', e.g
+            // `[1, 2`
             if reader.peek() != Some(',') {
                 break;
             }
+            // The reader advances after literal(","), so this saves its position to report an
+            // error in case it happens.
+            let save = reader.state.pos.clone();
             literal(",", reader)?;
+            // If there is one more comma, e.g. [1, 2,], it's better to report to the user because
+            // this occurance is common.
+            if reader.peek_ignoring_whitespace() == Some(']') {
+                return Err(Error {
+                    pos: save,
+                    recoverable: false,
+                    inner: ParseError::UnexpectedInJson {
+                        character: ','.to_string(),
+                    },
+                });
+            }
             let element = list_element(reader)?;
             elements.push(element);
         }
@@ -262,16 +279,18 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
-    let save = reader.state.pos.clone();
     let space0 = whitespace(reader);
     let value = match parse(reader) {
         Ok(r) => r,
-        Err(_) => {
-            return Err(error::Error {
-                pos: save,
+        Err(e) => {
+            return Err(Error {
+                // Recoverable must be set to false, else the Body parser may think this is not a
+                // JSON body, because the JSON parser can fail in object_value try_literal('{'),
+                // and try_literal is marked as recoverable.
                 recoverable: false,
-                inner: error::ParseError::Json,
-            })
+                pos: e.pos,
+                inner: e.inner,
+            });
         }
     };
     let space1 = whitespace(reader);
@@ -283,7 +302,9 @@ fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
 }
 
 pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+    let save = reader.state.clone();
     try_literal("{", reader)?;
+    peek_until_close_brace(reader, save)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];
     if reader.peek() != Some('}') {
@@ -294,10 +315,26 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             if reader.peek() == Some('}') {
                 break;
             }
+            // Reports "expecting '}'" in case the user forgot to add the last '}', e.g
+            // `{"name": "abc"`
             if reader.peek() != Some(',') {
                 break;
             }
+            // The reader advances after literal(","), so this saves its position to report an
+            // error in case it happens.
+            let save = reader.state.pos.clone();
             literal(",", reader)?;
+            // If there is one more comma, e.g. {"a": "b",}, it's better to report to the user
+            // because this occurance is common.
+            if reader.peek_ignoring_whitespace() == Some('}') {
+                return Err(Error {
+                    pos: save,
+                    recoverable: false,
+                    inner: ParseError::UnexpectedInJson {
+                        character: ','.to_string(),
+                    },
+                });
+            }
             let element = object_element(reader)?;
             elements.push(element);
         }
@@ -332,14 +369,28 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     literal(":", reader)?;
     let save = reader.state.pos.clone();
     let space2 = whitespace(reader);
+    // Checks if there is no element after ':'. In this case, a special error must be reported
+    // because this is a common occurance.
+    let next_char = reader.peek();
+    // Comparing to None because `next_char` can be EOF.
+    if next_char == Some('}') || next_char.is_none() {
+        return Err(error::Error {
+            pos: save,
+            recoverable: false,
+            inner: error::ParseError::ExpectedAnElementInJson,
+        });
+    }
     let value = match parse(reader) {
         Ok(r) => r,
-        Err(_) => {
-            return Err(error::Error {
-                pos: save,
+        Err(e) => {
+            return Err(Error {
+                // Recoverable must be set to false, else the Body parser may think this is not a
+                // JSON body, because the JSON parser can fail in object_value try_literal('{'),
+                // and try_literal is marked as recoverable.
                 recoverable: false,
-                inner: error::ParseError::Json,
-            })
+                pos: e.pos,
+                inner: e.inner,
+            });
         }
     };
     let space3 = whitespace(reader);
@@ -357,6 +408,34 @@ fn whitespace(reader: &mut Reader) -> String {
     reader.read_while(|c| *c == ' ' || *c == '\t' || *c == '\n' || *c == '\r')
 }
 
+/// Helper to find if the user forgot to place a close brace, e.g. `{"a":\n`.
+fn peek_until_close_brace(reader: &mut Reader, state: ReaderState) -> ParseResult<()> {
+    let mut offset = state.cursor;
+    // It's necessary to count the open braces found, because something like `{"a" : {"b": 1}` has
+    // a closing brace but the user still forgot to place the last brace.
+    let mut open_braces_found = 0;
+    loop {
+        if let Some(c) = reader.buffer.get(offset).copied() {
+            if c == '{' {
+                open_braces_found += 1;
+            } else if c == '}' {
+                if open_braces_found > 0 {
+                    open_braces_found -= 1;
+                    continue;
+                }
+                return Ok(());
+            }
+        } else {
+            return Err(Error {
+                pos: state.pos,
+                recoverable: false,
+                inner: ParseError::UnclosedBraceInJson,
+            });
+        }
+        offset += 1;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -367,13 +446,18 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json);
+        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("[0,1,]");
         let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 6 });
-        assert_eq!(error.inner, error::ParseError::Json);
+        assert_eq!(error.pos, Pos { line: 1, column: 5 });
+        assert_eq!(
+            error.inner,
+            error::ParseError::UnexpectedInJson {
+                character: ",".to_string()
+            }
+        );
         assert!(!error.recoverable);
     }
 
@@ -731,19 +815,26 @@ mod tests {
         );
         assert_eq!(reader.state.cursor, 3);
 
-        let mut reader = Reader::new("[true]");
+        let mut reader = Reader::new("[true, false]");
         assert_eq!(
             list_value(&mut reader).unwrap(),
             JsonValue::List {
                 space0: String::new(),
-                elements: vec![JsonListElement {
-                    space0: String::new(),
-                    value: JsonValue::Boolean(true),
-                    space1: String::new(),
-                }],
+                elements: vec![
+                    JsonListElement {
+                        space0: String::new(),
+                        value: JsonValue::Boolean(true),
+                        space1: String::new(),
+                    },
+                    JsonListElement {
+                        space0: String::from(" "),
+                        value: JsonValue::Boolean(false),
+                        space1: String::new(),
+                    }
+                ],
             }
         );
-        assert_eq!(reader.state.cursor, 6);
+        assert_eq!(reader.state.cursor, 13);
     }
 
     #[test]
@@ -761,8 +852,13 @@ mod tests {
 
         let mut reader = Reader::new("[1, 2,]");
         let error = list_value(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json);
+        assert_eq!(error.pos, Pos { line: 1, column: 6 });
+        assert_eq!(
+            error.inner,
+            error::ParseError::UnexpectedInJson {
+                character: ",".to_string()
+            }
+        );
         assert!(!error.recoverable);
     }
 
@@ -843,7 +939,7 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::Json);
+        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson);
         assert!(!error.recoverable);
     }
 
@@ -887,7 +983,7 @@ mod tests {
         let mut reader = Reader::new("\"name\":\n");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
-        assert_eq!(error.inner, error::ParseError::Json);
+        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson,);
         assert!(!error.recoverable);
     }
 

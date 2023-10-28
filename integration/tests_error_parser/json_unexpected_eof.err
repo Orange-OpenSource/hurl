@@ -1,7 +1,7 @@
 error: Parsing JSON
-  --> tests_error_parser/json_unexpected_eof.hurl:2:10
+  --> tests_error_parser/json_unexpected_eof.hurl:2:1
    |
  2 | { "name":
-   |          ^ JSON error
+   | ^ this brace is not closed later
    |
 

@@ -148,13 +148,8 @@ mod tests {
     fn test_bytes_json_error() {
         let mut reader = Reader::new("{ x ");
         let error = bytes(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 3 });
-        assert_eq!(
-            error.inner,
-            ParseError::Expecting {
-                value: "\"".to_string()
-            }
-        );
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(error.inner, ParseError::UnclosedBraceInJson);
     }
 
     #[test]

@@ -45,7 +45,9 @@ pub enum ParseError {
     PredicateValue,
     RegexExpr { message: String },
 
-    Unexpected { character: String },
+    ExpectedAnElementInJson,
+    UnexpectedInJson { character: String },
+    UnclosedBraceInJson,
     Eof,
     Url,
 

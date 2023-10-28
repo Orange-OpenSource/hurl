@@ -143,6 +143,21 @@ impl Reader {
         self.buffer.get(self.state.cursor).copied()
     }
 
+    /// Returns the next char ignoring whitespace without advancing the internal state.
+    pub fn peek_ignoring_whitespace(&mut self) -> Option<char> {
+        let mut i = self.state.cursor;
+        loop {
+            if let Some(c) = self.buffer.get(i).copied() {
+                if c != ' ' && c != '\t' && c != '\n' && c != '\r' {
+                    return Some(c);
+                }
+            } else {
+                return None;
+            }
+            i += 1;
+        }
+    }
+
     /// Returns the `count` char from the buffer without advancing the internal state.
     /// This methods can returns less than `count` chars if there is not enough chars in the buffer.
     pub fn peek_n(&self, count: usize) -> String {
