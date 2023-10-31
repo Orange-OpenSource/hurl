@@ -38,6 +38,46 @@ pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
     )
 }
 
+/// Helper for parse, but already knowing that we are inside a JSON body.
+fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
+    if let Some(c) = reader.peek() {
+        if c == ',' {
+            return Err(Error {
+                pos: reader.state.pos.clone(),
+                recoverable: false,
+                inner: error::ParseError::Json(JsonErrorVariant::EmptyElement),
+            });
+        }
+    }
+    match parse(reader) {
+        Ok(r) => Ok(r),
+        // The only error that is recoverable is caused by reaching object_value try_literal('{'),
+        // but this is not recoverable in this case, because we already know that we are in a JSON
+        // body. So, we change the error to CannotResolve for the object found.
+        Err(e) => match e {
+            Error {
+                recoverable: true, ..
+            } => {
+                return Err(error::Error {
+                    pos: e.pos,
+                    recoverable: false,
+                    inner: error::ParseError::Json(JsonErrorVariant::CannotResolve {
+                        name: reader
+                            .read_while(|c| !c.is_whitespace() && !c.is_ascii_punctuation()),
+                    }),
+                })
+            }
+            _ => {
+                return Err(Error {
+                    recoverable: false,
+                    pos: e.pos,
+                    inner: e.inner,
+                })
+            }
+        },
+    }
+}
+
 pub fn null_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     try_literal("null", reader)?;
     Ok(JsonValue::Null)
@@ -264,9 +304,9 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 return Err(Error {
                     pos: save,
                     recoverable: false,
-                    inner: ParseError::UnexpectedInJson {
+                    inner: ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
                         character: ','.to_string(),
-                    },
+                    }),
                 });
             }
             let element = list_element(reader)?;
@@ -280,19 +320,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 
 fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
     let space0 = whitespace(reader);
-    let value = match parse(reader) {
-        Ok(r) => r,
-        Err(e) => {
-            return Err(Error {
-                // Recoverable must be set to false, else the Body parser may think this is not a
-                // JSON body, because the JSON parser can fail in object_value try_literal('{'),
-                // and try_literal is marked as recoverable.
-                recoverable: false,
-                pos: e.pos,
-                inner: e.inner,
-            });
-        }
-    };
+    let value = parse_in_json(reader)?;
     let space1 = whitespace(reader);
     Ok(JsonListElement {
         space0,
@@ -330,9 +358,9 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 return Err(Error {
                     pos: save,
                     recoverable: false,
-                    inner: ParseError::UnexpectedInJson {
+                    inner: ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
                         character: ','.to_string(),
-                    },
+                    }),
                 });
             }
             let element = object_element(reader)?;
@@ -354,7 +382,7 @@ fn key(reader: &mut Reader) -> ParseResult<Template> {
         Err(error::Error {
             pos: save.pos,
             recoverable: false,
-            inner: error::ParseError::Json,
+            inner: error::ParseError::Json(JsonErrorVariant::EmptyElement),
         })
     } else {
         Ok(name)
@@ -377,22 +405,10 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
         return Err(error::Error {
             pos: save,
             recoverable: false,
-            inner: error::ParseError::ExpectedAnElementInJson,
+            inner: error::ParseError::Json(JsonErrorVariant::EmptyElement),
         });
     }
-    let value = match parse(reader) {
-        Ok(r) => r,
-        Err(e) => {
-            return Err(Error {
-                // Recoverable must be set to false, else the Body parser may think this is not a
-                // JSON body, because the JSON parser can fail in object_value try_literal('{'),
-                // and try_literal is marked as recoverable.
-                recoverable: false,
-                pos: e.pos,
-                inner: e.inner,
-            });
-        }
-    };
+    let value = parse_in_json(reader)?;
     let space3 = whitespace(reader);
     Ok(JsonObjectElement {
         space0,
@@ -429,7 +445,7 @@ fn peek_until_close_brace(reader: &mut Reader, state: ReaderState) -> ParseResul
             return Err(Error {
                 pos: state.pos,
                 recoverable: false,
-                inner: ParseError::UnclosedBraceInJson,
+                inner: ParseError::Json(JsonErrorVariant::UnclosedBrace),
             });
         }
         offset += 1;
@@ -446,7 +462,10 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = parse(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson);
+        assert_eq!(
+            error.inner,
+            error::ParseError::Json(JsonErrorVariant::EmptyElement)
+        );
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("[0,1,]");
@@ -454,9 +473,9 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
             error.inner,
-            error::ParseError::UnexpectedInJson {
-                character: ",".to_string()
-            }
+            error::ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
+                character: ','.to_string(),
+            }),
         );
         assert!(!error.recoverable);
     }
@@ -855,9 +874,9 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
             error.inner,
-            error::ParseError::UnexpectedInJson {
-                character: ",".to_string()
-            }
+            error::ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
+                character: ','.to_string(),
+            }),
         );
         assert!(!error.recoverable);
     }
@@ -939,7 +958,10 @@ mod tests {
         let mut reader = Reader::new("{ \"a\":\n}");
         let error = object_value(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
-        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson);
+        assert_eq!(
+            error.inner,
+            error::ParseError::Json(JsonErrorVariant::EmptyElement)
+        );
         assert!(!error.recoverable);
     }
 
@@ -983,7 +1005,10 @@ mod tests {
         let mut reader = Reader::new("\"name\":\n");
         let error = object_element(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
-        assert_eq!(error.inner, error::ParseError::ExpectedAnElementInJson,);
+        assert_eq!(
+            error.inner,
+            error::ParseError::Json(JsonErrorVariant::EmptyElement),
+        );
         assert!(!error.recoverable);
     }
 

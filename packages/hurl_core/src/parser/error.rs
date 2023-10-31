@@ -39,15 +39,12 @@ pub enum ParseError {
     JsonPathExpr,
     XPathExpr,
     TemplateVariable,
-    Json,
+    Json(JsonErrorVariant),
     Xml,
     Predicate,
     PredicateValue,
     RegexExpr { message: String },
 
-    ExpectedAnElementInJson,
-    UnexpectedInJson { character: String },
-    UnclosedBraceInJson,
     Eof,
     Url,
 
@@ -66,6 +63,14 @@ pub enum ParseError {
     InvalidOption,
     Multiline,
     GraphQlVariables,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum JsonErrorVariant {
+    UnexpectedCharcter { character: String },
+    CannotResolve { name: String },
+    EmptyElement,
+    UnclosedBrace,
 }
 
 impl Error {

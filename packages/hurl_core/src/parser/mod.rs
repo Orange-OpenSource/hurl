@@ -23,7 +23,7 @@ pub fn parse_hurl_file(s: &str) -> ParseResult<HurlFile> {
     parsers::hurl_file(&mut reader)
 }
 
-pub use self::error::{Error, ParseError};
+pub use self::error::{Error, ParseError, JsonErrorVariant};
 pub use self::json::{
     boolean_value as parse_json_boolean, null_value as parse_json_null,
     number_value as parse_json_number, parse as parse_json,

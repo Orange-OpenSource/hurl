@@ -18,8 +18,8 @@
 use core::cmp;
 
 use crate::ast::SourceInfo;
-use crate::parser;
 use crate::parser::ParseError;
+use crate::parser::{self, JsonErrorVariant};
 
 pub trait Error {
     fn source_info(&self) -> SourceInfo;
@@ -48,10 +48,7 @@ impl Error for parser::Error {
             ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
             ParseError::XPathExpr => "Parsing XPath expression".to_string(),
             ParseError::TemplateVariable => "Parsing template variable".to_string(),
-            ParseError::Json => "Parsing JSON".to_string(),
-            ParseError::UnexpectedInJson { .. } => "Parsing JSON".to_string(),
-            ParseError::ExpectedAnElementInJson => "Parsing JSON".to_string(),
-            ParseError::UnclosedBraceInJson => "Parsing JSON".to_string(),
+            ParseError::Json(_) => "Parsing JSON".to_string(),
             ParseError::Predicate => "Parsing predicate".to_string(),
             ParseError::PredicateValue => "Parsing predicate value".to_string(),
             ParseError::RegexExpr { .. } => "Parsing regex".to_string(),
@@ -97,7 +94,16 @@ impl Error for parser::Error {
             ParseError::JsonPathExpr => "expecting a JSONPath expression".to_string(),
             ParseError::XPathExpr => "expecting a XPath expression".to_string(),
             ParseError::TemplateVariable => "expecting a variable".to_string(),
-            ParseError::Json => "JSON error".to_string(),
+            ParseError::Json(variant) => {
+                match variant {
+                    JsonErrorVariant::UnexpectedCharcter { character } => format!("unexpected character: '{character}'"),
+                    JsonErrorVariant::EmptyElement => "expecting an element; found empty element instead".to_string(),
+                    JsonErrorVariant::UnclosedBrace => "this brace is not closed later".to_string(),
+                    JsonErrorVariant::CannotResolve { name } => {
+                        format!("failed to resolve '{name}'. If it's a variable, try enclosing it with double braces, e.g. {{{{{name}}}}}")
+                    }
+                }
+            }
             ParseError::Predicate => "expecting a predicate".to_string(),
             ParseError::PredicateValue => "invalid predicate value".to_string(),
             ParseError::RegexExpr { message } => format!("invalid Regex expression: {message}"),
@@ -119,9 +125,6 @@ impl Error for parser::Error {
             ParseError::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
             ParseError::Multiline => "the multiline is not valid".to_string(),
             ParseError::GraphQlVariables => "GraphQL variables is not a valid JSON object".to_string(),
-            ParseError::UnexpectedInJson { character } => format!("unexpected character: '{character}'"),
-            ParseError::ExpectedAnElementInJson => "expecting an element; found empty element instead".to_string(),
-            ParseError::UnclosedBraceInJson => "this brace is not closed later".to_string(),
             _ => format!("{self:?}"),
 
         }
