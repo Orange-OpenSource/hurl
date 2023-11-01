@@ -31,6 +31,12 @@ pub struct XmlDocument {
     pub root: Option<Element>,
 }
 
+impl XmlDocument {
+    pub fn new(root: Element) -> XmlDocument {
+        XmlDocument { root: Some(root) }
+    }
+}
+
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum XmlNode {
     /// An XML element.

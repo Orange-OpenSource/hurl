@@ -58,20 +58,16 @@ mod testcase;
 mod xml;
 use std::fs::File;
 
-use indexmap::IndexMap;
-use xmltree::{Element, XMLNode};
-
+use crate::report::junit::xml::{Element, XmlDocument};
 use crate::report::Error;
 pub use testcase::Testcase;
 
 /// Creates a JUnit from a list of `testcases`.
 pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {
-    let mut testsuites = vec![];
-
     // If there is an existing JUnit report, we parses it to insert a new testsuite.
     let path = std::path::Path::new(&filename);
-    if path.exists() {
-        let s = match std::fs::read_to_string(path) {
+    let mut root = if path.exists() {
+        let file = match File::open(path) {
             Ok(s) => s,
             Err(why) => {
                 return Err(Error {
@@ -79,24 +75,16 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
                 });
             }
         };
-        let root = Element::parse(s.as_bytes()).unwrap();
-        for child in root.children {
-            if let XMLNode::Element(_) = child.clone() {
-                testsuites.push(child.clone());
-            }
-        }
-    }
+        let doc = XmlDocument::parse(file).unwrap();
+        doc.root.unwrap()
+    } else {
+        Element::new("testsuites")
+    };
 
     let testsuite = create_testsuite(testcases);
-    testsuites.push(XMLNode::Element(testsuite));
-    let report = Element {
-        name: "testsuites".to_string(),
-        prefix: None,
-        namespace: None,
-        namespaces: None,
-        attributes: IndexMap::new(),
-        children: testsuites,
-    };
+    root = root.add_child(testsuite);
+
+    let doc = XmlDocument::new(root);
     let file = match File::create(filename) {
         Ok(f) => f,
         Err(e) => {
@@ -105,7 +93,7 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
             });
         }
     };
-    match report.write(file) {
+    match doc.write(file) {
         Ok(_) => Ok(()),
         Err(e) => Err(Error {
             message: format!("Failed to produce Junit report: {e:?}"),
@@ -115,7 +103,6 @@ pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error>
 
 /// Returns a testsuite as a XML object, from a list of `testcases`.
 fn create_testsuite(testcases: &[Testcase]) -> Element {
-    let mut attrs = IndexMap::new();
     let mut tests = 0;
     let mut errors = 0;
     let mut failures = 0;
@@ -126,26 +113,21 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
         failures += cases.get_fail_count();
     }
 
-    attrs.insert("tests".to_string(), tests.to_string());
-    attrs.insert("errors".to_string(), errors.to_string());
-    attrs.insert("failures".to_string(), failures.to_string());
+    let mut element = Element::new("testsuite")
+        .attr("tests", &tests.to_string())
+        .attr("errors", &errors.to_string())
+        .attr("failures", &failures.to_string());
 
-    let children = testcases
-        .iter()
-        .map(|t| XMLNode::Element(t.to_xml()))
-        .collect();
-    Element {
-        name: "testsuite".to_string(),
-        prefix: None,
-        namespace: None,
-        namespaces: None,
-        attributes: attrs,
-        children,
+    for testcase in testcases.iter() {
+        let child = testcase.to_xml();
+        element = element.add_child(child);
     }
+    element
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
     use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
     use hurl_core::ast::SourceInfo;
@@ -214,11 +196,11 @@ mod tests {
         let tc = Testcase::from(&res, content, filename);
         testcases.push(tc);
 
-        let mut buffer = Vec::new();
-        create_testsuite(&testcases).write(&mut buffer).unwrap();
+        let suite = create_testsuite(&testcases);
+        let doc = XmlDocument::new(suite);
         assert_eq!(
-            std::str::from_utf8(&buffer).unwrap(),
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+            doc.to_string().unwrap(),
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
             <testsuite tests=\"3\" errors=\"1\" failures=\"1\">\
                 <testcase id=\"-\" name=\"-\" time=\"0.230\" />\
                 <testcase id=\"-\" name=\"-\" time=\"0.230\">\

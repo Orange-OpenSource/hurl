@@ -30,7 +30,6 @@ glob = "0.3.1"
 hex = "0.4.3"
 hex-literal = "0.4.1"
 hurl_core = { version = "4.2.0-SNAPSHOT", path = "../hurl_core" }
-indexmap = "1.9.3"
 libflate = "2.0.0"
 libxml = "0.3.3"
 md5 = "0.7.0"
@@ -40,7 +39,6 @@ serde = "1.0.190"
 serde_json = "1.0.108"
 sha2 = "0.10.8"
 url = "2.4.1"
-xmltree = { version = "0.10.3",  features = ["attribute-order"] }
 xml-rs = { version = "0.8.19"}
 lazy_static = "1.4.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG

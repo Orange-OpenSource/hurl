@@ -52,8 +52,9 @@ impl From<FromUtf8Error> for WriterError {
 }
 
 impl XmlDocument {
-    /// Convenient method to seralize an XML document to a string.
-    pub fn write_string(&self) -> Result<String, WriterError> {
+    /// Convenient method to serialize an XML document to a string.
+    #[allow(dead_code)]
+    pub fn to_string(&self) -> Result<String, WriterError> {
         let buffer = vec![];
         let buffer = self.write(buffer)?;
         let str = String::from_utf8(buffer)?;
@@ -194,7 +195,7 @@ mod tests {
             ;
         let doc = XmlDocument { root: Some(root) };
         assert_eq!(
-            doc.write_string().unwrap(),
+            doc.to_string().unwrap(),
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
             <catalog>\
                 <book id=\"bk101\">\

@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-use super::xml::XmlDocument;
+use crate::report::junit::xml::Element;
 use crate::runner::HurlResult;
 use crate::util::logger;
-use indexmap::map::IndexMap;
-use xmltree::{Element, XMLNode};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Testcase {
@@ -58,44 +56,21 @@ impl Testcase {
 
     /// Serializes this testcase to XML.
     pub fn to_xml(&self) -> Element {
-        let name = "testcase".to_string();
-        let mut attributes = IndexMap::new();
-        attributes.insert("id".to_string(), self.id.clone());
-        attributes.insert("name".to_string(), self.name.clone());
         let time_in_seconds = format!("{:.3}", self.time_in_ms as f64 / 1000.0);
-        attributes.insert("time".to_string(), time_in_seconds);
 
-        let mut children = vec![];
-        for message in self.failures.clone() {
-            let element = Element {
-                prefix: None,
-                namespace: None,
-                namespaces: None,
-                name: "failure".to_string(),
-                attributes: IndexMap::new(),
-                children: vec![XMLNode::Text(message)],
-            };
-            children.push(XMLNode::Element(element));
+        let mut element = Element::new("testcase")
+            .attr("id", &self.id)
+            .attr("name", &self.name)
+            .attr("time", &time_in_seconds);
+
+        for failure in self.failures.iter() {
+            element = element.add_child(Element::new("failure").text(failure))
         }
-        for message in self.errors.clone() {
-            let element = Element {
-                prefix: None,
-                namespace: None,
-                namespaces: None,
-                name: "error".to_string(),
-                attributes: IndexMap::new(),
-                children: vec![XMLNode::Text(message)],
-            };
-            children.push(XMLNode::Element(element));
+
+        for error in self.errors.iter() {
+            element = element.add_child(Element::new("error").text(error))
         }
-        Element {
-            name,
-            prefix: None,
-            namespace: None,
-            namespaces: None,
-            attributes,
-            children,
-        }
+        element
     }
 
     pub fn get_error_count(&self) -> usize {
@@ -112,6 +87,7 @@ mod test {
     use hurl_core::ast::SourceInfo;
 
     use crate::report::junit::testcase::Testcase;
+    use crate::report::junit::xml::XmlDocument;
     use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
 
     #[test]
@@ -124,16 +100,13 @@ mod test {
             timestamp: 1,
         };
 
-        let mut buffer = Vec::new();
         let content = "";
         let filename = "test.hurl";
-        Testcase::from(&hurl_result, content, filename)
-            .to_xml()
-            .write(&mut buffer)
-            .unwrap();
+        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let doc = XmlDocument::new(element);
         assert_eq!(
-            std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
+            doc.to_string().unwrap(),
+            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230" />"#
         );
     }
 
@@ -164,14 +137,12 @@ HTTP/1.0 200
             cookies: vec![],
             timestamp: 1,
         };
-        let mut buffer = Vec::new();
-        Testcase::from(&hurl_result, content, filename)
-            .to_xml()
-            .write(&mut buffer)
-            .unwrap();
+
+        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let doc = XmlDocument::new(element);
         assert_eq!(
-            std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
+            doc.to_string().unwrap(),
+            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><failure>Assert status code
   --> test.hurl:2:10
    |
  2 | HTTP/1.0 200
@@ -205,14 +176,11 @@ HTTP/1.0 200
             cookies: vec![],
             timestamp: 1,
         };
-        let mut buffer = Vec::new();
-        Testcase::from(&hurl_result, content, filename)
-            .to_xml()
-            .write(&mut buffer)
-            .unwrap();
+        let element = Testcase::from(&hurl_result, content, filename).to_xml();
+        let doc = XmlDocument::new(element);
         assert_eq!(
-            std::str::from_utf8(&buffer).unwrap(),
-            r#"<?xml version="1.0" encoding="UTF-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
+            doc.to_string().unwrap(),
+            r#"<?xml version="1.0" encoding="utf-8"?><testcase id="test.hurl" name="test.hurl" time="0.230"><error>HTTP connection
   --> test.hurl:1:5
    |
  1 | GET http://unknown

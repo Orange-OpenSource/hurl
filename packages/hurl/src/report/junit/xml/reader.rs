@@ -32,6 +32,7 @@ pub enum ParserError {
 /// document returned is a in-memory tree representation of the whole document.
 impl XmlDocument {
     /// Convenient associated method to read and parse a XML string `source`.
+    #[allow(dead_code)]
     pub fn parse_str(source: &str) -> Result<XmlDocument, ParserError> {
         let bytes = source.as_bytes();
         XmlDocument::parse(bytes)
