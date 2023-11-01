@@ -33,7 +33,8 @@ Enhancements:
 
 Bugs Fixed:
 
-* Support HTTP/2 on windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
+* TAP reports can't be appended if there are failed tests [#2099](https://github.com/Orange-OpenSource/hurl/issues/2099)
+* Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
