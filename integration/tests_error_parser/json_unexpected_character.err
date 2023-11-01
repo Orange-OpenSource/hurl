@@ -1,7 +1,0 @@
-error: Parsing JSON
-  --> tests_error_parser/json_unexpected_character.hurl:2:1
-   |
- 2 | { "name": x
-   | ^ this brace is not closed later
-   |
-

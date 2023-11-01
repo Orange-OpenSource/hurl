@@ -1,7 +1,7 @@
 error: Parsing JSON
-  --> tests_error_parser/json.hurl:2:1
+  --> tests_error_parser/json.hurl:3:1
    |
- 2 | { "name":
-   | ^ this brace is not closed later
+ 3 | HTTP 200
+   | ^ expecting a boolean, number, string, array, object or null
    |
 

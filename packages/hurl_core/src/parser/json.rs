@@ -57,23 +57,16 @@ fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
         Err(e) => match e {
             Error {
                 recoverable: true, ..
-            } => {
-                return Err(error::Error {
-                    pos: e.pos,
-                    recoverable: false,
-                    inner: error::ParseError::Json(JsonErrorVariant::CannotResolve {
-                        name: reader
-                            .read_while(|c| !c.is_whitespace() && !c.is_ascii_punctuation()),
-                    }),
-                })
-            }
-            _ => {
-                return Err(Error {
-                    recoverable: false,
-                    pos: e.pos,
-                    inner: e.inner,
-                })
-            }
+            } => Err(error::Error {
+                pos: e.pos,
+                recoverable: false,
+                inner: error::ParseError::Json(JsonErrorVariant::ExpectingElement),
+            }),
+            _ => Err(Error {
+                recoverable: false,
+                pos: e.pos,
+                inner: e.inner,
+            }),
         },
     }
 }
@@ -304,9 +297,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 return Err(Error {
                     pos: save,
                     recoverable: false,
-                    inner: ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
-                        character: ','.to_string(),
-                    }),
+                    inner: ParseError::Json(JsonErrorVariant::TrailingComma),
                 });
             }
             let element = list_element(reader)?;
@@ -330,9 +321,7 @@ fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
 }
 
 pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let save = reader.state.clone();
     try_literal("{", reader)?;
-    peek_until_close_brace(reader, save)?;
     let space0 = whitespace(reader);
     let mut elements = vec![];
     if reader.peek() != Some('}') {
@@ -358,9 +347,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 return Err(Error {
                     pos: save,
                     recoverable: false,
-                    inner: ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
-                        character: ','.to_string(),
-                    }),
+                    inner: ParseError::Json(JsonErrorVariant::TrailingComma),
                 });
             }
             let element = object_element(reader)?;
@@ -388,6 +375,7 @@ fn key(reader: &mut Reader) -> ParseResult<Template> {
         Ok(name)
     }
 }
+
 fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     let space0 = whitespace(reader);
     //literal("\"", reader)?;
@@ -424,34 +412,6 @@ fn whitespace(reader: &mut Reader) -> String {
     reader.read_while(|c| *c == ' ' || *c == '\t' || *c == '\n' || *c == '\r')
 }
 
-/// Helper to find if the user forgot to place a close brace, e.g. `{"a":\n`.
-fn peek_until_close_brace(reader: &mut Reader, state: ReaderState) -> ParseResult<()> {
-    let mut offset = state.cursor;
-    // It's necessary to count the open braces found, because something like `{"a" : {"b": 1}` has
-    // a closing brace but the user still forgot to place the last brace.
-    let mut open_braces_found = 0;
-    loop {
-        if let Some(c) = reader.buffer.get(offset).copied() {
-            if c == '{' {
-                open_braces_found += 1;
-            } else if c == '}' {
-                if open_braces_found > 0 {
-                    open_braces_found -= 1;
-                    continue;
-                }
-                return Ok(());
-            }
-        } else {
-            return Err(Error {
-                pos: state.pos,
-                recoverable: false,
-                inner: ParseError::Json(JsonErrorVariant::UnclosedBrace),
-            });
-        }
-        offset += 1;
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -473,9 +433,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
             error.inner,
-            error::ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
-                character: ','.to_string(),
-            }),
+            error::ParseError::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
     }
@@ -874,9 +832,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
             error.inner,
-            error::ParseError::Json(JsonErrorVariant::UnexpectedCharcter {
-                character: ','.to_string(),
-            }),
+            error::ParseError::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
     }

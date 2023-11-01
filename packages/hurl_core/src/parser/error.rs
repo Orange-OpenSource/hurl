@@ -67,10 +67,9 @@ pub enum ParseError {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum JsonErrorVariant {
-    UnexpectedCharcter { character: String },
-    CannotResolve { name: String },
+    TrailingComma,
+    ExpectingElement,
     EmptyElement,
-    UnclosedBrace,
 }
 
 impl Error {

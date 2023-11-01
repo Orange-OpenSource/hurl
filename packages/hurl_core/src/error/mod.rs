@@ -96,12 +96,9 @@ impl Error for parser::Error {
             ParseError::TemplateVariable => "expecting a variable".to_string(),
             ParseError::Json(variant) => {
                 match variant {
-                    JsonErrorVariant::UnexpectedCharcter { character } => format!("unexpected character: '{character}'"),
+                    JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
                     JsonErrorVariant::EmptyElement => "expecting an element; found empty element instead".to_string(),
-                    JsonErrorVariant::UnclosedBrace => "this brace is not closed later".to_string(),
-                    JsonErrorVariant::CannotResolve { name } => {
-                        format!("failed to resolve '{name}'. If it's a variable, try enclosing it with double braces, e.g. {{{{{name}}}}}")
-                    }
+                    JsonErrorVariant::ExpectingElement => "expecting a boolean, number, string, array, object or null".to_string(),
                 }
             }
             ParseError::Predicate => "expecting a predicate".to_string(),
