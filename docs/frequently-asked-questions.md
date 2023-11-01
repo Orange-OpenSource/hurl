@@ -251,6 +251,40 @@ $ hurl test.hurl
 
 You can also use [filters] to process HTTP responses in asserts and captures.
 
+### How to include secrets?
+
+Secrets can be included in one of 3 ways:
+
+1. Pass them into Hurl via a [command line option](https://hurl.dev/docs/manual.html#variable):
+   
+	```shell
+	--variable <NAME=VALUE>
+	```
+ 
+3. Command line option to [define the variables in a file](https://hurl.dev/docs/manual.html#variables-file)
+   
+	```shell
+	--variables-file <FILE>
+	```
+ 
+4. Use environment variables, as explained in this [issue](https://github.com/Orange-OpenSource/hurl/issues/122):
+	1. Prefix the variable names with `HURL_`, e.g. `HURL_email`.
+ 	2. In a hurl file, refer to them without the prefix, i.e. `{{ email }}`. So in this case we could do:
+     
+	```shell
+	POST https://example.com/login
+	[FormParams]
+	email: {{ email }}
+	```
+
+### Can I pretty print a JSON reponse?
+
+Currently Hurl does not support pretty printing JSON, but there is an [issue open for it](https://github.com/Orange-OpenSource/hurl/issues/1760). For now you can pipe the output of a single response (chained responses would be invalid JSON) into [jq](https://jqlang.github.io/jq/). For example:
+
+```shell
+$ hurl myfile.hurl | jq
+```
+
 ## macOS
 
 ### How can I use a custom libcurl (from Homebrew by instance)?
