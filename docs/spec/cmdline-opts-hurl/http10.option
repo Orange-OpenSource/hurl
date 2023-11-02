@@ -1,0 +1,6 @@
+name: http10
+long: http1.0
+short: 0
+help: Tell Hurl to use HTTP version 1.0
+---
+Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.

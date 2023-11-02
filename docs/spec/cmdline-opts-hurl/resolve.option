@@ -1,0 +1,7 @@
+name: resolve
+long: resolve
+value: HOST:PORT:ADDR
+help: Provide a custom address for a specific HOST and PORT pair
+multi: append
+---
+Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.

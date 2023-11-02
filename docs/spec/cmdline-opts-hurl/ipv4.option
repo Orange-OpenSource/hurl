@@ -1,0 +1,6 @@
+name: ipv4
+long: ipv4
+short: 4
+help: Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6
+---
+This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.

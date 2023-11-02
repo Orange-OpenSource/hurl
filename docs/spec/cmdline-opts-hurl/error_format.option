@@ -1,0 +1,8 @@
+name: error_format
+long: error-format
+value: FORMAT
+value_default: short
+value_parser: ["short", "long"]
+help: Control the format of error messages
+---
+Control the format of error message (short by default or long)

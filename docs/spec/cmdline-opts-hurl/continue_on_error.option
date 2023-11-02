@@ -1,0 +1,10 @@
+name: continue_on_error
+long: continue-on-error
+help: Continue executing requests even if an error occurs
+---
+Continue executing requests to the end of the Hurl file even when an assert error occurs.
+By default, Hurl exits after an assert error in the HTTP response.
+
+Note that this option does not affect the behavior with multiple input Hurl files.
+
+All the input files are executed independently. The result of one file does not affect the execution of the other Hurl files.

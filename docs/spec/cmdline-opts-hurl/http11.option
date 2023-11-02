@@ -1,0 +1,5 @@
+name: http11
+long: http1.1
+help: Tell Hurl to use HTTP version 1.1
+---
+Tells Hurl to use HTTP version 1.1.

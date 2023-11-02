@@ -1,0 +1,5 @@
+name: path_as_is
+long: path-as-is
+help: Tell Hurl to not handle sequences of /../ or /./ in the given URL path
+---
+Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.

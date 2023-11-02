@@ -1,0 +1,8 @@
+name: report_html
+long: report-html
+value: DIR
+help: Generate HTML report to DIR
+---
+Generate HTML report in DIR.
+
+If the HTML report already exists, it will be updated with the new test results.

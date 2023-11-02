@@ -1,0 +1,7 @@
+name: http2
+long: http2
+help: Tell Hurl to use HTTP version 2
+---
+Tells Hurl to use HTTP version 2.
+For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.
+For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.

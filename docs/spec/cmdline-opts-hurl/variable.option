@@ -1,0 +1,7 @@
+name: variable
+long: variable
+value: NAME=VALUE
+help: Define a variable
+multi: append
+---
+Define variable (name/value) to be used in Hurl templates.

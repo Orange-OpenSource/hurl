@@ -1,0 +1,5 @@
+name: ssl_no_revoke
+long: ssl-no-revoke
+help: (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
+---
+(Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.

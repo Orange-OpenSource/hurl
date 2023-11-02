@@ -1,0 +1,10 @@
+name: connect_timeout
+long: connect-timeout
+value: SECONDS
+value_default: 300
+value_parser: value_parser!(u64)
+help: Maximum time allowed for connection
+---
+Maximum time in seconds that you allow Hurl's connection to take.
+
+See also [`-m, --max-time`](#max-time).

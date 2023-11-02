@@ -1,0 +1,5 @@
+name: ignore_asserts
+long: ignore-asserts
+help: Ignore asserts defined in the Hurl file
+---
+Ignore all asserts defined in the Hurl file.

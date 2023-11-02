@@ -1,0 +1,6 @@
+name: color
+long: color
+help: Colorize output
+conflict: no_color
+---
+Colorize debug output (the HTTP response output is not colorized).

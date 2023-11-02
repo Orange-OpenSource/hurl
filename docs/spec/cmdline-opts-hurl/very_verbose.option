@@ -1,0 +1,7 @@
+name: very_verbose
+long: very-verbose
+help: Turn on verbose output, including HTTP response and libcurl logs
+---
+Turn on more verbose output on standard error stream.
+
+In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.

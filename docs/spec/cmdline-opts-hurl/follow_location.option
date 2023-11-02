@@ -1,0 +1,6 @@
+name: follow_location
+long: location
+short: L
+help: Follow redirects
+---
+Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option

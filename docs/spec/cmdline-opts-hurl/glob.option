@@ -1,0 +1,10 @@
+name: glob
+long: glob
+value: GLOB
+help: Specify input files that match the given GLOB. Multiple glob flags may be used
+multi: append
+---
+Specify input files that match the given glob pattern.
+
+Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
+However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.

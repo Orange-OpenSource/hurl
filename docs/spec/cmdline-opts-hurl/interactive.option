@@ -1,0 +1,8 @@
+name: interactive
+long: interactive
+help: Turn on interactive mode
+conflict: to_entry
+---
+Stop between requests.
+
+This is similar to a break point, You can then continue (Press C) or quit (Press Q).

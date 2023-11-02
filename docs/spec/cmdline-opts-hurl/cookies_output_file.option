@@ -1,0 +1,10 @@
+name: cookies_output_file
+long: cookie-jar
+short: c
+value: FILE
+help: Write cookies to FILE after running the session (only for one session)
+---
+Write cookies to FILE after running the session (only for one session).
+The file will be written using the Netscape cookie file format.
+
+Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage between successive Hurl runs.

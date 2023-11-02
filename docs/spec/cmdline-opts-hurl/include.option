@@ -1,0 +1,6 @@
+name: include
+long: include
+short: i
+help: Include the HTTP headers in the output
+---
+Include the HTTP headers in the output

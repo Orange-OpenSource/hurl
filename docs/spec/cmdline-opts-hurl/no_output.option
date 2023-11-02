@@ -1,0 +1,6 @@
+name: no_output
+long: no-output
+help: Suppress output. By default, Hurl outputs the body of the last response
+conflict: json
+---
+Suppress output. By default, Hurl outputs the body of the last response.

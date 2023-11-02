@@ -1,0 +1,7 @@
+name: file_root
+long: file-root
+value: DIR
+help: Set root filesystem to import files [default: current directory]
+---
+Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
+When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.

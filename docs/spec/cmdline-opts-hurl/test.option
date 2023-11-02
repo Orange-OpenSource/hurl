@@ -1,0 +1,5 @@
+name: test
+long: test
+help: Activate test mode
+---
+Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.

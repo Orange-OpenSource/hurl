@@ -1,0 +1,9 @@
+name: cookies_input_file
+long: cookie
+short: b
+value: FILE
+help: Read cookies from FILE
+---
+Read cookies from FILE (using the Netscape cookie file format).
+
+Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.

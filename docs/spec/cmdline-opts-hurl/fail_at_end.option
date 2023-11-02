@@ -1,0 +1,6 @@
+name: fail_at_end
+long: fail-at-end
+help: Fail at end
+deprecated: true
+---
+

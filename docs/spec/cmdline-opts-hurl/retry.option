@@ -1,0 +1,8 @@
+name: retry
+long: retry
+value: NUM
+value_default: 0
+value_parser: value_parser!(i32).range(-1..)
+help: Maximum number of retries, 0 for no retries, -1 for unlimited retries
+---
+Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).

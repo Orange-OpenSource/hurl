@@ -1,0 +1,12 @@
+name: verbose
+long: verbose
+help: Turn on verbose
+---
+Turn on verbose output on standard error stream.
+Useful for debugging.
+
+A line starting with '>' means data sent by Hurl.
+A line staring with '<' means data received by Hurl.
+A line starting with '*' means additional info provided by Hurl.
+
+If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.

@@ -1,0 +1,9 @@
+name: connect_to
+long: connect-to
+value: HOST1:PORT1:HOST2:PORT2
+help: For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead
+multi: append
+---
+For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead. This option can be used several times in a command line.
+
+See also [`--resolve`](#resolve).

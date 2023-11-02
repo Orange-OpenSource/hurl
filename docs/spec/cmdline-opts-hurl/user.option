@@ -1,0 +1,7 @@
+name: user
+long: user
+short: u
+value: USER:PASSWORD
+help: Add basic Authentication header to each request
+---
+Add basic Authentication header to each request.

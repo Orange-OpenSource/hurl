@@ -1,0 +1,9 @@
+name: client_cert_file
+long: cert
+short: E
+value: CERTIFICATE[:PASSWORD]
+help: Client certificate file and password
+---
+Client certificate file and password.
+
+See also [`--key`](#key).

@@ -1,0 +1,8 @@
+name: report_tap
+long: report-tap
+value: FILE
+help: Write a TAP report to FILE
+---
+Generate TAP report.
+
+If the FILE report already exists, it will be updated with the new test results.

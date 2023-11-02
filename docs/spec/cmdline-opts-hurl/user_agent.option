@@ -1,0 +1,7 @@
+name: user_agent
+long: user-agent
+short: A
+value: NAME
+help: Specify the User-Agent string to send to the HTTP server
+---
+Specify the User-Agent string to send to the HTTP server.

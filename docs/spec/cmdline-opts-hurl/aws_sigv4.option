@@ -1,0 +1,10 @@
+name: aws_sigv4
+long: aws-sigv4
+value: PROVIDER1[:PROVIDER2[:REGION[:SERVICE]]]
+help: Use AWS V4 signature authentication in the transfer
+---
+Generate an `Authorization` header with an AWS SigV4 signature.
+
+Use [`-u, --user`](#user) to specify Access Key Id (username) and Secret Key (password).
+
+To use temporary session credentials (e.g. for an AWS IAM Role), add the `X-Amz-Security-Token` header containing the session token.

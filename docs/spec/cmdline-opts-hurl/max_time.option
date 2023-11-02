@@ -1,0 +1,11 @@
+name: max_time
+long: max-time
+short: m
+value: SECONDS
+value_default: 300
+value_parser: value_parser!(u64)
+help: Maximum time allowed for the transfer
+---
+Maximum time in seconds that you allow a request/response to take. This is the standard timeout.
+
+See also [`--connect-timeout`](#connect-timeout).

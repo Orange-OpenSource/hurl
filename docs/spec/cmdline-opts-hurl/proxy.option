@@ -1,0 +1,7 @@
+name: proxy
+long: proxy
+short: x
+value: [PROTOCOL://]HOST[:PORT]
+help: Use proxy on given PROTOCOL/HOST/PORT
+---
+Use the specified proxy.
