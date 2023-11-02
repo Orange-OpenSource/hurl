@@ -235,7 +235,7 @@ pub fn ip_resolve(arg_matches: &ArgMatches) -> Option<IpResolve> {
 }
 
 pub fn junit_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "junit")
+    get::<String>(arg_matches, "report_junit")
 }
 
 pub fn max_redirect(arg_matches: &ArgMatches) -> Option<usize> {
@@ -302,7 +302,7 @@ pub fn ssl_no_revoke(arg_matches: &ArgMatches) -> bool {
 }
 
 pub fn tap_file(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "tap")
+    get::<String>(arg_matches, "report_tap")
 }
 
 pub fn test(arg_matches: &ArgMatches) -> bool {

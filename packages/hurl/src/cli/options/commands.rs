@@ -327,8 +327,16 @@ pub fn proxy() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn report_html() -> clap::Arg {
+    clap::Arg::new("report_html")
+        .long("report-html")
+        .value_name("DIR")
+        .help("Generate HTML report to DIR")
+        .num_args(1)
+}
+
 pub fn report_junit() -> clap::Arg {
-    clap::Arg::new("junit")
+    clap::Arg::new("report_junit")
         .long("report-junit")
         .value_name("FILE")
         .help("Write a JUnit XML report to FILE")
@@ -336,18 +344,10 @@ pub fn report_junit() -> clap::Arg {
 }
 
 pub fn report_tap() -> clap::Arg {
-    clap::Arg::new("tap")
+    clap::Arg::new("report_tap")
         .long("report-tap")
         .value_name("FILE")
         .help("Write a TAP report to FILE")
-        .num_args(1)
-}
-
-pub fn report_html() -> clap::Arg {
-    clap::Arg::new("report_html")
-        .long("report-html")
-        .value_name("DIR")
-        .help("Generate HTML report to DIR")
         .num_args(1)
 }
 
