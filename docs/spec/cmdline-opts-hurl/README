@@ -1,0 +1,8 @@
+# Format all option files
+bin/spec/cmdline-opts/format.py docs/spec/cmdline-opts-hurl/*.option
+
+# Generate/Update clap command source file
+bin/spec/cmdline-opts/generate_source.py docs/spec/cmdline-opts-hurl/*.option >packages/hurl/src/cli/options/commands.rs
+
+# Generate/Update man options
+bin/spec/cmdline-opts/generate_man.py docs/spec/cmdline-opts-hurl/*.option

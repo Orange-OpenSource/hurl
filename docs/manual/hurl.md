@@ -164,7 +164,7 @@ See also [`--key`](#key).
 
 ### --color {#color}
 
-Colorize debug output (the HTTP response output is not colorized). 
+Colorize debug output (the HTTP response output is not colorized).
 
 ### --compressed {#compressed}
 
@@ -208,26 +208,20 @@ Combined with [`-b, --cookie`](#cookie), you can simulate a cookie storage betwe
 
 Sets delay before each request.
 
-
 ### --error-format <FORMAT> {#error-format}
 
 Control the format of error message (short by default or long)
-
 
 ### --file-root <DIR> {#file-root}
 
 Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
 When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
 
-### -L, --location {#location}
-
-Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
-
 ### --glob <GLOB> {#glob}
 
 Specify input files that match the given glob pattern.
 
-Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
+Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
 ### -0, --http1.0 {#http10}
@@ -248,13 +242,13 @@ For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Up
 
 Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
 
-### -i, --include {#include}
-
-Include the HTTP headers in the output (last entry).
-
 ### --ignore-asserts {#ignore-asserts}
 
 Ignore all asserts defined in the Hurl file.
+
+### -i, --include {#include}
+
+Include the HTTP headers in the output
 
 ### -k, --insecure {#insecure}
 
@@ -263,6 +257,7 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 ### --interactive {#interactive}
 
 Stop between requests.
+
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
 
 ### -4, --ipv4 {#ipv4}
@@ -275,15 +270,20 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 
 ### --json {#json}
 
-Output each hurl file result to JSON. The format is very closed to HAR format. 
+Output each hurl file result to JSON. The format is very closed to HAR format.
 
 ### --key <KEY> {#key}
 
 Private key file name.
 
+### -L, --location {#location}
+
+Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
+
 ### --max-redirs <NUM> {#max-redirs}
 
 Set maximum number of redirection-followings allowed
+
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 ### -m, --max-time <SECONDS> {#max-time}
@@ -303,6 +303,7 @@ Suppress output. By default, Hurl outputs the body of the last response.
 ### --noproxy <HOST(S)> {#noproxy}
 
 Comma-separated list of hosts which do not use a proxy.
+
 Override value from Environment variable no_proxy.
 
 ### -o, --output <FILE> {#output}
@@ -317,17 +318,17 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 Use the specified proxy.
 
-### --report-junit <FILE> {#report-junit}
-
-Generate JUnit File.
-
-If the FILE report already exists, it will be updated with the new test results.
-
 ### --report-html <DIR> {#report-html}
 
 Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
+
+### --report-junit <FILE> {#report-junit}
+
+Generate JUnit File.
+
+If the FILE report already exists, it will be updated with the new test results.
 
 ### --report-tap <FILE> {#report-tap}
 
@@ -335,11 +336,11 @@ Generate TAP report.
 
 If the FILE report already exists, it will be updated with the new test results.
 
-### --resolve <HOST:PORT:ADDR> {#resolve} <HOST:PORT:ADDR>
+### --resolve <HOST:PORT:ADDR> {#resolve}
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
 
-### --retry  <NUM> {#retry}
+### --retry <NUM> {#retry}
 
 Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
 
@@ -380,7 +381,7 @@ Each variable is defined as name=value exactly as with [`--variable`](#variable)
 
 Note that defining a variable twice produces an error.
 
-### -v, --verbose {#verbose}
+### --verbose {#verbose}
 
 Turn on verbose output on standard error stream.
 Useful for debugging.
@@ -396,7 +397,6 @@ If you only want HTTP headers in the output, [`-i, --include`](#include) might b
 Turn on more verbose output on standard error stream.
 
 In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.
-
 
 ### -h, --help {#help}
 
