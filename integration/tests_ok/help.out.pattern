@@ -28,7 +28,7 @@ Options:
           Read cookies from FILE
   -c, --cookie-jar <FILE>
           Write cookies to FILE after running the session (only for one session)
-      --delay <milliseconds>
+      --delay <MILLISECONDS>
           Sets delay before each request. [default: 0]
       --error-format <FORMAT>
           Control the format of error messages [default: short] [possible values: short, long]

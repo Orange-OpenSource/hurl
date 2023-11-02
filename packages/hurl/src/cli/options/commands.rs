@@ -15,7 +15,17 @@
  * limitations under the License.
  *
  */
+// Generated - Do not modify
 use clap::{value_parser, ArgAction};
+
+pub fn input_files() -> clap::Arg {
+    clap::Arg::new("input_files")
+        .value_name("FILES")
+        .help("Set the input file to use")
+        .required(false)
+        .index(1)
+        .num_args(1..)
+}
 
 pub fn aws_sigv4() -> clap::Arg {
     clap::Arg::new("aws_sigv4")
@@ -35,8 +45,8 @@ pub fn cacert_file() -> clap::Arg {
 
 pub fn client_cert_file() -> clap::Arg {
     clap::Arg::new("client_cert_file")
-        .short('E')
         .long("cert")
+        .short('E')
         .value_name("CERTIFICATE[:PASSWORD]")
         .help("Client certificate file and password")
         .num_args(1)
@@ -54,8 +64,8 @@ pub fn color() -> clap::Arg {
     clap::Arg::new("color")
         .long("color")
         .help("Colorize output")
-        .action(ArgAction::SetTrue)
         .conflicts_with("no_color")
+        .action(ArgAction::SetTrue)
 }
 
 pub fn compressed() -> clap::Arg {
@@ -69,9 +79,9 @@ pub fn connect_timeout() -> clap::Arg {
     clap::Arg::new("connect_timeout")
         .long("connect-timeout")
         .value_name("SECONDS")
-        .help("Maximum time allowed for connection")
-        .default_value("300".to_string())
+        .default_value("300")
         .value_parser(value_parser!(u64))
+        .help("Maximum time allowed for connection")
         .num_args(1)
 }
 
@@ -80,9 +90,8 @@ pub fn connect_to() -> clap::Arg {
         .long("connect-to")
         .value_name("HOST1:PORT1:HOST2:PORT2")
         .help("For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead")
-        .action(ArgAction::Append)
-        .number_of_values(1)
         .num_args(1)
+        .action(ArgAction::Append)
 }
 
 pub fn continue_on_error() -> clap::Arg {
@@ -94,8 +103,8 @@ pub fn continue_on_error() -> clap::Arg {
 
 pub fn cookies_input_file() -> clap::Arg {
     clap::Arg::new("cookies_input_file")
-        .short('b')
         .long("cookie")
+        .short('b')
         .value_name("FILE")
         .help("Read cookies from FILE")
         .num_args(1)
@@ -103,8 +112,8 @@ pub fn cookies_input_file() -> clap::Arg {
 
 pub fn cookies_output_file() -> clap::Arg {
     clap::Arg::new("cookies_output_file")
-        .short('c')
         .long("cookie-jar")
+        .short('c')
         .value_name("FILE")
         .help("Write cookies to FILE after running the session (only for one session)")
         .num_args(1)
@@ -113,10 +122,10 @@ pub fn cookies_output_file() -> clap::Arg {
 pub fn delay() -> clap::Arg {
     clap::Arg::new("delay")
         .long("delay")
-        .value_name("milliseconds")
-        .help("Sets delay before each request.")
+        .value_name("MILLISECONDS")
         .default_value("0")
         .value_parser(value_parser!(u64))
+        .help("Sets delay before each request.")
         .num_args(1)
 }
 
@@ -124,17 +133,18 @@ pub fn error_format() -> clap::Arg {
     clap::Arg::new("error_format")
         .long("error-format")
         .value_name("FORMAT")
-        .value_parser(["short", "long"])
         .default_value("short")
+        .value_parser(["short", "long"])
         .help("Control the format of error messages")
+        .num_args(1)
 }
 
 pub fn fail_at_end() -> clap::Arg {
     clap::Arg::new("fail_at_end")
         .long("fail-at-end")
         .help("Fail at end")
-        .hide(true)
         .action(ArgAction::SetTrue)
+        .hide(true)
 }
 
 pub fn file_root() -> clap::Arg {
@@ -147,8 +157,8 @@ pub fn file_root() -> clap::Arg {
 
 pub fn follow_location() -> clap::Arg {
     clap::Arg::new("follow_location")
-        .short('L')
         .long("location")
+        .short('L')
         .help("Follow redirects")
         .action(ArgAction::SetTrue)
 }
@@ -158,14 +168,14 @@ pub fn glob() -> clap::Arg {
         .long("glob")
         .value_name("GLOB")
         .help("Specify input files that match the given GLOB. Multiple glob flags may be used")
+        .num_args(1)
         .action(ArgAction::Append)
-        .number_of_values(1)
 }
 
 pub fn http10() -> clap::Arg {
     clap::Arg::new("http10")
-        .short('0')
         .long("http1.0")
+        .short('0')
         .help("Tell Hurl to use HTTP version 1.0")
         .action(ArgAction::SetTrue)
 }
@@ -191,14 +201,6 @@ pub fn http3() -> clap::Arg {
         .action(ArgAction::SetTrue)
 }
 
-pub fn include() -> clap::Arg {
-    clap::Arg::new("include")
-        .short('i')
-        .long("include")
-        .help("Include the HTTP headers in the output")
-        .action(ArgAction::SetTrue)
-}
-
 pub fn ignore_asserts() -> clap::Arg {
     clap::Arg::new("ignore_asserts")
         .long("ignore-asserts")
@@ -206,19 +208,18 @@ pub fn ignore_asserts() -> clap::Arg {
         .action(ArgAction::SetTrue)
 }
 
-pub fn input_files() -> clap::Arg {
-    clap::Arg::new("input_files")
-        .value_name("FILES")
-        .help("Set the input file to use")
-        .required(false)
-        .index(1)
-        .num_args(1..)
+pub fn include() -> clap::Arg {
+    clap::Arg::new("include")
+        .long("include")
+        .short('i')
+        .help("Include the HTTP headers in the output")
+        .action(ArgAction::SetTrue)
 }
 
 pub fn insecure() -> clap::Arg {
     clap::Arg::new("insecure")
-        .short('k')
         .long("insecure")
+        .short('k')
         .help("Allow insecure SSL connections")
         .action(ArgAction::SetTrue)
 }
@@ -259,10 +260,10 @@ pub fn max_redirects() -> clap::Arg {
     clap::Arg::new("max_redirects")
         .long("max-redirs")
         .value_name("NUM")
-        .help("Maximum number of redirects allowed, -1 for unlimited redirects")
-        .default_value("50".to_string())
-        .allow_hyphen_values(true)
+        .default_value("50")
         .value_parser(value_parser!(i32).range(-1..))
+        .allow_hyphen_values(true)
+        .help("Maximum number of redirects allowed, -1 for unlimited redirects")
         .num_args(1)
 }
 
@@ -271,10 +272,9 @@ pub fn max_time() -> clap::Arg {
         .long("max-time")
         .short('m')
         .value_name("SECONDS")
-        .help("Maximum time allowed for the transfer")
-        .default_value("300".to_string())
-        .allow_hyphen_values(true)
+        .default_value("300")
         .value_parser(value_parser!(u64))
+        .help("Maximum time allowed for the transfer")
         .num_args(1)
 }
 
@@ -304,8 +304,8 @@ pub fn noproxy() -> clap::Arg {
 
 pub fn output() -> clap::Arg {
     clap::Arg::new("output")
-        .short('o')
         .long("output")
+        .short('o')
         .value_name("FILE")
         .help("Write to FILE instead of stdout")
         .num_args(1)
@@ -320,8 +320,8 @@ pub fn path_as_is() -> clap::Arg {
 
 pub fn proxy() -> clap::Arg {
     clap::Arg::new("proxy")
-        .short('x')
         .long("proxy")
+        .short('x')
         .value_name("[PROTOCOL://]HOST[:PORT]")
         .help("Use proxy on given PROTOCOL/HOST/PORT")
         .num_args(1)
@@ -356,19 +356,18 @@ pub fn resolve() -> clap::Arg {
         .long("resolve")
         .value_name("HOST:PORT:ADDR")
         .help("Provide a custom address for a specific HOST and PORT pair")
-        .action(ArgAction::Append)
-        .number_of_values(1)
         .num_args(1)
+        .action(ArgAction::Append)
 }
 
 pub fn retry() -> clap::Arg {
     clap::Arg::new("retry")
         .long("retry")
         .value_name("NUM")
-        .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
-        .allow_hyphen_values(true)
         .default_value("0")
         .value_parser(value_parser!(i32).range(-1..))
+        .allow_hyphen_values(true)
+        .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
         .num_args(1)
 }
 
@@ -376,9 +375,9 @@ pub fn retry_interval() -> clap::Arg {
     clap::Arg::new("retry_interval")
         .long("retry-interval")
         .value_name("MILLISECONDS")
-        .help("Interval in milliseconds before a retry")
-        .value_parser(value_parser!(u64))
         .default_value("1000")
+        .value_parser(value_parser!(u64))
+        .help("Interval in milliseconds before a retry")
         .num_args(1)
 }
 
@@ -400,17 +399,16 @@ pub fn to_entry() -> clap::Arg {
     clap::Arg::new("to_entry")
         .long("to-entry")
         .value_name("ENTRY_NUMBER")
+        .value_parser(value_parser!(u32).range(1..))
         .help("Execute Hurl file to ENTRY_NUMBER (starting at 1)")
         .conflicts_with("interactive")
-        .allow_hyphen_values(true)
-        .value_parser(value_parser!(u32).range(1..))
         .num_args(1)
 }
 
 pub fn user() -> clap::Arg {
     clap::Arg::new("user")
-        .short('u')
         .long("user")
+        .short('u')
         .value_name("USER:PASSWORD")
         .help("Add basic Authentication header to each request")
         .num_args(1)
@@ -418,8 +416,8 @@ pub fn user() -> clap::Arg {
 
 pub fn user_agent() -> clap::Arg {
     clap::Arg::new("user_agent")
-        .short('A')
         .long("user-agent")
+        .short('A')
         .value_name("NAME")
         .help("Specify the User-Agent string to send to the HTTP server")
         .num_args(1)
@@ -430,9 +428,8 @@ pub fn variable() -> clap::Arg {
         .long("variable")
         .value_name("NAME=VALUE")
         .help("Define a variable")
-        .action(ArgAction::Append)
-        .number_of_values(1)
         .num_args(1)
+        .action(ArgAction::Append)
 }
 
 pub fn variables_file() -> clap::Arg {
@@ -440,8 +437,8 @@ pub fn variables_file() -> clap::Arg {
         .long("variables-file")
         .value_name("FILE")
         .help("Define a properties file in which you define your variables")
-        .action(ArgAction::Append)
         .num_args(1)
+        .action(ArgAction::Append)
 }
 
 pub fn verbose() -> clap::Arg {
