@@ -136,6 +136,12 @@ $ yum install -y pkg-config gcc openssl-devel libxml2-devel
 $ pacman -Sy --noconfirm pkgconf gcc glibc openssl libxml2
 ```
 
+#### Alpine based distributions
+
+```shell
+$ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev 
+```
+
 ### Build on macOS
 
 ```shell
