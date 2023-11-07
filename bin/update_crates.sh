@@ -116,8 +116,6 @@ main() {
     check_args "${arg}"
     updated_count=0
 
-    blacklisted=""
-
     # update toml
     for package in packages/*; do
         toml_file="${package}/Cargo.toml"
@@ -135,12 +133,6 @@ main() {
             if [ "${newest_version}" == "${actual_version}" ]; then
                 echo "${color_green}newest${color_reset}"
             else
-                # Blacklist some crates
-                if [[ ${crate} =~ ${blacklisted} ]]; then
-                    echo "${color_yellow} blacklisted latest ${last_version}${color_reset}"
-                    continue
-                fi
-
                 if [ "${arg}" = "--check" ]; then
                     echo "${color_red}old, please update to latest ${last_version}${color_reset}"
                     updated_count=$((updated_count + 1))
