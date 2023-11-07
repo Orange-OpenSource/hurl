@@ -1,1 +1,2 @@
 curl 'http://localhost:8000/assert-header'
+curl 'http://localhost:8000/assert-header'
