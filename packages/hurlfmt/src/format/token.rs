@@ -987,6 +987,12 @@ impl Tokenizable for Filter {
             FilterValue::HtmlUnescape => {
                 vec![Token::FilterType(String::from("htmlUnescape"))]
             }
+            FilterValue::JsonPath { space0, expr } => {
+                let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("jsonpath"))];
+                tokens.append(&mut space0.tokenize());
+                tokens.append(&mut expr.tokenize());
+                tokens
+            }
             FilterValue::Nth { space0, n } => {
                 let mut tokens: Vec<Token> = vec![Token::FilterType(String::from("nth"))];
                 tokens.append(&mut space0.tokenize());

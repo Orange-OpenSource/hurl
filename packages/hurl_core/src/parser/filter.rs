@@ -58,6 +58,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             format_filter,
             html_decode_filter,
             html_encode_filter,
+            jsonpath_filter,
             nth_filter,
             regex_filter,
             replace_filter,
@@ -125,6 +126,13 @@ fn html_encode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 fn html_decode_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
     try_literal("htmlUnescape", reader)?;
     Ok(FilterValue::HtmlUnescape)
+}
+
+fn jsonpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
+    try_literal("jsonpath", reader)?;
+    let space0 = one_or_more_spaces(reader)?;
+    let expr = quoted_template(reader).map_err(|e| e.non_recoverable())?;
+    Ok(FilterValue::JsonPath { space0, expr })
 }
 
 fn nth_filter(reader: &mut Reader) -> ParseResult<FilterValue> {

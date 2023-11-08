@@ -864,6 +864,10 @@ pub enum FilterValue {
     },
     HtmlEscape,
     HtmlUnescape,
+    JsonPath {
+        space0: Whitespace,
+        expr: Template,
+    },
     Nth {
         space0: Whitespace,
         n: u64,

@@ -782,6 +782,11 @@ impl HtmlFormatter {
             }
             FilterValue::HtmlEscape => self.fmt_span("filter-type", "htmlEscape"),
             FilterValue::HtmlUnescape => self.fmt_span("filter-type", "htmlUnescape"),
+            FilterValue::JsonPath { space0, expr } => {
+                self.fmt_span("filter-type", "jsonpath");
+                self.fmt_space(space0);
+                self.fmt_template(expr);
+            }
             FilterValue::Nth { space0, n: value } => {
                 self.fmt_span("filter-type", "nth");
                 self.fmt_space(space0);

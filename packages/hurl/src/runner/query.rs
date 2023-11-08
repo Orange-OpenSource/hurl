@@ -26,7 +26,7 @@ use crate::runner::filter;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 
-use crate::{http, jsonpath};
+use crate::http;
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
@@ -151,46 +151,13 @@ fn eval_query_jsonpath(
     variables: &HashMap<String, Value>,
     query_source_info: &SourceInfo,
 ) -> QueryResult {
-    let value = eval_template(expr, variables)?;
-    let expr_source_info = &expr.source_info;
-    let jsonpath_query = match jsonpath::parse(value.as_str()) {
-        Ok(q) => q,
-        Err(_) => {
-            return Err(Error {
-                source_info: expr_source_info.clone(),
-                inner: RunnerError::QueryInvalidJsonpathExpression { value },
-                assert: false,
-            });
-        }
-    };
-    let json = match response.text() {
-        Err(inner) => {
-            return Err(Error {
-                source_info: query_source_info.clone(),
-                inner: RunnerError::from(inner),
-                assert: false,
-            });
-        }
-        Ok(v) => v,
-    };
-    let value = match serde_json::from_str(json.as_str()) {
-        Err(_) => {
-            return Err(Error {
-                source_info: query_source_info.clone(),
-                inner: RunnerError::QueryInvalidJson,
-                assert: false,
-            });
-        }
-        Ok(v) => v,
-    };
-
-    let results = jsonpath_query.eval(&value);
-    match results {
-        None => Ok(None),
-        Some(jsonpath::JsonpathResult::SingleEntry(value)) => Ok(Some(Value::from_json(&value))),
-        Some(jsonpath::JsonpathResult::Collection(values)) => {
-            Ok(Some(Value::from_json(&serde_json::Value::Array(values))))
-        }
+    match response.text() {
+        Err(inner) => Err(Error {
+            source_info: query_source_info.clone(),
+            inner: RunnerError::from(inner),
+            assert: false,
+        }),
+        Ok(json) => filter::eval_jsonpath_string(&json, expr, variables, query_source_info),
     }
 }
 

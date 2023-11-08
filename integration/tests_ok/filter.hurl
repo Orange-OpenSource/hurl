@@ -22,6 +22,7 @@ jsonpath "$.id" toInt == 123
 jsonpath "$.score" toInt == 1
 jsonpath "$.ips" split ", " count == 3
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
+jsonpath "$.json" jsonpath "$.message" == "Hello"
 {
   "list": [1,2,3],
   "message": "Hello Bob!",
@@ -35,5 +36,6 @@ jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
   ],
   "id": "123",
   "score": 1.6,
-  "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10"
+  "ips": "192.168.2.1, 10.0.0.20, 10.0.0.10",
+  "json": "{\"message\": \"Hello\"}"
 }

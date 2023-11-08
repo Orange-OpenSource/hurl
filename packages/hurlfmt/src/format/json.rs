@@ -639,6 +639,10 @@ impl ToJson for FilterValue {
                 attributes.push(("type".to_string(), JValue::String("format".to_string())));
                 attributes.push(("fmt".to_string(), JValue::String(fmt.to_string())));
             }
+            FilterValue::JsonPath { expr, .. } => {
+                attributes.push(("type".to_string(), JValue::String("jsonpath".to_string())));
+                attributes.push(("expr".to_string(), JValue::String(expr.to_string())));
+            }
             FilterValue::Nth { n, .. } => {
                 attributes.push(("type".to_string(), JValue::String("nth".to_string())));
                 attributes.push(("n".to_string(), JValue::Number(n.to_string())));

@@ -424,6 +424,7 @@ filter:
   | format-filter
   | html-escape-filter
   | html-unescape-filter
+  | json-filter
   | nth-filter
   | regex-filter
   | replace-filter
