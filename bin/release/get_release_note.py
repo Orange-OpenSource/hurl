@@ -5,10 +5,11 @@ Example:
     $ python3 bin/release/get_release_note.py 1.7.0
 
 """
+import argparse
 import datetime
 import json
 import sys
-from typing import List
+from typing import List, Optional
 
 import requests
 from bs4 import BeautifulSoup
@@ -17,7 +18,15 @@ hurl_repo_url = "https://github.com/Orange-OpenSource/hurl"
 
 
 class Pull:
-    def __init__(self, url: str, description: str, tags: List[str] = [], issues=None):
+    def __init__(
+        self,
+        url: str,
+        description: str,
+        tags: Optional[List[str]] = None,
+        issues: Optional[List[int]] = None,
+    ):
+        if tags is None:
+            tags = []
         if issues is None:
             issues = []
         self.url = url
@@ -67,11 +76,11 @@ class Issue:
         )
 
 
-def release_note(milestone: str) -> str:
+def release_note(milestone: str, token: Optional[str]) -> str:
     """return markdown release note for the given milestone"""
     date = datetime.datetime.now()
-    milestone_number = get_milestone(milestone)
-    issues = get_issues(milestone_number)
+    milestone_number = get_milestone(title=milestone, token=token)
+    issues = get_issues(milestone_number=milestone_number, token=token)
     pulls = pulls_from_issues(issues)
     authors = [
         author
@@ -101,10 +110,10 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
     return list(pulls.values())
 
 
-def get_issues(milestone_number: int) -> List[Issue]:
+def get_issues(milestone_number: int, token: Optional[str]) -> List[Issue]:
     """Return issues for the given milestone and tags"""
     path = "/issues?milestone=%s&state=all&per_page=100" % milestone_number
-    response = github_get(path)
+    response = github_get(path=path, token=token)
     issues = []
     for issue_json in json.loads(response):
         if "pull_request" in issue_json:
@@ -115,26 +124,29 @@ def get_issues(milestone_number: int) -> List[Issue]:
             labels = issue_json["labels"]
             tags = [label["name"] for label in labels]
         author = issue_json["user"]["login"]
-        pulls = get_linked_pulls(number)
+        pulls = get_linked_pulls(issue_number=number, token=token)
         issue = Issue(number, tags, author, pulls)
         issues.append(issue)
     return issues
 
 
-def get_linked_pulls(issue_number) -> List[Pull]:
+def get_linked_pulls(issue_number: int, token: Optional[str]) -> List[Pull]:
     """return linked pull request for a given issue"""
     # Webscapping the webpage issue
     # because the API does not provide the relationship between issues and Pull request
 
     url = "https://github.com/Orange-OpenSource/hurl/issues/%d" % issue_number
     sys.stderr.write("* GET %s\n" % url)
-    r = requests.get(url)
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    r = requests.get(url, headers=headers)
     html = r.text
     pulls = webscrapping_linked_pulls(html)
     return pulls
 
 
-def webscrapping_linked_pulls(html) -> List[Pull]:
+def webscrapping_linked_pulls(html: str) -> List[Pull]:
     soup = BeautifulSoup(html, "html.parser")
     links = soup.select("development-menu a")
     pulls = []
@@ -196,33 +208,39 @@ def generate_md(
     return s
 
 
-def get_milestone(title: str) -> int:
+def get_milestone(title: str, token: Optional[str]) -> int:
     """Return milestone number"""
     path = "/milestones?state=all"
-    response = github_get(path)
+    response = github_get(path=path, token=token)
     for milestone in json.loads(response):
         if milestone["title"] == title:
             return milestone["number"]
     return -1
 
 
-def github_get(path: str) -> str:
+def github_get(path: str, token: Optional[str]) -> str:
     """Execute an HTTP GET with request"""
     github_api_url = "https://api.github.com/repos/Orange-OpenSource/hurl"
     url = github_api_url + path
     sys.stderr.write("* GET %s\n" % url)
-    r = requests.get(
-        url,
-        # headers={"authorization": "Bearer " + github_api_token} # increase rate limit
-    )
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    r = requests.get(url, headers=headers)
     if r.status_code != 200:
         raise Exception("HTTP Error %s - %s" % (r.status_code, r.text))
     return r.text
 
 
+def main():
+    parser = argparse.ArgumentParser(
+        description="Get Hurl release notes from issues/PR"
+    )
+    parser.add_argument("version", help="Hurl release version ex 4.2.0")
+    parser.add_argument("--token", help="GitHub authentication token")
+    args = parser.parse_args()
+    print(release_note(milestone=args.version, token=args.token))
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: bin/release/get_release_note.py <VERSION>")
-        sys.exit(1)
-    version = sys.argv[1]
-    print(release_note(version))
+    main()
