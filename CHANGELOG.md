@@ -2,6 +2,8 @@
 ========================================================================================================================
 
 Thanks to
+[@gmetal](https://github.com/gmetal),
+[@mihirn](https://github.com/mihirn),
 [@smokedlinq](https://github.com/smokedlinq),
 [@RickMoynihan](https://github.com/RickMoynihan),
 [@pit1sIBM](https://github.com/pit1sIBM),
@@ -19,10 +21,11 @@ Thanks to
 
 Enhancements:
 
+* Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
 * Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
-* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710) [#464](https://github.com/Orange-OpenSource/hurl/issues/464)
+* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
 * Add skip option [#1815](https://github.com/Orange-OpenSource/hurl/issues/1815)
 * Add --ipv4/--ipv6 option [#1727](https://github.com/Orange-OpenSource/hurl/issues/1727)
 * Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
