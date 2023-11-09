@@ -112,7 +112,7 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
 
 def get_issues(milestone_number: int, token: Optional[str]) -> List[Issue]:
     """Return issues for the given milestone and tags"""
-    path = "/issues?milestone=%s&state=all&per_page=100" % milestone_number
+    path = "/issues?milestone=%s&state=closed&per_page=100" % milestone_number
     response = github_get(path=path, token=token)
     issues = []
     for issue_json in json.loads(response):
