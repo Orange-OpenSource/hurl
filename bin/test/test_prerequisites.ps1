@@ -39,7 +39,7 @@ write-output "cache deny all" "cache_log /dev/null" "access_log /dev/null" "http
 C:\Squid\bin\squid -k kill 2>&1 || true
 C:\Squid\bin\squid -d 2 -N -f squid.conf 2>&1 > build\proxy.log &
 if ($LASTEXITCODE) { Throw }
-sleep 5
+sleep 30
 if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:3128) {write-host -foregroundcolor Green "proxy is up"} else {write-host -foregroundcolor Red "proxy is down" ; cat build\proxy.log ; exit 1}
 
 cd $actual_dir
