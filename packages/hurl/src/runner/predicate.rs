@@ -108,10 +108,10 @@ impl Value {
     pub fn display(&self) -> String {
         match self {
             Value::Bool(v) => format!("bool <{v}>"),
+            Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Date(v) => format!("date <{v}>"),
-            Value::Integer(v) => format!("int <{v}>"),
-            Value::String(v) => format!("string <{v}>"),
             Value::Float(f) => format!("float <{}>", format_float(*f)),
+            Value::Integer(v) => format!("int <{v}>"),
             Value::List(values) => format!(
                 "[{}]",
                 values
@@ -121,11 +121,11 @@ impl Value {
                     .join(", ")
             ),
             Value::Nodeset(n) => format!("nodeset of size <{n}>"),
-            Value::Object(_) => "object".to_string(),
-            Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Null => "null".to_string(),
-            Value::Unit => "unit".to_string(),
+            Value::Object(_) => "object".to_string(),
             Value::Regex(value) => format!("regex <{}>", value.as_str()),
+            Value::String(v) => format!("string <{v}>"),
+            Value::Unit => "unit".to_string(),
         }
     }
 }
@@ -142,9 +142,9 @@ impl Value {
             Value::Nodeset(size) => format!("list of size {size}"),
             Value::Null => "null".to_string(),
             Value::Object(values) => format!("list of size {}", values.len()),
+            Value::Regex(value) => format!("regex <{value}>"),
             Value::String(value) => format!("string <{value}>"),
             Value::Unit => "something".to_string(),
-            Value::Regex(value) => format!("regex <{value}>"),
         }
     }
 }

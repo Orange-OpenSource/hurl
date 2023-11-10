@@ -31,9 +31,9 @@ pub enum Value {
     Nodeset(usize),
     Null,
     Object(Vec<(String, Value)>),
+    Regex(regex::Regex),
     String(String),
     Unit,
-    Regex(regex::Regex),
 }
 
 // You must implement it yourself because of the Float
@@ -42,6 +42,7 @@ impl PartialEq for Value {
         match (self, other) {
             (Value::Bool(v1), Value::Bool(v2)) => v1 == v2,
             (Value::Bytes(v1), Value::Bytes(v2)) => v1 == v2,
+            (Value::Date(v1), Value::Date(v2)) => v1 == v2,
             (Value::Float(v1), Value::Float(v2)) => (v1 - v2).abs() < f64::EPSILON,
             (Value::Integer(v1), Value::Integer(v2)) => v1 == v2,
             (Value::List(v1), Value::List(v2)) => v1 == v2,
@@ -50,7 +51,6 @@ impl PartialEq for Value {
             (Value::Object(v1), Value::Object(v2)) => v1 == v2,
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
-            (Value::Date(v1), Value::Date(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -61,24 +61,24 @@ impl Eq for Value {}
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
-            Value::Integer(x) => x.to_string(),
             Value::Bool(x) => x.to_string(),
+            Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Date(v) => v.to_string(),
             Value::Float(f) => format_float(*f),
-            Value::String(x) => x.clone(),
+            Value::Integer(x) => x.to_string(),
             Value::List(values) => {
                 let values: Vec<String> = values.iter().map(|e| e.to_string()).collect();
                 format!("[{}]", values.join(","))
             }
-            Value::Object(_) => "Object()".to_string(),
             Value::Nodeset(x) => format!("Nodeset{x:?}"),
-            Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Null => "null".to_string(),
-            Value::Unit => "Unit".to_string(),
+            Value::Object(_) => "Object()".to_string(),
             Value::Regex(x) => {
                 let s = str::replace(x.as_str(), "/", "\\/");
                 format!("/{s}/")
             }
+            Value::String(x) => x.clone(),
+            Value::Unit => "Unit".to_string(),
         };
         write!(f, "{value}")
     }
@@ -95,18 +95,18 @@ fn format_float(value: f64) -> String {
 impl Value {
     pub fn _type(&self) -> String {
         match self {
-            Value::Integer(_) => "integer".to_string(),
             Value::Bool(_) => "boolean".to_string(),
+            Value::Bytes(_) => "bytes".to_string(),
             Value::Date(_) => "date".to_string(),
             Value::Float(_) => "float".to_string(),
-            Value::String(_) => "string".to_string(),
+            Value::Integer(_) => "integer".to_string(),
             Value::List(_) => "list".to_string(),
-            Value::Object(_) => "object".to_string(),
             Value::Nodeset(_) => "nodeset".to_string(),
-            Value::Bytes(_) => "bytes".to_string(),
             Value::Null => "null".to_string(),
-            Value::Unit => "unit".to_string(),
+            Value::Object(_) => "object".to_string(),
             Value::Regex(_) => "regex".to_string(),
+            Value::String(_) => "string".to_string(),
+            Value::Unit => "unit".to_string(),
         }
     }
 
