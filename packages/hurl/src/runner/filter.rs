@@ -26,7 +26,7 @@ use percent_encoding::AsciiSet;
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
 use crate::runner::xpath;
-use crate::runner::{Error, RunnerError, Value};
+use crate::runner::{Error, Number, RunnerError, Value};
 use crate::{html, jsonpath};
 
 /// Apply successive `filters` to an input `value`.
@@ -140,9 +140,9 @@ fn eval_count(
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
-        Value::List(values) => Ok(Some(Value::Integer(values.len() as i64))),
-        Value::Bytes(values) => Ok(Some(Value::Integer(values.len() as i64))),
-        Value::Nodeset(size) => Ok(Some(Value::Integer(*size as i64))),
+        Value::List(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
+        Value::Bytes(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
+        Value::Nodeset(size) => Ok(Some(Value::Number(Number::Integer(*size as i64)))),
         v => Err(Error {
             source_info: source_info.clone(),
             inner: RunnerError::FilterInvalidInput(v._type()),
@@ -159,7 +159,7 @@ fn eval_days_after_now(
     match value {
         Value::Date(value) => {
             let diff = value.signed_duration_since(Utc::now());
-            Ok(Some(Value::Integer(diff.num_days())))
+            Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -177,7 +177,7 @@ fn eval_days_before_now(
     match value {
         Value::Date(value) => {
             let diff = Utc::now().signed_duration_since(*value);
-            Ok(Some(Value::Integer(diff.num_days())))
+            Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
         v => Err(Error {
             source_info: source_info.clone(),
@@ -436,11 +436,11 @@ fn eval_to_int(
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
-        Value::Integer(v) => Ok(Some(Value::Integer(*v))),
-        Value::Float(v) => Ok(Some(Value::Integer(*v as i64))),
+        Value::Number(Number::Integer(v)) => Ok(Some(Value::Number(Number::Integer(*v)))),
+        Value::Number(Number::Float(v)) => Ok(Some(Value::Number(Number::Integer(*v as i64)))),
         Value::String(v) => match v.parse::<i64>() {
-            Ok(i) => Ok(Some(Value::Integer(i))),
-            Err(_) => Err(Error {
+            Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
+            _ => Err(Error {
                 source_info: source_info.clone(),
                 inner: RunnerError::FilterInvalidInput(value.display()),
                 assert,
@@ -591,16 +591,16 @@ pub mod tests {
             eval_filters(
                 &vec![filter_count()],
                 &Value::List(vec![
-                    Value::Integer(1),
-                    Value::Integer(2),
-                    Value::Integer(2),
+                    Value::Number(Number::Integer(1)),
+                    Value::Number(Number::Integer(2)),
+                    Value::Number(Number::Integer(2)),
                 ]),
                 &variables,
                 false,
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(3)
+            Value::Number(Number::Integer(3))
         );
     }
 
@@ -612,16 +612,16 @@ pub mod tests {
             eval_filter(
                 &filter_count(),
                 &Value::List(vec![
-                    Value::Integer(1),
-                    Value::Integer(2),
-                    Value::Integer(2),
+                    Value::Number(Number::Integer(1)),
+                    Value::Number(Number::Integer(2)),
+                    Value::Number(Number::Integer(2)),
                 ]),
                 &variables,
                 false,
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(3)
+            Value::Number(Number::Integer(3))
         );
 
         let error = eval_filter(&filter_count(), &Value::Bool(true), &variables, false)
@@ -651,7 +651,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(0)
+            Value::Number(Number::Integer(0))
         );
 
         let now_plus_30hours = now + Duration::hours(30);
@@ -667,7 +667,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(1)
+            Value::Number(Number::Integer(1))
         );
         assert_eq!(
             eval_filter(
@@ -681,7 +681,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(-1)
+            Value::Number(Number::Integer(-1))
         );
     }
 
@@ -857,19 +857,29 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(123)
+            Value::Number(Number::Integer(123))
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Integer(123), &variables, false)
-                .unwrap()
-                .unwrap(),
-            Value::Integer(123)
+            eval_filter(
+                &filter,
+                &Value::Number(Number::Integer(123)),
+                &variables,
+                false
+            )
+            .unwrap()
+            .unwrap(),
+            Value::Number(Number::Integer(123))
         );
         assert_eq!(
-            eval_filter(&filter, &Value::Float(1.6), &variables, false)
-                .unwrap()
-                .unwrap(),
-            Value::Integer(1)
+            eval_filter(
+                &filter,
+                &Value::Number(Number::Float(1.6)),
+                &variables,
+                false
+            )
+            .unwrap()
+            .unwrap(),
+            Value::Number(Number::Integer(1))
         );
     }
 
@@ -983,22 +993,25 @@ pub mod tests {
             eval_filter(
                 &filter,
                 &Value::List(vec![
-                    Value::Integer(0),
-                    Value::Integer(1),
-                    Value::Integer(2),
-                    Value::Integer(3)
+                    Value::Number(Number::Integer(0)),
+                    Value::Number(Number::Integer(1)),
+                    Value::Number(Number::Integer(2)),
+                    Value::Number(Number::Integer(3))
                 ]),
                 &variables,
                 false
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(2)
+            Value::Number(Number::Integer(2))
         );
         assert_eq!(
             eval_filter(
                 &filter,
-                &Value::List(vec![Value::Integer(0), Value::Integer(1)]),
+                &Value::List(vec![
+                    Value::Number(Number::Integer(0)),
+                    Value::Number(Number::Integer(1))
+                ]),
                 &variables,
                 false
             )

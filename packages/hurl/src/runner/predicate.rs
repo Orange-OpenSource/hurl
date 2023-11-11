@@ -25,6 +25,7 @@ use crate::runner::core::{Error, PredicateResult};
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
+use crate::runner::Number;
 use crate::runner::RunnerError;
 
 /// Evaluates a `predicate` against an actual `value`.
@@ -110,8 +111,6 @@ impl Value {
             Value::Bool(v) => format!("bool <{v}>"),
             Value::Bytes(value) => format!("byte array <{}>", hex::encode(value)),
             Value::Date(v) => format!("date <{v}>"),
-            Value::Float(f) => format!("float <{}>", format_float(*f)),
-            Value::Integer(v) => format!("int <{v}>"),
             Value::List(values) => format!(
                 "[{}]",
                 values
@@ -121,11 +120,21 @@ impl Value {
                     .join(", ")
             ),
             Value::Nodeset(n) => format!("nodeset of size <{n}>"),
+            Value::Number(number) => number.display(),
             Value::Null => "null".to_string(),
             Value::Object(_) => "object".to_string(),
             Value::Regex(value) => format!("regex <{}>", value.as_str()),
             Value::String(v) => format!("string <{v}>"),
             Value::Unit => "unit".to_string(),
+        }
+    }
+}
+
+impl Number {
+    pub fn display(&self) -> String {
+        match self {
+            Number::Float(f) => format!("float <{}>", format_float(*f)),
+            Number::Integer(v) => format!("int <{v}>"),
         }
     }
 }
@@ -136,15 +145,23 @@ impl Value {
             Value::Bool(value) => format!("bool <{value}>"),
             Value::Bytes(values) => format!("list of size {}", values.len()),
             Value::Date(value) => format!("date <{value}>"),
-            Value::Float(f) => format!("float <{}>", format_float(*f)),
-            Value::Integer(value) => format!("integer <{value}>"),
             Value::List(value) => format!("list of size {}", value.len()),
             Value::Nodeset(size) => format!("list of size {size}"),
             Value::Null => "null".to_string(),
+            Value::Number(number) => number.expected(),
             Value::Object(values) => format!("list of size {}", values.len()),
             Value::Regex(value) => format!("regex <{value}>"),
             Value::String(value) => format!("string <{value}>"),
             Value::Unit => "something".to_string(),
+        }
+    }
+}
+
+impl Number {
+    fn expected(&self) -> String {
+        match self {
+            Number::Float(f) => format!("float <{}>", format_float(*f)),
+            Number::Integer(value) => format!("integer <{value}>"),
         }
     }
 }
@@ -501,7 +518,7 @@ fn eval_match(
 /// Evaluates if an `actual` value is an integer.
 fn eval_is_integer(actual: &Value) -> Result<AssertResult, Error> {
     Ok(AssertResult {
-        success: matches!(actual, Value::Integer(_)),
+        success: matches!(actual, Value::Number(Number::Integer(_))),
         actual: actual.display(),
         expected: "integer".to_string(),
         type_mismatch: false,
@@ -511,7 +528,7 @@ fn eval_is_integer(actual: &Value) -> Result<AssertResult, Error> {
 /// Evaluates if an `actual` value is a float.
 fn eval_is_float(actual: &Value) -> Result<AssertResult, Error> {
     Ok(AssertResult {
-        success: matches!(actual, Value::Float(_)),
+        success: matches!(actual, Value::Number(Number::Float(_))),
         actual: actual.display(),
         expected: "float".to_string(),
         type_mismatch: false,
@@ -640,25 +657,27 @@ fn assert_values_equal(actual: &Value, expected: &Value) -> AssertResult {
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Integer(value1), Value::Integer(value2)) => AssertResult {
-            success: value1 == value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Float(f), Value::Integer(i)) => AssertResult {
+        (Value::Number(Number::Integer(value1)), Value::Number(Number::Integer(value2))) => {
+            AssertResult {
+                success: value1 == value2,
+                actual: actual_display,
+                expected: expected_display,
+                type_mismatch: false,
+            }
+        }
+        (Value::Number(Number::Float(f)), Value::Number(Number::Integer(i))) => AssertResult {
             success: (f.trunc() - *i as f64).abs() < f64::EPSILON && f.fract() == 0.0,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Integer(i), Value::Float(f)) => AssertResult {
+        (Value::Number(Number::Integer(i)), Value::Number(Number::Float(f))) => AssertResult {
             success: (f.trunc() - *i as f64).abs() < f64::EPSILON && f.fract() == 0.0,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Float(f1), Value::Float(f2)) => AssertResult {
+        (Value::Number(Number::Float(f1)), Value::Number(Number::Float(f2))) => AssertResult {
             success: (f1 - f2).abs() < f64::EPSILON,
             actual: actual_display,
             expected: expected_display,
@@ -715,25 +734,27 @@ fn assert_values_not_equal(actual: &Value, expected: &Value) -> AssertResult {
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Integer(value1), Value::Integer(value2)) => AssertResult {
-            success: value1 != value2,
-            actual: actual_display,
-            expected: expected_display,
-            type_mismatch: false,
-        },
-        (Value::Float(f), Value::Integer(i)) => AssertResult {
+        (Value::Number(Number::Integer(value1)), Value::Number(Number::Integer(value2))) => {
+            AssertResult {
+                success: value1 != value2,
+                actual: actual_display,
+                expected: expected_display,
+                type_mismatch: false,
+            }
+        }
+        (Value::Number(Number::Float(f)), Value::Number(Number::Integer(i))) => AssertResult {
             success: (f.trunc() - *i as f64).abs() > f64::EPSILON || f.fract() != 0.0,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Integer(i), Value::Float(f)) => AssertResult {
+        (Value::Number(Number::Integer(i)), Value::Number(Number::Float(f))) => AssertResult {
             success: (f.trunc() - *i as f64).abs() > f64::EPSILON || f.fract() != 0.0,
             actual: actual_display,
             expected: expected_display,
             type_mismatch: false,
         },
-        (Value::Float(f1), Value::Float(f2)) => AssertResult {
+        (Value::Number(Number::Float(f1)), Value::Number(Number::Float(f2))) => AssertResult {
             success: (f1 - f2).abs() > f64::EPSILON,
             actual: actual_display,
             expected: expected_display,
@@ -882,10 +903,18 @@ fn assert_values_less_or_equal(actual_value: &Value, expected_value: &Value) -> 
 /// - `None` if `actual` and `expected` are not comparable.
 fn compare_values(actual: &Value, expected: &Value) -> Option<i32> {
     match (actual, expected) {
-        (Value::Integer(i1), Value::Integer(i2)) => Some(compare_float(*i1 as f64, *i2 as f64)),
-        (Value::Float(f1), Value::Float(f2)) => Some(compare_float(*f1, *f2)),
-        (Value::Float(f1), Value::Integer(i2)) => Some(compare_float(*f1, *i2 as f64)),
-        (Value::Integer(i1), Value::Float(f2)) => Some(compare_float(*i1 as f64, *f2)),
+        (Value::Number(Number::Integer(i1)), Value::Number(Number::Integer(i2))) => {
+            Some(compare_float(*i1 as f64, *i2 as f64))
+        }
+        (Value::Number(Number::Float(f1)), Value::Number(Number::Float(f2))) => {
+            Some(compare_float(*f1, *f2))
+        }
+        (Value::Number(Number::Float(f1)), Value::Number(Number::Integer(i2))) => {
+            Some(compare_float(*f1, *i2 as f64))
+        }
+        (Value::Number(Number::Integer(i1)), Value::Number(Number::Float(f2))) => {
+            Some(compare_float(*i1 as f64, *f2))
+        }
         (Value::String(s1), Value::String(s2)) => Some(compare_string(s1, s2)),
         _ => None,
     }
@@ -1001,7 +1030,12 @@ mod tests {
 
         assert!(eval_predicate(&predicate, &variables, &Some(Value::Bool(true))).is_ok());
 
-        let error = eval_predicate(&predicate, &variables, &Some(Value::Integer(10))).unwrap_err();
+        let error = eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(10))),
+        )
+        .unwrap_err();
         assert_eq!(
             error.inner,
             RunnerError::AssertFailure {
@@ -1012,7 +1046,12 @@ mod tests {
         );
         assert_eq!(error.source_info, SourceInfo::new(1, 0, 1, 0));
 
-        assert!(eval_predicate(&predicate, &variables, &Some(Value::Integer(1))).is_ok());
+        assert!(eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(1)))
+        )
+        .is_ok());
     }
 
     #[test]
@@ -1054,7 +1093,7 @@ mod tests {
         // predicate: `== 10`
         // value: 1
         let expected = PredicateValue::Integer(10);
-        let value = Value::Integer(1);
+        let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1077,7 +1116,7 @@ mod tests {
             value: 1.2,
             encoded: "1.2".to_string(),
         });
-        let value = Value::Float(1.1);
+        let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1117,7 +1156,7 @@ mod tests {
         // predicate: `== 1`
         // value: 1
         let expected = PredicateValue::Integer(1);
-        let value = Value::Integer(1);
+        let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1170,7 +1209,7 @@ mod tests {
             value: 1.1,
             encoded: "1.1".to_string(),
         });
-        let value = Value::Float(1.1);
+        let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1185,7 +1224,7 @@ mod tests {
         // predicate: `== 1`
         // value: 1.0
         let expected = PredicateValue::Integer(1);
-        let value = Value::Float(1.0);
+        let value = Value::Number(Number::Float(1.0));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1200,7 +1239,7 @@ mod tests {
         // predicate: `== 1`
         // value: 2
         let expected = PredicateValue::Integer(1);
-        let value = Value::Integer(2);
+        let value = Value::Number(Number::Integer(2));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1281,70 +1320,130 @@ mod tests {
     fn test_compare_numbers() {
         // 2 integers
         assert_eq!(
-            compare_values(&Value::Integer(2), &Value::Integer(1)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Integer(2)),
+                &Value::Number(Number::Integer(1))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Integer(1), &Value::Integer(1)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Integer(1)),
+                &Value::Number(Number::Integer(1))
+            )
+            .unwrap(),
             0
         );
         assert_eq!(
-            compare_values(&Value::Integer(1), &Value::Integer(2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Integer(1)),
+                &Value::Number(Number::Integer(2))
+            )
+            .unwrap(),
             -1
         );
         assert_eq!(
-            compare_values(&Value::Integer(-1), &Value::Integer(-2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Integer(-1)),
+                &Value::Number(Number::Integer(-2))
+            )
+            .unwrap(),
             1
         );
 
         // 2 floats
         assert_eq!(
-            compare_values(&Value::Float(2.3), &Value::Float(1.2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(2.3)),
+                &Value::Number(Number::Float(1.2))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Float(2.3), &Value::Float(2.2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(2.3)),
+                &Value::Number(Number::Float(2.2))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Float(1.2), &Value::Float(1.5)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(1.2)),
+                &Value::Number(Number::Float(1.5))
+            )
+            .unwrap(),
             -1
         );
         assert_eq!(
-            compare_values(&Value::Float(-2.1), &Value::Float(-3.1)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(-2.1)),
+                &Value::Number(Number::Float(-3.1))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Float(1.1), &Value::Float(-2.1)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(1.1)),
+                &Value::Number(Number::Float(-2.1))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Float(1.1), &Value::Float(1.1)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(1.1)),
+                &Value::Number(Number::Float(1.1))
+            )
+            .unwrap(),
             0
         );
 
         // 1 float and 1 integer
         assert_eq!(
-            compare_values(&Value::Float(2.3), &Value::Integer(2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(2.3)),
+                &Value::Number(Number::Integer(2))
+            )
+            .unwrap(),
             1
         );
         assert_eq!(
-            compare_values(&Value::Float(2.3), &Value::Integer(3)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(2.3)),
+                &Value::Number(Number::Integer(3))
+            )
+            .unwrap(),
             -1
         );
         assert_eq!(
-            compare_values(&Value::Float(2.0), &Value::Integer(2)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Float(2.0)),
+                &Value::Number(Number::Integer(2))
+            )
+            .unwrap(),
             0
         );
 
         // 1 integer and 1 float
         assert_eq!(
-            compare_values(&Value::Integer(2), &Value::Float(2.0)).unwrap(),
+            compare_values(
+                &Value::Number(Number::Integer(2)),
+                &Value::Number(Number::Float(2.0))
+            )
+            .unwrap(),
             0
         );
 
         // with a non number
-        assert!(compare_values(&Value::Integer(-1), &Value::String("hello".to_string())).is_none());
+        assert!(compare_values(
+            &Value::Number(Number::Integer(-1)),
+            &Value::String("hello".to_string())
+        )
+        .is_none());
     }
 
     #[test]
@@ -1394,7 +1493,10 @@ mod tests {
     #[test]
     fn test_assert_value_greater() {
         assert_eq!(
-            assert_values_greater(&Value::Integer(2), &Value::Integer(1)),
+            assert_values_greater(
+                &Value::Number(Number::Integer(2)),
+                &Value::Number(Number::Integer(1))
+            ),
             AssertResult {
                 success: true,
                 type_mismatch: false,
@@ -1403,7 +1505,10 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(&Value::Integer(1), &Value::Integer(1)),
+            assert_values_greater(
+                &Value::Number(Number::Integer(1)),
+                &Value::Number(Number::Integer(1))
+            ),
             AssertResult {
                 success: false,
                 type_mismatch: false,
@@ -1412,7 +1517,10 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(&Value::Float(1.1), &Value::Integer(1)),
+            assert_values_greater(
+                &Value::Number(Number::Float(1.1)),
+                &Value::Number(Number::Integer(1))
+            ),
             AssertResult {
                 success: true,
                 type_mismatch: false,
@@ -1421,7 +1529,10 @@ mod tests {
             }
         );
         assert_eq!(
-            assert_values_greater(&Value::Float(1.1), &Value::Integer(2)),
+            assert_values_greater(
+                &Value::Number(Number::Float(1.1)),
+                &Value::Number(Number::Integer(2))
+            ),
             AssertResult {
                 success: false,
                 type_mismatch: false,
@@ -1435,7 +1546,7 @@ mod tests {
     fn test_predicate_is_empty_are_false() {
         // predicate: `isEmpty`
         // value: [1]
-        let value = Value::List(vec![Value::Integer(1)]);
+        let value = Value::List(vec![Value::Number(Number::Integer(1))]);
         let assert_result = eval_is_empty(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1477,7 +1588,7 @@ mod tests {
     fn test_predicate_type() {
         // predicate: `isInteger`
         // value: 1
-        let value = Value::Integer(1);
+        let value = Value::Number(Number::Integer(1));
         let assert_result = eval_is_integer(&value).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1486,7 +1597,7 @@ mod tests {
 
         // predicate: `isInteger`
         // value: 1
-        let value = Value::Float(1.0);
+        let value = Value::Number(Number::Float(1.0));
         let assert_result = eval_is_integer(&value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
@@ -1513,7 +1624,12 @@ mod tests {
         };
 
         let variables = HashMap::new();
-        assert!(eval_predicate(&predicate, &variables, &Some(Value::Integer(1))).is_ok());
+        assert!(eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(1)))
+        )
+        .is_ok());
 
         // startswith predicate generates a type error with an integer value
         // predicate: `not startWith "toto"`
@@ -1536,7 +1652,12 @@ mod tests {
                 },
             },
         };
-        let error = eval_predicate(&predicate, &variables, &Some(Value::Integer(1))).unwrap_err();
+        let error = eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Number(Number::Integer(1))),
+        )
+        .unwrap_err();
         assert_eq!(
             error.inner,
             RunnerError::AssertFailure {

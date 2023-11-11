@@ -24,7 +24,7 @@ use libxml::bindings::{htmlReadMemory, xmlReadMemory};
 use libxml::parser::{ParseFormat, Parser, XmlParseError};
 use libxml::tree::Document;
 
-use crate::runner::value::Value;
+use crate::runner::{Number, Value};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum XpathError {
@@ -161,9 +161,9 @@ fn eval(doc: &Document, expr: &str, support_ns: bool) -> Result<Value, XpathErro
     };
 
     match unsafe { *result.ptr }.type_ {
-        libxml::bindings::xmlXPathObjectType_XPATH_NUMBER => {
-            Ok(Value::from_f64(unsafe { *result.ptr }.floatval))
-        }
+        libxml::bindings::xmlXPathObjectType_XPATH_NUMBER => Ok(Value::Number(Number::from_f64(
+            unsafe { *result.ptr }.floatval,
+        ))),
         libxml::bindings::xmlXPathObjectType_XPATH_BOOLEAN => {
             Ok(Value::Bool(unsafe { *result.ptr }.boolval != 0))
         }
@@ -253,16 +253,25 @@ mod tests {
 </food>
 "#;
         let xpath = "count(//food/*)";
-        assert_eq!(eval_xml(xml, xpath).unwrap(), Value::from_f64(3.0));
+        assert_eq!(
+            eval_xml(xml, xpath).unwrap(),
+            Value::Number(Number::from_f64(3.0))
+        );
 
         let xpath = "//food/*";
         assert_eq!(eval_xml(xml, xpath).unwrap(), Value::Nodeset(3));
 
         let xpath = "count(//*[@type='fruit'])";
-        assert_eq!(eval_xml(xml, xpath).unwrap(), Value::from_f64(2.0));
+        assert_eq!(
+            eval_xml(xml, xpath).unwrap(),
+            Value::Number(Number::from_f64(2.0))
+        );
 
         let xpath = "number(//food/banana/@price)";
-        assert_eq!(eval_xml(xml, xpath).unwrap(), Value::from_f64(1.1));
+        assert_eq!(
+            eval_xml(xml, xpath).unwrap(),
+            Value::Number(Number::from_f64(1.1))
+        );
     }
 
     #[test]

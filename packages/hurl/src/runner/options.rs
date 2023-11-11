@@ -19,7 +19,7 @@
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
 use crate::runner::{template, RunnerError};
-use crate::runner::{Error, RunnerOptions, Value};
+use crate::runner::{Error, Number, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 use hurl_core::ast::{
     BooleanOption, Entry, EntryOption, Float, NaturalOption, OptionKind, Retry, RetryOption,
@@ -276,7 +276,7 @@ fn eval_natural_option(
     match natural_value {
         NaturalOption::Literal(value) => Ok(*value),
         NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
-            Value::Integer(value) => {
+            Value::Number(Number::Integer(value)) => {
                 if value < 0 {
                     Err(Error {
                         source_info: expr.variable.source_info.clone(),
@@ -311,7 +311,7 @@ fn eval_retry_option(
     match retry_option_value {
         RetryOption::Literal(retry) => Ok(*retry),
         RetryOption::Expression(expr) => match eval_expression(expr, variables)? {
-            Value::Integer(value) => {
+            Value::Number(Number::Integer(value)) => {
                 if value == -1 {
                     Ok(Retry::Infinite)
                 } else if value == 0 {
@@ -350,8 +350,8 @@ fn eval_variable_value(
     match variable_value {
         VariableValue::Null => Ok(Value::Null),
         VariableValue::Bool(v) => Ok(Value::Bool(*v)),
-        VariableValue::Integer(v) => Ok(Value::Integer(*v)),
-        VariableValue::Float(Float { value, .. }) => Ok(Value::Float(*value)),
+        VariableValue::Integer(v) => Ok(Value::Number(Number::Integer(*v))),
+        VariableValue::Float(Float { value, .. }) => Ok(Value::Number(Number::Float(*value))),
         VariableValue::String(template) => {
             let s = template::eval_template(template, variables)?;
             Ok(Value::String(s))
@@ -424,7 +424,7 @@ mod tests {
             }
         );
 
-        variables.insert("verbose".to_string(), Value::Integer(10));
+        variables.insert("verbose".to_string(), Value::Number(Number::Integer(10)));
         let error = eval_boolean_option(&verbose_option_template(), &variables)
             .err()
             .unwrap();
@@ -446,7 +446,7 @@ mod tests {
             1
         );
 
-        variables.insert("retry".to_string(), Value::Integer(10));
+        variables.insert("retry".to_string(), Value::Number(Number::Integer(10)));
         assert_eq!(
             eval_natural_option(&retry_option_template(), &variables).unwrap(),
             10

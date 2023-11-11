@@ -20,6 +20,7 @@
 
 pub use self::core::{AssertResult, CaptureResult, EntryResult, Error, HurlResult, RunnerError};
 pub use self::hurl_file::run;
+pub use self::number::Number;
 pub use self::runner_options::{RunnerOptions, RunnerOptionsBuilder};
 pub use self::value::Value;
 
@@ -35,6 +36,7 @@ mod hurl_file;
 mod json;
 mod multiline;
 mod multipart;
+mod number;
 mod options;
 mod predicate;
 mod predicate_value;

@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::runner::core::{Error, RunnerError};
-use crate::runner::value::Value;
+use crate::runner::Value;
 
 /// Renders to string a `template` given a map of variables.
 pub fn eval_template(
@@ -83,7 +83,7 @@ impl Value {
     pub fn is_renderable(&self) -> bool {
         matches!(
             self,
-            Value::Integer(_) | Value::Bool(_) | Value::Float(_) | Value::String(_) | Value::Null
+            Value::Number(_) | Value::Bool(_) | Value::String(_) | Value::Null
         )
     }
 }
@@ -93,6 +93,7 @@ mod tests {
     use hurl_core::ast::SourceInfo;
 
     use super::*;
+    use crate::runner::Number;
 
     fn template_element_expression() -> TemplateElement {
         // {{name}}
@@ -140,7 +141,10 @@ mod tests {
         let mut variables = HashMap::new();
         variables.insert(
             "name".to_string(),
-            Value::List(vec![Value::Integer(1), Value::Integer(2)]),
+            Value::List(vec![
+                Value::Number(Number::Integer(1)),
+                Value::Number(Number::Integer(2)),
+            ]),
         );
         let error = eval_template_element(&template_element_expression(), &variables)
             .err()

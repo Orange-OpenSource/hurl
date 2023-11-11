@@ -27,7 +27,7 @@ use crate::runner::core::*;
 use crate::runner::json::eval_json_value;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::Value;
 use crate::util::path::ContextDir;
 
 /// Returns a list of assert results on the response status code and HTTP version,
@@ -340,6 +340,7 @@ pub fn eval_captures(
 mod tests {
     use self::super::super::{assert, capture};
     use super::*;
+    use crate::runner::Number;
 
     pub fn user_response() -> Response {
         let whitespace = Whitespace {
@@ -399,7 +400,7 @@ mod tests {
                 &context_dir,
             ),
             vec![AssertResult::Explicit {
-                actual: Ok(Some(Value::Integer(2))),
+                actual: Ok(Some(Value::Number(Number::Integer(2)))),
                 source_info: SourceInfo::new(1, 22, 1, 24),
                 predicate_result: Some(Err(Error {
                     source_info: SourceInfo::new(1, 0, 1, 0),
@@ -445,7 +446,7 @@ mod tests {
             .unwrap(),
             vec![CaptureResult {
                 name: "UserCount".to_string(),
-                value: Value::Float(2.0),
+                value: Value::Number(Number::Float(2.0)),
             }]
         );
     }

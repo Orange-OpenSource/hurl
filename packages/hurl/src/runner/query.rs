@@ -24,7 +24,8 @@ use sha2::Digest;
 use crate::runner::core::{Error, RunnerError};
 use crate::runner::filter;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::Number;
+use crate::runner::Value;
 
 use crate::http;
 
@@ -67,7 +68,9 @@ pub fn eval_query(
 }
 
 fn eval_query_status(response: &http::Response) -> QueryResult {
-    Ok(Some(Value::Integer(i64::from(response.status))))
+    Ok(Some(Value::Number(Number::Integer(i64::from(
+        response.status,
+    )))))
 }
 
 fn eval_query_url(response: &http::Response) -> QueryResult {
@@ -213,7 +216,9 @@ fn eval_query_variable(name: &Template, variables: &HashMap<String, Value>) -> Q
 }
 
 fn eval_query_duration(response: &http::Response) -> QueryResult {
-    Ok(Some(Value::Integer(response.duration.as_millis() as i64)))
+    Ok(Some(Value::Number(Number::Integer(
+        response.duration.as_millis() as i64,
+    ))))
 }
 
 fn eval_query_bytes(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
@@ -293,7 +298,9 @@ fn eval_cookie_attribute_name(
                 Err(_) => todo!(),
             }
         }
-        CookieAttributeName::MaxAge(_) => cookie.max_age().map(Value::Integer),
+        CookieAttributeName::MaxAge(_) => {
+            cookie.max_age().map(|v| Value::Number(Number::Integer(v)))
+        }
         CookieAttributeName::Domain(_) => cookie.domain().map(Value::String),
         CookieAttributeName::Path(_) => cookie.path().map(Value::String),
         CookieAttributeName::Secure(_) => {
@@ -321,9 +328,9 @@ impl Value {
             serde_json::Value::Bool(bool) => Value::Bool(*bool),
             serde_json::Value::Number(n) => {
                 if n.is_f64() {
-                    Value::from_f64(n.as_f64().unwrap())
+                    Value::Number(Number::from_f64(n.as_f64().unwrap()))
                 } else {
-                    Value::Integer(n.as_i64().unwrap())
+                    Value::Number(Number::Integer(n.as_i64().unwrap()))
                 }
             }
             serde_json::Value::String(s) => Value::String(s.to_string()),
@@ -533,7 +540,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Integer(200)
+            Value::Number(Number::Integer(200))
         );
     }
 
@@ -898,7 +905,7 @@ pub mod tests {
             )
             .unwrap()
             .unwrap(),
-            Value::Float(2.0)
+            Value::Number(Number::Float(2.0))
         );
     }
 

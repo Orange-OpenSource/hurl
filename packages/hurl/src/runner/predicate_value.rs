@@ -23,7 +23,8 @@ use crate::runner::core::Error;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::Number;
+use crate::runner::Value;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
@@ -38,8 +39,8 @@ pub fn eval_predicate_value(
             let s = eval_multiline(value, variables)?;
             Ok(Value::String(s))
         }
-        PredicateValue::Integer(value) => Ok(Value::Integer(*value)),
-        PredicateValue::Float(value) => Ok(Value::Float(value.value)),
+        PredicateValue::Integer(value) => Ok(Value::Number(Number::Integer(*value))),
+        PredicateValue::Float(value) => Ok(Value::Number(Number::Float(value.value))),
         PredicateValue::Bool(value) => Ok(Value::Bool(*value)),
         PredicateValue::Null => Ok(Value::Null),
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),

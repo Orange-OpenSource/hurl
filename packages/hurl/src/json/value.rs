@@ -19,15 +19,14 @@
 use base64::engine::general_purpose;
 use base64::Engine;
 
-use crate::runner::Value;
+use crate::runner::{Number, Value};
 
 impl Value {
     pub fn to_json(&self) -> serde_json::Value {
         match self {
             Value::Bool(v) => serde_json::Value::Bool(*v),
             Value::Date(v) => serde_json::Value::String(v.to_string()),
-            Value::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),
-            Value::Float(f) => serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap()),
+            Value::Number(v) => v.to_json(),
             Value::String(s) => serde_json::Value::String(s.clone()),
             Value::List(values) => {
                 let values = values.iter().map(|v| v.to_json()).collect();
@@ -57,6 +56,17 @@ impl Value {
             Value::Null => serde_json::Value::Null,
             Value::Regex(value) => serde_json::Value::String(value.to_string()),
             Value::Unit => todo!("how to serialize that in json?"),
+        }
+    }
+}
+
+impl Number {
+    pub fn to_json(&self) -> serde_json::Value {
+        match self {
+            Number::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),
+            Number::Float(f) => {
+                serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap())
+            }
         }
     }
 }

@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use crate::runner::Number;
 use std::fmt;
 
 /// System types used in Hurl.
@@ -25,26 +26,24 @@ pub enum Value {
     Bool(bool),
     Bytes(Vec<u8>),
     Date(chrono::DateTime<chrono::Utc>),
-    Float(f64),
-    Integer(i64),
     List(Vec<Value>),
     Nodeset(usize),
     Null,
+    Number(Number),
     Object(Vec<(String, Value)>),
     Regex(regex::Regex),
     String(String),
     Unit,
 }
 
-// You must implement it yourself because of the Float
+// You must implement it yourself because of the Regex Value
 impl PartialEq for Value {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (Value::Bool(v1), Value::Bool(v2)) => v1 == v2,
             (Value::Bytes(v1), Value::Bytes(v2)) => v1 == v2,
             (Value::Date(v1), Value::Date(v2)) => v1 == v2,
-            (Value::Float(v1), Value::Float(v2)) => (v1 - v2).abs() < f64::EPSILON,
-            (Value::Integer(v1), Value::Integer(v2)) => v1 == v2,
+            (Value::Number(v1), Value::Number(v2)) => v1 == v2,
             (Value::List(v1), Value::List(v2)) => v1 == v2,
             (Value::Nodeset(v1), Value::Nodeset(v2)) => v1 == v2,
             (Value::Null, Value::Null) => true,
@@ -64,8 +63,7 @@ impl fmt::Display for Value {
             Value::Bool(x) => x.to_string(),
             Value::Bytes(v) => format!("hex, {};", hex::encode(v)),
             Value::Date(v) => v.to_string(),
-            Value::Float(f) => format_float(*f),
-            Value::Integer(x) => x.to_string(),
+            Value::Number(v) => v.to_string(),
             Value::List(values) => {
                 let values: Vec<String> = values.iter().map(|e| e.to_string()).collect();
                 format!("[{}]", values.join(","))
@@ -84,22 +82,13 @@ impl fmt::Display for Value {
     }
 }
 
-fn format_float(value: f64) -> String {
-    if value.fract() < f64::EPSILON {
-        format!("{value}.0")
-    } else {
-        value.to_string()
-    }
-}
-
 impl Value {
     pub fn _type(&self) -> String {
         match self {
             Value::Bool(_) => "boolean".to_string(),
             Value::Bytes(_) => "bytes".to_string(),
             Value::Date(_) => "date".to_string(),
-            Value::Float(_) => "float".to_string(),
-            Value::Integer(_) => "integer".to_string(),
+            Value::Number(v) => v._type(),
             Value::List(_) => "list".to_string(),
             Value::Nodeset(_) => "nodeset".to_string(),
             Value::Null => "null".to_string(),
@@ -108,10 +97,6 @@ impl Value {
             Value::String(_) => "string".to_string(),
             Value::Unit => "unit".to_string(),
         }
-    }
-
-    pub fn from_f64(value: f64) -> Value {
-        Value::Float(value)
     }
 
     pub fn is_scalar(&self) -> bool {
@@ -125,13 +110,7 @@ mod tests {
 
     #[test]
     fn test_is_scalar() {
-        assert!(Value::Integer(1).is_scalar());
+        assert!(Value::Number(Number::Integer(1)).is_scalar());
         assert!(!Value::List(vec![]).is_scalar());
-    }
-
-    #[test]
-    fn test_to_string() {
-        assert_eq!(Value::Float(1.0).to_string(), "1.0".to_string());
-        assert_eq!(Value::Float(1.1).to_string(), "1.1".to_string());
     }
 }

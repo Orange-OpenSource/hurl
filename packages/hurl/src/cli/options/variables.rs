@@ -17,7 +17,7 @@
  */
 
 use super::OptionsError;
-use crate::runner::Value;
+use crate::runner::{Number, Value};
 
 pub fn parse(s: &str) -> Result<(String, Value), OptionsError> {
     match s.find('=') {
@@ -40,9 +40,9 @@ pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
     } else if s == "null" {
         Ok(Value::Null)
     } else if let Ok(v) = s.parse::<i64>() {
-        Ok(Value::Integer(v))
+        Ok(Value::Number(Number::Integer(v)))
     } else if let Ok(v) = s.parse::<f64>() {
-        Ok(Value::Float(v))
+        Ok(Value::Number(Number::Float(v)))
     } else if let Some(s) = s.strip_prefix('"') {
         if let Some(s) = s.strip_suffix('"') {
             Ok(Value::String(s.to_string()))
@@ -73,11 +73,11 @@ mod tests {
         );
         assert_eq!(
             parse("age=30").unwrap(),
-            ("age".to_string(), Value::Integer(30))
+            ("age".to_string(), Value::Number(Number::Integer(30)))
         );
         assert_eq!(
             parse("height=1.7").unwrap(),
-            ("height".to_string(), Value::Float(1.7))
+            ("height".to_string(), Value::Number(Number::Float(1.7)))
         );
         assert_eq!(
             parse("id=\"123\"").unwrap(),
@@ -104,10 +104,22 @@ mod tests {
             Value::String("Jennifer".to_string())
         );
         assert_eq!(parse_value("true").unwrap(), Value::Bool(true));
-        assert_eq!(parse_value("30").unwrap(), Value::Integer(30));
-        assert_eq!(parse_value("1.7").unwrap(), Value::Float(1.7));
-        assert_eq!(parse_value("1.0").unwrap(), Value::Float(1.0));
-        assert_eq!(parse_value("-1.0").unwrap(), Value::Float(-1.0));
+        assert_eq!(
+            parse_value("30").unwrap(),
+            Value::Number(Number::Integer(30))
+        );
+        assert_eq!(
+            parse_value("1.7").unwrap(),
+            Value::Number(Number::Float(1.7))
+        );
+        assert_eq!(
+            parse_value("1.0").unwrap(),
+            Value::Number(Number::Float(1.0))
+        );
+        assert_eq!(
+            parse_value("-1.0").unwrap(),
+            Value::Number(Number::Float(-1.0))
+        );
         assert_eq!(
             parse_value("\"123\"").unwrap(),
             Value::String("123".to_string())

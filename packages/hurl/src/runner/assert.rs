@@ -24,7 +24,7 @@ use crate::runner::core::{Error, RunnerError, *};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
 use crate::runner::query::eval_query;
-use crate::runner::value::Value;
+use crate::runner::Value;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
@@ -182,6 +182,7 @@ pub mod tests {
     use super::super::query;
     use super::*;
     use crate::http::xml_three_users_http_response;
+    use crate::runner::Number;
 
     // `xpath "//user" count == 3`
     pub fn assert_count_user() -> Assert {
@@ -235,7 +236,7 @@ pub mod tests {
                 &xml_three_users_http_response(),
             ),
             AssertResult::Explicit {
-                actual: Ok(Some(Value::Integer(3))),
+                actual: Ok(Some(Value::Number(Number::Integer(3)))),
                 source_info: SourceInfo::new(1, 22, 1, 24),
                 predicate_result: Some(Ok(())),
             }

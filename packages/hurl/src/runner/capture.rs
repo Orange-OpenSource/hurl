@@ -24,7 +24,7 @@ use crate::runner::core::{CaptureResult, Error, RunnerError};
 use crate::runner::filter::eval_filters;
 use crate::runner::query::eval_query;
 use crate::runner::template::eval_template;
-use crate::runner::value::Value;
+use crate::runner::Value;
 
 /// Evaluates a `capture` with `variables` map and `http_response`, returns a
 /// [`CaptureResult`] on success or an [`Error`] .
@@ -70,6 +70,7 @@ pub mod tests {
 
     use self::super::super::query;
     use super::*;
+    use crate::runner::Number;
 
     pub fn user_count_capture() -> Capture {
         // non scalar value
@@ -227,7 +228,7 @@ pub mod tests {
             .unwrap(),
             CaptureResult {
                 name: "UserCount".to_string(),
-                value: Value::from_f64(3.0),
+                value: Value::Number(Number::from_f64(3.0)),
             }
         );
 
@@ -235,7 +236,7 @@ pub mod tests {
             eval_capture(&duration_capture(), &variables, &http::json_http_response()).unwrap(),
             CaptureResult {
                 name: "duration".to_string(),
-                value: Value::from_f64(1.5),
+                value: Value::Number(Number::from_f64(1.5)),
             }
         );
     }
