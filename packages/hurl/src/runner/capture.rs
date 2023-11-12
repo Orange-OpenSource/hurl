@@ -228,7 +228,7 @@ pub mod tests {
             .unwrap(),
             CaptureResult {
                 name: "UserCount".to_string(),
-                value: Value::Number(Number::from_f64(3.0)),
+                value: Value::Number(Number::from(3.0)),
             }
         );
 
@@ -236,7 +236,7 @@ pub mod tests {
             eval_capture(&duration_capture(), &variables, &http::json_http_response()).unwrap(),
             CaptureResult {
                 name: "duration".to_string(),
-                value: Value::Number(Number::from_f64(1.5)),
+                value: Value::Number(Number::from(1.5)),
             }
         );
     }

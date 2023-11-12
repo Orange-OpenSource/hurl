@@ -161,9 +161,9 @@ fn eval(doc: &Document, expr: &str, support_ns: bool) -> Result<Value, XpathErro
     };
 
     match unsafe { *result.ptr }.type_ {
-        libxml::bindings::xmlXPathObjectType_XPATH_NUMBER => Ok(Value::Number(Number::from_f64(
-            unsafe { *result.ptr }.floatval,
-        ))),
+        libxml::bindings::xmlXPathObjectType_XPATH_NUMBER => {
+            Ok(Value::Number(Number::from(unsafe { *result.ptr }.floatval)))
+        }
         libxml::bindings::xmlXPathObjectType_XPATH_BOOLEAN => {
             Ok(Value::Bool(unsafe { *result.ptr }.boolval != 0))
         }
@@ -255,7 +255,7 @@ mod tests {
         let xpath = "count(//food/*)";
         assert_eq!(
             eval_xml(xml, xpath).unwrap(),
-            Value::Number(Number::from_f64(3.0))
+            Value::Number(Number::from(3.0))
         );
 
         let xpath = "//food/*";
@@ -264,13 +264,13 @@ mod tests {
         let xpath = "count(//*[@type='fruit'])";
         assert_eq!(
             eval_xml(xml, xpath).unwrap(),
-            Value::Number(Number::from_f64(2.0))
+            Value::Number(Number::from(2.0))
         );
 
         let xpath = "number(//food/banana/@price)";
         assert_eq!(
             eval_xml(xml, xpath).unwrap(),
-            Value::Number(Number::from_f64(1.1))
+            Value::Number(Number::from(1.1))
         );
     }
 

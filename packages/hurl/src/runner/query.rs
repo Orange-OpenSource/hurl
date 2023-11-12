@@ -328,9 +328,9 @@ impl Value {
             serde_json::Value::Bool(bool) => Value::Bool(*bool),
             serde_json::Value::Number(n) => {
                 if n.is_f64() {
-                    Value::Number(Number::from_f64(n.as_f64().unwrap()))
+                    Value::Number(Number::from(n.as_f64().unwrap()))
                 } else {
-                    Value::Number(Number::Integer(n.as_i64().unwrap()))
+                    Value::Number(Number::from(n.as_i64().unwrap()))
                 }
             }
             serde_json::Value::String(s) => Value::String(s.to_string()),

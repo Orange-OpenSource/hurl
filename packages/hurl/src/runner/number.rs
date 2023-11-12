@@ -64,9 +64,17 @@ impl Number {
             Number::Integer(_) => "integer".to_string(),
         }
     }
+}
 
-    pub fn from_f64(value: f64) -> Number {
+impl From<f64> for Number {
+    fn from(value: f64) -> Self {
         Number::Float(value)
+    }
+}
+
+impl From<i64> for Number {
+    fn from(value: i64) -> Self {
+        Number::Integer(value)
     }
 }
 
@@ -78,5 +86,7 @@ mod tests {
     fn test_to_string() {
         assert_eq!(Number::Float(1.0).to_string(), "1.0".to_string());
         assert_eq!(Number::Float(1.1).to_string(), "1.1".to_string());
+        assert_eq!(Number::from(1.0).to_string(), "1.0".to_string());
+        assert_eq!(Number::from(1.1).to_string(), "1.1".to_string());
     }
 }
