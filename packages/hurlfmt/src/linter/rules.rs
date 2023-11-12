@@ -407,10 +407,9 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
         PredicateValue::MultilineString(value) => {
             PredicateValue::MultilineString(lint_multiline_string(value))
         }
-        PredicateValue::Integer(value) => PredicateValue::Integer(*value),
-        PredicateValue::Float(value) => PredicateValue::Float(value.clone()),
         PredicateValue::Bool(value) => PredicateValue::Bool(*value),
         PredicateValue::Null => PredicateValue::Null,
+        PredicateValue::Number(value) => PredicateValue::Number(value.clone()),
         PredicateValue::Hex(value) => PredicateValue::Hex(lint_hex(value)),
         PredicateValue::Base64(value) => PredicateValue::Base64(lint_base64(value)),
         PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),

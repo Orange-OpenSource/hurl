@@ -748,7 +748,7 @@ mod tests {
                             value: String::from(" "),
                             source_info: SourceInfo::new(1, 23, 1, 24),
                         },
-                        value: PredicateValue::Integer(5),
+                        value: PredicateValue::Number(Number::Integer(5)),
                         operator: true,
                     },
                 },

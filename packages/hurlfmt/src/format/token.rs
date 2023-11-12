@@ -611,10 +611,9 @@ impl Tokenizable for PredicateValue {
         match self {
             PredicateValue::String(value) => value.tokenize(),
             PredicateValue::MultilineString(value) => value.tokenize(),
-            PredicateValue::Integer(value) => vec![Token::Number(value.to_string())],
-            PredicateValue::Float(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
             PredicateValue::Null => vec![Token::Keyword("null".to_string())],
+            PredicateValue::Number(value) => vec![Token::Number(value.to_string())],
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
             PredicateValue::Expression(value) => value.tokenize(),

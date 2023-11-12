@@ -23,7 +23,7 @@ use crate::runner::core::Error;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::Number;
+use crate::runner::Number as ValueNumber;
 use crate::runner::Value;
 
 pub fn eval_predicate_value(
@@ -39,10 +39,9 @@ pub fn eval_predicate_value(
             let s = eval_multiline(value, variables)?;
             Ok(Value::String(s))
         }
-        PredicateValue::Integer(value) => Ok(Value::Number(Number::Integer(*value))),
-        PredicateValue::Float(value) => Ok(Value::Number(Number::Float(value.value))),
         PredicateValue::Bool(value) => Ok(Value::Bool(*value)),
         PredicateValue::Null => Ok(Value::Null),
+        PredicateValue::Number(value) => Ok(Value::Number(eval_number(value))),
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Expression(expr) => {
@@ -62,5 +61,12 @@ pub fn eval_predicate_value_template(
         PredicateValue::Regex(regex) => Ok(regex.inner.to_string()),
         // All others value should have failed in parsing:
         _ => panic!("expect a string or a regex predicate value"),
+    }
+}
+
+fn eval_number(number: &Number) -> ValueNumber {
+    match number {
+        Number::Float(value) => ValueNumber::Float(value.value),
+        Number::Integer(value) => ValueNumber::Integer(*value),
     }
 }

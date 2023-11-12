@@ -80,6 +80,15 @@ impl fmt::Display for TemplateElement {
     }
 }
 
+impl fmt::Display for Number {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Number::Float(value) => write!(f, "{}", value),
+            Number::Integer(value) => write!(f, "{}", value),
+        }
+    }
+}
+
 impl fmt::Display for Float {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.encoded)

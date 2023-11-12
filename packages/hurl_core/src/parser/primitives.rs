@@ -460,6 +460,33 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     Ok(format!("{first_digit}{s}").parse().unwrap())
 }
 
+pub fn number(reader: &mut Reader) -> ParseResult<Number> {
+    choice(
+        &[
+            |p1| match float(p1) {
+                Ok(value) => Ok(Number::Float(value)),
+                Err(e) => Err(e),
+            },
+            |p1| match integer(p1) {
+                Ok(value) => Ok(Number::Integer(value)),
+                Err(e) => Err(e),
+            },
+        ],
+        reader,
+    )
+    .map_err(|e| Error {
+        pos: e.pos,
+        recoverable: true,
+        inner: if e.recoverable {
+            ParseError::Expecting {
+                value: "number".to_string(),
+            }
+        } else {
+            e.inner
+        },
+    })
+}
+
 pub fn integer(reader: &mut Reader) -> ParseResult<i64> {
     let sign = match try_literal("-", reader) {
         Err(_) => 1,
@@ -978,6 +1005,32 @@ mod tests {
             error.inner,
             ParseError::Expecting {
                 value: String::from("natural")
+            }
+        );
+        assert!(error.recoverable);
+    }
+
+    #[test]
+    pub fn test_number() {
+        let mut reader = Reader::new("1");
+        assert_eq!(number(&mut reader).unwrap(), Number::Integer(1));
+
+        let mut reader = Reader::new("1.1");
+        assert_eq!(
+            number(&mut reader).unwrap(),
+            Number::Float(Float {
+                value: 1.1,
+                encoded: "1.1".to_string()
+            })
+        );
+
+        let mut reader = Reader::new("x");
+        let error = number(&mut reader).err().unwrap();
+        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: String::from("number")
             }
         );
         assert!(error.recoverable);

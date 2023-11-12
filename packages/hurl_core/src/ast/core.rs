@@ -414,8 +414,7 @@ pub struct PredicateFunc {
 pub enum PredicateValue {
     String(Template),
     MultilineString(MultilineString),
-    Integer(i64),
-    Float(Float),
+    Number(Number),
     Bool(bool),
     Null,
     Hex(Hex),
@@ -599,9 +598,9 @@ pub struct Filename {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Number {
-    pub int: i64,
-    pub decimal: u64,
+pub enum Number {
+    Float(Float),
+    Integer(i64),
 }
 
 // keep Number terminology for both Integer and Decimal Numbers

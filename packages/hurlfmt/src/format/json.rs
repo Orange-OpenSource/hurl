@@ -560,10 +560,9 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
     match predicate_value {
         PredicateValue::String(value) => (JValue::String(value.to_string()), None),
         PredicateValue::MultilineString(value) => (JValue::String(value.value().to_string()), None),
-        PredicateValue::Integer(value) => (JValue::Number(value.to_string()), None),
-        PredicateValue::Float(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
         PredicateValue::Null => (JValue::Null, None),
+        PredicateValue::Number(value) => (JValue::Number(value.to_string()), None),
         PredicateValue::Hex(value) => {
             let base64_string = general_purpose::STANDARD.encode(value.value);
             (JValue::String(base64_string), Some("base64".to_string()))
@@ -896,7 +895,7 @@ pub mod tests {
                 source_info: SourceInfo::new(0, 0, 0, 0),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
-                    value: PredicateValue::Integer(value),
+                    value: PredicateValue::Number(Number::Integer(value)),
                     operator: false,
                 },
             },

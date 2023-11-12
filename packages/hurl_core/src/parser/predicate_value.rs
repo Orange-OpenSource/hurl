@@ -34,12 +34,8 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
                 Ok(value) => Ok(PredicateValue::Bool(value)),
                 Err(e) => Err(e),
             },
-            |p1| match float(p1) {
-                Ok(value) => Ok(PredicateValue::Float(value)),
-                Err(e) => Err(e),
-            },
-            |p1| match integer(p1) {
-                Ok(value) => Ok(PredicateValue::Integer(value)),
+            |p1| match number(p1) {
+                Ok(value) => Ok(PredicateValue::Number(value)),
                 Err(e) => Err(e),
             },
             |p1| match hex(p1) {
@@ -97,16 +93,16 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Integer(1)
+            PredicateValue::Number(Number::Integer(1))
         );
 
         let mut reader = Reader::new("1.1");
         assert_eq!(
             predicate_value(&mut reader).unwrap(),
-            PredicateValue::Float(Float {
+            PredicateValue::Number(Number::Float(Float {
                 value: 1.1,
                 encoded: "1.1".to_string(),
-            })
+            }))
         );
     }
 

@@ -532,8 +532,7 @@ impl HtmlFormatter {
         match predicate_value {
             PredicateValue::String(value) => self.fmt_template(value),
             PredicateValue::MultilineString(value) => self.fmt_multiline_string(value, false),
-            PredicateValue::Integer(value) => self.fmt_number(value),
-            PredicateValue::Float(value) => self.fmt_number(&value.encoded),
+            PredicateValue::Number(value) => self.fmt_number(value),
             PredicateValue::Bool(value) => self.fmt_bool(*value),
             PredicateValue::Hex(value) => self.fmt_hex(value),
             PredicateValue::Base64(value) => self.fmt_base64(value),

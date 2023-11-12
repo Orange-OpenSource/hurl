@@ -105,7 +105,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
 
 impl PredicateValue {
     pub fn is_number(&self) -> bool {
-        matches!(self, PredicateValue::Integer(_) | PredicateValue::Float(_))
+        matches!(self, PredicateValue::Number(_))
     }
     pub fn is_string(&self) -> bool {
         matches!(self, PredicateValue::String(_))
@@ -460,10 +460,10 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::Float(Float {
+                value: PredicateValue::Number(Number::Float(Float {
                     value: 1.1,
                     encoded: "1.1".to_string(),
-                }),
+                })),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 3, 1, 4),
@@ -476,7 +476,7 @@ mod tests {
         assert_eq!(
             equal_predicate(&mut reader).unwrap(),
             PredicateFuncValue::Equal {
-                value: PredicateValue::Integer(2),
+                value: PredicateValue::Number(Number::Integer(2)),
                 space0: Whitespace {
                     value: String::from(" "),
                     source_info: SourceInfo::new(1, 3, 1, 4),

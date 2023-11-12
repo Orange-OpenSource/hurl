@@ -1021,7 +1021,7 @@ mod tests {
             predicate_func: PredicateFunc {
                 value: PredicateFuncValue::Equal {
                     space0: whitespace,
-                    value: PredicateValue::Integer(10),
+                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(10)),
                     operator: false,
                 },
                 source_info: SourceInfo::new(1, 11, 1, 12),
@@ -1060,7 +1060,7 @@ mod tests {
 
         // predicate: `== 10`
         // value: true
-        let expected = PredicateValue::Integer(10);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Bool(true);
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
@@ -1077,7 +1077,7 @@ mod tests {
 
         // predicate: `== 10`
         // value: Unit
-        let expected = PredicateValue::Integer(10);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Unit;
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
@@ -1092,7 +1092,7 @@ mod tests {
 
         // predicate: `== 10`
         // value: 1
-        let expected = PredicateValue::Integer(10);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
@@ -1112,10 +1112,10 @@ mod tests {
 
         // predicate: `== 1.2`
         // value: 1.1
-        let expected = PredicateValue::Float(Float {
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float {
             value: 1.2,
             encoded: "1.2".to_string(),
-        });
+        }));
         let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);
@@ -1155,7 +1155,7 @@ mod tests {
 
         // predicate: `== 1`
         // value: 1
-        let expected = PredicateValue::Integer(1);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Integer(1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
@@ -1205,10 +1205,10 @@ mod tests {
 
         // predicate: `== 1.1`
         // value: 1.1
-        let expected = PredicateValue::Float(Float {
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Float(Float {
             value: 1.1,
             encoded: "1.1".to_string(),
-        });
+        }));
         let value = Value::Number(Number::Float(1.1));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
@@ -1223,7 +1223,7 @@ mod tests {
 
         // predicate: `== 1`
         // value: 1.0
-        let expected = PredicateValue::Integer(1);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Float(1.0));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(assert_result.success);
@@ -1238,7 +1238,7 @@ mod tests {
 
         // predicate: `== 1`
         // value: 2
-        let expected = PredicateValue::Integer(1);
+        let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Integer(2));
         let assert_result = eval_equal(&expected, &variables, &value).unwrap();
         assert!(!assert_result.success);

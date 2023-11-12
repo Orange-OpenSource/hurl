@@ -197,7 +197,7 @@ pub mod tests {
                 source_info: SourceInfo::new(1, 22, 1, 24),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
-                    value: PredicateValue::Integer(3),
+                    value: PredicateValue::Number(hurl_core::ast::Number::Integer(3)),
                     operator: true,
                 },
             },
