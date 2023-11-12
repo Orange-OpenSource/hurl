@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::{Error, RunnerOptions, Value};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::{Error, Number, RunnerOptions, Value};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4501,7 +4501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            Value::Integer(value) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            Value::Number(Number::Integer(value)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5061,7 +5061,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            Value::Integer(value) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Value::Number(Number::Integer(value)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5685,7 +5685,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        VariableValue::Integer(v) =&gt; Ok(Value::Integer(*v)),</pre>
+                <pre class="has-background-success-light py-0 px-2">        VariableValue::Integer(v) =&gt; Ok(Value::Number(Number::Integer(*v))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5701,7 +5701,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        VariableValue::Float(Float { value, .. }) =&gt; Ok(Value::Float(*value)),</pre>
+                <pre class="has-background-danger-light py-0 px-2">        VariableValue::Float(Float { value, .. }) =&gt; Ok(Value::Number(Number::Float(*value))),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6869,7 +6869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        variables.insert(&quot;verbose&quot;.to_string(), Value::Integer(10));</pre>
+                <pre class="has-background-white py-0 px-2">        variables.insert(&quot;verbose&quot;.to_string(), Value::Number(Number::Integer(10)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7221,7 +7221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        variables.insert(&quot;retry&quot;.to_string(), Value::Integer(10));</pre>
+                <pre class="has-background-white py-0 px-2">        variables.insert(&quot;retry&quot;.to_string(), Value::Number(Number::Integer(10)));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7323,7 +7323,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-11-11 08:08</p>
+                <p class="heading">Date: 2023-11-12 08:07</p>
             </div>
         </footer>
     </body>
