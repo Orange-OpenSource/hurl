@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::cmp::Ordering;
 use std::fmt;
 
 /// System types used in Hurl.
@@ -78,6 +79,27 @@ impl From<i64> for Number {
     }
 }
 
+impl Number {
+    pub fn cmp_value(&self, other: &Number) -> Ordering {
+        match (self, other) {
+            (Number::Integer(i1), Number::Integer(i2)) => i1.cmp(i2),
+            (Number::Float(f1), Number::Float(f2)) => compare_float(*f1, *f2),
+            (Number::Integer(i1), Number::Float(f2)) => compare_float(*i1 as f64, *f2),
+            (Number::Float(f1), Number::Integer(i2)) => compare_float(*f1, *i2 as f64),
+        }
+    }
+}
+
+fn compare_float(f1: f64, f2: f64) -> Ordering {
+    if f1 > f2 {
+        Ordering::Greater
+    } else if f1 < f2 {
+        Ordering::Less
+    } else {
+        Ordering::Equal
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -88,5 +110,50 @@ mod tests {
         assert_eq!(Number::Float(1.1).to_string(), "1.1".to_string());
         assert_eq!(Number::from(1.0).to_string(), "1.0".to_string());
         assert_eq!(Number::from(1.1).to_string(), "1.1".to_string());
+    }
+
+    #[test]
+    fn test_cmp_value() {
+        let integer_zero = Number::from(0);
+        let integer_one = Number::from(1);
+        let integer_two = Number::from(2);
+        let integer_max = Number::from(i64::max_value());
+        let integer_min = Number::from(i64::min_value());
+
+        let float_zero = Number::from(0.0);
+        let float_one = Number::from(1.0);
+        let float_one_plus_epsilon = Number::from(1.000_000_000_000_000_100);
+        let float_one_plus_plus_epsilon = Number::from(1.000_000_000_000_001);
+        let float_two = Number::from(2.0);
+        let float_min = Number::from(f64::MIN);
+        let float_max = Number::from(f64::MAX);
+
+        assert_eq!(integer_one.cmp_value(&integer_one), Ordering::Equal);
+        assert_eq!(integer_one.cmp_value(&float_one), Ordering::Equal);
+        assert_eq!(integer_one.cmp_value(&integer_zero), Ordering::Greater);
+        assert_eq!(integer_one.cmp_value(&float_zero), Ordering::Greater);
+        assert_eq!(integer_one.cmp_value(&integer_two), Ordering::Less);
+        assert_eq!(integer_one.cmp_value(&float_two), Ordering::Less);
+
+        assert_eq!(integer_min.cmp_value(&float_min), Ordering::Greater);
+        assert_eq!(integer_max.cmp_value(&float_max), Ordering::Less);
+
+        assert_eq!(float_one.cmp_value(&float_one), Ordering::Equal);
+        assert_eq!(
+            float_one.cmp_value(&float_one_plus_epsilon),
+            Ordering::Equal
+        );
+        assert_eq!(
+            float_one.cmp_value(&float_one_plus_plus_epsilon),
+            Ordering::Less
+        );
+
+        // edge cases
+        // the integer 9_007_199_254_740_993 can not be represented by f64
+        // it will be casted to 9_007_199_254_740_992 for comparison
+        assert_eq!(
+            Number::from(9_007_199_254_740_992.0).cmp_value(&Number::from(9_007_199_254_740_993)),
+            Ordering::Equal
+        );
     }
 }
