@@ -62,7 +62,9 @@ impl From<report::Error> for CliError {
 
 impl From<output::Error> for CliError {
     fn from(e: output::Error) -> Self {
-        Self { message: e.message }
+        Self {
+            message: e.to_string(),
+        }
     }
 }
 

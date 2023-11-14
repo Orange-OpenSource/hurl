@@ -16,7 +16,7 @@
  *
  */
 use crate::output;
-use crate::output::Error;
+use crate::output::error::Error;
 use crate::runner::HurlResult;
 
 /// Writes the `hurl_result` JSON representation to the file `filename_out`.

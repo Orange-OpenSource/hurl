@@ -15,28 +15,30 @@
  * limitations under the License.
  *
  */
-use std::io;
-use std::io::Write;
+use std::fmt;
 
-#[cfg(target_family = "windows")]
-use std::io::IsTerminal;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Error(String);
 
-use crate::output::error::Error;
+impl Error {
+    pub fn new(message: &str) -> Error {
+        Error(message.to_string())
+    }
 
-#[cfg(target_family = "unix")]
-pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
-    let mut handle = io::stdout().lock();
-    handle.write_all(buf)?;
-    Ok(())
+    pub fn from_path(error: std::io::Error, path: &str) -> Error {
+        let message = format!("Error {path}: {error}");
+        Error::new(&message)
+    }
 }
 
-#[cfg(target_family = "windows")]
-pub(crate) fn write_stdout(buf: &[u8]) -> Result<(), Error> {
-    if io::stdout().is_terminal() {
-        println!("{}", String::from_utf8_lossy(buf));
-    } else {
-        let mut handle = io::stdout().lock();
-        handle.write_all(buf)?;
+impl From<std::io::Error> for Error {
+    fn from(value: std::io::Error) -> Self {
+        Error::new(&value.to_string())
     }
-    Ok(())
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
 }

@@ -33,7 +33,7 @@ pub fn write_body(
     color: bool,
     filename_out: &Option<String>,
     logger: &Logger,
-) -> Result<(), output::Error> {
+) -> Result<(), output::error::Error> {
     // By default, we output the body response bytes of the last entry
     if let Some(entry_result) = hurl_result.entries.last() {
         if let Some(call) = entry_result.calls.last() {
@@ -60,19 +60,14 @@ pub fn write_body(
                             assert: false,
                         };
                         let message = error.fixme();
-                        return Err(output::Error { message });
+                        return Err(output::error::Error::new(&message));
                     }
                 }
             } else {
                 response.body.clone()
             };
             output.append(&mut body);
-            let result = output::write_output(&output, filename_out);
-            if result.is_err() {
-                return Err(output::Error {
-                    message: "Undefined error".to_string(),
-                });
-            }
+            output::write_output(&output, filename_out)?;
         } else {
             logger.info("No response has been received");
         }
