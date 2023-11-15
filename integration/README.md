@@ -25,7 +25,7 @@ virtual environment and install required dependencies:
 ```shell
 $ python3 -m venv .venv
 $ source .venv/bin/activate
-$ pip install --requirements bin/requirements-fozen.txt
+$ pip install -r bin/requirements-frozen.txt
 ```
 
 ### Proxy
