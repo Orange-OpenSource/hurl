@@ -2,9 +2,9 @@ GET http://localhost:8000/float
 HTTP 200
 [Asserts]
 jsonpath "$[1]" == 0.0
-jsonpath "$[2]" == 0.0
-jsonpath "$[2]" == 0.0000000000000001    # too small
-jsonpath "$[3]" == 0.000000000000001     # The smallest decimal
+jsonpath "$[2]" != 0.0
+jsonpath "$[2]" == 0.0000000000000001
+jsonpath "$[3]" == 0.000000000000001
 jsonpath "$[4]" == 0.333
 jsonpath "$[4]" != 0.3333333333333333
 jsonpath "$[5]" == 0.3333333333333333

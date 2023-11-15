@@ -2,9 +2,9 @@
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[1]"</span> <span class="predicate-type">==</span> <span class="number">0.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">==</span> <span class="number">0.0</span></span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">==</span> <span class="number">0.0000000000000001</span></span>    <span class="comment"># too small</span>
-<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[3]"</span> <span class="predicate-type">==</span> <span class="number">0.000000000000001</span></span>     <span class="comment"># The smallest decimal</span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">!=</span> <span class="number">0.0</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[2]"</span> <span class="predicate-type">==</span> <span class="number">0.0000000000000001</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[3]"</span> <span class="predicate-type">==</span> <span class="number">0.000000000000001</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[4]"</span> <span class="predicate-type">==</span> <span class="number">0.333</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[4]"</span> <span class="predicate-type">!=</span> <span class="number">0.3333333333333333</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[5]"</span> <span class="predicate-type">==</span> <span class="number">0.3333333333333333</span></span>
