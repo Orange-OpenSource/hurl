@@ -23,7 +23,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::runner::body::eval_file;
-use crate::runner::core::Error;
+use crate::runner::error::Error;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 use crate::util::path::ContextDir;

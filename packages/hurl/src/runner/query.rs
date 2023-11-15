@@ -21,7 +21,7 @@ use hurl_core::ast::*;
 use regex::Regex;
 use sha2::Digest;
 
-use crate::runner::core::{Error, RunnerError};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::filter;
 use crate::runner::template::eval_template;
 use crate::runner::Number;

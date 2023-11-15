@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-use std::path::PathBuf;
-
-use hurl_core::ast::SourceInfo;
-
-use crate::http::{Call, Cookie, RequestedHttpVersion};
+use crate::http::{Call, Cookie};
+use crate::runner::error::Error;
 use crate::runner::value::Value;
+use hurl_core::ast::SourceInfo;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
@@ -100,101 +98,3 @@ pub struct CaptureResult {
 }
 
 pub type PredicateResult = Result<(), Error>;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Error {
-    pub source_info: SourceInfo,
-    pub inner: RunnerError,
-    pub assert: bool,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum RunnerError {
-    TemplateVariableNotDefined {
-        name: String,
-    },
-    TemplateVariableInvalidType {
-        name: String,
-        value: String,
-        expecting: String,
-    },
-    InvalidJson {
-        value: String,
-    },
-    InvalidUrl(String),
-    InvalidUrlPrefix(String),
-
-    HttpConnection(String),
-    CouldNotResolveProxyName,
-    CouldNotResolveHost(String),
-    FailToConnect,
-    Timeout,
-    TooManyRedirect,
-    CouldNotParseResponse,
-    SslCertificate(String),
-
-    UnsupportedContentEncoding(String),
-    UnsupportedHttpVersion(RequestedHttpVersion),
-    CouldNotUncompressResponse(String),
-
-    FileReadAccess {
-        value: String,
-    },
-    InvalidDecoding {
-        charset: String,
-    },
-    InvalidCharset {
-        charset: String,
-    },
-
-    // Query
-    QueryHeaderNotFound,
-    QueryCookieNotFound,
-    QueryInvalidJsonpathExpression {
-        value: String,
-    },
-    QueryInvalidXpathEval,
-    QueryInvalidXml,
-    QueryInvalidJson,
-    NoQueryResult,
-
-    // Predicate
-    PredicateType,
-    PredicateValue(Value),
-    AssertFailure {
-        actual: String,
-        expected: String,
-        type_mismatch: bool,
-    },
-    InvalidRegex,
-
-    AssertHeaderValueError {
-        actual: String,
-    },
-    AssertBodyValueError {
-        actual: String,
-        expected: String,
-    },
-    AssertVersion {
-        actual: String,
-    },
-    AssertStatus {
-        actual: String,
-    },
-
-    UnrenderableVariable {
-        name: String,
-        value: String,
-    },
-
-    UnauthorizedFileAccess {
-        path: PathBuf,
-    },
-
-    // Filter
-    FilterMissingInput,
-    FilterInvalidInput(String),
-    FilterRegexNoCapture,
-    FilterInvalidEncoding(String),
-    FilterDecode(String),
-}

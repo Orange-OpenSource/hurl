@@ -21,7 +21,7 @@ use std::path::PathBuf;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::core::{Error, RunnerError};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::json::eval_json_value;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;

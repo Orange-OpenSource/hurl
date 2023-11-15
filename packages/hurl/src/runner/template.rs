@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use hurl_core::ast::*;
 
-use crate::runner::core::{Error, RunnerError};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::Value;
 
 /// Renders to string a `template` given a map of variables.

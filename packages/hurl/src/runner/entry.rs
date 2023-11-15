@@ -22,7 +22,8 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::ClientOptions;
-use crate::runner::core::{Error, RunnerError, *};
+use crate::runner::core::{AssertResult, EntryResult};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set, eval_request};
 use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_asserts};
 use crate::runner::runner_options::RunnerOptions;

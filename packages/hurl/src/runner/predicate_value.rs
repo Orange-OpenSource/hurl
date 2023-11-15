@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use hurl_core::ast::*;
 
-use crate::runner::core::Error;
+use crate::runner::error::Error;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;

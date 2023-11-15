@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use hurl_core::ast::{JsonListElement, JsonObjectElement, JsonValue, Template, TemplateElement};
 use hurl_core::parser::{parse_json_boolean, parse_json_null, parse_json_number, Reader};
 
-use crate::runner::core::{Error, RunnerError};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::template::render_expression;
 use crate::runner::value::Value;
 
@@ -181,7 +181,7 @@ fn encode_json_char(c: char) -> String {
 mod tests {
     use hurl_core::ast::*;
 
-    use super::super::core::RunnerError;
+    use super::super::error::RunnerError;
     use super::*;
 
     pub fn json_hello_world_value() -> JsonValue {

@@ -20,7 +20,8 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::core::{Error, RunnerError, *};
+use crate::runner::core::AssertResult;
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::filter::eval_filters;
 use crate::runner::predicate::eval_predicate;
 use crate::runner::query::eval_query;

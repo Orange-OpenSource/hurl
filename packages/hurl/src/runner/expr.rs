@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use hurl_core::ast::Expr;
 
-use crate::runner::core::{Error, RunnerError};
+use crate::runner::error::{Error, RunnerError};
 use crate::runner::value::Value;
 
 /// Evaluates the expression `expr` with `variables` map and `http_response`, returns a

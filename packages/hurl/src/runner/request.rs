@@ -23,7 +23,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::runner::body::eval_body;
-use crate::runner::core::Error;
+use crate::runner::error::Error;
 use crate::runner::multipart::eval_multipart_param;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
@@ -169,7 +169,7 @@ fn eval_method(method: &Method) -> http::Method {
 mod tests {
     use hurl_core::ast::SourceInfo;
 
-    use super::super::core::RunnerError;
+    use super::super::error::RunnerError;
     use super::*;
 
     fn whitespace() -> Whitespace {

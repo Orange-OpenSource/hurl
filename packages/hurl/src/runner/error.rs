@@ -15,15 +15,111 @@
  * limitations under the License.
  *
  */
+use crate::http::{HttpError, RequestedHttpVersion};
+use crate::runner::Value;
 use hurl_core::ast::SourceInfo;
-use hurl_core::error::Error;
+use std::path::PathBuf;
 
-use crate::http::HttpError;
-use crate::runner;
-use crate::runner::RunnerError;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Error {
+    pub source_info: SourceInfo,
+    pub inner: RunnerError,
+    pub assert: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum RunnerError {
+    TemplateVariableNotDefined {
+        name: String,
+    },
+    TemplateVariableInvalidType {
+        name: String,
+        value: String,
+        expecting: String,
+    },
+    InvalidJson {
+        value: String,
+    },
+    InvalidUrl(String),
+    InvalidUrlPrefix(String),
+
+    HttpConnection(String),
+    CouldNotResolveProxyName,
+    CouldNotResolveHost(String),
+    FailToConnect,
+    Timeout,
+    TooManyRedirect,
+    CouldNotParseResponse,
+    SslCertificate(String),
+
+    UnsupportedContentEncoding(String),
+    UnsupportedHttpVersion(RequestedHttpVersion),
+    CouldNotUncompressResponse(String),
+
+    FileReadAccess {
+        value: String,
+    },
+    InvalidDecoding {
+        charset: String,
+    },
+    InvalidCharset {
+        charset: String,
+    },
+
+    // Query
+    QueryHeaderNotFound,
+    QueryCookieNotFound,
+    QueryInvalidJsonpathExpression {
+        value: String,
+    },
+    QueryInvalidXpathEval,
+    QueryInvalidXml,
+    QueryInvalidJson,
+    NoQueryResult,
+
+    // Predicate
+    PredicateType,
+    PredicateValue(Value),
+    AssertFailure {
+        actual: String,
+        expected: String,
+        type_mismatch: bool,
+    },
+    InvalidRegex,
+
+    AssertHeaderValueError {
+        actual: String,
+    },
+    AssertBodyValueError {
+        actual: String,
+        expected: String,
+    },
+    AssertVersion {
+        actual: String,
+    },
+    AssertStatus {
+        actual: String,
+    },
+
+    UnrenderableVariable {
+        name: String,
+        value: String,
+    },
+
+    UnauthorizedFileAccess {
+        path: PathBuf,
+    },
+
+    // Filter
+    FilterMissingInput,
+    FilterInvalidInput(String),
+    FilterRegexNoCapture,
+    FilterInvalidEncoding(String),
+    FilterDecode(String),
+}
 
 /// Textual Output for runner errors
-impl Error for runner::Error {
+impl hurl_core::error::Error for Error {
     fn source_info(&self) -> SourceInfo {
         self.clone().source_info
     }
