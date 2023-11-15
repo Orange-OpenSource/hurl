@@ -15,61 +15,10 @@
  * limitations under the License.
  *
  */
+mod error;
 mod fs;
 mod interactive;
 pub(crate) mod options;
-
-use std::error::Error;
-use std::fmt;
-
-use hurl::{output, report};
-
+pub use self::error::CliError;
 pub use self::fs::read_to_string;
 pub use self::options::OutputType;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CliError {
-    pub message: String,
-}
-
-impl From<Box<dyn Error>> for CliError {
-    fn from(e: Box<dyn Error>) -> Self {
-        Self {
-            message: format!("{e:?}"),
-        }
-    }
-}
-
-impl From<&str> for CliError {
-    fn from(e: &str) -> Self {
-        Self {
-            message: e.to_string(),
-        }
-    }
-}
-
-impl From<String> for CliError {
-    fn from(e: String) -> Self {
-        Self { message: e }
-    }
-}
-
-impl From<report::Error> for CliError {
-    fn from(e: report::Error) -> Self {
-        Self { message: e.message }
-    }
-}
-
-impl From<output::Error> for CliError {
-    fn from(e: output::Error) -> Self {
-        Self {
-            message: e.to_string(),
-        }
-    }
-}
-
-impl fmt::Display for CliError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
