@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/error-xpath-to-json"},"response":{"status":200,"captures":[{"name":"head","query":{"type":"xpath","expr":"//html/head"}}]}},{"request":{"method":"POST","url":"http://localhost:8000/undefined","body":{"type":"json","value":{"head":"{{head}}"}}}}]}

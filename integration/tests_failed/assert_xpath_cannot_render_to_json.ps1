@@ -1,3 +1,3 @@
 Set-StrictMode -Version latest
 $ErrorActionPreference = 'Stop'
-hurl tests_failed/template_variable_not_renderable.hurl
+hurl tests_failed/assert_xpath_cannot_render_to_json.hurl

@@ -1,7 +1,0 @@
-error: Unrenderable variable
-  --> tests_failed/template_variable_not_renderable.hurl:10:11
-   |
-10 | param1: {{list}}
-   |           ^^^^ variable <list> with value [1,2,3] can not be rendered
-   |
-

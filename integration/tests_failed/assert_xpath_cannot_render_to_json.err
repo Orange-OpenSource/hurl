@@ -1,0 +1,7 @@
+error: Unrenderable variable
+  --> tests_failed/assert_xpath_cannot_render_to_json.hurl:8:15
+   |
+ 8 |     "head": {{head}}
+   |               ^^^^ variable <head> with value Nodeset1 can not be rendered
+   |
+

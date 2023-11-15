@@ -1,0 +1,14 @@
+error: Unrenderable variable
+  --> tests_failed/template_variables_not_renderable.hurl:10:11
+   |
+10 | param1: {{object}}
+   |           ^^^^^^ variable <object> with value Object() can not be rendered
+   |
+
+error: Unrenderable variable
+  --> tests_failed/template_variables_not_renderable.hurl:22:11
+   |
+22 | param1: {{list}}
+   |           ^^^^ variable <list> with value [1,2,3] can not be rendered
+   |
+
