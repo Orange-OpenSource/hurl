@@ -34,7 +34,7 @@ convert_toml_crates_to_key_value() {
         grep --extended-regexp --invert-match "^\[|path|^$|^#" |
             cut --delimiter ',' --field 1 |
                 sed "s/version//g" |
-                    tr -d '"{=' |
+                    tr -d '"{=}' |
                         tr -d "'" |
                             tr -s ' ' |
                                 sort
@@ -98,17 +98,6 @@ update_crate_version_in_toml() {
     fi
 }
 
-which_is_the_newest_version() {
-    # init vars
-    first_version="$1"
-    second_version="$2"
-
-    # which is the newest version
-    echo -e "${first_version}\n${second_version}" |
-        sort --version-sort |
-        tail -1
-}
-
 main() {
     # init vars
     crates_api_root_url="https://crates.io/api/v1/crates"
@@ -129,12 +118,11 @@ main() {
                 return 1
             fi
             echo -n "- ${crate} ${actual_version} "
-            newest_version=$(which_is_the_newest_version "${last_version}" "${actual_version}")
-            if [ "${newest_version}" == "${actual_version}" ]; then
+            if [ "${last_version}" == "${actual_version}" ]; then
                 echo "${color_green}newest${color_reset}"
             else
                 if [ "${arg}" = "--check" ]; then
-                    echo "${color_red}old, please update to latest ${last_version}${color_reset}"
+                    echo "${color_red}please update to max stable version ${last_version}${color_reset}"
                     updated_count=$((updated_count + 1))
                 else
                     update_crate_version_in_toml "${crate}" "${actual_version}" "${last_version}" "${toml_file}"
