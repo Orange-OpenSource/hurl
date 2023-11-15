@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
+
+use hurl_core::ast::SourceInfo;
+
 use crate::http::{HttpError, RequestedHttpVersion};
 use crate::runner::Value;
-use hurl_core::ast::SourceInfo;
-use std::path::PathBuf;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {

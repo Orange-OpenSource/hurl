@@ -58,9 +58,10 @@ mod testcase;
 mod xml;
 use std::fs::File;
 
+pub use testcase::Testcase;
+
 use crate::report::junit::xml::{Element, XmlDocument};
 use crate::report::Error;
-pub use testcase::Testcase;
 
 /// Creates a JUnit from a list of `testcases`.
 pub fn write_report(filename: &str, testcases: &[Testcase]) -> Result<(), Error> {
@@ -127,10 +128,11 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::SourceInfo;
+
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
     use crate::runner::{EntryResult, Error, HurlResult, RunnerError};
-    use hurl_core::ast::SourceInfo;
 
     #[test]
     fn create_junit_report() {

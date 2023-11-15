@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::HurlFile;
+
 use crate::http::Call;
 use crate::report::html::nav::Tab;
 use crate::report::html::timeline::unit::Pixel;
 use crate::report::html::Testcase;
 use crate::runner::EntryResult;
-use hurl_core::ast::HurlFile;
 
 mod calls;
 mod nice;

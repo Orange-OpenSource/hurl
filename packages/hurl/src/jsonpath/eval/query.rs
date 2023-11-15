@@ -51,9 +51,10 @@ impl Query {
 
 #[cfg(test)]
 mod tests {
+    use serde_json::json;
+
     use crate::jsonpath::ast::{Number, Predicate, PredicateFunc, Query, Selector};
     use crate::jsonpath::JsonpathResult;
-    use serde_json::json;
 
     pub fn json_root() -> serde_json::Value {
         json!({ "store": json_store() })

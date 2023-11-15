@@ -16,9 +16,10 @@
  *
  */
 
+use colored::Colorize;
+
 use crate::http::{debug, mimetype, Response};
 use crate::util::logger::Logger;
-use colored::Colorize;
 
 impl Response {
     /// Log a response body as text if possible, or a slice of body bytes.

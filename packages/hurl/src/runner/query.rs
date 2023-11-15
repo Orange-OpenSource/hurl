@@ -21,13 +21,10 @@ use hurl_core::ast::*;
 use regex::Regex;
 use sha2::Digest;
 
-use crate::runner::error::{Error, RunnerError};
-use crate::runner::filter;
-use crate::runner::template::eval_template;
-use crate::runner::Number;
-use crate::runner::Value;
-
 use crate::http;
+use crate::runner::error::{Error, RunnerError};
+use crate::runner::template::eval_template;
+use crate::runner::{filter, Number, Value};
 
 pub type QueryResult = Result<Option<Value>, Error>;
 
@@ -352,7 +349,6 @@ impl Value {
 #[cfg(test)]
 pub mod tests {
     use hex_literal::hex;
-
     use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;

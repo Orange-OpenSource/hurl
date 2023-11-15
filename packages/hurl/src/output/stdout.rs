@@ -16,10 +16,9 @@
  *
  */
 use std::io;
-use std::io::Write;
-
 #[cfg(target_family = "windows")]
 use std::io::IsTerminal;
+use std::io::Write;
 
 use crate::output::error::Error;
 

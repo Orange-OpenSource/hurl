@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use std::os::raw::{c_char, c_int, c_void};
+use std::ptr;
+
 use libxml::bindings::{
     xmlChar, xmlCreatePushParserCtxt, xmlFreeParserCtxt, xmlParseChunk, xmlSAXHandlerPtr,
 };
-use std::os::raw::{c_char, c_int, c_void};
-use std::ptr;
 
 use crate::parser::error::*;
 use crate::parser::reader::Reader;

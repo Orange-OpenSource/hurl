@@ -15,15 +15,17 @@
  * limitations under the License.
  *
  */
-use crate::report::junit::xml::writer::WriterError::GenericError;
-use crate::report::junit::xml::{Element, XmlDocument, XmlNode};
 use std::borrow::Cow;
 use std::string::FromUtf8Error;
+
 use xml::attribute::Attribute;
 use xml::name::Name;
 use xml::namespace::Namespace;
 use xml::writer::{Error, XmlEvent};
 use xml::EventWriter;
+
+use crate::report::junit::xml::writer::WriterError::GenericError;
+use crate::report::junit::xml::{Element, XmlDocument, XmlNode};
 
 /// Errors raised when serializing an XML document.
 #[derive(Debug)]

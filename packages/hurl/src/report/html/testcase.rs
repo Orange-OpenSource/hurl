@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use hurl_core::parser;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+
+use hurl_core::parser;
 use uuid::Uuid;
 
 use crate::runner::{EntryResult, Error, HurlResult};

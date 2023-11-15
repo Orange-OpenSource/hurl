@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-use crate::report::junit::xml::reader::ParserError::{GenericError, InvalidXml};
-use crate::report::junit::xml::{Attribute, Element, XmlDocument, XmlNode};
 use xml::attribute::OwnedAttribute;
 use xml::name::OwnedName;
 use xml::reader::{EventReader, XmlEvent};
+
+use crate::report::junit::xml::reader::ParserError::{GenericError, InvalidXml};
+use crate::report::junit::xml::{Attribute, Element, XmlDocument, XmlNode};
 
 /// Errors raised when deserializing a buffer.
 #[derive(Clone, Eq, PartialEq, Debug)]

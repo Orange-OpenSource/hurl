@@ -24,7 +24,6 @@ use crate::parser::primitives::*;
 use crate::parser::query::query;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
-
 use crate::parser::{filename, key_string, option, ParseResult};
 
 pub fn request_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {

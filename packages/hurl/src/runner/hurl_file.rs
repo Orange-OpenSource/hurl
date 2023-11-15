@@ -20,7 +20,6 @@ use std::thread;
 use std::time::Instant;
 
 use chrono::Utc;
-
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
 use hurl_core::ast::*;
 use hurl_core::error::Error;

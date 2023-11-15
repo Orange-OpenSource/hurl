@@ -18,8 +18,7 @@
 use core::cmp;
 
 use crate::ast::SourceInfo;
-use crate::parser::ParseError;
-use crate::parser::{self, JsonErrorVariant};
+use crate::parser::{self, JsonErrorVariant, ParseError};
 
 pub trait Error {
     fn source_info(&self) -> SourceInfo;

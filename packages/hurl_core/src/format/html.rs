@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::ast::*;
 use std::fmt::Display;
+
+use crate::ast::*;
 
 /// Returns an HTML string of the Hurl file `hurl_file`.
 ///

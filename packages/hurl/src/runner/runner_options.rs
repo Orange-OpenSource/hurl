@@ -17,9 +17,9 @@
  */
 use std::time::Duration;
 
-use crate::http::{IpResolve, RequestedHttpVersion};
 use hurl_core::ast::{Entry, Retry};
 
+use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::util::path::ContextDir;
 
 pub struct RunnerOptionsBuilder {

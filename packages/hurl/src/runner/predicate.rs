@@ -26,8 +26,7 @@ use crate::runner::error::Error;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
-use crate::runner::Number;
-use crate::runner::RunnerError;
+use crate::runner::{Number, RunnerError};
 
 /// Evaluates a `predicate` against an actual `value`.
 ///

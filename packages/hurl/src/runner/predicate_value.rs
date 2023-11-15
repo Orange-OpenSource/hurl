@@ -23,8 +23,7 @@ use crate::runner::error::Error;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
-use crate::runner::Number as ValueNumber;
-use crate::runner::Value;
+use crate::runner::{Number as ValueNumber, Value};
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,

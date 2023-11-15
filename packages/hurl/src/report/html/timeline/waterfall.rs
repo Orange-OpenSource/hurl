@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use chrono::{DateTime, Utc};
 use std::iter::zip;
 use std::time::Duration;
+
+use chrono::{DateTime, Utc};
 
 use crate::http::Call;
 use crate::report::html::timeline::nice::NiceScale;
@@ -597,10 +598,10 @@ impl Byte {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::report::html::timeline::unit::Microsecond;
-    use crate::report::html::timeline::unit::{Interval, Scale};
     use chrono::{Duration, TimeZone, Utc};
+
+    use super::*;
+    use crate::report::html::timeline::unit::{Interval, Microsecond, Scale};
 
     #[test]
     fn legend_svg() {

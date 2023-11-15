@@ -16,6 +16,7 @@
  *
  */
 use std::fmt;
+
 use url::Url;
 
 use crate::http::core::*;

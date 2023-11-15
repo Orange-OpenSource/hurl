@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::iter::zip;
+
 use crate::http::Call;
 use crate::report::html::timeline::svg::Attribute::{
     Fill, FontFamily, FontSize, Height, Href, TextDecoration, ViewBox, Width, X, Y,
@@ -26,7 +28,6 @@ use crate::report::html::timeline::util::{
 };
 use crate::report::html::timeline::{svg, CallContext, CallContextKind, CALL_HEIGHT};
 use crate::report::html::Testcase;
-use std::iter::zip;
 
 impl Testcase {
     /// Returns a SVG view of `calls` list using contexts `call_ctxs`.

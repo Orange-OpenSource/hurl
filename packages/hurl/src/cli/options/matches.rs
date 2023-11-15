@@ -15,19 +15,21 @@
  * limitations under the License.
  *
  */
-use super::variables::{parse as parse_variable, parse_value};
-use super::OptionsError;
-use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve};
-use crate::cli::OutputType;
-use clap::ArgMatches;
-use hurl::runner::Value;
-use hurl_core::ast::Retry;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, IsTerminal};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 use std::{env, io};
+
+use clap::ArgMatches;
+use hurl::runner::Value;
+use hurl_core::ast::Retry;
+
+use super::variables::{parse as parse_variable, parse_value};
+use super::OptionsError;
+use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve};
+use crate::cli::OutputType;
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
     match get_string(arg_matches, "cacert_file") {

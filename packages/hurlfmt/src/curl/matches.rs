@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use super::HurlOption;
 use clap::ArgMatches;
+
+use super::HurlOption;
 
 pub fn body(arg_matches: &ArgMatches) -> Option<String> {
     match get_string(arg_matches, "data") {

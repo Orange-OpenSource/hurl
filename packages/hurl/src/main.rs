@@ -22,12 +22,13 @@ use std::path::Path;
 use std::time::Instant;
 use std::{env, process};
 
-use crate::cli::options::OptionsError;
 use colored::control;
 use hurl::report::{html, junit, tap};
 use hurl::runner::HurlResult;
 use hurl::util::logger::{BaseLogger, Logger, LoggerOptionsBuilder, Verbosity};
 use hurl::{output, runner};
+
+use crate::cli::options::OptionsError;
 
 const EXIT_OK: i32 = 0;
 const EXIT_ERROR_COMMANDLINE: i32 = 1;
@@ -327,8 +328,9 @@ fn get_summary(runs: &[HurlRun], duration: u128) -> String {
 
 #[cfg(test)]
 pub mod tests {
-    use super::*;
     use hurl::runner::EntryResult;
+
+    use super::*;
 
     #[test]
     fn create_run_summary() {

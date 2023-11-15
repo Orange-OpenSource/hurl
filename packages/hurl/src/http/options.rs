@@ -15,10 +15,12 @@
  * limitations under the License.
  *
  */
+use std::time::Duration;
+
+use hurl_core::ast::Retry;
+
 use crate::http::request::RequestedHttpVersion;
 use crate::http::IpResolve;
-use hurl_core::ast::Retry;
-use std::time::Duration;
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {

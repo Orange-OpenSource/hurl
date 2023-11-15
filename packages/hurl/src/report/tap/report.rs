@@ -16,11 +16,11 @@
  *
  */
 
-use crate::report::Error;
-
-use super::Testcase;
 use std::fs::File;
 use std::io::Write;
+
+use super::Testcase;
+use crate::report::Error;
 
 // https://testanything.org/tap-version-13-specification.html
 const TAP_REPORT_VERSION_MARKER: &str = "TAP version 13";

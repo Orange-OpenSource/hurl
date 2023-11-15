@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
+
 use colored::*;
 use hurl_core::error::Error;
 use hurl_core::parser;
-use std::path::PathBuf;
 
 use crate::linter;
 

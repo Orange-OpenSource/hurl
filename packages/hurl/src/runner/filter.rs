@@ -25,8 +25,7 @@ use percent_encoding::AsciiSet;
 
 use crate::runner::regex::eval_regex_value;
 use crate::runner::template::eval_template;
-use crate::runner::xpath;
-use crate::runner::{Error, Number, RunnerError, Value};
+use crate::runner::{xpath, Error, Number, RunnerError, Value};
 use crate::{html, jsonpath};
 
 /// Apply successive `filters` to an input `value`.

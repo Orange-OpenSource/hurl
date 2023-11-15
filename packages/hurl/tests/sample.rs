@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
+use std::collections::HashMap;
+use std::time::Duration;
+
 use hurl::http::{Call, HttpVersion, Request, Response};
 use hurl::runner;
 use hurl::runner::{EntryResult, HurlResult, RunnerOptionsBuilder};
 use hurl::util::logger::LoggerOptionsBuilder;
 use hurl::util::path::ContextDir;
 use hurl_core::ast::Retry;
-use std::collections::HashMap;
-use std::time::Duration;
 
 #[test]
 fn simple_sample() {

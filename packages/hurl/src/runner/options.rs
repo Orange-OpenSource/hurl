@@ -16,17 +16,18 @@
  *
  */
 
-use crate::http::{IpResolve, RequestedHttpVersion};
-use crate::runner::template::{eval_expression, eval_template};
-use crate::runner::{template, RunnerError};
-use crate::runner::{Error, Number, RunnerOptions, Value};
-use crate::util::logger::{Logger, Verbosity};
+use std::collections::HashMap;
+use std::time::Duration;
+
 use hurl_core::ast::{
     BooleanOption, Entry, EntryOption, Float, NaturalOption, OptionKind, Retry, RetryOption,
     SectionValue, VariableDefinition, VariableValue,
 };
-use std::collections::HashMap;
-use std::time::Duration;
+
+use crate::http::{IpResolve, RequestedHttpVersion};
+use crate::runner::template::{eval_expression, eval_template};
+use crate::runner::{template, Error, Number, RunnerError, RunnerOptions, Value};
+use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
 /// and a default `runner_options`.
@@ -361,9 +362,10 @@ fn eval_variable_value(
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
+
     use super::*;
     use crate::runner::RunnerError;
-    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
 
     fn verbose_option_template() -> BooleanOption {
         // {{verbose}}

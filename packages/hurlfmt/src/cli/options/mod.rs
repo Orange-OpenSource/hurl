@@ -19,9 +19,10 @@
 mod commands;
 mod matches;
 
-use clap::ArgMatches;
 use std::env;
 use std::path::PathBuf;
+
+use clap::ArgMatches;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Options {

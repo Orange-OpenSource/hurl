@@ -58,8 +58,7 @@ pub fn parse_value(s: &str) -> Result<Value, OptionsError> {
 
 #[cfg(test)]
 mod tests {
-    use super::OptionsError;
-    use super::*;
+    use super::{OptionsError, *};
 
     #[test]
     fn test_parse() {

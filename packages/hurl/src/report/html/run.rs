@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::HurlFile;
+
 use crate::http::Call;
 use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
 use crate::runner::EntryResult;
-use hurl_core::ast::HurlFile;
 
 impl Testcase {
     /// Creates an HTML view of a run (HTTP status code, response header etc...)

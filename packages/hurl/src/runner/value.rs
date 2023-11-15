@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::runner::Number;
 use std::fmt;
+
+use crate::runner::Number;
 
 /// System types used in Hurl.
 ///

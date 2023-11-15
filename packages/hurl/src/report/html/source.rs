@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-use crate::report::html::nav::Tab;
 use hurl_core::ast::HurlFile;
 use regex::{Captures, Regex};
 
+use crate::report::html::nav::Tab;
 use crate::report::html::Testcase;
 use crate::runner::Error as RunnerError;
 
@@ -83,9 +83,10 @@ fn underline_errors(content: &str, errors: &[RunnerError]) -> String {
 
 #[cfg(test)]
 mod tests {
+    use hurl_core::ast::SourceInfo;
+
     use super::*;
     use crate::runner::RunnerError::QueryHeaderNotFound;
-    use hurl_core::ast::SourceInfo;
 
     #[test]
     fn add_underlined_errors() {

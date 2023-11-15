@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
+use std::time::Duration;
+
 use chrono::{DateTime, Utc};
 use curl::easy::Easy;
-use std::time::Duration;
 
 use crate::http::easy_ext;
 

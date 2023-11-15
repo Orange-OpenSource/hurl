@@ -16,9 +16,10 @@
  *
  */
 
+use float_cmp::approx_eq;
+
 use crate::jsonpath::ast::{Predicate, PredicateFunc, Selector, Slice};
 use crate::jsonpath::JsonpathResult;
-use float_cmp::approx_eq;
 
 impl Selector {
     pub fn eval(&self, root: &serde_json::Value) -> Option<JsonpathResult> {
@@ -200,10 +201,10 @@ fn extract_value(obj: serde_json::Value, key_path: Vec<String>) -> Option<serde_
 
 #[cfg(test)]
 mod tests {
-    use crate::jsonpath::ast::Number;
     use serde_json::json;
 
     use super::*;
+    use crate::jsonpath::ast::Number;
 
     pub fn json_root() -> serde_json::Value {
         json!({ "store": json_store() })

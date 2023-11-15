@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+use hurl_core::ast::SourceInfo;
+
 use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
 use crate::runner::value::Value;
-use hurl_core::ast::SourceInfo;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {

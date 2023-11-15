@@ -15,13 +15,15 @@
  * limitations under the License.
  *
  */
-use super::OptionsError;
-use crate::cli::options::{InputFormat, OutputFormat};
-use clap::parser::ValueSource;
-use clap::ArgMatches;
 use std::io;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
+
+use clap::parser::ValueSource;
+use clap::ArgMatches;
+
+use super::OptionsError;
+use crate::cli::options::{InputFormat, OutputFormat};
 
 pub fn check(arg_matches: &ArgMatches) -> bool {
     has_flag(arg_matches, "check")

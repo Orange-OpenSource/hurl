@@ -15,9 +15,10 @@
  * limitations under the License.
  *
  */
-use hurl::{output, report};
 use std::error::Error;
 use std::fmt;
+
+use hurl::{output, report};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliError {
