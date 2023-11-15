@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/get-object"},"response":{"status":200,"captures":[{"name":"object","query":{"type":"jsonpath","expr":"$.values"}}]}},{"request":{"method":"GET","url":"http://localhost:8000/undefined","query_string_params":[{"name":"param1","value":"{{object}}"}]},"response":{"status":200}}]}
