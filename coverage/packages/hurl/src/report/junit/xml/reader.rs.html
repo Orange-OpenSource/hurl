@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::report::junit::xml::reader::ParserError::{GenericError, InvalidXml};</pre>
+                <pre class="has-background-white py-0 px-2">use xml::attribute::OwnedAttribute;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::report::junit::xml::{Attribute, Element, XmlDocument, XmlNode};</pre>
+                <pre class="has-background-white py-0 px-2">use xml::name::OwnedName;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use xml::attribute::OwnedAttribute;</pre>
+                <pre class="has-background-white py-0 px-2">use xml::reader::{EventReader, XmlEvent};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -373,7 +373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use xml::name::OwnedName;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use xml::reader::{EventReader, XmlEvent};</pre>
+                <pre class="has-background-white py-0 px-2">use crate::report::junit::xml::reader::ParserError::{GenericError, InvalidXml};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">use crate::report::junit::xml::{Attribute, Element, XmlDocument, XmlNode};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Errors raised when deserializing a buffer.</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -431,13 +431,13 @@
                 <a href="#25">25</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">#[derive(Clone, Eq, PartialEq, Debug)]</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Errors raised when deserializing a buffer.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -447,13 +447,13 @@
                 <a href="#26">26</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">pub enum ParserError {</pre>
+                <pre class="has-background-danger-light py-0 px-2">#[derive(Clone, Eq, PartialEq, Debug)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    InvalidXml(String),</pre>
+                <pre class="has-background-white py-0 px-2">pub enum ParserError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -485,7 +485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    GenericError(String),</pre>
+                <pre class="has-background-white py-0 px-2">    InvalidXml(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2">    GenericError(String),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Deserializes a XML document from [`std::io::Read`] source. The XML</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -549,7 +549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; document returned is a in-memory tree representation of the whole document.</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Deserializes a XML document from [`std::io::Read`] source. The XML</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -565,7 +565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl XmlDocument {</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; document returned is a in-memory tree representation of the whole document.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Convenient associated method to read and parse a XML string `source`.</pre>
+                <pre class="has-background-white py-0 px-2">impl XmlDocument {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[allow(dead_code)]</pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Convenient associated method to read and parse a XML string `source`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -607,13 +607,13 @@
                 <a href="#36">36</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    pub fn parse_str(source: &amp;str) -&gt; Result&lt;XmlDocument, ParserError&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">    #[allow(dead_code)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        let bytes = source.as_bytes();</pre>
+                <pre class="has-background-danger-light py-0 px-2">    pub fn parse_str(source: &amp;str) -&gt; Result&lt;XmlDocument, ParserError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -645,7 +645,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        XmlDocument::parse(bytes)</pre>
+                <pre class="has-background-danger-light py-0 px-2">        let bytes = source.as_bytes();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    }</pre>
+                <pre class="has-background-danger-light py-0 px-2">        XmlDocument::parse(bytes)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -671,13 +671,13 @@
                 <a href="#40">40</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-danger-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Read a XML `source` and parses it to a [`XmlDocument`].</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -703,13 +703,13 @@
                 <a href="#42">42</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    pub fn parse&lt;R&gt;(source: R) -&gt; Result&lt;XmlDocument, ParserError&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Read a XML `source` and parses it to a [`XmlDocument`].</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    where</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub fn parse&lt;R&gt;(source: R) -&gt; Result&lt;XmlDocument, ParserError&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        R: std::io::Read,</pre>
+                <pre class="has-background-success-light py-0 px-2">    where</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    {</pre>
+                <pre class="has-background-success-light py-0 px-2">        R: std::io::Read,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut reader = EventReader::new(source);</pre>
+                <pre class="has-background-success-light py-0 px-2">    {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut initialized = false;</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut reader = EventReader::new(source);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut root: Option&lt;Element&gt; = None;</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut initialized = false;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -813,6 +813,22 @@
                 id="49"
                 role="cell">
                 <a href="#49">49</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        let mut root: Option&lt;Element&gt; = None;</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="50"
+                role="cell">
+                <a href="#50">50</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -826,9 +842,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="50"
+                id="51"
                 role="cell">
-                <a href="#50">50</a>
+                <a href="#51">51</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -842,9 +858,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="51"
+                id="52"
                 role="cell">
-                <a href="#51">51</a>
+                <a href="#52">52</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -858,9 +874,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="52"
+                id="53"
                 role="cell">
-                <a href="#52">52</a>
+                <a href="#53">53</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -874,9 +890,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="53"
+                id="54"
                 role="cell">
-                <a href="#53">53</a>
+                <a href="#54">54</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -890,9 +906,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="54"
+                id="55"
                 role="cell">
-                <a href="#54">54</a>
+                <a href="#55">55</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -902,22 +918,6 @@
             <div class="column has-background-danger-light p-0"
                  role="cell">
                 <pre class="has-background-danger-light py-0 px-2">                        return Err(InvalidXml(&quot;Invalid end of document&quot;.to_string()));</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="55"
-                role="cell">
-                <a href="#55">55</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -933,7 +933,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    return Ok(XmlDocument { root });</pre>
+                <pre class="has-background-success-light py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -941,6 +941,22 @@
                 id="57"
                 role="cell">
                 <a href="#57">57</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                    return Ok(XmlDocument { root });</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="58"
+                role="cell">
+                <a href="#58">58</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -954,9 +970,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="58"
+                id="59"
                 role="cell">
-                <a href="#58">58</a>
+                <a href="#59">59</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -970,9 +986,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="59"
+                id="60"
                 role="cell">
-                <a href="#59">59</a>
+                <a href="#60">60</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -982,22 +998,6 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::StartElement {</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="60"
-                role="cell">
-                <a href="#60">60</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
-            </div>
-            <div class="column has-background-success-light p-0"
-                 role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    name, attributes, ..</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1013,7 +1013,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                }) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                    name, attributes, ..</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1029,7 +1029,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    &#x2F;&#x2F; At this point of the parsing, we must have an initialized document</pre>
+                <pre class="has-background-success-light py-0 px-2">                }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1045,7 +1045,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    &#x2F;&#x2F; and no root.</pre>
+                <pre class="has-background-success-light py-0 px-2">                    &#x2F;&#x2F; At this point of the parsing, we must have an initialized document</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1061,7 +1061,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    if !initialized || root.is_some() {</pre>
+                <pre class="has-background-success-light py-0 px-2">                    &#x2F;&#x2F; and no root.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1071,13 +1071,13 @@
                 <a href="#65">65</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                        return Err(InvalidXml(&quot;Invalid start of document&quot;.to_string()));</pre>
+                <pre class="has-background-success-light py-0 px-2">                    if !initialized || root.is_some() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1087,13 +1087,13 @@
                 <a href="#66">66</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        return Err(InvalidXml(&quot;Invalid start of document&quot;.to_string()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1109,7 +1109,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let element = Element::try_parse(&amp;name, &amp;attributes, &amp;mut reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1125,7 +1125,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    root = Some(element);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let element = Element::try_parse(&amp;name, &amp;attributes, &amp;mut reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1135,13 +1135,13 @@
                 <a href="#69">69</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    root = Some(element);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1157,7 +1157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::EndElement { .. }) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1165,6 +1165,22 @@
                 id="71"
                 role="cell">
                 <a href="#71">71</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::EndElement { .. }) =&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="72"
+                role="cell">
+                <a href="#72">72</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1178,9 +1194,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="72"
+                id="73"
                 role="cell">
-                <a href="#72">72</a>
+                <a href="#73">73</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1190,22 +1206,6 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">                }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="73"
-                role="cell">
-                <a href="#73">73</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::CData(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1221,7 +1221,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Comment(_)) =&gt; {}</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::CData(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1237,7 +1237,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Characters(_)) =&gt; {}</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Comment(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1253,7 +1253,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Whitespace(_)) =&gt; {}</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Characters(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1269,7 +1269,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(e) =&gt; return Err(GenericError(e.to_string())),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Whitespace(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1279,13 +1279,13 @@
                 <a href="#78">78</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(e) =&gt; return Err(GenericError(e.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1301,7 +1301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1311,13 +1311,13 @@
                 <a href="#80">80</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1327,13 +1327,13 @@
                 <a href="#81">81</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1349,7 +1349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1365,7 +1365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Element {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1375,13 +1375,13 @@
                 <a href="#84">84</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    fn try_parse&lt;R: std::io::Read&gt;(</pre>
+                <pre class="has-background-white py-0 px-2">impl Element {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1397,7 +1397,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        name: &amp;OwnedName,</pre>
+                <pre class="has-background-success-light py-0 px-2">    fn try_parse&lt;R: std::io::Read&gt;(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1413,7 +1413,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        attributes: &amp;[OwnedAttribute],</pre>
+                <pre class="has-background-success-light py-0 px-2">        name: &amp;OwnedName,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1429,7 +1429,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        reader: &amp;mut EventReader&lt;R&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">        attributes: &amp;[OwnedAttribute],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1445,7 +1445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    ) -&gt; Result&lt;Element, ParserError&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">        reader: &amp;mut EventReader&lt;R&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1461,7 +1461,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let mut element = Element::new(&amp;name.local_name);</pre>
+                <pre class="has-background-success-light py-0 px-2">    ) -&gt; Result&lt;Element, ParserError&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1477,7 +1477,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        element.attrs = attributes</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut element = Element::new(&amp;name.local_name);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1493,7 +1493,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            .iter()</pre>
+                <pre class="has-background-success-light py-0 px-2">        element.attrs = attributes</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1501,6 +1501,22 @@
                 id="92"
                 role="cell">
                 <a href="#92">92</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">            .iter()</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="93"
+                role="cell">
+                <a href="#93">93</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1514,9 +1530,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="93"
+                id="94"
                 role="cell">
-                <a href="#93">93</a>
+                <a href="#94">94</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1526,22 +1542,6 @@
             <div class="column has-background-success-light p-0"
                  role="cell">
                 <pre class="has-background-success-light py-0 px-2">            .collect();</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="94"
-                role="cell">
-                <a href="#94">94</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1557,7 +1557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        loop {</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1565,6 +1565,22 @@
                 id="96"
                 role="cell">
                 <a href="#96">96</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">        loop {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="97"
+                role="cell">
+                <a href="#97">97</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -1578,9 +1594,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="97"
+                id="98"
                 role="cell">
-                <a href="#97">97</a>
+                <a href="#98">98</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1594,9 +1610,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="98"
+                id="99"
                 role="cell">
-                <a href="#98">98</a>
+                <a href="#99">99</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1606,22 +1622,6 @@
             <div class="column has-background-danger-light p-0"
                  role="cell">
                 <pre class="has-background-danger-light py-0 px-2">                    return Err(InvalidXml(&quot;Invalid start of document&quot;.to_string()))</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="99"
-                role="cell">
-                <a href="#99">99</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1637,7 +1637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::EndDocument) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1645,6 +1645,22 @@
                 id="101"
                 role="cell">
                 <a href="#101">101</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::EndDocument) =&gt; {</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="102"
+                role="cell">
+                <a href="#102">102</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1658,9 +1674,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="102"
+                id="103"
                 role="cell">
-                <a href="#102">102</a>
+                <a href="#103">103</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1670,22 +1686,6 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">                }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="103"
-                role="cell">
-                <a href="#103">103</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::ProcessingInstruction { name, data }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1701,7 +1701,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::ProcessingInstruction(name, data);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::ProcessingInstruction { name, data }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1717,7 +1717,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::ProcessingInstruction(name, data);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1733,7 +1733,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1743,13 +1743,13 @@
                 <a href="#107">107</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::StartElement {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1759,13 +1759,13 @@
                 <a href="#108">108</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="12">
-                12
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    name, attributes, ..</pre>
+                <pre class="has-background-white py-0 px-2">                Ok(XmlEvent::StartElement {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1781,7 +1781,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                }) =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">                    name, attributes, ..</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1797,7 +1797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let child = Element::try_parse(&amp;name, &amp;attributes, reader)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">                }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1813,7 +1813,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    element.children.push(XmlNode::Element(child));</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let child = Element::try_parse(&amp;name, &amp;attributes, reader)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1823,13 +1823,13 @@
                 <a href="#112">112</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="12">
+                12
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    element.children.push(XmlNode::Element(child));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1839,13 +1839,13 @@
                 <a href="#113">113</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Ok(XmlEvent::EndElement { name, .. }) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1861,7 +1861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    return if element.name == name.local_name {</pre>
+                <pre class="has-background-success-light py-0 px-2">                Ok(XmlEvent::EndElement { name, .. }) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1877,7 +1877,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                        Ok(element)</pre>
+                <pre class="has-background-success-light py-0 px-2">                    return if element.name == name.local_name {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1885,6 +1885,22 @@
                 id="116"
                 role="cell">
                 <a href="#116">116</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">                        Ok(element)</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="117"
+                role="cell">
+                <a href="#117">117</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -1898,9 +1914,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="117"
+                id="118"
                 role="cell">
-                <a href="#117">117</a>
+                <a href="#118">118</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -1910,22 +1926,6 @@
             <div class="column has-background-danger-light p-0"
                  role="cell">
                 <pre class="has-background-danger-light py-0 px-2">                        Err(InvalidXml(format!(&quot;Bag closing element {name}&quot;)))</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="118"
-                role="cell">
-                <a href="#118">118</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1941,7 +1941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                }</pre>
+                <pre class="has-background-white py-0 px-2">                    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1951,13 +1951,13 @@
                 <a href="#120">120</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::CData(value)) =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::CData(value);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::CData(value)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1989,7 +1989,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::CData(value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2005,7 +2005,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2021,7 +2021,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Comment(value)) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2037,7 +2037,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::Comment(value);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Comment(value)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let child = XmlNode::Comment(value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2069,7 +2069,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    element.children.push(child);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2079,13 +2079,13 @@
                 <a href="#128">128</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="3">
-                3
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                Ok(XmlEvent::Characters(value)) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2101,7 +2101,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    let child = XmlNode::Text(value);</pre>
+                <pre class="has-background-success-light py-0 px-2">                Ok(XmlEvent::Characters(value)) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2117,7 +2117,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    element.children.push(child);</pre>
+                <pre class="has-background-success-light py-0 px-2">                    let child = XmlNode::Text(value);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2133,7 +2133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                }</pre>
+                <pre class="has-background-success-light py-0 px-2">                    element.children.push(child);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2143,13 +2143,13 @@
                 <a href="#132">132</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="3">
+                3
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Whitespace(_)) =&gt; {}</pre>
+                <pre class="has-background-success-light py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2165,7 +2165,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                Err(e) =&gt; return Err(GenericError(e.to_string())),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Ok(XmlEvent::Whitespace(_)) =&gt; {}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2175,13 +2175,13 @@
                 <a href="#134">134</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">                Err(e) =&gt; return Err(GenericError(e.to_string())),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2197,7 +2197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2207,13 +2207,13 @@
                 <a href="#136">136</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
-                role="cell" aria-label="15">
-                15
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
             </div>
-            <div class="column has-background-success-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2223,13 +2223,13 @@
                 <a href="#137">137</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="15">
+                15
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-success-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2245,7 +2245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2261,7 +2261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">mod tests {</pre>
+                <pre class="has-background-white py-0 px-2">#[cfg(test)]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use crate::report::junit::xml::{Element, XmlDocument};</pre>
+                <pre class="has-background-white py-0 px-2">mod tests {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    use crate::report::junit::xml::{Element, XmlDocument};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2325,7 +2325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn read_xml_0_succeed() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2357,7 +2357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    fn read_xml_0_succeed() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;names&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;name first=&quot;bob&quot; last=&quot;jones&quot; &#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;names&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;name first=&quot;elizabeth&quot; last=&quot;smith&quot; &#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;name first=&quot;bob&quot; last=&quot;jones&quot; &#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;names&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;name first=&quot;elizabeth&quot; last=&quot;smith&quot; &#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;names&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2453,7 +2453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2469,7 +2469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2485,7 +2485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2501,7 +2501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Element::new(&quot;names&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2517,7 +2517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">            Element::new(&quot;names&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2533,7 +2533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;name&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2549,7 +2549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;first&quot;, &quot;bob&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;name&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2565,7 +2565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;last&quot;, &quot;jones&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;first&quot;, &quot;bob&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2581,7 +2581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;last&quot;, &quot;jones&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2597,7 +2597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2613,7 +2613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;name&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2629,7 +2629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;first&quot;, &quot;elizabeth&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;name&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2645,7 +2645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;last&quot;, &quot;smith&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;first&quot;, &quot;elizabeth&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2661,7 +2661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;last&quot;, &quot;smith&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2677,7 +2677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2693,7 +2693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2709,7 +2709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2725,7 +2725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2741,7 +2741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn read_xml_1_succeed() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2757,7 +2757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    fn read_xml_1_succeed() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2773,7 +2773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;project name=&quot;project-name&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2789,7 +2789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;libraries&gt;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;project name=&quot;project-name&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2805,7 +2805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;library groupId=&quot;org.example&quot; artifactId=&quot;&amp;lt;name&amp;gt;&quot; version=&quot;0.1&quot;&#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;libraries&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;library groupId=&quot;com.example&quot; artifactId=&quot;&amp;quot;cool-lib&amp;amp;&quot; version=&quot;999&quot;&#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;library groupId=&quot;org.example&quot; artifactId=&quot;&amp;lt;name&amp;gt;&quot; version=&quot;0.1&quot;&#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2837,7 +2837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;libraries&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;library groupId=&quot;com.example&quot; artifactId=&quot;&amp;quot;cool-lib&amp;amp;&quot; version=&quot;999&quot;&#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2853,7 +2853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;module name=&quot;module-1&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;libraries&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2869,7 +2869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;files&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;module name=&quot;module-1&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2885,7 +2885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;somefile.java&quot; type=&quot;java&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;files&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2901,7 +2901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Some &amp;lt;java&amp;gt; class</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;somefile.java&quot; type=&quot;java&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2917,7 +2917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
+                <pre class="has-background-white py-0 px-2">                Some &amp;lt;java&amp;gt; class</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2933,7 +2933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;another_file.java&quot; type=&quot;java&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2949,7 +2949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Another &amp;quot;java&amp;quot; class</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;another_file.java&quot; type=&quot;java&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2965,7 +2965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
+                <pre class="has-background-white py-0 px-2">                Another &amp;quot;java&amp;quot; class</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2981,7 +2981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;config.xml&quot; type=&quot;xml&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2997,7 +2997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Weird &amp;apos;XML&amp;apos; config</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;config.xml&quot; type=&quot;xml&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3013,7 +3013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
+                <pre class="has-background-white py-0 px-2">                Weird &amp;apos;XML&amp;apos; config</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3029,7 +3029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;files&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3045,7 +3045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;libraries&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;files&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3061,7 +3061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;library groupId=&quot;junit&quot; artifactId=&quot;junit&quot; version=&quot;1.9.5&quot;&#x2F;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;libraries&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3077,7 +3077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;libraries&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;library groupId=&quot;junit&quot; artifactId=&quot;junit&quot; version=&quot;1.9.5&quot;&#x2F;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;module&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;libraries&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3109,7 +3109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;module name=&quot;module-2&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;module&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3125,7 +3125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;files&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;module name=&quot;module-2&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3141,7 +3141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;program.js&quot; type=&quot;javascript&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;files&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3157,7 +3157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                JavaScript &amp;amp; program</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;program.js&quot; type=&quot;javascript&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3173,7 +3173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
+                <pre class="has-background-white py-0 px-2">                JavaScript &amp;amp; program</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3189,7 +3189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;style.css&quot; type=&quot;css&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3205,7 +3205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Cascading style sheet: &amp;#xA9; - &amp;#1161;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;file name=&quot;style.css&quot; type=&quot;css&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3221,7 +3221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
+                <pre class="has-background-white py-0 px-2">                Cascading style sheet: &amp;#xA9; - &amp;#1161;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3237,7 +3237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;files&gt;</pre>
+                <pre class="has-background-white py-0 px-2">            &lt;&#x2F;file&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3253,7 +3253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;module&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        &lt;&#x2F;files&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3269,7 +3269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;project&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;module&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3285,7 +3285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;project&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3301,7 +3301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3317,7 +3317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3333,7 +3333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3349,7 +3349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3365,7 +3365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Element::new(&quot;project&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3381,7 +3381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;name&quot;, &quot;project-name&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            Element::new(&quot;project&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3397,7 +3397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;name&quot;, &quot;project-name&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3413,7 +3413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;libraries&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3429,7 +3429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;libraries&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3445,7 +3445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;library&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3461,7 +3461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;groupId&quot;, &quot;org.example&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;library&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3477,7 +3477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;artifactId&quot;, &quot;&lt;name&gt;&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;groupId&quot;, &quot;org.example&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3493,7 +3493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;version&quot;, &quot;0.1&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;artifactId&quot;, &quot;&lt;name&gt;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3509,7 +3509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                )</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;version&quot;, &quot;0.1&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3525,7 +3525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3541,7 +3541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;library&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3557,7 +3557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;groupId&quot;, &quot;com.example&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;library&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3573,7 +3573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;artifactId&quot;, &quot;\&quot;cool-lib&amp;&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;groupId&quot;, &quot;com.example&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3589,7 +3589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;version&quot;, &quot;999&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;artifactId&quot;, &quot;\&quot;cool-lib&amp;&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3605,7 +3605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                )</pre>
+                <pre class="has-background-white py-0 px-2">                                        .attr(&quot;version&quot;, &quot;999&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3621,7 +3621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3637,7 +3637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3653,7 +3653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;module&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3669,7 +3669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;module-1&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;module&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3685,7 +3685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;module-1&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3701,7 +3701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;files&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3717,7 +3717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;files&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3733,7 +3733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3749,7 +3749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;somefile.java&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3765,7 +3765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;java&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;somefile.java&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3781,7 +3781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Some &lt;java&gt; class\n            &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;java&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3797,7 +3797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Some &lt;java&gt; class\n            &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3813,7 +3813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3829,7 +3829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3845,7 +3845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;another_file.java&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3861,7 +3861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;java&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;another_file.java&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3877,7 +3877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Another \&quot;java\&quot; class\n            &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;java&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3893,7 +3893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Another \&quot;java\&quot; class\n            &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3909,7 +3909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3925,7 +3925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3941,7 +3941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;config.xml&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3957,7 +3957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;xml&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;config.xml&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3973,7 +3973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Weird &#x27;XML&#x27; config\n            &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;xml&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3989,7 +3989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Weird &#x27;XML&#x27; config\n            &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4005,7 +4005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                )</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4021,7 +4021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4037,7 +4037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;libraries&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4053,7 +4053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(Element::new(&quot;library&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;libraries&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4069,7 +4069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;groupId&quot;, &quot;junit&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(Element::new(&quot;library&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4085,7 +4085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;artifactId&quot;, &quot;junit&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;groupId&quot;, &quot;junit&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4101,7 +4101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;version&quot;, &quot;1.9.5&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;artifactId&quot;, &quot;junit&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4117,7 +4117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                            .attr(&quot;version&quot;, &quot;1.9.5&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4133,7 +4133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                )</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4149,7 +4149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4165,7 +4165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4181,7 +4181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;module&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4197,7 +4197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;module-2&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;module&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4213,7 +4213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;module-2&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4229,7 +4229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;files&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4245,7 +4245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                    Element::new(&quot;files&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4261,7 +4261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4277,7 +4277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;program.js&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4293,7 +4293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;javascript&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;program.js&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4309,7 +4309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                JavaScript &amp; program\n            &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;javascript&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4325,7 +4325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                JavaScript &amp; program\n            &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4341,7 +4341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4357,7 +4357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4373,7 +4373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;style.css&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                            Element::new(&quot;file&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4389,7 +4389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;css&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;name&quot;, &quot;style.css&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4405,7 +4405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Cascading style sheet: © - \u{489}\n            &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                                .attr(&quot;type&quot;, &quot;css&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4421,7 +4421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                                .text(&quot;\n                Cascading style sheet: © - \u{489}\n            &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4437,7 +4437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                )</pre>
+                <pre class="has-background-white py-0 px-2">                                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4453,7 +4453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4469,7 +4469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                );</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4485,7 +4485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">                );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4501,7 +4501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4517,7 +4517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4533,7 +4533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn read_xml_with_namespaces() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4549,7 +4549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    fn read_xml_with_namespaces() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4565,7 +4565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;p:data xmlns:p=&quot;urn:example:namespace&quot; xmlns:d=&quot;urn:example:double&quot; xmlns:h=&quot;urn:example:header&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4581,7 +4581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;p:datum id=&quot;34&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">&lt;p:data xmlns:p=&quot;urn:example:namespace&quot; xmlns:d=&quot;urn:example:double&quot; xmlns:h=&quot;urn:example:header&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4597,7 +4597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;p:name&gt;Name&lt;&#x2F;p:name&gt;</pre>
+                <pre class="has-background-white py-0 px-2">  &lt;p:datum id=&quot;34&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4613,7 +4613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;d:name&gt;Another name&lt;&#x2F;d:name&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;p:name&gt;Name&lt;&#x2F;p:name&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4629,7 +4629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;d:arg&gt;0.3&lt;&#x2F;d:arg&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;d:name&gt;Another name&lt;&#x2F;d:name&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4645,7 +4645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;d:arg&gt;0.2&lt;&#x2F;d:arg&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;d:arg&gt;0.3&lt;&#x2F;d:arg&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4661,7 +4661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;p:arg&gt;0.1&lt;&#x2F;p:arg&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;d:arg&gt;0.2&lt;&#x2F;d:arg&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4677,7 +4677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;p:arg&gt;0.01&lt;&#x2F;p:arg&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;p:arg&gt;0.1&lt;&#x2F;p:arg&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4693,7 +4693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;h:header name=&quot;Header-1&quot;&gt;header 1 value&lt;&#x2F;h:header&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;p:arg&gt;0.01&lt;&#x2F;p:arg&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4709,7 +4709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;h:header name=&quot;Header-2&quot;&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;h:header name=&quot;Header-1&quot;&gt;header 1 value&lt;&#x2F;h:header&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4725,7 +4725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">      Some bigger value</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;h:header name=&quot;Header-2&quot;&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4741,7 +4741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;h:header&gt;</pre>
+                <pre class="has-background-white py-0 px-2">      Some bigger value</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4757,7 +4757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;p:datum&gt;</pre>
+                <pre class="has-background-white py-0 px-2">    &lt;&#x2F;h:header&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4773,7 +4773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&lt;&#x2F;p:data&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">  &lt;&#x2F;p:datum&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4789,7 +4789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&lt;&#x2F;p:data&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4805,7 +4805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4821,7 +4821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4837,7 +4837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4853,7 +4853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Element::new(&quot;data&quot;).add_child(</pre>
+                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4869,7 +4869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Element::new(&quot;datum&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            Element::new(&quot;data&quot;).add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4885,7 +4885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .attr(&quot;id&quot;, &quot;34&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                Element::new(&quot;datum&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4901,7 +4901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;name&quot;).text(&quot;Name&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .attr(&quot;id&quot;, &quot;34&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4917,7 +4917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;name&quot;).text(&quot;Another name&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;name&quot;).text(&quot;Name&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4933,7 +4933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.3&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;name&quot;).text(&quot;Another name&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4949,7 +4949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.2&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.3&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4965,7 +4965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.1&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.2&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4981,7 +4981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.01&quot;))</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.1&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4997,7 +4997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(Element::new(&quot;arg&quot;).text(&quot;0.01&quot;))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5013,7 +5013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        Element::new(&quot;header&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5029,7 +5029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            .attr(&quot;name&quot;, &quot;Header-1&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        Element::new(&quot;header&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5045,7 +5045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            .text(&quot;header 1 value&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            .attr(&quot;name&quot;, &quot;Header-1&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5061,7 +5061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    )</pre>
+                <pre class="has-background-white py-0 px-2">                            .text(&quot;header 1 value&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5077,7 +5077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                    )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5093,7 +5093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        Element::new(&quot;header&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5109,7 +5109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            .attr(&quot;name&quot;, &quot;Header-2&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        Element::new(&quot;header&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5125,7 +5125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            .text(&quot;\n      Some bigger value\n    &quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            .attr(&quot;name&quot;, &quot;Header-2&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5141,7 +5141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    )</pre>
+                <pre class="has-background-white py-0 px-2">                            .text(&quot;\n      Some bigger value\n    &quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5157,7 +5157,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            )</pre>
+                <pre class="has-background-white py-0 px-2">                    )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5173,7 +5173,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        );</pre>
+                <pre class="has-background-white py-0 px-2">            )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5189,7 +5189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5205,7 +5205,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5221,7 +5221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5237,7 +5237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn read_junit_xml() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5253,7 +5253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;testsuites&gt;&lt;testsuite tests=&quot;3&quot; errors=&quot;0&quot; failures=&quot;1&quot;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;a.hurl&quot; name=&quot;&#x2F;tmp&#x2F;a.hurl&quot; time=&quot;0.438&quot; &#x2F;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;b.hurl&quot; name=&quot;&#x2F;tmp&#x2F;b.hurl&quot; time=&quot;0.234&quot;&gt;&lt;failure&gt;Assert status code</pre>
+                <pre class="has-background-white py-0 px-2">    fn read_junit_xml() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5269,7 +5269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;b.hurl:4:6</pre>
+                <pre class="has-background-white py-0 px-2">        let xml = r#&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;testsuites&gt;&lt;testsuite tests=&quot;3&quot; errors=&quot;0&quot; failures=&quot;1&quot;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;a.hurl&quot; name=&quot;&#x2F;tmp&#x2F;a.hurl&quot; time=&quot;0.438&quot; &#x2F;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;b.hurl&quot; name=&quot;&#x2F;tmp&#x2F;b.hurl&quot; time=&quot;0.234&quot;&gt;&lt;failure&gt;Assert status code</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5285,7 +5285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;b.hurl:4:6</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5301,7 +5301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 4 | HTTP 300</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5317,7 +5317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |      ^^^ actual value is &amp;lt;200&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 4 | HTTP 300</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5333,7 +5333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&lt;&#x2F;failure&gt;&lt;&#x2F;testcase&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;c.hurl&quot; name=&quot;&#x2F;tmp&#x2F;c.hurl&quot; time=&quot;0.236&quot; &#x2F;&gt;&lt;&#x2F;testsuite&gt;&lt;testsuite tests=&quot;2&quot; errors=&quot;0&quot; failures=&quot;1&quot;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;a.hurl&quot; name=&quot;&#x2F;tmp&#x2F;a.hurl&quot; time=&quot;0.370&quot; &#x2F;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;c.hurl&quot; name=&quot;&#x2F;tmp&#x2F;c.hurl&quot; time=&quot;0.247&quot;&gt;&lt;failure&gt;Assert failure</pre>
+                <pre class="has-background-white py-0 px-2">   |      ^^^ actual value is &amp;lt;200&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5349,7 +5349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;c.hurl:6:0</pre>
+                <pre class="has-background-white py-0 px-2">   |&lt;&#x2F;failure&gt;&lt;&#x2F;testcase&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;c.hurl&quot; name=&quot;&#x2F;tmp&#x2F;c.hurl&quot; time=&quot;0.236&quot; &#x2F;&gt;&lt;&#x2F;testsuite&gt;&lt;testsuite tests=&quot;2&quot; errors=&quot;0&quot; failures=&quot;1&quot;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;a.hurl&quot; name=&quot;&#x2F;tmp&#x2F;a.hurl&quot; time=&quot;0.370&quot; &#x2F;&gt;&lt;testcase id=&quot;&#x2F;tmp&#x2F;c.hurl&quot; name=&quot;&#x2F;tmp&#x2F;c.hurl&quot; time=&quot;0.247&quot;&gt;&lt;failure&gt;Assert failure</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5365,7 +5365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;c.hurl:6:0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5381,7 +5381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 6 | xpath &quot;normalize-space(&#x2F;&#x2F;title)&quot; == &quot;Hello World!&quot;</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5397,7 +5397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   actual:   string &amp;lt;Hurl - Run and Test HTTP Requests&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 6 | xpath &quot;normalize-space(&#x2F;&#x2F;title)&quot; == &quot;Hello World!&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5413,7 +5413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   expected: string &amp;lt;Hello World!&gt;</pre>
+                <pre class="has-background-white py-0 px-2">   |   actual:   string &amp;lt;Hurl - Run and Test HTTP Requests&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5429,7 +5429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&lt;&#x2F;failure&gt;&lt;&#x2F;testcase&gt;&lt;&#x2F;testsuite&gt;&lt;&#x2F;testsuites&gt;&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">   |   expected: string &amp;lt;Hello World!&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5445,7 +5445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
+                <pre class="has-background-white py-0 px-2">   |&lt;&#x2F;failure&gt;&lt;&#x2F;testcase&gt;&lt;&#x2F;testsuite&gt;&lt;&#x2F;testsuites&gt;&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5461,7 +5461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        let doc = XmlDocument::parse_str(xml).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5477,7 +5477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5493,7 +5493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Element::new(&quot;testsuites&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">            doc.root.unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5509,7 +5509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">            Element::new(&quot;testsuites&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5525,7 +5525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;testsuite&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5541,7 +5541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;tests&quot;, &quot;3&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;testsuite&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5557,7 +5557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;errors&quot;, &quot;0&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;tests&quot;, &quot;3&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5573,7 +5573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;failures&quot;, &quot;1&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;errors&quot;, &quot;0&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5589,7 +5589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;failures&quot;, &quot;1&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5605,7 +5605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5621,7 +5621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5637,7 +5637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5653,7 +5653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.438&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5669,7 +5669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.438&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5685,7 +5685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5701,7 +5701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5717,7 +5717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;b.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5733,7 +5733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;b.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;b.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5749,7 +5749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.234&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;b.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5765,7 +5765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(Element::new(&quot;failure&quot;).text(</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.234&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5781,7 +5781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    r#&quot;Assert status code</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(Element::new(&quot;failure&quot;).text(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5797,7 +5797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;b.hurl:4:6</pre>
+                <pre class="has-background-white py-0 px-2">                                    r#&quot;Assert status code</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5813,7 +5813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;b.hurl:4:6</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5829,7 +5829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 4 | HTTP 300</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5845,7 +5845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |      ^^^ actual value is &lt;200&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 4 | HTTP 300</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5861,7 +5861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">   |      ^^^ actual value is &lt;200&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5877,7 +5877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                ))</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5893,7 +5893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                ))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5909,7 +5909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5925,7 +5925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5941,7 +5941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5957,7 +5957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5973,7 +5973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.236&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5989,7 +5989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.236&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6005,7 +6005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6021,7 +6021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6037,7 +6037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;testsuite&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6053,7 +6053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;tests&quot;, &quot;2&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                    Element::new(&quot;testsuite&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6069,7 +6069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;errors&quot;, &quot;0&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;tests&quot;, &quot;2&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6085,7 +6085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .attr(&quot;failures&quot;, &quot;1&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;errors&quot;, &quot;0&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6101,7 +6101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        .attr(&quot;failures&quot;, &quot;1&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6117,7 +6117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6133,7 +6133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6149,7 +6149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6165,7 +6165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.370&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;a.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6181,7 +6181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.370&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6197,7 +6197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6213,7 +6213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                        .add_child(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6229,7 +6229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                            Element::new(&quot;testcase&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6245,7 +6245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;id&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6261,7 +6261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.247&quot;)</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;name&quot;, &quot;&#x2F;tmp&#x2F;c.hurl&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6277,7 +6277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                .add_child(Element::new(&quot;failure&quot;).text(</pre>
+                <pre class="has-background-white py-0 px-2">                                .attr(&quot;time&quot;, &quot;0.247&quot;)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6293,7 +6293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                    r#&quot;Assert failure</pre>
+                <pre class="has-background-white py-0 px-2">                                .add_child(Element::new(&quot;failure&quot;).text(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6309,7 +6309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;c.hurl:6:0</pre>
+                <pre class="has-background-white py-0 px-2">                                    r#&quot;Assert failure</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6325,7 +6325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; &#x2F;tmp&#x2F;c.hurl:6:0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6341,7 +6341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 6 | xpath &quot;normalize-space(&#x2F;&#x2F;title)&quot; == &quot;Hello World!&quot;</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6357,7 +6357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   actual:   string &lt;Hurl - Run and Test HTTP Requests&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 6 | xpath &quot;normalize-space(&#x2F;&#x2F;title)&quot; == &quot;Hello World!&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6373,7 +6373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   expected: string &lt;Hello World!&gt;</pre>
+                <pre class="has-background-white py-0 px-2">   |   actual:   string &lt;Hurl - Run and Test HTTP Requests&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6389,7 +6389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">   |   expected: string &lt;Hello World!&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6405,7 +6405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                                ))</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6421,7 +6421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        )</pre>
+                <pre class="has-background-white py-0 px-2">                                ))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6437,7 +6437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                )</pre>
+                <pre class="has-background-white py-0 px-2">                        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6453,7 +6453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">                )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6469,7 +6469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6485,13 +6485,29 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="404"
+                role="cell">
+                <a href="#404">404</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-11-15 08:10</p>
+                <p class="heading">Date: 2023-11-16 08:08</p>
             </div>
         </footer>
     </body>
