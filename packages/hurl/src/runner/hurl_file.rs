@@ -26,7 +26,7 @@ use hurl_core::error::Error;
 use hurl_core::parser;
 
 use crate::http::Call;
-use crate::runner::core::*;
+use crate::runner::result::*;
 use crate::runner::runner_options::RunnerOptions;
 use crate::runner::{entry, options, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};

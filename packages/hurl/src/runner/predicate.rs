@@ -21,9 +21,9 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 use regex;
 
-use crate::runner::core::PredicateResult;
 use crate::runner::error::Error;
 use crate::runner::predicate_value::{eval_predicate_value, eval_predicate_value_template};
+use crate::runner::result::PredicateResult;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 use crate::runner::{Number, RunnerError};

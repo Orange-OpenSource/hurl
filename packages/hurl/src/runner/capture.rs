@@ -20,10 +20,10 @@ use std::collections::HashMap;
 use hurl_core::ast::*;
 
 use crate::http;
-use crate::runner::core::CaptureResult;
 use crate::runner::error::{Error, RunnerError};
 use crate::runner::filter::eval_filters;
 use crate::runner::query::eval_query;
+use crate::runner::result::CaptureResult;
 use crate::runner::template::eval_template;
 use crate::runner::Value;
 
