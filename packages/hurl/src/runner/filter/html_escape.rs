@@ -1,0 +1,80 @@
+/*
+ * Hurl (https://hurl.dev)
+ * Copyright (C) 2023 Orange
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+use hurl_core::ast::SourceInfo;
+
+use crate::html;
+use crate::runner::{Error, RunnerError, Value};
+
+pub fn eval_html_escape(
+    value: &Value,
+    source_info: &SourceInfo,
+    assert: bool,
+) -> Result<Option<Value>, Error> {
+    match value {
+        Value::String(value) => {
+            let encoded = html::html_escape(value);
+            Ok(Some(Value::String(encoded)))
+        }
+        v => Err(Error {
+            source_info: source_info.clone(),
+            inner: RunnerError::FilterInvalidInput(v._type()),
+            assert,
+        }),
+    }
+}
+
+#[cfg(test)]
+pub mod tests {
+    use crate::runner::filter::eval::eval_filter;
+    use crate::runner::Value;
+    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use std::collections::HashMap;
+
+    #[test]
+    pub fn eval_filter_html_escape() {
+        let variables = HashMap::new();
+        let filter = Filter {
+            source_info: SourceInfo::new(1, 1, 1, 1),
+            value: FilterValue::HtmlEscape,
+        };
+
+        let tests = [
+            ("foo", "foo"),
+            ("<tag>", "&lt;tag&gt;"),
+            ("foo & bar", "foo &amp; bar"),
+            (
+                "string with double quote: \"baz\"",
+                "string with double quote: &quot;baz&quot;",
+            ),
+        ];
+        for (input, output) in tests.iter() {
+            assert_eq!(
+                eval_filter(
+                    &filter,
+                    &Value::String(input.to_string()),
+                    &variables,
+                    false
+                )
+                .unwrap()
+                .unwrap(),
+                Value::String(output.to_string())
+            );
+        }
+    }
+}
