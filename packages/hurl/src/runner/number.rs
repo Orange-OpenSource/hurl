@@ -25,6 +25,7 @@ use std::fmt;
 pub enum Number {
     Float(f64),
     Integer(i64),
+    String(String),
 }
 
 // You must implement it yourself because of the Float
@@ -33,6 +34,7 @@ impl PartialEq for Number {
         match (self, other) {
             (Number::Float(v1), Number::Float(v2)) => (v1 - v2).abs() < f64::EPSILON,
             (Number::Integer(v1), Number::Integer(v2)) => v1 == v2,
+            (Number::String(v1), Number::String(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -45,6 +47,7 @@ impl fmt::Display for Number {
         let value = match self {
             Number::Float(f) => format_float(*f),
             Number::Integer(x) => x.to_string(),
+            Number::String(s) => s.to_string(),
         };
         write!(f, "{value}")
     }
@@ -63,6 +66,7 @@ impl Number {
         match self {
             Number::Float(_) => "float".to_string(),
             Number::Integer(_) => "integer".to_string(),
+            Number::String(_) => "string".to_string(),
         }
     }
 }
@@ -86,6 +90,7 @@ impl Number {
             (Number::Float(f1), Number::Float(f2)) => compare_float(*f1, *f2),
             (Number::Integer(i1), Number::Float(f2)) => compare_float(*i1 as f64, *f2),
             (Number::Float(f1), Number::Integer(i2)) => compare_float(*f1, *i2 as f64),
+            (n1, n2) => compare_number_string(&n1.to_string(), &n2.to_string()),
         }
     }
 }
@@ -100,6 +105,40 @@ fn compare_float(f1: f64, f2: f64) -> Ordering {
     }
 }
 
+fn compare_number_string(n1: &str, n2: &str) -> Ordering {
+    let (neg1, i1, d1) = number_components(n1);
+    let (neg2, i2, d2) = number_components(n2);
+    if neg1 == neg2 {
+        match i1.cmp(i2) {
+            Ordering::Less => Ordering::Less,
+            Ordering::Greater => Ordering::Greater,
+            Ordering::Equal => d1.cmp(d2),
+        }
+    } else if neg1 {
+        Ordering::Less
+    } else {
+        Ordering::Greater
+    }
+}
+
+// return triple (negative, integer, decimals)
+fn number_components(s: &str) -> (bool, &str, &str) {
+    match s.strip_prefix('-') {
+        None => match s.find('.') {
+            None => (false, s.trim_start_matches('0'), ""),
+            Some(index) => (
+                false,
+                &s[..index].trim_start_matches('0'),
+                &s[(index + 1)..].trim_end_matches('0'),
+            ),
+        },
+        Some(s) => {
+            let (_, integer, decimal) = number_components(s);
+            (true, integer, decimal)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -110,11 +149,17 @@ mod tests {
         assert_eq!(Number::Float(1.1).to_string(), "1.1".to_string());
         assert_eq!(Number::from(1.0).to_string(), "1.0".to_string());
         assert_eq!(Number::from(1.1).to_string(), "1.1".to_string());
+        assert_eq!(
+            Number::String("1.1".to_string()).to_string(),
+            "1.1".to_string()
+        );
+        assert_eq!(Number::String("1".to_string()).to_string(), "1".to_string());
     }
 
     #[test]
     fn test_cmp_value() {
         let integer_zero = Number::from(0);
+        let integer_minus_one = Number::from(-1);
         let integer_one = Number::from(1);
         let integer_two = Number::from(2);
         let integer_max = Number::from(i64::max_value());
@@ -128,12 +173,24 @@ mod tests {
         let float_min = Number::from(f64::MIN);
         let float_max = Number::from(f64::MAX);
 
+        let number_one = Number::String("1".to_string());
+        let number_two = Number::String("2".to_string());
+        let number_two_with_decimal = Number::String("2.0".to_string());
+
+        assert_eq!(integer_minus_one.cmp_value(&integer_zero), Ordering::Less);
+
         assert_eq!(integer_one.cmp_value(&integer_one), Ordering::Equal);
+        assert_eq!(integer_one.cmp_value(&number_one), Ordering::Equal);
         assert_eq!(integer_one.cmp_value(&float_one), Ordering::Equal);
         assert_eq!(integer_one.cmp_value(&integer_zero), Ordering::Greater);
         assert_eq!(integer_one.cmp_value(&float_zero), Ordering::Greater);
         assert_eq!(integer_one.cmp_value(&integer_two), Ordering::Less);
         assert_eq!(integer_one.cmp_value(&float_two), Ordering::Less);
+        assert_eq!(integer_one.cmp_value(&number_two), Ordering::Less);
+        assert_eq!(
+            integer_one.cmp_value(&number_two_with_decimal),
+            Ordering::Less
+        );
 
         assert_eq!(integer_min.cmp_value(&float_min), Ordering::Greater);
         assert_eq!(integer_max.cmp_value(&float_max), Ordering::Less);
@@ -155,5 +212,28 @@ mod tests {
             Number::from(9_007_199_254_740_992.0).cmp_value(&Number::from(9_007_199_254_740_993)),
             Ordering::Equal
         );
+    }
+
+    #[test]
+    fn test_cmp_number_string() {
+        assert_eq!(compare_number_string("1", "1"), Ordering::Equal);
+        assert_eq!(compare_number_string("1", "1.0"), Ordering::Equal);
+        assert_eq!(compare_number_string("1.000", "1.0"), Ordering::Equal);
+        assert_eq!(compare_number_string("1", "2"), Ordering::Less);
+        assert_eq!(compare_number_string("1.1", "2"), Ordering::Less);
+        assert_eq!(compare_number_string("-001.1000", "-1.1"), Ordering::Equal);
+    }
+
+    #[test]
+    fn test_number_components() {
+        assert_eq!(number_components("1"), (false, "1", ""));
+        assert_eq!(number_components("1.0"), (false, "1", ""));
+        assert_eq!(number_components("01"), (false, "1", ""));
+
+        assert_eq!(number_components("1.1"), (false, "1", "1"));
+        assert_eq!(number_components("1.100"), (false, "1", "1"));
+
+        assert_eq!(number_components("-1.1"), (true, "1", "1"));
+        assert_eq!(number_components("-01.100"), (true, "1", "1"));
     }
 }

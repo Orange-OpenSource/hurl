@@ -326,8 +326,10 @@ impl Value {
             serde_json::Value::Number(n) => {
                 if n.is_f64() {
                     Value::Number(Number::from(n.as_f64().unwrap()))
-                } else {
+                } else if n.is_i64() {
                     Value::Number(Number::from(n.as_i64().unwrap()))
+                } else {
+                    Value::Number(Number::String(n.to_string()))
                 }
             }
             serde_json::Value::String(s) => Value::String(s.to_string()),
@@ -520,6 +522,28 @@ pub mod tests {
                 }),
             },
         }
+    }
+
+    #[test]
+    pub fn value_from_json() {
+        let json_number: serde_json::Value = serde_json::from_str("1000").unwrap();
+        assert_eq!(
+            Value::from_json(&json_number),
+            Value::Number(Number::Integer(1000))
+        );
+
+        let json_number: serde_json::Value = serde_json::from_str("1.0").unwrap();
+        assert_eq!(
+            Value::from_json(&json_number),
+            Value::Number(Number::Float(1.0))
+        );
+
+        let json_number: serde_json::Value =
+            serde_json::from_str("1000000000000000000000").unwrap();
+        assert_eq!(
+            Value::from_json(&json_number),
+            Value::Number(Number::String("1000000000000000000000".to_string()))
+        )
     }
 
     #[test]

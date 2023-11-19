@@ -18,6 +18,7 @@
 
 use base64::engine::general_purpose;
 use base64::Engine;
+use std::str::FromStr;
 
 use crate::runner::{Number, Value};
 
@@ -66,6 +67,10 @@ impl Number {
             Number::Integer(v) => serde_json::Value::Number(serde_json::Number::from(*v)),
             Number::Float(f) => {
                 serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap())
+            }
+            Number::String(s) => {
+                let number = serde_json::Number::from_str(s).unwrap();
+                serde_json::Value::Number(number)
             }
         }
     }

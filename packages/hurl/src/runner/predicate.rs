@@ -135,6 +135,7 @@ impl Number {
         match self {
             Number::Float(f) => format!("float <{}>", format_float(*f)),
             Number::Integer(v) => format!("int <{v}>"),
+            Number::String(s) => format!("number <{s}>"),
         }
     }
 }
@@ -162,6 +163,7 @@ impl Number {
         match self {
             Number::Float(f) => format!("float <{}>", format_float(*f)),
             Number::Integer(value) => format!("integer <{value}>"),
+            Number::String(s) => format!("number <{s}>"),
         }
     }
 }
