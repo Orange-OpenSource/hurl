@@ -565,7 +565,7 @@ impl Client {
     fn set_form(&mut self, params: &[Param]) -> Result<(), HttpError> {
         if !params.is_empty() {
             let s = self.url_encode_params(params);
-            self.handle.post_fields_copy(s.as_str().as_bytes())?;
+            self.handle.post_fields_copy(s.as_bytes())?;
         }
         Ok(())
     }
