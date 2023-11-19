@@ -48,6 +48,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     let mut buf = String::new();
     let mut parser = new_sax_parser();
     let mut parser_context = ParserContext::new();
+    let mut initialized = false;
 
     // We use libxml SAX parser to identify the end of the XML body.
     // We feed the SAX parser chars by chars (Rust char), so chunks are UFT-8 bytes,
@@ -73,6 +74,17 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             let count = bytes.len() as c_int;
             let bytes = bytes.as_ptr() as *const c_char;
             let ret = xmlParseChunk(context, bytes, count, end);
+            match parser_context.state {
+                ParserState::StartDocument => initialized = true,
+                // libxml >= 2.12: end of document is raised at the exact byte position, we check
+                // that the document has been initialized to stop the parsing with success.
+                ParserState::EndDocument if initialized => break,
+                // libxml <= 2.12: end of the XML body is detected with a closing element event and
+                // depth of the tree. The end of document event is not always raised at the exact
+                // closing `>` position.
+                ParserState::EndElement if parser_context.depth == 0 => break,
+                _ => {}
+            }
             if ret != 0 {
                 xmlFreeParserCtxt(context);
                 return Err(Error {
@@ -80,15 +92,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
                     recoverable: false,
                     inner: ParseError::Xml,
                 });
-            }
-
-            // End of the XML body is detected with a closing element event and depth of the tree.
-            // There is also a closing document event but it's not always raised at the exact
-            // closing `>` position.
-            if std::matches!(parser_context.state, ParserState::EndElement)
-                && parser_context.depth == 0
-            {
-                break;
             }
         }
 
