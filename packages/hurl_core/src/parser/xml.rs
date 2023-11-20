@@ -137,8 +137,8 @@ fn new_sax_parser() -> libxml::bindings::xmlSAXHandler {
         setDocumentLocator: None,
         startDocument: Some(on_start_document),
         endDocument: Some(on_end_document),
-        startElement: Some(on_start_element),
-        endElement: Some(on_end_element),
+        startElement: None,
+        endElement: None,
         reference: None,
         characters: None,
         ignorableWhitespace: None,
@@ -152,8 +152,8 @@ fn new_sax_parser() -> libxml::bindings::xmlSAXHandler {
         externalSubset: None,
         initialized: libxml::bindings::XML_SAX2_MAGIC,
         _private: ptr::null_mut(),
-        startElementNs: None,
-        endElementNs: None,
+        startElementNs: Some(on_start_element),
+        endElementNs: Some(on_end_element),
         serror: None,
     }
 }
@@ -173,8 +173,14 @@ unsafe extern "C" fn on_end_document(ctx: *mut c_void) {
 /// Called when an opening tag has been processed.
 unsafe extern "C" fn on_start_element(
     ctx: *mut c_void,
-    _name: *const xmlChar,
-    _atts: *mut *const xmlChar,
+    _local_name: *const xmlChar,
+    _prefix: *const xmlChar,
+    _uri: *const xmlChar,
+    _nb_namespaces: c_int,
+    _namespaces: *mut *const xmlChar,
+    _nb_attributes: c_int,
+    _nb_defaulted: c_int,
+    _attributes: *mut *const xmlChar,
 ) {
     let context: &mut ParserContext = unsafe { &mut *(ctx as *mut ParserContext) };
     context.state = ParserState::StartElement;
@@ -182,7 +188,12 @@ unsafe extern "C" fn on_start_element(
 }
 
 /// Called when the end of an element has been detected.
-unsafe extern "C" fn on_end_element(ctx: *mut c_void, _name: *const xmlChar) {
+unsafe extern "C" fn on_end_element(
+    ctx: *mut c_void,
+    _local_name: *const xmlChar,
+    _prefix: *const xmlChar,
+    _uri: *const xmlChar,
+) {
     let context: &mut ParserContext = unsafe { &mut *(ctx as *mut ParserContext) };
     context.state = ParserState::EndElement;
     context.depth -= 1;
