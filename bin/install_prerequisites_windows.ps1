@@ -26,8 +26,24 @@ python -m pip install --upgrade pip --quiet
 if ($LASTEXITCODE) { Throw }
 
 # install proxy
+echo "==== install Squid"
 choco install --confirm squid --install-arguments="'TARGETDIR=C:\'"
 if ($LASTEXITCODE) { Throw }
-Get-ChildItem -Force C:\Squid\bin
-C:\Squid\bin\squid --version
+echo "==== create log dir integration\build"
+New-Item -ItemType Directory -Path integration\build -Force
+echo "==== Squid service status"
+sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
+echo "==== Squid process status"
+Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
+echo "==== Squid version"
+C:\Squid\bin\squid --version | tee -Append -filepath integration\build\proxy.log
+echo "==== stop Squid service and kill child process"
+taskkill /f /fi "SERVICES eq squidsrv" 2>&1 | tee -Append -filepath integration\build\proxy.log
 if ($LASTEXITCODE) { Throw }
+taskkill /f /IM squid.exe 2>&1 | tee -Append -filepath integration\build\proxy.log
+if ($LASTEXITCODE) { Throw }
+echo "==== Squid service status"
+sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
+echo "==== Squid process status"
+Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
+
