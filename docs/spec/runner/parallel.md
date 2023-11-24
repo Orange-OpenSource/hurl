@@ -57,6 +57,20 @@ stateDiagram-v2
 - `--repeat-all` TBD
 - ...
 
+## Console Output
+
+We need to defined what will be the output on stdout/stderr when running in parallel. We can take inspiration of 
+example of parallel execution from cargo issue [Console output should better reflect the build process](https://github.com/rust-lang/cargo/issues/8889)
+
+![buck build](https://user-images.githubusercontent.com/1940490/108307902-9dea2180-7163-11eb-9a4d-269d68d40d9f.gif)
+
+![bazel build](https://user-images.githubusercontent.com/1940490/108307921-a7738980-7163-11eb-80c0-4844d55a4390.gif)
+
+![https://asciinema.org/a/nMUGH5T2PiizxwK340n0DTW4M](https://camo.githubusercontent.com/fa245e2401ab21b30aa76cd07f877181a9a07be9be83d748f6c12d248e1024c0/68747470733a2f2f61736369696e656d612e6f72672f612f6e4d5547483554325069697a78774b3334306e30445457344d2e737667)
+
+TODO: make asciinema for different options. 
+
+
 ## Tools 
 
 ### wrk2 
