@@ -42,21 +42,21 @@ pub fn eval_query(
             expr: CookiePath { name, attribute },
             ..
         } => eval_query_cookie(http_response, &name, &attribute, variables),
-        QueryValue::Body => eval_query_body(http_response, &query.source_info),
+        QueryValue::Body => eval_query_body(http_response, query.source_info),
         QueryValue::Xpath { expr, .. } => {
-            eval_query_xpath(http_response, &expr, variables, &query.source_info)
+            eval_query_xpath(http_response, &expr, variables, query.source_info)
         }
         QueryValue::Jsonpath { expr, .. } => {
-            eval_query_jsonpath(http_response, &expr, variables, &query.source_info)
+            eval_query_jsonpath(http_response, &expr, variables, query.source_info)
         }
         QueryValue::Regex { value, .. } => {
-            eval_query_regex(http_response, &value, variables, &query.source_info)
+            eval_query_regex(http_response, &value, variables, query.source_info)
         }
         QueryValue::Variable { name, .. } => eval_query_variable(&name, variables),
         QueryValue::Duration => eval_query_duration(http_response),
-        QueryValue::Bytes => eval_query_bytes(http_response, &query.source_info),
-        QueryValue::Sha256 => eval_query_sha256(http_response, &query.source_info),
-        QueryValue::Md5 => eval_query_md5(http_response, &query.source_info),
+        QueryValue::Bytes => eval_query_bytes(http_response, query.source_info),
+        QueryValue::Sha256 => eval_query_sha256(http_response, query.source_info),
+        QueryValue::Md5 => eval_query_md5(http_response, query.source_info),
         QueryValue::Certificate {
             attribute_name: field,
             ..
@@ -115,12 +115,12 @@ fn eval_query_cookie(
     }
 }
 
-fn eval_query_body(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     // Can return a string if encoding is known and utf8.
     match response.text() {
         Ok(s) => Ok(Some(Value::String(s))),
         Err(inner) => Err(Error {
-            source_info: query_source_info.clone(),
+            source_info: query_source_info,
             inner: RunnerError::from(inner),
             assert: false,
         }),
@@ -131,11 +131,11 @@ fn eval_query_xpath(
     response: &http::Response,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
 ) -> QueryResult {
     match response.text() {
         Err(inner) => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::from(inner),
             assert: false,
         }),
@@ -149,11 +149,11 @@ fn eval_query_jsonpath(
     response: &http::Response,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    query_source_info: &SourceInfo,
+    query_source_info: SourceInfo,
 ) -> QueryResult {
     match response.text() {
         Err(inner) => Err(Error {
-            source_info: query_source_info.clone(),
+            source_info: query_source_info,
             inner: RunnerError::from(inner),
             assert: false,
         }),
@@ -165,12 +165,12 @@ fn eval_query_regex(
     response: &http::Response,
     regex: &RegexValue,
     variables: &HashMap<String, Value>,
-    query_source_info: &SourceInfo,
+    query_source_info: SourceInfo,
 ) -> QueryResult {
     let s = match response.text() {
         Err(inner) => {
             return Err(Error {
-                source_info: query_source_info.clone(),
+                source_info: query_source_info,
                 inner: RunnerError::from(inner),
                 assert: false,
             });
@@ -183,7 +183,7 @@ fn eval_query_regex(
             match Regex::new(value.as_str()) {
                 Ok(re) => re,
                 Err(_) => {
-                    let source_info = t.source_info.clone();
+                    let source_info = t.source_info;
                     return Err(Error {
                         source_info,
                         inner: RunnerError::InvalidRegex,
@@ -218,23 +218,23 @@ fn eval_query_duration(response: &http::Response) -> QueryResult {
     ))))
 }
 
-fn eval_query_bytes(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
         Err(inner) => Err(Error {
-            source_info: query_source_info.clone(),
+            source_info: query_source_info,
             inner: RunnerError::from(inner),
             assert: false,
         }),
     }
 }
 
-fn eval_query_sha256(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
             return Err(Error {
-                source_info: query_source_info.clone(),
+                source_info: query_source_info,
                 inner: RunnerError::from(inner),
                 assert: false,
             })
@@ -247,12 +247,12 @@ fn eval_query_sha256(response: &http::Response, query_source_info: &SourceInfo) 
     Ok(Some(bytes))
 }
 
-fn eval_query_md5(response: &http::Response, query_source_info: &SourceInfo) -> QueryResult {
+fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
             return Err(Error {
-                source_info: query_source_info.clone(),
+                source_info: query_source_info,
                 inner: RunnerError::from(inner),
                 assert: false,
             })

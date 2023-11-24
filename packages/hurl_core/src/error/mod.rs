@@ -29,8 +29,8 @@ pub trait Error {
 impl Error for parser::Error {
     fn source_info(&self) -> SourceInfo {
         SourceInfo {
-            start: self.pos.clone(),
-            end: self.pos.clone(),
+            start: self.pos,
+            end: self.pos,
         }
     }
 

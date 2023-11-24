@@ -109,7 +109,7 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
 }
 
 fn section_name(reader: &mut Reader) -> ParseResult<String> {
-    let pos = reader.state.pos.clone();
+    let pos = reader.state.pos;
     try_literal("[", reader)?;
     let name = reader.read_while(|c| c.is_alphanumeric());
     if name.is_empty() {
@@ -236,7 +236,7 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
             let space2 = Whitespace {
                 value: String::new(),
                 source_info: SourceInfo {
-                    start: save.pos.clone(),
+                    start: save.pos,
                     end: save.pos,
                 },
             };

@@ -27,7 +27,7 @@ use crate::parser::{expr, filename, ParseResult};
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let pos = reader.state.pos.clone();
+    let pos = reader.state.pos;
     let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
@@ -204,7 +204,7 @@ fn option_very_verbose(reader: &mut Reader) -> ParseResult<OptionKind> {
 }
 
 fn retry(reader: &mut Reader) -> ParseResult<Retry> {
-    let pos = reader.state.pos.clone();
+    let pos = reader.state.pos;
     let value = nonrecover(integer, reader)?;
     if value == -1 {
         Ok(Retry::Infinite)

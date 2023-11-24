@@ -52,13 +52,13 @@ fn check_request(request: &Request) -> Vec<Error> {
     let mut errors = vec![];
     if !request.space0.value.is_empty() {
         errors.push(Error {
-            source_info: request.space0.source_info.clone(),
+            source_info: request.space0.source_info,
             inner: LinterError::UnnecessarySpace,
         });
     }
     if request.space1.value != " " {
         errors.push(Error {
-            source_info: request.space1.source_info.clone(),
+            source_info: request.space1.source_info,
             inner: LinterError::OneSpace,
         });
     }
@@ -100,7 +100,7 @@ fn check_response(response: &Response) -> Vec<Error> {
     let mut errors = vec![];
     if !response.space0.value.is_empty() {
         errors.push(Error {
-            source_info: response.space0.source_info.clone(),
+            source_info: response.space0.source_info,
             inner: LinterError::UnnecessarySpace,
         });
     }
@@ -574,7 +574,7 @@ fn check_line_terminator(line_terminator: &LineTerminator) -> Vec<Error> {
         None => {
             if !line_terminator.space0.value.is_empty() {
                 errors.push(Error {
-                    source_info: line_terminator.space0.source_info.clone(),
+                    source_info: line_terminator.space0.source_info,
                     inner: LinterError::UnnecessarySpace,
                 });
             }

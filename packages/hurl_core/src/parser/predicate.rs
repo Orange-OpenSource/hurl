@@ -39,8 +39,8 @@ fn predicate_not(reader: &mut Reader) -> (bool, Whitespace) {
     let no_whitespace = Whitespace {
         value: String::new(),
         source_info: SourceInfo {
-            start: save.pos.clone(),
-            end: save.pos.clone(),
+            start: save.pos,
+            end: save.pos,
         },
     };
     if try_literal("not", reader).is_ok() {

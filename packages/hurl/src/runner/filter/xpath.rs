@@ -26,7 +26,7 @@ pub fn eval_xpath(
     value: &Value,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -36,7 +36,7 @@ pub fn eval_xpath(
             eval_xpath_string(xml, expr, variables, source_info, is_html)
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),
@@ -47,7 +47,7 @@ pub fn eval_xpath_string(
     xml: &str,
     expr_template: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     is_html: bool,
 ) -> Result<Option<Value>, Error> {
     let expr = eval_template(expr_template, variables)?;
@@ -59,17 +59,17 @@ pub fn eval_xpath_string(
     match result {
         Ok(value) => Ok(Some(value)),
         Err(xpath::XpathError::InvalidXml) => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::QueryInvalidXml,
             assert: false,
         }),
         Err(xpath::XpathError::InvalidHtml) => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::QueryInvalidXml,
             assert: false,
         }),
         Err(xpath::XpathError::Eval) => Err(Error {
-            source_info: expr_template.source_info.clone(),
+            source_info: expr_template.source_info,
             inner: RunnerError::QueryInvalidXpathEval,
             assert: false,
         }),

@@ -25,7 +25,7 @@ use crate::runner::{Error, RunnerError, Value};
 // like Jinja template (https://jinja.palletsprojects.com/en/3.1.x/templates/#jinja-filters.urlencode)
 pub fn eval_url_encode(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -40,7 +40,7 @@ pub fn eval_url_encode(
             Ok(Some(Value::String(encoded)))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

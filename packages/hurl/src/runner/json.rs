@@ -83,7 +83,7 @@ pub fn eval_json_value(
                 return Ok(s);
             }
             Err(Error {
-                source_info: exp.variable.source_info.clone(),
+                source_info: exp.variable.source_info,
                 inner: RunnerError::InvalidJson { value: s },
                 assert: false,
             })

@@ -28,7 +28,7 @@ pub fn eval_to_date(
     value: &Value,
     fmt: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     let fmt = eval_template(fmt, variables)?;
@@ -39,13 +39,13 @@ pub fn eval_to_date(
                 v.and_local_timezone(chrono::Utc).unwrap(),
             ))),
             Err(_) => Err(Error {
-                source_info: source_info.clone(),
+                source_info,
                 inner: RunnerError::FilterInvalidInput(value.display()),
                 assert,
             }),
         },
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),

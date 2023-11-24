@@ -94,8 +94,8 @@ pub fn run(
             let runner_error = RunnerError::from(http_error);
             let error = Error {
                 source_info: SourceInfo {
-                    start: entry.request.url.source_info.start.clone(),
-                    end: entry.request.url.source_info.end.clone(),
+                    start: entry.request.url.source_info.start,
+                    end: entry.request.url.source_info.end,
                 },
                 inner: runner_error,
                 assert: false,

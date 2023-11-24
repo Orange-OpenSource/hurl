@@ -24,7 +24,7 @@ use crate::runner::{Error, Number, RunnerError, Value};
 
 pub fn eval_days_after_now(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -33,7 +33,7 @@ pub fn eval_days_after_now(
             Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

@@ -24,9 +24,9 @@ use crate::parser::string::*;
 use crate::parser::{Error, ParseError, ParseResult};
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let value = query_value(reader)?;
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     Ok(Query {
         source_info: SourceInfo { start, end },
         value,
@@ -75,7 +75,7 @@ fn header_query(reader: &mut Reader) -> ParseResult<QueryValue> {
 fn cookie_query(reader: &mut Reader) -> ParseResult<QueryValue> {
     try_literal("cookie", reader)?;
     let space0 = one_or_more_spaces(reader)?;
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let s = quoted_oneline_string(reader)?;
     // todo should work with an encodedString in order to support escape sequence
     // or decode escape sequence with the cookiepath parser
@@ -206,7 +206,7 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
         let value =
             "Field <Subject>, <Issuer>,<Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
         let inner = ParseError::Expecting { value };
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         Err(Error {
             pos,
             recoverable: false,

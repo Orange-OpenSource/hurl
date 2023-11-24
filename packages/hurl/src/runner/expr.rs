@@ -29,7 +29,7 @@ pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Valu
         Ok(value.clone())
     } else {
         Err(Error {
-            source_info: expr.variable.source_info.clone(),
+            source_info: expr.variable.source_info,
             inner: RunnerError::TemplateVariableNotDefined {
                 name: expr.variable.name.clone(),
             },

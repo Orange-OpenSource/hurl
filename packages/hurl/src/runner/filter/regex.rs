@@ -27,7 +27,7 @@ pub fn eval_regex(
     value: &Value,
     regex_value: &RegexValue,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     let re = eval_regex_value(regex_value, variables)?;
@@ -40,7 +40,7 @@ pub fn eval_regex(
             None => Ok(None),
         },
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

@@ -55,7 +55,7 @@ pub fn eval_filters(
             eval_filter(filter, &value, variables, in_assert)?
         } else {
             return Err(Error {
-                source_info: filter.source_info.clone(),
+                source_info: filter.source_info,
                 inner: RunnerError::FilterMissingInput,
                 assert: in_assert,
             });
@@ -71,30 +71,24 @@ pub fn eval_filter(
     in_assert: bool,
 ) -> Result<Option<Value>, Error> {
     match &filter.value {
-        FilterValue::Count => eval_count(value, &filter.source_info, in_assert),
-        FilterValue::DaysAfterNow => eval_days_after_now(value, &filter.source_info, in_assert),
-        FilterValue::DaysBeforeNow => eval_days_before_now(value, &filter.source_info, in_assert),
+        FilterValue::Count => eval_count(value, filter.source_info, in_assert),
+        FilterValue::DaysAfterNow => eval_days_after_now(value, filter.source_info, in_assert),
+        FilterValue::DaysBeforeNow => eval_days_before_now(value, filter.source_info, in_assert),
         FilterValue::Decode { encoding, .. } => {
-            eval_decode(value, encoding, variables, &filter.source_info, in_assert)
+            eval_decode(value, encoding, variables, filter.source_info, in_assert)
         }
         FilterValue::Format { fmt, .. } => {
-            eval_format(value, fmt, variables, &filter.source_info, in_assert)
+            eval_format(value, fmt, variables, filter.source_info, in_assert)
         }
-        FilterValue::HtmlEscape => eval_html_escape(value, &filter.source_info, in_assert),
-        FilterValue::HtmlUnescape => eval_html_unescape(value, &filter.source_info, in_assert),
+        FilterValue::HtmlEscape => eval_html_escape(value, filter.source_info, in_assert),
+        FilterValue::HtmlUnescape => eval_html_unescape(value, filter.source_info, in_assert),
         FilterValue::JsonPath { expr, .. } => {
-            eval_jsonpath(value, expr, variables, &filter.source_info, in_assert)
+            eval_jsonpath(value, expr, variables, filter.source_info, in_assert)
         }
         FilterValue::Regex {
             value: regex_value, ..
-        } => eval_regex(
-            value,
-            regex_value,
-            variables,
-            &filter.source_info,
-            in_assert,
-        ),
-        FilterValue::Nth { n, .. } => eval_nth(value, &filter.source_info, in_assert, *n),
+        } => eval_regex(value, regex_value, variables, filter.source_info, in_assert),
+        FilterValue::Nth { n, .. } => eval_nth(value, filter.source_info, in_assert, *n),
         FilterValue::Replace {
             old_value,
             new_value,
@@ -102,22 +96,22 @@ pub fn eval_filter(
         } => eval_replace(
             value,
             variables,
-            &filter.source_info,
+            filter.source_info,
             in_assert,
             old_value,
             new_value,
         ),
         FilterValue::Split { sep, .. } => {
-            eval_split(value, variables, &filter.source_info, in_assert, sep)
+            eval_split(value, variables, filter.source_info, in_assert, sep)
         }
         FilterValue::ToDate { fmt, .. } => {
-            eval_to_date(value, fmt, variables, &filter.source_info, in_assert)
+            eval_to_date(value, fmt, variables, filter.source_info, in_assert)
         }
-        FilterValue::ToInt => eval_to_int(value, &filter.source_info, in_assert),
-        FilterValue::UrlDecode => eval_url_decode(value, &filter.source_info, in_assert),
-        FilterValue::UrlEncode => eval_url_encode(value, &filter.source_info, in_assert),
+        FilterValue::ToInt => eval_to_int(value, filter.source_info, in_assert),
+        FilterValue::UrlDecode => eval_url_decode(value, filter.source_info, in_assert),
+        FilterValue::UrlEncode => eval_url_encode(value, filter.source_info, in_assert),
         FilterValue::XPath { expr, .. } => {
-            eval_xpath(value, expr, variables, &filter.source_info, in_assert)
+            eval_xpath(value, expr, variables, filter.source_info, in_assert)
         }
     }
 }

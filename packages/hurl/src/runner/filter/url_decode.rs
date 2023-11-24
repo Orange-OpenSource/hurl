@@ -22,7 +22,7 @@ use crate::runner::{Error, RunnerError, Value};
 
 pub fn eval_url_decode(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -30,14 +30,14 @@ pub fn eval_url_decode(
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
                 Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
                 Err(_) => Err(Error {
-                    source_info: source_info.clone(),
+                    source_info,
                     inner: RunnerError::FilterInvalidInput("Invalid UTF8 stream".to_string()),
                     assert,
                 }),
             }
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

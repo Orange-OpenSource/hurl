@@ -48,7 +48,7 @@ pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
 }
 
 pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let value = choice(
         &[
             count_filter,
@@ -84,7 +84,7 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
             e
         }
     })?;
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     let source_info = SourceInfo { start, end };
     Ok(Filter { source_info, value })
 }

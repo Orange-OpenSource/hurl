@@ -26,7 +26,7 @@ use crate::runner::{Error, RunnerError, Value};
 pub fn eval_replace(
     value: &Value,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
     old_value: &RegexValue,
     new_value: &Template,
@@ -39,7 +39,7 @@ pub fn eval_replace(
             Ok(Some(Value::String(s)))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),

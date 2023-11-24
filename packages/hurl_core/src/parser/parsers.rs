@@ -125,7 +125,7 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
 fn method(reader: &mut Reader) -> ParseResult<Method> {
     if reader.is_eof() {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: true,
             inner: ParseError::Method {
                 name: "<EOF>".to_string(),
@@ -196,7 +196,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
 }
 
 fn status(reader: &mut Reader) -> ParseResult<Status> {
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let value = match try_literal("*", reader) {
         Ok(_) => StatusValue::Any,
         Err(_) => match natural(reader) {
@@ -210,7 +210,7 @@ fn status(reader: &mut Reader) -> ParseResult<Status> {
             }
         },
     };
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     Ok(Status {
         value,
         source_info: SourceInfo { start, end },

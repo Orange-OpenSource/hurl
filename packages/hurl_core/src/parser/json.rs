@@ -43,7 +43,7 @@ fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
     if let Some(c) = reader.peek() {
         if c == ',' {
             return Err(Error {
-                pos: reader.state.pos.clone(),
+                pos: reader.state.pos,
                 recoverable: false,
                 inner: error::ParseError::Json(JsonErrorVariant::EmptyElement),
             });
@@ -90,7 +90,7 @@ fn string_template(reader: &mut Reader) -> ParseResult<Template> {
     try_literal("\"", reader)?;
     let delimiter = Some('"');
     let mut chars = vec![];
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     loop {
         if reader.peek() == Some('"') || reader.is_eof() {
             break;
@@ -98,13 +98,10 @@ fn string_template(reader: &mut Reader) -> ParseResult<Template> {
         let char = any_char(reader)?;
         chars.push(char);
     }
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
 
     let encoded_string = EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end: end.clone(),
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
     literal("\"", reader)?;
@@ -229,10 +226,10 @@ pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
         Ok(_) => {
             let digits = reader.read_while(|c| c.is_ascii_digit());
             if digits.is_empty() {
-                return Err(error::Error {
-                    pos: reader.state.pos.clone(),
+                return Err(Error {
+                    pos: reader.state.pos,
                     recoverable: false,
-                    inner: error::ParseError::Expecting {
+                    inner: ParseError::Expecting {
                         value: "digits".to_string(),
                     },
                 });
@@ -289,7 +286,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             }
             // The reader advances after literal(","), so this saves its position to report an
             // error in case it happens.
-            let save = reader.state.pos.clone();
+            let save = reader.state.pos;
             literal(",", reader)?;
             // If there is one more comma, e.g. [1, 2,], it's better to report to the user because
             // this occurance is common.
@@ -339,7 +336,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
             }
             // The reader advances after literal(","), so this saves its position to report an
             // error in case it happens.
-            let save = reader.state.pos.clone();
+            let save = reader.state.pos;
             literal(",", reader)?;
             // If there is one more comma, e.g. {"a": "b",}, it's better to report to the user
             // because this occurance is common.
@@ -383,7 +380,7 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
     //literal("\"", reader)?;
     let space1 = whitespace(reader);
     literal(":", reader)?;
-    let save = reader.state.pos.clone();
+    let save = reader.state.pos;
     let space2 = whitespace(reader);
     // Checks if there is no element after ':'. In this case, a special error must be reported
     // because this is a common occurance.

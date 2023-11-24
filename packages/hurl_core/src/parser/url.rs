@@ -39,7 +39,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
 
     if !url_prefix_valid(reader) {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::UrlInvalidStart,
         });
@@ -114,7 +114,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
         reader.state = save;
         let c = reader.peek().unwrap();
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::UrlIllegalCharacter(c),
         });

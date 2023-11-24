@@ -24,7 +24,7 @@ use crate::parser::string::*;
 use crate::parser::ParseResult;
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let s = reader.read_while(|c| *c != '[');
     let mut template_reader = Reader::new(s.as_str());
     template_reader.state.pos = start;
@@ -47,7 +47,7 @@ fn cookiepath_attribute(reader: &mut Reader) -> ParseResult<CookieAttribute> {
 }
 
 fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttributeName> {
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let s = reader.read_while(|c| c.is_alphabetic() || *c == '-');
     match s.to_lowercase().as_str() {
         "value" => Ok(CookieAttributeName::Value(s)),

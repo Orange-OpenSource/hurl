@@ -22,7 +22,7 @@ use crate::runner::{Error, Number, RunnerError, Value};
 
 pub fn eval_to_int(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -31,13 +31,13 @@ pub fn eval_to_int(
         Value::String(v) => match v.parse::<i64>() {
             Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
             _ => Err(Error {
-                source_info: source_info.clone(),
+                source_info,
                 inner: RunnerError::FilterInvalidInput(value.display()),
                 assert,
             }),
         },
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),

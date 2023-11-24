@@ -93,7 +93,7 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
                     let mut reader = Reader::new(encoded.as_str());
                     reader.state = ReaderState {
                         cursor: 0,
-                        pos: expression_start.unwrap().clone(),
+                        pos: expression_start.unwrap(),
                     };
                     let expression = expr::parse2(&mut reader)?;
                     elements.push(TemplateElement::Expression(expression));

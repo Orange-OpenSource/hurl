@@ -43,7 +43,7 @@ impl AssertResult {
                     None
                 } else {
                     Some(Error {
-                        source_info: source_info.clone(),
+                        source_info: *source_info,
                         inner: RunnerError::AssertVersion {
                             actual: actual.clone(),
                         },
@@ -60,7 +60,7 @@ impl AssertResult {
                     None
                 } else {
                     Some(Error {
-                        source_info: source_info.clone(),
+                        source_info: *source_info,
                         inner: RunnerError::AssertStatus {
                             actual: actual.to_string(),
                         },
@@ -79,7 +79,7 @@ impl AssertResult {
                         None
                     } else {
                         Some(Error {
-                            source_info: source_info.clone(),
+                            source_info: *source_info,
                             inner: RunnerError::AssertHeaderValueError { actual: s.clone() },
                             assert: false,
                         })
@@ -101,7 +101,7 @@ impl AssertResult {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
                             Some(Error {
-                                source_info: source_info.clone(),
+                                source_info: *source_info,
                                 inner: RunnerError::AssertBodyValueError { actual, expected },
                                 assert: false,
                             })
@@ -146,8 +146,7 @@ pub fn eval_assert(
                     .first()
                     .expect("at least one filter")
                     .1
-                    .source_info
-                    .clone(),
+                    .source_info,
                 inner: RunnerError::FilterMissingInput,
                 assert: true,
             }),
@@ -163,7 +162,7 @@ pub fn eval_assert(
         query_result
     };
 
-    let source_info = &assert.predicate.predicate_func.source_info;
+    let source_info = assert.predicate.predicate_func.source_info;
     let predicate_result = match &actual {
         Err(_) => None,
         Ok(actual) => Some(eval_predicate(&assert.predicate, variables, actual)),
@@ -171,7 +170,7 @@ pub fn eval_assert(
 
     AssertResult::Explicit {
         actual,
-        source_info: source_info.clone(),
+        source_info,
         predicate_result,
     }
 }

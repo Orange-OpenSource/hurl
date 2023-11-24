@@ -294,7 +294,7 @@ fn eval_predicate_func(
         } => eval_include(expected, variables, value),
         PredicateFuncValue::Match {
             value: expected, ..
-        } => eval_match(expected, &predicate_func.source_info, variables, value),
+        } => eval_match(expected, predicate_func.source_info, variables, value),
         PredicateFuncValue::IsInteger => eval_is_integer(value),
         PredicateFuncValue::IsFloat => eval_is_float(value),
         PredicateFuncValue::IsBoolean => eval_is_boolean(value),
@@ -476,7 +476,7 @@ fn eval_include(
 /// Evaluates if an `expected` regex (using a `variables` set) matches an `actual` value.
 fn eval_match(
     expected: &PredicateValue,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     variables: &HashMap<String, Value>,
     actual: &Value,
 ) -> Result<AssertResult, Error> {
@@ -487,7 +487,7 @@ fn eval_match(
                 Ok(re) => re,
                 Err(_) => {
                     return Err(Error {
-                        source_info: source_info.clone(),
+                        source_info,
                         inner: RunnerError::InvalidRegex,
                         assert: false,
                     });
@@ -1457,7 +1457,7 @@ mod tests {
         });
         let value = Value::String("aa".to_string());
         let source_info = SourceInfo::new(0, 0, 0, 0);
-        let assert_result = eval_match(&expected, &source_info, &variables, &value).unwrap();
+        let assert_result = eval_match(&expected, source_info, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "string <aa>");

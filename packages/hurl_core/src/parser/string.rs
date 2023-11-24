@@ -32,7 +32,7 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
     let mut spaces = vec![];
     let mut end = start.clone();
     loop {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         match any_char(vec!['#'], reader) {
             Err(e) => {
                 if e.recoverable {
@@ -61,8 +61,8 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
     reader.state = end.clone();
     let encoded_string = template::EncodedString {
         source_info: SourceInfo {
-            start: start.pos.clone(),
-            end: end.pos.clone(),
+            start: start.pos,
+            end: end.pos,
         },
         chars,
     };
@@ -88,11 +88,11 @@ pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<String> {
 
 pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.state.clone().pos;
-    let mut end = start.clone();
+    let mut end = start;
     try_literal("\"", reader)?;
     let mut chars = vec![];
     loop {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         let save = reader.state.clone();
         match any_char(vec!['"'], reader) {
             Err(e) => {
@@ -111,10 +111,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
     }
     literal("\"", reader)?;
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end,
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
     let elements = template::templatize(encoded_string)?;
@@ -123,7 +120,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
         elements,
         source_info: SourceInfo {
             start,
-            end: reader.state.pos.clone(),
+            end: reader.state.pos,
         },
     })
 }
@@ -131,11 +128,11 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
 pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     let delimiter = Some('`');
     let start = reader.state.clone().pos;
-    let mut end = start.clone();
+    let mut end = start;
     try_literal("`", reader)?;
     let mut chars = vec![];
     loop {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         let save = reader.state.clone();
         match any_char(vec!['`', '\n'], reader) {
             Err(e) => {
@@ -154,10 +151,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     }
     literal("`", reader)?;
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end,
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
     let elements = template::templatize(encoded_string)?;
@@ -166,7 +160,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
         elements,
         source_info: SourceInfo {
             start,
-            end: reader.state.pos.clone(),
+            end: reader.state.pos,
         },
     })
 }

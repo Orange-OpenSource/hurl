@@ -25,7 +25,7 @@ use crate::runner::{Error, RunnerError, Value};
 pub fn eval_split(
     value: &Value,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
     sep: &Template,
 ) -> Result<Option<Value>, Error> {
@@ -39,7 +39,7 @@ pub fn eval_split(
             Ok(Some(Value::List(values)))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),

@@ -27,13 +27,13 @@ pub fn eval_jsonpath(
     value: &Value,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
         Value::String(json) => eval_jsonpath_string(json, expr, variables, source_info),
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),
@@ -44,7 +44,7 @@ pub fn eval_jsonpath_string(
     json: &str,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
 ) -> Result<Option<Value>, Error> {
     let value = eval_template(expr, variables)?;
     let expr_source_info = &expr.source_info;
@@ -52,7 +52,7 @@ pub fn eval_jsonpath_string(
         Ok(q) => q,
         Err(_) => {
             return Err(Error {
-                source_info: expr_source_info.clone(),
+                source_info: *expr_source_info,
                 inner: RunnerError::QueryInvalidJsonpathExpression { value },
                 assert: false,
             });
@@ -61,7 +61,7 @@ pub fn eval_jsonpath_string(
     let value = match serde_json::from_str(json) {
         Err(_) => {
             return Err(Error {
-                source_info: source_info.clone(),
+                source_info,
                 inner: RunnerError::QueryInvalidJson,
                 assert: false,
             });

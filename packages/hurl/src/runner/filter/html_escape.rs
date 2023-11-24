@@ -23,7 +23,7 @@ use crate::runner::{Error, RunnerError, Value};
 
 pub fn eval_html_escape(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     match value {
@@ -32,7 +32,7 @@ pub fn eval_html_escape(
             Ok(Some(Value::String(encoded)))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

@@ -33,7 +33,7 @@ pub fn eval_regex_value(
             match Regex::new(value.as_str()) {
                 Ok(re) => Ok(re),
                 Err(_) => Err(Error {
-                    source_info: t.source_info.clone(),
+                    source_info: t.source_info,
                     inner: RunnerError::InvalidRegex,
                     assert: false,
                 }),

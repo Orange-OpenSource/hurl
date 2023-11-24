@@ -39,7 +39,7 @@ pub fn eval_capture(
     let value = match value {
         None => {
             return Err(Error {
-                source_info: capture.query.source_info.clone(),
+                source_info: capture.query.source_info,
                 inner: RunnerError::NoQueryResult,
                 assert: false,
             });
@@ -49,7 +49,7 @@ pub fn eval_capture(
             match eval_filters(&filters, &value, variables, false)? {
                 None => {
                     return Err(Error {
-                        source_info: capture.query.source_info.clone(),
+                        source_info: capture.query.source_info,
                         inner: RunnerError::NoQueryResult,
                         assert: false,
                     })

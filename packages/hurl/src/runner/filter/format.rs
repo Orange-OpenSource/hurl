@@ -26,7 +26,7 @@ pub fn eval_format(
     value: &Value,
     fmt: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     let fmt = eval_template(fmt, variables)?;
@@ -37,7 +37,7 @@ pub fn eval_format(
             Ok(Some(Value::String(formatted)))
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

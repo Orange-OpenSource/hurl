@@ -659,13 +659,13 @@ impl PartialEq for Regex {
 }
 impl Eq for Regex {}
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Pos {
     pub line: usize,
     pub column: usize,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct SourceInfo {
     pub start: Pos,
     pub end: Pos,

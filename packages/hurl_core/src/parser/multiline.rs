@@ -82,13 +82,13 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
 
     let mut chars = vec![];
 
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
         if c == '\n' {
-            let end = reader.state.pos.clone();
+            let end = reader.state.pos;
             let variables = optional(graphql_variables, reader)?;
             match variables {
                 None => continue,
@@ -96,10 +96,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
                     literal("```", reader)?;
 
                     let encoded_string = template::EncodedString {
-                        source_info: SourceInfo {
-                            start: start.clone(),
-                            end: end.clone(),
-                        },
+                        source_info: SourceInfo { start, end },
                         chars: chars.clone(),
                     };
 
@@ -120,14 +117,11 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
             }
         }
     }
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end: end.clone(),
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
 
@@ -232,20 +226,17 @@ fn plain_text(reader: &mut Reader) -> ParseResult<MultilineString> {
 fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         let c = reader.read().unwrap();
         chars.push((c, c.to_string(), pos));
     }
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end: end.clone(),
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
 
@@ -261,9 +252,9 @@ fn multiline_string_value(reader: &mut Reader) -> ParseResult<Template> {
 fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
     let mut chars = vec![];
 
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     while reader.peek_n(3) != "```" && !reader.is_eof() {
-        let pos = reader.state.pos.clone();
+        let pos = reader.state.pos;
         let c = reader.read().unwrap();
         if c == '\n' {
             return Err(Error {
@@ -274,14 +265,11 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
         }
         chars.push((c, c.to_string(), pos));
     }
-    let end = reader.state.pos.clone();
+    let end = reader.state.pos;
     literal("```", reader)?;
 
     let encoded_string = template::EncodedString {
-        source_info: SourceInfo {
-            start: start.clone(),
-            end: end.clone(),
-        },
+        source_info: SourceInfo { start, end },
         chars,
     };
 

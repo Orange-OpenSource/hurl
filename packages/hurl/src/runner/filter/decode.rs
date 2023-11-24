@@ -28,7 +28,7 @@ pub fn eval_decode(
     value: &Value,
     encoding_value: &Template,
     variables: &HashMap<String, Value>,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
 ) -> Result<Option<Value>, Error> {
     let encoding_value = eval_template(encoding_value, variables)?;
@@ -36,14 +36,14 @@ pub fn eval_decode(
         Value::Bytes(value) => {
             match encoding::label::encoding_from_whatwg_label(encoding_value.as_str()) {
                 None => Err(Error {
-                    source_info: source_info.clone(),
+                    source_info,
                     inner: RunnerError::FilterInvalidEncoding(encoding_value),
                     assert,
                 }),
                 Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
                     Ok(decoded) => Ok(Some(Value::String(decoded))),
                     Err(_) => Err(Error {
-                        source_info: source_info.clone(),
+                        source_info,
                         inner: RunnerError::FilterDecode(encoding_value),
                         assert,
                     }),
@@ -51,7 +51,7 @@ pub fn eval_decode(
             }
         }
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v._type()),
             assert,
         }),

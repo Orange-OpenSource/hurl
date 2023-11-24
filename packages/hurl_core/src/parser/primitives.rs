@@ -318,7 +318,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
     }
     if current != -1 {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::OddNumberOfHexDigits,
         });
@@ -337,7 +337,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
 
 pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     try_literal("/", reader)?;
-    let start = reader.state.pos.clone();
+    let start = reader.state.pos;
     let mut s = String::new();
 
     // Hurl escaping /
@@ -350,7 +350,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
         match reader.read() {
             None => {
                 return Err(Error {
-                    pos: reader.state.pos.clone(),
+                    pos: reader.state.pos,
                     recoverable: false,
                     inner: ParseError::Eof,
                 })

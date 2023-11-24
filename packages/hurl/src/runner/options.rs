@@ -258,7 +258,7 @@ fn eval_boolean_option(
         BooleanOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Bool(value) => Ok(value),
             v => Err(Error {
-                source_info: expr.variable.source_info.clone(),
+                source_info: expr.variable.source_info,
                 inner: RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
@@ -280,7 +280,7 @@ fn eval_natural_option(
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
                     Err(Error {
-                        source_info: expr.variable.source_info.clone(),
+                        source_info: expr.variable.source_info,
                         inner: RunnerError::TemplateVariableInvalidType {
                             name: expr.variable.name.clone(),
                             value: value.to_string(),
@@ -293,7 +293,7 @@ fn eval_natural_option(
                 }
             }
             v => Err(Error {
-                source_info: expr.variable.source_info.clone(),
+                source_info: expr.variable.source_info,
                 inner: RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
@@ -321,7 +321,7 @@ fn eval_retry_option(
                     Ok(Retry::Finite(value as usize))
                 } else {
                     Err(Error {
-                        source_info: expr.variable.source_info.clone(),
+                        source_info: expr.variable.source_info,
                         inner: RunnerError::TemplateVariableInvalidType {
                             name: expr.variable.name.clone(),
                             value: value.to_string(),
@@ -332,7 +332,7 @@ fn eval_retry_option(
                 }
             }
             v => Err(Error {
-                source_info: expr.variable.source_info.clone(),
+                source_info: expr.variable.source_info,
                 inner: RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),

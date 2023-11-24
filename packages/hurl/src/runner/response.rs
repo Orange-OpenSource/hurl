@@ -43,7 +43,7 @@ pub fn eval_version_status_asserts(
     asserts.push(AssertResult::Version {
         actual: http_response.version.to_string(),
         expected: version.value.to_string(),
-        source_info: version.source_info.clone(),
+        source_info: version.source_info,
     });
 
     let status = &response.status;
@@ -51,7 +51,7 @@ pub fn eval_version_status_asserts(
         asserts.push(AssertResult::Status {
             actual: http_response.status as u64,
             expected: v,
-            source_info: status.source_info.clone(),
+            source_info: status.source_info,
         });
     }
     asserts
@@ -85,12 +85,12 @@ pub fn eval_asserts(
                         if actuals.is_empty() {
                             asserts.push(AssertResult::Header {
                                 actual: Err(Error {
-                                    source_info: header.key.source_info.clone(),
+                                    source_info: header.key.source_info,
                                     inner: RunnerError::QueryHeaderNotFound,
                                     assert: false,
                                 }),
                                 expected,
-                                source_info: header.key.source_info.clone(),
+                                source_info: header.key.source_info,
                             });
                         } else if actuals.len() == 1 {
                             let actual = actuals.first().unwrap().to_string();
@@ -165,8 +165,8 @@ fn eval_implicit_body_asserts(
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -175,7 +175,7 @@ fn eval_implicit_body_asserts(
             AssertResult::Body {
                 actual,
                 expected,
-                source_info: spec_body.space0.source_info.clone(),
+                source_info: spec_body.space0.source_info,
             }
         }
         Bytes::Xml(value) => {
@@ -184,8 +184,8 @@ fn eval_implicit_body_asserts(
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -194,7 +194,7 @@ fn eval_implicit_body_asserts(
             AssertResult::Body {
                 actual,
                 expected,
-                source_info: spec_body.space0.source_info.clone(),
+                source_info: spec_body.space0.source_info,
             }
         }
         Bytes::OnelineString(value) => {
@@ -206,8 +206,8 @@ fn eval_implicit_body_asserts(
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -216,7 +216,7 @@ fn eval_implicit_body_asserts(
             AssertResult::Body {
                 actual,
                 expected,
-                source_info: value.source_info.clone(),
+                source_info: value.source_info,
             }
         }
         Bytes::MultilineString(multi) => {
@@ -228,8 +228,8 @@ fn eval_implicit_body_asserts(
                 Ok(s) => Ok(Value::String(s)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -252,8 +252,8 @@ fn eval_implicit_body_asserts(
                 Ok(b) => Ok(Value::Bytes(b)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -263,8 +263,8 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: SourceInfo {
-                    start: space0.source_info.end.clone(),
-                    end: space1.source_info.start.clone(),
+                    start: space0.source_info.end,
+                    end: space1.source_info.start,
                 },
             }
         }
@@ -279,8 +279,8 @@ fn eval_implicit_body_asserts(
                 Ok(b) => Ok(Value::Bytes(b)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -290,8 +290,8 @@ fn eval_implicit_body_asserts(
                 actual,
                 expected,
                 source_info: SourceInfo {
-                    start: space0.source_info.end.clone(),
-                    end: space1.source_info.start.clone(),
+                    start: space0.source_info.end,
+                    end: space1.source_info.start,
                 },
             }
         }
@@ -304,8 +304,8 @@ fn eval_implicit_body_asserts(
                 Ok(b) => Ok(Value::Bytes(b)),
                 Err(e) => Err(Error {
                     source_info: SourceInfo {
-                        start: spec_body.space0.source_info.end.clone(),
-                        end: spec_body.space0.source_info.end.clone(),
+                        start: spec_body.space0.source_info.end,
+                        end: spec_body.space0.source_info.end,
                     },
                     inner: RunnerError::from(e),
                     assert: true,
@@ -314,7 +314,7 @@ fn eval_implicit_body_asserts(
             AssertResult::Body {
                 actual,
                 expected,
-                source_info: spec_body.space0.source_info.clone(),
+                source_info: spec_body.space0.source_info,
             }
         }
     }

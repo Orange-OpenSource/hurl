@@ -75,14 +75,14 @@ pub enum JsonErrorVariant {
 impl Error {
     pub fn recoverable(&self) -> Error {
         Error {
-            pos: self.pos.clone(),
+            pos: self.pos,
             recoverable: true,
             inner: self.inner.clone(),
         }
     }
     pub fn non_recoverable(&self) -> Error {
         Error {
-            pos: self.pos.clone(),
+            pos: self.pos,
             recoverable: false,
             inner: self.inner.clone(),
         }

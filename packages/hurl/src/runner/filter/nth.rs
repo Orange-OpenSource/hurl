@@ -22,14 +22,14 @@ use crate::runner::{Error, RunnerError, Value};
 
 pub fn eval_nth(
     value: &Value,
-    source_info: &SourceInfo,
+    source_info: SourceInfo,
     assert: bool,
     n: u64,
 ) -> Result<Option<Value>, Error> {
     match value {
         Value::List(values) => match values.get(n as usize) {
             None => Err(Error {
-                source_info: source_info.clone(),
+                source_info,
                 inner: RunnerError::FilterInvalidInput(format!(
                     "Out of bound - size is {}",
                     values.len()
@@ -39,7 +39,7 @@ pub fn eval_nth(
             Some(value) => Ok(Some(value.clone())),
         },
         v => Err(Error {
-            source_info: source_info.clone(),
+            source_info,
             inner: RunnerError::FilterInvalidInput(v.display()),
             assert,
         }),
