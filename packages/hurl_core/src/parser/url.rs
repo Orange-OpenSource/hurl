@@ -24,8 +24,7 @@ use crate::parser::{expr, ParseResult};
 pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     // Must be neither JSON-encoded nor empty.
     // But more restrictive: whitelist characters, not empty
-
-    let start = reader.state.clone();
+    let start = reader.state;
     let mut elements = vec![];
     let mut buffer = String::new();
 
@@ -46,13 +45,13 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     loop {
-        let save = reader.state.clone();
+        let save = reader.state;
         match line_terminator(reader) {
             Ok(_) => {
                 reader.state = save;
                 break;
             }
-            _ => reader.state = save.clone(),
+            _ => reader.state = save,
         }
 
         match expr::parse(reader) {
@@ -70,7 +69,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
                 if !e.recoverable {
                     return Err(e);
                 } else {
-                    reader.state = save.clone();
+                    reader.state = save;
                     match reader.read() {
                         None => break,
                         Some(c) => {
@@ -100,7 +99,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     if elements.is_empty() {
-        reader.state = start.clone();
+        reader.state = start;
         return Err(Error {
             pos: start.pos,
             recoverable: false,
@@ -109,7 +108,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     }
 
     // URLs should be followed by a line terminator
-    let save = reader.state.clone();
+    let save = reader.state;
     if line_terminator(reader).is_err() {
         reader.state = save;
         let c = reader.peek().unwrap();
@@ -126,7 +125,7 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
         elements,
         source_info: SourceInfo {
             start: start.pos,
-            end: reader.state.clone().pos,
+            end: reader.state.pos,
         },
     })
 }

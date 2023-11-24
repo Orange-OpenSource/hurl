@@ -20,7 +20,7 @@ use crate::parser::reader::Reader;
 use crate::parser::{ParseFunc, ParseResult};
 
 pub fn optional<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Option<T>> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match f(reader) {
         Ok(r) => Ok(Some(r)),
         Err(e) => {
@@ -59,11 +59,11 @@ pub fn nonrecover<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<T> {
 }
 
 pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
-    let _start = reader.state.clone();
+    let _start = reader.state;
 
     let mut v: Vec<T> = Vec::new();
     loop {
-        let initial_state = reader.state.clone();
+        let initial_state = reader.state;
         if reader.is_eof() {
             return Ok(v);
         }
@@ -86,12 +86,12 @@ pub fn zero_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<
 }
 
 pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T>> {
-    let _initial_state = reader.state.clone();
+    let _initial_state = reader.state;
     match f(reader) {
         Ok(first) => {
             let mut v = vec![first];
             loop {
-                let initial_state = reader.state.clone();
+                let initial_state = reader.state;
                 match f(reader) {
                     Ok(r) => {
                         v.push(r);
@@ -123,7 +123,7 @@ pub fn one_or_more<T>(f: ParseFunc<T>, reader: &mut Reader) -> ParseResult<Vec<T
 /// Typically this should be recoverable
 pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
     for (pos, f) in fs.iter().enumerate() {
-        let start = reader.state.clone();
+        let start = reader.state;
         if pos == fs.len() - 1 {
             return f(reader);
         }

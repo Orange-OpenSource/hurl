@@ -56,7 +56,7 @@ pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
         return Err(Error {

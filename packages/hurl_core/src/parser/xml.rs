@@ -47,7 +47,7 @@ use crate::parser::ParseResult;
 /// byte a possible valid XML body.
 ///
 pub fn parse(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
+    let start = reader.state;
 
     // We test if our first character is a start of an XML text.
     // If not, we return immediately a recoverable error.

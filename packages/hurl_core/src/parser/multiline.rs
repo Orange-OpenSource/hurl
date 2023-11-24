@@ -24,7 +24,7 @@ use crate::parser::{template, Error, ParseError, ParseResult};
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;
-    let save = reader.state.clone();
+    let save = reader.state;
 
     match choice(&[json_text, xml_text, graphql, plain_text], reader) {
         Ok(multi) => Ok(multi),
@@ -141,7 +141,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
 }
 
 fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match reader.read() {
         None => Err(Error {
             pos: start.pos,
@@ -171,7 +171,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match zero_or_more(whitespace, reader) {
         Ok(v) => {
             let s = v.iter().map(|x| x.value.clone()).collect();
@@ -192,7 +192,7 @@ fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
 fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
     try_literal("variables", reader)?;
     let space = zero_or_more_spaces(reader)?;
-    let start = reader.state.clone();
+    let start = reader.state;
     let object = object_value(reader);
     let value = match object {
         Ok(obj) => obj,

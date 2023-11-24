@@ -23,7 +23,7 @@ use crate::parser::string::*;
 use crate::parser::{base64, filename, key_string, ParseResult};
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match reader.read() {
         None => Err(Error {
             pos: start.pos,
@@ -53,7 +53,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 pub fn one_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match one_or_more(space, reader) {
         Ok(v) => {
             let s = v.iter().map(|x| x.value.clone()).collect();
@@ -72,7 +72,7 @@ pub fn one_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
 }
 
 pub fn zero_or_more_spaces(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match zero_or_more(space, reader) {
         //Ok(v) => return Ok(v.join("")),
         Ok(v) => {
@@ -133,13 +133,13 @@ pub fn optional_line_terminators(reader: &mut Reader) -> ParseResult<Vec<LineTer
 
 pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
     try_literal("#", reader)?;
-    let start = reader.state.clone();
+    let start = reader.state;
     let mut value = String::new();
     loop {
         if reader.is_eof() {
             break;
         }
-        let save_state = reader.state.clone();
+        let save_state = reader.state;
         match newline(reader) {
             Ok(_) => {
                 reader.state = save_state;
@@ -157,7 +157,7 @@ pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
         value,
         source_info: SourceInfo {
             start: start.pos,
-            end: reader.state.clone().pos,
+            end: reader.state.pos,
         },
     })
 }
@@ -167,9 +167,9 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // non recoverable parser
     // => use combinator recover to make it recoverable
 
-    let start = reader.state.clone();
+    let start = reader.state;
     for c in s.chars() {
-        let _state = reader.state.clone();
+        let _state = reader.state;
         match reader.read() {
             None => {
                 return Err(Error {
@@ -201,7 +201,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
 pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // recoverable version which reset the cursor
     // meant to be combined with following action
-    let save_state = reader.state.clone();
+    let save_state = reader.state;
     match literal(s, reader) {
         Ok(_) => Ok(()),
         Err(e) => {
@@ -217,15 +217,15 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
 
 // return the literal string
 pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match literal(s1, reader) {
         Ok(_) => Ok(s1.to_string()),
         Err(_) => {
-            reader.state = start.clone();
+            reader.state = start;
             match literal(s2, reader) {
                 Ok(_) => Ok(s2.to_string()),
                 Err(_) => {
-                    reader.state = start.clone();
+                    reader.state = start;
                     Err(Error {
                         pos: start.pos,
                         recoverable: true,
@@ -240,7 +240,7 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<Stri
 }
 
 pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match try_literal("\r\n", reader) {
         Ok(_) => Ok(Whitespace {
             value: "\r\n".to_string(),
@@ -300,7 +300,7 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
     let start = reader.state.cursor;
     let mut current: i32 = -1;
     loop {
-        let s = reader.state.clone();
+        let s = reader.state;
         match hex_digit(reader) {
             Ok(d) => {
                 if current != -1 {
@@ -405,7 +405,7 @@ pub fn null(reader: &mut Reader) -> ParseResult<()> {
 }
 
 pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match try_literal("true", reader) {
         Ok(_) => Ok(true),
         Err(_) => match literal("false", reader) {
@@ -422,7 +422,7 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
 }
 
 pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
-    let start = reader.state.clone();
+    let start = reader.state;
 
     if reader.is_eof() {
         return Err(Error {
@@ -444,7 +444,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
         });
     }
 
-    let save = reader.state.clone();
+    let save = reader.state;
     let s = reader.read_while(|c| c.is_ascii_digit());
 
     // if the first digit is zero, you should not have any more digits
@@ -533,7 +533,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<Float> {
 }
 
 pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
-    let _start = reader.state.clone();
+    let _start = reader.state;
     try_literal("file", reader)?;
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
@@ -550,11 +550,11 @@ pub(crate) fn file(reader: &mut Reader) -> ParseResult<File> {
 pub(crate) fn base64(reader: &mut Reader) -> ParseResult<Base64> {
     // base64 => can have whitespace
     // support parser position
-    let _start = reader.state.clone();
+    let _start = reader.state;
     try_literal("base64", reader)?;
     literal(",", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let save_state = reader.state.clone();
+    let save_state = reader.state;
     let value = base64::parse(reader);
     let count = reader.state.cursor - save_state.cursor;
     reader.state = save_state;
@@ -574,7 +574,7 @@ pub fn eof(reader: &mut Reader) -> ParseResult<()> {
         Ok(())
     } else {
         Err(Error {
-            pos: reader.state.clone().pos,
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::Expecting {
                 value: String::from("eof"),

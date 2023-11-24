@@ -46,7 +46,7 @@ fn entry(reader: &mut Reader) -> ParseResult<Entry> {
 }
 
 fn request(reader: &mut Reader) -> ParseResult<Request> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let m = method(reader)?;
@@ -93,7 +93,7 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
 }
 
 fn response(reader: &mut Reader) -> ParseResult<Response> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let _version = version(reader)?;
@@ -132,7 +132,7 @@ fn method(reader: &mut Reader) -> ParseResult<Method> {
             },
         });
     }
-    let start = reader.state.clone();
+    let start = reader.state;
     let name = reader.read_while(|c| c.is_ascii_alphabetic());
     if name.is_empty() || name.to_uppercase() != name {
         Err(Error {
@@ -146,7 +146,7 @@ fn method(reader: &mut Reader) -> ParseResult<Method> {
 }
 
 fn version(reader: &mut Reader) -> ParseResult<Version> {
-    let start = reader.state.clone();
+    let start = reader.state;
     try_literal("HTTP", reader)?;
 
     let next_c = reader.peek();

@@ -25,7 +25,7 @@ use crate::parser::{Error, ParseError, ParseResult, Reader};
 pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];
     loop {
-        let save = reader.state.clone();
+        let save = reader.state;
         let space = zero_or_more_spaces(reader)?;
         if space.value.is_empty() {
             break;

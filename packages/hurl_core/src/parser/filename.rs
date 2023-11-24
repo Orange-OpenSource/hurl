@@ -24,7 +24,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
     // This is an absolute file
     // that you have to write with a relative name
     // default root_dir is the hurl directory
-    let start = reader.state.clone();
+    let start = reader.state;
     let s = reader.read_while_escaping(|c| {
         c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-'
     });
@@ -40,7 +40,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
         value: s,
         source_info: SourceInfo {
             start: start.pos,
-            end: reader.state.clone().pos,
+            end: reader.state.pos,
         },
     })
 }

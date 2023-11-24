@@ -39,11 +39,11 @@ pub fn response_sections(reader: &mut Reader) -> ParseResult<Vec<Section>> {
 fn request_section(reader: &mut Reader) -> ParseResult<Section> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let start = reader.state.clone();
+    let start = reader.state.pos;
     let name = section_name(reader)?;
     let source_info = SourceInfo {
-        start: start.clone().pos,
-        end: reader.state.clone().pos,
+        start,
+        end: reader.state.pos,
     };
     let line_terminator0 = line_terminator(reader)?;
     let value = match name.as_str() {
@@ -56,8 +56,8 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
         _ => {
             return Err(Error {
                 pos: Pos {
-                    line: start.pos.line,
-                    column: start.pos.column + 1,
+                    line: start.line,
+                    column: start.column + 1,
                 },
                 recoverable: false,
                 inner: ParseError::RequestSectionName { name: name.clone() },
@@ -77,11 +77,11 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
 fn response_section(reader: &mut Reader) -> ParseResult<Section> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let start = reader.state.clone();
+    let start = reader.state.pos;
     let name = section_name(reader)?;
     let source_info = SourceInfo {
-        start: start.clone().pos,
-        end: reader.state.clone().pos,
+        start,
+        end: reader.state.pos,
     };
     let line_terminator0 = line_terminator(reader)?;
     let value = match name.as_str() {
@@ -90,8 +90,8 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
         _ => {
             return Err(Error {
                 pos: Pos {
-                    line: start.pos.line,
-                    column: start.pos.column + 1,
+                    line: start.line,
+                    column: start.column + 1,
                 },
                 recoverable: false,
                 inner: ParseError::ResponseSectionName { name: name.clone() },
@@ -188,7 +188,7 @@ fn cookie(reader: &mut Reader) -> ParseResult<Cookie> {
 }
 
 fn multipart_param(reader: &mut Reader) -> ParseResult<MultipartParam> {
-    let save = reader.state.clone();
+    let save = reader.state;
     match file_param(reader) {
         Ok(f) => Ok(MultipartParam::FileParam(f)),
         Err(e) => {
@@ -229,10 +229,10 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
     let f = filename::parse(reader)?;
     let space1 = zero_or_more_spaces(reader)?;
     literal(";", reader)?;
-    let save = reader.state.clone();
+    let save = reader.state;
     let (space2, content_type) = match line_terminator(reader) {
         Ok(_) => {
-            reader.state = save.clone();
+            reader.state = save;
             let space2 = Whitespace {
                 value: String::new(),
                 source_info: SourceInfo {
@@ -260,16 +260,16 @@ fn file_value(reader: &mut Reader) -> ParseResult<FileValue> {
 }
 
 fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let mut buf = String::new();
     let mut spaces = String::new();
-    let mut save = reader.state.clone();
+    let mut save = reader.state;
     while let Some(c) = reader.read() {
         if c.is_alphanumeric() || c == '/' || c == ';' || c == '=' || c == '-' {
             buf.push_str(spaces.as_str());
             spaces = String::new();
             buf.push(c);
-            save = reader.state.clone();
+            save = reader.state;
         } else if c == ' ' {
             spaces.push(' ');
         } else {

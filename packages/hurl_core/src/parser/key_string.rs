@@ -23,7 +23,7 @@ use crate::parser::template::template;
 use crate::parser::{string, ParseResult};
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state.clone();
+    let start = reader.state;
 
     let mut elements = vec![];
     loop {
@@ -70,7 +70,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
 
-    let end = reader.state.clone();
+    let end = reader.state;
     Ok(Template {
         delimiter: None,
         elements,
@@ -108,7 +108,7 @@ fn key_string_content(reader: &mut Reader) -> ParseResult<String> {
 fn key_string_text(reader: &mut Reader) -> String {
     let mut s = String::new();
     loop {
-        let save = reader.state.clone();
+        let save = reader.state;
         match reader.read() {
             None => break,
             Some(c) => {
@@ -135,7 +135,7 @@ fn key_string_text(reader: &mut Reader) -> String {
 
 fn key_string_escaped_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
-    let start = reader.state.clone();
+    let start = reader.state;
     match reader.read() {
         Some('#') => Ok('#'),
         Some(':') => Ok(':'),

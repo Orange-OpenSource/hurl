@@ -116,12 +116,12 @@ fn string_template(reader: &mut Reader) -> ParseResult<Template> {
 }
 
 fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.peek_back(start.cursor), start.pos)),
         Err(e) => {
             if e.recoverable {
-                reader.state = start.clone();
+                reader.state = start;
                 match reader.read() {
                     None => Err(error::Error {
                         pos: start.pos,
@@ -153,7 +153,7 @@ fn any_char(reader: &mut Reader) -> ParseResult<(char, String, Pos)> {
 
 fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
-    let start = reader.state.clone();
+    let start = reader.state;
     match reader.read() {
         Some('"') => Ok('"'),
         Some('\\') => Ok('\\'),
@@ -197,7 +197,7 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
 }
 
 pub fn number_value(reader: &mut Reader) -> ParseResult<JsonValue> {
-    let start = reader.state.clone();
+    let start = reader.state;
 
     let sign = match try_literal("-", reader) {
         Err(_) => String::new(),
@@ -360,7 +360,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
 }
 
 fn key(reader: &mut Reader) -> ParseResult<Template> {
-    let save = reader.state.clone();
+    let save = reader.state;
     let name = string_template(reader).map_err(|e| e.non_recoverable())?;
     if name.elements.is_empty() {
         Err(error::Error {

@@ -27,10 +27,10 @@ use crate::parser::{template, ParseResult};
 ///    the string does not contain trailing space
 /// 2- templatize
 pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let mut chars = vec![];
     let mut spaces = vec![];
-    let mut end = start.clone();
+    let mut end = start;
     loop {
         let pos = reader.state.pos;
         match any_char(vec!['#'], reader) {
@@ -53,12 +53,12 @@ pub fn unquoted_template(reader: &mut Reader) -> ParseResult<Template> {
                         spaces = vec![];
                     }
                     chars.push((c, s, pos));
-                    end = reader.state.clone();
+                    end = reader.state;
                 }
             }
         }
     }
-    reader.state = end.clone();
+    reader.state = end;
     let encoded_string = template::EncodedString {
         source_info: SourceInfo {
             start: start.pos,
@@ -87,13 +87,13 @@ pub fn quoted_oneline_string(reader: &mut Reader) -> ParseResult<String> {
 }
 
 pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
-    let start = reader.state.clone().pos;
+    let start = reader.state.pos;
     let mut end = start;
     try_literal("\"", reader)?;
     let mut chars = vec![];
     loop {
         let pos = reader.state.pos;
-        let save = reader.state.clone();
+        let save = reader.state;
         match any_char(vec!['"'], reader) {
             Err(e) => {
                 if e.recoverable {
@@ -105,7 +105,7 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
             }
             Ok((c, s)) => {
                 chars.push((c, s, pos));
-                end = reader.state.clone().pos;
+                end = reader.state.pos;
             }
         }
     }
@@ -127,13 +127,13 @@ pub fn quoted_template(reader: &mut Reader) -> ParseResult<Template> {
 
 pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
     let delimiter = Some('`');
-    let start = reader.state.clone().pos;
+    let start = reader.state.pos;
     let mut end = start;
     try_literal("`", reader)?;
     let mut chars = vec![];
     loop {
         let pos = reader.state.pos;
-        let save = reader.state.clone();
+        let save = reader.state;
         match any_char(vec!['`', '\n'], reader) {
             Err(e) => {
                 if e.recoverable {
@@ -145,7 +145,7 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
             }
             Ok((c, s)) => {
                 chars.push((c, s, pos));
-                end = reader.state.clone().pos;
+                end = reader.state.pos;
             }
         }
     }
@@ -166,12 +166,12 @@ pub fn backtick_template(reader: &mut Reader) -> ParseResult<Template> {
 }
 
 fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String)> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match escape_char(reader) {
         Ok(c) => Ok((c, reader.peek_back(start.cursor))),
         Err(e) => {
             if e.recoverable {
-                reader.state = start.clone();
+                reader.state = start;
                 match reader.read() {
                     None => Err(Error {
                         pos: start.pos,
@@ -205,7 +205,7 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
 
 fn escape_char(reader: &mut Reader) -> ParseResult<char> {
     try_literal("\\", reader)?;
-    let start = reader.state.clone();
+    let start = reader.state;
     match reader.read() {
         Some('#') => Ok('#'),
         Some('"') => Ok('"'),

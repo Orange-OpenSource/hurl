@@ -224,7 +224,7 @@ fn retry(reader: &mut Reader) -> ParseResult<Retry> {
 }
 
 fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match boolean(reader) {
         Ok(v) => Ok(BooleanOption::Literal(v)),
         Err(_) => {
@@ -242,7 +242,7 @@ fn boolean_option(reader: &mut Reader) -> ParseResult<BooleanOption> {
 }
 
 fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match natural(reader) {
         Ok(v) => Ok(NaturalOption::Literal(v)),
         Err(_) => {
@@ -260,7 +260,7 @@ fn natural_option(reader: &mut Reader) -> ParseResult<NaturalOption> {
 }
 
 fn retry_option(reader: &mut Reader) -> ParseResult<RetryOption> {
-    let start = reader.state.clone();
+    let start = reader.state;
     match retry(reader) {
         Ok(v) => Ok(RetryOption::Literal(v)),
         Err(_) => {
@@ -292,7 +292,7 @@ fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
 }
 
 fn variable_name(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state.clone();
+    let start = reader.state;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
         return Err(Error {

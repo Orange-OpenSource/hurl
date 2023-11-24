@@ -31,7 +31,7 @@ pub fn parse(reader: &mut Reader) -> Vec<u8> {
         if !pad.is_empty() {
             break;
         }
-        let save = reader.state.clone();
+        let save = reader.state;
         match reader.read() {
             None => {
                 break;
@@ -142,7 +142,7 @@ fn padding(reader: &mut Reader) -> String {
     // consume padding can not fail
     let mut buf = String::new();
     loop {
-        let save = reader.state.clone();
+        let save = reader.state;
         match reader.read() {
             Some('=') => {
                 buf.push('=');
