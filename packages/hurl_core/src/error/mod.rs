@@ -36,93 +36,104 @@ impl Error for parser::Error {
 
     fn description(&self) -> String {
         match self.clone().inner {
-            ParseError::Method { .. } => "Parsing method".to_string(),
-            ParseError::Version => "Parsing version".to_string(),
-            ParseError::Status => "Parsing status code".to_string(),
-            ParseError::Filename => "Parsing filename".to_string(),
+            ParseError::DuplicateSection => "Parsing section".to_string(),
+            ParseError::EscapeChar => "Parsing escape character".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),
-            ParseError::Space => "Parsing space".to_string(),
-            ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
-            ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
-            ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
-            ParseError::XPathExpr => "Parsing XPath expression".to_string(),
-            ParseError::TemplateVariable => "Parsing template variable".to_string(),
+            ParseError::Filename => "Parsing filename".to_string(),
+            ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
+            ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
             ParseError::Json(_) => "Parsing JSON".to_string(),
+            ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
+            ParseError::Method { .. } => "Parsing method".to_string(),
+            ParseError::Multiline => "Parsing multiline".to_string(),
+            ParseError::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
             ParseError::Predicate => "Parsing predicate".to_string(),
             ParseError::PredicateValue => "Parsing predicate value".to_string(),
             ParseError::RegexExpr { .. } => "Parsing regex".to_string(),
-            ParseError::DuplicateSection => "Parsing section".to_string(),
             ParseError::RequestSection => "Parsing section".to_string(),
+            ParseError::RequestSectionName { .. } => "Parsing request section name".to_string(),
             ParseError::ResponseSection => "Parsing section".to_string(),
-            ParseError::EscapeChar => "Parsing escape character".to_string(),
-            ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
-            ParseError::OddNumberOfHexDigits => "Parsing hex bytearray".to_string(),
+            ParseError::ResponseSectionName { .. } => "Parsing response section name".to_string(),
+            ParseError::Space => "Parsing space".to_string(),
+            ParseError::Status => "Parsing status code".to_string(),
+            ParseError::TemplateVariable => "Parsing template variable".to_string(),
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             ParseError::UrlInvalidStart => "Parsing URL".to_string(),
-            ParseError::Multiline => "Parsing multiline".to_string(),
-            ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
+            ParseError::Version => "Parsing version".to_string(),
+            ParseError::XPathExpr => "Parsing XPath expression".to_string(),
+            // TODO: implement all variants
             _ => format!("{self:?}"),
         }
     }
 
     fn fixme(&self) -> String {
         match self.inner.clone() {
-            ParseError::Method { name }
-            => format!("the HTTP method <{name}> is not valid. {}", did_you_mean(
-                &["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"],
-                name.as_str(),
-                "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
-            )),
-            ParseError::Version => "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string(),
-            ParseError::Status => "HTTP status code is not valid".to_string(),
-            ParseError::Filename => "expecting a filename".to_string(),
+            ParseError::DuplicateSection => "the section is already defined".to_string(),
+            ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
             ParseError::Expecting { value } => format!("expecting '{value}'"),
-            ParseError::Space => "expecting a space".to_string(),
-            ParseError::RequestSectionName { name }
-            => format!("the section is not valid. {}", did_you_mean(
-                &["QueryStringParams", "FormParams", "MultipartFormData", "Cookies", "Options"],
-                name.as_str(),
-                "Valid values are QueryStringParams, FormParams, MultipartFormData, Cookies or Options",
-            )),
-            ParseError::ResponseSectionName { name }
-            => format!("the section is not valid. {}", did_you_mean(
-                &["Captures", "Asserts"],
-                name.as_str(),
-                "Valid values are Captures or Asserts",
-            )),
-            ParseError::JsonPathExpr => "expecting a JSONPath expression".to_string(),
-            ParseError::XPathExpr => "expecting a XPath expression".to_string(),
-            ParseError::TemplateVariable => "expecting a variable".to_string(),
-            ParseError::Json(variant) => {
-                match variant {
-                    JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
-                    JsonErrorVariant::EmptyElement => "expecting an element; found empty element instead".to_string(),
-                    JsonErrorVariant::ExpectingElement => "expecting a boolean, number, string, array, object or null".to_string(),
+            ParseError::Filename => "expecting a filename".to_string(),
+            ParseError::GraphQlVariables => {
+                "GraphQL variables is not a valid JSON object".to_string()
+            }
+            ParseError::InvalidCookieAttribute => "the cookie attribute is not valid".to_string(),
+            ParseError::Json(variant) => match variant {
+                JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
+                JsonErrorVariant::EmptyElement => {
+                    "expecting an element; found empty element instead".to_string()
                 }
+                JsonErrorVariant::ExpectingElement => {
+                    "expecting a boolean, number, string, array, object or null".to_string()
+                }
+            },
+            ParseError::JsonPathExpr => "expecting a JSONPath expression".to_string(),
+            ParseError::Method { name } => {
+                let valid_values = [
+                    "GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH",
+                ];
+                let default =
+                    "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH";
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), default);
+                format!("the HTTP method <{name}> is not valid. {did_you_mean}")
+            }
+            ParseError::Multiline => "the multiline is not valid".to_string(),
+            ParseError::OddNumberOfHexDigits => {
+                "expecting an even number of hex digits".to_string()
             }
             ParseError::Predicate => "expecting a predicate".to_string(),
             ParseError::PredicateValue => "invalid predicate value".to_string(),
             ParseError::RegexExpr { message } => format!("invalid Regex expression: {message}"),
-            ParseError::DuplicateSection => "the section is already defined".to_string(),
-            ParseError::RequestSection => {
-                "this is not a valid section for a request".to_string()
+            ParseError::RequestSection => "this is not a valid section for a request".to_string(),
+            ParseError::RequestSectionName { name } => {
+                let valid_values = [
+                    "QueryStringParams",
+                    "FormParams",
+                    "MultipartFormData",
+                    "Cookies",
+                    "Options",
+                ];
+                let default = "Valid values are QueryStringParams, FormParams, MultipartFormData, Cookies or Options";
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), default);
+                format!("the section is not valid. {did_you_mean}")
             }
-            ParseError::ResponseSection => {
-                "this is not a valid section for a response".to_string()
+            ParseError::ResponseSection => "this is not a valid section for a response".to_string(),
+            ParseError::ResponseSectionName { name } => {
+                let valid_values = ["Captures", "Asserts"];
+                let default = "Valid values are Captures or Asserts";
+                let did_your_mean = did_you_mean(&valid_values, name.as_str(), default);
+                format!("the section is not valid. {did_your_mean}")
             }
-            ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
-            ParseError::InvalidCookieAttribute => {
-                "the cookie attribute is not valid".to_string()
-            }
-            ParseError::OddNumberOfHexDigits => {
-                "expecting an even number of hex digits".to_string()
-            }
+            ParseError::Space => "expecting a space".to_string(),
+            ParseError::Status => "HTTP status code is not valid".to_string(),
+            ParseError::TemplateVariable => "expecting a variable".to_string(),
             ParseError::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
             ParseError::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
-            ParseError::Multiline => "the multiline is not valid".to_string(),
-            ParseError::GraphQlVariables => "GraphQL variables is not a valid JSON object".to_string(),
-            _ => format!("{self:?}"),
+            ParseError::Version => {
+                "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string()
+            }
+            ParseError::XPathExpr => "expecting a XPath expression".to_string(),
 
+            // TODO: implement all variants
+            _ => format!("{self:?}"),
         }
     }
 }
@@ -148,7 +159,7 @@ fn suggestion(valid_values: &[&str], actual: &str) -> Option<String> {
     None
 }
 
-// from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Rust
+// From https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Rust
 fn levenshtein_distance(s1: &str, s2: &str) -> usize {
     let v1: Vec<char> = s1.chars().collect();
     let v2: Vec<char> = s2.chars().collect();

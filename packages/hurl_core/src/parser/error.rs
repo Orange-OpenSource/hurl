@@ -17,6 +17,7 @@
  */
 use crate::ast::Pos;
 
+/// Represents a parser error.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Error {
     pub pos: Pos,
@@ -26,43 +27,38 @@ pub struct Error {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ParseError {
+    DuplicateSection,
+    Eof,
+    EscapeChar,
     Expecting { value: String },
-
-    Method { name: String },
-    Version,
-    Status,
-    Filename,
     FileContentType,
-    Space,
-    RequestSectionName { name: String },
-    ResponseSectionName { name: String },
-    JsonPathExpr,
-    XPathExpr,
-    TemplateVariable,
+    Filename,
+    GraphQlVariables,
+    HexDigit,
+    InvalidCookieAttribute,
+    InvalidOption,
     Json(JsonErrorVariant),
-    Xml,
+    JsonPathExpr,
+    Method { name: String },
+    Multiline,
+    OddNumberOfHexDigits,
     Predicate,
     PredicateValue,
     RegexExpr { message: String },
-
-    Eof,
-    Url,
-
-    DuplicateSection,
     RequestSection,
+    RequestSectionName { name: String },
     ResponseSection,
-
-    HexDigit,
+    ResponseSectionName { name: String },
+    Space,
+    Status,
+    TemplateVariable,
     Unicode,
-    EscapeChar,
-
-    InvalidCookieAttribute,
-    OddNumberOfHexDigits,
+    Url,
     UrlIllegalCharacter(char),
     UrlInvalidStart,
-    InvalidOption,
-    Multiline,
-    GraphQlVariables,
+    Version,
+    XPathExpr,
+    Xml,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
