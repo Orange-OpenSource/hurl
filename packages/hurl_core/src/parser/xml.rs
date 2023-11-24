@@ -26,6 +26,26 @@ use crate::parser::error::*;
 use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
+/// Parses a text buffer until a valid XML has been found.
+/// We're using a SAX XML parser because we need to stop the parsing at the byte position where
+/// an XML text is detected.
+/// For example, when we have this kind of Hurl file:
+///
+/// ```hurl
+/// POST https://foo.com
+/// <?xml version="1.0"?>
+/// <catalog>
+///   <book id="bk101">
+///     <author>Gambardella, Matthew</author>
+///     <title>XML Developer's Guide</title>
+///   </book>
+/// </catalog>
+/// HTTP 201
+/// ```
+///
+/// As there is no "formal" end of body, we need to parse the string until we detect at the precise
+/// byte a possible valid XML body.
+///
 pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state.clone();
 
