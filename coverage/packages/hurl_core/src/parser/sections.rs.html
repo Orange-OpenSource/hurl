@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        start: start.clone().pos,</pre>
+                <pre class="has-background-success-light py-0 px-2">        start,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        end: reader.state.clone().pos,</pre>
+                <pre class="has-background-success-light py-0 px-2">        end: reader.state.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -981,7 +981,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    line: start.pos.line,</pre>
+                <pre class="has-background-success-light py-0 px-2">                    line: start.line,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -997,7 +997,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    column: start.pos.column + 1,</pre>
+                <pre class="has-background-success-light py-0 px-2">                    column: start.column + 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1317,7 +1317,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1365,7 +1365,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        start: start.clone().pos,</pre>
+                <pre class="has-background-success-light py-0 px-2">        start,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1381,7 +1381,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        end: reader.state.clone().pos,</pre>
+                <pre class="has-background-success-light py-0 px-2">        end: reader.state.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    line: start.pos.line,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    line: start.line,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1541,7 +1541,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    column: start.pos.column + 1,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    column: start.column + 1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1829,7 +1829,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let pos = reader.state.pos.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let pos = reader.state.pos;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3093,7 +3093,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let save = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let save = reader.state;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3749,7 +3749,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let save = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let save = reader.state;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3797,7 +3797,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            reader.state = save.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">            reader.state = save;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3861,7 +3861,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                    start: save.pos.clone(),</pre>
+                <pre class="has-background-success-light py-0 px-2">                    start: save.pos,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4245,7 +4245,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let start = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let start = reader.state;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4293,7 +4293,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let mut save = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let mut save = reader.state;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4389,7 +4389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            save = reader.state.clone();</pre>
+                <pre class="has-background-success-light py-0 px-2">            save = reader.state;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13707,7 +13707,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-11-24 08:08</p>
+                <p class="heading">Date: 2023-11-25 08:08</p>
             </div>
         </footer>
     </body>
