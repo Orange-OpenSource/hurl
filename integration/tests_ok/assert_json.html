@@ -105,9 +105,27 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$[?(@.id == 1)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Bob"</span></span>
 </span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
-<span class="line"></span>
 <span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/assert-json/filter</span></span>
 </span><span class="response"><span class="line"><span class="version">HTTP</span> <span class="number">200</span></span>
 <span class="line"><span class="section-header">[Asserts]</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.fruit[?(@.price.US==200)].name"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"grape"</span></span>
+<span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.fruit.[?(@.US == 100)]"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">0</span></span>   <span class="comment"># To be clarified with spec: the first fruit is return by jsonpath.com</span>
+<span class="json"><span class="line">{</span>
+<span class="line">    "fruit": [</span>
+<span class="line">        {</span>
+<span class="line">            "name": "apple",</span>
+<span class="line">            "price": {</span>
+<span class="line">                "US": 100,</span>
+<span class="line">                "UN": 110</span>
+<span class="line">            }</span>
+<span class="line">        },</span>
+<span class="line">        {</span>
+<span class="line">            "name": "grape",</span>
+<span class="line">            "price": {</span>
+<span class="line">                "US": 200,</span>
+<span class="line">                "UN": 150</span>
+<span class="line">            }</span>
+<span class="line">        }</span>
+<span class="line">    ]</span>
+<span class="line">}</span></span>
 </span></span></code></pre>

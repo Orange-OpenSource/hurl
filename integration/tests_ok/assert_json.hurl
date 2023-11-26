@@ -105,8 +105,26 @@ jsonpath "$[0].name" == "Bob"
 jsonpath "$.[?(@.id == 1)].name" nth 0 == "Bob"
 jsonpath "$[?(@.id == 1)].name" nth 0 == "Bob"
 
-
 GET http://localhost:8000/assert-json/filter
 HTTP 200
 [Asserts]
 jsonpath "$.fruit[?(@.price.US==200)].name" nth 0 == "grape"
+jsonpath "$.fruit.[?(@.US == 100)]" count == 0   # To be clarified with spec: the first fruit is return by jsonpath.com
+{
+    "fruit": [
+        {
+            "name": "apple",
+            "price": {
+                "US": 100,
+                "UN": 110
+            }
+        },
+        {
+            "name": "grape",
+            "price": {
+                "US": 200,
+                "UN": 150
+            }
+        }
+    ]
+}
