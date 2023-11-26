@@ -97,6 +97,14 @@ If you're a Rust programmer, Hurl can be installed with cargo.
 $ cargo install hurl
 ```
 
+### conda-forge
+
+```shell
+$ conda install -c conda-forge hurl
+```
+
+Hurl can also be installed with [`conda-forge`] powered package manager like [`pixi`]. 
+
 ### Docker
 
 ```shell
@@ -179,4 +187,5 @@ Please follow the [contrib on Windows section].
 [Rust]: https://www.rust-lang.org
 [contrib on Windows section]: https://github.com/Orange-OpenSource/hurl/blob/master/contrib/windows/README.md
 [NixOS / Nix package]: https://search.nixos.org/packages?from=0&size=1&sort=relevance&type=packages&query=hurl
-
+[`conda-forge`]: https://conda-forge.org
+[`pixi`]: https://prefix.dev
