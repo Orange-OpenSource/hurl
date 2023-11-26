@@ -32,11 +32,10 @@ pub fn eval_days_after_now(
             let diff = value.signed_duration_since(Utc::now());
             Ok(Some(Value::Number(Number::Integer(diff.num_days()))))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

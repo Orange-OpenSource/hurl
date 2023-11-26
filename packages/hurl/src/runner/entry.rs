@@ -91,15 +91,12 @@ pub fn run(
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
-            let runner_error = RunnerError::from(http_error);
-            let error = Error {
-                source_info: SourceInfo {
-                    start: entry.request.url.source_info.start,
-                    end: entry.request.url.source_info.end,
-                },
-                inner: runner_error,
-                assert: false,
+            let source_info = SourceInfo {
+                start: entry.request.url.source_info.start,
+                end: entry.request.url.source_info.end,
             };
+            let inner = RunnerError::from(http_error);
+            let error = Error::new(source_info, inner, false);
             return EntryResult {
                 entry_index,
                 calls: vec![],
@@ -208,11 +205,7 @@ fn asserts_to_errors(asserts: &[AssertResult]) -> Vec<Error> {
         .map(
             |Error {
                  source_info, inner, ..
-             }| Error {
-                source_info,
-                inner,
-                assert: true,
-            },
+             }| Error::new(source_info, inner, true),
         )
         .collect()
 }

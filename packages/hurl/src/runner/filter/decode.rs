@@ -35,26 +35,23 @@ pub fn eval_decode(
     match value {
         Value::Bytes(value) => {
             match encoding::label::encoding_from_whatwg_label(encoding_value.as_str()) {
-                None => Err(Error {
-                    source_info,
-                    inner: RunnerError::FilterInvalidEncoding(encoding_value),
-                    assert,
-                }),
+                None => {
+                    let inner = RunnerError::FilterInvalidEncoding(encoding_value);
+                    Err(Error::new(source_info, inner, assert))
+                }
                 Some(enc) => match enc.decode(value, DecoderTrap::Strict) {
                     Ok(decoded) => Ok(Some(Value::String(decoded))),
-                    Err(_) => Err(Error {
-                        source_info,
-                        inner: RunnerError::FilterDecode(encoding_value),
-                        assert,
-                    }),
+                    Err(_) => {
+                        let inner = RunnerError::FilterDecode(encoding_value);
+                        Err(Error::new(source_info, inner, assert))
+                    }
                 },
             }
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

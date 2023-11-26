@@ -36,11 +36,10 @@ pub fn eval_format(
             let formatted = format!("{}", value.format(fmt.as_str()));
             Ok(Some(Value::String(formatted)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

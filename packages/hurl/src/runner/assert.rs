@@ -42,13 +42,10 @@ impl AssertResult {
                 {
                     None
                 } else {
-                    Some(Error {
-                        source_info: *source_info,
-                        inner: RunnerError::AssertVersion {
-                            actual: actual.clone(),
-                        },
-                        assert: false,
-                    })
+                    let inner = RunnerError::AssertVersion {
+                        actual: actual.to_string(),
+                    };
+                    Some(Error::new(*source_info, inner, false))
                 }
             }
             AssertResult::Status {
@@ -59,13 +56,10 @@ impl AssertResult {
                 if actual == expected {
                     None
                 } else {
-                    Some(Error {
-                        source_info: *source_info,
-                        inner: RunnerError::AssertStatus {
-                            actual: actual.to_string(),
-                        },
-                        assert: false,
-                    })
+                    let inner = RunnerError::AssertStatus {
+                        actual: actual.to_string(),
+                    };
+                    Some(Error::new(*source_info, inner, false))
                 }
             }
             AssertResult::Header {
@@ -78,11 +72,8 @@ impl AssertResult {
                     if s == expected {
                         None
                     } else {
-                        Some(Error {
-                            source_info: *source_info,
-                            inner: RunnerError::AssertHeaderValueError { actual: s.clone() },
-                            assert: false,
-                        })
+                        let inner = RunnerError::AssertHeaderValueError { actual: s.clone() };
+                        Some(Error::new(*source_info, inner, false))
                     }
                 }
             },
@@ -100,16 +91,12 @@ impl AssertResult {
                         } else {
                             let actual = actual.to_string();
                             let expected = expected.to_string();
-                            Some(Error {
-                                source_info: *source_info,
-                                inner: RunnerError::AssertBodyValueError { actual, expected },
-                                assert: false,
-                            })
+                            let inner = RunnerError::AssertBodyValueError { actual, expected };
+                            Some(Error::new(*source_info, inner, false))
                         }
                     }
                 },
             },
-
             AssertResult::Explicit { actual: Err(e), .. } => Some(e.clone()),
             AssertResult::Explicit {
                 predicate_result: Some(Err(e)),

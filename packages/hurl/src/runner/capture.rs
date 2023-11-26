@@ -38,21 +38,21 @@ pub fn eval_capture(
     let value = eval_query(&capture.query, variables, http_response)?;
     let value = match value {
         None => {
-            return Err(Error {
-                source_info: capture.query.source_info,
-                inner: RunnerError::NoQueryResult,
-                assert: false,
-            });
+            return Err(Error::new(
+                capture.query.source_info,
+                RunnerError::NoQueryResult,
+                false,
+            ));
         }
         Some(value) => {
             let filters = capture.filters.iter().map(|(_, f)| f.clone()).collect();
             match eval_filters(&filters, &value, variables, false)? {
                 None => {
-                    return Err(Error {
-                        source_info: capture.query.source_info,
-                        inner: RunnerError::NoQueryResult,
-                        assert: false,
-                    })
+                    return Err(Error::new(
+                        capture.query.source_info,
+                        RunnerError::NoQueryResult,
+                        false,
+                    ));
                 }
                 Some(v) => v,
             }

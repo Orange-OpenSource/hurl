@@ -29,11 +29,10 @@ pub fn eval_count(
         Value::List(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Bytes(values) => Ok(Some(Value::Number(Number::Integer(values.len() as i64)))),
         Value::Nodeset(size) => Ok(Some(Value::Number(Number::Integer(*size as i64)))),
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

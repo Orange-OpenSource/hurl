@@ -69,22 +69,16 @@ pub fn eval_file(filename: &Filename, context_dir: &ContextDir) -> Result<Vec<u8
     // is a child of the context directory.
     let file = filename.value.clone();
     if !context_dir.is_access_allowed(&file) {
-        return Err(Error {
-            source_info: filename.source_info,
-            inner: RunnerError::UnauthorizedFileAccess {
-                path: PathBuf::from(file),
-            },
-            assert: false,
-        });
+        let inner = RunnerError::UnauthorizedFileAccess {
+            path: PathBuf::from(file),
+        };
+        return Err(Error::new(filename.source_info, inner, false));
     }
     let resolved_file = context_dir.get_path(&file);
+    let inner = RunnerError::FileReadAccess { value: file };
     match std::fs::read(resolved_file) {
         Ok(value) => Ok(value),
-        Err(_) => Err(Error {
-            source_info: filename.source_info,
-            inner: RunnerError::FileReadAccess { value: file },
-            assert: false,
-        }),
+        Err(_) => Err(Error::new(filename.source_info, inner, false)),
     }
 }
 

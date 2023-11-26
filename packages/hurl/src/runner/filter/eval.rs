@@ -54,11 +54,11 @@ pub fn eval_filters(
         value = if let Some(value) = value {
             eval_filter(filter, &value, variables, in_assert)?
         } else {
-            return Err(Error {
-                source_info: filter.source_info,
-                inner: RunnerError::FilterMissingInput,
-                assert: in_assert,
-            });
+            return Err(Error::new(
+                filter.source_info,
+                RunnerError::FilterMissingInput,
+                in_assert,
+            ));
         }
     }
     Ok(value)

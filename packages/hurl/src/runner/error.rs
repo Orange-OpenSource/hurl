@@ -32,6 +32,16 @@ pub struct Error {
     pub assert: bool,
 }
 
+impl Error {
+    pub fn new(source_info: SourceInfo, inner: RunnerError, assert: bool) -> Error {
+        Error {
+            source_info,
+            inner,
+            assert,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum RunnerError {
     AssertBodyValueError {

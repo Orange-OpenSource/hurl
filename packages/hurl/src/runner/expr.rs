@@ -28,12 +28,9 @@ pub fn eval_expr(expr: &Expr, variables: &HashMap<String, Value>) -> Result<Valu
     if let Some(value) = variables.get(expr.variable.name.as_str()) {
         Ok(value.clone())
     } else {
-        Err(Error {
-            source_info: expr.variable.source_info,
-            inner: RunnerError::TemplateVariableNotDefined {
-                name: expr.variable.name.clone(),
-            },
-            assert: false,
-        })
+        let inner = RunnerError::TemplateVariableNotDefined {
+            name: expr.variable.name.clone(),
+        };
+        Err(Error::new(expr.variable.source_info, inner, false))
     }
 }
