@@ -20,7 +20,6 @@ use std::path::PathBuf;
 use hurl_core::ast::SourceInfo;
 
 use crate::http::{HttpError, RequestedHttpVersion};
-use crate::runner::Value;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of
@@ -54,10 +53,7 @@ pub enum RunnerError {
         actual: String,
     },
     CouldNotParseResponse,
-    CouldNotResolveProxyName,
-    CouldNotResolveHost(String),
     CouldNotUncompressResponse(String),
-    FailToConnect,
     FileReadAccess {
         value: String,
     },
@@ -65,7 +61,6 @@ pub enum RunnerError {
     FilterInvalidEncoding(String),
     FilterInvalidInput(String),
     FilterMissingInput,
-    FilterRegexNoCapture,
     HttpConnection(String),
     InvalidJson {
         value: String,
@@ -81,16 +76,12 @@ pub enum RunnerError {
     InvalidUrlPrefix(String),
     NoQueryResult,
     QueryHeaderNotFound,
-    QueryCookieNotFound,
     QueryInvalidJsonpathExpression {
         value: String,
     },
     QueryInvalidXpathEval,
     QueryInvalidXml,
     QueryInvalidJson,
-    PredicateType,
-    PredicateValue(Value),
-    SslCertificate(String),
     TemplateVariableNotDefined {
         name: String,
     },
@@ -99,7 +90,6 @@ pub enum RunnerError {
         value: String,
         expecting: String,
     },
-    Timeout,
     TooManyRedirect,
     UnsupportedContentEncoding(String),
     UnsupportedHttpVersion(RequestedHttpVersion),
@@ -126,16 +116,12 @@ impl hurl_core::error::Error for Error {
             RunnerError::AssertStatus { .. } => "Assert status code".to_string(),
             RunnerError::AssertVersion { .. } => "Assert HTTP version".to_string(),
             RunnerError::CouldNotParseResponse => "HTTP connection".to_string(),
-            RunnerError::CouldNotResolveHost(_) => "HTTP connection".to_string(),
-            RunnerError::CouldNotResolveProxyName => "HTTP connection".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
-            RunnerError::FailToConnect => "HTTP connection".to_string(),
             RunnerError::FileReadAccess { .. } => "File read access".to_string(),
             RunnerError::FilterDecode { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidEncoding { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
             RunnerError::FilterMissingInput => "Filter Error".to_string(),
-            RunnerError::FilterRegexNoCapture => "Filter Error".to_string(),
             RunnerError::HttpConnection { .. } => "HTTP connection".to_string(),
             RunnerError::InvalidCharset { .. } => "Invalid charset".to_string(),
             RunnerError::InvalidDecoding { .. } => "Invalid decoding".to_string(),
@@ -144,18 +130,13 @@ impl hurl_core::error::Error for Error {
             RunnerError::InvalidUrl(..) => "Invalid URL".to_string(),
             RunnerError::InvalidUrlPrefix(..) => "Invalid URL".to_string(),
             RunnerError::NoQueryResult => "No query result".to_string(),
-            RunnerError::PredicateType => "Assert - inconsistent predicate type".to_string(),
-            RunnerError::PredicateValue { .. } => "Assert - predicate value failed".to_string(),
-            RunnerError::QueryCookieNotFound => "Cookie not found".to_string(),
             RunnerError::QueryHeaderNotFound => "Header not found".to_string(),
             RunnerError::QueryInvalidJson => "Invalid JSON".to_string(),
             RunnerError::QueryInvalidJsonpathExpression { .. } => "Invalid JSONPath".to_string(),
             RunnerError::QueryInvalidXml => "Invalid XML".to_string(),
             RunnerError::QueryInvalidXpathEval => "Invalid XPath expression".to_string(),
-            RunnerError::SslCertificate { .. } => "SSL certificate".to_string(),
             RunnerError::TemplateVariableInvalidType { .. } => "Invalid variable type".to_string(),
             RunnerError::TemplateVariableNotDefined { .. } => "Undefined variable".to_string(),
-            RunnerError::Timeout => "HTTP connection".to_string(),
             RunnerError::TooManyRedirect => "HTTP connection".to_string(),
             RunnerError::UnauthorizedFileAccess { .. } => "Unauthorized file access".to_string(),
             RunnerError::UnrenderableVariable { .. } => "Unrenderable variable".to_string(),
@@ -188,12 +169,9 @@ impl hurl_core::error::Error for Error {
             RunnerError::AssertStatus { actual, .. } => format!("actual value is <{actual}>"),
             RunnerError::AssertVersion { actual, .. } => format!("actual value is <{actual}>"),
             RunnerError::CouldNotParseResponse => "could not parse response".to_string(),
-            RunnerError::CouldNotResolveHost(host) => format!("could not resolve host <{host}>"),
-            RunnerError::CouldNotResolveProxyName => "could not resolve proxy name".to_string(),
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("could not uncompress response with {algorithm}")
             }
-            RunnerError::FailToConnect => "fail to connect".to_string(),
             RunnerError::FileReadAccess { value } => format!("file {value} can not be read"),
             RunnerError::FilterDecode(encoding) => {
                 format!("value can not be decoded with <{encoding}> encoding")
@@ -205,7 +183,6 @@ impl hurl_core::error::Error for Error {
                 format!("invalid filter input: {message}")
             }
             RunnerError::FilterMissingInput => "missing value to apply filter".to_string(),
-            RunnerError::FilterRegexNoCapture => "capture not found".to_string(),
             RunnerError::HttpConnection(message) => message.to_string(),
             RunnerError::InvalidCharset { charset } => {
                 format!("the charset '{charset}' is not valid")
@@ -222,15 +199,6 @@ impl hurl_core::error::Error for Error {
                 format!("URL <{url}> must start with http:// or https://")
             }
             RunnerError::NoQueryResult => "The query didn't return any result".to_string(),
-            RunnerError::PredicateType => {
-                "predicate type inconsistent with value return by query".to_string()
-            }
-            RunnerError::PredicateValue(value) => {
-                format!("actual value is <{value}>")
-            }
-            RunnerError::QueryCookieNotFound => {
-                "this cookie has not been found in the response".to_string()
-            }
             RunnerError::QueryHeaderNotFound => {
                 "this header has not been found in the response".to_string()
             }
@@ -240,7 +208,6 @@ impl hurl_core::error::Error for Error {
             }
             RunnerError::QueryInvalidXml => "the HTTP response is not a valid XML".to_string(),
             RunnerError::QueryInvalidXpathEval => "the XPath expression is not valid".to_string(),
-            RunnerError::SslCertificate(description) => description.clone(),
             RunnerError::TemplateVariableInvalidType {
                 value, expecting, ..
             } => {
@@ -249,7 +216,6 @@ impl hurl_core::error::Error for Error {
             RunnerError::TemplateVariableNotDefined { name } => {
                 format!("you must set the variable {name}")
             }
-            RunnerError::Timeout => "timeout has been reached".to_string(),
             RunnerError::TooManyRedirect => "too many redirect".to_string(),
             RunnerError::UnauthorizedFileAccess { path } => {
                 format!(
