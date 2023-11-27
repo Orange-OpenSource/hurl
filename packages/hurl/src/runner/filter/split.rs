@@ -38,11 +38,10 @@ pub fn eval_split(
                 .collect();
             Ok(Some(Value::List(values)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v.display()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v.display());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

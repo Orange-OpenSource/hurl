@@ -28,21 +28,19 @@ pub fn eval_nth(
 ) -> Result<Option<Value>, Error> {
     match value {
         Value::List(values) => match values.get(n as usize) {
-            None => Err(Error {
-                source_info,
-                inner: RunnerError::FilterInvalidInput(format!(
+            None => {
+                let inner = RunnerError::FilterInvalidInput(format!(
                     "Out of bound - size is {}",
                     values.len()
-                )),
-                assert,
-            }),
+                ));
+                Err(Error::new(source_info, inner, assert))
+            }
             Some(value) => Ok(Some(value.clone())),
         },
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v.display()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v.display());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 
@@ -95,11 +93,11 @@ pub mod tests {
             )
             .err()
             .unwrap(),
-            Error {
-                source_info: SourceInfo::new(1, 1, 1, 1),
-                inner: RunnerError::FilterInvalidInput("Out of bound - size is 2".to_string()),
-                assert: false
-            }
+            Error::new(
+                SourceInfo::new(1, 1, 1, 1),
+                RunnerError::FilterInvalidInput("Out of bound - size is 2".to_string()),
+                false
+            )
         );
     }
 }

@@ -72,33 +72,36 @@ pub fn eval_asserts(
     for header in response.headers.iter() {
         match eval_template(&header.value, variables) {
             Err(e) => {
-                asserts.push(AssertResult::Header {
+                let result = AssertResult::Header {
                     actual: Err(e),
                     expected: String::new(),
-                    source_info: header.key.clone().source_info,
-                });
+                    source_info: header.key.source_info,
+                };
+                asserts.push(result);
             }
             Ok(expected) => {
                 match eval_template(&header.key, variables) {
                     Ok(header_name) => {
                         let actuals = http_response.get_header_values(&header_name);
                         if actuals.is_empty() {
-                            asserts.push(AssertResult::Header {
-                                actual: Err(Error {
-                                    source_info: header.key.source_info,
-                                    inner: RunnerError::QueryHeaderNotFound,
-                                    assert: false,
-                                }),
+                            let result = AssertResult::Header {
+                                actual: Err(Error::new(
+                                    header.key.source_info,
+                                    RunnerError::QueryHeaderNotFound,
+                                    false,
+                                )),
                                 expected,
                                 source_info: header.key.source_info,
-                            });
+                            };
+                            asserts.push(result);
                         } else if actuals.len() == 1 {
                             let actual = actuals.first().unwrap().to_string();
-                            asserts.push(AssertResult::Header {
+                            let result = AssertResult::Header {
                                 actual: Ok(actual),
                                 expected,
-                                source_info: header.value.clone().source_info,
-                            });
+                                source_info: header.value.source_info,
+                            };
+                            asserts.push(result);
                         } else {
                             // failure by default
                             // expected value not found in the list
@@ -117,19 +120,21 @@ pub fn eval_asserts(
                                     break;
                                 }
                             }
-                            asserts.push(AssertResult::Header {
+                            let result = AssertResult::Header {
                                 actual: Ok(actual),
                                 expected,
-                                source_info: header.value.clone().source_info,
-                            });
+                                source_info: header.value.source_info,
+                            };
+                            asserts.push(result);
                         }
                     }
                     Err(e) => {
-                        asserts.push(AssertResult::Header {
+                        let result = AssertResult::Header {
                             actual: Err(e),
                             expected,
-                            source_info: header.value.clone().source_info,
-                        });
+                            source_info: header.value.source_info,
+                        };
+                        asserts.push(result);
                     }
                 }
             }
@@ -163,14 +168,13 @@ fn eval_implicit_body_asserts(
             };
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -182,14 +186,13 @@ fn eval_implicit_body_asserts(
             let expected = Ok(Value::String(value.to_string()));
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -204,14 +207,13 @@ fn eval_implicit_body_asserts(
             };
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -226,14 +228,13 @@ fn eval_implicit_body_asserts(
             };
             let actual = match http_response.text() {
                 Ok(s) => Ok(Value::String(s)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -250,14 +251,13 @@ fn eval_implicit_body_asserts(
             let expected = Ok(Value::Bytes(value.to_vec()));
             let actual = match http_response.uncompress_body() {
                 Ok(b) => Ok(Value::Bytes(b)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -277,14 +277,13 @@ fn eval_implicit_body_asserts(
             let expected = Ok(Value::Bytes(value.to_vec()));
             let actual = match http_response.uncompress_body() {
                 Ok(b) => Ok(Value::Bytes(b)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -302,14 +301,13 @@ fn eval_implicit_body_asserts(
             };
             let actual = match http_response.uncompress_body() {
                 Ok(b) => Ok(Value::Bytes(b)),
-                Err(e) => Err(Error {
-                    source_info: SourceInfo {
+                Err(e) => {
+                    let source_info = SourceInfo {
                         start: spec_body.space0.source_info.end,
                         end: spec_body.space0.source_info.end,
-                    },
-                    inner: RunnerError::from(e),
-                    assert: true,
-                }),
+                    };
+                    Err(Error::new(source_info, e.into(), true))
+                }
             };
             AssertResult::Body {
                 actual,
@@ -403,15 +401,15 @@ mod tests {
             vec![AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(2)))),
                 source_info: SourceInfo::new(1, 22, 1, 24),
-                predicate_result: Some(Err(Error {
-                    source_info: SourceInfo::new(1, 0, 1, 0),
-                    inner: RunnerError::AssertFailure {
+                predicate_result: Some(Err(Error::new(
+                    SourceInfo::new(1, 0, 1, 0),
+                    RunnerError::AssertFailure {
                         actual: "int <2>".to_string(),
                         expected: "int <3>".to_string(),
                         type_mismatch: false,
                     },
-                    assert: true,
-                })),
+                    true
+                ))),
             },]
         );
     }

@@ -55,14 +55,11 @@ pub fn render_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Res
     if value.is_renderable() {
         Ok(value.clone().to_string())
     } else {
-        Err(Error {
-            source_info,
-            inner: RunnerError::UnrenderableVariable {
-                name: name.to_string(),
-                value: value.to_string(),
-            },
-            assert: false,
-        })
+        let inner = RunnerError::UnrenderableVariable {
+            name: name.to_string(),
+            value: value.to_string(),
+        };
+        Err(Error::new(source_info, inner, false))
     }
 }
 
@@ -71,11 +68,10 @@ pub fn eval_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Resul
     let name = &expr.variable.name;
     match variables.get(name.as_str()) {
         Some(value) => Ok(value.clone()),
-        _ => Err(Error {
-            source_info,
-            inner: RunnerError::TemplateVariableNotDefined { name: name.clone() },
-            assert: false,
-        }),
+        _ => {
+            let inner = RunnerError::TemplateVariableNotDefined { name: name.clone() };
+            Err(Error::new(source_info, inner, false))
+        }
     }
 }
 

@@ -698,13 +698,10 @@ pub mod tests {
 HTTP/1.0 200
 "#;
         let filename = "test.hurl";
-        let error = runner::Error {
-            source_info: SourceInfo::new(2, 10, 2, 13),
-            inner: runner::RunnerError::AssertStatus {
-                actual: "404".to_string(),
-            },
-            assert: true,
+        let inner = runner::RunnerError::AssertStatus {
+            actual: "404".to_string(),
         };
+        let error = runner::Error::new(SourceInfo::new(2, 10, 2, 13), inner, true);
         assert_eq!(
             error_string(filename, content, &error, false),
             r#"Assert status code
@@ -724,11 +721,11 @@ HTTP/1.0 200
 xpath "strong(//head/title)" == "Hello"
 "#;
         let filename = "test.hurl";
-        let error = runner::Error {
-            source_info: SourceInfo::new(4, 7, 4, 29),
-            inner: runner::RunnerError::QueryInvalidXpathEval,
-            assert: true,
-        };
+        let error = runner::Error::new(
+            SourceInfo::new(4, 7, 4, 29),
+            runner::RunnerError::QueryInvalidXpathEval,
+            true,
+        );
         assert_eq!(
             error_string(filename, content, &error, false),
             r#"Invalid XPath expression
@@ -777,14 +774,11 @@ HTTP/1.0 200
 ```
 "#;
         let filename = "test.hurl";
-        let error = runner::Error {
-            source_info: SourceInfo::new(3, 4, 4, 1),
-            inner: runner::RunnerError::AssertBodyValueError {
-                actual: "<p>Hello</p>\n\n".to_string(),
-                expected: "<p>Hello</p>\n".to_string(),
-            },
-            assert: true,
+        let inner = runner::RunnerError::AssertBodyValueError {
+            actual: "<p>Hello</p>\n\n".to_string(),
+            expected: "<p>Hello</p>\n".to_string(),
         };
+        let error = runner::Error::new(SourceInfo::new(3, 4, 4, 1), inner, true);
         assert_eq!(
             error_string(filename, content, &error, false),
             r#"Assert body value

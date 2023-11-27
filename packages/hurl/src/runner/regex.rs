@@ -32,11 +32,7 @@ pub fn eval_regex_value(
             let value = eval_template(t, variables)?;
             match Regex::new(value.as_str()) {
                 Ok(re) => Ok(re),
-                Err(_) => Err(Error {
-                    source_info: t.source_info,
-                    inner: RunnerError::InvalidRegex,
-                    assert: false,
-                }),
+                Err(_) => Err(Error::new(t.source_info, RunnerError::InvalidRegex, false)),
             }
         }
         RegexValue::Regex(re) => Ok(re.inner.clone()),

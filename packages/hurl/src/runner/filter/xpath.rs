@@ -35,11 +35,10 @@ pub fn eval_xpath(
             let is_html = true;
             eval_xpath_string(xml, expr, variables, source_info, is_html)
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 
@@ -58,21 +57,17 @@ pub fn eval_xpath_string(
     };
     match result {
         Ok(value) => Ok(Some(value)),
-        Err(xpath::XpathError::InvalidXml) => Err(Error {
-            source_info,
-            inner: RunnerError::QueryInvalidXml,
-            assert: false,
-        }),
-        Err(xpath::XpathError::InvalidHtml) => Err(Error {
-            source_info,
-            inner: RunnerError::QueryInvalidXml,
-            assert: false,
-        }),
-        Err(xpath::XpathError::Eval) => Err(Error {
-            source_info: expr_template.source_info,
-            inner: RunnerError::QueryInvalidXpathEval,
-            assert: false,
-        }),
+        Err(xpath::XpathError::InvalidXml) => {
+            Err(Error::new(source_info, RunnerError::QueryInvalidXml, false))
+        }
+        Err(xpath::XpathError::InvalidHtml) => {
+            Err(Error::new(source_info, RunnerError::QueryInvalidXml, false))
+        }
+        Err(xpath::XpathError::Eval) => Err(Error::new(
+            expr_template.source_info,
+            RunnerError::QueryInvalidXpathEval,
+            false,
+        )),
         Err(xpath::XpathError::Unsupported) => {
             panic!("Unsupported xpath {expr}"); // good usecase for panic - I could not reproduce this usecase myself
         }

@@ -29,18 +29,16 @@ pub fn eval_url_decode(
         Value::String(value) => {
             match percent_encoding::percent_decode(value.as_bytes()).decode_utf8() {
                 Ok(decoded) => Ok(Some(Value::String(decoded.to_string()))),
-                Err(_) => Err(Error {
-                    source_info,
-                    inner: RunnerError::FilterInvalidInput("Invalid UTF8 stream".to_string()),
-                    assert,
-                }),
+                Err(_) => {
+                    let inner = RunnerError::FilterInvalidInput("Invalid UTF-8 stream".to_string());
+                    Err(Error::new(source_info, inner, assert))
+                }
             }
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

@@ -39,11 +39,10 @@ pub fn eval_url_encode(
             let encoded = percent_encoding::percent_encode(value.as_bytes(), FRAGMENT).to_string();
             Ok(Some(Value::String(encoded)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

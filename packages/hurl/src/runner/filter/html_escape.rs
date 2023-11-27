@@ -31,11 +31,10 @@ pub fn eval_html_escape(
             let encoded = html::html_escape(value);
             Ok(Some(Value::String(encoded)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

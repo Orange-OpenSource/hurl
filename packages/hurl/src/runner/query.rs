@@ -119,11 +119,7 @@ fn eval_query_body(response: &http::Response, query_source_info: SourceInfo) -> 
     // Can return a string if encoding is known and utf8.
     match response.text() {
         Ok(s) => Ok(Some(Value::String(s))),
-        Err(inner) => Err(Error {
-            source_info: query_source_info,
-            inner: RunnerError::from(inner),
-            assert: false,
-        }),
+        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -131,17 +127,13 @@ fn eval_query_xpath(
     response: &http::Response,
     expr: &Template,
     variables: &HashMap<String, Value>,
-    source_info: SourceInfo,
+    query_source_info: SourceInfo,
 ) -> QueryResult {
     match response.text() {
-        Err(inner) => Err(Error {
-            source_info,
-            inner: RunnerError::from(inner),
-            assert: false,
-        }),
         Ok(xml) => {
-            filter::eval_xpath_string(&xml, expr, variables, source_info, response.is_html())
+            filter::eval_xpath_string(&xml, expr, variables, query_source_info, response.is_html())
         }
+        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -152,12 +144,8 @@ fn eval_query_jsonpath(
     query_source_info: SourceInfo,
 ) -> QueryResult {
     match response.text() {
-        Err(inner) => Err(Error {
-            source_info: query_source_info,
-            inner: RunnerError::from(inner),
-            assert: false,
-        }),
         Ok(json) => filter::eval_jsonpath_string(&json, expr, variables, query_source_info),
+        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -168,28 +156,15 @@ fn eval_query_regex(
     query_source_info: SourceInfo,
 ) -> QueryResult {
     let s = match response.text() {
-        Err(inner) => {
-            return Err(Error {
-                source_info: query_source_info,
-                inner: RunnerError::from(inner),
-                assert: false,
-            });
-        }
         Ok(v) => v,
+        Err(inner) => return Err(Error::new(query_source_info, inner.into(), false)),
     };
     let re = match regex {
         RegexValue::Template(t) => {
             let value = eval_template(t, variables)?;
             match Regex::new(value.as_str()) {
                 Ok(re) => re,
-                Err(_) => {
-                    let source_info = t.source_info;
-                    return Err(Error {
-                        source_info,
-                        inner: RunnerError::InvalidRegex,
-                        assert: false,
-                    });
-                }
+                Err(_) => return Err(Error::new(t.source_info, RunnerError::InvalidRegex, false)),
             }
         }
         RegexValue::Regex(re) => re.inner.clone(),
@@ -221,11 +196,7 @@ fn eval_query_duration(response: &http::Response) -> QueryResult {
 fn eval_query_bytes(response: &http::Response, query_source_info: SourceInfo) -> QueryResult {
     match response.uncompress_body() {
         Ok(s) => Ok(Some(Value::Bytes(s))),
-        Err(inner) => Err(Error {
-            source_info: query_source_info,
-            inner: RunnerError::from(inner),
-            assert: false,
-        }),
+        Err(inner) => Err(Error::new(query_source_info, inner.into(), false)),
     }
 }
 
@@ -233,11 +204,7 @@ fn eval_query_sha256(response: &http::Response, query_source_info: SourceInfo) -
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(Error {
-                source_info: query_source_info,
-                inner: RunnerError::from(inner),
-                assert: false,
-            })
+            return Err(Error::new(query_source_info, inner.into(), false));
         }
     };
     let mut hasher = sha2::Sha256::new();
@@ -251,11 +218,7 @@ fn eval_query_md5(response: &http::Response, query_source_info: SourceInfo) -> Q
     let bytes = match response.uncompress_body() {
         Ok(s) => s,
         Err(inner) => {
-            return Err(Error {
-                source_info: query_source_info,
-                inner: RunnerError::from(inner),
-                assert: false,
-            })
+            return Err(Error::new(query_source_info, inner.into(), false));
         }
     };
     let bytes = md5::compute(bytes).to_vec();

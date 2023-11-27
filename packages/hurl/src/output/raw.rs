@@ -18,7 +18,7 @@
 use hurl_core::ast::SourceInfo;
 use hurl_core::error::Error;
 
-use crate::runner::{HurlResult, RunnerError};
+use crate::runner::HurlResult;
 use crate::util::logger::Logger;
 use crate::{output, runner};
 
@@ -54,11 +54,8 @@ pub fn write_body(
                         // FIXME: we convert to a runner::Error to be able to use fixme
                         // method. Can we do otherwise (without creating an artificial
                         // error a first character).
-                        let error = runner::Error {
-                            source_info: SourceInfo::new(0, 0, 0, 0),
-                            inner: RunnerError::from(e),
-                            assert: false,
-                        };
+                        let source_info = SourceInfo::new(0, 0, 0, 0);
+                        let error = runner::Error::new(source_info, e.into(), false);
                         let message = error.fixme();
                         return Err(output::error::Error::new(&message));
                     }

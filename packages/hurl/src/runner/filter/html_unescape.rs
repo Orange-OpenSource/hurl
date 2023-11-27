@@ -31,11 +31,10 @@ pub fn eval_html_unescape(
             let decoded = html::html_unescape(value);
             Ok(Some(Value::String(decoded)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

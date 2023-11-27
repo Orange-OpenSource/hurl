@@ -30,17 +30,15 @@ pub fn eval_to_int(
         Value::Number(Number::Float(v)) => Ok(Some(Value::Number(Number::Integer(*v as i64)))),
         Value::String(v) => match v.parse::<i64>() {
             Ok(i) => Ok(Some(Value::Number(Number::Integer(i)))),
-            _ => Err(Error {
-                source_info,
-                inner: RunnerError::FilterInvalidInput(value.display()),
-                assert,
-            }),
+            _ => {
+                let inner = RunnerError::FilterInvalidInput(value.display());
+                Err(Error::new(source_info, inner, assert))
+            }
         },
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v.display()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v.display());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

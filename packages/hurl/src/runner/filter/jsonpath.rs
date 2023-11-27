@@ -32,11 +32,10 @@ pub fn eval_jsonpath(
 ) -> Result<Option<Value>, Error> {
     match value {
         Value::String(json) => eval_jsonpath_string(json, expr, variables, source_info),
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v._type()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v._type());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 
@@ -51,20 +50,17 @@ pub fn eval_jsonpath_string(
     let jsonpath_query = match jsonpath::parse(value.as_str()) {
         Ok(q) => q,
         Err(_) => {
-            return Err(Error {
-                source_info: *expr_source_info,
-                inner: RunnerError::QueryInvalidJsonpathExpression { value },
-                assert: false,
-            });
+            let inner = RunnerError::QueryInvalidJsonpathExpression { value };
+            return Err(Error::new(*expr_source_info, inner, false));
         }
     };
     let value = match serde_json::from_str(json) {
         Err(_) => {
-            return Err(Error {
+            return Err(Error::new(
                 source_info,
-                inner: RunnerError::QueryInvalidJson,
-                assert: false,
-            });
+                RunnerError::QueryInvalidJson,
+                false,
+            ));
         }
         Ok(v) => v,
     };

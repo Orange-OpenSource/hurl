@@ -122,13 +122,13 @@ HTTP/1.0 200
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![Error {
-                    source_info: SourceInfo::new(2, 10, 2, 13),
-                    inner: RunnerError::AssertStatus {
+                errors: vec![Error::new(
+                    SourceInfo::new(2, 10, 2, 13),
+                    RunnerError::AssertStatus {
                         actual: "404".to_string(),
                     },
-                    assert: true,
-                }],
+                    true,
+                )],
                 time_in_ms: 0,
                 compressed: false,
             }],
@@ -161,13 +161,11 @@ HTTP/1.0 200
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
-                errors: vec![Error {
-                    source_info: SourceInfo::new(1, 5, 1, 19),
-                    inner: RunnerError::HttpConnection(
-                        "(6) Could not resolve host: unknown".to_string(),
-                    ),
-                    assert: false,
-                }],
+                errors: vec![Error::new(
+                    SourceInfo::new(1, 5, 1, 19),
+                    RunnerError::HttpConnection("(6) Could not resolve host: unknown".to_string()),
+                    false,
+                )],
                 time_in_ms: 0,
                 compressed: false,
             }],

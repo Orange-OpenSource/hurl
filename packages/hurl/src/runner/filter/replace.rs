@@ -38,11 +38,10 @@ pub fn eval_replace(
             let s = re.replace_all(v, new_value).to_string();
             Ok(Some(Value::String(s)))
         }
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v.display()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v.display());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 

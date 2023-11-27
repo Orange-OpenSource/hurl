@@ -22,7 +22,7 @@ use hurl_core::ast::*;
 
 use crate::http;
 use crate::http::ClientOptions;
-use crate::runner::error::{Error, RunnerError};
+use crate::runner::error::Error;
 use crate::runner::request::{cookie_storage_clear, cookie_storage_set, eval_request};
 use crate::runner::response::{eval_asserts, eval_captures, eval_version_status_asserts};
 use crate::runner::result::{AssertResult, EntryResult};
@@ -95,8 +95,7 @@ pub fn run(
                 start: entry.request.url.source_info.start,
                 end: entry.request.url.source_info.end,
             };
-            let inner = RunnerError::from(http_error);
-            let error = Error::new(source_info, inner, false);
+            let error = Error::new(source_info, http_error.into(), false);
             return EntryResult {
                 entry_index,
                 calls: vec![],

@@ -257,15 +257,14 @@ fn eval_boolean_option(
         BooleanOption::Literal(value) => Ok(*value),
         BooleanOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Bool(value) => Ok(value),
-            v => Err(Error {
-                source_info: expr.variable.source_info,
-                inner: RunnerError::TemplateVariableInvalidType {
+            v => {
+                let inner = RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "boolean".to_string(),
-                },
-                assert: false,
-            }),
+                };
+                Err(Error::new(expr.variable.source_info, inner, false))
+            }
         },
     }
 }
@@ -279,28 +278,24 @@ fn eval_natural_option(
         NaturalOption::Expression(expr) => match eval_expression(expr, variables)? {
             Value::Number(Number::Integer(value)) => {
                 if value < 0 {
-                    Err(Error {
-                        source_info: expr.variable.source_info,
-                        inner: RunnerError::TemplateVariableInvalidType {
-                            name: expr.variable.name.clone(),
-                            value: value.to_string(),
-                            expecting: "positive integer".to_string(),
-                        },
-                        assert: false,
-                    })
+                    let inner = RunnerError::TemplateVariableInvalidType {
+                        name: expr.variable.name.clone(),
+                        value: value.to_string(),
+                        expecting: "positive integer".to_string(),
+                    };
+                    Err(Error::new(expr.variable.source_info, inner, false))
                 } else {
                     Ok(value as u64)
                 }
             }
-            v => Err(Error {
-                source_info: expr.variable.source_info,
-                inner: RunnerError::TemplateVariableInvalidType {
+            v => {
+                let inner = RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "positive integer".to_string(),
-                },
-                assert: false,
-            }),
+                };
+                Err(Error::new(expr.variable.source_info, inner, false))
+            }
         },
     }
 }
@@ -320,26 +315,22 @@ fn eval_retry_option(
                 } else if value > 0 {
                     Ok(Retry::Finite(value as usize))
                 } else {
-                    Err(Error {
-                        source_info: expr.variable.source_info,
-                        inner: RunnerError::TemplateVariableInvalidType {
-                            name: expr.variable.name.clone(),
-                            value: value.to_string(),
-                            expecting: "integer".to_string(),
-                        },
-                        assert: false,
-                    })
+                    let inner = RunnerError::TemplateVariableInvalidType {
+                        name: expr.variable.name.clone(),
+                        value: value.to_string(),
+                        expecting: "integer".to_string(),
+                    };
+                    Err(Error::new(expr.variable.source_info, inner, false))
                 }
             }
-            v => Err(Error {
-                source_info: expr.variable.source_info,
-                inner: RunnerError::TemplateVariableInvalidType {
+            v => {
+                let inner = RunnerError::TemplateVariableInvalidType {
                     name: expr.variable.name.clone(),
                     value: v.to_string(),
                     expecting: "integer".to_string(),
-                },
-                assert: false,
-            }),
+                };
+                Err(Error::new(expr.variable.source_info, inner, false))
+            }
         },
     }
 }

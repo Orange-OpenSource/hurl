@@ -63,35 +63,26 @@ pub fn eval_predicate(
     if assert_result.type_mismatch {
         let not = if predicate.not { "not " } else { "" };
         let expected = format!("{}{}", not, assert_result.expected);
-        Err(Error {
-            source_info,
-            inner: RunnerError::AssertFailure {
-                actual: assert_result.actual,
-                expected,
-                type_mismatch: true,
-            },
-            assert: true,
-        })
+        let inner = RunnerError::AssertFailure {
+            actual: assert_result.actual,
+            expected,
+            type_mismatch: true,
+        };
+        Err(Error::new(source_info, inner, true))
     } else if predicate.not && assert_result.success {
-        Err(Error {
-            source_info,
-            inner: RunnerError::AssertFailure {
-                actual: assert_result.actual,
-                expected: format!("not {}", assert_result.expected),
-                type_mismatch: false,
-            },
-            assert: true,
-        })
+        let inner = RunnerError::AssertFailure {
+            actual: assert_result.actual,
+            expected: format!("not {}", assert_result.expected),
+            type_mismatch: false,
+        };
+        Err(Error::new(source_info, inner, true))
     } else if !predicate.not && !assert_result.success {
-        Err(Error {
-            source_info,
-            inner: RunnerError::AssertFailure {
-                actual: assert_result.actual,
-                expected: assert_result.expected,
-                type_mismatch: false,
-            },
-            assert: true,
-        })
+        let inner = RunnerError::AssertFailure {
+            actual: assert_result.actual,
+            expected: assert_result.expected,
+            type_mismatch: false,
+        };
+        Err(Error::new(source_info, inner, true))
     } else {
         Ok(())
     }
@@ -487,13 +478,7 @@ fn eval_match(
             let expected = eval_template(template, variables)?;
             match regex::Regex::new(expected.as_str()) {
                 Ok(re) => re,
-                Err(_) => {
-                    return Err(Error {
-                        source_info,
-                        inner: RunnerError::InvalidRegex,
-                        assert: false,
-                    });
-                }
+                Err(_) => return Err(Error::new(source_info, RunnerError::InvalidRegex, false)),
             }
         }
         PredicateValue::Regex(regex) => regex.inner.clone(),

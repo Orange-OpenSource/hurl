@@ -38,17 +38,15 @@ pub fn eval_to_date(
             Ok(v) => Ok(Some(Value::Date(
                 v.and_local_timezone(chrono::Utc).unwrap(),
             ))),
-            Err(_) => Err(Error {
-                source_info,
-                inner: RunnerError::FilterInvalidInput(value.display()),
-                assert,
-            }),
+            Err(_) => {
+                let inner = RunnerError::FilterInvalidInput(value.display());
+                Err(Error::new(source_info, inner, assert))
+            }
         },
-        v => Err(Error {
-            source_info,
-            inner: RunnerError::FilterInvalidInput(v.display()),
-            assert,
-        }),
+        v => {
+            let inner = RunnerError::FilterInvalidInput(v.display());
+            Err(Error::new(source_info, inner, assert))
+        }
     }
 }
 
