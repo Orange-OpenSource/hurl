@@ -171,7 +171,7 @@ mod tests {
                     value: "aaa:".to_string(),
                     encoded: "aaa\\:".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 6),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
         assert_eq!(reader.state.cursor, 5);
@@ -185,7 +185,7 @@ mod tests {
                     value: "$top".to_string(),
                     encoded: "$top".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 5),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
             }
         );
         assert_eq!(reader.state.cursor, 4);
@@ -199,7 +199,7 @@ mod tests {
                     value: "key :".to_string(),
                     encoded: "key\\u{20}\\u{3a}".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 16),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 16)),
             }
         );
         assert_eq!(reader.state.cursor, 15);
@@ -213,7 +213,7 @@ mod tests {
                     value: "values[0]".to_string(),
                     encoded: "values\\u{5b}0\\u{5d}".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 20),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             }
         );
         assert_eq!(reader.state.cursor, 19);
@@ -227,7 +227,7 @@ mod tests {
                     value: "values[0]".to_string(),
                     encoded: "values[0]".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 10),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             }
         );
         assert_eq!(reader.state.cursor, 9);
@@ -241,7 +241,7 @@ mod tests {
                     value: "[0]".to_string(),
                     encoded: "\\u{5b}0\\u{5d}".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 14),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }
         );
         assert_eq!(reader.state.cursor, 13);

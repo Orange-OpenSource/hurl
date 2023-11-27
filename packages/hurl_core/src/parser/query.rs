@@ -226,7 +226,7 @@ mod tests {
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
-                source_info: SourceInfo::new(1, 1, 1, 7),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
                 value: QueryValue::Status,
             }
         );
@@ -238,7 +238,7 @@ mod tests {
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
-                source_info: SourceInfo::new(1, 1, 1, 7),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
                 value: QueryValue::Status,
             }
         );
@@ -252,7 +252,7 @@ mod tests {
             QueryValue::Header {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
                 name: Template {
                     delimiter: Some('"'),
@@ -260,7 +260,7 @@ mod tests {
                         value: "Foo".to_string(),
                         encoded: "Foo".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 8, 1, 13),
+                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 13)),
                 },
             }
         );
@@ -274,7 +274,7 @@ mod tests {
             QueryValue::Cookie {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
                 expr: CookiePath {
                     name: Template {
@@ -283,17 +283,17 @@ mod tests {
                             value: "Foo".to_string(),
                             encoded: "Foo".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 9, 1, 12),
+                        source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 12)),
                     },
                     attribute: Some(CookieAttribute {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 13, 1, 13),
+                            source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(1, 13)),
                         },
                         name: CookieAttributeName::Domain("Domain".to_string()),
                         space1: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 19, 1, 19),
+                            source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
                         },
                     }),
                 },
@@ -313,7 +313,7 @@ mod tests {
             QueryValue::Xpath {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 6, 1, 7),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
                 expr: Template {
                     delimiter: Some('"'),
@@ -321,14 +321,14 @@ mod tests {
                         value: String::from("normalize-space(//head/title)"),
                         encoded: String::from("normalize-space(//head/title)"),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 38),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 38)),
                 },
             },
         );
 
         let mut reader = Reader::new("xpath \"normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])\"");
         assert_eq!(xpath_query(&mut reader).unwrap(), QueryValue::Xpath {
-            space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(1, 6, 1, 7) },
+            space0: Whitespace { value: String::from(" "), source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)) },
             expr: Template {
                 delimiter: Some('"'),
                 elements: vec![
@@ -337,7 +337,7 @@ mod tests {
                         encoded: String::from("normalize-space(//div[contains(concat(' ',normalize-space(@class),' '),' monthly-price ')])"),
                     }
                 ],
-                source_info: SourceInfo::new(1, 7, 1, 100),
+                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 100)),
             },
 
         });
@@ -351,7 +351,7 @@ mod tests {
             QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -359,7 +359,7 @@ mod tests {
                         encoded: "$['statusCode']".to_string(),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 27),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 27)),
                 },
             },
         );
@@ -369,7 +369,7 @@ mod tests {
             QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -377,7 +377,7 @@ mod tests {
                         encoded: "$.success".to_string(),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 21),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 21)),
                 },
             },
         );
@@ -389,7 +389,7 @@ mod tests {
         assert_eq!(
             query(&mut reader).unwrap(),
             Query {
-                source_info: SourceInfo::new(1, 1, 1, 5),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
                 value: QueryValue::Body,
             }
         );
@@ -398,10 +398,10 @@ mod tests {
             vec![(
                 Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::new(1, 5, 1, 6)
+                    source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 6))
                 },
                 Filter {
-                    source_info: SourceInfo::new(1, 6, 1, 15),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                     value: FilterValue::UrlDecode,
                 }
             )]

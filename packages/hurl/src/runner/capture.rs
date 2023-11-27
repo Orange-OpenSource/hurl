@@ -77,7 +77,7 @@ pub mod tests {
         // non scalar value
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Capture {
             line_terminators: vec![],
@@ -88,7 +88,7 @@ pub mod tests {
                     value: "UserCount".to_string(),
                     encoded: "UserCount".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: whitespace.clone(),
             space2: whitespace.clone(),
@@ -108,7 +108,7 @@ pub mod tests {
         // non scalar value
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Capture {
             line_terminators: vec![],
@@ -119,7 +119,7 @@ pub mod tests {
                     value: "duration".to_string(),
                     encoded: "duration".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: whitespace.clone(),
             space2: whitespace.clone(),
@@ -140,7 +140,7 @@ pub mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         let capture = Capture {
             line_terminators: vec![],
@@ -151,7 +151,7 @@ pub mod tests {
                     value: "count".to_string(),
                     encoded: "count".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             filters: vec![],
             space1: whitespace.clone(),
@@ -177,7 +177,7 @@ pub mod tests {
         // non scalar value
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         let _capture = Capture {
             line_terminators: vec![],
@@ -188,14 +188,14 @@ pub mod tests {
                     value: "???".to_string(),
                     encoded: "???".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: whitespace.clone(),
             space2: whitespace.clone(),
 
             // xpath //user
             query: Query {
-                source_info: SourceInfo::new(1, 1, 1, 13),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
                 value: QueryValue::Xpath {
                     space0: whitespace.clone(),
                     expr: Template {
@@ -204,7 +204,7 @@ pub mod tests {
                             value: "//user".to_string(),
                             encoded: "//user".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 7, 1, 13),
+                        source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 13)),
                     },
                 },
             },

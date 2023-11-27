@@ -48,19 +48,19 @@ pub fn eval_nth(
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Error, Number, RunnerError, Value};
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Whitespace};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo, Whitespace};
     use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_nth() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Nth {
                 n: 2,
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };
@@ -94,7 +94,7 @@ pub mod tests {
             .err()
             .unwrap(),
             Error::new(
-                SourceInfo::new(1, 1, 1, 1),
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 RunnerError::FilterInvalidInput("Out of bound - size is 2".to_string()),
                 false
             )

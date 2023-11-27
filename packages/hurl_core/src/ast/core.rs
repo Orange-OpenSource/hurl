@@ -665,6 +665,12 @@ pub struct Pos {
     pub column: usize,
 }
 
+impl Pos {
+    pub fn new(line: usize, column: usize) -> Pos {
+        Pos { line, column }
+    }
+}
+
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct SourceInfo {
     pub start: Pos,
@@ -672,22 +678,8 @@ pub struct SourceInfo {
 }
 
 impl SourceInfo {
-    pub fn new(
-        start_line: usize,
-        start_col: usize,
-        end_line: usize,
-        end_column: usize,
-    ) -> SourceInfo {
-        SourceInfo {
-            start: Pos {
-                line: start_line,
-                column: start_col,
-            },
-            end: Pos {
-                line: end_line,
-                column: end_column,
-            },
-        }
+    pub fn new(start: Pos, end: Pos) -> SourceInfo {
+        SourceInfo { start, end }
     }
 }
 

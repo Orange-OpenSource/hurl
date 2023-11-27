@@ -322,10 +322,10 @@ pub mod tests {
         // xpath ???
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 13),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
@@ -334,7 +334,7 @@ pub mod tests {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 },
             },
         }
@@ -343,10 +343,10 @@ pub mod tests {
     pub fn xpath_count_user_query() -> Query {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 13),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
@@ -355,7 +355,7 @@ pub mod tests {
                         value: "count(//user)".to_string(),
                         encoded: "count(//user)".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         }
@@ -364,10 +364,10 @@ pub mod tests {
     pub fn xpath_users() -> Query {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 13),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
@@ -376,7 +376,7 @@ pub mod tests {
                         value: "//user".to_string(),
                         encoded: "/user".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         }
@@ -385,11 +385,11 @@ pub mod tests {
     pub fn jsonpath_success() -> Query {
         // jsonpath $.success
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 19),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -397,7 +397,7 @@ pub mod tests {
                         encoded: String::from("$.success"),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 19),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 19)),
                 },
             },
         }
@@ -406,11 +406,11 @@ pub mod tests {
     pub fn jsonpath_errors() -> Query {
         // jsonpath $.errors
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 19),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -418,7 +418,7 @@ pub mod tests {
                         encoded: String::from("$.errors"),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 18),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
                 },
             },
         }
@@ -427,11 +427,11 @@ pub mod tests {
     pub fn jsonpath_duration() -> Query {
         // jsonpath $.errors
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 19),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -439,7 +439,7 @@ pub mod tests {
                         encoded: String::from("$.duration"),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 18),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 18)),
                 },
             },
         }
@@ -448,11 +448,11 @@ pub mod tests {
     pub fn regex_name() -> Query {
         // regex "Hello ([a-zA-Z]+)!"
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 26),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 26)),
             value: QueryValue::Regex {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 6, 1, 7),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
                 value: RegexValue::Template(Template {
                     delimiter: Some('"'),
@@ -460,7 +460,7 @@ pub mod tests {
                         value: "Hello ([a-zA-Z]+)!".to_string(),
                         encoded: "Hello ([a-zA-Z]+)!".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 26),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 26)),
                 }),
             },
         }
@@ -469,11 +469,11 @@ pub mod tests {
     pub fn regex_invalid() -> Query {
         // regex ???"
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 26),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 26)),
             value: QueryValue::Regex {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 6, 1, 7),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
                 value: RegexValue::Template(Template {
                     delimiter: Some('"'),
@@ -481,7 +481,7 @@ pub mod tests {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 }),
             },
         }
@@ -515,7 +515,7 @@ pub mod tests {
         assert_eq!(
             eval_query(
                 &Query {
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     value: QueryValue::Status,
                 },
                 &variables,
@@ -532,11 +532,11 @@ pub mod tests {
         let variables = HashMap::new();
         // header Custom
         let query_header = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Header {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
                 name: Template {
                     delimiter: Some('"'),
@@ -544,7 +544,7 @@ pub mod tests {
                         value: "Custom".to_string(),
                         encoded: "Custom".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 8, 2, 14),
+                    source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 14)),
                 },
             },
         };
@@ -562,11 +562,11 @@ pub mod tests {
         // header Content-Type
         let variables = HashMap::new();
         let query_header = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Header {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 7, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                 },
                 name: Template {
                     delimiter: Some('"'),
@@ -574,7 +574,7 @@ pub mod tests {
                         value: "Content-Type".to_string(),
                         encoded: "Content-Type".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 8, 1, 16),
+                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 16)),
                 },
             },
         };
@@ -591,7 +591,7 @@ pub mod tests {
         let variables = HashMap::new();
         let space = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         let response = http::Response {
             headers: vec![
@@ -602,7 +602,7 @@ pub mod tests {
 
         // cookie "LSID"
         let query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
@@ -612,7 +612,7 @@ pub mod tests {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
                         }],
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
                     attribute: None,
                 },
@@ -625,7 +625,7 @@ pub mod tests {
 
         // cookie "LSID[Path]"
         let query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
@@ -635,7 +635,7 @@ pub mod tests {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
                         }],
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
@@ -652,7 +652,7 @@ pub mod tests {
 
         // cookie "LSID[Secure]"
         let query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
@@ -662,7 +662,7 @@ pub mod tests {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
                         }],
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
@@ -679,7 +679,7 @@ pub mod tests {
 
         // cookie "LSID[Domain]"
         let query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Cookie {
                 space0: space.clone(),
                 expr: CookiePath {
@@ -689,7 +689,7 @@ pub mod tests {
                             value: "LSID".to_string(),
                             encoded: "LSID".to_string(),
                         }],
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     },
                     attribute: Some(CookieAttribute {
                         space0: space.clone(),
@@ -790,7 +790,7 @@ pub mod tests {
         assert_eq!(
             eval_query(
                 &Query {
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     value: QueryValue::Body,
                 },
                 &variables,
@@ -802,7 +802,7 @@ pub mod tests {
         );
         let error = eval_query(
             &Query {
-                source_info: SourceInfo::new(1, 1, 1, 2),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2)),
                 value: QueryValue::Body,
             },
             &variables,
@@ -810,7 +810,10 @@ pub mod tests {
         )
         .err()
         .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 2));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 2))
+        );
         assert_eq!(
             error.inner,
             RunnerError::InvalidDecoding {
@@ -843,11 +846,11 @@ pub mod tests {
         let variables = HashMap::new();
         // xpath ^^^
         let query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Xpath {
                 space0: Whitespace {
                     value: String::from(" "),
-                    source_info: SourceInfo::new(1, 6, 1, 7),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
                 expr: Template {
                     delimiter: Some('"'),
@@ -855,7 +858,7 @@ pub mod tests {
                         value: "^^^".to_string(),
                         encoded: "^^^".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10)),
                 },
             },
         };
@@ -897,10 +900,10 @@ pub mod tests {
         // $x("normalize-space(/html/head/meta/@charset)")
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         Query {
-            source_info: SourceInfo::new(1, 1, 1, 13),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 13)),
             value: QueryValue::Xpath {
                 space0: whitespace,
                 expr: Template {
@@ -909,7 +912,7 @@ pub mod tests {
                         value: "normalize-space(/html/head/meta/@charset)".to_string(),
                         encoded: "normalize-space(/html/head/meta/@charset)".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         }
@@ -936,11 +939,11 @@ pub mod tests {
 
         // jsonpath xxx
         let jsonpath_query = Query {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: QueryValue::Jsonpath {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 9, 1, 10),
+                    source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 10)),
                 },
                 expr: Template {
                     elements: vec![TemplateElement::String {
@@ -948,7 +951,7 @@ pub mod tests {
                         encoded: String::from("xxx"),
                     }],
                     delimiter: Some('"'),
-                    source_info: SourceInfo::new(1, 10, 1, 13),
+                    source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 13)),
                 },
             },
         };
@@ -1038,7 +1041,10 @@ pub mod tests {
         let error = eval_query(&regex_invalid(), &variables, &http::hello_http_response())
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 10));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 7), Pos::new(1, 10))
+        );
         assert_eq!(error.inner, RunnerError::InvalidRegex);
     }
 
@@ -1048,7 +1054,7 @@ pub mod tests {
         assert_eq!(
             eval_query(
                 &Query {
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     value: QueryValue::Bytes,
                 },
                 &variables,
@@ -1066,7 +1072,7 @@ pub mod tests {
         assert_eq!(
             eval_query(
                 &Query {
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     value: QueryValue::Sha256 {},
                 },
                 &variables,

@@ -344,7 +344,7 @@ mod tests {
     pub fn user_response() -> Response {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
         };
         let line_terminator = LineTerminator {
             space0: whitespace.clone(),
@@ -356,12 +356,12 @@ mod tests {
             line_terminators: vec![],
             version: Version {
                 value: VersionValue::Version1,
-                source_info: SourceInfo::new(2, 1, 2, 9),
+                source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 9)),
             },
             space0: whitespace.clone(),
             status: Status {
                 value: StatusValue::Specific(200),
-                source_info: SourceInfo::new(2, 10, 2, 13),
+                source_info: SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
             },
             space1: whitespace.clone(),
             line_terminator0: line_terminator.clone(),
@@ -372,18 +372,18 @@ mod tests {
                     space0: whitespace.clone(),
                     line_terminator0: line_terminator.clone(),
                     value: SectionValue::Asserts(vec![assert::tests::assert_count_user()]),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 Section {
                     line_terminators: vec![],
                     space0: whitespace,
                     line_terminator0: line_terminator,
                     value: SectionValue::Captures(vec![capture::tests::user_count_capture()]),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             ],
             body: None,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
@@ -400,9 +400,9 @@ mod tests {
             ),
             vec![AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(2)))),
-                source_info: SourceInfo::new(1, 22, 1, 24),
+                source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 24)),
                 predicate_result: Some(Err(Error::new(
-                    SourceInfo::new(1, 0, 1, 0),
+                    SourceInfo::new(Pos::new(1, 0), Pos::new(1, 0)),
                     RunnerError::AssertFailure {
                         actual: "int <2>".to_string(),
                         expected: "int <3>".to_string(),
@@ -422,12 +422,12 @@ mod tests {
                 AssertResult::Version {
                     actual: String::from("HTTP/1.0"),
                     expected: String::from("HTTP/1.0"),
-                    source_info: SourceInfo::new(2, 1, 2, 9),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 9)),
                 },
                 AssertResult::Status {
                     actual: 200,
                     expected: 200,
-                    source_info: SourceInfo::new(2, 10, 2, 13),
+                    source_info: SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
                 },
             ]
         );

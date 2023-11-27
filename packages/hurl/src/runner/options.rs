@@ -353,7 +353,7 @@ fn eval_variable_value(
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::{Expr, SourceInfo, Variable, Whitespace};
+    use hurl_core::ast::{Expr, Pos, SourceInfo, Variable, Whitespace};
 
     use super::*;
     use crate::runner::RunnerError;
@@ -363,15 +363,15 @@ mod tests {
         BooleanOption::Expression(Expr {
             space0: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             variable: Variable {
                 name: "verbose".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         })
     }
@@ -381,15 +381,15 @@ mod tests {
         NaturalOption::Expression(Expr {
             space0: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             variable: Variable {
                 name: "retry".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             space1: Whitespace {
                 value: "".to_string(),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         })
     }

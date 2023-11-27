@@ -486,15 +486,15 @@ mod tests {
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 15, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::new(1, 15, 1, 19),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 19, 1, 19),
+                        source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
                     },
                 }),
                 TemplateElement::String {
@@ -502,7 +502,7 @@ mod tests {
                     encoded: "!".to_string(),
                 },
             ],
-            source_info: SourceInfo::new(1, 2, 1, 22),
+            source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
         })
     }
 
@@ -514,7 +514,7 @@ mod tests {
             JsonValue::String(Template {
                 delimiter: Some('"'),
                 elements: vec![],
-                source_info: SourceInfo::new(1, 2, 1, 2),
+                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
             })
         );
         assert_eq!(reader.state.cursor, 2);
@@ -532,7 +532,7 @@ mod tests {
                     value: "{}".to_string(),
                     encoded: "{}".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 2, 1, 4),
+                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 4)),
             })
         );
         assert_eq!(reader.state.cursor, 4);
@@ -752,15 +752,15 @@ mod tests {
             JsonValue::Expression(Expr {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 3, 1, 3)
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3))
                 },
                 variable: Variable {
                     name: "n".to_string(),
-                    source_info: SourceInfo::new(1, 3, 1, 4)
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4))
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4)
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4))
                 }
             })
         );
@@ -883,7 +883,7 @@ mod tests {
                             value: "a".to_string(),
                             encoded: "a".to_string()
                         }],
-                        source_info: SourceInfo::new(2, 4, 2, 5)
+                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5))
                     },
                     space1: String::new(),
                     space2: " ".to_string(),
@@ -931,7 +931,7 @@ mod tests {
                         value: "a".to_string(),
                         encoded: "a".to_string()
                     }],
-                    source_info: SourceInfo::new(1, 2, 1, 3)
+                    source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3))
                 },
                 space1: String::new(),
                 space2: " ".to_string(),

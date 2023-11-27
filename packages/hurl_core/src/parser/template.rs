@@ -142,7 +142,7 @@ mod tests {
     #[test]
     fn test_templatize_empty_string() {
         let encoded_string = EncodedString {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             chars: vec![],
         };
         assert_eq!(templatize(encoded_string).unwrap(), vec![]);
@@ -152,7 +152,7 @@ mod tests {
     fn test_templatize_hello_world() {
         // Hi\u0020{{name}}!
         let encoded_string = EncodedString {
-            source_info: SourceInfo::new(1, 1, 1, 18),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18)),
             chars: vec![
                 ('H', "H".to_string(), Pos { line: 1, column: 1 }),
                 ('i', "i".to_string(), Pos { line: 1, column: 2 }),
@@ -234,15 +234,15 @@ mod tests {
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 11, 1, 11),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::new(1, 11, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 15)),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 15, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                 }),
                 TemplateElement::String {
@@ -257,7 +257,7 @@ mod tests {
     fn test_templatize_expression_only() {
         // {{x}}!
         let encoded_string = EncodedString {
-            source_info: SourceInfo::new(1, 1, 1, 7),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 7)),
             chars: vec![
                 ('{', "{".to_string(), Pos { line: 1, column: 1 }),
                 ('{', "{".to_string(), Pos { line: 1, column: 2 }),
@@ -271,15 +271,15 @@ mod tests {
             vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 3, 1, 3),
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                 },
                 variable: Variable {
                     name: "x".to_string(),
-                    source_info: SourceInfo::new(1, 3, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 4)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
             }),]
         );
@@ -290,7 +290,7 @@ mod tests {
         // missing closing
         // {{x
         let encoded_string = EncodedString {
-            source_info: SourceInfo::new(1, 1, 1, 4),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
             chars: vec![
                 ('{', "{".to_string(), Pos { line: 1, column: 1 }),
                 ('{', "{".to_string(), Pos { line: 1, column: 2 }),
@@ -313,7 +313,7 @@ mod tests {
         // \{\{
         // This is a valid string "{{"
         let encoded_string = EncodedString {
-            source_info: SourceInfo::new(1, 1, 1, 4),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
             chars: vec![
                 ('{', "\\{".to_string(), Pos { line: 1, column: 1 }),
                 ('{', "\\{".to_string(), Pos { line: 1, column: 2 }),

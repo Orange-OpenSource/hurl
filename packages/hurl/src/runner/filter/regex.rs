@@ -53,7 +53,7 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{RunnerError, Value};
     use hurl_core::ast::{
-        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
+        Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     #[test]
     fn eval_filter_regex() {
@@ -61,10 +61,10 @@ pub mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 20),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             value: FilterValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
@@ -73,7 +73,7 @@ pub mod tests {
                         value: "Hello (.*)!".to_string(),
                         encoded: "Hello (.*)!".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 20),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),
             },
         };
@@ -92,7 +92,10 @@ pub mod tests {
         let error = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 20));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20))
+        );
         assert_eq!(
             error.inner,
             RunnerError::FilterInvalidInput("boolean".to_string())
@@ -104,10 +107,10 @@ pub mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 20),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 20)),
             value: FilterValue::Regex {
                 space0: whitespace,
                 value: RegexValue::Template(Template {
@@ -116,7 +119,7 @@ pub mod tests {
                         value: "???".to_string(),
                         encoded: "???".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 20),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),
             },
         };
@@ -128,7 +131,10 @@ pub mod tests {
         )
         .err()
         .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 20));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20))
+        );
         assert_eq!(error.inner, RunnerError::InvalidRegex);
     }
 }

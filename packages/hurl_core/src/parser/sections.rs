@@ -378,31 +378,31 @@ mod tests {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 10, 1, 10),
+                        source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
                     },
                     comment: None,
                     newline: Whitespace {
                         value: String::from("\n"),
-                        source_info: SourceInfo::new(1, 10, 2, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(2, 1)),
                     },
                 },
                 value: SectionValue::Asserts(vec![Assert {
                     line_terminators: vec![],
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(2, 1, 2, 1),
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                     },
                     query: Query {
-                        source_info: SourceInfo::new(2, 1, 2, 18),
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 18)),
                         value: QueryValue::Header {
                             space0: Whitespace {
                                 value: String::from(" "),
-                                source_info: SourceInfo::new(2, 7, 2, 8),
+                                source_info: SourceInfo::new(Pos::new(2, 7), Pos::new(2, 8)),
                             },
                             name: Template {
                                 delimiter: Some('"'),
@@ -410,27 +410,27 @@ mod tests {
                                     value: "Location".to_string(),
                                     encoded: "Location".to_string(),
                                 }],
-                                source_info: SourceInfo::new(2, 8, 2, 18),
+                                source_info: SourceInfo::new(Pos::new(2, 8), Pos::new(2, 18)),
                             },
                         },
                     },
                     filters: vec![],
                     space1: Whitespace {
                         value: String::from(" "),
-                        source_info: SourceInfo::new(2, 18, 2, 19),
+                        source_info: SourceInfo::new(Pos::new(2, 18), Pos::new(2, 19)),
                     },
                     predicate: Predicate {
                         not: false,
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(2, 19, 2, 19),
+                            source_info: SourceInfo::new(Pos::new(2, 19), Pos::new(2, 19)),
                         },
                         predicate_func: PredicateFunc {
-                            source_info: SourceInfo::new(2, 19, 2, 41),
+                            source_info: SourceInfo::new(Pos::new(2, 19), Pos::new(2, 41)),
                             value: PredicateFuncValue::Equal {
                                 space0: Whitespace {
                                     value: String::from(" "),
-                                    source_info: SourceInfo::new(2, 21, 2, 22),
+                                    source_info: SourceInfo::new(Pos::new(2, 21), Pos::new(2, 22)),
                                 },
                                 value: PredicateValue::String(Template {
                                     delimiter: Some('"'),
@@ -438,7 +438,7 @@ mod tests {
                                         value: "https://google.fr".to_string(),
                                         encoded: "https://google.fr".to_string(),
                                     }],
-                                    source_info: SourceInfo::new(2, 22, 2, 41),
+                                    source_info: SourceInfo::new(Pos::new(2, 22), Pos::new(2, 41)),
                                 }),
                                 operator: true,
                             },
@@ -447,16 +447,16 @@ mod tests {
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(2, 41, 2, 41),
+                            source_info: SourceInfo::new(Pos::new(2, 41), Pos::new(2, 41)),
                         },
                         comment: None,
                         newline: Whitespace {
                             value: String::from("\n"),
-                            source_info: SourceInfo::new(2, 41, 3, 1),
+                            source_info: SourceInfo::new(Pos::new(2, 41), Pos::new(3, 1)),
                         },
                     },
                 }]),
-                source_info: SourceInfo::new(1, 1, 1, 10),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             }
         );
     }
@@ -499,7 +499,7 @@ mod tests {
                     value: "Bar".to_string(),
                     encoded: "Bar".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 6, 1, 9),
+                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 9)),
             }
         );
     }
@@ -532,19 +532,19 @@ mod tests {
             FileValue {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 6, 1, 6),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
                 filename: Filename {
                     value: "hello.txt".to_string(),
-                    source_info: SourceInfo::new(1, 6, 1, 15),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 15, 1, 15),
+                    source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                 },
                 space2: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 16, 1, 16),
+                    source_info: SourceInfo::new(Pos::new(1, 16), Pos::new(1, 16)),
                 },
                 content_type: None,
             }
@@ -555,19 +555,19 @@ mod tests {
             FileValue {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 6, 1, 6),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
                 filename: Filename {
                     value: "hello.txt".to_string(),
-                    source_info: SourceInfo::new(1, 6, 1, 15),
+                    source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 15, 1, 15),
+                    source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                 },
                 space2: Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::new(1, 16, 1, 17),
+                    source_info: SourceInfo::new(Pos::new(1, 16), Pos::new(1, 17)),
                 },
                 content_type: Some("text/html".to_string()),
             }
@@ -611,17 +611,17 @@ mod tests {
                     value: "url".to_string(),
                     encoded: "url".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 4),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 4)),
             },
         );
         assert_eq!(
             capture0.query,
             Query {
-                source_info: SourceInfo::new(1, 6, 1, 23),
+                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 23)),
                 value: QueryValue::Header {
                     space0: Whitespace {
                         value: String::from(" "),
-                        source_info: SourceInfo::new(1, 12, 1, 13),
+                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 13)),
                     },
                     name: Template {
                         delimiter: Some('"'),
@@ -629,7 +629,7 @@ mod tests {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 13, 1, 23),
+                        source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(1, 23)),
                     },
                 },
             }
@@ -644,11 +644,11 @@ mod tests {
         assert_eq!(
             capture0.query,
             Query {
-                source_info: SourceInfo::new(1, 8, 1, 25),
+                source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 25)),
                 value: QueryValue::Header {
                     space0: Whitespace {
                         value: String::from(" "),
-                        source_info: SourceInfo::new(1, 14, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 15)),
                     },
                     name: Template {
                         delimiter: Some('"'),
@@ -656,7 +656,7 @@ mod tests {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 15, 1, 25),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 25)),
                     },
                 },
             }
@@ -709,11 +709,11 @@ mod tests {
         assert_eq!(
             assert0.query,
             Query {
-                source_info: SourceInfo::new(1, 1, 1, 18),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18)),
                 value: QueryValue::Header {
                     space0: Whitespace {
                         value: String::from(" "),
-                        source_info: SourceInfo::new(1, 7, 1, 8),
+                        source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 8)),
                     },
                     name: Template {
                         delimiter: Some('"'),
@@ -721,7 +721,7 @@ mod tests {
                             value: "Location".to_string(),
                             encoded: "Location".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 8, 1, 18),
+                        source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 18)),
                     },
                 },
             }
@@ -738,14 +738,14 @@ mod tests {
                 not: false,
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 21, 1, 21),
+                    source_info: SourceInfo::new(Pos::new(1, 21), Pos::new(1, 21)),
                 },
                 predicate_func: PredicateFunc {
-                    source_info: SourceInfo::new(1, 21, 1, 25),
+                    source_info: SourceInfo::new(Pos::new(1, 21), Pos::new(1, 25)),
                     value: PredicateFuncValue::Equal {
                         space0: Whitespace {
                             value: String::from(" "),
-                            source_info: SourceInfo::new(1, 23, 1, 24),
+                            source_info: SourceInfo::new(Pos::new(1, 23), Pos::new(1, 24)),
                         },
                         value: PredicateValue::Number(Number::Integer(5)),
                         operator: true,
@@ -765,24 +765,24 @@ mod tests {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 12, 1, 12),
+                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 12)),
                     },
                     comment: None,
                     newline: Whitespace {
                         value: String::from("\n"),
-                        source_info: SourceInfo::new(1, 12, 2, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(2, 1)),
                     },
                 },
                 value: SectionValue::BasicAuth(Some(KeyValue {
                     line_terminators: vec![],
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(2, 1, 2, 1)
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1))
                     },
                     key: Template {
                         delimiter: None,
@@ -790,15 +790,15 @@ mod tests {
                             value: "user".to_string(),
                             encoded: "user".to_string()
                         }],
-                        source_info: SourceInfo::new(2, 1, 2, 5),
+                        source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 5)),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(2, 5, 2, 5)
+                        source_info: SourceInfo::new(Pos::new(2, 5), Pos::new(2, 5))
                     },
                     space2: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(2, 6, 2, 6)
+                        source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 6))
                     },
                     value: Template {
                         delimiter: None,
@@ -806,21 +806,21 @@ mod tests {
                             value: "password".to_string(),
                             encoded: "password".to_string()
                         }],
-                        source_info: SourceInfo::new(2, 6, 2, 14),
+                        source_info: SourceInfo::new(Pos::new(2, 6), Pos::new(2, 14)),
                     },
                     line_terminator0: LineTerminator {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(2, 14, 2, 14)
+                            source_info: SourceInfo::new(Pos::new(2, 14), Pos::new(2, 14))
                         },
                         comment: None,
                         newline: Whitespace {
                             value: "\n".to_string(),
-                            source_info: SourceInfo::new(2, 14, 3, 1)
+                            source_info: SourceInfo::new(Pos::new(2, 14), Pos::new(3, 1))
                         },
                     },
                 })),
-                source_info: SourceInfo::new(1, 1, 1, 12),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
             }
         );
         assert_eq!(reader.state.pos, Pos { line: 3, column: 1 });
@@ -832,21 +832,21 @@ mod tests {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 12, 1, 12),
+                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(1, 12)),
                     },
                     comment: None,
                     newline: Whitespace {
                         value: String::from("\n"),
-                        source_info: SourceInfo::new(1, 12, 2, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 12), Pos::new(2, 1)),
                     },
                 },
                 value: SectionValue::BasicAuth(None),
-                source_info: SourceInfo::new(1, 1, 1, 12),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 12)),
             }
         );
         assert_eq!(reader.state.pos, Pos { line: 2, column: 1 });

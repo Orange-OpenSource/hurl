@@ -47,14 +47,14 @@ pub mod tests {
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::{Number, RunnerError, Value};
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_to_int() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToInt,
         };
         assert_eq!(
@@ -96,7 +96,7 @@ pub mod tests {
     pub fn eval_filter_to_int_error() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToInt,
         };
         let err = eval_filter(

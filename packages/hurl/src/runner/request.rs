@@ -175,7 +175,7 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
@@ -196,7 +196,7 @@ mod tests {
                         space0: whitespace(),
                         variable: Variable {
                             name: String::from("base_url"),
-                            source_info: SourceInfo::new(1, 7, 1, 15),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
                         },
                         space1: whitespace(),
                     }),
@@ -206,13 +206,13 @@ mod tests {
                     },
                 ],
                 delimiter: None,
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             line_terminator0: line_terminator,
             headers: vec![],
             sections: vec![],
             body: None,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
@@ -250,7 +250,7 @@ mod tests {
                     encoded: String::from("http://localhost:8000/querystring-params"),
                 }],
                 delimiter: None,
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             line_terminator0: line_terminator.clone(),
             headers: vec![],
@@ -266,7 +266,7 @@ mod tests {
                                 value: "param1".to_string(),
                                 encoded: "param1".to_string(),
                             }],
-                            source_info: SourceInfo::new(0, 0, 0, 0),
+                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         },
                         Template {
                             delimiter: None,
@@ -274,11 +274,11 @@ mod tests {
                                 space0: whitespace(),
                                 variable: Variable {
                                     name: String::from("param1"),
-                                    source_info: SourceInfo::new(1, 7, 1, 15),
+                                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
                                 },
                                 space1: whitespace(),
                             })],
-                            source_info: SourceInfo::new(0, 0, 0, 0),
+                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         },
                     ),
                     simple_key_value(
@@ -288,7 +288,7 @@ mod tests {
                                 value: "param2".to_string(),
                                 encoded: "param2".to_string(),
                             }],
-                            source_info: SourceInfo::new(0, 0, 0, 0),
+                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         },
                         Template {
                             delimiter: None,
@@ -296,14 +296,14 @@ mod tests {
                                 value: "a b".to_string(),
                                 encoded: "a b".to_string(),
                             }],
-                            source_info: SourceInfo::new(0, 0, 0, 0),
+                            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                         },
                     ),
                 ]),
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             }],
             body: None,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
@@ -313,7 +313,10 @@ mod tests {
         let error = eval_request(&hello_request(), &variables, &ContextDir::default())
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 15));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15))
+        );
         assert_eq!(
             error.inner,
             RunnerError::TemplateVariableNotDefined {
@@ -360,7 +363,7 @@ mod tests {
                 space0: whitespace(),
                 comment: Some(Comment {
                     value: "@cookie_storage_clear".to_string(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 }),
                 newline: whitespace(),
             }],
@@ -373,13 +376,13 @@ mod tests {
                     encoded: String::from("http://localhost"),
                 },],
                 delimiter: None,
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
             line_terminator0: line_terminator,
             headers: vec![],
             sections: vec![],
             body: None,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }));
     }
 
@@ -401,7 +404,7 @@ mod tests {
                         value:
                             "@cookie_storage_set: localhost\tFALSE\t/\tFALSE\t0\tcookie1\tvalueA"
                                 .to_string(),
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     }),
                     newline: whitespace(),
                 }],
@@ -414,13 +417,13 @@ mod tests {
                         encoded: String::from("http://localhost"),
                     },],
                     delimiter: None,
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 line_terminator0: line_terminator,
                 headers: vec![],
                 sections: vec![],
                 body: None,
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             })
         );
     }

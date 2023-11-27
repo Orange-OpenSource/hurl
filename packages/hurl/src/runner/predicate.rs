@@ -53,11 +53,10 @@ pub fn eval_predicate(
 ) -> PredicateResult {
     let assert_result = eval_predicate_func(&predicate.predicate_func, variables, value.as_ref())?;
 
+    // Column error is set to 0 to disable the error display of "^----"
     let source_info = SourceInfo::new(
-        predicate.space0.source_info.start.line,
-        0,
-        predicate.space0.source_info.start.line,
-        0,
+        Pos::new(predicate.space0.source_info.start.line, 0),
+        Pos::new(predicate.space0.source_info.start.line, 0),
     );
 
     if assert_result.type_mismatch {
@@ -869,7 +868,7 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
@@ -889,7 +888,7 @@ mod tests {
         let variables = HashMap::new();
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(1, 1, 0, 0),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(0, 0)),
         };
 
         let predicate = Predicate {
@@ -901,7 +900,7 @@ mod tests {
                     value: PredicateValue::Number(hurl_core::ast::Number::Integer(10)),
                     operator: false,
                 },
-                source_info: SourceInfo::new(1, 11, 1, 12),
+                source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 12)),
             },
         };
 
@@ -921,7 +920,10 @@ mod tests {
                 type_mismatch: false,
             }
         );
-        assert_eq!(error.source_info, SourceInfo::new(1, 0, 1, 0));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 0), Pos::new(1, 0))
+        );
 
         assert!(eval_predicate(
             &predicate,
@@ -1009,7 +1011,7 @@ mod tests {
         // value: Some(Unit) | None
         let pred_func = PredicateFunc {
             value: PredicateFuncValue::Exist,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
 
         let value = Some(&Value::Unit);
@@ -1134,18 +1136,18 @@ mod tests {
             elements: vec![TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 11, 1, 11),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                 },
                 variable: Variable {
                     name: String::from("base_url"),
-                    source_info: SourceInfo::new(1, 11, 1, 19),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 19, 1, 19),
+                    source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
                 },
             })],
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
         };
 
         // predicate: `== "{{base_url}}"`
@@ -1160,7 +1162,10 @@ mod tests {
                 name: String::from("base_url")
             }
         );
-        assert_eq!(error.source_info, SourceInfo::new(1, 11, 1, 19));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 11), Pos::new(1, 19))
+        );
 
         // predicate: `== "{{base_url}}"`
         // value: "http://localhost:8000"
@@ -1307,7 +1312,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
@@ -1331,7 +1336,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::StartWith {
                     space0: whitespace(),
                     value: PredicateValue::String(Template {
@@ -1340,7 +1345,7 @@ mod tests {
                             value: "toto".to_string(),
                             encoded: "toto".to_string(),
                         }],
-                        source_info: SourceInfo::new(0, 0, 0, 0),
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                     }),
                 },
             },
@@ -1396,7 +1401,7 @@ mod tests {
             not: false,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     value: PredicateValue::Null,
@@ -1420,7 +1425,7 @@ mod tests {
             not: true,
             space0: whitespace(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace(),
                     operator: false,
@@ -1443,7 +1448,7 @@ mod tests {
             inner: regex::Regex::new(r#"a{3}"#).unwrap(),
         });
         let value = Value::String("aa".to_string());
-        let source_info = SourceInfo::new(0, 0, 0, 0);
+        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
         let assert_result = eval_match(&expected, source_info, &variables, &value).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);

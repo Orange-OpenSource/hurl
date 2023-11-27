@@ -193,15 +193,15 @@ mod tests {
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 15, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::new(1, 15, 1, 19),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19)),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 19, 1, 19),
+                        source_info: SourceInfo::new(Pos::new(1, 19), Pos::new(1, 19)),
                     },
                 }),
                 TemplateElement::String {
@@ -209,7 +209,7 @@ mod tests {
                     encoded: "!".to_string(),
                 },
             ],
-            source_info: SourceInfo::new(1, 2, 1, 22),
+            source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 22)),
         })
     }
 
@@ -224,7 +224,7 @@ mod tests {
                         value: "firstName".to_string(),
                         encoded: "firstName".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 space1: String::new(),
                 space2: " ".to_string(),
@@ -234,7 +234,7 @@ mod tests {
                         value: "John".to_string(),
                         encoded: "John".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
                 space3: "\n".to_string(),
             }],
@@ -269,7 +269,10 @@ mod tests {
         let error = eval_json_value(&json_hello_world_value(), &variables, true)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 15, 1, 19));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 15), Pos::new(1, 19))
+        );
         assert_eq!(
             error.inner,
             RunnerError::TemplateVariableNotDefined {
@@ -330,7 +333,7 @@ mod tests {
                 encoded: "Hi".to_string(),
                 value: "Hi".to_string(),
             }],
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
         assert_eq!(
             eval_json_value(
@@ -392,7 +395,7 @@ mod tests {
                         value: "\n".to_string(),
                         encoded: "\\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 }),
                 &variables,
                 true
@@ -413,7 +416,7 @@ mod tests {
                         value: "\n".to_string(),
                         encoded: "\\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 &variables,
             )
@@ -436,12 +439,12 @@ mod tests {
                             space0: whitespace(),
                             variable: Variable {
                                 name: "quote".to_string(),
-                                source_info: SourceInfo::new(0, 0, 0, 0),
+                                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                             },
                             space1: whitespace(),
                         }),
                     ],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 &variables,
             )
@@ -453,7 +456,7 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: String::new(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 

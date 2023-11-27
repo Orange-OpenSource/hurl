@@ -42,14 +42,14 @@ pub fn eval_html_unescape(
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_html_unescape() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::HtmlUnescape,
         };
 

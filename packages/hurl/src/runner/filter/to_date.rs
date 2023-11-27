@@ -56,7 +56,9 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
     use chrono::{DateTime, NaiveDate, Utc};
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::ast::{
+        Filter, FilterValue, Pos, SourceInfo, Template, TemplateElement, Whitespace,
+    };
     use std::collections::HashMap;
 
     #[test]
@@ -64,7 +66,7 @@ pub mod tests {
         let variables = HashMap::new();
 
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToDate {
                 fmt: Template {
                     delimiter: Some('"'),
@@ -72,11 +74,11 @@ pub mod tests {
                         value: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
                         encoded: "%Y %b %d %H:%M:%S%.3f %z".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };
@@ -99,7 +101,7 @@ pub mod tests {
         );
 
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::ToDate {
                 fmt: Template {
                     delimiter: Some('"'),
@@ -107,11 +109,11 @@ pub mod tests {
                         value: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
                         encoded: "%a, %d %b %Y %H:%M:%S GMT".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };

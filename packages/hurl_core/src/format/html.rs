@@ -901,7 +901,7 @@ mod tests {
                 value: String::new(),
                 encoded: "unused".to_string(),
             }],
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });
         let mut fmt = HtmlFormatter::new();
         fmt.fmt_multiline_string(&multiline_string, false);
@@ -922,7 +922,7 @@ mod tests {
                 value: "hello".to_string(),
                 encoded: "unused".to_string(),
             }],
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });
         let mut fmt = HtmlFormatter::new();
         fmt.fmt_multiline_string(&multiline_string, false);
@@ -960,7 +960,7 @@ mod tests {
                     value: "line1\nline2\n".to_string(),
                     encoded: "unused".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             },
         });
         let mut fmt = HtmlFormatter::new();
@@ -1025,7 +1025,7 @@ mod tests {
                         value: "id".to_string(),
                         encoded: "id".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space1: String::new(),
                 space2: " ".to_string(),
@@ -1053,7 +1053,7 @@ mod tests {
                 value: "\n".to_string(),
                 encoded: "\\n".to_string(),
             }],
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         });
         fmt.fmt_json_value(&value);
         assert_eq!(

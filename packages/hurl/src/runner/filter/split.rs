@@ -50,14 +50,16 @@ pub mod tests {
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::ast::{
+        Filter, FilterValue, Pos, SourceInfo, Template, TemplateElement, Whitespace,
+    };
     use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_split() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Split {
                 sep: Template {
                     delimiter: Some('"'),
@@ -65,11 +67,11 @@ pub mod tests {
                         value: ",".to_string(),
                         encoded: ",".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };

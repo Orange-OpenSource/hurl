@@ -83,7 +83,7 @@ mod tests {
                         value: "cookie1".to_string(),
                         encoded: "cookie1".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },
                 attribute: None,
             }
@@ -103,17 +103,17 @@ mod tests {
                         value: "cookie1".to_string(),
                         encoded: "cookie1".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 1, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
                 },
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 9, 1, 9),
+                        source_info: SourceInfo::new(Pos::new(1, 9), Pos::new(1, 9)),
                     },
                     name: CookieAttributeName::Domain("Domain".to_string()),
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 15, 1, 15),
+                        source_info: SourceInfo::new(Pos::new(1, 15), Pos::new(1, 15)),
                     },
                 }),
             }
@@ -132,28 +132,28 @@ mod tests {
                     elements: vec![TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 3, 1, 3),
+                            source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 3)),
                         },
                         variable: Variable {
                             name: "name".to_string(),
-                            source_info: SourceInfo::new(1, 3, 1, 7),
+                            source_info: SourceInfo::new(Pos::new(1, 3), Pos::new(1, 7)),
                         },
                         space1: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 7, 1, 7),
+                            source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 7)),
                         },
                     })],
-                    source_info: SourceInfo::new(1, 1, 1, 9),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
                 },
                 attribute: Some(CookieAttribute {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 10, 1, 10),
+                        source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
                     },
                     name: CookieAttributeName::Domain("Domain".to_string()),
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 16, 1, 16),
+                        source_info: SourceInfo::new(Pos::new(1, 16), Pos::new(1, 16)),
                     },
                 }),
             }

@@ -77,7 +77,9 @@ pub fn eval_jsonpath_string(
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo, Template, TemplateElement, Whitespace};
+    use hurl_core::ast::{
+        Filter, FilterValue, Pos, SourceInfo, Template, TemplateElement, Whitespace,
+    };
     use std::collections::HashMap;
 
     use crate::runner::filter::eval::eval_filter;
@@ -88,7 +90,7 @@ pub mod tests {
         let variables = HashMap::new();
 
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::JsonPath {
                 expr: Template {
                     delimiter: Some('"'),
@@ -96,11 +98,11 @@ pub mod tests {
                         value: "$.message".to_string(),
                         encoded: "$.message".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };

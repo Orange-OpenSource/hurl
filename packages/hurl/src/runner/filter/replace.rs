@@ -51,7 +51,7 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
     use hurl_core::ast::{
-        Filter, FilterValue, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
+        Filter, FilterValue, Pos, RegexValue, SourceInfo, Template, TemplateElement, Whitespace,
     };
     use std::collections::HashMap;
 
@@ -59,7 +59,7 @@ pub mod tests {
     pub fn eval_filter_replace() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             value: FilterValue::Replace {
                 old_value: RegexValue::Template(Template {
                     delimiter: None,
@@ -67,7 +67,7 @@ pub mod tests {
                         value: "\\s+".to_string(),
                         encoded: ",".to_string(),
                     }],
-                    source_info: SourceInfo::new(1, 7, 1, 20),
+                    source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 }),
                 new_value: Template {
                     delimiter: Some('"'),
@@ -75,15 +75,15 @@ pub mod tests {
                         value: ",".to_string(),
                         encoded: ",".to_string(),
                     }],
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             },
         };

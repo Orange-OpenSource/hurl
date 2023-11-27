@@ -51,14 +51,14 @@ pub mod tests {
 
     use crate::runner::filter::eval::eval_filter;
     use crate::runner::Value;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     #[test]
     pub fn eval_filter_url_encode() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: FilterValue::UrlEncode,
         };
         assert_eq!(

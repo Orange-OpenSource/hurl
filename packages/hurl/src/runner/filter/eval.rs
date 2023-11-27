@@ -119,7 +119,7 @@ pub fn eval_filter(
 pub mod tests {
     use crate::runner::filter::eval::eval_filters;
     use crate::runner::{Number, Value};
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     #[test]
@@ -129,7 +129,7 @@ pub mod tests {
         assert_eq!(
             eval_filters(
                 &vec![Filter {
-                    source_info: SourceInfo::new(1, 1, 1, 6),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
                     value: FilterValue::Count,
                 }],
                 &Value::List(vec![

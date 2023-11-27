@@ -81,7 +81,7 @@ fn lint_request(request: &Request) -> Request {
     let mut sections: Vec<Section> = request.sections.iter().map(lint_section).collect();
     sections.sort_by_key(|k| section_value_index(k.value.clone()));
 
-    let source_info = SourceInfo::new(0, 0, 0, 0);
+    let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
     Request {
         line_terminators,
         space0,
@@ -129,7 +129,7 @@ fn lint_response(response: &Response) -> Response {
         headers,
         sections,
         body,
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
 }
 
@@ -142,7 +142,7 @@ fn lint_section(section: &Section) -> Section {
         space0: empty_whitespace(),
         value,
         line_terminator0,
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
 }
 
@@ -227,7 +227,7 @@ fn lint_capture(capture: &Capture) -> Capture {
 
 fn lint_query(query: &Query) -> Query {
     Query {
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         value: lint_query_value(&query.value),
     }
 }
@@ -329,7 +329,7 @@ fn lint_predicate(predicate: &Predicate) -> Predicate {
 
 fn lint_predicate_func(predicate_func: &PredicateFunc) -> PredicateFunc {
     PredicateFunc {
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         value: lint_predicate_func_value(&predicate_func.value),
     }
 }
@@ -503,7 +503,7 @@ fn lint_file(file: &File) -> File {
         space0: empty_whitespace(),
         filename: Filename {
             value: file.filename.value.clone(),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         },
         space1: empty_whitespace(),
     }
@@ -556,14 +556,14 @@ fn lint_file_param(file_param: &FileParam) -> FileParam {
 fn empty_whitespace() -> Whitespace {
     Whitespace {
         value: String::new(),
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
 }
 
 fn one_whitespace() -> Whitespace {
     Whitespace {
         value: " ".to_string(),
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
 }
 
@@ -588,7 +588,7 @@ fn lint_line_terminator(line_terminator: &LineTerminator) -> LineTerminator {
         None => empty_whitespace(),
         Some(_) => Whitespace {
             value: line_terminator.clone().space0.value,
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         },
     };
     let comment = line_terminator.comment.as_ref().map(lint_comment);
@@ -598,7 +598,7 @@ fn lint_line_terminator(line_terminator: &LineTerminator) -> LineTerminator {
         } else {
             "\n".to_string()
         },
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     };
     LineTerminator {
         space0,
@@ -614,7 +614,7 @@ fn lint_comment(comment: &Comment) -> Comment {
         } else {
             format!(" {}", comment.value)
         },
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
     }
 }
 
@@ -628,7 +628,7 @@ fn lint_entry_option(entry_option: &EntryOption) -> EntryOption {
 
 fn lint_filter(filter: &Filter) -> Filter {
     Filter {
-        source_info: SourceInfo::new(0, 0, 0, 0),
+        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         value: lint_filter_value(&filter.value),
     }
 }

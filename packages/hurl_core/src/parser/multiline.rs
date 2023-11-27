@@ -152,12 +152,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
             if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
                 Ok(Whitespace {
                     value: c.to_string(),
-                    source_info: SourceInfo::new(
-                        start.pos.line,
-                        start.pos.column,
-                        reader.state.pos.line,
-                        reader.state.pos.column,
-                    ),
+                    source_info: SourceInfo::new(start.pos, reader.state.pos),
                 })
             } else {
                 Err(Error {
@@ -177,12 +172,7 @@ fn zero_or_more_whitespaces(reader: &mut Reader) -> ParseResult<Whitespace> {
             let s = v.iter().map(|x| x.value.clone()).collect();
             Ok(Whitespace {
                 value: s,
-                source_info: SourceInfo::new(
-                    start.pos.line,
-                    start.pos.column,
-                    reader.state.pos.line,
-                    reader.state.pos.column,
-                ),
+                source_info: SourceInfo::new(start.pos, reader.state.pos),
             })
         }
         Err(e) => Err(e),
@@ -294,11 +284,11 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -306,7 +296,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
             })
         );
@@ -317,11 +307,11 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: "         ".to_string(),
-                    source_info: SourceInfo::new(1, 4, 1, 13),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 13)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 13, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 13), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -329,7 +319,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
             })
         );
@@ -343,11 +333,11 @@ mod tests {
             MultilineString::Json(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 8, 1, 8),
+                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(1, 8)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 8, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 8), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -355,7 +345,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
             })
         );
@@ -369,11 +359,11 @@ mod tests {
             MultilineString::GraphQl(GraphQl {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 11, 1, 11),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 11, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -381,7 +371,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
                 variables: None,
             })
@@ -393,11 +383,11 @@ mod tests {
             MultilineString::GraphQl(GraphQl {
                 space: Whitespace {
                     value: "      ".to_string(),
-                    source_info: SourceInfo::new(1, 11, 1, 17),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 17)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 17, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 17), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -405,7 +395,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
                 variables: None,
             })
@@ -433,7 +423,7 @@ mod tests {
             MultilineString::OneLineText(Template {
                 delimiter: None,
                 elements: vec![],
-                source_info: SourceInfo::new(1, 4, 1, 4),
+                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
             })
         );
 
@@ -443,16 +433,16 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
                     elements: vec![],
-                    source_info: SourceInfo::new(2, 1, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
             })
         );
@@ -462,16 +452,16 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\r\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
                     elements: vec![],
-                    source_info: SourceInfo::new(2, 1, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
             })
         );
@@ -488,7 +478,7 @@ mod tests {
                     value: "Hello World!".to_string(),
                     encoded: "Hello World!".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 4, 1, 16),
+                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 16)),
             })
         );
     }
@@ -504,7 +494,7 @@ mod tests {
                     value: "base64_inline".to_string(),
                     encoded: "base64_inline".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 4, 1, 17),
+                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 17)),
             })
         );
     }
@@ -517,11 +507,11 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -529,7 +519,7 @@ mod tests {
                         value: "line1\nline2\nline3\n".to_string(),
                         encoded: "line1\nline2\nline3\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 5, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(5, 1)),
                 },
             })
         );
@@ -543,11 +533,11 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -555,7 +545,7 @@ mod tests {
                         value: "\n".to_string(),
                         encoded: "\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 3, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
                 },
             })
         );
@@ -567,11 +557,11 @@ mod tests {
             MultilineString::Text(Text {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 4, 1, 4),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 4)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 4, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -579,7 +569,7 @@ mod tests {
                         value: "\r\n".to_string(),
                         encoded: "\r\n".to_string(),
                     }],
-                    source_info: SourceInfo::new(2, 1, 3, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(3, 1)),
                 },
             })
         );
@@ -624,7 +614,7 @@ mod tests {
             Template {
                 delimiter: None,
                 elements: vec![],
-                source_info: SourceInfo::new(1, 1, 1, 1),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
         );
         assert_eq!(reader.state.cursor, 3);
@@ -638,7 +628,7 @@ mod tests {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 6),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             }
         );
         assert_eq!(reader.state.cursor, 8);
@@ -665,11 +655,11 @@ variables {
             MultilineString::GraphQl(GraphQl {
                 space: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 11, 1, 11),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(1, 11)),
                 },
                 newline: Whitespace {
                     value: "\n".to_string(),
-                    source_info: SourceInfo::new(1, 11, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 11), Pos::new(2, 1)),
                 },
                 value: Template {
                     delimiter: None,
@@ -678,12 +668,12 @@ variables {
                         encoded:
                             "query Human($name: String!) {\n  human(name: $name) {\n    name\n    height(unit: FOOT)\n}\n\n".to_string()
                     }],
-                    source_info: SourceInfo::new(2, 1, 8, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(8, 1)),
                 },
                 variables: Some(GraphQlVariables {
                     space: Whitespace {
                         value: " ".to_string(),
-                        source_info: SourceInfo::new(8, 10, 8, 11),
+                        source_info: SourceInfo::new(Pos::new(8, 10), Pos::new(8, 11)),
                     },
                     value: JsonValue::Object {
                         space0: "\n  ".to_string(),
@@ -697,7 +687,7 @@ variables {
                                         encoded: "name".to_string()
                                     }
                                 ],
-                                source_info: SourceInfo::new(9, 4, 9, 8)
+                                source_info: SourceInfo::new(Pos::new(9, 4), Pos::new(9, 8))
                             },
                             space1: String::new(),
                             space2: " ".to_string(),
@@ -709,14 +699,14 @@ variables {
                                         encoded: "Han Solo".to_string()
                                     }
                                 ],
-                                source_info: SourceInfo::new(9, 12, 9, 20)
+                                source_info: SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))
                             }),
                             space3: "\n".to_string()
                         }]
                     },
                     whitespace: Whitespace {
                         value: "\n".to_string(),
-                        source_info: SourceInfo::new(10, 2, 11, 1)
+                        source_info: SourceInfo::new(Pos::new(10, 2), Pos::new(11, 1))
                     }
                 })
             })

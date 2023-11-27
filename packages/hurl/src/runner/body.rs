@@ -95,14 +95,14 @@ mod tests {
         // file, data.bin;
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
             filename: Filename {
                 value: String::from("tests/data.bin"),
-                source_info: SourceInfo::new(1, 7, 1, 15),
+                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
             },
             space1: whitespace,
         });
@@ -122,14 +122,14 @@ mod tests {
         // file, data.bin;
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         };
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
             filename: Filename {
                 value: String::from("data.bin"),
-                source_info: SourceInfo::new(1, 7, 1, 15),
+                source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
             },
             space1: whitespace,
         });
@@ -146,6 +146,9 @@ mod tests {
                 value: "data.bin".to_string()
             }
         );
-        assert_eq!(error.source_info, SourceInfo::new(1, 7, 1, 15));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15))
+        );
     }
 }

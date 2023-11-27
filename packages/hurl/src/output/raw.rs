@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::SourceInfo;
+use hurl_core::ast::{Pos, SourceInfo};
 use hurl_core::error::Error;
 
 use crate::runner::HurlResult;
@@ -54,7 +54,7 @@ pub fn write_body(
                         // FIXME: we convert to a runner::Error to be able to use fixme
                         // method. Can we do otherwise (without creating an artificial
                         // error a first character).
-                        let source_info = SourceInfo::new(0, 0, 0, 0);
+                        let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
                         let error = runner::Error::new(source_info, e.into(), false);
                         let message = error.fixme();
                         return Err(output::error::Error::new(&message));

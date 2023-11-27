@@ -60,7 +60,7 @@ mod tests {
     use std::collections::HashMap;
 
     use hurl_core::ast::{
-        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, SourceInfo,
+        GraphQl, GraphQlVariables, JsonObjectElement, JsonValue, MultilineString, Pos, SourceInfo,
         Template, TemplateElement, Whitespace,
     };
 
@@ -69,19 +69,19 @@ mod tests {
     fn whitespace() -> Whitespace {
         Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
     fn newline() -> Whitespace {
         Whitespace {
             value: String::from("\n"),
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         }
     }
 
     fn empty_source_info() -> SourceInfo {
-        SourceInfo::new(0, 0, 0, 0)
+        SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0))
     }
 
     #[test]

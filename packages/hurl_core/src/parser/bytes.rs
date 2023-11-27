@@ -129,7 +129,7 @@ mod tests {
             Bytes::Json(JsonValue::String(Template {
                 delimiter: Some('"'),
                 elements: vec![],
-                source_info: SourceInfo::new(1, 2, 1, 2),
+                source_info: SourceInfo::new(Pos::new(1, 2), Pos::new(1, 2)),
             }))
         );
         assert_eq!(reader.state.cursor, 2);
@@ -198,7 +198,7 @@ mod tests {
                     value: "foo".to_string(),
                     encoded: "foo".to_string()
                 }],
-                source_info: SourceInfo::new(1, 1, 1, 6)
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
             })
         );
         assert_eq!(reader.state.cursor, 5);

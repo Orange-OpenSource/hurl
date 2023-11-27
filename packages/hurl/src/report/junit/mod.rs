@@ -128,7 +128,7 @@ fn create_testsuite(testcases: &[Testcase]) -> Element {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     use crate::report::junit::xml::XmlDocument;
     use crate::report::junit::{create_testsuite, Testcase};
@@ -157,7 +157,7 @@ mod tests {
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error::new(
-                    SourceInfo::new(2, 10, 2, 13),
+                    SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
                     RunnerError::AssertStatus {
                         actual: "404".to_string(),
                     },
@@ -181,7 +181,7 @@ mod tests {
                 captures: vec![],
                 asserts: vec![],
                 errors: vec![Error::new(
-                    SourceInfo::new(1, 5, 1, 19),
+                    SourceInfo::new(Pos::new(1, 5), Pos::new(1, 19)),
                     RunnerError::HttpConnection("(6) Could not resolve host: unknown".to_string()),
                     false,
                 )],

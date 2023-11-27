@@ -216,7 +216,7 @@ impl TemplateElement {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::{SourceInfo, TemplateElement, Variable, Whitespace};
+    use crate::ast::{Pos, SourceInfo, TemplateElement, Variable, Whitespace};
 
     #[test]
     fn test_to_string() {
@@ -225,15 +225,15 @@ mod tests {
             Value::Expression(Expr {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 variable: Variable {
                     name: "x".to_string(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(0, 0, 0, 0),
+                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
                 },
             })
             .to_string()
@@ -247,7 +247,7 @@ mod tests {
                     value: "hello".to_string(),
                     encoded: "hello".to_string(),
                 }],
-                source_info: SourceInfo::new(0, 0, 0, 0),
+                source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             })
             .to_string()
         );
@@ -304,7 +304,7 @@ mod tests {
                             value: "id".to_string(),
                             encoded: "id".to_string(),
                         }],
-                        source_info: SourceInfo::new(1, 1, 1, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                     space1: String::new(),
                     space2: " ".to_string(),
@@ -323,15 +323,15 @@ mod tests {
             TemplateElement::Expression(Expr {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 variable: Variable {
                     name: "name".to_string(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
                 space1: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 },
             })
             .encoded(),
@@ -343,18 +343,18 @@ mod tests {
                 elements: vec![TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 1, 1, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                     variable: Variable {
                         name: "name".to_string(),
-                        source_info: SourceInfo::new(1, 1, 1, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(1, 1, 1, 1),
+                        source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     },
                 })],
-                source_info: SourceInfo::new(1, 1, 1, 1),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             }
             .encoded(),
             "{{name}}".to_string()

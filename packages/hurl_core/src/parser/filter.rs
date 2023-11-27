@@ -211,7 +211,7 @@ mod tests {
         assert_eq!(
             filter(&mut reader).unwrap(),
             Filter {
-                source_info: SourceInfo::new(1, 1, 1, 6),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
                 value: FilterValue::Count,
             }
         );

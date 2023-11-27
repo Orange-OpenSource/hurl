@@ -46,7 +46,7 @@ pub fn eval_format(
 #[cfg(test)]
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
 
     use super::*;
 
@@ -54,7 +54,7 @@ pub mod tests {
     pub fn eval_filter_url_decode() {
         let variables = HashMap::new();
         let filter = Filter {
-            source_info: SourceInfo::new(0, 0, 0, 0),
+            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
             value: FilterValue::UrlDecode,
         };
         assert_eq!(

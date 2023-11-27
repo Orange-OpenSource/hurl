@@ -679,7 +679,7 @@ fn get_lines(text: &str) -> Vec<&str> {
 
 #[cfg(test)]
 pub mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
     use crate::runner;
@@ -701,7 +701,11 @@ HTTP/1.0 200
         let inner = runner::RunnerError::AssertStatus {
             actual: "404".to_string(),
         };
-        let error = runner::Error::new(SourceInfo::new(2, 10, 2, 13), inner, true);
+        let error = runner::Error::new(
+            SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),
+            inner,
+            true,
+        );
         assert_eq!(
             error_string(filename, content, &error, false),
             r#"Assert status code
@@ -722,7 +726,7 @@ xpath "strong(//head/title)" == "Hello"
 "#;
         let filename = "test.hurl";
         let error = runner::Error::new(
-            SourceInfo::new(4, 7, 4, 29),
+            SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29)),
             runner::RunnerError::QueryInvalidXpathEval,
             true,
         );
@@ -746,7 +750,7 @@ jsonpath "$.count" >= 5
 "#;
         let filename = "test.hurl";
         let error = runner::Error {
-            source_info: SourceInfo::new(4, 0, 4, 0),
+            source_info: SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0)),
             inner: runner::RunnerError::AssertFailure {
                 actual: "int <2>".to_string(),
                 expected: "greater than int <5>".to_string(),
@@ -778,7 +782,8 @@ HTTP/1.0 200
             actual: "<p>Hello</p>\n\n".to_string(),
             expected: "<p>Hello</p>\n".to_string(),
         };
-        let error = runner::Error::new(SourceInfo::new(3, 4, 4, 1), inner, true);
+        let error =
+            runner::Error::new(SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1)), inner, true);
         assert_eq!(
             error_string(filename, content, &error, false),
             r#"Assert body value

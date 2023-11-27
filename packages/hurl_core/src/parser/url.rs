@@ -157,7 +157,7 @@ mod tests {
                     encoded: String::from("http://google.fr"),
                 }],
                 delimiter: None,
-                source_info: SourceInfo::new(1, 1, 1, 17),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 17)),
             }
         );
         assert_eq!(reader.state.cursor, 16);
@@ -176,7 +176,7 @@ mod tests {
                     ),
                 }],
                 delimiter: None,
-                source_info: SourceInfo::new(1, 1, 1, 57),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 57)),
             }
         );
         assert_eq!(reader.state.cursor, 56);
@@ -196,15 +196,15 @@ mod tests {
                     TemplateElement::Expression(Expr {
                         space0: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 10, 1, 10),
+                            source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 10)),
                         },
                         variable: Variable {
                             name: String::from("host"),
-                            source_info: SourceInfo::new(1, 10, 1, 14),
+                            source_info: SourceInfo::new(Pos::new(1, 10), Pos::new(1, 14)),
                         },
                         space1: Whitespace {
                             value: String::new(),
-                            source_info: SourceInfo::new(1, 14, 1, 14),
+                            source_info: SourceInfo::new(Pos::new(1, 14), Pos::new(1, 14)),
                         },
                     }),
                     TemplateElement::String {
@@ -213,7 +213,7 @@ mod tests {
                     },
                 ],
                 delimiter: None,
-                source_info: SourceInfo::new(1, 1, 1, 19),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );
         assert_eq!(reader.state.cursor, 18);

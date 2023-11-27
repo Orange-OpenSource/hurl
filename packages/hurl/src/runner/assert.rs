@@ -175,13 +175,13 @@ pub mod tests {
     pub fn assert_count_user() -> Assert {
         let whitespace = Whitespace {
             value: String::from(" "),
-            source_info: SourceInfo::new(1, 1, 1, 1),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
         };
         let predicate = Predicate {
             not: false,
             space0: whitespace.clone(),
             predicate_func: PredicateFunc {
-                source_info: SourceInfo::new(1, 22, 1, 24),
+                source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 24)),
                 value: PredicateFuncValue::Equal {
                     space0: whitespace.clone(),
                     value: PredicateValue::Number(hurl_core::ast::Number::Integer(3)),
@@ -196,7 +196,7 @@ pub mod tests {
             filters: vec![(
                 whitespace.clone(),
                 Filter {
-                    source_info: SourceInfo::new(1, 16, 1, 21),
+                    source_info: SourceInfo::new(Pos::new(1, 16), Pos::new(1, 21)),
                     value: FilterValue::Count,
                 },
             )],
@@ -224,7 +224,7 @@ pub mod tests {
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(3)))),
-                source_info: SourceInfo::new(1, 22, 1, 24),
+                source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 24)),
                 predicate_result: Some(Ok(())),
             }
         );

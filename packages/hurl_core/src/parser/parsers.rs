@@ -57,14 +57,9 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let headers = zero_or_more(key_value, reader)?;
     let sections = request_sections(reader)?;
     let b = optional(body, reader)?;
-    let source_info = SourceInfo::new(
-        start.pos.line,
-        start.pos.column,
-        reader.state.pos.line,
-        reader.state.pos.column,
-    );
+    let source_info = SourceInfo::new(start.pos, reader.state.pos);
 
-    // check duplicated section
+    // Check duplicated section
     let mut section_names = vec![];
     for section in sections.clone() {
         if section_names.contains(&section.name().to_string()) {
@@ -113,12 +108,7 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
         headers,
         sections,
         body: b,
-        source_info: SourceInfo::new(
-            start.pos.line,
-            start.pos.column,
-            reader.state.pos.line,
-            reader.state.pos.column,
-        ),
+        source_info: SourceInfo::new(start.pos, reader.state.pos),
     })
 }
 
@@ -163,12 +153,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
                 if try_literal(s, reader).is_ok() {
                     return Ok(Version {
                         value: value.clone(),
-                        source_info: SourceInfo::new(
-                            start.pos.line,
-                            start.pos.column,
-                            reader.state.pos.line,
-                            reader.state.pos.column,
-                        ),
+                        source_info: SourceInfo::new(start.pos, reader.state.pos),
                     });
                 }
             }
@@ -180,12 +165,7 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
         }
         Some(' ') => Ok(Version {
             value: VersionAny,
-            source_info: SourceInfo::new(
-                start.pos.line,
-                start.pos.column,
-                reader.state.pos.line,
-                reader.state.pos.column,
-            ),
+            source_info: SourceInfo::new(start.pos, reader.state.pos),
         }),
         _ => Err(Error {
             pos: start.pos,
@@ -293,12 +273,12 @@ mod tests {
             line_terminators: vec![],
             space0: Whitespace {
                 value: String::new(),
-                source_info: SourceInfo::new(1, 1, 1, 1),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             },
             method: Method("GET".to_string()),
             space1: Whitespace {
                 value: " ".to_string(),
-                source_info: SourceInfo::new(1, 4, 1, 5),
+                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 5)),
             },
             url: Template {
                 elements: vec![TemplateElement::String {
@@ -306,23 +286,23 @@ mod tests {
                     encoded: String::from("http://google.fr"),
                 }],
                 delimiter: None,
-                source_info: SourceInfo::new(1, 5, 1, 21),
+                source_info: SourceInfo::new(Pos::new(1, 5), Pos::new(1, 21)),
             },
             line_terminator0: LineTerminator {
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 21, 1, 21),
+                    source_info: SourceInfo::new(Pos::new(1, 21), Pos::new(1, 21)),
                 },
                 comment: None,
                 newline: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 21, 1, 21),
+                    source_info: SourceInfo::new(Pos::new(1, 21), Pos::new(1, 21)),
                 },
             },
             headers: vec![],
             sections: vec![],
             body: None,
-            source_info: SourceInfo::new(1, 1, 1, 21),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 21)),
         };
         assert_eq!(request(&mut reader).unwrap(), default_request);
         assert_eq!(reader.state.cursor, 20);
@@ -332,12 +312,12 @@ mod tests {
             line_terminators: vec![],
             space0: Whitespace {
                 value: String::new(),
-                source_info: SourceInfo::new(1, 1, 1, 1),
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
             },
             method: Method("GET".to_string()),
             space1: Whitespace {
                 value: "  ".to_string(),
-                source_info: SourceInfo::new(1, 4, 1, 6),
+                source_info: SourceInfo::new(Pos::new(1, 4), Pos::new(1, 6)),
             },
             url: Template {
                 elements: vec![TemplateElement::String {
@@ -345,26 +325,26 @@ mod tests {
                     encoded: String::from("http://google.fr"),
                 }],
                 delimiter: None,
-                source_info: SourceInfo::new(1, 6, 1, 22),
+                source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 22)),
             },
             line_terminator0: LineTerminator {
                 space0: Whitespace {
                     value: " ".to_string(),
-                    source_info: SourceInfo::new(1, 22, 1, 23),
+                    source_info: SourceInfo::new(Pos::new(1, 22), Pos::new(1, 23)),
                 },
                 comment: Some(Comment {
                     value: " comment".to_string(),
-                    source_info: SourceInfo::new(1, 24, 1, 32),
+                    source_info: SourceInfo::new(Pos::new(1, 24), Pos::new(1, 32)),
                 }),
                 newline: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(1, 32, 1, 32),
+                    source_info: SourceInfo::new(Pos::new(1, 32), Pos::new(1, 32)),
                 },
             },
             headers: vec![],
             sections: vec![],
             body: None,
-            source_info: SourceInfo::new(1, 1, 1, 32),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 32)),
         };
         assert_eq!(request(&mut reader).unwrap(), default_request);
         assert_eq!(reader.state.cursor, 31);
@@ -391,15 +371,15 @@ mod tests {
                 line_terminators: vec![],
                 space0: Whitespace {
                     value: String::new(),
-                    source_info: SourceInfo::new(2, 1, 2, 1),
+                    source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 1)),
                 },
                 value: Bytes::MultilineString(MultilineString::Text(Text {
                     space: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(2, 4, 2, 4),
+                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(2, 4)),
                     },
                     newline: Whitespace {
-                        source_info: SourceInfo::new(2, 4, 3, 1),
+                        source_info: SourceInfo::new(Pos::new(2, 4), Pos::new(3, 1)),
                         value: "\n".to_string(),
                     },
                     value: Template {
@@ -408,18 +388,18 @@ mod tests {
                             encoded: String::from("Hello World!\n"),
                         }],
                         delimiter: None,
-                        source_info: SourceInfo::new(3, 1, 4, 1),
+                        source_info: SourceInfo::new(Pos::new(3, 1), Pos::new(4, 1)),
                     },
                 })),
                 line_terminator0: LineTerminator {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(4, 4, 4, 4),
+                        source_info: SourceInfo::new(Pos::new(4, 4), Pos::new(4, 4)),
                     },
                     comment: None,
                     newline: Whitespace {
                         value: String::new(),
-                        source_info: SourceInfo::new(4, 4, 4, 4),
+                        source_info: SourceInfo::new(Pos::new(4, 4), Pos::new(4, 4)),
                     },
                 },
             }
@@ -466,7 +446,7 @@ mod tests {
                     value: "Hello".to_string(),
                     encoded: "Hello".to_string(),
                 }],
-                source_info: SourceInfo::new(2, 2, 2, 7),
+                source_info: SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
             }))
         );
 

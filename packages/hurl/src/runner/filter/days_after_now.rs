@@ -44,7 +44,7 @@ pub mod tests {
     use crate::runner::filter::eval::eval_filter;
     use chrono::offset::Utc;
     use chrono::Duration;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     use super::*;
@@ -57,7 +57,7 @@ pub mod tests {
         assert_eq!(
             eval_filter(
                 &Filter {
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     value: FilterValue::DaysAfterNow,
                 },
                 &Value::Date(now),
@@ -73,7 +73,7 @@ pub mod tests {
         assert_eq!(
             eval_filter(
                 &Filter {
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     value: FilterValue::DaysAfterNow,
                 },
                 &Value::Date(now_plus_30hours),
@@ -87,7 +87,7 @@ pub mod tests {
         assert_eq!(
             eval_filter(
                 &Filter {
-                    source_info: SourceInfo::new(1, 1, 1, 1),
+                    source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                     value: FilterValue::DaysBeforeNow,
                 },
                 &Value::Date(now_plus_30hours),

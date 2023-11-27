@@ -83,7 +83,7 @@ fn underline_errors(content: &str, errors: &[RunnerError]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use hurl_core::ast::SourceInfo;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
     use crate::runner::RunnerError::QueryHeaderNotFound;
@@ -137,7 +137,7 @@ mod tests {
         </pre>"#;
 
         let errors = vec![RunnerError {
-            source_info: SourceInfo::new(2, 1, 2, 4),
+            source_info: SourceInfo::new(Pos::new(2, 1), Pos::new(2, 4)),
             inner: QueryHeaderNotFound,
             assert: true,
         }];

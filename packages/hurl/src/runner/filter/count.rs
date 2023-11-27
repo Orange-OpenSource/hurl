@@ -39,7 +39,7 @@ pub fn eval_count(
 #[cfg(test)]
 pub mod tests {
     use crate::runner::filter::eval::eval_filter;
-    use hurl_core::ast::{Filter, FilterValue, SourceInfo};
+    use hurl_core::ast::{Filter, FilterValue, Pos, SourceInfo};
     use std::collections::HashMap;
 
     use super::*;
@@ -49,7 +49,7 @@ pub mod tests {
         let variables = HashMap::new();
 
         let filter = Filter {
-            source_info: SourceInfo::new(1, 1, 1, 6),
+            source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
             value: FilterValue::Count,
         };
         assert_eq!(
@@ -71,7 +71,10 @@ pub mod tests {
         let error = eval_filter(&filter, &Value::Bool(true), &variables, false)
             .err()
             .unwrap();
-        assert_eq!(error.source_info, SourceInfo::new(1, 1, 1, 6));
+        assert_eq!(
+            error.source_info,
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6))
+        );
         assert_eq!(
             error.inner,
             RunnerError::FilterInvalidInput("boolean".to_string())
