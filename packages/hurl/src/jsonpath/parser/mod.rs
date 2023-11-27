@@ -19,7 +19,7 @@
 use error::Error;
 use reader::Reader;
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pos {
     pub line: usize,
     pub column: usize,

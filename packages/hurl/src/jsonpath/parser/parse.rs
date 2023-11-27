@@ -33,7 +33,7 @@ fn query(reader: &mut Reader) -> ParseResult<Query> {
     let selectors = zero_or_more(selector, reader)?;
     if !reader.is_eof() {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::Expecting {
                 value: "eof".to_string(),
@@ -61,7 +61,7 @@ fn selector(reader: &mut Reader) -> ParseResult<Selector> {
 }
 
 fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector, Error> {
-    let initial_state = reader.state.clone();
+    let initial_state = reader.state;
     try_left_bracket(reader)?;
     let mut indexes = vec![];
     let i = match natural(reader) {
@@ -76,7 +76,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     };
     indexes.push(i);
     loop {
-        let state = reader.state.clone();
+        let state = reader.state;
         if try_literal(",", reader).is_ok() {
             let i = match natural(reader) {
                 Err(e) => {
@@ -99,7 +99,7 @@ fn selector_array_index_or_array_indices(reader: &mut Reader) -> Result<Selector
     if let Err(e) = try_literal("]", reader) {
         reader.state = initial_state;
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: true,
             inner: e.inner,
         });
@@ -121,10 +121,10 @@ fn selector_array_wildcard(reader: &mut Reader) -> Result<Selector, Error> {
 
 fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
     try_left_bracket(reader)?;
-    let state = reader.state.clone();
+    let state = reader.state;
     let start = match integer(reader) {
         Err(_) => {
-            reader.state = state.clone();
+            reader.state = state;
             None
         }
         Ok(v) => Some(v),
@@ -138,7 +138,7 @@ fn selector_array_slice(reader: &mut Reader) -> Result<Selector, Error> {
             },
         });
     };
-    let state = reader.state.clone();
+    let state = reader.state;
     let end = match integer(reader) {
         Err(_) => {
             reader.state = state;
@@ -162,7 +162,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
     try_left_bracket(reader)?;
     match string_value(reader) {
         Err(_) => Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: true,
             inner: ParseError::Expecting {
                 value: "value string".to_string(),
@@ -178,7 +178,7 @@ fn selector_object_key_bracket(reader: &mut Reader) -> Result<Selector, Error> {
 fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
     if !reader.try_literal(".") {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: true,
             inner: ParseError::Expecting {
                 value: "[ or .".to_string(),
@@ -189,7 +189,7 @@ fn selector_object_key(reader: &mut Reader) -> Result<Selector, Error> {
     let s = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if s.is_empty() {
         return Err(Error {
-            pos: reader.state.pos.clone(),
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::Expecting {
                 value: "empty value".to_string(),
@@ -216,7 +216,7 @@ fn selector_recursive_key(reader: &mut Reader) -> Result<Selector, Error> {
 }
 
 fn try_left_bracket(reader: &mut Reader) -> Result<(), Error> {
-    let start = reader.state.clone();
+    let start = reader.state;
     if literal(".[", reader).is_err() {
         reader.state = start;
         try_literal("[", reader)?;
@@ -236,7 +236,7 @@ fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     // @.key>=value   GreaterThanOrEqual(Key, Value)
     literal("@.", reader)?; // assume key value for the time being
     let key = key_path(reader)?;
-    let state = reader.state.clone();
+    let state = reader.state;
     let func = match predicate_func(reader) {
         Ok(f) => f,
         Err(_) => {

@@ -20,7 +20,7 @@ use super::error::{Error, ParseError};
 use super::{ParseResult, Reader};
 
 pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
-    let start = reader.state.clone();
+    let start = reader.state;
 
     if reader.is_eof() {
         return Err(Error {
@@ -42,7 +42,7 @@ pub fn natural(reader: &mut Reader) -> ParseResult<usize> {
         });
     }
 
-    let save = reader.state.clone();
+    let save = reader.state;
     let s = reader.read_while(|c| c.is_ascii_digit());
 
     // if the first digit is zero, you should not have any more digits
@@ -103,7 +103,7 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
         match reader.read() {
             None => {
                 return Err(Error {
-                    pos: reader.state.pos.clone(),
+                    pos: reader.state.pos,
                     recoverable: false,
                     inner: ParseError::Expecting {
                         value: String::from("'"),
@@ -119,7 +119,7 @@ pub fn string_value(reader: &mut Reader) -> Result<String, Error> {
                     }
                     _ => {
                         return Err(Error {
-                            pos: reader.state.pos.clone(),
+                            pos: reader.state.pos,
                             recoverable: false,
                             inner: ParseError::Expecting {
                                 value: String::from("'"),
@@ -148,7 +148,7 @@ pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
                 c
             } else {
                 return Err(Error {
-                    pos: reader.state.pos.clone(),
+                    pos: reader.state.pos,
                     recoverable: false,
                     inner: ParseError::Expecting {
                         value: "key".to_string(),
@@ -158,7 +158,7 @@ pub fn key_name(reader: &mut Reader) -> Result<String, Error> {
         }
         None => {
             return Err(Error {
-                pos: reader.state.pos.clone(),
+                pos: reader.state.pos,
                 recoverable: false,
                 inner: ParseError::Expecting {
                     value: "key".to_string(),
@@ -187,7 +187,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // does not return a value
     // non recoverable reader
     // => use combinator recover to make it recoverable
-    let start = reader.state.clone();
+    let start = reader.state;
     if reader.clone().is_eof() {
         return Err(Error {
             pos: start.pos,
@@ -198,7 +198,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         });
     }
     for c in s.chars() {
-        let _state = reader.state.clone();
+        let _state = reader.state;
         match reader.read() {
             None => {
                 return Err(Error {

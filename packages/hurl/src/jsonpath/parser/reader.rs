@@ -26,7 +26,7 @@ pub struct Reader {
     pub state: ReaderState,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct ReaderState {
     pub cursor: usize,
     pub pos: Pos,

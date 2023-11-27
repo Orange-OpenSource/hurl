@@ -20,11 +20,11 @@ use super::reader::Reader;
 use super::{ParseFunc, ParseResult};
 
 pub fn zero_or_more<T>(f: ParseFunc<T>, p: &mut Reader) -> ParseResult<Vec<T>> {
-    let _start = p.state.clone();
+    let _start = p.state;
 
     let mut v: Vec<T> = Vec::new();
     loop {
-        let initial_state = p.state.clone();
+        let initial_state = p.state;
         if p.is_eof() {
             return Ok(v);
         }
@@ -50,7 +50,7 @@ pub fn zero_or_more<T>(f: ParseFunc<T>, p: &mut Reader) -> ParseResult<Vec<T>> {
 /// Typically this should be recoverable
 pub fn choice<T>(fs: &[ParseFunc<T>], reader: &mut Reader) -> ParseResult<T> {
     for (pos, f) in fs.iter().enumerate() {
-        let start = reader.state.clone();
+        let start = reader.state;
         if pos == fs.len() - 1 {
             return f(reader);
         }
