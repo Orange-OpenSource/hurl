@@ -134,7 +134,7 @@ fn encode_bytes(b: Vec<u8>) -> String {
 
 impl Method {
     pub fn curl_args(&self, data: bool) -> Vec<String> {
-        match self.0.clone().as_str() {
+        match self.0.as_str() {
             "GET" => {
                 if data {
                     vec!["--request".to_string(), "GET".to_string()]

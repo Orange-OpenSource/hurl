@@ -70,7 +70,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
     let decimal = if reader.try_literal(".") {
         if reader.is_eof() {
             return Err(Error {
-                pos: reader.clone().state.pos,
+                pos: reader.state.pos,
                 recoverable: false,
                 inner: ParseError::Expecting {
                     value: String::from("natural"),
@@ -81,7 +81,7 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         let s = reader.read_while(|c| c.is_ascii_digit());
         if s.is_empty() {
             return Err(Error {
-                pos: reader.clone().state.pos,
+                pos: reader.state.pos,
                 recoverable: false,
                 inner: ParseError::Expecting {
                     value: String::from("natural"),
@@ -188,7 +188,7 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     // non recoverable reader
     // => use combinator recover to make it recoverable
     let start = reader.state;
-    if reader.clone().is_eof() {
+    if reader.is_eof() {
         return Err(Error {
             pos: start.pos,
             recoverable: false,

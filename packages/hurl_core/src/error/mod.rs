@@ -35,7 +35,7 @@ impl Error for parser::Error {
     }
 
     fn description(&self) -> String {
-        match self.clone().inner {
+        match self.inner {
             ParseError::DuplicateSection => "Parsing section".to_string(),
             ParseError::EscapeChar => "Parsing escape character".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),

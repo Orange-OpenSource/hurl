@@ -66,7 +66,7 @@ impl Tokenizable for Entry {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         tokens.append(&mut self.request.tokenize());
-        if let Some(response) = self.clone().response {
+        if let Some(response) = &self.response {
             tokens.append(&mut response.tokenize());
         }
         tokens
@@ -90,7 +90,7 @@ impl Tokenizable for Request {
         tokens.append(&mut self.line_terminator0.tokenize());
         tokens.append(&mut self.headers.iter().flat_map(|e| e.tokenize()).collect());
         tokens.append(&mut self.sections.iter().flat_map(|e| e.tokenize()).collect());
-        if let Some(body) = self.clone().body {
+        if let Some(body) = &self.body {
             tokens.append(&mut body.tokenize());
         }
         tokens
@@ -360,7 +360,7 @@ impl Tokenizable for Capture {
         tokens.append(&mut self.space2.tokenize());
         tokens.append(&mut self.query.tokenize());
         for (space, filter) in &self.filters {
-            tokens.append(&mut space.clone().tokenize());
+            tokens.append(&mut space.tokenize());
             tokens.append(&mut filter.tokenize());
         }
         tokens.append(&mut self.line_terminator0.tokenize());
@@ -381,7 +381,7 @@ impl Tokenizable for Assert {
         tokens.append(&mut self.space0.tokenize());
         tokens.append(&mut self.query.tokenize());
         for (space, filter) in &self.filters {
-            tokens.append(&mut space.clone().tokenize());
+            tokens.append(&mut space.tokenize());
             tokens.append(&mut filter.tokenize());
         }
         tokens.append(&mut self.space1.tokenize());
@@ -395,7 +395,7 @@ impl Tokenizable for Assert {
 
 impl Tokenizable for Query {
     fn tokenize(&self) -> Vec<Token> {
-        self.value.clone().tokenize()
+        self.value.tokenize()
     }
 }
 
@@ -682,14 +682,14 @@ impl Tokenizable for EncodedString {
         let mut tokens: Vec<Token> = vec![];
         if self.quotes {
             tokens.push(Token::StringDelimiter(
-                if self.clone().quotes { "\"" } else { "" }.to_string(),
+                if self.quotes { "\"" } else { "" }.to_string(),
             ));
         }
         tokens.push(Token::String(self.encoded.clone()));
 
         if self.quotes {
             tokens.push(Token::StringDelimiter(
-                if self.clone().quotes { "\"" } else { "" }.to_string(),
+                if self.quotes { "\"" } else { "" }.to_string(),
             ));
         }
         tokens
@@ -749,7 +749,7 @@ impl Tokenizable for LineTerminator {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         tokens.append(&mut self.space0.tokenize());
-        if let Some(comment) = self.clone().comment {
+        if let Some(comment) = &self.comment {
             tokens.append(&mut comment.tokenize());
         }
         tokens.append(&mut self.newline.tokenize());
@@ -761,7 +761,7 @@ impl Tokenizable for Whitespace {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         if !self.value.is_empty() {
-            tokens.push(Token::Whitespace(self.clone().value));
+            tokens.push(Token::Whitespace(self.value.clone()));
         }
         tokens
     }
@@ -769,13 +769,13 @@ impl Tokenizable for Whitespace {
 
 impl Tokenizable for Comment {
     fn tokenize(&self) -> Vec<Token> {
-        vec![Token::Comment(format!("#{}", self.clone().value))]
+        vec![Token::Comment(format!("#{}", self.value.clone()))]
     }
 }
 
 impl Tokenizable for Filename {
     fn tokenize(&self) -> Vec<Token> {
-        let s = self.clone().value.replace(' ', "\\ ");
+        let s = self.value.replace(' ', "\\ ");
         vec![Token::String(s)]
     }
 }

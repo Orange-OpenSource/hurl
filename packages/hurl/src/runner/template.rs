@@ -53,7 +53,7 @@ pub fn render_expression(expr: &Expr, variables: &HashMap<String, Value>) -> Res
     let name = &expr.variable.name;
     let value = eval_expression(expr, variables)?;
     if value.is_renderable() {
-        Ok(value.clone().to_string())
+        Ok(value.to_string())
     } else {
         let inner = RunnerError::UnrenderableVariable {
             name: name.to_string(),

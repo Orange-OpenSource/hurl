@@ -232,7 +232,7 @@ pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
     let c = match std::char::from_u32(v) {
         None => {
             return Err(Error {
-                pos: reader.clone().state.pos,
+                pos: reader.state.pos,
                 recoverable: false,
                 inner: ParseError::Unicode,
             });

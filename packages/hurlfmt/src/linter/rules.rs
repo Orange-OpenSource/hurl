@@ -587,7 +587,7 @@ fn lint_line_terminator(line_terminator: &LineTerminator) -> LineTerminator {
     let space0 = match line_terminator.comment {
         None => empty_whitespace(),
         Some(_) => Whitespace {
-            value: line_terminator.clone().space0.value,
+            value: line_terminator.space0.value.clone(),
             source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
         },
     };

@@ -318,30 +318,6 @@ fn assert(reader: &mut Reader) -> ParseResult<Assert> {
     let space1 = one_or_more_spaces(reader)?;
     let predicate0 = predicate(reader)?;
 
-    // Specifics for jsonpath //
-    // jsonpath always return a list
-    // the equals predicate will be used as "firstEquals"
-    // you also need the firstStartsWith => not really orthogonal!!
-    /* let predicate0 = Predicate {
-            not: predicate0.clone().not,
-            space0: predicate0.clone().space0,
-            predicate_func: PredicateFunc {
-                source_info: predicate0.clone().predicate_func.source_info,
-                value: if query0.clone().is_jsonpath() {
-                    match predicate0.clone().predicate_func.value {
-                        PredicateFuncValue::EqualBool { space0, value } => PredicateFuncValue::FirstEqualBool { space0, value },
-                        PredicateFuncValue::EqualInt { space0, value } => PredicateFuncValue::FirstEqualInt { space0, value },
-                        PredicateFuncValue::EqualString { space0, value } => PredicateFuncValue::FirstEqualString { space0, value },
-                        PredicateFuncValue::CountEqual { space0, value } => PredicateFuncValue::FirstCountEqual { space0, value },
-                        PredicateFuncValue::StartWith { space0, value } => PredicateFuncValue::FirstStartWith { space0, value },
-                        _ => predicate0.clone().predicate_func.value
-                    }
-                } else {
-                    predicate0.clone().predicate_func.value
-                },
-            },
-        };
-    */
     let line_terminator0 = line_terminator(reader)?;
     Ok(Assert {
         line_terminators,

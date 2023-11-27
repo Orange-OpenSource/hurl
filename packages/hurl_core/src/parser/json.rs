@@ -164,10 +164,10 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => unicode(reader),
-        _ => Err(error::Error {
+        _ => Err(Error {
             pos: start.pos,
             recoverable: false,
-            inner: error::ParseError::EscapeChar,
+            inner: ParseError::EscapeChar,
         }),
     }
 }
@@ -176,10 +176,10 @@ fn unicode(reader: &mut Reader) -> ParseResult<char> {
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
         None => {
-            return Err(error::Error {
-                pos: reader.clone().state.pos,
+            return Err(Error {
+                pos: reader.state.pos,
                 recoverable: false,
-                inner: error::ParseError::Unicode,
+                inner: ParseError::Unicode,
             })
         }
         Some(c) => c,

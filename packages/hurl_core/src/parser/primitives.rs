@@ -351,7 +351,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
                     //
                     // To fit nicely in Hurl Error reporting, you need an error message string that does not spread on multiple lines
                     // You will assume that the error most relevant description is on the last line
-                    let lines = s.split('\n').clone().collect::<Vec<&str>>();
+                    let lines = s.split('\n').collect::<Vec<&str>>();
                     let last_line = lines.last().expect("at least one line");
                     last_line
                         .strip_prefix("error: ")
@@ -479,7 +479,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<Float> {
 
     if reader.is_eof() {
         return Err(Error {
-            pos: reader.clone().state.pos,
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::Expecting {
                 value: String::from("natural"),
@@ -490,7 +490,7 @@ pub fn float(reader: &mut Reader) -> ParseResult<Float> {
     let s = reader.read_while(|c| c.is_ascii_digit());
     if s.is_empty() {
         return Err(Error {
-            pos: reader.clone().state.pos,
+            pos: reader.state.pos,
             recoverable: false,
             inner: ParseError::Expecting {
                 value: String::from("natural"),
