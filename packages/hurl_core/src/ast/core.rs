@@ -412,15 +412,15 @@ pub struct PredicateFunc {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[allow(clippy::large_enum_variant)]
 pub enum PredicateValue {
-    String(Template),
-    MultilineString(MultilineString),
-    Number(Number),
-    Bool(bool),
-    Null,
-    Hex(Hex),
     Base64(Base64),
+    Bool(bool),
     Expression(Expr),
+    Hex(Hex),
+    MultilineString(MultilineString),
+    Null,
+    Number(Number),
     Regex(Regex),
+    String(Template),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
