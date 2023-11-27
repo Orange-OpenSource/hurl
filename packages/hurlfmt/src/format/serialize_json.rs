@@ -33,16 +33,16 @@ pub enum JValue {
 }
 
 impl JValue {
-    pub fn format(self) -> String {
+    pub fn format(&self) -> String {
         match self {
             JValue::Null => "null".to_string(),
-            JValue::Number(n) => n,
+            JValue::Number(n) => n.to_string(),
             JValue::String(s) => format!("\"{}\"", s.chars().map(format_char).collect::<String>()),
             JValue::Boolean(b) => b.to_string(),
             JValue::List(elem) => {
                 let s = elem
                     .iter()
-                    .map(|e| e.clone().format())
+                    .map(|e| e.format())
                     .collect::<Vec<String>>()
                     .join(",");
                 format!("[{s}]")
@@ -50,7 +50,7 @@ impl JValue {
             JValue::Object(key_values) => {
                 let s = key_values
                     .iter()
-                    .map(|(k, v)| format!("\"{}\":{}", k, v.clone().format()))
+                    .map(|(k, v)| format!("\"{}\":{}", k, v.format()))
                     .collect::<Vec<String>>()
                     .join(",");
                 format!("{{{s}}}")
