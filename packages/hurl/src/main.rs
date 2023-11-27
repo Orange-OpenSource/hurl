@@ -92,7 +92,7 @@ fn main() {
         let verbosity = Verbosity::from(opts.verbose, opts.very_verbose);
         let logger_options = LoggerOptionsBuilder::new()
             .color(opts.color)
-            .error_format(opts.error_format.clone().into())
+            .error_format(opts.error_format.into())
             .filename(filename)
             .progress_bar(opts.progress_bar)
             .test(opts.test)

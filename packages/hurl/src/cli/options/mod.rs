@@ -99,7 +99,7 @@ impl From<clap::Error> for OptionsError {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
     Short,
     Long,
@@ -431,7 +431,7 @@ impl Options {
         let verbosity = Verbosity::from(self.verbose, self.very_verbose);
         LoggerOptionsBuilder::new()
             .color(self.color)
-            .error_format(self.error_format.clone().into())
+            .error_format(self.error_format.into())
             .filename(filename)
             .progress_bar(self.progress_bar)
             .test(self.test)
