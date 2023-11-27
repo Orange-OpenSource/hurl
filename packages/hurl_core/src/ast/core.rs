@@ -601,6 +601,7 @@ pub struct Filename {
 pub enum Number {
     Float(Float),
     Integer(i64),
+    String(String),
 }
 
 // keep Number terminology for both Integer and Decimal Numbers

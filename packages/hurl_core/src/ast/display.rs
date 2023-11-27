@@ -85,6 +85,7 @@ impl fmt::Display for Number {
         match self {
             Number::Float(value) => write!(f, "{}", value),
             Number::Integer(value) => write!(f, "{}", value),
+            Number::String(value) => write!(f, "{}", value),
         }
     }
 }
