@@ -115,7 +115,7 @@ pub enum RunnerError {
 /// Textual Output for runner errors
 impl hurl_core::error::Error for Error {
     fn source_info(&self) -> SourceInfo {
-        self.clone().source_info
+        self.source_info
     }
 
     fn description(&self) -> String {

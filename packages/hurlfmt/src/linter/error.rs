@@ -24,10 +24,9 @@ use crate::linter::LinterError;
 ///
 /// Textual Output for linter errors
 ///
-///
 impl Error for linter::Error {
     fn source_info(&self) -> SourceInfo {
-        self.clone().source_info
+        self.source_info
     }
 
     fn description(&self) -> String {
