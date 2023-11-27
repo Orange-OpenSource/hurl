@@ -238,13 +238,13 @@ equal-predicate: ("equals" | "==") sp predicate-value
 
 not-equal-predicate: ("notEquals" | "!=") sp predicate-value
 
-greater-predicate: ("greaterThan" | ">") sp (integer | float | quoted-string)
+greater-predicate: ("greaterThan" | ">") sp (number | quoted-string)
 
-greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (integer | float | quoted-string)
+greater-or-equal-predicate: ("greaterThanOrEquals" | ">=") sp sp* (number | quoted-string)
 
-less-predicate: ("lessThan" | "<") sp (integer | float | quoted-string)
+less-predicate: ("lessThan" | "<") sp (number | quoted-string)
 
-less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (integer | float | quoted-string)
+less-or-equal-predicate: ("lessThanOrEquals" | "<=") sp (number | quoted-string)
 
 start-with-predicate: "startsWith" sp (quoted-string | oneline-hex | oneline-base64)
 
@@ -273,15 +273,14 @@ collection-predicate: "isCollection"
 date-predicate: "isDate"
 
 predicate-value:
-    null
-  | boolean
-  | integer
-  | float
-  | quoted-string
-  | oneline-hex
+    boolean
+  | multiline-string
+  | null
+  | number
   | oneline-base64
   | oneline-file
-  | multiline-string
+  | oneline-hex
+  | quoted-string
   | template
 
 
@@ -424,7 +423,7 @@ filter:
   | format-filter
   | html-escape-filter
   | html-unescape-filter
-  | json-filter
+  | jsonpath-filter
   | nth-filter
   | regex-filter
   | replace-filter
@@ -448,6 +447,8 @@ format-filter: "format"
 html-escape-filter: "htmlEscape"
 
 html-unescape-filter: "htmlUnescape"
+
+jsonpath-filter: "jsonpath" sp quoted-string
 
 nth-filter: "nth" sp integer
 
@@ -479,6 +480,8 @@ alphanum: [A-Za-z0-9]
 integer: digit+
 
 float: integer fraction
+
+number: integer | float
 
 digit: [0-9]
 
