@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-use hurl_core::ast::SourceInfo;
+use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
 use crate::runner::value::Value;
+use crate::runner::write::write_file;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
@@ -60,7 +61,10 @@ pub struct EntryResult {
     pub asserts: Vec<AssertResult>,
     pub errors: Vec<Error>,
     pub time_in_ms: u128,
-    pub compressed: bool, // The entry has been executed with `--compressed` option
+    // The entry has been executed with `--compressed` option:
+    // server is requested to send compressed response, and the response should be uncompressed
+    // when outputted on stdout.
+    pub compressed: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -99,3 +103,32 @@ pub struct CaptureResult {
 }
 
 pub type PredicateResult = Result<(), Error>;
+
+impl EntryResult {
+    /// Writes the last HTTP response of this entry result to the file `filename`.
+    /// The HTTP response can be decompressed if the entry's `compressed` option has been set.
+    pub fn write_response(&self, filename: String) -> Result<(), Error> {
+        match self.calls.last() {
+            Some(call) => {
+                let response = &call.response;
+                if self.compressed {
+                    let bytes = match response.uncompress_body() {
+                        Ok(bytes) => bytes,
+                        Err(e) => {
+                            // TODO: pass a [`SourceInfo`] in case of error
+                            // We may pass a [`SourceInfo`] as a parameter of this method to make
+                            // a more accurate error (for instance a [`SourceInfo`] pointing at
+                            // `output: foo.bin`
+                            let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
+                            return Err(Error::new(source_info, e.into(), false));
+                        }
+                    };
+                    write_file(&bytes, &filename)
+                } else {
+                    write_file(&response.body, &filename)
+                }
+            }
+            None => Ok(()),
+        }
+    }
+}

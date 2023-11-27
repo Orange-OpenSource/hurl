@@ -230,6 +230,7 @@ impl HtmlFormatter {
             OptionKind::IpV4(value) => self.fmt_bool_option(value),
             OptionKind::IpV6(value) => self.fmt_bool_option(value),
             OptionKind::MaxRedirect(value) => self.fmt_natural_option(value),
+            OptionKind::Output(filename) => self.fmt_filename(filename),
             OptionKind::PathAsIs(value) => self.fmt_bool_option(value),
             OptionKind::Proxy(value) => self.fmt_template(value),
             OptionKind::Resolve(value) => self.fmt_template(value),

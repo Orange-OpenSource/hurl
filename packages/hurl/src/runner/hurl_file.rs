@@ -21,14 +21,13 @@ use std::time::Instant;
 
 use chrono::Utc;
 use hurl_core::ast::VersionValue::VersionAnyLegacy;
-use hurl_core::ast::*;
+use hurl_core::ast::{Body, Bytes, Entry, HurlFile, MultilineString, Request, Response, Retry};
 use hurl_core::error::Error;
 use hurl_core::parser;
 
 use crate::http::Call;
-use crate::runner::result::*;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, Value};
+use crate::runner::{entry, options, EntryResult, HurlResult, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 use crate::{http, runner};
 
@@ -104,15 +103,19 @@ pub fn run(
     let start = Instant::now();
     let timestamp = Utc::now().timestamp();
 
+    // Main loop processing each entry.
+    // The `entry_index` is not always incremented of each loop tick: an entry can be retried upon
+    // errors for instance. Each entry is executed with options that are computed from the global
+    // runner options and the "overridden" request options.
     loop {
         if entry_index > n {
             break;
         }
         let entry = &hurl_file.entries[entry_index - 1];
 
-        // We compute the new logger for this entry, before entering into the `run`
-        // function because entry options can modify the logger and we want the preamble
-        // "Executing entry..." to be displayed based on the entry level verbosity.
+        // We compute the new logger for this entry, before entering into the `run` function because
+        // entry options can modify the logger and we want the preamble "Executing entry..." to be
+        // displayed based on the entry level verbosity.
         let logger =
             get_entry_logger(entry, logger_options, &variables).map_err(|e| e.description())?;
         if let Some(pre_entry) = runner_options.pre_entry {
@@ -186,8 +189,8 @@ pub fn run(
         } else {
             false
         };
-        // If `retry_max_reached` is true, we print now a warning, before displaying
-        // any assert error so any potential error is the last thing displayed to the user.
+        // If `retry_max_reached` is true, we print now a warning, before displaying any assert
+        // error so any potential error is the last thing displayed to the user.
         // If `retry_max_reached` is not true (for instance `retry`is true, or there is no error
         // we first log the error and a potential warning about retrying.
         logger.test_erase_line();
@@ -196,9 +199,29 @@ pub fn run(
             logger.debug("");
         }
 
+        // We logs eventual errors, only if we're not retrying the current entry...
         let retry = !matches!(retry_opts, Retry::None) && !retry_max_reached && has_error;
         if has_error {
             log_errors(&entry_result, content, retry, &logger);
+        }
+
+        // When --output is overriden on a request level, we output the HTTP response only if the
+        // call has succeeded.
+        if let Ok(RunnerOptions {
+            output: Some(output),
+            ..
+        }) = options
+        {
+            if !has_error {
+                // TODO: make output write error as part of entry result errors.
+                // For the moment, we deal the --output request failure as a simple warning and not
+                // an error. If we want to treat it as an error, we've to add it to the current
+                // `entry_result` errors, and optionally deals with retry if we can't write to the
+                // specified path.
+                if let Err(e) = entry_result.write_response(output) {
+                    logger.warning(&e.fixme());
+                }
+            }
         }
         entries.push(entry_result);
 
@@ -209,9 +232,9 @@ pub fn run(
                 format!("Retry entry {entry_index} (x{retry_count} pause {delay} ms)").as_str(),
             );
             retry_count += 1;
-            // If we retry the entry, we do not want to display a 'blank' progress bar
-            // during the sleep delay. During the pause, we artificially show the previously
-            // erased progress line.
+            // If we retry the entry, we do not want to display a 'blank' progress bar during the
+            // sleep delay. During the pause, we artificially show the previously erased progress
+            // line.
             logger.test_progress(entry_index, n);
             thread::sleep(retry_interval);
             logger.test_erase_line();

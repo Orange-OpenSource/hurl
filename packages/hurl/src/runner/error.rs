@@ -65,7 +65,12 @@ pub enum RunnerError {
     CouldNotParseResponse,
     CouldNotUncompressResponse(String),
     FileReadAccess {
-        value: String,
+        file: String,
+    },
+    // I/O write error on a path
+    FileWriteAccess {
+        file: String,
+        error: String,
     },
     FilterDecode(String),
     FilterInvalidEncoding(String),
@@ -128,6 +133,7 @@ impl hurl_core::error::Error for Error {
             RunnerError::CouldNotParseResponse => "HTTP connection".to_string(),
             RunnerError::CouldNotUncompressResponse(..) => "Decompression error".to_string(),
             RunnerError::FileReadAccess { .. } => "File read access".to_string(),
+            RunnerError::FileWriteAccess { .. } => "File write access".to_string(),
             RunnerError::FilterDecode { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidEncoding { .. } => "Filter Error".to_string(),
             RunnerError::FilterInvalidInput { .. } => "Filter Error".to_string(),
@@ -182,7 +188,10 @@ impl hurl_core::error::Error for Error {
             RunnerError::CouldNotUncompressResponse(algorithm) => {
                 format!("could not uncompress response with {algorithm}")
             }
-            RunnerError::FileReadAccess { value } => format!("file {value} can not be read"),
+            RunnerError::FileReadAccess { file } => format!("file {file} can not be read"),
+            RunnerError::FileWriteAccess { file, error } => {
+                format!("{file} can not be write ({error})")
+            }
             RunnerError::FilterDecode(encoding) => {
                 format!("value can not be decoded with <{encoding}> encoding")
             }

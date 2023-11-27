@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 use std::collections::HashMap;
 use std::time::Duration;
 
@@ -156,6 +155,9 @@ pub fn get_entry_options(
                     OptionKind::MaxRedirect(value) => {
                         let value = eval_natural_option(value, variables)?;
                         runner_options.max_redirect = Some(value as usize)
+                    }
+                    OptionKind::Output(filename) => {
+                        runner_options.output = Some(filename.value.clone())
                     }
                     OptionKind::PathAsIs(value) => {
                         let value = eval_boolean_option(value, variables)?;

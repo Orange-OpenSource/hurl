@@ -341,29 +341,9 @@ impl Options {
         let cacert_file = self.cacert_file.clone();
         let client_cert_file = self.client_cert_file.clone();
         let client_key_file = self.client_key_file.clone();
-        let connects_to = self.connects_to.clone();
-        let follow_location = self.follow_location;
-        let http_version = match self.http_version {
-            Some(version) => version.into(),
-            None => RequestedHttpVersion::default(),
-        };
-        let ip_resolve = match self.ip_resolve {
-            Some(ip) => ip.into(),
-            None => http::IpResolve::default(),
-        };
-        let insecure = self.insecure;
-        let max_redirect = self.max_redirect;
-        let path_as_is = self.path_as_is;
-        let proxy = self.proxy.clone();
-        let no_proxy = self.no_proxy.clone();
-        let cookie_input_file = self.cookie_input_file.clone();
-        let timeout = self.timeout;
-        let connect_timeout = self.connect_timeout;
-        let user = self.user.clone();
-        let user_agent = self.user_agent.clone();
         let compressed = self.compressed;
-        let continue_on_error = self.continue_on_error;
-        let delay = self.delay;
+        let connect_timeout = self.connect_timeout;
+        let connects_to = self.connects_to.clone();
         let file_root = match self.file_root {
             Some(ref filename) => Path::new(filename),
             None => {
@@ -376,22 +356,73 @@ impl Options {
             }
         };
         let context_dir = ContextDir::new(current_dir, file_root);
-        let pre_entry = if self.interactive {
-            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
-        } else {
-            None
+        let continue_on_error = self.continue_on_error;
+        let cookie_input_file = self.cookie_input_file.clone();
+        let delay = self.delay;
+        let follow_location = self.follow_location;
+        let http_version = match self.http_version {
+            Some(version) => version.into(),
+            None => RequestedHttpVersion::default(),
         };
+        let ignore_asserts = self.ignore_asserts;
+        let insecure = self.insecure;
+        let ip_resolve = match self.ip_resolve {
+            Some(ip) => ip.into(),
+            None => http::IpResolve::default(),
+        };
+        let max_redirect = self.max_redirect;
+        let no_proxy = self.no_proxy.clone();
+        // FIXME:
+        // When used globally (on the command line), `--output` writes the last successful request
+        // to `output` file. We don't want to output every entry's response, so we initialise
+        // output to `None`.
+        // The straightforward code should have been `let output = self.output;` but if we do this
+        // every entry's response would have been dumped to stdout.
+        //
+        // If we compare with `--compressed`:
+        //
+        // ```
+        // cli.compressed = true =>
+        //   entry_1.compressed = true
+        //   entry_2.compressed = true
+        //     entry_2.overridden.compressed = false
+        //   entry_3.compressed = true
+        //   etc...
+        //   entry_last.compressed = true
+        // ```
+        //
+        // whereas
+        //
+        // ```
+        // cli.output = /tmp/out.bin =>
+        //   entry_1.output = None
+        //   entry_2.output = None
+        //     entry_2.overridden.output = /tmp/bar.bin
+        //   entry_3.output = None
+        //   etc...
+        //   entry_last.output = /tmp/out.bin
+        // ```
+        let output = None;
+        let path_as_is = self.path_as_is;
         let post_entry = if self.interactive {
             Some(cli::interactive::post_entry as fn() -> bool)
         } else {
             None
         };
-        let to_entry = self.to_entry;
+        let pre_entry = if self.interactive {
+            Some(cli::interactive::pre_entry as fn(Entry) -> bool)
+        } else {
+            None
+        };
+        let proxy = self.proxy.clone();
         let resolves = self.resolves.clone();
         let retry = self.retry;
         let retry_interval = self.retry_interval;
-        let ignore_asserts = self.ignore_asserts;
         let ssl_no_revoke = self.ssl_no_revoke;
+        let timeout = self.timeout;
+        let to_entry = self.to_entry;
+        let user = self.user.clone();
+        let user_agent = self.user_agent.clone();
 
         RunnerOptionsBuilder::new()
             .aws_sigv4(aws_sigv4)
@@ -412,6 +443,7 @@ impl Options {
             .ip_resolve(ip_resolve)
             .max_redirect(max_redirect)
             .no_proxy(no_proxy)
+            .output(output)
             .path_as_is(path_as_is)
             .post_entry(post_entry)
             .pre_entry(pre_entry)

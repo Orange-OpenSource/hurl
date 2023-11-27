@@ -296,6 +296,7 @@ impl ToJson for EntryOption {
             OptionKind::IpV4(value) => value.to_json(),
             OptionKind::IpV6(value) => value.to_json(),
             OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
+            OptionKind::Output(filename) => JValue::String(filename.value.clone()),
             OptionKind::PathAsIs(value) => value.to_json(),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),

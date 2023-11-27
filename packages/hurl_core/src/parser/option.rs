@@ -25,10 +25,11 @@ use crate::parser::reader::Reader;
 use crate::parser::string::*;
 use crate::parser::{expr, filename, ParseResult};
 
+/// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
-    let pos = reader.state.pos;
+    let start = reader.state.pos;
     let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
@@ -50,6 +51,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "key" => option_key(reader)?,
         "location" => option_follow_location(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
+        "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
         "proxy" => option_proxy(reader)?,
         "resolve" => option_resolve(reader)?,
@@ -59,16 +61,10 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
-        _ => {
-            return Err(Error {
-                pos,
-                recoverable: true,
-                inner: ParseError::InvalidOption,
-            });
-        }
+        _ => return Err(Error::new(start, true, ParseError::InvalidOption)),
     };
-    let line_terminator0 = line_terminator(reader)?;
 
+    let line_terminator0 = line_terminator(reader)?;
     Ok(EntryOption {
         line_terminators,
         space0,
@@ -157,6 +153,11 @@ fn option_key(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_max_redirect(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(natural_option, reader)?;
     Ok(OptionKind::MaxRedirect(value))
+}
+
+fn option_output(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = filename::parse(reader)?;
+    Ok(OptionKind::Output(value))
 }
 
 fn option_path_as_is(reader: &mut Reader) -> ParseResult<OptionKind> {

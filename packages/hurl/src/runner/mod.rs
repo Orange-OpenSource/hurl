@@ -48,4 +48,5 @@ mod result;
 mod runner_options;
 mod template;
 mod value;
+mod write;
 mod xpath;

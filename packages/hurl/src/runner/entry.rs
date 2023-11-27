@@ -91,10 +91,9 @@ pub fn run(
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {
         Ok(calls) => calls,
         Err(http_error) => {
-            let source_info = SourceInfo {
-                start: entry.request.url.source_info.start,
-                end: entry.request.url.source_info.end,
-            };
+            let start = entry.request.url.source_info.start;
+            let end = entry.request.url.source_info.end;
+            let source_info = SourceInfo::new(start, end);
             let error = Error::new(source_info, http_error.into(), false);
             return EntryResult {
                 entry_index,

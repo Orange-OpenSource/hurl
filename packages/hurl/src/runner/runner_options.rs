@@ -41,6 +41,7 @@ pub struct RunnerOptionsBuilder {
     ip_resolve: IpResolve,
     max_redirect: Option<usize>,
     no_proxy: Option<String>,
+    output: Option<String>,
     path_as_is: bool,
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(Entry) -> bool>,
@@ -77,6 +78,7 @@ impl Default for RunnerOptionsBuilder {
             ip_resolve: IpResolve::default(),
             max_redirect: Some(50),
             no_proxy: None,
+            output: None,
             path_as_is: false,
             post_entry: None,
             pre_entry: None,
@@ -241,6 +243,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Specifies the file to output the HTTP response instead of stdout.
+    pub fn output(&mut self, output: Option<String>) -> &mut Self {
+        self.output = output;
+        self
+    }
+
     /// Sets function to be executed after each entry execution.
     ///
     /// If the function returns true, the run is stopped.
@@ -337,6 +345,7 @@ impl RunnerOptionsBuilder {
             ip_resolve: self.ip_resolve,
             max_redirect: self.max_redirect,
             no_proxy: self.no_proxy.clone(),
+            output: self.output.clone(),
             path_as_is: self.path_as_is,
             post_entry: self.post_entry,
             pre_entry: self.pre_entry,
@@ -374,6 +383,7 @@ pub struct RunnerOptions {
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,
     pub(crate) no_proxy: Option<String>,
+    pub(crate) output: Option<String>,
     pub(crate) path_as_is: bool,
     pub(crate) post_entry: Option<fn() -> bool>,
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,

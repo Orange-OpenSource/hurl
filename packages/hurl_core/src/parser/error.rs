@@ -69,6 +69,16 @@ pub enum JsonErrorVariant {
 }
 
 impl Error {
+    /// Creates a new error for the position `pos`, of type `inner`.
+    pub fn new(pos: Pos, recoverable: bool, inner: ParseError) -> Error {
+        Error {
+            pos,
+            recoverable,
+            inner,
+        }
+    }
+
+    /// Makes a recoverable error.
     pub fn recoverable(&self) -> Error {
         Error {
             pos: self.pos,
@@ -76,6 +86,8 @@ impl Error {
             inner: self.inner.clone(),
         }
     }
+
+    /// Makes a non recoverable error.
     pub fn non_recoverable(&self) -> Error {
         Error {
             pos: self.pos,

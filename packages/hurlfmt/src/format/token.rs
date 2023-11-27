@@ -891,6 +891,7 @@ impl Tokenizable for OptionKind {
             OptionKind::IpV4(value) => value.tokenize(),
             OptionKind::IpV6(value) => value.tokenize(),
             OptionKind::MaxRedirect(value) => value.tokenize(),
+            OptionKind::Output(filename) => filename.tokenize(),
             OptionKind::PathAsIs(value) => value.tokenize(),
             OptionKind::Proxy(value) => value.tokenize(),
             OptionKind::Resolve(value) => value.tokenize(),
