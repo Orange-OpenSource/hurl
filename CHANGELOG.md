@@ -3,26 +3,18 @@
 
 Thanks to
 [@gmetal](https://github.com/gmetal),
-[@mihirn](https://github.com/mihirn),
-[@smokedlinq](https://github.com/smokedlinq),
-[@RickMoynihan](https://github.com/RickMoynihan),
+[@humphd](https://github.com/humphd),
 [@pit1sIBM](https://github.com/pit1sIBM),
-[@kidbrax](https://github.com/kidbrax),
 [@janwytze](https://github.com/janwytze),
 [@kingluo](https://github.com/kingluo),
-[@Lythenas](https://github.com/Lythenas),
-[@teto](https://github.com/teto),
 [@khimaros](https://github.com/khimaros),
 [@iredmail](https://github.com/iredmail),
-[@tnicolaisen-snabble](https://github.com/tnicolaisen-snabble),
-[@tpluscode](https://github.com/tpluscode),
-[@ecolinet](https://github.com/ecolinet),
-[@nikeee](https://github.com/nikeee),
 
 Enhancements:
 
 * Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
+* Support conda-forge installation [#2018](https://github.com/Orange-OpenSource/hurl/issues/2018)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
 * Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
 * Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
@@ -36,6 +28,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix undefined error for various I/O error using --output. [#2156](https://github.com/Orange-OpenSource/hurl/issues/2156)
 * TAP reports can't be appended if there are failed tests [#2099](https://github.com/Orange-OpenSource/hurl/issues/2099)
 * Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 
