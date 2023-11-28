@@ -10949,7 +10949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::SourceInfo;</pre>
+                <pre class="has-background-white py-0 px-2">    use hurl_core::ast::{Pos, SourceInfo};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11253,7 +11253,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = runner::Error {</pre>
+                <pre class="has-background-white py-0 px-2">        let inner = runner::RunnerError::AssertStatus {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11269,7 +11269,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(2, 10, 2, 13),</pre>
+                <pre class="has-background-white py-0 px-2">            actual: &quot;404&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11285,7 +11285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            inner: runner::RunnerError::AssertStatus {</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11301,7 +11301,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;404&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        let error = runner::Error::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11317,7 +11317,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">            SourceInfo::new(Pos::new(2, 10), Pos::new(2, 13)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11333,7 +11333,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert: true,</pre>
+                <pre class="has-background-white py-0 px-2">            inner,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11349,7 +11349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11365,7 +11365,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11381,7 +11381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11397,7 +11397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            r#&quot;Assert status code</pre>
+                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11413,7 +11413,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:2:10</pre>
+                <pre class="has-background-white py-0 px-2">            r#&quot;Assert status code</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11429,7 +11429,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:2:10</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11445,7 +11445,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 2 | HTTP&#x2F;1.0 200</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11461,7 +11461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |          ^^^ actual value is &lt;404&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 2 | HTTP&#x2F;1.0 200</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11477,7 +11477,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">   |          ^^^ actual value is &lt;404&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11493,7 +11493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11509,7 +11509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11525,7 +11525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11541,7 +11541,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11557,7 +11557,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_invalid_xpath_expression() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11573,7 +11573,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;example.com</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_invalid_xpath_expression() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11589,7 +11589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
+                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;example.com</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11605,7 +11605,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">[Asserts]</pre>
+                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11621,7 +11621,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">xpath &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot; == &quot;Hello&quot;</pre>
+                <pre class="has-background-white py-0 px-2">[Asserts]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11637,7 +11637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">xpath &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot; == &quot;Hello&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11653,7 +11653,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11669,7 +11669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = runner::Error {</pre>
+                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11685,7 +11685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(4, 7, 4, 29),</pre>
+                <pre class="has-background-white py-0 px-2">        let error = runner::Error::new(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11701,7 +11701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            inner: runner::RunnerError::QueryInvalidXpathEval,</pre>
+                <pre class="has-background-white py-0 px-2">            SourceInfo::new(Pos::new(4, 7), Pos::new(4, 29)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11717,7 +11717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert: true,</pre>
+                <pre class="has-background-white py-0 px-2">            runner::RunnerError::QueryInvalidXpathEval,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11733,7 +11733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11749,7 +11749,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        );</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11765,7 +11765,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11781,7 +11781,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            r#&quot;Invalid XPath expression</pre>
+                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11797,7 +11797,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:4:7</pre>
+                <pre class="has-background-white py-0 px-2">            r#&quot;Invalid XPath expression</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11813,7 +11813,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:4:7</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11829,7 +11829,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 4 | xpath &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot; == &quot;Hello&quot;</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11845,7 +11845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid</pre>
+                <pre class="has-background-white py-0 px-2"> 4 | xpath &quot;strong(&#x2F;&#x2F;head&#x2F;title)&quot; == &quot;Hello&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11861,7 +11861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">   |       ^^^^^^^^^^^^^^^^^^^^^^ the XPath expression is not valid</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11877,7 +11877,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11893,7 +11893,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11909,7 +11909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11925,7 +11925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11941,7 +11941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_assert_error_jsonpath() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11957,7 +11957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;api</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_assert_error_jsonpath() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11973,7 +11973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
+                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;api</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11989,7 +11989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">[Asserts]</pre>
+                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12005,7 +12005,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">jsonpath &quot;$.count&quot; &gt;= 5</pre>
+                <pre class="has-background-white py-0 px-2">[Asserts]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12021,7 +12021,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">jsonpath &quot;$.count&quot; &gt;= 5</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12037,7 +12037,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12053,7 +12053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = runner::Error {</pre>
+                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12069,7 +12069,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(4, 0, 4, 0),</pre>
+                <pre class="has-background-white py-0 px-2">        let error = runner::Error {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12085,7 +12085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            inner: runner::RunnerError::AssertFailure {</pre>
+                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(Pos::new(4, 0), Pos::new(4, 0)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12101,7 +12101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;int &lt;2&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            inner: runner::RunnerError::AssertFailure {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12117,7 +12117,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than int &lt;5&gt;&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                actual: &quot;int &lt;2&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12133,7 +12133,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
+                <pre class="has-background-white py-0 px-2">                expected: &quot;greater than int &lt;5&gt;&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12149,7 +12149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">                type_mismatch: false,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12165,7 +12165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert: true,</pre>
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12181,7 +12181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">            assert: true,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12197,7 +12197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12213,7 +12213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12229,7 +12229,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            r#&quot;Assert failure</pre>
+                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12245,7 +12245,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:4:0</pre>
+                <pre class="has-background-white py-0 px-2">            r#&quot;Assert failure</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12261,7 +12261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:4:0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12277,7 +12277,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 4 | jsonpath &quot;$.count&quot; &gt;= 5</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12293,7 +12293,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   actual:   int &lt;2&gt;</pre>
+                <pre class="has-background-white py-0 px-2"> 4 | jsonpath &quot;$.count&quot; &gt;= 5</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12309,7 +12309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |   expected: greater than int &lt;5&gt;</pre>
+                <pre class="has-background-white py-0 px-2">   |   actual:   int &lt;2&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12325,7 +12325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">   |   expected: greater than int &lt;5&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12341,7 +12341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12357,7 +12357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12373,7 +12373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12389,7 +12389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12405,7 +12405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_assert_error_newline() {</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12421,7 +12421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;localhost</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_assert_error_newline() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12437,7 +12437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
+                <pre class="has-background-white py-0 px-2">        let content = r#&quot;GET http:&#x2F;&#x2F;localhost</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12453,7 +12453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">```&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
+                <pre class="has-background-white py-0 px-2">HTTP&#x2F;1.0 200</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12469,7 +12469,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">```</pre>
+                <pre class="has-background-white py-0 px-2">```&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12485,7 +12485,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
+                <pre class="has-background-white py-0 px-2">```</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12501,7 +12501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
+                <pre class="has-background-white py-0 px-2">&quot;#;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12517,7 +12517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let error = runner::Error {</pre>
+                <pre class="has-background-white py-0 px-2">        let filename = &quot;test.hurl&quot;;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12533,7 +12533,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            source_info: SourceInfo::new(3, 4, 4, 1),</pre>
+                <pre class="has-background-white py-0 px-2">        let inner = runner::RunnerError::AssertBodyValueError {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12549,7 +12549,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            inner: runner::RunnerError::AssertBodyValueError {</pre>
+                <pre class="has-background-white py-0 px-2">            actual: &quot;&lt;p&gt;Hello&lt;&#x2F;p&gt;\n\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12565,7 +12565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                actual: &quot;&lt;p&gt;Hello&lt;&#x2F;p&gt;\n\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">            expected: &quot;&lt;p&gt;Hello&lt;&#x2F;p&gt;\n&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12581,7 +12581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                expected: &quot;&lt;p&gt;Hello&lt;&#x2F;p&gt;\n&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">        };</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12597,7 +12597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            },</pre>
+                <pre class="has-background-white py-0 px-2">        let error =</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12613,7 +12613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            assert: true,</pre>
+                <pre class="has-background-white py-0 px-2">            runner::Error::new(SourceInfo::new(Pos::new(3, 4), Pos::new(4, 1)), inner, true);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12629,7 +12629,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        };</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12645,7 +12645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(</pre>
+                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12661,7 +12661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            error_string(filename, content, &amp;error, false),</pre>
+                <pre class="has-background-white py-0 px-2">            r#&quot;Assert body value</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12677,7 +12677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            r#&quot;Assert body value</pre>
+                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:3:4</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12693,7 +12693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">  --&gt; test.hurl:3:4</pre>
+                <pre class="has-background-white py-0 px-2">   |</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12709,7 +12709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |</pre>
+                <pre class="has-background-white py-0 px-2"> 3 | ```&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12725,7 +12725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> 3 | ```&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
+                <pre class="has-background-white py-0 px-2">   |    ^ actual value is &lt;&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12741,7 +12741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |    ^ actual value is &lt;&lt;p&gt;Hello&lt;&#x2F;p&gt;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12757,7 +12757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&gt;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12773,7 +12773,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&gt;</pre>
+                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12789,7 +12789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">   |&quot;#</pre>
+                <pre class="has-background-white py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12805,7 +12805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        )</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12821,7 +12821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12837,7 +12837,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">    #[rustfmt::skip]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12853,7 +12853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[rustfmt::skip]</pre>
+                <pre class="has-background-white py-0 px-2">    #[test]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12869,7 +12869,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    #[test]</pre>
+                <pre class="has-background-white py-0 px-2">    fn test_progress_string() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12885,7 +12885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    fn test_progress_string() {</pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 20 entries:</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12901,7 +12901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 20 entries:</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1,  20), &quot;[&gt;                       ] 1&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12917,7 +12917,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1,  20), &quot;[&gt;                       ] 1&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(2,  20), &quot;[=&gt;                      ] 2&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12933,7 +12933,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(2,  20), &quot;[=&gt;                      ] 2&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(5,  20), &quot;[====&gt;                   ] 5&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12949,7 +12949,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(5,  20), &quot;[====&gt;                   ] 5&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(10, 20), &quot;[==========&gt;             ] 10&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12965,7 +12965,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(10, 20), &quot;[==========&gt;             ] 10&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(15, 20), &quot;[================&gt;       ] 15&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12981,7 +12981,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(15, 20), &quot;[================&gt;       ] 15&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(20, 20), &quot;[======================&gt; ] 20&#x2F;20&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12997,7 +12997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(20, 20), &quot;[======================&gt; ] 20&#x2F;20&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13013,7 +13013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 3 entries:</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13029,7 +13029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 3 entries:</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1, 3), &quot;[&gt;                       ] 1&#x2F;3&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13045,7 +13045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1, 3), &quot;[&gt;                       ] 1&#x2F;3&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(2, 3), &quot;[========&gt;               ] 2&#x2F;3&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13061,7 +13061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(2, 3), &quot;[========&gt;               ] 2&#x2F;3&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(3, 3), &quot;[================&gt;       ] 3&#x2F;3&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13077,7 +13077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(3, 3), &quot;[================&gt;       ] 3&#x2F;3&quot;);</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13093,7 +13093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 1 entries:</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13109,7 +13109,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Progress strings with 1 entries:</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1, 1), &quot;[&gt;                       ] 1&#x2F;1&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13125,7 +13125,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(progress_string(1, 1), &quot;[&gt;                       ] 1&#x2F;1&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13141,29 +13141,13 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="820"
-                role="cell">
-                <a href="#820">820</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-11-27 08:08</p>
+                <p class="heading">Date: 2023-11-28 08:08</p>
             </div>
         </footer>
     </body>
