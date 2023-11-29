@@ -1141,7 +1141,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(response) = self.clone().response {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(response) = &amp;self.response {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(body) = self.clone().body {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(body) = &amp;self.body {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5845,7 +5845,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            tokens.append(&amp;mut space.clone().tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            tokens.append(&amp;mut space.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6181,7 +6181,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            tokens.append(&amp;mut space.clone().tokenize());</pre>
+                <pre class="has-background-success-light py-0 px-2">            tokens.append(&amp;mut space.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6405,7 +6405,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        self.value.clone().tokenize()</pre>
+                <pre class="has-background-success-light py-0 px-2">        self.value.tokenize()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10997,7 +10997,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                if self.clone().quotes { &quot;\&quot;&quot; } else { &quot;&quot; }.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                if self.quotes { &quot;\&quot;&quot; } else { &quot;&quot; }.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11109,7 +11109,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                if self.clone().quotes { &quot;\&quot;&quot; } else { &quot;&quot; }.to_string(),</pre>
+                <pre class="has-background-danger-light py-0 px-2">                if self.quotes { &quot;\&quot;&quot; } else { &quot;&quot; }.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12069,7 +12069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        if let Some(comment) = self.clone().comment {</pre>
+                <pre class="has-background-success-light py-0 px-2">        if let Some(comment) = &amp;self.comment {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12261,7 +12261,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            tokens.push(Token::Whitespace(self.clone().value));</pre>
+                <pre class="has-background-success-light py-0 px-2">            tokens.push(Token::Whitespace(self.value.clone()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12389,7 +12389,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        vec![Token::Comment(format!(&quot;#{}&quot;, self.clone().value))]</pre>
+                <pre class="has-background-success-light py-0 px-2">        vec![Token::Comment(format!(&quot;#{}&quot;, self.value.clone()))]</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -12485,7 +12485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let s = self.clone().value.replace(&#x27; &#x27;, &quot;\\ &quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">        let s = self.value.replace(&#x27; &#x27;, &quot;\\ &quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16731,7 +16731,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-11-28 08:08</p>
+                <p class="heading">Date: 2023-11-29 08:08</p>
             </div>
         </footer>
     </body>
