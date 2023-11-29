@@ -1,0 +1,25 @@
+name: auto-close-inactive-pr
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+concurrency: auto-close-inactive-pr-${{ github.ref }}
+
+jobs:
+  auto-close-inactive-pr:
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+      GITHUB_TOKEN: ${{ secrets.HURL_BOT_TOKEN }}
+      REPO: ${{ github.repository }}
+    name: auto-close-inactive-pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Auto close inactive PR
+        run: .github/workflows/bin/auto-close-inactive-pr.sh --github-project-path "${REPO}" --github-token "${GITHUB_TOKEN}" --dry
+
