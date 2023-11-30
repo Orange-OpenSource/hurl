@@ -18,6 +18,7 @@
 use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::multiline::multiline_string;
+use crate::parser::number::number;
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;

@@ -43,6 +43,7 @@ mod filter;
 mod json;
 mod key_string;
 mod multiline;
+mod number;
 mod option;
 mod parsers;
 mod predicate;

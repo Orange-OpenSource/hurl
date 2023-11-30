@@ -20,6 +20,7 @@ use crate::ast::*;
 use crate::parser::bytes::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
+use crate::parser::number::natural;
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::sections::*;

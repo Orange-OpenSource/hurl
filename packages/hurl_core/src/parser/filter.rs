@@ -17,7 +17,8 @@
  */
 use crate::ast::{Filter, FilterValue, SourceInfo, Whitespace};
 use crate::parser::combinators::choice;
-use crate::parser::primitives::{natural, one_or_more_spaces, try_literal, zero_or_more_spaces};
+use crate::parser::number::natural;
+use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 use crate::parser::query::regex_value;
 use crate::parser::string::quoted_template;
 use crate::parser::{Error, ParseError, ParseResult, Reader};
