@@ -42,7 +42,7 @@ function consume_args(){
         case "$1" in
         --help)
             usage
-            return 0
+            exit 0
             ;;
         --dry)
             if [[ ${2:-} =~ true|false ]] ; then
@@ -60,7 +60,7 @@ function consume_args(){
                 shift
                 shift
             else
-                print_error "option $1" "can not be null"
+                log_error "option $1" "can not be null"
                 usage >&2
                 return 1
             fi
@@ -71,7 +71,7 @@ function consume_args(){
                 shift
                 shift
             else
-                print_error "option $1" "can not be null"
+                log_error "option $1" "can not be null"
                 usage >&2
                 return 1
             fi
@@ -82,13 +82,13 @@ function consume_args(){
             shift
             shift
             else
-                print_error "option $1" "can not be null"
+                log_error "option $1" "can not be null"
                 usage >&2
                 return1
             fi
             ;;
         *)
-            print_error "option $1" "is unknown"
+            log_error "option $1" "is unknown"
             usage >&2
             return 1
             ;;
@@ -96,13 +96,13 @@ function consume_args(){
     done
     for mandatory_option in github_project_path github_token ; do
         if [[ -z ${!mandatory_option} ]] ; then
-            print_error "option --${mandatory_option//_/-}" "is mandatory"
+            log_error "option --${mandatory_option//_/-}" "is mandatory"
             usage >&2
             return 1
         fi
     done
     if ! (command -v gh >/dev/null 2>&1) ; then
-        print_error "packages prerequisites" "github client (gh) has to be installed on your system (https://github.com/cli/cli)"
+        log_error "packages prerequisites" "github client (gh) has to be installed on your system (https://github.com/cli/cli)"
         usage >&2
         return 1
     fi
@@ -123,8 +123,7 @@ function is_timestamp_young(){
 
 # main
 script_dir=$(dirname "$0")
-source "${script_dir}/github.functions.sh"
-source "${script_dir}/common.functions.sh"
+source "${script_dir}/shared.functions.sh"
 init_terminal_colors
 consume_args "$@"
 github_connect "${github_token}"
@@ -137,12 +136,12 @@ else
         echo "> working on PR ${pr_number} from ${github_project_path}"
         timestamp=$(github_get_pr_last_update_timestamp "${github_project_path}" "${pr_number}")
         if is_timestamp_young "${timestamp}" ; then
-            comment="✅ This PR remains open because it is younger than ${max_days_of_inactivity} days"
+            comment="✅ This PR remains open because it is younger than ${max_days_of_inactivity} days ($(date -d "@${timestamp}"))"
         else
             comment="📆 This PR has been closed because there is no activity (commits/comments) for more than ${max_days_of_inactivity} days 😥. Feel free to reopen it with new commits/comments."
             if [[ ${dry} == false ]] ; then
                 if ! result=$(github_close_pr "${github_project_path}" "${pr_number}" "${comment}" 2>&1) ; then
-                    print_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
+                    log_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
                     return 1
                 fi
             fi
