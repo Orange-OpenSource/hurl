@@ -128,3 +128,11 @@ jsonpath "$.fruit.[?(@.US == 100)]" count == 0   # To be clarified with spec: th
         }
     ]
 }
+
+GET http://localhost:8000/assert-json/big-number
+HTTP 200
+[Asserts]
+jsonpath "$.big_integer" == 1000000000000000000000
+{
+  "big_integer": 1000000000000000000000
+}

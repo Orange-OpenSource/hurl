@@ -60,3 +60,13 @@ def assert_json_filter():
 }""",
         mimetype="application/json",
     )
+
+
+@app.route("/assert-json/big-number")
+def assert_json_big_number():
+    return Response(
+        """{
+  "big_integer": 1000000000000000000000
+}""",
+        mimetype="application/json",
+    )
