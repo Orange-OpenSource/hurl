@@ -11,7 +11,7 @@ echo "--------------------------------------------------------------------------
 while read -r rust_file ; do
     if [ "$(grep -c "Copyright (C) 2023 Orange" "$rust_file" || true)" -eq 0 ] ; then
         echo "Missing [Copyright (C) 2023 Orange] in ${color_red}${rust_file}${color_reset}"
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     else
         echo "[Copyright (C) 2023 Orange] is present in ${color_green}${rust_file}${color_reset}"
     fi
@@ -22,7 +22,7 @@ echo "--------------------------------------------------------------------------
 while read -r script ; do
     if [ "$(head -1 "$script" | grep -c "#!/bin/bash" || true)" -eq 0 ] ; then
         echo "Missing [#!/bin/bash] shebang in ${color_red}${script}${color_reset}"
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     else
         echo "[#!/bin/bash] shebang is present in ${color_green}${script}${color_reset}"
     fi
@@ -33,7 +33,7 @@ echo "--------------------------------------------------------------------------
 while read -r script ; do
     if [ "$(grep -Ev "^$|^#" "$script" | head -1 | grep -c "set -Eeuo pipefail" || true)" -eq 0 ] ; then
         echo "Missing [set -Eeuo pipefail] in ${color_red}${script}${color_reset}"
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     else
         echo "[set -Eeuo pipefail] is present in ${color_green}${script}${color_reset}"
     fi
@@ -50,7 +50,7 @@ while read -r script ; do
             echo "${color_red}${clean_function}${color_reset} have to be: $(echo "${clean_function}" | tr '-' '_')"
         done < <(echo "${kebab_case_function_list}")
         echo
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     fi
 done < <(find . -type f -name "*.sh")
 
@@ -59,13 +59,13 @@ echo "--------------------------------------------------------------------------
 while read -r script ; do
     if [ "$(head -1 "$script" | grep -c "Set-StrictMode -Version latest" || true)" -eq 0 ] ; then
         echo "Missing [Set-StrictMode -Version latest] in first line of ${color_red}${script}${color_reset}"
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     else
         echo "[Set-StrictMode -Version latest] is present in first line of ${color_green}${script}${color_reset}"
     fi
     if [ "$(head -2 "$script" | tail -1 | grep -c "\$ErrorActionPreference = 'Stop'" || true)" -eq 0 ] ; then
         echo "Missing [\$ErrorActionPreference = 'Stop'] in second line of ${color_red}${script}${color_reset}"
-        ((errors_count++))
+        errors_count=$((errors_count+1))
     else
         echo "[\$ErrorActionPreference = 'Stop'] is present in second line of ${color_green}${script}${color_reset}"
     fi
