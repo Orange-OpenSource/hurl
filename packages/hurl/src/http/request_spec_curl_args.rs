@@ -31,17 +31,17 @@ impl RequestSpec {
             !self.multipart.is_empty() || !self.form.is_empty() || !self.body.bytes().is_empty();
         arguments.append(&mut self.method.curl_args(data));
 
-        for header in self.headers.clone() {
+        for header in self.headers.iter() {
             arguments.append(&mut header.curl_args());
         }
 
         let has_explicit_content_type = self
             .headers
             .iter()
-            .map(|h| h.name.clone())
+            .map(|h| &h.name)
             .any(|n| n.as_str() == "Content-Type");
         if !has_explicit_content_type {
-            if let Some(content_type) = self.content_type.clone() {
+            if let Some(content_type) = &self.content_type {
                 if content_type.as_str() != "application/x-www-form-urlencoded"
                     && content_type.as_str() != "multipart/form-data"
                 {
@@ -49,7 +49,7 @@ impl RequestSpec {
                     arguments.push(format!("'Content-Type: {content_type}'"));
                 }
             } else if !self.body.bytes().is_empty() {
-                match self.body.clone() {
+                match self.body {
                     Body::Text(_) => {
                         arguments.push("--header".to_string());
                         arguments.push("'Content-Type:'".to_string())
@@ -66,11 +66,11 @@ impl RequestSpec {
             }
         }
 
-        for param in self.form.clone() {
+        for param in self.form.iter() {
             arguments.push("--data".to_string());
             arguments.push(format!("'{}'", param.curl_arg_escape()));
         }
-        for param in self.multipart.clone() {
+        for param in self.multipart.iter() {
             arguments.push("--form".to_string());
             arguments.push(format!("'{}'", param.curl_arg(context_dir)));
         }

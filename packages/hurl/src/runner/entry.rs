@@ -44,7 +44,8 @@ pub fn run(
     runner_options: &RunnerOptions,
     logger: &Logger,
 ) -> EntryResult {
-    let http_request = match eval_request(&entry.request, variables, &runner_options.context_dir) {
+    let context_dir = &runner_options.context_dir;
+    let http_request = match eval_request(&entry.request, variables, context_dir) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {
@@ -82,8 +83,13 @@ pub fn run(
     log_request_spec(&http_request, logger);
 
     logger.debug("Request can be run with the following curl command:");
-    let curl_command =
-        http_client.curl_command_line(&http_request, &runner_options.context_dir, &client_options);
+    let output = &runner_options.output;
+    let curl_command = http_client.curl_command_line(
+        &http_request,
+        context_dir,
+        output.as_deref(),
+        &client_options,
+    );
     logger.debug(curl_command.as_str());
     logger.debug("");
 
@@ -172,12 +178,7 @@ pub fn run(
     // Compute asserts
     if !runner_options.ignore_asserts {
         if let Some(response_spec) = &entry.response {
-            let mut asserts = eval_asserts(
-                response_spec,
-                variables,
-                http_response,
-                &runner_options.context_dir,
-            );
+            let mut asserts = eval_asserts(response_spec, variables, http_response, context_dir);
             all_asserts.append(&mut asserts);
         }
     };

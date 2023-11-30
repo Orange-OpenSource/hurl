@@ -715,6 +715,7 @@ impl Client {
         &mut self,
         request_spec: &RequestSpec,
         context_dir: &ContextDir,
+        output: Option<&str>,
         options: &ClientOptions,
     ) -> String {
         let mut arguments = vec!["curl".to_string()];
@@ -737,6 +738,13 @@ impl Client {
             ));
         }
         arguments.append(&mut options.curl_args());
+
+        // --output is not an option of the HTTP client, we deal with it here:
+        if let Some(output) = output {
+            arguments.push("--output".to_string());
+            arguments.push(output.to_string());
+        }
+
         arguments.push(url);
         arguments.join(" ")
     }
@@ -877,6 +885,7 @@ impl From<IpResolve> for easy::IpResolve {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::default::Default;
 
     #[test]
     fn test_parse_header() {
@@ -1030,5 +1039,50 @@ mod tests {
         // Default => Default: no change
         state.set_requested_http_version(RequestedHttpVersion::Default);
         assert!(!state.has_changed());
+    }
+
+    #[test]
+    fn command_line_args() {
+        let mut client = Client::new();
+        let request = RequestSpec {
+            method: Method("GET".to_string()),
+            url: "https://example.org".to_string(),
+            ..Default::default()
+        };
+        let context_dir = ContextDir::default();
+        let output = Some("/tmp/foo.bin");
+        let options = ClientOptions {
+            aws_sigv4: Some("aws:amz:sts".to_string()),
+            cacert_file: Some("/etc/cert.pem".to_string()),
+            compressed: true,
+            connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
+            insecure: true,
+            max_redirect: Some(10),
+            path_as_is: true,
+            proxy: Some("localhost:3128".to_string()),
+            no_proxy: None,
+            user: Some("user:password".to_string()),
+            user_agent: Some("my-useragent".to_string()),
+            verbosity: Some(Verbosity::VeryVerbose),
+            ..Default::default()
+        };
+
+        let cmd = client.curl_command_line(&request, &context_dir, output, &options);
+        assert_eq!(
+            cmd,
+            "curl \
+         --aws-sigv4 aws:amz:sts \
+         --cacert /etc/cert.pem \
+         --compressed \
+         --connect-to example.com:443:host-47.example.com:443 \
+         --insecure \
+         --max-redirs 10 \
+         --path-as-is \
+         --proxy 'localhost:3128' \
+         --user 'user:password' \
+         --user-agent 'my-useragent' \
+         --output /tmp/foo.bin \
+         'https://example.org'"
+        );
     }
 }
