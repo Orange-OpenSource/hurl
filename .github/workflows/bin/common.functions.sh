@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # functions
 
-function init-terminal-colors(){
+function init_terminal_colors(){
     color_black=$(echo -ne "\033[1;30m")
     color_red=$(echo -ne "\033[1;31m")
     color_green=$(echo -ne "\033[1;32m")
@@ -16,7 +16,7 @@ function init-terminal-colors(){
     export color_black color_red color_green color_yellow color_blue color_purple color_cyan color_backwhite color_reset
 }
 
-function print-error(){
+function print_error(){
     title=$1
     message=$2
     echo "${color_red}$(basename "$0"): ${title}: ${message}${color_reset}"

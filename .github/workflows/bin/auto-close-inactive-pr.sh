@@ -33,7 +33,7 @@ function usage(){
     echo
 }
 
-function consume-args(){
+function consume_args(){
     dry=false
     github_project_path=
     github_token=
@@ -60,7 +60,7 @@ function consume-args(){
                 shift
                 shift
             else
-                print-error "option $1" "can not be null"
+                print_error "option $1" "can not be null"
                 usage >&2
                 return 1
             fi
@@ -71,7 +71,7 @@ function consume-args(){
                 shift
                 shift
             else
-                print-error "option $1" "can not be null"
+                print_error "option $1" "can not be null"
                 usage >&2
                 return 1
             fi
@@ -82,13 +82,13 @@ function consume-args(){
             shift
             shift
             else
-                print-error "option $1" "can not be null"
+                print_error "option $1" "can not be null"
                 usage >&2
                 return1
             fi
             ;;
         *)
-            print-error "option $1" "is unknown"
+            print_error "option $1" "is unknown"
             usage >&2
             return 1
             ;;
@@ -96,19 +96,19 @@ function consume-args(){
     done
     for mandatory_option in github_project_path github_token ; do
         if [[ -z ${!mandatory_option} ]] ; then
-            print-error "option --${mandatory_option//_/-}" "is mandatory"
+            print_error "option --${mandatory_option//_/-}" "is mandatory"
             usage >&2
             return 1
         fi
     done
     if ! (command -v gh >/dev/null 2>&1) ; then
-        print-error "packages prerequisites" "github client (gh) has to be installed on your system (https://github.com/cli/cli)"
+        print_error "packages prerequisites" "github client (gh) has to be installed on your system (https://github.com/cli/cli)"
         usage >&2
         return 1
     fi
 }
 
-function is-timestamp-young(){
+function is_timestamp_young(){
     timestamp=$1
     max_seconds_of_inactivity=$((max_days_of_inactivity * 24 * 60 * 60))
     actual_timestamp=$(date +%s)
@@ -125,24 +125,24 @@ function is-timestamp-young(){
 script_dir=$(dirname "$0")
 source "${script_dir}/github.functions.sh"
 source "${script_dir}/common.functions.sh"
-init-terminal-colors
-consume-args "$@"
-github-connect "${github_token}"
-github-test-repo "${github_project_path}"
-pr_list=$(github-get-pr-number-list "${github_project_path}")
+init_terminal_colors
+consume_args "$@"
+github_connect "${github_token}"
+github_test_repo "${github_project_path}"
+pr_list=$(github_get_pr_number_list "${github_project_path}")
 if [[ -z "${pr_list}" ]] ; then
     echo "> There is no opened PR for ${github_project_path}"
 else
     while read -r pr_number ; do
         echo "> working on PR ${pr_number} from ${github_project_path}"
-        timestamp=$(github-get-pr-last-update-timestamp "${github_project_path}" "${pr_number}")
-        if is-timestamp-young "${timestamp}" ; then
+        timestamp=$(github_get_pr_last_update_timestamp "${github_project_path}" "${pr_number}")
+        if is_timestamp_young "${timestamp}" ; then
             comment="✅ This PR remains open because it is younger than ${max_days_of_inactivity} days"
         else
             comment="📆 This PR has been closed because there is no activity (commits/comments) for more than ${max_days_of_inactivity} days 😥. Feel free to reopen it with new commits/comments."
             if [[ ${dry} == false ]] ; then
-                if ! result=$(github-close-pr "${github_project_path}" "${pr_number}" "${comment}" 2>&1) ; then
-                    print-error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
+                if ! result=$(github_close_pr "${github_project_path}" "${pr_number}" "${comment}" 2>&1) ; then
+                    print_error "${FUNCNAME[0]}" "$(head -1 <<< "${result}")"
                     return 1
                 fi
             fi
