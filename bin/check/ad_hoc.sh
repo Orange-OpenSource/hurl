@@ -39,6 +39,21 @@ while read -r script ; do
     fi
 done < <(find . -type f -name "*.sh")
 
+# Check bash function names in kebab case instead of camel case
+echo "------------------------------------------------------------------------------------------"
+while read -r script ; do
+    kebab_case_function_list=$( (grep -Ev "^#" "${script}" || true) | (grep -E "^function" "${script}" || true) | (grep '-' || true) )
+    if [ -n "${kebab_case_function_list}" ] ; then
+        echo "Kebab case is not allowed for function naming, use snake case instead in ${color_red}${script}${color_reset}"
+        while read -r function ; do
+            clean_function=$(echo "${function}" | tr -s ' ' | cut --delimiter ' ' --field 2 | cut --delimiter '(' --field 1)
+            echo "${color_red}${clean_function}${color_reset} have to be: $(echo "${clean_function}" | tr '-' '_')"
+        done < <(echo "${kebab_case_function_list}")
+        echo
+        ((errors_count++))
+    fi
+done < <(find . -type f -name "*.sh")
+
 # Check *PS1 error handling at two first lines
 echo "------------------------------------------------------------------------------------------"
 while read -r script ; do
