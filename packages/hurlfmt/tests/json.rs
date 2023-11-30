@@ -57,13 +57,13 @@ fn value_string() -> BoxedStrategy<JsonValue> {
     let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
     let variable = Variable {
         name: "name".to_string(),
-        source_info: source_info.clone(),
+        source_info: source_info,
     };
     prop_oneof![
         Just(JsonValue::String(Template {
             elements: vec![],
             delimiter: Some('"'),
-            source_info: source_info.clone()
+            source_info: source_info
         })),
         Just(JsonValue::String(Template {
             elements: vec![TemplateElement::String {
@@ -71,7 +71,7 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                 value: "Hello".to_string(),
             }],
             delimiter: Some('"'),
-            source_info: source_info.clone()
+            source_info: source_info
         })),
         Just(JsonValue::String(Template {
             elements: vec![
@@ -82,12 +82,12 @@ fn value_string() -> BoxedStrategy<JsonValue> {
                 TemplateElement::Expression(Expr {
                     space0: Whitespace {
                         value: String::new(),
-                        source_info: source_info.clone()
+                        source_info: source_info
                     },
                     variable,
                     space1: Whitespace {
                         value: String::new(),
-                        source_info: source_info.clone()
+                        source_info: source_info
                     },
                 })
             ],
