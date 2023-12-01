@@ -190,7 +190,7 @@ impl hurl_core::error::Error for Error {
             }
             RunnerError::FileReadAccess { file } => format!("file {file} can not be read"),
             RunnerError::FileWriteAccess { file, error } => {
-                format!("{file} can not be write ({error})")
+                format!("{file} can not be written ({error})")
             }
             RunnerError::FilterDecode(encoding) => {
                 format!("value can not be decoded with <{encoding}> encoding")

@@ -19,8 +19,8 @@ use hurl_core::ast::{Pos, SourceInfo};
 
 use crate::http::{Call, Cookie};
 use crate::runner::error::Error;
+use crate::runner::output::Output;
 use crate::runner::value::Value;
-use crate::runner::write::write_file;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HurlResult {
@@ -123,9 +123,9 @@ impl EntryResult {
                             return Err(Error::new(source_info, e.into(), false));
                         }
                     };
-                    write_file(&bytes, &filename)
+                    Output::File(filename).write(&bytes)
                 } else {
-                    write_file(&response.body, &filename)
+                    Output::File(filename).write(&response.body)
                 }
             }
             None => Ok(()),

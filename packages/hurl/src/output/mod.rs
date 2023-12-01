@@ -24,29 +24,7 @@
 mod error;
 mod json;
 mod raw;
-mod stdout;
-
-use std::io::Write;
-use std::path::Path;
 
 pub use self::error::Error;
 pub use self::json::write_json;
 pub use self::raw::write_body;
-
-/// Writes `bytes` to the file `filename` or stdout by default.
-fn write_output(bytes: &Vec<u8>, filename: &Option<String>) -> Result<(), Error> {
-    match filename {
-        None => stdout::write_stdout(bytes.as_slice())?,
-        Some(filename) => {
-            let path = Path::new(filename.as_str());
-            let mut file = match std::fs::File::create(path) {
-                Ok(file) => file,
-                Err(e) => return Err(Error::from_path(e, filename)),
-            };
-            if let Err(e) = file.write_all(bytes.as_slice()) {
-                return Err(Error::from_path(e, filename));
-            }
-        }
-    }
-    Ok(())
-}

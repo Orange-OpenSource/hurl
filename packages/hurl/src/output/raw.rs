@@ -16,11 +16,11 @@
  *
  */
 use hurl_core::ast::{Pos, SourceInfo};
-use hurl_core::error::Error;
 
-use crate::runner::HurlResult;
+use crate::output::Error;
+use crate::runner;
+use crate::runner::{HurlResult, Output};
 use crate::util::logger::Logger;
-use crate::{output, runner};
 
 /// Writes the `hurl_result` last body response to the file `filename_out`.
 ///
@@ -33,7 +33,7 @@ pub fn write_body(
     color: bool,
     filename_out: &Option<String>,
     logger: &Logger,
-) -> Result<(), output::error::Error> {
+) -> Result<(), Error> {
     // By default, we output the body response bytes of the last entry
     if let Some(entry_result) = hurl_result.entries.last() {
         if let Some(call) = entry_result.calls.last() {
@@ -47,24 +47,27 @@ pub fn write_body(
                 text.push('\n');
                 output.append(&mut text.into_bytes());
             }
-            let mut body = if entry_result.compressed {
-                match response.uncompress_body() {
-                    Ok(bytes) => bytes,
+            if entry_result.compressed {
+                let mut bytes = match response.uncompress_body() {
+                    Ok(b) => b,
                     Err(e) => {
-                        // FIXME: we convert to a runner::Error to be able to use fixme
-                        // method. Can we do otherwise (without creating an artificial
-                        // error a first character).
+                        // FIXME: we convert to a runner::Error to be able to use fixme!
+                        // We may pass a [`SourceInfo`] as a parameter of this method to make
+                        // a more accurate error
                         let source_info = SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0));
                         let error = runner::Error::new(source_info, e.into(), false);
-                        let message = error.fixme();
-                        return Err(output::error::Error::new(&message));
+                        return Err(error.into());
                     }
-                }
+                };
+                output.append(&mut bytes);
             } else {
-                response.body.clone()
-            };
-            output.append(&mut body);
-            output::write_output(&output, filename_out)?;
+                let bytes = &response.body;
+                output.extend(bytes);
+            }
+            match filename_out {
+                Some(file) => Output::File(file.to_string()).write(&output)?,
+                None => Output::StdOut.write(&output)?,
+            }
         } else {
             logger.info("No response has been received");
         }

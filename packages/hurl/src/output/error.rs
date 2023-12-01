@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use crate::runner;
+use hurl_core::error::Error as CoreError;
 use std::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -24,16 +26,11 @@ impl Error {
     pub fn new(message: &str) -> Error {
         Error(message.to_string())
     }
-
-    pub fn from_path(error: std::io::Error, path: &str) -> Error {
-        let message = format!("Error {path}: {error}");
-        Error::new(&message)
-    }
 }
 
-impl From<std::io::Error> for Error {
-    fn from(value: std::io::Error) -> Self {
-        Error::new(&value.to_string())
+impl From<runner::Error> for Error {
+    fn from(error: runner::Error) -> Self {
+        Error::new(&error.fixme())
     }
 }
 
