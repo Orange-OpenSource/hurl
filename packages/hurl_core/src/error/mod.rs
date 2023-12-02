@@ -62,7 +62,14 @@ impl Error for parser::Error {
             ParseError::Version => "Parsing version".to_string(),
             ParseError::XPathExpr => "Parsing XPath expression".to_string(),
             // TODO: implement all variants
-            _ => format!("{self:?}"),
+            // _ => ,
+            ParseError::Eof => format!("{self:?}"),
+            ParseError::FileContentType => format!("{self:?}"),
+            ParseError::HexDigit => format!("{self:?}"),
+            ParseError::InvalidOption => format!("{self:?}"),
+            ParseError::Unicode => format!("{self:?}"),
+            ParseError::Url => format!("{self:?}"),
+            ParseError::Xml => format!("{self:?}"),
         }
     }
 
@@ -133,7 +140,14 @@ impl Error for parser::Error {
             ParseError::XPathExpr => "expecting a XPath expression".to_string(),
 
             // TODO: implement all variants
-            _ => format!("{self:?}"),
+            // _ => format!("{self:?}"),
+            ParseError::Eof => format!("{self:?}"),
+            ParseError::FileContentType => format!("{self:?}"),
+            ParseError::HexDigit => format!("{self:?}"),
+            ParseError::InvalidOption => format!("{self:?}"),
+            ParseError::Unicode => format!("{self:?}"),
+            ParseError::Url => format!("{self:?}"),
+            ParseError::Xml => format!("{self:?}"),
         }
     }
 }
