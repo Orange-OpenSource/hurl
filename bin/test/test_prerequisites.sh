@@ -42,7 +42,7 @@ echo "----- install servers prerequisites -----"
 python3 -m pip install --requirement bin/requirements-frozen.txt
 
 echo "----- start servers -----"
-cd integration
+cd integration/hurl
 mkdir -p build
 
 echo -e "\n------------------ Starting server.py"

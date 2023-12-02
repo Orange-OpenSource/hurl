@@ -28,9 +28,13 @@ fi
 
 
 # integration tests
-cd integration
+cd integration/hurlfmt
+./integration.py
+./test_html_output.py tests_export/*.html
+cd -
+
+cd integration/hurl
 ./hurlfmt_check.sh tests_ok/*.hurl tests_failed/*.hurl
 ./integration.py
 ./test_curl_commands.sh 
-./test_html_output.py tests_ok/*.html tests_failed/*.html
 

@@ -11,7 +11,7 @@ python3 -m pip install --requirement $project_root_path\bin\requirements-frozen.
 if ($LASTEXITCODE) { Throw }
 
 # start mock servers
-cd $project_root_path\integration
+cd $project_root_path\integration\hurl
 New-Item -ItemType Directory -Force -Path build
 
 python server.py 2>&1 > build\server.log &

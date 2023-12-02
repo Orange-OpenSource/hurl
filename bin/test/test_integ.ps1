@@ -15,7 +15,7 @@ hurlfmt --version
 if ($LASTEXITCODE) { Throw }
 
 # run integration tests
-cd $project_root_path\integration
+cd $project_root_path\integration\hurl
 python integration.py
 if ($LASTEXITCODE) { Throw }
 

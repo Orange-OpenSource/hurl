@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/redirect/7","options":[{"name":"location","value":true},{"name":"max-redirs","value":5}]},"response":{"status":200}}]}

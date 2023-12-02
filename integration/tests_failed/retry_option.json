@@ -1,1 +1,0 @@
-{"entries":[{"request":{"method":"GET","url":"http://localhost:8000/not-found","options":[{"name":"retry","value":2},{"name":"retry-interval","value":0}]},"response":{"status":200}}]}
