@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="11 / 11">100 %</abbr></p>
+                <abbr title="14 / 15">93.33 %</abbr></p>
         </div>
     </div>
 
@@ -325,7 +325,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::output;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::output::error::Error;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::output::error::Error;</pre>
+                <pre class="has-background-white py-0 px-2">use crate::runner::{HurlResult, Output};</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -357,7 +357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">use crate::runner::HurlResult;</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -373,7 +373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Writes the `hurl_result` JSON representation to the file `filename_out`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Writes the `hurl_result` JSON representation to the file `filename_out`.</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; If `filename_out` is `None`, stdout is used. The original content of the Hurl</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; If `filename_out` is `None`, stdout is used. The original content of the Hurl</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; file is necessary in order to construct error fields with column, line number etc... when</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; file is necessary in order to construct error fields with column, line number etc... when</pre>
+                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; processing failed asserts and captures.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -447,13 +447,13 @@
                 <a href="#26">26</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; processing failed asserts and captures.</pre>
+                <pre class="has-background-success-light py-0 px-2">pub fn write_json(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -469,7 +469,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">pub fn write_json(</pre>
+                <pre class="has-background-success-light py-0 px-2">    hurl_result: &amp;HurlResult,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -485,7 +485,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    hurl_result: &amp;HurlResult,</pre>
+                <pre class="has-background-success-light py-0 px-2">    content: &amp;str,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    content: &amp;str,</pre>
+                <pre class="has-background-success-light py-0 px-2">    filename_in: &amp;str,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    filename_in: &amp;str,</pre>
+                <pre class="has-background-success-light py-0 px-2">    filename_out: &amp;Option&lt;String&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    filename_out: &amp;Option&lt;String&gt;,</pre>
+                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;(), Error&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -549,7 +549,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">) -&gt; Result&lt;(), Error&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">    let json_result = hurl_result.to_json(content, filename_in);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -565,7 +565,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let json_result = hurl_result.to_json(content, filename_in);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let serialized = serde_json::to_string(&amp;json_result).unwrap();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let serialized = serde_json::to_string(&amp;json_result).unwrap();</pre>
+                <pre class="has-background-success-light py-0 px-2">    let s = format!(&quot;{serialized}\n&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let s = format!(&quot;{serialized}\n&quot;);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let bytes = s.into_bytes();</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -613,7 +613,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    output::write_output(&amp;s.into_bytes(), filename_out)</pre>
+                <pre class="has-background-success-light py-0 px-2">    match filename_out {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -621,6 +621,70 @@
                 id="37"
                 role="cell">
                 <a href="#37">37</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">        Some(file) =&gt; Output::File(file.to_string()).write(&amp;bytes)?,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="38"
+                role="cell">
+                <a href="#38">38</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">        None =&gt; Output::StdOut.write(&amp;bytes)?,</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="39"
+                role="cell">
+                <a href="#39">39</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="40"
+                role="cell">
+                <a href="#40">40</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
+                role="cell" aria-label="27">
+                27
+            </div>
+            <div class="column has-background-success-light p-0"
+                 role="cell">
+                <pre class="has-background-success-light py-0 px-2">    Ok(())</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="41"
+                role="cell">
+                <a href="#41">41</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success"
@@ -635,7 +699,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-12-02 08:08</p>
+                <p class="heading">Date: 2023-12-03 08:08</p>
             </div>
         </footer>
     </body>
