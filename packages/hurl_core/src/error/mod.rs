@@ -42,6 +42,7 @@ impl Error for parser::Error {
             ParseError::FileContentType => "Parsing file content type".to_string(),
             ParseError::Filename => "Parsing filename".to_string(),
             ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
+            ParseError::HexDigit => "Parsing hexadecimal number".to_string(),
             ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
             ParseError::Json(_) => "Parsing JSON".to_string(),
             ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
@@ -65,7 +66,6 @@ impl Error for parser::Error {
             ParseError::Xml => "Parsing XML".to_string(),
             // TODO: implement all variants
             // _ => ,
-            ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
@@ -73,7 +73,7 @@ impl Error for parser::Error {
     }
 
     fn fixme(&self) -> String {
-        match self.inner.clone() {
+        match &self.inner {
             ParseError::DuplicateSection => "the section is already defined".to_string(),
             ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
             ParseError::Expecting { value } => format!("expecting '{value}'"),
@@ -82,6 +82,7 @@ impl Error for parser::Error {
             ParseError::GraphQlVariables => {
                 "GraphQL variables is not a valid JSON object".to_string()
             }
+            ParseError::HexDigit => "expecting a valid hexadecimal number".to_string(),
             ParseError::InvalidCookieAttribute => "the cookie attribute is not valid".to_string(),
             ParseError::Json(variant) => match variant {
                 JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
@@ -141,7 +142,6 @@ impl Error for parser::Error {
             ParseError::Xml => "invalid XML".to_string(),
             // TODO: implement all variants
             // _ => format!("{self:?}"),
-            ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
