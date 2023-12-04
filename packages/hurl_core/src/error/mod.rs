@@ -61,6 +61,7 @@ impl Error for parser::Error {
             ParseError::UrlInvalidStart => "Parsing URL".to_string(),
             ParseError::Version => "Parsing version".to_string(),
             ParseError::XPathExpr => "Parsing XPath expression".to_string(),
+            ParseError::Xml => "Parsing XML".to_string(),
             // TODO: implement all variants
             // _ => ,
             ParseError::Eof => format!("{self:?}"),
@@ -69,7 +70,6 @@ impl Error for parser::Error {
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
-            ParseError::Xml => format!("{self:?}"),
         }
     }
 
@@ -138,7 +138,7 @@ impl Error for parser::Error {
                 "HTTP version must be HTTP, HTTP/1.0, HTTP/1.1 or HTTP/2".to_string()
             }
             ParseError::XPathExpr => "expecting a XPath expression".to_string(),
-
+            ParseError::Xml => "invalid XML".to_string(),
             // TODO: implement all variants
             // _ => format!("{self:?}"),
             ParseError::Eof => format!("{self:?}"),
@@ -147,7 +147,6 @@ impl Error for parser::Error {
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
-            ParseError::Xml => format!("{self:?}"),
         }
     }
 }

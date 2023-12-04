@@ -47,8 +47,6 @@ use crate::parser::ParseResult;
 /// byte a possible valid XML body.
 ///
 pub fn parse(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.state;
-
     // We test if our first character is a start of an XML text.
     // If not, we return immediately a recoverable error.
     // Otherwise, we start parsing the supposedly XML buffer. Any
@@ -56,13 +54,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
     let c = reader.peek();
     match c {
         Some('<') => {}
-        _ => {
-            return Err(Error {
-                pos: start.pos,
-                recoverable: true,
-                inner: ParseError::Xml,
-            })
-        }
+        _ => return Err(Error::new(reader.state.pos, true, ParseError::Xml)),
     }
 
     let mut buf = String::new();
@@ -82,6 +74,9 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             ptr::null(),
         );
 
+        // We keep track of the previous char reader position, to accurately  raise eventual error.
+        let mut prev_pos = reader.state.pos;
+
         while let Some(c) = reader.read() {
             buf.push(c);
 
@@ -95,11 +90,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             let ret = xmlParseChunk(context, bytes, count, end);
             if ret != 0 {
                 xmlFreeParserCtxt(context);
-                return Err(Error {
-                    pos: start.pos,
-                    recoverable: false,
-                    inner: ParseError::Xml,
-                });
+                return Err(Error::new(prev_pos, false, ParseError::Xml));
             }
 
             // End of the XML body is detected with a closing element event and depth of the tree.
@@ -110,6 +101,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<String> {
             {
                 break;
             }
+            prev_pos = reader.state.pos;
         }
 
         xmlFreeParserCtxt(context);
@@ -240,18 +232,30 @@ mod tests {
 
         let mut reader = Reader::new("<<");
         let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(error.pos, Pos { line: 1, column: 2 });
         assert_eq!(error.inner, ParseError::Xml);
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("<users><user /></users");
         let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 22
+            }
+        );
         assert_eq!(error.inner, ParseError::Xml);
 
         let mut reader = Reader::new("<users aa><user /></users");
         let error = parse(&mut reader).err().unwrap();
-        assert_eq!(error.pos, Pos { line: 1, column: 1 });
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 10
+            }
+        );
         assert_eq!(error.inner, ParseError::Xml);
     }
 
