@@ -315,11 +315,10 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
     loop {
         match reader.read() {
             None => {
-                return Err(Error {
-                    pos: reader.state.pos,
-                    recoverable: false,
-                    inner: ParseError::Eof,
-                })
+                let inner = ParseError::RegexExpr {
+                    message: "unexpected end of file".to_string(),
+                };
+                return Err(Error::new(reader.state.pos, false, inner));
             }
             Some('/') => break,
             Some('\\') => {
@@ -917,7 +916,12 @@ mod tests {
         let error = regex(&mut reader).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert!(!error.recoverable);
-        assert_eq!(error.inner, ParseError::Eof);
+        assert_eq!(
+            error.inner,
+            ParseError::RegexExpr {
+                message: "unexpected end of file".to_string()
+            }
+        );
 
         let mut reader = Reader::new("/x{a}/");
         let error = regex(&mut reader).err().unwrap();

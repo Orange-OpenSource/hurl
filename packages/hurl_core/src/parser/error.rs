@@ -28,7 +28,6 @@ pub struct Error {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ParseError {
     DuplicateSection,
-    Eof,
     EscapeChar,
     Expecting { value: String },
     FileContentType,

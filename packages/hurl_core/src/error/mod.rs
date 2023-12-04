@@ -65,7 +65,6 @@ impl Error for parser::Error {
             ParseError::Xml => "Parsing XML".to_string(),
             // TODO: implement all variants
             // _ => ,
-            ParseError::Eof => format!("{self:?}"),
             ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
@@ -142,7 +141,6 @@ impl Error for parser::Error {
             ParseError::Xml => "invalid XML".to_string(),
             // TODO: implement all variants
             // _ => format!("{self:?}"),
-            ParseError::Eof => format!("{self:?}"),
             ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
