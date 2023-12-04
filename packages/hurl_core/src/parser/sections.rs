@@ -279,11 +279,7 @@ fn file_content_type(reader: &mut Reader) -> ParseResult<String> {
 
     reader.state = save;
     if buf.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::FileContentType,
-        });
+        return Err(Error::new(start.pos, false, ParseError::FileContentType));
     }
     Ok(buf)
 }

@@ -39,6 +39,7 @@ impl Error for parser::Error {
             ParseError::DuplicateSection => "Parsing section".to_string(),
             ParseError::EscapeChar => "Parsing escape character".to_string(),
             ParseError::Expecting { .. } => "Parsing literal".to_string(),
+            ParseError::FileContentType => "Parsing file content type".to_string(),
             ParseError::Filename => "Parsing filename".to_string(),
             ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
             ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
@@ -65,7 +66,6 @@ impl Error for parser::Error {
             // TODO: implement all variants
             // _ => ,
             ParseError::Eof => format!("{self:?}"),
-            ParseError::FileContentType => format!("{self:?}"),
             ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
@@ -78,6 +78,7 @@ impl Error for parser::Error {
             ParseError::DuplicateSection => "the section is already defined".to_string(),
             ParseError::EscapeChar => "the escaping sequence is not valid".to_string(),
             ParseError::Expecting { value } => format!("expecting '{value}'"),
+            ParseError::FileContentType => "expecting a content type".to_string(),
             ParseError::Filename => "expecting a filename".to_string(),
             ParseError::GraphQlVariables => {
                 "GraphQL variables is not a valid JSON object".to_string()
@@ -142,7 +143,6 @@ impl Error for parser::Error {
             // TODO: implement all variants
             // _ => format!("{self:?}"),
             ParseError::Eof => format!("{self:?}"),
-            ParseError::FileContentType => format!("{self:?}"),
             ParseError::HexDigit => format!("{self:?}"),
             ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
