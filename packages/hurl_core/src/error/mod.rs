@@ -44,6 +44,7 @@ impl Error for parser::Error {
             ParseError::GraphQlVariables => "Parsing GraphQL variables".to_string(),
             ParseError::HexDigit => "Parsing hexadecimal number".to_string(),
             ParseError::InvalidCookieAttribute => "Parsing cookie attribute".to_string(),
+            ParseError::InvalidOption(_) => "Parsing option".to_string(),
             ParseError::Json(_) => "Parsing JSON".to_string(),
             ParseError::JsonPathExpr => "Parsing JSONPath expression".to_string(),
             ParseError::Method { .. } => "Parsing method".to_string(),
@@ -66,7 +67,6 @@ impl Error for parser::Error {
             ParseError::Xml => "Parsing XML".to_string(),
             // TODO: implement all variants
             // _ => ,
-            ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
         }
@@ -84,6 +84,39 @@ impl Error for parser::Error {
             }
             ParseError::HexDigit => "expecting a valid hexadecimal number".to_string(),
             ParseError::InvalidCookieAttribute => "the cookie attribute is not valid".to_string(),
+            ParseError::InvalidOption(name) => {
+                let valid_values = [
+                    "aws-sigv4",
+                    "cacert",
+                    "cert",
+                    "compressed",
+                    "connect-to",
+                    "delay",
+                    "insecure",
+                    "http1.0",
+                    "http1.1",
+                    "http2",
+                    "http3",
+                    "ipv4",
+                    "ipv6",
+                    "key",
+                    "location",
+                    "max-redirs",
+                    "output",
+                    "path-as-is",
+                    "proxy",
+                    "resolve",
+                    "retry",
+                    "retry-interval",
+                    "skip",
+                    "variable",
+                    "verbose",
+                    "very-verbose",
+                ];
+                let default = format!("Valid values are {}", valid_values.join(", "));
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
+                format!("the option name is not valid. {did_you_mean}")
+            }
             ParseError::Json(variant) => match variant {
                 JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
                 JsonErrorVariant::EmptyElement => {
@@ -98,9 +131,8 @@ impl Error for parser::Error {
                 let valid_values = [
                     "GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH",
                 ];
-                let default =
-                    "Valid values are GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH";
-                let did_you_mean = did_you_mean(&valid_values, name.as_str(), default);
+                let default = format!("Valid values are {}", valid_values.join(", "));
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the HTTP method <{name}> is not valid. {did_you_mean}")
             }
             ParseError::Multiline => "the multiline is not valid".to_string(),
@@ -119,8 +151,8 @@ impl Error for parser::Error {
                     "Cookies",
                     "Options",
                 ];
-                let default = "Valid values are QueryStringParams, FormParams, MultipartFormData, Cookies or Options";
-                let did_you_mean = did_you_mean(&valid_values, name.as_str(), default);
+                let default = format!("Valid values are {}", valid_values.join(", "));
+                let did_you_mean = did_you_mean(&valid_values, name.as_str(), &default);
                 format!("the section is not valid. {did_you_mean}")
             }
             ParseError::ResponseSection => "this is not a valid section for a response".to_string(),
@@ -142,7 +174,6 @@ impl Error for parser::Error {
             ParseError::Xml => "invalid XML".to_string(),
             // TODO: implement all variants
             // _ => format!("{self:?}"),
-            ParseError::InvalidOption => format!("{self:?}"),
             ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
         }

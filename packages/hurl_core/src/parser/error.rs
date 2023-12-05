@@ -35,7 +35,7 @@ pub enum ParseError {
     GraphQlVariables,
     HexDigit,
     InvalidCookieAttribute,
-    InvalidOption,
+    InvalidOption(String),
     Json(JsonErrorVariant),
     JsonPathExpr,
     Method { name: String },

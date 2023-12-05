@@ -30,7 +30,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
     let line_terminators = optional_line_terminators(reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let start = reader.state.pos;
-    let option = reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.');
+    // We accept '_' even if there is no option name with this character. We do this to be able to
+    // enter the parsing of the option name and to have better error description (ex: 'max-redirs'
+    // vs 'max_redirs').
+    let option =
+        reader.read_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '.' || *c == '_');
     let space1 = zero_or_more_spaces(reader)?;
     try_literal(":", reader)?;
     let space2 = zero_or_more_spaces(reader)?;
@@ -61,7 +65,13 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
-        _ => return Err(Error::new(start, true, ParseError::InvalidOption)),
+        _ => {
+            return Err(Error::new(
+                start,
+                false,
+                ParseError::InvalidOption(option.to_string()),
+            ))
+        }
     };
 
     let line_terminator0 = line_terminator(reader)?;
