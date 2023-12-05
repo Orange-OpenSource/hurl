@@ -74,6 +74,13 @@ jobs:
       if: always()
       run: bin/check/xmllint.sh
 
+    - name: Hurlfmt
+      if: always()
+      run: |
+        bin/release/release.sh
+        export PATH=target/release:$PATH
+        bin/check/hurlfmt.sh
+
     - name: Run crates update
       if: always()
       run: bin/check/crates.sh

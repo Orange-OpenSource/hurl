@@ -34,7 +34,6 @@ cd integration/hurlfmt
 cd -
 
 cd integration/hurl
-./hurlfmt_check.sh tests_ok/*.hurl tests_failed/*.hurl
 ./integration.py
 ./test_curl_commands.sh 
 
