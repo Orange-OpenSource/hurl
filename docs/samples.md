@@ -536,7 +536,7 @@ The Access Key is given per [`--user`].
 [JSONPath]: https://goessner.net/articles/JsonPath/
 [Basic authentication]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme
 [`Authorization` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-[Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/tests_ok
+[Hurl tests suite]: https://github.com/Orange-OpenSource/hurl/tree/master/integration/hurl/tests_ok
 [Authorization]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
 [`-u/--user` option]: /docs/manual.md#user
 [curl]: https://curl.se
