@@ -1,7 +1,21 @@
 error: Unrenderable variable
-  --> tests_failed/template_variable_not_renderable.hurl:10:11
+  --> tests_failed/template_variable_not_renderable.hurl:12:9
    |
-10 | param1: {{list}}
-   |           ^^^^ variable <list> with value [1,2,3] can not be rendered
+12 | list: {{list}}
+   |         ^^^^ variable <list> with value [1,2,3] can not be rendered
+   |
+
+error: Unrenderable variable
+  --> tests_failed/template_variable_not_renderable.hurl:17:11
+   |
+17 | object: {{object}}
+   |           ^^^^^^ variable <object> with value Object() can not be rendered
+   |
+
+error: Unrenderable variable
+  --> tests_failed/template_variable_not_renderable.hurl:22:12
+   |
+22 | nodeset: {{nodeset}}
+   |            ^^^^^^^ variable <nodeset> with value Nodeset1 can not be rendered
    |
 
