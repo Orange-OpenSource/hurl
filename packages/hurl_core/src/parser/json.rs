@@ -173,19 +173,21 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
 }
 
 fn unicode(reader: &mut Reader) -> ParseResult<char> {
+    let start = reader.state.pos;
     let cp1 = hex_value(reader)?;
     let cp = if is_surrogate(cp1) {
         literal("\\u", reader)?;
+        let start = reader.state.pos;
         let cp2 = hex_value(reader)?;
         match cp_surrogate_pair(cp1, cp2) {
-            None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
+            None => return Err(Error::new(start, false, ParseError::Unicode)),
             Some(cp) => cp,
         }
     } else {
         cp1
     };
     let c = match char::from_u32(cp) {
-        None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
+        None => return Err(Error::new(start, false, ParseError::Unicode)),
         Some(c) => c,
     };
     Ok(c)
@@ -700,13 +702,7 @@ mod tests {
 
         let mut reader = Reader::new("d800\\ud800");
         let error = unicode(&mut reader).unwrap_err();
-        assert_eq!(
-            error.pos,
-            Pos {
-                line: 1,
-                column: 11
-            }
-        );
+        assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(error.inner, ParseError::Unicode);
         assert!(!error.recoverable);
     }

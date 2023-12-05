@@ -60,6 +60,7 @@ impl Error for parser::Error {
             ParseError::Space => "Parsing space".to_string(),
             ParseError::Status => "Parsing status code".to_string(),
             ParseError::TemplateVariable => "Parsing template variable".to_string(),
+            ParseError::Unicode => "Parsing unicode literal".to_string(),
             ParseError::UrlIllegalCharacter(_) => "Parsing URL".to_string(),
             ParseError::UrlInvalidStart => "Parsing URL".to_string(),
             ParseError::Version => "Parsing version".to_string(),
@@ -67,7 +68,6 @@ impl Error for parser::Error {
             ParseError::Xml => "Parsing XML".to_string(),
             // TODO: implement all variants
             // _ => ,
-            ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
         }
     }
@@ -165,6 +165,7 @@ impl Error for parser::Error {
             ParseError::Space => "expecting a space".to_string(),
             ParseError::Status => "HTTP status code is not valid".to_string(),
             ParseError::TemplateVariable => "expecting a variable".to_string(),
+            ParseError::Unicode => "Invalid unicode literal".to_string(),
             ParseError::UrlIllegalCharacter(c) => format!("illegal character <{c}>"),
             ParseError::UrlInvalidStart => "expecting http://, https:// or {{".to_string(),
             ParseError::Version => {
@@ -174,7 +175,6 @@ impl Error for parser::Error {
             ParseError::Xml => "invalid XML".to_string(),
             // TODO: implement all variants
             // _ => format!("{self:?}"),
-            ParseError::Unicode => format!("{self:?}"),
             ParseError::Url => format!("{self:?}"),
         }
     }
