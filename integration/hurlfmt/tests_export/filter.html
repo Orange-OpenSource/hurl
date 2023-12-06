@@ -23,6 +23,8 @@
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.ips"</span> <span class="filter-type">split</span> <span class="string">", "</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">3</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.ips"</span> <span class="filter-type">replace</span> <span class="string">", "</span> <span class="string">"|"</span> <span class="predicate-type">==</span> <span class="string">"192.168.2.1|10.0.0.20|10.0.0.10"</span></span>
 <span class="line"><span class="query-type">jsonpath</span> <span class="string">"$.json"</span> <span class="filter-type">jsonpath</span> <span class="string">"$.message"</span> <span class="predicate-type">==</span> <span class="string">"Hello"</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">daysAfterNow</span> <span class="predicate-type">&gt;</span> <span class="number">15</span></span>
+<span class="line"><span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">daysBeforeNow</span> <span class="predicate-type">&gt;</span> <span class="number">15</span></span>
 <span class="json"><span class="line">{</span>
 <span class="line">  "list": [1,2,3],</span>
 <span class="line">  "message": "Hello Bob!",</span>

@@ -23,6 +23,8 @@ jsonpath "$.score" toInt == 1
 jsonpath "$.ips" split ", " count == 3
 jsonpath "$.ips" replace ", " "|" == "192.168.2.1|10.0.0.20|10.0.0.10"
 jsonpath "$.json" jsonpath "$.message" == "Hello"
+certificate "Expire-Date" daysAfterNow > 15
+certificate "Expire-Date" daysBeforeNow > 15
 {
   "list": [1,2,3],
   "message": "Hello Bob!",
