@@ -1,6 +1,7 @@
 *.swp
 *.swo
 *.pyc
+*.profraw
 .mypy_cache/
 
 target/

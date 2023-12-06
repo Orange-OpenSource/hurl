@@ -58,6 +58,10 @@ jobs:
       if: always()
       run: bin/check/rust_version.py 7
 
+    - name: Coverage
+      if: always()
+      run: bin/check/coverage.sh
+
     - name: Rustfmt
       if: always()
       run: bin/check/rustfmt.sh
