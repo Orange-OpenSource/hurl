@@ -116,31 +116,79 @@ assert:
 
 option:
   lt*
-  ( ca-certificate-option
+  ( aws-sigv4-option
+  | ca-certificate-option
+  | client-certificate-option
+  | client-key-option
+  | compressed-option
+  | connect-to-option
+  | delay-option
   | follow-redirect-option
+  | http10-option
+  | http11-option
+  | http2-option
+  | http3-option
   | insecure-option
+  | ipv4-option
+  | ipv6-option
   | max-redirs-option
+  | output-option
+  | path-as-is-option
+  | proxy-option
   | resolve-option
   | retry-option
   | retry-interval-option
+  | skip-option
   | variable-option
   | verbose-option
   | very-verbose-option
   )
 
+aws-sigv4-option: "aws-sigv4" ":" value-string lt
+
 ca-certificate-option: "cacert" ":" filename lt
+
+client-certificate-option: "cert" ":" value-string lt
+
+client-key-option: "key" ":" value-string lt
+
+compressed-option: "compressed" ":" boolean-option lt
+
+connect-to-option: "connect-to" ":" value-string lt
+
+delay-option: "delay" ":" integer-option lt
 
 follow-redirect-option: "location" ":" boolean-option lt
 
+http10-option: "http1.0" ":" boolean-option lt
+
+http11-option: "http1.1" ":" boolean-option lt
+
+http2-option: "http2" ":" boolean-option lt
+
+http3-option: "http3" ":" boolean-option lt
+
 insecure-option: "insecure" ":" boolean-option lt
+
+ipv4-option: "ipv4" ":" boolean-option lt
+
+ipv6-option: "ipv6" ":" boolean-option lt
 
 max-redirs-option: "max-redirs" ":" integer-option lt
 
+output-option: "output" ":" value-string lt
+
+path-as-is-option: "path-as-is" ":" boolean-option lt
+
+proxy-option: "proxy" ":" value-string lt
+
 resolve-option: "resolve" ":" value-string lt
 
-retry-option: "retry" ":" boolean-option lt
+retry-option: "retry" ":" integer-option lt
 
 retry-interval-option: "retry-interval" ":" integer-option lt
+
+skip-option: "skip" ":" boolean-option lt
 
 variable-option: "variable" ":" variable-definition lt
 
