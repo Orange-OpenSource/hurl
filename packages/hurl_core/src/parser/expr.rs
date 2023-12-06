@@ -22,14 +22,11 @@ use crate::parser::reader::Reader;
 use crate::parser::ParseResult;
 
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
-    // let start = p.state.clone();
-
     try_literal("{{", reader)?;
     let space0 = zero_or_more_spaces(reader)?;
     let variable = variable_name(reader)?;
     let space1 = zero_or_more_spaces(reader)?;
 
-    //literal("}}", p)?;
     if try_literal("}}}", reader).is_err() {
         literal("}}", reader)?
     }
@@ -42,8 +39,6 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
 }
 
 pub fn parse2(reader: &mut Reader) -> ParseResult<Expr> {
-    // let start = p.state.clone();
-
     let space0 = zero_or_more_spaces(reader)?;
     let variable = variable_name(reader)?;
     let space1 = zero_or_more_spaces(reader)?;

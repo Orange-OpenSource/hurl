@@ -52,7 +52,6 @@ pub enum ParseError {
     Status,
     TemplateVariable,
     Unicode,
-    Url,
     UrlIllegalCharacter(char),
     UrlInvalidStart,
     Version,

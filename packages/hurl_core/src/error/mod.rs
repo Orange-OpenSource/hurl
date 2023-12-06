@@ -66,9 +66,6 @@ impl Error for parser::Error {
             ParseError::Version => "Parsing version".to_string(),
             ParseError::XPathExpr => "Parsing XPath expression".to_string(),
             ParseError::Xml => "Parsing XML".to_string(),
-            // TODO: implement all variants
-            // _ => ,
-            ParseError::Url => format!("{self:?}"),
         }
     }
 
@@ -173,9 +170,6 @@ impl Error for parser::Error {
             }
             ParseError::XPathExpr => "expecting a XPath expression".to_string(),
             ParseError::Xml => "invalid XML".to_string(),
-            // TODO: implement all variants
-            // _ => format!("{self:?}"),
-            ParseError::Url => format!("{self:?}"),
         }
     }
 }

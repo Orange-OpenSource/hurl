@@ -28,14 +28,6 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     let mut elements = vec![];
     let mut buffer = String::new();
 
-    if reader.is_eof() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Url,
-        });
-    }
-
     if !url_prefix_valid(reader) {
         return Err(Error {
             pos: reader.state.pos,
@@ -91,19 +83,11 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
             }
         }
     }
+
     if !buffer.is_empty() {
         elements.push(TemplateElement::String {
             value: buffer.clone(),
             encoded: buffer,
-        });
-    }
-
-    if elements.is_empty() {
-        reader.state = start;
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Url,
         });
     }
 
