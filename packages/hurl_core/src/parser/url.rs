@@ -29,11 +29,11 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     let mut buffer = String::new();
 
     if !url_prefix_valid(reader) {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::UrlInvalidStart,
-        });
+        return Err(Error::new(
+            reader.state.pos,
+            false,
+            ParseError::UrlInvalidStart,
+        ));
     }
 
     loop {
@@ -96,11 +96,11 @@ pub fn url(reader: &mut Reader) -> ParseResult<Template> {
     if line_terminator(reader).is_err() {
         reader.state = save;
         let c = reader.peek().unwrap();
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::UrlIllegalCharacter(c),
-        });
+        return Err(Error::new(
+            reader.state.pos,
+            false,
+            ParseError::UrlIllegalCharacter(c),
+        ));
     }
 
     reader.state = save;

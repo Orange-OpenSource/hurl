@@ -64,11 +64,11 @@ fn request(reader: &mut Reader) -> ParseResult<Request> {
     let mut section_names = vec![];
     for section in sections.clone() {
         if section_names.contains(&section.name().to_string()) {
-            return Err(Error {
-                pos: section.source_info.start,
-                recoverable: false,
-                inner: ParseError::DuplicateSection,
-            });
+            return Err(Error::new(
+                section.source_info.start,
+                false,
+                ParseError::DuplicateSection,
+            ));
         } else {
             section_names.push(section.name().to_string());
         }
@@ -115,22 +115,16 @@ fn response(reader: &mut Reader) -> ParseResult<Response> {
 
 fn method(reader: &mut Reader) -> ParseResult<Method> {
     if reader.is_eof() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: true,
-            inner: ParseError::Method {
-                name: "<EOF>".to_string(),
-            },
-        });
+        let inner = ParseError::Method {
+            name: "<EOF>".to_string(),
+        };
+        return Err(Error::new(reader.state.pos, true, inner));
     }
     let start = reader.state;
     let name = reader.read_while(|c| c.is_ascii_alphabetic());
     if name.is_empty() || name.to_uppercase() != name {
-        Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Method { name },
-        })
+        let inner = ParseError::Method { name };
+        Err(Error::new(start.pos, false, inner))
     } else {
         Ok(Method(name))
     }
@@ -158,21 +152,13 @@ fn version(reader: &mut Reader) -> ParseResult<Version> {
                     });
                 }
             }
-            Err(Error {
-                pos: start.pos,
-                recoverable: false,
-                inner: ParseError::Version,
-            })
+            Err(Error::new(start.pos, false, ParseError::Version))
         }
         Some(' ') => Ok(Version {
             value: VersionAny,
             source_info: SourceInfo::new(start.pos, reader.state.pos),
         }),
-        _ => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Version,
-        }),
+        _ => Err(Error::new(start.pos, false, ParseError::Version)),
     }
 }
 
@@ -182,13 +168,7 @@ fn status(reader: &mut Reader) -> ParseResult<Status> {
         Ok(_) => StatusValue::Any,
         Err(_) => match natural(reader) {
             Ok(value) => StatusValue::Specific(value),
-            Err(_) => {
-                return Err(Error {
-                    pos: start,
-                    recoverable: false,
-                    inner: ParseError::Status,
-                });
-            }
+            Err(_) => return Err(Error::new(start, false, ParseError::Status)),
         },
     };
     let end = reader.state.pos;

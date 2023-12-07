@@ -54,14 +54,9 @@ fn request_section(reader: &mut Reader) -> ParseResult<Section> {
         "Cookies" => section_value_cookies(reader)?,
         "Options" => section_value_options(reader)?,
         _ => {
-            return Err(Error {
-                pos: Pos {
-                    line: start.line,
-                    column: start.column + 1,
-                },
-                recoverable: false,
-                inner: ParseError::RequestSectionName { name: name.clone() },
-            });
+            let inner = ParseError::RequestSectionName { name: name.clone() };
+            let pos = Pos::new(start.line, start.column + 1);
+            return Err(Error::new(pos, false, inner));
         }
     };
 
@@ -88,14 +83,9 @@ fn response_section(reader: &mut Reader) -> ParseResult<Section> {
         "Captures" => section_value_captures(reader)?,
         "Asserts" => section_value_asserts(reader)?,
         _ => {
-            return Err(Error {
-                pos: Pos {
-                    line: start.line,
-                    column: start.column + 1,
-                },
-                recoverable: false,
-                inner: ParseError::ResponseSectionName { name: name.clone() },
-            });
+            let inner = ParseError::ResponseSectionName { name: name.clone() };
+            let pos = Pos::new(start.line, start.column + 1);
+            return Err(Error::new(pos, false, inner));
         }
     };
 
@@ -114,13 +104,10 @@ fn section_name(reader: &mut Reader) -> ParseResult<String> {
     let name = reader.read_while(|c| c.is_alphanumeric());
     if name.is_empty() {
         // Could be the empty json array for the body
-        return Err(Error {
-            pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: "a valid section name".to_string(),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: "a valid section name".to_string(),
+        };
+        return Err(Error::new(pos, true, inner));
     }
     try_literal("]", reader)?;
     Ok(name)

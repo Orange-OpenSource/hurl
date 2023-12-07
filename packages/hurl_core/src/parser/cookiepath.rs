@@ -58,11 +58,7 @@ fn cookiepath_attribute_name(reader: &mut Reader) -> ParseResult<CookieAttribute
         "secure" => Ok(CookieAttributeName::Secure(s)),
         "httponly" => Ok(CookieAttributeName::HttpOnly(s)),
         "samesite" => Ok(CookieAttributeName::SameSite(s)),
-        _ => Err(Error {
-            pos: start,
-            recoverable: false,
-            inner: ParseError::InvalidCookieAttribute,
-        }),
+        _ => Err(Error::new(start, false, ParseError::InvalidCookieAttribute)),
     }
 }
 

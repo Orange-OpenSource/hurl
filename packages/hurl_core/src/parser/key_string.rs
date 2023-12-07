@@ -50,23 +50,17 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
         }
     }
     if elements.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: "key-string".to_string(),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: "key-string".to_string(),
+        };
+        return Err(Error::new(start.pos, false, inner));
     }
     if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
         if encoded.starts_with('[') {
-            return Err(Error {
-                pos: start.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
-                    value: "key-string".to_string(),
-                },
-            });
+            let inner = ParseError::Expecting {
+                value: "key-string".to_string(),
+            };
+            return Err(Error::new(start.pos, false, inner));
         }
     }
 
@@ -147,11 +141,7 @@ fn key_string_escaped_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => string::unicode(reader),
-        _ => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::EscapeChar,
-        }),
+        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
     }
 }
 

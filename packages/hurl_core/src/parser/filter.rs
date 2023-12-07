@@ -74,13 +74,10 @@ pub fn filter(reader: &mut Reader) -> ParseResult<Filter> {
     )
     .map_err(|e| {
         if e.recoverable {
-            Error {
-                pos: e.pos,
-                recoverable: e.recoverable,
-                inner: ParseError::Expecting {
-                    value: "filter".to_string(),
-                },
-            }
+            let inner = ParseError::Expecting {
+                value: "filter".to_string(),
+            };
+            Error::new(e.pos, true, inner)
         } else {
             e
         }

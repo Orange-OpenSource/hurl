@@ -29,11 +29,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
         c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-'
     });
     if s.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Filename,
-        });
+        return Err(Error::new(start.pos, false, ParseError::Filename));
     }
 
     Ok(Filename {

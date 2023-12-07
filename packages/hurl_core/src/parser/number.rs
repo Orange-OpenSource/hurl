@@ -27,23 +27,17 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
     let start = reader.state;
 
     if reader.is_eof() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: String::from("natural"),
+        };
+        return Err(Error::new(start.pos, true, inner));
     }
     let first_digit = reader.read().unwrap();
     if !first_digit.is_ascii_digit() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: String::from("natural"),
+        };
+        return Err(Error::new(start.pos, true, inner));
     }
 
     let save = reader.state;
@@ -51,23 +45,19 @@ pub fn natural(reader: &mut Reader) -> ParseResult<u64> {
 
     // if the first digit is zero, you should not have any more digits
     if first_digit == '0' && !s.is_empty() {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: String::from("natural"),
+        };
+        return Err(Error::new(save.pos, false, inner));
     }
     match format!("{first_digit}{s}").parse() {
         Ok(value) => Ok(value),
-        Err(_) => Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
+        Err(_) => {
+            let inner = ParseError::Expecting {
                 value: String::from("natural"),
-            },
-        }),
+            };
+            Err(Error::new(save.pos, false, inner))
+        }
     }
 }
 
@@ -89,16 +79,15 @@ pub fn number(reader: &mut Reader) -> ParseResult<Number> {
         ],
         reader,
     )
-    .map_err(|e| Error {
-        pos: e.pos,
-        recoverable: true,
-        inner: if e.recoverable {
+    .map_err(|e| {
+        let inner = if e.recoverable {
             ParseError::Expecting {
                 value: "number".to_string(),
             }
         } else {
             e.inner
-        },
+        };
+        Error::new(e.pos, true, inner)
     })
 }
 
@@ -123,37 +112,30 @@ pub fn float(reader: &mut Reader) -> ParseResult<Float> {
     try_literal(".", reader)?;
 
     if reader.is_eof() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: String::from("natural"),
+        };
+        return Err(Error::new(reader.state.pos, false, inner));
     }
 
     let s = reader.read_while(|c| c.is_ascii_digit());
     if s.is_empty() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: String::from("natural"),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: String::from("natural"),
+        };
+        return Err(Error::new(reader.state.pos, false, inner));
     }
     match format!("{sign}{nat}.{s}").parse() {
         Ok(value) => {
             let encoded = reader.peek_back(start.cursor);
             Ok(Float { value, encoded })
         }
-        Err(_) => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
+        Err(_) => {
+            let inner = ParseError::Expecting {
                 value: String::from("float"),
-            },
-        }),
+            };
+            Err(Error::new(start.pos, false, inner))
+        }
     }
 }
 
@@ -164,24 +146,18 @@ pub fn string_number(reader: &mut Reader) -> ParseResult<String> {
     };
     let integer = reader.read_while(|c| c.is_ascii_digit());
     if integer.is_empty() {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: true,
-            inner: ParseError::Expecting {
-                value: "number".to_string(),
-            },
-        });
+        let inner = ParseError::Expecting {
+            value: "number".to_string(),
+        };
+        return Err(Error::new(reader.state.pos, true, inner));
     }
     let decimal = if try_literal(".", reader).is_ok() {
         let s = reader.read_while(|c| c.is_ascii_digit());
         if s.is_empty() {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
-                    value: "decimals".to_string(),
-                },
-            });
+            let inner = ParseError::Expecting {
+                value: "decimals".to_string(),
+            };
+            return Err(Error::new(reader.state.pos, false, inner));
         }
         format!(".{s}")
     } else {

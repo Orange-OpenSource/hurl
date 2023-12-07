@@ -173,24 +173,20 @@ fn any_char(except: Vec<char>, reader: &mut Reader) -> ParseResult<(char, String
             if e.recoverable {
                 reader.state = start;
                 match reader.read() {
-                    None => Err(Error {
-                        pos: start.pos,
-                        recoverable: true,
-                        inner: ParseError::Expecting {
+                    None => {
+                        let inner = ParseError::Expecting {
                             value: "char".to_string(),
-                        },
-                    }),
+                        };
+                        Err(Error::new(start.pos, true, inner))
+                    }
                     Some(c) => {
                         if except.contains(&c)
                             || ['\\', '\x08', '\n', '\x0c', '\r', '\t'].contains(&c)
                         {
-                            Err(Error {
-                                pos: start.pos,
-                                recoverable: true,
-                                inner: ParseError::Expecting {
-                                    value: "char".to_string(),
-                                },
-                            })
+                            let inner = ParseError::Expecting {
+                                value: "char".to_string(),
+                            };
+                            Err(Error::new(start.pos, true, inner))
                         } else {
                             Ok((c, reader.peek_back(start.cursor)))
                         }
@@ -218,11 +214,7 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
         Some('r') => Ok('\r'),
         Some('t') => Ok('\t'),
         Some('u') => unicode(reader),
-        _ => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::EscapeChar,
-        }),
+        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
     }
 }
 
@@ -230,13 +222,7 @@ pub(crate) fn unicode(reader: &mut Reader) -> ParseResult<char> {
     literal("{", reader)?;
     let v = hex_value(reader)?;
     let c = match std::char::from_u32(v) {
-        None => {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Unicode,
-            });
-        }
+        None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
         Some(c) => c,
     };
     literal("}", reader)?;

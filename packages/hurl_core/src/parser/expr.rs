@@ -54,11 +54,7 @@ fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
     let start = reader.state;
     let name = reader.read_while(|c| c.is_alphanumeric() || *c == '_' || *c == '-');
     if name.is_empty() {
-        return Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::TemplateVariable,
-        });
+        return Err(Error::new(start.pos, false, ParseError::TemplateVariable));
     }
     Ok(Variable {
         name,

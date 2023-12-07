@@ -78,19 +78,11 @@ impl Error {
 
     /// Makes a recoverable error.
     pub fn recoverable(&self) -> Error {
-        Error {
-            pos: self.pos,
-            recoverable: true,
-            inner: self.inner.clone(),
-        }
+        Error::new(self.pos, true, self.inner.clone())
     }
 
     /// Makes a non recoverable error.
     pub fn non_recoverable(&self) -> Error {
-        Error {
-            pos: self.pos,
-            recoverable: false,
-            inner: self.inner.clone(),
-        }
+        Error::new(self.pos, false, self.inner.clone())
     }
 }

@@ -143,11 +143,7 @@ fn graphql(reader: &mut Reader) -> ParseResult<MultilineString> {
 fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state;
     match reader.read() {
-        None => Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Space,
-        }),
+        None => Err(Error::new(start.pos, true, ParseError::Space)),
         Some(c) => {
             if c == ' ' || c == '\t' || c == '\n' || c == '\r' {
                 Ok(Whitespace {
@@ -155,11 +151,7 @@ fn whitespace(reader: &mut Reader) -> ParseResult<Whitespace> {
                     source_info: SourceInfo::new(start.pos, reader.state.pos),
                 })
             } else {
-                Err(Error {
-                    pos: start.pos,
-                    recoverable: true,
-                    inner: ParseError::Space,
-                })
+                Err(Error::new(start.pos, true, ParseError::Space))
             }
         }
     }
@@ -186,13 +178,7 @@ fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
     let object = object_value(reader);
     let value = match object {
         Ok(obj) => obj,
-        Err(_) => {
-            return Err(Error {
-                pos: start.pos,
-                recoverable: false,
-                inner: ParseError::GraphQlVariables,
-            });
-        }
+        Err(_) => return Err(Error::new(start.pos, false, ParseError::GraphQlVariables)),
     };
     let whitespace = zero_or_more_whitespaces(reader)?;
     Ok(GraphQlVariables {
@@ -247,11 +233,7 @@ fn oneline_string_value(reader: &mut Reader) -> ParseResult<Template> {
         let pos = reader.state.pos;
         let c = reader.read().unwrap();
         if c == '\n' {
-            return Err(Error {
-                pos: start,
-                recoverable: false,
-                inner: ParseError::Multiline,
-            });
+            return Err(Error::new(start, false, ParseError::Multiline));
         }
         chars.push((c, c.to_string(), pos));
     }
@@ -730,14 +712,7 @@ variables
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(
             error,
-            Error {
-                pos: Pos {
-                    line: 8,
-                    column: 10
-                },
-                recoverable: false,
-                inner: ParseError::GraphQlVariables
-            }
+            Error::new(Pos::new(8, 10), false, ParseError::GraphQlVariables)
         )
     }
 
@@ -762,14 +737,7 @@ variables [
         let error = multiline_string(&mut reader).err().unwrap();
         assert_eq!(
             error,
-            Error {
-                pos: Pos {
-                    line: 8,
-                    column: 11
-                },
-                recoverable: false,
-                inner: ParseError::GraphQlVariables
-            }
+            Error::new(Pos::new(8, 11), false, ParseError::GraphQlVariables)
         )
     }
 }

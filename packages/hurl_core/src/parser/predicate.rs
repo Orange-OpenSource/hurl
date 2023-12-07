@@ -94,11 +94,7 @@ fn predicate_func_value(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
     ) {
         Err(Error {
             recoverable: true, ..
-        }) => Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::Predicate,
-        }),
+        }) => Err(Error::new(start.pos, false, ParseError::Predicate)),
         x => x,
     }
 }
@@ -175,11 +171,7 @@ fn greater_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
             operator,
         })
     } else {
-        Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        })
+        Err(Error::new(start.pos, false, ParseError::PredicateValue))
     }
 }
 
@@ -202,11 +194,7 @@ fn greater_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncV
             operator,
         })
     } else {
-        Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        })
+        Err(Error::new(start.pos, false, ParseError::PredicateValue))
     }
 }
 
@@ -229,11 +217,7 @@ fn less_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
             operator,
         })
     } else {
-        Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        })
+        Err(Error::new(start.pos, false, ParseError::PredicateValue))
     }
 }
 
@@ -256,11 +240,7 @@ fn less_or_equal_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValu
             operator,
         })
     } else {
-        Err(Error {
-            pos: start.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        })
+        Err(Error::new(start.pos, false, ParseError::PredicateValue))
     }
 }
 
@@ -270,11 +250,7 @@ fn start_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> 
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        });
+        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
     }
     Ok(PredicateFuncValue::StartWith { space0, value })
 }
@@ -285,11 +261,7 @@ fn end_with_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        });
+        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
     }
     Ok(PredicateFuncValue::EndWith { space0, value })
 }
@@ -300,11 +272,7 @@ fn contain_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !value.is_string() && !value.is_bytearray() {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        });
+        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
     }
     Ok(PredicateFuncValue::Contain { space0, value })
 }
@@ -322,11 +290,7 @@ fn match_predicate(reader: &mut Reader) -> ParseResult<PredicateFuncValue> {
     let save = reader.state;
     let value = predicate_value(reader)?;
     if !matches!(value, PredicateValue::String(_)) && !matches!(value, PredicateValue::Regex(_)) {
-        return Err(Error {
-            pos: save.pos,
-            recoverable: false,
-            inner: ParseError::PredicateValue,
-        });
+        return Err(Error::new(save.pos, false, ParseError::PredicateValue));
     }
     Ok(PredicateFuncValue::Match { space0, value })
 }

@@ -144,12 +144,11 @@ pub fn regex_value(reader: &mut Reader) -> ParseResult<RegexValue> {
         ],
         reader,
     )
-    .map_err(|e| Error {
-        pos: e.pos,
-        recoverable: false,
-        inner: ParseError::Expecting {
+    .map_err(|e| {
+        let inner = ParseError::Expecting {
             value: "\" or /".to_string(),
-        },
+        };
+        Error::new(e.pos, false, inner)
     })
 }
 
@@ -204,14 +203,10 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
         Ok(CertificateAttributeName::SerialNumber)
     } else {
         let value =
-            "Field <Subject>, <Issuer>,<Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
+            "Field <Subject>, <Issuer>, <Start-Date>, <Expire-Date> or <Serial-Number>".to_string();
         let inner = ParseError::Expecting { value };
         let pos = reader.state.pos;
-        Err(Error {
-            pos,
-            recoverable: false,
-            inner,
-        })
+        Err(Error::new(pos, false, inner))
     }
 }
 

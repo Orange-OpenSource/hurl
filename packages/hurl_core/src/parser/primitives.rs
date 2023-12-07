@@ -25,11 +25,7 @@ use crate::parser::{base64, filename, key_string, ParseResult};
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.state;
     match reader.read() {
-        None => Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::Space,
-        }),
+        None => Err(Error::new(start.pos, true, ParseError::Space)),
         Some(c) => {
             if c == ' ' || c == '\t' {
                 Ok(Whitespace {
@@ -37,11 +33,7 @@ pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
                     source_info: SourceInfo::new(start.pos, reader.state.pos),
                 })
             } else {
-                Err(Error {
-                    pos: start.pos,
-                    recoverable: true,
-                    inner: ParseError::Space,
-                })
+                Err(Error::new(start.pos, true, ParseError::Space))
             }
         }
     }
@@ -89,13 +81,10 @@ pub fn line_terminator(reader: &mut Reader) -> ParseResult<LineTerminator> {
         match newline(reader) {
             Ok(r) => r,
             Err(e) => {
-                return Err(Error {
-                    pos: e.pos,
-                    recoverable: false,
-                    inner: ParseError::Expecting {
-                        value: String::from("line_terminator"),
-                    },
-                });
+                let inner = ParseError::Expecting {
+                    value: String::from("line_terminator"),
+                };
+                return Err(Error::new(e.pos, false, inner));
             }
         }
     };
@@ -149,23 +138,17 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         let _state = reader.state;
         match reader.read() {
             None => {
-                return Err(Error {
-                    pos: start.pos,
-                    recoverable: false,
-                    inner: ParseError::Expecting {
-                        value: s.to_string(),
-                    },
-                });
+                let inner = ParseError::Expecting {
+                    value: s.to_string(),
+                };
+                return Err(Error::new(start.pos, false, inner));
             }
             Some(x) => {
                 if x != c {
-                    return Err(Error {
-                        pos: start.pos,
-                        recoverable: false,
-                        inner: ParseError::Expecting {
-                            value: s.to_string(),
-                        },
-                    });
+                    let inner = ParseError::Expecting {
+                        value: s.to_string(),
+                    };
+                    return Err(Error::new(start.pos, false, inner));
                 } else {
                     continue;
                 }
@@ -182,11 +165,7 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
         Ok(_) => Ok(()),
         Err(e) => {
             reader.state = save_state;
-            Err(Error {
-                pos: e.pos,
-                recoverable: true,
-                inner: e.inner,
-            })
+            Err(Error::new(e.pos, true, e.inner))
         }
     }
 }
@@ -202,13 +181,10 @@ pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<Stri
                 Ok(_) => Ok(s2.to_string()),
                 Err(_) => {
                     reader.state = start;
-                    Err(Error {
-                        pos: start.pos,
-                        recoverable: true,
-                        inner: ParseError::Expecting {
-                            value: format!("<{s1}> or <{s2}>"),
-                        },
-                    })
+                    let inner = ParseError::Expecting {
+                        value: format!("<{s1}> or <{s2}>"),
+                    };
+                    Err(Error::new(start.pos, true, inner))
                 }
             }
         }
@@ -227,13 +203,12 @@ pub fn newline(reader: &mut Reader) -> ParseResult<Whitespace> {
                 value: "\n".to_string(),
                 source_info: SourceInfo::new(start.pos, reader.state.pos),
             }),
-            Err(_) => Err(Error {
-                pos: start.pos,
-                recoverable: false,
-                inner: ParseError::Expecting {
+            Err(_) => {
+                let inner = ParseError::Expecting {
                     value: String::from("newline"),
-                },
-            }),
+                };
+                Err(Error::new(start.pos, false, inner))
+            }
         },
     }
 }
@@ -283,11 +258,11 @@ pub fn hex(reader: &mut Reader) -> ParseResult<Hex> {
         };
     }
     if current != -1 {
-        return Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::OddNumberOfHexDigits,
-        });
+        return Err(Error::new(
+            reader.state.pos,
+            false,
+            ParseError::OddNumberOfHexDigits,
+        ));
     }
     let encoded = reader.peek_back(start);
     let space1 = zero_or_more_spaces(reader)?;
@@ -356,11 +331,7 @@ pub fn regex(reader: &mut Reader) -> ParseResult<Regex> {
                 regex::Error::CompiledTooBig(_) => "Size limit exceeded".to_string(),
                 _ => "unknown".to_string(),
             };
-            Err(Error {
-                pos: start,
-                recoverable: false,
-                inner: ParseError::RegexExpr { message },
-            })
+            Err(Error::new(start, false, ParseError::RegexExpr { message }))
         }
     }
 }
@@ -375,13 +346,12 @@ pub fn boolean(reader: &mut Reader) -> ParseResult<bool> {
         Ok(_) => Ok(true),
         Err(_) => match literal("false", reader) {
             Ok(_) => Ok(false),
-            Err(_) => Err(Error {
-                pos: start.pos,
-                recoverable: true,
-                inner: ParseError::Expecting {
+            Err(_) => {
+                let inner = ParseError::Expecting {
                     value: String::from("true|false"),
-                },
-            }),
+                };
+                Err(Error::new(start.pos, true, inner))
+            }
         },
     }
 }
@@ -427,13 +397,10 @@ pub fn eof(reader: &mut Reader) -> ParseResult<()> {
     if reader.is_eof() {
         Ok(())
     } else {
-        Err(Error {
-            pos: reader.state.pos,
-            recoverable: false,
-            inner: ParseError::Expecting {
-                value: String::from("eof"),
-            },
-        })
+        let inner = ParseError::Expecting {
+            value: String::from("eof"),
+        };
+        Err(Error::new(reader.state.pos, false, inner))
     }
 }
 
@@ -464,17 +431,9 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
     match reader.read() {
         Some(c) => match hex_digit_value(c) {
             Some(v) => Ok(v),
-            None => Err(Error {
-                pos: start.pos,
-                recoverable: true,
-                inner: ParseError::HexDigit,
-            }),
+            None => Err(Error::new(start.pos, true, ParseError::HexDigit)),
         },
-        None => Err(Error {
-            pos: start.pos,
-            recoverable: true,
-            inner: ParseError::HexDigit,
-        }),
+        None => Err(Error::new(start.pos, true, ParseError::HexDigit)),
     }
 }
 

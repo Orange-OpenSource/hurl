@@ -118,13 +118,14 @@ pub fn templatize(encoded_string: EncodedString) -> ParseResult<Vec<TemplateElem
             encoded.push('{');
         }
         State::Template | State::FirstCloseBracket => {
-            return Err(error::Error {
-                pos: encoded_string.source_info.end,
-                recoverable: false,
-                inner: error::ParseError::Expecting {
-                    value: "}}".to_string(),
-                },
-            });
+            let inner = error::ParseError::Expecting {
+                value: "}}".to_string(),
+            };
+            return Err(error::Error::new(
+                encoded_string.source_info.end,
+                false,
+                inner,
+            ));
         }
     }
 
