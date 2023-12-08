@@ -20,9 +20,41 @@
 <span class="line"><span class="string">path-as-is</span>: <span class="boolean">false</span></span>
 <span class="line"><span class="string">proxy</span>: <span class="string">http://proxy.example</span></span>
 <span class="line"><span class="string">resolve</span>: <span class="string">example.com:443:127.0.0.1</span></span>
+<span class="line"><span class="string">retry</span>: <span class="number">0</span></span>
+<span class="line"><span class="string">retry</span>: <span class="number">-1</span></span>
 <span class="line"><span class="string">retry</span>: <span class="number">4</span></span>
 <span class="line"><span class="string">retry-interval</span>: <span class="number">1000</span></span>
 <span class="line"><span class="string">skip</span>: <span class="boolean">false</span></span>
 <span class="line"><span class="string">variable</span>: name=<span class="string">Bob</span></span>
 <span class="line"><span class="string">verbose</span>: <span class="boolean">false</span></span>
-<span class="line"><span class="string">very-verbose</span>: <span class="boolean">false</span></span></span></span></code></pre>
+<span class="line"><span class="string">very-verbose</span>: <span class="boolean">false</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">GET</span> <span class="url">http://localhost:8000/hello</span></span>
+<span class="line"><span class="section-header">[Options]</span></span>
+<span class="line"><span class="string">aws-sigv4</span>: <span class="string">{{aws-sigv4}}</span></span>
+<span class="line"></span><span class="comment">#cacert: {{cacert}}         NOT SUPPORTED YET</span>
+<span class="line"></span><span class="comment">#cert: {{cert}}             NOT SUPPORTED YET</span>
+<span class="line"></span><span class="comment">#key: {{key}}               NOT SUPPORTED YET</span>
+<span class="line"><span class="string">compressed</span>: <span class="expr">{{compressed}}</span></span>
+<span class="line"><span class="string">connect-to</span>: <span class="string">{{connect-to}}</span></span>
+<span class="line"><span class="string">delay</span>: <span class="expr">{{delay}}</span></span>
+<span class="line"><span class="string">location</span>: <span class="expr">{{location}}</span></span>
+<span class="line"><span class="string">http1.0</span>: <span class="expr">{{http10}}</span></span>
+<span class="line"><span class="string">http1.1</span>: <span class="expr">{{http11}}</span></span>
+<span class="line"><span class="string">http2</span>: <span class="expr">{{http2}}</span></span>
+<span class="line"><span class="string">http3</span>: <span class="expr">{{http3}}</span></span>
+<span class="line"><span class="string">insecure</span>: <span class="expr">{{insecure}}</span></span>
+<span class="line"><span class="string">ipv4</span>: <span class="expr">{{ipv4}}</span></span>
+<span class="line"><span class="string">ipv6</span>: <span class="expr">{{ipv6}}</span></span>
+<span class="line"><span class="string">max-redirs</span>: <span class="expr">{{max-redirs}}</span></span>
+<span class="line"></span><span class="comment">#output: {{output}}         NOT SUPPORTED YET</span>
+<span class="line"><span class="string">path-as-is</span>: <span class="expr">{{path-as-is}}</span></span>
+<span class="line"><span class="string">proxy</span>: <span class="string">{{proxy}}</span></span>
+<span class="line"><span class="string">resolve</span>: <span class="string">{{resolve}}</span></span>
+<span class="line"><span class="string">retry</span>: <span class="expr">{{retry}}</span></span>
+<span class="line"><span class="string">retry-interval</span>: <span class="expr">{{retry-interval}}</span></span>
+<span class="line"><span class="string">skip</span>: <span class="expr">{{skip}}</span></span>
+<span class="line"></span><span class="comment">#variable: {{variable}}     NOT SUPPORTED YET</span>
+<span class="line"><span class="string">verbose</span>: <span class="expr">{{verbose}}</span></span>
+<span class="line"><span class="string">very-verbose</span>: <span class="expr">{{very-verbose}}</span></span>
+</span></span></code></pre>
