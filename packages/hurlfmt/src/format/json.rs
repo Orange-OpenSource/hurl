@@ -295,13 +295,13 @@ impl ToJson for EntryOption {
             OptionKind::Insecure(value) => value.to_json(),
             OptionKind::IpV4(value) => value.to_json(),
             OptionKind::IpV6(value) => value.to_json(),
-            OptionKind::MaxRedirect(value) => JValue::Number(value.to_string()),
+            OptionKind::MaxRedirect(value) => value.to_json(),
             OptionKind::Output(filename) => JValue::String(filename.value.clone()),
             OptionKind::PathAsIs(value) => value.to_json(),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),
-            OptionKind::Retry(value) => JValue::Number(value.to_string()),
-            OptionKind::RetryInterval(value) => JValue::Number(value.to_string()),
+            OptionKind::Retry(value) => value.to_json(),
+            OptionKind::RetryInterval(value) => value.to_json(),
             OptionKind::Skip(value) => value.to_json(),
             OptionKind::Variable(value) => {
                 JValue::String(format!("{}={}", value.name, value.value))
@@ -329,6 +329,25 @@ impl ToJson for NaturalOption {
         match self {
             NaturalOption::Literal(value) => JValue::Number(value.to_string()),
             NaturalOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
+
+impl ToJson for RetryOption {
+    fn to_json(&self) -> JValue {
+        match self {
+            RetryOption::Literal(value) => value.to_json(),
+            RetryOption::Expression(expr) => expr.to_json(),
+        }
+    }
+}
+
+impl ToJson for Retry {
+    fn to_json(&self) -> JValue {
+        match self {
+            Retry::None => JValue::Number("0".to_string()),
+            Retry::Finite(value) => JValue::Number(value.to_string()),
+            Retry::Infinite => JValue::Number("-1".to_string()),
         }
     }
 }
