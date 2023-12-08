@@ -173,18 +173,43 @@ fn escape_char(reader: &mut Reader) -> ParseResult<char> {
 }
 
 fn unicode(reader: &mut Reader) -> ParseResult<char> {
-    let v = hex_value(reader)?;
-    let c = match std::char::from_u32(v) {
-        None => {
-            return Err(Error {
-                pos: reader.state.pos,
-                recoverable: false,
-                inner: ParseError::Unicode,
-            })
+    let cp1 = hex_value(reader)?;
+    let cp = if is_surrogate(cp1) {
+        literal("\\u", reader)?;
+        let cp2 = hex_value(reader)?;
+        match cp_surrogate_pair(cp1, cp2) {
+            None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
+            Some(cp) => cp,
         }
+    } else {
+        cp1
+    };
+    let c = match char::from_u32(cp) {
+        None => return Err(Error::new(reader.state.pos, false, ParseError::Unicode)),
         Some(c) => c,
     };
     Ok(c)
+}
+
+// 0xd800-0xdc00 encodes the high 10 bits of a pair.
+// 0xdc00-0xe000 encodes the low 10 bits of a pair.
+// the value is those 20 bits plus 0x10000.
+const SURR1: u32 = 0xd800;
+const SURR2: u32 = 0xdc00;
+const SURR3: u32 = 0xe000;
+const SURR_SELF: u32 = 0x10000;
+
+/// Returns whether the specified Unicode code point can appear in a surrogate pair.
+fn is_surrogate(cp: u32) -> bool {
+    (SURR1..SURR3).contains(&cp)
+}
+
+fn cp_surrogate_pair(cp1: u32, cp2: u32) -> Option<u32> {
+    if (SURR1..SURR2).contains(&cp1) && (SURR2..SURR3).contains(&cp2) {
+        Some(((cp1 - SURR1) << 10) | ((cp2 - SURR2) + SURR_SELF))
+    } else {
+        None
+    }
 }
 
 fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
@@ -192,7 +217,7 @@ fn hex_value(reader: &mut Reader) -> ParseResult<u32> {
     let digit2 = nonrecover(hex_digit, reader)?;
     let digit3 = nonrecover(hex_digit, reader)?;
     let digit4 = nonrecover(hex_digit, reader)?;
-    let value = digit1 * (16 ^ 3) + digit2 * (16 ^ 2) + digit3 * 16 + digit4;
+    let value = digit1 * (16 * 16 * 16) + digit2 * (16 * 16) + digit3 * 16 + digit4;
     Ok(value)
 }
 
@@ -653,6 +678,37 @@ mod tests {
         let mut reader = Reader::new("000a");
         assert_eq!(unicode(&mut reader).unwrap(), '\n');
         assert_eq!(reader.state.cursor, 4);
+
+        let mut reader = Reader::new("c350");
+        assert_eq!(unicode(&mut reader).unwrap(), '썐');
+        assert_eq!(reader.state.cursor, 4);
+
+        let mut reader = Reader::new("d83c\\udf78");
+        assert_eq!(unicode(&mut reader).unwrap(), '🍸');
+        assert_eq!(reader.state.cursor, 10);
+
+        let mut reader = Reader::new("d800");
+        let error = unicode(&mut reader).unwrap_err();
+        assert_eq!(error.pos, Pos { line: 1, column: 5 });
+        assert_eq!(
+            error.inner,
+            ParseError::Expecting {
+                value: "\\u".to_string()
+            }
+        );
+        assert!(!error.recoverable);
+
+        let mut reader = Reader::new("d800\\ud800");
+        let error = unicode(&mut reader).unwrap_err();
+        assert_eq!(
+            error.pos,
+            Pos {
+                line: 1,
+                column: 11
+            }
+        );
+        assert_eq!(error.inner, ParseError::Unicode);
+        assert!(!error.recoverable);
     }
 
     #[test]
@@ -660,10 +716,13 @@ mod tests {
         let mut reader = Reader::new("0020x");
         assert_eq!(hex_value(&mut reader).unwrap(), 32);
 
+        let mut reader = Reader::new("d800");
+        assert_eq!(hex_value(&mut reader).unwrap(), 55296);
+
         let mut reader = Reader::new("x");
-        let error = hex_value(&mut reader).err().unwrap();
+        let error = hex_value(&mut reader).unwrap_err();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
-        assert_eq!(error.inner, error::ParseError::HexDigit);
+        assert_eq!(error.inner, ParseError::HexDigit);
         assert!(!error.recoverable);
     }
 
@@ -726,7 +785,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.inner,
-            error::ParseError::Expecting {
+            ParseError::Expecting {
                 value: "number".to_string()
             }
         );
@@ -737,7 +796,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 3 });
         assert_eq!(
             error.inner,
-            error::ParseError::Expecting {
+            ParseError::Expecting {
                 value: "digits".to_string()
             }
         );
@@ -818,7 +877,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.inner,
-            error::ParseError::Expecting {
+            ParseError::Expecting {
                 value: "[".to_string()
             }
         );
@@ -829,7 +888,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
             error.inner,
-            error::ParseError::Json(JsonErrorVariant::TrailingComma),
+            ParseError::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
     }
@@ -899,7 +958,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.inner,
-            error::ParseError::Expecting {
+            ParseError::Expecting {
                 value: "{".to_string()
             }
         );
@@ -913,7 +972,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
             error.inner,
-            error::ParseError::Json(JsonErrorVariant::EmptyElement)
+            ParseError::Json(JsonErrorVariant::EmptyElement)
         );
         assert!(!error.recoverable);
     }
@@ -949,7 +1008,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.inner,
-            error::ParseError::Expecting {
+            ParseError::Expecting {
                 value: "\"".to_string()
             }
         );
@@ -960,7 +1019,7 @@ mod tests {
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(
             error.inner,
-            error::ParseError::Json(JsonErrorVariant::EmptyElement),
+            ParseError::Json(JsonErrorVariant::EmptyElement),
         );
         assert!(!error.recoverable);
     }

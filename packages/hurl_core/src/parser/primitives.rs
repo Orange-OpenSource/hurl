@@ -142,11 +142,8 @@ pub fn comment(reader: &mut Reader) -> ParseResult<Comment> {
     })
 }
 
+/// Does not return a value, non recoverable parser. Use combinator recover to make it recoverable
 pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
-    // does not return a value
-    // non recoverable parser
-    // => use combinator recover to make it recoverable
-
     let start = reader.state;
     for c in s.chars() {
         let _state = reader.state;
@@ -178,9 +175,8 @@ pub fn literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     Ok(())
 }
 
+/// Recoverable version which reset the cursor, meant to be combined with following action.
 pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
-    // recoverable version which reset the cursor
-    // meant to be combined with following action
     let save_state = reader.state;
     match literal(s, reader) {
         Ok(_) => Ok(()),
@@ -195,7 +191,7 @@ pub fn try_literal(s: &str, reader: &mut Reader) -> ParseResult<()> {
     }
 }
 
-// return the literal string
+/// Returns the literal string
 pub fn try_literals(s1: &str, s2: &str, reader: &mut Reader) -> ParseResult<String> {
     let start = reader.state;
     match literal(s1, reader) {
