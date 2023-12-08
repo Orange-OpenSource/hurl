@@ -256,7 +256,7 @@ impl HtmlFormatter {
         match retry {
             Retry::Finite(n) => self.fmt_number(n),
             Retry::Infinite => self.fmt_number(-1),
-            _ => {}
+            Retry::None => self.fmt_number(0),
         };
     }
 
