@@ -25,6 +25,10 @@ retry: -1
 retry: 4
 retry-interval: 1000
 skip: false
+variable: user=null
+variable: status=true
+variable: count=2
+variable: score=7.7
 variable: name=Bob
 verbose: false
 very-verbose: false

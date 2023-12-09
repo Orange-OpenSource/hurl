@@ -1,0 +1,25 @@
+<pre><code class="language-hurl"><span class="hurl-entry"><span class="request"><span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/json</span></span>
+<span class="json"><span class="line">{</span>
+<span class="line">   "message": "Hello"</span>
+<span class="line">}</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/xml</span></span>
+<span class="xml"><span class="line">&lt;message&gt;Hello&lt;/message&gt;</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/multiline-string</span></span>
+<span class="multiline"><span class="line">```</span>
+<span class="line">Hello</span>
+<span class="line">```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-string</span></span>
+<span class="multiline"><span class="line">```Hello```</span></span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-base64</span></span>
+<span class="line">base64,<span class="base64">bGluZTEKbGluZTINCmxpbmUzCg==</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-file</span></span>
+<span class="line">file,<span class="filename">data.bin</span>;</span>
+</span></span><span class="hurl-entry"><span class="request"><span class="line"></span>
+<span class="line"><span class="method">POST</span> <span class="url">http://localhost:8000/oneline-hex</span></span>
+<span class="line">hex,<span class="hex">010203</span>;</span>
+</span></span></code></pre>
