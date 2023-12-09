@@ -583,6 +583,7 @@ fn json_predicate_value(predicate_value: PredicateValue) -> (JValue, Option<Stri
         PredicateValue::Bool(value) => (JValue::Boolean(value), None),
         PredicateValue::Null => (JValue::Null, None),
         PredicateValue::Number(value) => (JValue::Number(value.to_string()), None),
+        PredicateValue::File(value) => (value.to_json(), None),
         PredicateValue::Hex(value) => {
             let base64_string = general_purpose::STANDARD.encode(value.value);
             (JValue::String(base64_string), Some("base64".to_string()))

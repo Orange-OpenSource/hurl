@@ -410,6 +410,7 @@ fn lint_predicate_value(predicate_value: &PredicateValue) -> PredicateValue {
         PredicateValue::Bool(value) => PredicateValue::Bool(*value),
         PredicateValue::Null => PredicateValue::Null,
         PredicateValue::Number(value) => PredicateValue::Number(value.clone()),
+        PredicateValue::File(value) => PredicateValue::File(lint_file(value)),
         PredicateValue::Hex(value) => PredicateValue::Hex(lint_hex(value)),
         PredicateValue::Base64(value) => PredicateValue::Base64(lint_base64(value)),
         PredicateValue::Expression(value) => PredicateValue::Expression(value.clone()),

@@ -26,6 +26,7 @@ use crate::runner::predicate::eval_predicate;
 use crate::runner::query::eval_query;
 use crate::runner::result::AssertResult;
 use crate::runner::Value;
+use crate::util::path::ContextDir;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.
@@ -120,6 +121,7 @@ pub fn eval_assert(
     assert: &Assert,
     variables: &HashMap<String, Value>,
     http_response: &http::Response,
+    context_dir: &ContextDir,
 ) -> AssertResult {
     let query_result = eval_query(&assert.query, variables, http_response);
 
@@ -152,7 +154,12 @@ pub fn eval_assert(
     let source_info = assert.predicate.predicate_func.source_info;
     let predicate_result = match &actual {
         Err(_) => None,
-        Ok(actual) => Some(eval_predicate(&assert.predicate, variables, actual)),
+        Ok(actual) => Some(eval_predicate(
+            &assert.predicate,
+            variables,
+            actual,
+            context_dir,
+        )),
     };
 
     AssertResult::Explicit {
@@ -165,6 +172,7 @@ pub fn eval_assert(
 #[cfg(test)]
 pub mod tests {
     use hurl_core::ast::SourceInfo;
+    use std::path::Path;
 
     use super::super::query;
     use super::*;
@@ -216,11 +224,15 @@ pub mod tests {
     #[test]
     fn test_eval() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
         assert_eq!(
             eval_assert(
                 &assert_count_user(),
                 &variables,
                 &xml_three_users_http_response(),
+                &context_dir
             ),
             AssertResult::Explicit {
                 actual: Ok(Some(Value::Number(Number::Integer(3)))),

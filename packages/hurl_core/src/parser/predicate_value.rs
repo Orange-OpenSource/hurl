@@ -39,6 +39,10 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
                 Ok(value) => Ok(PredicateValue::Number(value)),
                 Err(e) => Err(e),
             },
+            |p1| match file(p1) {
+                Ok(value) => Ok(PredicateValue::File(value)),
+                Err(e) => Err(e),
+            },
             |p1| match hex(p1) {
                 Ok(value) => Ok(PredicateValue::Hex(value)),
                 Err(e) => Err(e),

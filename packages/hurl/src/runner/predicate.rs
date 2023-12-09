@@ -27,6 +27,7 @@ use crate::runner::result::PredicateResult;
 use crate::runner::template::eval_template;
 use crate::runner::value::Value;
 use crate::runner::{Number, RunnerError};
+use crate::util::path::ContextDir;
 
 /// Evaluates a `predicate` against an actual `value`.
 ///
@@ -50,8 +51,14 @@ pub fn eval_predicate(
     predicate: &Predicate,
     variables: &HashMap<String, Value>,
     value: &Option<Value>,
+    context_dir: &ContextDir,
 ) -> PredicateResult {
-    let assert_result = eval_predicate_func(&predicate.predicate_func, variables, value.as_ref())?;
+    let assert_result = eval_predicate_func(
+        &predicate.predicate_func,
+        variables,
+        value.as_ref(),
+        context_dir,
+    )?;
 
     // Column error is set to 0 to disable the error display of "^----"
     let source_info = SourceInfo::new(
@@ -171,26 +178,27 @@ fn format_float(value: f64) -> String {
 fn expected_no_value(
     predicate_func_value: &PredicateFuncValue,
     variables: &HashMap<String, Value>,
+    context_dir: &ContextDir,
 ) -> Result<String, Error> {
     match &predicate_func_value {
         PredicateFuncValue::Equal { value, .. } | PredicateFuncValue::NotEqual { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(value.expected())
         }
         PredicateFuncValue::GreaterThan { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("greater than <{}>", value.expected()))
         }
         PredicateFuncValue::GreaterThanOrEqual { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("greater than or equals to <{}>", value.expected()))
         }
         PredicateFuncValue::LessThan { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("less than <{}>", value.expected()))
         }
         PredicateFuncValue::LessThanOrEqual { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("less than or equals to <{}>", value.expected()))
         }
         PredicateFuncValue::StartWith {
@@ -212,7 +220,7 @@ fn expected_no_value(
             Ok(format!("contains string <{expected}>"))
         }
         PredicateFuncValue::Include { value, .. } => {
-            let value = eval_predicate_value(value, variables)?;
+            let value = eval_predicate_value(value, variables, context_dir)?;
             Ok(format!("include {}", value.expected()))
         }
         PredicateFuncValue::Match {
@@ -239,11 +247,12 @@ fn eval_predicate_func(
     predicate_func: &PredicateFunc,
     variables: &HashMap<String, Value>,
     value: Option<&Value>,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
     let value = match value {
         Some(value) => value,
         None => {
-            let expected = expected_no_value(&predicate_func.value, variables)?;
+            let expected = expected_no_value(&predicate_func.value, variables, context_dir)?;
             return Ok(AssertResult {
                 success: false,
                 actual: "none".to_string(),
@@ -256,34 +265,34 @@ fn eval_predicate_func(
     match &predicate_func.value {
         PredicateFuncValue::Equal {
             value: expected, ..
-        } => eval_equal(expected, variables, value),
+        } => eval_equal(expected, variables, value, context_dir),
         PredicateFuncValue::NotEqual {
             value: expected, ..
-        } => eval_not_equal(expected, variables, value),
+        } => eval_not_equal(expected, variables, value, context_dir),
         PredicateFuncValue::GreaterThan {
             value: expected, ..
-        } => eval_greater_than(expected, variables, value),
+        } => eval_greater_than(expected, variables, value, context_dir),
         PredicateFuncValue::GreaterThanOrEqual {
             value: expected, ..
-        } => eval_greater_than_or_equal(expected, variables, value),
+        } => eval_greater_than_or_equal(expected, variables, value, context_dir),
         PredicateFuncValue::LessThan {
             value: expected, ..
-        } => eval_less_than(expected, variables, value),
+        } => eval_less_than(expected, variables, value, context_dir),
         PredicateFuncValue::LessThanOrEqual {
             value: expected, ..
-        } => eval_less_than_or_equal(expected, variables, value),
+        } => eval_less_than_or_equal(expected, variables, value, context_dir),
         PredicateFuncValue::StartWith {
             value: expected, ..
-        } => eval_start_with(expected, variables, value),
+        } => eval_start_with(expected, variables, value, context_dir),
         PredicateFuncValue::EndWith {
             value: expected, ..
-        } => eval_end_with(expected, variables, value),
+        } => eval_end_with(expected, variables, value, context_dir),
         PredicateFuncValue::Contain {
             value: expected, ..
-        } => eval_contain(expected, variables, value),
+        } => eval_contain(expected, variables, value, context_dir),
         PredicateFuncValue::Include {
             value: expected, ..
-        } => eval_include(expected, variables, value),
+        } => eval_include(expected, variables, value, context_dir),
         PredicateFuncValue::Match {
             value: expected, ..
         } => eval_match(expected, predicate_func.source_info, variables, value),
@@ -303,8 +312,9 @@ fn eval_equal(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_equal(actual, &expected))
 }
 
@@ -313,8 +323,9 @@ fn eval_not_equal(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_not_equal(actual, &expected))
 }
 
@@ -323,8 +334,9 @@ fn eval_greater_than(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater(actual, &expected))
 }
 
@@ -333,8 +345,9 @@ fn eval_greater_than_or_equal(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_greater_or_equal(actual, &expected))
 }
 
@@ -343,8 +356,9 @@ fn eval_less_than(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less(actual, &expected))
 }
 
@@ -353,8 +367,9 @@ fn eval_less_than_or_equal(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_values_less_or_equal(actual, &expected))
 }
 
@@ -364,8 +379,9 @@ fn eval_start_with(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("starts with {}", expected.display());
     let actual_display = actual.display();
     match (expected, actual) {
@@ -396,8 +412,9 @@ fn eval_end_with(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("ends with {}", expected.display());
     let actual_display = actual.display();
     match (expected, actual) {
@@ -428,8 +445,9 @@ fn eval_contain(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     let expected_display = format!("contains {}", expected.display());
     let actual_display = actual.display();
     match (expected, actual) {
@@ -460,8 +478,9 @@ fn eval_include(
     expected: &PredicateValue,
     variables: &HashMap<String, Value>,
     actual: &Value,
+    context_dir: &ContextDir,
 ) -> Result<AssertResult, Error> {
-    let expected = eval_predicate_value(expected, variables)?;
+    let expected = eval_predicate_value(expected, variables, context_dir)?;
     Ok(assert_include(actual, &expected))
 }
 
@@ -864,6 +883,7 @@ fn contains(haystack: &[u8], needle: &[u8]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::{AssertResult, *};
+    use std::path::Path;
 
     fn whitespace() -> Whitespace {
         Whitespace {
@@ -886,6 +906,10 @@ mod tests {
         // `not == 10` with value `10`    ValueError
         // `not == 10` with value `true`  => this is now valid
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+
         let whitespace = Whitespace {
             value: String::from(" "),
             source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(0, 0)),
@@ -904,12 +928,19 @@ mod tests {
             },
         };
 
-        assert!(eval_predicate(&predicate, &variables, &Some(Value::Bool(true))).is_ok());
+        assert!(eval_predicate(
+            &predicate,
+            &variables,
+            &Some(Value::Bool(true)),
+            &context_dir
+        )
+        .is_ok());
 
         let error = eval_predicate(
             &predicate,
             &variables,
             &Some(Value::Number(Number::Integer(10))),
+            &context_dir,
         )
         .unwrap_err();
         assert_eq!(
@@ -928,7 +959,8 @@ mod tests {
         assert!(eval_predicate(
             &predicate,
             &variables,
-            &Some(Value::Number(Number::Integer(1)))
+            &Some(Value::Number(Number::Integer(1))),
+            &context_dir
         )
         .is_ok());
     }
@@ -936,12 +968,15 @@ mod tests {
     #[test]
     fn test_predicate_type_mismatch() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 10`
         // value: true
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Bool(true);
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         // FIXME: should be type_mismatch = true here
         // assert!(assert_result.type_mismatch);
@@ -953,12 +988,15 @@ mod tests {
     #[test]
     fn test_predicate_type_mismatch_with_unit() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 10`
         // value: Unit
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Unit;
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "unit");
@@ -968,12 +1006,15 @@ mod tests {
     #[test]
     fn test_predicate_value_error() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 10`
         // value: 1
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(10));
         let value = Value::Number(Number::Integer(1));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
@@ -983,7 +1024,7 @@ mod tests {
         // value: false
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
@@ -996,7 +1037,7 @@ mod tests {
             encoded: "1.2".to_string(),
         }));
         let value = Value::Number(Number::Float(1.1));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
@@ -1006,6 +1047,9 @@ mod tests {
     #[test]
     fn test_predicate_exist() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `exist`
         // value: Some(Unit) | None
@@ -1015,13 +1059,15 @@ mod tests {
         };
 
         let value = Some(&Value::Unit);
-        let assert_result = eval_predicate_func(&pred_func, &variables, value).unwrap();
+        let assert_result =
+            eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert_eq!(assert_result.actual.as_str(), "unit");
         assert_eq!(assert_result.expected.as_str(), "something");
 
         let value = None;
-        let assert_result = eval_predicate_func(&pred_func, &variables, value).unwrap();
+        let assert_result =
+            eval_predicate_func(&pred_func, &variables, value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "none");
@@ -1031,12 +1077,15 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_integers() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 1`
         // value: 1
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Integer(1));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <1>");
@@ -1046,12 +1095,15 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_booleans() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== false`
         // value: false
         let expected = PredicateValue::Bool(false);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
@@ -1061,7 +1113,7 @@ mod tests {
         // value: false
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(false);
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <false>");
@@ -1071,7 +1123,7 @@ mod tests {
         // value: true
         let expected = PredicateValue::Bool(true);
         let value = Value::Bool(true);
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "bool <true>");
@@ -1081,6 +1133,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_floats() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 1.1`
         // value: 1.1
@@ -1089,7 +1144,7 @@ mod tests {
             encoded: "1.1".to_string(),
         }));
         let value = Value::Number(Number::Float(1.1));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.1>");
@@ -1099,12 +1154,15 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_float_integer() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 1`
         // value: 1.0
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Float(1.0));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "float <1.0>");
@@ -1114,12 +1172,15 @@ mod tests {
     #[test]
     fn test_predicate_value_not_equals() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== 1`
         // value: 2
         let expected = PredicateValue::Number(hurl_core::ast::Number::Integer(1));
         let value = Value::Number(Number::Integer(2));
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(!assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(assert_result.actual.as_str(), "int <2>");
@@ -1129,6 +1190,9 @@ mod tests {
     #[test]
     fn test_predicate_value_equals_string() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // {{base_url}}
         let template = Template {
@@ -1155,7 +1219,7 @@ mod tests {
         // base_url is not defined
         let expected = PredicateValue::String(template.clone());
         let value = Value::String(String::from("http://localhost:8000"));
-        let error = eval_equal(&expected, &variables, &value).unwrap_err();
+        let error = eval_equal(&expected, &variables, &value, &context_dir).unwrap_err();
         assert_eq!(
             error.inner,
             RunnerError::TemplateVariableNotDefined {
@@ -1175,7 +1239,7 @@ mod tests {
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let assert_result = eval_equal(&expected, &variables, &value).unwrap();
+        let assert_result = eval_equal(&expected, &variables, &value, &context_dir).unwrap();
         assert!(assert_result.success);
         assert!(!assert_result.type_mismatch);
         assert_eq!(
@@ -1305,6 +1369,10 @@ mod tests {
 
     #[test]
     fn test_predicate_not_with_different_types() {
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
+
         // equals predicate does not generate a type error with an integer value
         // predicate: `not == null`
         // value: 1
@@ -1325,7 +1393,8 @@ mod tests {
         assert!(eval_predicate(
             &predicate,
             &variables,
-            &Some(Value::Number(Number::Integer(1)))
+            &Some(Value::Number(Number::Integer(1))),
+            &context_dir
         )
         .is_ok());
 
@@ -1354,6 +1423,7 @@ mod tests {
             &predicate,
             &variables,
             &Some(Value::Number(Number::Integer(1))),
+            &context_dir,
         )
         .unwrap_err();
         assert_eq!(
@@ -1395,6 +1465,9 @@ mod tests {
     #[test]
     fn test_no_type_mismatch_with_none_value() {
         let variables = HashMap::new();
+        let current_dir = std::env::current_dir().unwrap();
+        let file_root = Path::new("file_root");
+        let context_dir = ContextDir::new(current_dir.as_path(), file_root);
 
         // predicate: `== null`
         let predicate = Predicate {
@@ -1410,7 +1483,9 @@ mod tests {
             },
         };
 
-        let error = eval_predicate(&predicate, &variables, &None).err().unwrap();
+        let error = eval_predicate(&predicate, &variables, &None, &context_dir)
+            .err()
+            .unwrap();
         assert_eq!(
             error.inner,
             RunnerError::AssertFailure {
@@ -1435,7 +1510,7 @@ mod tests {
         };
 
         let variables = HashMap::new();
-        assert!(eval_predicate(&predicate, &variables, &None).is_ok());
+        assert!(eval_predicate(&predicate, &variables, &None, &context_dir).is_ok());
     }
 
     #[test]

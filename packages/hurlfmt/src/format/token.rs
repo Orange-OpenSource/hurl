@@ -614,6 +614,7 @@ impl Tokenizable for PredicateValue {
             PredicateValue::Bool(value) => vec![Token::Boolean(value.to_string())],
             PredicateValue::Null => vec![Token::Keyword("null".to_string())],
             PredicateValue::Number(value) => vec![Token::Number(value.to_string())],
+            PredicateValue::File(value) => value.tokenize(),
             PredicateValue::Hex(value) => vec![Token::String(value.to_string())],
             PredicateValue::Base64(value) => value.tokenize(),
             PredicateValue::Expression(value) => value.tokenize(),

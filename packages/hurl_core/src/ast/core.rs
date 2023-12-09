@@ -415,6 +415,7 @@ pub enum PredicateValue {
     Base64(Base64),
     Bool(bool),
     Expression(Expr),
+    File(File),
     Hex(Hex),
     MultilineString(MultilineString),
     Null,

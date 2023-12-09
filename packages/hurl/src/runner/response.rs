@@ -147,7 +147,7 @@ pub fn eval_asserts(
     }
 
     for assert in response.asserts().iter() {
-        let assert_result = eval_assert(assert, variables, http_response);
+        let assert_result = eval_assert(assert, variables, http_response, context_dir);
         asserts.push(assert_result);
     }
     asserts

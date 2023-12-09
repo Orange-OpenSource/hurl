@@ -4,6 +4,7 @@ Content-Type: application/octet-stream
 [Asserts]
 bytes == hex,010203;
 bytes == base64,AQID;
+bytes == file,bytes.bin;
 bytes count == 3
 bytes startsWith hex,01;
 bytes endsWith hex,03;

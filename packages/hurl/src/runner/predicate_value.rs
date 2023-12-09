@@ -19,15 +19,18 @@ use std::collections::HashMap;
 
 use hurl_core::ast::*;
 
+use crate::runner::body::eval_file; // TODO move function out of body module
 use crate::runner::error::Error;
 use crate::runner::expr::eval_expr;
 use crate::runner::multiline::eval_multiline;
 use crate::runner::template::eval_template;
 use crate::runner::{Number as ValueNumber, Value};
+use crate::util::path::ContextDir;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
     variables: &HashMap<String, Value>,
+    context_dir: &ContextDir,
 ) -> Result<Value, Error> {
     match predicate_value {
         PredicateValue::String(template) => {
@@ -41,6 +44,10 @@ pub fn eval_predicate_value(
         PredicateValue::Bool(value) => Ok(Value::Bool(*value)),
         PredicateValue::Null => Ok(Value::Null),
         PredicateValue::Number(value) => Ok(Value::Number(eval_number(value))),
+        PredicateValue::File(value) => {
+            let value = eval_file(&value.filename, context_dir)?;
+            Ok(Value::Bytes(value))
+        }
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Base64(value) => Ok(Value::Bytes(value.value.clone())),
         PredicateValue::Expression(expr) => {
