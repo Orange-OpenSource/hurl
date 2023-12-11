@@ -26,7 +26,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
     // default root_dir is the hurl directory
     let start = reader.state;
     let s = reader.read_while_escaping(|c| {
-        c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-'
+        c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-' || *c == ':'
     });
     if s.is_empty() {
         return Err(Error::new(start.pos, false, ParseError::Filename));

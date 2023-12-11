@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> ssl/error_client_authentication_passphrase.hurl:1:5
+   |
+ 1 | GET https://localhost:8003/hello
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (58) ~~~
+   |
+

@@ -411,8 +411,16 @@ impl Client {
             self.handle.cainfo(cacert_file)?;
             self.handle.ssl_cert_type("PEM")?;
         }
-        if let Some(client_cert_file) = options.client_cert_file.clone() {
-            self.handle.ssl_cert(client_cert_file)?;
+        if let Some(client_cert_file) = &options.client_cert_file {
+            match parse_cert_password(client_cert_file) {
+                (cert, Some(password)) => {
+                    self.handle.ssl_cert(cert)?;
+                    self.handle.key_password(&password)?;
+                }
+                (cert, None) => {
+                    self.handle.ssl_cert(cert)?;
+                }
+            }
             self.handle.ssl_cert_type("PEM")?;
         }
         if let Some(client_key_file) = options.client_key_file.clone() {
@@ -860,6 +868,52 @@ fn to_list(items: &[String]) -> List {
     list
 }
 
+/// Parses a cert file name, with a potential user provided password, and returns a pair of
+/// cert file name, password.
+/// See <https://curl.se/docs/manpage.html#-E>
+/// > In the <certificate> portion of the argument, you must escape the character ":" as "\:" so
+/// > that it is not recognized as the password delimiter. Similarly, you must escape the character
+/// > "\" as "\\" so that it is not recognized as an escape character.
+fn parse_cert_password(cert_and_pass: &str) -> (String, Option<String>) {
+    let mut iter = cert_and_pass.chars();
+    let mut cert = String::new();
+    let mut password = String::new();
+    // The state of the parser:
+    // - `true` if we're parsing the certificate portion of `cert_and_pass`
+    // - `false` if we're parsing the password portion of `cert_and_pass`
+    let mut parse_cert = true;
+    while let Some(c) = iter.next() {
+        if parse_cert {
+            // We're parsing the certificate, do some escaping
+            match c {
+                '\\' => {
+                    // We read the next escaped char, if we failed, we're at the end of this string,
+                    // the read char is not an escaping \.
+                    match iter.next() {
+                        Some(c) => cert.push(c),
+                        None => {
+                            cert.push('\\');
+                            break;
+                        }
+                    }
+                }
+                ':' if parse_cert => parse_cert = false,
+                c => cert.push(c),
+            }
+        } else {
+            // We have already found a cert/password separator, we don't need to escape anything now
+            // we just update the password
+            password.push(c);
+        }
+    }
+
+    if parse_cert {
+        (cert, None)
+    } else {
+        (cert, Some(password))
+    }
+}
+
 impl From<RequestedHttpVersion> for easy::HttpVersion {
     fn from(value: RequestedHttpVersion) -> Self {
         match value {
@@ -1083,6 +1137,38 @@ mod tests {
          --user-agent 'my-useragent' \
          --output /tmp/foo.bin \
          'https://example.org'"
+        );
+    }
+
+    #[test]
+    fn parse_cert_option() {
+        assert_eq!(parse_cert_password("foobar"), ("foobar".to_string(), None));
+        assert_eq!(
+            parse_cert_password("foobar:toto"),
+            ("foobar".to_string(), Some("toto".to_string()))
+        );
+        assert_eq!(
+            parse_cert_password("foobar:toto:tata"),
+            ("foobar".to_string(), Some("toto:tata".to_string()))
+        );
+        assert_eq!(
+            parse_cert_password("foobar:"),
+            ("foobar".to_string(), Some("".to_string()))
+        );
+        assert_eq!(
+            parse_cert_password("foobar\\"),
+            ("foobar\\".to_string(), None)
+        );
+        assert_eq!(
+            parse_cert_password("foo\\:bar\\:baz:toto:tata\\:tutu"),
+            (
+                "foo:bar:baz".to_string(),
+                Some("toto:tata\\:tutu".to_string())
+            )
+        );
+        assert_eq!(
+            parse_cert_password("foo\\\\:toto\\:tata:tutu"),
+            ("foo\\".to_string(), Some("toto\\:tata:tutu".to_string()))
         );
     }
 }

@@ -13,6 +13,7 @@ openssl req -x509 -new -nodes -key ca/key.pem -sha256 -days 1024 -out ca/cert.pe
 openssl genrsa -out client/key.pem 2048
 openssl req -new -key client/key.pem -sha256 -out client/csr.pem -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=client"
 openssl x509 -req -in client/csr.pem -CA ca/cert.pem -CAkey ca/key.pem -CAcreateserial -out client/cert.pem -days 825 -sha256
+openssl rsa -aes256 -in ssl/client/key.pem -passout pass:foobar -out ssl/client/encrypted.key.pem
 
 # Server
 openssl genrsa -out server/key.pem 2048
