@@ -9,6 +9,7 @@ Thanks to
 [@kingluo](https://github.com/kingluo),
 [@khimaros](https://github.com/khimaros),
 [@iredmail](https://github.com/iredmail),
+[@andres-lowrie](https://github.com/andres-lowrie),
 
 Enhancements:
 
@@ -17,9 +18,10 @@ Enhancements:
 * Support conda-forge installation [#2018](https://github.com/Orange-OpenSource/hurl/issues/2018)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
 * Log only non-default options in verbose mode [#1927](https://github.com/Orange-OpenSource/hurl/issues/1927)
-* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710)
+* Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710) [#898](https://github.com/Orange-OpenSource/hurl/issues/898)
 * Add skip option [#1815](https://github.com/Orange-OpenSource/hurl/issues/1815)
 * Add --ipv4/--ipv6 option [#1727](https://github.com/Orange-OpenSource/hurl/issues/1727)
+* Add --output option per request [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http2 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http1.0/-0 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
@@ -28,9 +30,13 @@ Enhancements:
 
 Bugs Fixed:
 
+* Fix unicode surrogate pair decoding in JSON request body [#2235](https://github.com/Orange-OpenSource/hurl/issues/2235)
+* Better error description for some parse error [#2187](https://github.com/Orange-OpenSource/hurl/issues/2187)
 * Fix undefined error for various I/O error using --output. [#2156](https://github.com/Orange-OpenSource/hurl/issues/2156)
 * TAP reports can't be appended if there are failed tests [#2099](https://github.com/Orange-OpenSource/hurl/issues/2099)
 * Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
+* Support key password in --cert option (certificate[:password]) [#2047](https://github.com/Orange-OpenSource/hurl/issues/2047)
+
 
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
