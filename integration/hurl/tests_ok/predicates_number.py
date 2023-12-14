@@ -8,8 +8,11 @@ def predicates_number():
         """{
   "integer": 1,
   "float": 1.0,
-  "float2": 0.1,
-  "float3": 0.100000000000000005
+  "small_float1": 0.1,
+  "small_float2": 0.100000000000000005,
+  "big_float1": 1000000000000000000000.0,
+  "big_float2": 1000000000000000000000.5,
+  "big_integer": 1000000000000000000000
 }""",
         mimetype="application/json",
     )
