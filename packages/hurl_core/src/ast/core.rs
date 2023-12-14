@@ -602,7 +602,7 @@ pub struct Filename {
 pub enum Number {
     Float(Float),
     Integer(i64),
-    String(String),
+    BigInteger(String),
 }
 
 // keep Number terminology for both Integer and Decimal Numbers
@@ -834,8 +834,7 @@ pub struct VariableDefinition {
 pub enum VariableValue {
     Null,
     Bool(bool),
-    Integer(i64),
-    Float(Float),
+    Number(Number),
     String(Template),
 }
 

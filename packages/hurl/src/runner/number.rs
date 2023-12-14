@@ -25,7 +25,7 @@ use std::fmt;
 pub enum Number {
     Float(f64),
     Integer(i64),
-    String(String),
+    BigInteger(String),
 }
 
 // You must implement it yourself because of the Float
@@ -34,7 +34,7 @@ impl PartialEq for Number {
         match (self, other) {
             (Number::Float(v1), Number::Float(v2)) => (v1 - v2).abs() < f64::EPSILON,
             (Number::Integer(v1), Number::Integer(v2)) => v1 == v2,
-            (Number::String(v1), Number::String(v2)) => v1 == v2,
+            (Number::BigInteger(v1), Number::BigInteger(v2)) => v1 == v2,
             _ => false,
         }
     }
@@ -47,7 +47,7 @@ impl fmt::Display for Number {
         let value = match self {
             Number::Float(f) => format_float(*f),
             Number::Integer(x) => x.to_string(),
-            Number::String(s) => s.to_string(),
+            Number::BigInteger(s) => s.to_string(),
         };
         write!(f, "{value}")
     }
@@ -66,7 +66,7 @@ impl Number {
         match self {
             Number::Float(_) => "float".to_string(),
             Number::Integer(_) => "integer".to_string(),
-            Number::String(_) => "string".to_string(),
+            Number::BigInteger(_) => "string".to_string(),
         }
     }
 }
@@ -150,10 +150,13 @@ mod tests {
         assert_eq!(Number::from(1.0).to_string(), "1.0".to_string());
         assert_eq!(Number::from(1.1).to_string(), "1.1".to_string());
         assert_eq!(
-            Number::String("1.1".to_string()).to_string(),
+            Number::BigInteger("1.1".to_string()).to_string(),
             "1.1".to_string()
         );
-        assert_eq!(Number::String("1".to_string()).to_string(), "1".to_string());
+        assert_eq!(
+            Number::BigInteger("1".to_string()).to_string(),
+            "1".to_string()
+        );
     }
 
     #[test]
@@ -173,9 +176,9 @@ mod tests {
         let float_min = Number::from(f64::MIN);
         let float_max = Number::from(f64::MAX);
 
-        let number_one = Number::String("1".to_string());
-        let number_two = Number::String("2".to_string());
-        let number_two_with_decimal = Number::String("2.0".to_string());
+        let number_one = Number::BigInteger("1".to_string());
+        let number_two = Number::BigInteger("2".to_string());
+        let number_two_with_decimal = Number::BigInteger("2.0".to_string());
 
         assert_eq!(integer_minus_one.cmp_value(&integer_zero), Ordering::Less);
 

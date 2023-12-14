@@ -271,8 +271,7 @@ impl HtmlFormatter {
         match option {
             VariableValue::Null => self.fmt_span("null", "null"),
             VariableValue::Bool(v) => self.fmt_bool(*v),
-            VariableValue::Integer(v) => self.fmt_number(v),
-            VariableValue::Float(v) => self.fmt_number(&v.encoded),
+            VariableValue::Number(v) => self.fmt_number(v),
             VariableValue::String(t) => self.fmt_template(t),
         }
     }

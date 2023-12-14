@@ -74,6 +74,6 @@ fn eval_number(number: &Number) -> ValueNumber {
     match number {
         Number::Float(value) => ValueNumber::Float(value.value),
         Number::Integer(value) => ValueNumber::Integer(*value),
-        Number::String(value) => ValueNumber::String(value.clone()),
+        Number::BigInteger(value) => ValueNumber::BigInteger(value.clone()),
     }
 }

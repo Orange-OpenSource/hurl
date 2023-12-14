@@ -19,8 +19,8 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use hurl_core::ast::{
-    BooleanOption, Entry, EntryOption, Float, NaturalOption, OptionKind, Retry, RetryOption,
-    SectionValue, VariableDefinition, VariableValue,
+    BooleanOption, Entry, EntryOption, Float, NaturalOption, Number as AstNumber, OptionKind,
+    Retry, RetryOption, SectionValue, VariableDefinition, VariableValue,
 };
 
 use crate::http::{IpResolve, RequestedHttpVersion};
@@ -344,12 +344,19 @@ fn eval_variable_value(
     match variable_value {
         VariableValue::Null => Ok(Value::Null),
         VariableValue::Bool(v) => Ok(Value::Bool(*v)),
-        VariableValue::Integer(v) => Ok(Value::Number(Number::Integer(*v))),
-        VariableValue::Float(Float { value, .. }) => Ok(Value::Number(Number::Float(*value))),
+        VariableValue::Number(v) => Ok(eval_number(v)),
         VariableValue::String(template) => {
             let s = template::eval_template(template, variables)?;
             Ok(Value::String(s))
         }
+    }
+}
+
+fn eval_number(number: &AstNumber) -> Value {
+    match number {
+        AstNumber::Float(Float { value, .. }) => Value::Number(Number::Float(*value)),
+        AstNumber::Integer(value) => Value::Number(Number::Integer(*value)),
+        AstNumber::BigInteger(value) => Value::Number(Number::BigInteger(value.clone())),
     }
 }
 

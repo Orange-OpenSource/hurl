@@ -68,7 +68,7 @@ impl Number {
             Number::Float(f) => {
                 serde_json::Value::Number(serde_json::Number::from_f64(*f).unwrap())
             }
-            Number::String(s) => {
+            Number::BigInteger(s) => {
                 let number = serde_json::Number::from_str(s).unwrap();
                 serde_json::Value::Number(number)
             }

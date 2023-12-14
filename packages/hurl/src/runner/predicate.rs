@@ -132,7 +132,7 @@ impl Number {
         match self {
             Number::Float(f) => format!("float <{}>", format_float(*f)),
             Number::Integer(v) => format!("int <{v}>"),
-            Number::String(s) => format!("number <{s}>"),
+            Number::BigInteger(s) => format!("number <{s}>"),
         }
     }
 }
@@ -160,7 +160,7 @@ impl Number {
         match self {
             Number::Float(f) => format!("float <{}>", format_float(*f)),
             Number::Integer(value) => format!("integer <{value}>"),
-            Number::String(s) => format!("number <{s}>"),
+            Number::BigInteger(s) => format!("number <{s}>"),
         }
     }
 }
@@ -523,7 +523,8 @@ fn eval_match(
 /// Evaluates if an `actual` value is an integer.
 fn eval_is_integer(actual: &Value) -> Result<AssertResult, Error> {
     Ok(AssertResult {
-        success: matches!(actual, Value::Number(Number::Integer(_))),
+        success: matches!(actual, Value::Number(Number::Integer(_)))
+            || matches!(actual, Value::Number(Number::BigInteger(_))),
         actual: actual.display(),
         expected: "integer".to_string(),
         type_mismatch: false,

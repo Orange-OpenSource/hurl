@@ -959,8 +959,7 @@ impl Tokenizable for VariableValue {
         match self {
             VariableValue::Null => vec![Token::Keyword("null".to_string())],
             VariableValue::Bool(v) => vec![Token::Boolean(v.to_string())],
-            VariableValue::Integer(v) => vec![Token::Number(v.to_string())],
-            VariableValue::Float(v) => vec![Token::Number(v.to_string())],
+            VariableValue::Number(v) => vec![Token::Number(v.to_string())],
             VariableValue::String(v) => v.tokenize(),
         }
     }

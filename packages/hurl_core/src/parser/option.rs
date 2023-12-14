@@ -19,7 +19,7 @@
 use crate::ast::*;
 use crate::parser::combinators::*;
 use crate::parser::error::*;
-use crate::parser::number::{float, integer, natural};
+use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::*;
 use crate::parser::reader::Reader;
 use crate::parser::string::*;
@@ -320,12 +320,8 @@ fn variable_value(reader: &mut Reader) -> ParseResult<VariableValue> {
                 Ok(value) => Ok(VariableValue::Bool(value)),
                 Err(e) => Err(e),
             },
-            |p1| match float(p1) {
-                Ok(value) => Ok(VariableValue::Float(value)),
-                Err(e) => Err(e),
-            },
-            |p1| match integer(p1) {
-                Ok(value) => Ok(VariableValue::Integer(value)),
+            |p1| match number(p1) {
+                Ok(value) => Ok(VariableValue::Number(value)),
                 Err(e) => Err(e),
             },
             |p1| match quoted_template(p1) {
@@ -542,7 +538,7 @@ mod tests {
                         end: Pos { line: 1, column: 3 },
                     },
                 },
-                value: VariableValue::Integer(1),
+                value: VariableValue::Number(Number::Integer(1)),
             }
         );
     }
@@ -561,7 +557,7 @@ mod tests {
         let mut reader = Reader::new("1");
         assert_eq!(
             variable_value(&mut reader).unwrap(),
-            VariableValue::Integer(1)
+            VariableValue::Number(Number::Integer(1))
         );
 
         let mut reader = Reader::new("toto");

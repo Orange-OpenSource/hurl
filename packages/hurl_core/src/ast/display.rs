@@ -85,7 +85,7 @@ impl fmt::Display for Number {
         match self {
             Number::Float(value) => write!(f, "{}", value),
             Number::Integer(value) => write!(f, "{}", value),
-            Number::String(value) => write!(f, "{}", value),
+            Number::BigInteger(value) => write!(f, "{}", value),
         }
     }
 }
@@ -207,8 +207,7 @@ impl fmt::Display for VariableValue {
         let s = match self {
             VariableValue::Null => "null".to_string(),
             VariableValue::Bool(value) => value.to_string(),
-            VariableValue::Integer(n) => n.to_string(),
-            VariableValue::Float(x) => x.to_string(),
+            VariableValue::Number(n) => n.to_string(),
             VariableValue::String(s) => s.to_string(),
         };
         write!(f, "{}", s)
