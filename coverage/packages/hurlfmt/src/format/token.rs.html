@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="345 / 789">43.73 %</abbr></p>
+                <abbr title="345 / 788">43.78 %</abbr></p>
         </div>
     </div>
 
@@ -15429,7 +15429,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            VariableValue::Integer(v) =&gt; vec![Token::Number(v.to_string())],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            VariableValue::Number(v) =&gt; vec![Token::Number(v.to_string())],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15445,7 +15445,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            VariableValue::Float(v) =&gt; vec![Token::Number(v.to_string())],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            VariableValue::String(v) =&gt; v.tokenize(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15453,22 +15453,6 @@
                 id="964"
                 role="cell">
                 <a href="#964">964</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            VariableValue::String(v) =&gt; v.tokenize(),</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="965"
-                role="cell">
-                <a href="#965">965</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15482,9 +15466,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="966"
+                id="965"
                 role="cell">
-                <a href="#966">966</a>
+                <a href="#965">965</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -15494,6 +15478,22 @@
             <div class="column has-background-danger-light p-0"
                  role="cell">
                 <pre class="has-background-danger-light py-0 px-2">    }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="966"
+                role="cell">
+                <a href="#966">966</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
+                
+            </div>
+            <div class="column has-background-white p-0"
+                 role="cell">
+                <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15509,7 +15509,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">}</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15525,7 +15525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">impl Tokenizable for Filter {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15535,13 +15535,13 @@
                 <a href="#969">969</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">impl Tokenizable for Filter {</pre>
+                <pre class="has-background-danger-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15557,7 +15557,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">    fn tokenize(&amp;self) -&gt; Vec&lt;Token&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">        match self.value.clone() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15573,7 +15573,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        match self.value.clone() {</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Count =&gt; vec![Token::FilterType(String::from(&quot;count&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15589,7 +15589,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Count =&gt; vec![Token::FilterType(String::from(&quot;count&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::DaysAfterNow =&gt; vec![Token::FilterType(String::from(&quot;daysAfterNow&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15605,7 +15605,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::DaysAfterNow =&gt; vec![Token::FilterType(String::from(&quot;daysAfterNow&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::DaysBeforeNow =&gt; vec![Token::FilterType(String::from(&quot;daysBeforeNow&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15621,7 +15621,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::DaysBeforeNow =&gt; vec![Token::FilterType(String::from(&quot;daysBeforeNow&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15637,7 +15637,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Decode { space0, encoding } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;decode&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15653,7 +15653,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;decode&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15669,7 +15669,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut encoding.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15685,7 +15685,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut encoding.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15695,13 +15695,13 @@
                 <a href="#979">979</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15711,13 +15711,13 @@
                 <a href="#980">980</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15733,7 +15733,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Format { space0, fmt } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;format&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15749,7 +15749,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;format&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15765,7 +15765,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15781,7 +15781,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15789,22 +15789,6 @@
                 id="985"
                 role="cell">
                 <a href="#985">985</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
-                
-            </div>
-            <div class="column has-background-danger-light p-0"
-                 role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="986"
-                role="cell">
-                <a href="#986">986</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15818,9 +15802,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="987"
+                id="986"
                 role="cell">
-                <a href="#987">987</a>
+                <a href="#986">986</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -15834,9 +15818,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="988"
+                id="987"
                 role="cell">
-                <a href="#988">988</a>
+                <a href="#987">987</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15850,9 +15834,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="989"
+                id="988"
                 role="cell">
-                <a href="#989">989</a>
+                <a href="#988">988</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -15866,9 +15850,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="990"
+                id="989"
                 role="cell">
-                <a href="#990">990</a>
+                <a href="#989">989</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -15878,6 +15862,22 @@
             <div class="column has-background-white p-0"
                  role="cell">
                 <pre class="has-background-white py-0 px-2">            }</pre>
+            </div>
+        </div><div class="columns p-0 m-0" role="row">
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered"
+                id="990"
+                role="cell">
+                <a href="#990">990</a>
+            </div>
+            <div
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
+                
+            </div>
+            <div class="column has-background-danger-light p-0"
+                 role="cell">
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15893,7 +15893,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::JsonPath { space0, expr } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;jsonpath&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15909,7 +15909,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;jsonpath&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15925,7 +15925,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15941,7 +15941,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15951,13 +15951,13 @@
                 <a href="#995">995</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15967,13 +15967,13 @@
                 <a href="#996">996</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Nth { space0, n } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -15989,7 +15989,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Nth { space0, n } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;nth&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16005,7 +16005,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;nth&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16021,7 +16021,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.push(Token::Number(n.to_string()));</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16037,7 +16037,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.push(Token::Number(n.to_string()));</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16047,13 +16047,13 @@
                 <a href="#1001">1001</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16063,13 +16063,13 @@
                 <a href="#1002">1002</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16085,7 +16085,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Regex { space0, value } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;regex&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16101,7 +16101,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;regex&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16117,7 +16117,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16133,7 +16133,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut value.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16143,13 +16143,13 @@
                 <a href="#1007">1007</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16165,7 +16165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">            FilterValue::Replace {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16175,13 +16175,13 @@
                 <a href="#1009">1009</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            FilterValue::Replace {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                space0,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16197,7 +16197,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                space0,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                old_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16213,7 +16213,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                old_value,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                space1,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16229,7 +16229,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                space1,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                new_value,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16245,7 +16245,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                new_value,</pre>
+                <pre class="has-background-danger-light py-0 px-2">            } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16261,7 +16261,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;replace&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16277,7 +16277,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;replace&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16293,7 +16293,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut old_value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16309,7 +16309,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut old_value.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space1.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16325,7 +16325,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space1.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut new_value.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16341,7 +16341,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut new_value.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16351,13 +16351,13 @@
                 <a href="#1020">1020</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16367,13 +16367,13 @@
                 <a href="#1021">1021</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::UrlEncode =&gt; vec![Token::FilterType(String::from(&quot;urlEncode&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16389,7 +16389,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::UrlEncode =&gt; vec![Token::FilterType(String::from(&quot;urlEncode&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::UrlDecode =&gt; vec![Token::FilterType(String::from(&quot;urlDecode&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16405,7 +16405,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::UrlDecode =&gt; vec![Token::FilterType(String::from(&quot;urlDecode&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16421,7 +16421,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::Split { space0, sep } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;split&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16437,7 +16437,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;split&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16453,7 +16453,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut sep.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16469,7 +16469,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut sep.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16479,13 +16479,13 @@
                 <a href="#1028">1028</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16495,13 +16495,13 @@
                 <a href="#1029">1029</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16517,7 +16517,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::ToDate { space0, fmt } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;toDate&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16533,7 +16533,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;toDate&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16549,7 +16549,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16565,7 +16565,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut fmt.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16575,13 +16575,13 @@
                 <a href="#1034">1034</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16591,13 +16591,13 @@
                 <a href="#1035">1035</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
+                role="cell" aria-label="0">
                 
             </div>
-            <div class="column has-background-white p-0"
+            <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::ToInt =&gt; vec![Token::FilterType(String::from(&quot;toInt&quot;))],</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16613,7 +16613,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::ToInt =&gt; vec![Token::FilterType(String::from(&quot;toInt&quot;))],</pre>
+                <pre class="has-background-danger-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16629,7 +16629,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            FilterValue::XPath { space0, expr } =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;xpath&quot;))];</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16645,7 +16645,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let mut tokens: Vec&lt;Token&gt; = vec![Token::FilterType(String::from(&quot;xpath&quot;))];</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16661,7 +16661,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut space0.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16677,7 +16677,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens.append(&amp;mut expr.tokenize());</pre>
+                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16687,13 +16687,13 @@
                 <a href="#1041">1041</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
-                role="cell" aria-label="0">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
+                role="cell" aria-label="no coverage">
                 
             </div>
-            <div class="column has-background-danger-light p-0"
+            <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                tokens</pre>
+                <pre class="has-background-white py-0 px-2">            }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16709,7 +16709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16717,22 +16717,6 @@
                 id="1043"
                 role="cell">
                 <a href="#1043">1043</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
-                role="cell" aria-label="no coverage">
-                
-            </div>
-            <div class="column has-background-white p-0"
-                 role="cell">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0" role="row">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="1044"
-                role="cell">
-                <a href="#1044">1044</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger"
@@ -16746,9 +16730,9 @@
         </div><div class="columns p-0 m-0" role="row">
             <div
                 class="column is-1 is-narrow p-0 has-text-centered"
-                id="1045"
+                id="1044"
                 role="cell">
-                <a href="#1045">1045</a>
+                <a href="#1044">1044</a>
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white"
@@ -16763,7 +16747,7 @@
 </div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2023-12-14 08:08</p>
+                <p class="heading">Date: 2023-12-15 08:08</p>
             </div>
         </footer>
     </body>
