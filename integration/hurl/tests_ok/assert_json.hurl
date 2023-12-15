@@ -129,6 +129,59 @@ jsonpath "$.fruit.[?(@.US == 100)]" count == 0   # To be clarified with spec: th
     ]
 }
 
+GET http://localhost:8000/assert-json/filter-by-name
+HTTP 200
+[Asserts]
+
+jsonpath "$..*[?(@.name)]" count == 5
+jsonpath "$..*[?(@.name=='car')].id" nth 0 == 1
+jsonpath "$..*[?(@.name=='wheel')].id" nth 0 == 4
+
+jsonpath "$..items[?(@.name)]" count == 5
+jsonpath "$..items[?(@.name=='car')].id" nth 0 == 1
+jsonpath "$..items[?(@.name=='wheel')].id" nth 0 == 4
+
+jsonpath "$.main.items[?(@.name)]" count == 3
+jsonpath "$.main.items[?(@.name=='car')].id" nth 0 == 1
+jsonpath "$.main.items[?(@.name=='wheel')].id" isEmpty
+
+jsonpath "$.main..items[?(@.name)]" count == 4
+jsonpath "$.main..items[?(@.name=='car')].id" nth 0 == 1
+jsonpath "$.main..items[?(@.name=='wheel')].id" nth 0 == 4
+
+{
+  "main": {
+    "items": [
+      {
+        "id": 1,
+        "name": "car"
+      },
+      {
+        "id": 2,
+        "name": "bike",
+        "items": [
+          {
+            "id": 4,
+            "name": "wheel"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "plane"
+      }
+    ]
+  },
+  "more": {
+    "items": [
+      {
+        "id": 5,
+        "name": "scooter"
+      }
+    ]
+  }
+}
+
 GET http://localhost:8000/assert-json/big-number
 HTTP 200
 [Asserts]

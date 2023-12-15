@@ -62,6 +62,45 @@ def assert_json_filter():
     )
 
 
+@app.route("/assert-json/filter-by-name")
+def assert_json_filter_ny_name():
+    return Response(
+        """{
+  "main": {
+    "items": [
+      {
+        "id": 1,
+        "name": "car"
+      },
+      {
+        "id": 2,
+        "name": "bike",
+        "items": [
+          {
+            "id": 4,
+            "name": "wheel"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "plane"
+      }
+    ]
+  },
+  "more": {
+    "items": [
+      {
+        "id": 5,
+        "name": "scooter"
+      }
+    ]
+  }
+}""",
+        mimetype="application/json",
+    )
+
+
 @app.route("/assert-json/big-number")
 def assert_json_big_number():
     return Response(
