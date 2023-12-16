@@ -1,9 +1,10 @@
 from app import app
-from flask import redirect, Response
+from flask import request, redirect, Response
 
 
 @app.route("/follow-redirect", methods=["GET", "POST"])
 def follow_redirect():
+    assert request.headers["Accept"] == "text/plain"
     return redirect("http://localhost:8000/following-redirect")
 
 
@@ -24,6 +25,7 @@ def following_redirect():
 
 @app.route("/followed-redirect")
 def followed_redirect():
+    assert request.headers["Accept"] == "text/plain"
     return "Followed redirect!"
 
 

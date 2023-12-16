@@ -18,7 +18,7 @@ cookie "cookie2" == "valueA"
 
 # No redirect
 GET http://localhost:8000/follow-redirect
-
+Accept: text/plain
 HTTP 302
 [Asserts]
 header "Location" == "http://localhost:8000/following-redirect"
@@ -26,6 +26,7 @@ header "Location" == "http://localhost:8000/following-redirect"
 
 # With redirect
 GET http://localhost:8000/follow-redirect
+Accept: text/plain
 [Options]
 location: true
 

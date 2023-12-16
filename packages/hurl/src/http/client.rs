@@ -130,6 +130,7 @@ impl Client {
             request_spec = RequestSpec {
                 method: redirect_method,
                 url: redirect_url,
+                headers: request_spec.headers,
                 ..Default::default()
             };
         }
