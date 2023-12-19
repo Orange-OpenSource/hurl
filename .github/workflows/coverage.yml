@@ -36,14 +36,8 @@ jobs:
     - name: Test Prerequisites
       run: bin/test/test_prerequisites.sh
 
-    - name: Run Integration Tests
-      run: |
-        export LLVM_PROFILE_FILE="hurl-test-integration-%p-%m.profraw"
-        export PATH="$PWD/target/debug:$PATH"
-        bin/test/test_integ.sh
-    - name: Build Report
-      run: |
-        grcov . --binary-path target/debug -s . -t html --branch --ignore-not-existing -o ./coverage/
+    - name: Run Coverage
+      run: bin/coverage_run.sh
 
     - name: Init git bot context
       uses: crazy-max/ghaction-import-gpg@v5
@@ -62,7 +56,7 @@ jobs:
         user_name: 'hurl-bot'
         user_email: 'bot@hurl.dev'
         publish_branch: github-pages
-        publish_dir: coverage
+        publish_dir: target/coverage
         destination_dir: coverage
 
     - name: Archive Artifacts
@@ -71,5 +65,5 @@ jobs:
       with:
         name: coverage
         path: |
-          coverage
+          target/coverage
           *.profraw
