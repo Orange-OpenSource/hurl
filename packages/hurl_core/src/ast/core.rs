@@ -267,7 +267,7 @@ pub struct FileParam {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FileValue {
     pub space0: Whitespace,
-    pub filename: Filename,
+    pub filename: Template,
     pub space1: Whitespace,
     pub space2: Whitespace,
     pub content_type: Option<String>,
@@ -561,7 +561,7 @@ pub struct Base64 {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct File {
     pub space0: Whitespace,
-    pub filename: Filename,
+    pub filename: Template,
     pub space1: Whitespace,
 }
 
@@ -595,12 +595,6 @@ pub struct EncodedString {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Whitespace {
-    pub value: String,
-    pub source_info: SourceInfo,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Filename {
     pub value: String,
     pub source_info: SourceInfo,
 }
@@ -718,9 +712,9 @@ pub struct EntryOption {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OptionKind {
     AwsSigV4(Template),
-    CaCertificate(Filename),
-    ClientCert(Filename),
-    ClientKey(Filename),
+    CaCertificate(Template),
+    ClientCert(Template),
+    ClientKey(Template),
     Compressed(BooleanOption),
     ConnectTo(Template),
     Delay(NaturalOption),
@@ -733,7 +727,7 @@ pub enum OptionKind {
     IpV6(BooleanOption),
     FollowLocation(BooleanOption),
     MaxRedirect(NaturalOption),
-    Output(Filename),
+    Output(Template),
     PathAsIs(BooleanOption),
     Proxy(Template),
     Resolve(Template),
@@ -780,9 +774,9 @@ impl OptionKind {
     pub fn value_as_str(&self) -> String {
         match self {
             OptionKind::AwsSigV4(value) => value.to_string(),
-            OptionKind::CaCertificate(filename) => filename.value.clone(),
-            OptionKind::ClientCert(filename) => filename.value.clone(),
-            OptionKind::ClientKey(filename) => filename.value.clone(),
+            OptionKind::CaCertificate(filename) => filename.to_string(),
+            OptionKind::ClientCert(filename) => filename.to_string(),
+            OptionKind::ClientKey(filename) => filename.to_string(),
             OptionKind::Compressed(value) => value.to_string(),
             OptionKind::ConnectTo(value) => value.to_string(),
             OptionKind::Delay(value) => value.to_string(),
@@ -795,7 +789,7 @@ impl OptionKind {
             OptionKind::IpV4(value) => value.to_string(),
             OptionKind::IpV6(value) => value.to_string(),
             OptionKind::MaxRedirect(value) => value.to_string(),
-            OptionKind::Output(filename) => filename.value.to_string(),
+            OptionKind::Output(filename) => filename.to_string(),
             OptionKind::PathAsIs(value) => value.to_string(),
             OptionKind::Proxy(value) => value.to_string(),
             OptionKind::Resolve(value) => value.to_string(),

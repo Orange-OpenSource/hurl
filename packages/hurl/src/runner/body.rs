@@ -58,16 +58,21 @@ pub fn eval_bytes(
         Bytes::Base64(Base64 { value, .. }) => Ok(http::Body::Binary(value.clone())),
         Bytes::Hex(Hex { value, .. }) => Ok(http::Body::Binary(value.clone())),
         Bytes::File(File { filename, .. }) => {
-            let value = eval_file(filename, context_dir)?;
-            Ok(http::Body::File(value, filename.value.clone()))
+            let value = eval_file(filename, variables, context_dir)?;
+            let filename = eval_template(filename, variables)?;
+            Ok(http::Body::File(value, filename))
         }
     }
 }
 
-pub fn eval_file(filename: &Filename, context_dir: &ContextDir) -> Result<Vec<u8>, Error> {
+pub fn eval_file(
+    filename: &Template,
+    variables: &HashMap<String, Value>,
+    context_dir: &ContextDir,
+) -> Result<Vec<u8>, Error> {
+    let file = eval_template(filename, variables)?;
     // In order not to leak any private date, we check that the user provided file
     // is a child of the context directory.
-    let file = filename.value.clone();
     if !context_dir.is_access_allowed(&file) {
         let inner = RunnerError::UnauthorizedFileAccess {
             path: PathBuf::from(file),
@@ -100,9 +105,13 @@ mod tests {
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
-            filename: Filename {
-                value: String::from("tests/data.bin"),
+            filename: Template {
+                delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+                elements: vec![TemplateElement::String {
+                    value: "tests/data.bin".to_string(),
+                    encoded: "tests/data.bin".to_string(),
+                }],
             },
             space1: whitespace,
         });
@@ -127,9 +136,13 @@ mod tests {
 
         let bytes = Bytes::File(File {
             space0: whitespace.clone(),
-            filename: Filename {
-                value: String::from("data.bin"),
+            filename: Template {
+                delimiter: None,
                 source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15)),
+                elements: vec![TemplateElement::String {
+                    value: "data.bin".to_string(),
+                    encoded: "data.bin".to_string(),
+                }],
             },
             space1: whitespace,
         });

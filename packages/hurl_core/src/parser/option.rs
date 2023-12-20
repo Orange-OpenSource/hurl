@@ -453,8 +453,12 @@ mod tests {
                         end: Pos { line: 1, column: 9 },
                     },
                 },
-                kind: OptionKind::CaCertificate(Filename {
-                    value: "/home/foo/cert.pem".to_string(),
+                kind: OptionKind::CaCertificate(Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "/home/foo/cert.pem".to_string(),
+                        encoded: "/home/foo/cert.pem".to_string()
+                    }],
                     source_info: SourceInfo {
                         start: Pos { line: 1, column: 9 },
                         end: Pos {

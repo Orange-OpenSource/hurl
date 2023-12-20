@@ -774,13 +774,6 @@ impl Tokenizable for Comment {
     }
 }
 
-impl Tokenizable for Filename {
-    fn tokenize(&self) -> Vec<Token> {
-        let s = self.value.replace(' ', "\\ ");
-        vec![Token::String(s)]
-    }
-}
-
 impl Tokenizable for JsonValue {
     fn tokenize(&self) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];

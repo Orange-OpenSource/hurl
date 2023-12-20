@@ -45,7 +45,7 @@ pub fn eval_predicate_value(
         PredicateValue::Null => Ok(Value::Null),
         PredicateValue::Number(value) => Ok(Value::Number(eval_number(value))),
         PredicateValue::File(value) => {
-            let value = eval_file(&value.filename, context_dir)?;
+            let value = eval_file(&value.filename, variables, context_dir)?;
             Ok(Value::Bytes(value))
         }
         PredicateValue::Hex(value) => Ok(Value::Bytes(value.value.clone())),

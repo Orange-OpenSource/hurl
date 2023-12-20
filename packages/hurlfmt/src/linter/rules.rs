@@ -502,10 +502,7 @@ fn lint_hex(hex: &Hex) -> Hex {
 fn lint_file(file: &File) -> File {
     File {
         space0: empty_whitespace(),
-        filename: Filename {
-            value: file.filename.value.clone(),
-            source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
-        },
+        filename: lint_template(&file.filename),
         space1: empty_whitespace(),
     }
 }

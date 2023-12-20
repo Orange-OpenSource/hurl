@@ -493,8 +493,12 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
-                filename: Filename {
-                    value: "hello.txt".to_string(),
+                filename: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: "hello.txt".to_string(),
+                        encoded: "hello.txt".to_string(),
+                    }],
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                 },
                 space1: Whitespace {
@@ -516,8 +520,12 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
-                filename: Filename {
-                    value: "hello.txt".to_string(),
+                filename: Template {
+                    elements: vec![TemplateElement::String {
+                        value: "hello.txt".to_string(),
+                        encoded: "hello.txt".to_string(),
+                    }],
+                    delimiter: None,
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 15)),
                 },
                 space1: Whitespace {

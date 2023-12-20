@@ -99,7 +99,7 @@ fn log_request(request: Request) {
                                 };
                             eprintln!(
                                 "\r{}: {}{}",
-                                file_param.key, file_param.value.filename.value, content_type
+                                file_param.key, file_param.value.filename, content_type
                             );
                         }
                     }

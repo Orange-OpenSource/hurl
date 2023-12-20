@@ -25,7 +25,7 @@ use hurl_core::ast::{
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
-use crate::runner::{template, Error, Number, RunnerError, RunnerOptions, Value};
+use crate::runner::{Error, Number, RunnerError, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
@@ -54,13 +54,16 @@ pub fn get_entry_options(
                         runner_options.aws_sigv4 = Some(value)
                     }
                     OptionKind::CaCertificate(filename) => {
-                        runner_options.cacert_file = Some(filename.value.clone())
+                        let value = eval_template(filename, variables)?;
+                        runner_options.cacert_file = Some(value)
                     }
                     OptionKind::ClientCert(filename) => {
-                        runner_options.client_cert_file = Some(filename.value.clone())
+                        let value = eval_template(filename, variables)?;
+                        runner_options.client_cert_file = Some(value)
                     }
                     OptionKind::ClientKey(filename) => {
-                        runner_options.client_key_file = Some(filename.value.clone())
+                        let value = eval_template(filename, variables)?;
+                        runner_options.client_key_file = Some(value)
                     }
                     OptionKind::Compressed(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -157,7 +160,8 @@ pub fn get_entry_options(
                         runner_options.max_redirect = Some(value as usize)
                     }
                     OptionKind::Output(filename) => {
-                        runner_options.output = Some(filename.value.clone())
+                        let value = eval_template(filename, variables)?;
+                        runner_options.output = Some(value)
                     }
                     OptionKind::PathAsIs(value) => {
                         let value = eval_boolean_option(value, variables)?;
@@ -346,7 +350,7 @@ fn eval_variable_value(
         VariableValue::Bool(v) => Ok(Value::Bool(*v)),
         VariableValue::Number(v) => Ok(eval_number(v)),
         VariableValue::String(template) => {
-            let s = template::eval_template(template, variables)?;
+            let s = eval_template(template, variables)?;
             Ok(Value::String(s))
         }
     }

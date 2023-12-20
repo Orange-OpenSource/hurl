@@ -308,9 +308,9 @@ impl HtmlFormatter {
         }
     }
 
-    fn fmt_filename(&mut self, filename: &Filename) {
+    fn fmt_filename(&mut self, filename: &Template) {
         self.fmt_span_open("filename");
-        let s = filename.value.replace(' ', "\\ ");
+        let s = filename.to_string().replace(' ', "\\ ");
         self.buffer.push_str(s.as_str());
         self.fmt_span_close();
     }

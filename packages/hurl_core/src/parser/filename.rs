@@ -17,28 +17,136 @@
  */
 use crate::ast::*;
 use crate::parser::error::*;
+use crate::parser::primitives::try_literal;
 use crate::parser::reader::Reader;
-use crate::parser::ParseResult;
+use crate::parser::template::template;
+use crate::parser::{string, ParseResult};
 
-pub fn parse(reader: &mut Reader) -> ParseResult<Filename> {
-    // This is an absolute file
-    // that you have to write with a relative name
-    // default root_dir is the hurl directory
+pub fn parse(reader: &mut Reader) -> ParseResult<Template> {
     let start = reader.state;
-    let s = reader.read_while_escaping(|c| {
-        c.is_alphanumeric() || *c == '.' || *c == '/' || *c == '_' || *c == '-' || *c == ':'
-    });
-    if s.is_empty() {
-        return Err(Error::new(start.pos, false, ParseError::Filename));
+
+    let mut elements = vec![];
+    loop {
+        match template(reader) {
+            Ok(expr) => {
+                let element = TemplateElement::Expression(expr);
+                elements.push(element);
+            }
+            Err(e) => {
+                if e.recoverable {
+                    let value = filename_content(reader)?;
+                    if value.is_empty() {
+                        break;
+                    }
+                    let encoded: String = reader.buffer[start.cursor..reader.state.cursor]
+                        .iter()
+                        .collect();
+                    let element = TemplateElement::String { value, encoded };
+                    elements.push(element);
+                } else {
+                    return Err(e);
+                }
+            }
+        }
+    }
+    if elements.is_empty() {
+        let inner = ParseError::Filename;
+        return Err(Error::new(start.pos, false, inner));
+    }
+    if let Some(TemplateElement::String { encoded, .. }) = elements.first() {
+        if encoded.starts_with('[') {
+            let inner = ParseError::Expecting {
+                value: "filename".to_string(),
+            };
+            return Err(Error::new(start.pos, false, inner));
+        }
     }
 
-    Ok(Filename {
-        value: s,
+    let end = reader.state;
+    Ok(Template {
+        delimiter: None,
+        elements,
         source_info: SourceInfo {
             start: start.pos,
-            end: reader.state.pos,
+            end: end.pos,
         },
     })
+}
+
+fn filename_content(reader: &mut Reader) -> ParseResult<String> {
+    let mut s = String::new();
+    loop {
+        match filename_escaped_char(reader) {
+            Ok(c) => {
+                s.push(c);
+            }
+            Err(e) => {
+                if e.recoverable {
+                    let s2 = filename_text(reader);
+                    if s2.is_empty() {
+                        break;
+                    } else {
+                        s.push_str(&s2);
+                    }
+                } else {
+                    return Err(e);
+                }
+            }
+        }
+    }
+    Ok(s)
+}
+
+fn filename_text(reader: &mut Reader) -> String {
+    let mut s = String::new();
+    loop {
+        let save = reader.state;
+        match reader.read() {
+            None => break,
+            Some(c) => {
+                if c.is_alphanumeric()
+                    || c == '_'
+                    || c == '-'
+                    || c == '.'
+                    || c == '['
+                    || c == ']'
+                    || c == '@'
+                    || c == '$'
+                    || c == '/'
+                    || c == ':'
+                {
+                    s.push(c);
+                } else {
+                    reader.state = save;
+                    break;
+                }
+            }
+        }
+    }
+
+    s
+}
+
+fn filename_escaped_char(reader: &mut Reader) -> ParseResult<char> {
+    try_literal("\\", reader)?;
+    let start = reader.state;
+    match reader.read() {
+        Some(';') => Ok(';'),
+        Some('#') => Ok('#'),
+        Some('[') => Ok('['),
+        Some(' ') => Ok(' '),
+        Some(']') => Ok(']'),
+        Some(':') => Ok(':'),
+        Some('\\') => Ok('\\'),
+        Some('/') => Ok('/'),
+        Some('b') => Ok('\x08'),
+        Some('f') => Ok('\x0c'),
+        Some('n') => Ok('\n'),
+        Some('r') => Ok('\r'),
+        Some('t') => Ok('\t'),
+        Some('u') => string::unicode(reader),
+        _ => Err(Error::new(start.pos, false, ParseError::EscapeChar)),
+    }
 }
 
 #[cfg(test)]
@@ -51,8 +159,12 @@ mod tests {
         let mut reader = Reader::new("data/data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Filename {
-                value: String::from("data/data.bin"),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "data/data.bin".to_string(),
+                    encoded: "data/data.bin".to_string()
+                }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 14)),
             }
         );
@@ -61,8 +173,13 @@ mod tests {
         let mut reader = Reader::new("data.bin");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Filename {
-                value: String::from("data.bin"),
+            Template {
+                //value: String::from("data.bin"),
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "data.bin".to_string(),
+                    encoded: "data.bin".to_string()
+                }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 9)),
             }
         );
@@ -74,8 +191,12 @@ mod tests {
         let mut reader = Reader::new("file\\ with\\ spaces");
         assert_eq!(
             parse(&mut reader).unwrap(),
-            Filename {
-                value: String::from("file with spaces"),
+            Template {
+                delimiter: None,
+                elements: vec![TemplateElement::String {
+                    value: "file with spaces".to_string(),
+                    encoded: "file\\ with\\ spaces".to_string()
+                }],
                 source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 19)),
             }
         );

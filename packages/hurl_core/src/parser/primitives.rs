@@ -904,8 +904,12 @@ mod tests {
                     value: String::new(),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 6)),
                 },
-                filename: Filename {
-                    value: String::from("data.xml"),
+                filename: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: String::from("data.xml"),
+                        encoded: String::from("data.xml"),
+                    }],
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 14)),
                 },
                 space1: Whitespace {
@@ -923,8 +927,12 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                filename: Filename {
-                    value: String::from("filename1"),
+                filename: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: String::from("filename1"),
+                        encoded: String::from("filename1"),
+                    }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 16)),
                 },
                 space1: Whitespace {
@@ -942,8 +950,12 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                filename: Filename {
-                    value: String::from("tmp/filename1"),
+                filename: Template {
+                    delimiter: None,
+                    elements: vec![TemplateElement::String {
+                        value: String::from("tmp/filename1"),
+                        encoded: String::from("tmp/filename1"),
+                    }],
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 20)),
                 },
                 space1: Whitespace {
@@ -961,8 +973,12 @@ mod tests {
                     value: String::from(" "),
                     source_info: SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
                 },
-                filename: Filename {
-                    value: String::from("tmp/filename with spaces.txt"),
+                filename: Template {
+                    elements: vec![TemplateElement::String {
+                        value: String::from("tmp/filename with spaces.txt"),
+                        encoded: String::from("tmp/filename\\ with\\ spaces.txt"),
+                    }],
+                    delimiter: None,
                     source_info: SourceInfo::new(Pos::new(1, 7), Pos::new(1, 37)),
                 },
                 space1: Whitespace {

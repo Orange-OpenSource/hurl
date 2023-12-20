@@ -52,37 +52,44 @@ pub fn eval_file_param(
     variables: &HashMap<String, Value>,
 ) -> Result<http::FileParam, Error> {
     let name = eval_template(&file_param.key, variables)?;
-    let filename = file_param.value.filename.clone();
-    let data = eval_file(&filename, context_dir)?;
-    let content_type = file_value_content_type(&file_param.value);
+    let filename = eval_template(&file_param.value.filename, variables)?;
+    let data = eval_file(&file_param.value.filename, variables, context_dir)?;
+    let content_type = file_value_content_type(&file_param.value, variables)?;
     Ok(http::FileParam {
         name,
-        filename: filename.value,
+        filename,
         data,
         content_type,
     })
 }
 
-pub fn file_value_content_type(file_value: &FileValue) -> String {
-    match file_value.content_type.clone() {
-        None => match Path::new(file_value.filename.value.as_str())
-            .extension()
-            .and_then(OsStr::to_str)
-        {
-            Some("gif") => "image/gif".to_string(),
-            Some("jpg") => "image/jpeg".to_string(),
-            Some("jpeg") => "image/jpeg".to_string(),
-            Some("png") => "image/png".to_string(),
-            Some("svg") => "image/svg+xml".to_string(),
-            Some("txt") => "text/plain".to_string(),
-            Some("htm") => "text/html".to_string(),
-            Some("html") => "text/html".to_string(),
-            Some("pdf") => "application/pdf".to_string(),
-            Some("xml") => "application/xml".to_string(),
-            _ => "application/octet-stream".to_string(),
-        },
+pub fn file_value_content_type(
+    file_value: &FileValue,
+    variables: &HashMap<String, Value>,
+) -> Result<String, Error> {
+    let value = match file_value.content_type.clone() {
+        None => {
+            let value = eval_template(&file_value.filename, variables)?;
+            match Path::new(value.as_str())
+                .extension()
+                .and_then(OsStr::to_str)
+            {
+                Some("gif") => "image/gif".to_string(),
+                Some("jpg") => "image/jpeg".to_string(),
+                Some("jpeg") => "image/jpeg".to_string(),
+                Some("png") => "image/png".to_string(),
+                Some("svg") => "image/svg+xml".to_string(),
+                Some("txt") => "text/plain".to_string(),
+                Some("htm") => "text/html".to_string(),
+                Some("html") => "text/html".to_string(),
+                Some("pdf") => "application/pdf".to_string(),
+                Some("xml") => "application/xml".to_string(),
+                _ => "application/octet-stream".to_string(),
+            }
+        }
         Some(content_type) => content_type,
-    }
+    };
+    Ok(value)
 }
 
 #[cfg(test)]
@@ -125,9 +132,13 @@ mod tests {
                 space2: whitespace(),
                 value: FileValue {
                     space0: whitespace(),
-                    filename: Filename {
-                        value: "hello.txt".to_string(),
+                    filename: Template {
+                        delimiter: None,
                         source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                        elements: vec![TemplateElement::String {
+                            value: "hello.txt".to_string(),
+                            encoded: "hello.txt".to_string(),
+                        }],
                     },
                     space1: whitespace(),
                     space2: whitespace(),
@@ -152,59 +163,92 @@ mod tests {
 
     #[test]
     pub fn test_file_value_content_type() {
+        let variables = HashMap::default();
         assert_eq!(
-            file_value_content_type(&FileValue {
-                space0: whitespace(),
-                filename: Filename {
-                    value: "hello.txt".to_string(),
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            file_value_content_type(
+                &FileValue {
+                    space0: whitespace(),
+                    filename: Template {
+                        delimiter: None,
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                        elements: vec![TemplateElement::String {
+                            value: "hello.txt".to_string(),
+                            encoded: "hello.txt".to_string()
+                        }],
+                    },
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: None,
                 },
-                space1: whitespace(),
-                space2: whitespace(),
-                content_type: None,
-            }),
+                &variables
+            )
+            .unwrap(),
             "text/plain".to_string()
         );
 
         assert_eq!(
-            file_value_content_type(&FileValue {
-                space0: whitespace(),
-                filename: Filename {
-                    value: "hello.html".to_string(),
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            file_value_content_type(
+                &FileValue {
+                    space0: whitespace(),
+                    filename: Template {
+                        delimiter: None,
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                        elements: vec![TemplateElement::String {
+                            value: "hello.html".to_string(),
+                            encoded: "hello.html".to_string()
+                        }],
+                    },
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: None,
                 },
-                space1: whitespace(),
-                space2: whitespace(),
-                content_type: None,
-            }),
+                &variables
+            )
+            .unwrap(),
             "text/html".to_string()
         );
 
         assert_eq!(
-            file_value_content_type(&FileValue {
-                space0: whitespace(),
-                filename: Filename {
-                    value: "hello.txt".to_string(),
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            file_value_content_type(
+                &FileValue {
+                    space0: whitespace(),
+                    filename: Template {
+                        delimiter: None,
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                        elements: vec![TemplateElement::String {
+                            value: "hello.txt".to_string(),
+                            encoded: "hello.txt".to_string()
+                        }],
+                    },
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: Some("text/html".to_string()),
                 },
-                space1: whitespace(),
-                space2: whitespace(),
-                content_type: Some("text/html".to_string()),
-            }),
+                &variables
+            )
+            .unwrap(),
             "text/html".to_string()
         );
 
         assert_eq!(
-            file_value_content_type(&FileValue {
-                space0: whitespace(),
-                filename: Filename {
-                    value: "hello".to_string(),
-                    source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+            file_value_content_type(
+                &FileValue {
+                    space0: whitespace(),
+                    filename: Template {
+                        delimiter: None,
+                        source_info: SourceInfo::new(Pos::new(0, 0), Pos::new(0, 0)),
+                        elements: vec![TemplateElement::String {
+                            value: "hello".to_string(),
+                            encoded: "hello".to_string()
+                        }],
+                    },
+                    space1: whitespace(),
+                    space2: whitespace(),
+                    content_type: None,
                 },
-                space1: whitespace(),
-                space2: whitespace(),
-                content_type: None,
-            }),
+                &variables
+            )
+            .unwrap(),
             "application/octet-stream".to_string()
         );
     }

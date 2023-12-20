@@ -208,7 +208,7 @@ impl ToJson for File {
             ("type".to_string(), JValue::String("file".to_string())),
             (
                 "filename".to_string(),
-                JValue::String(self.filename.value.clone()),
+                JValue::String(self.filename.to_string()),
             ),
         ])
     }
@@ -250,7 +250,7 @@ impl ToJson for FileParam {
             ("name".to_string(), JValue::String(self.key.to_string())),
             (
                 "filename".to_string(),
-                JValue::String(self.value.filename.value.clone()),
+                JValue::String(self.value.filename.to_string()),
             ),
         ];
         if let Some(content_type) = self.value.content_type.clone() {
@@ -281,9 +281,9 @@ impl ToJson for EntryOption {
         let name = "value".to_string();
         let value = match &self.kind {
             OptionKind::AwsSigV4(value) => JValue::String(value.to_string()),
-            OptionKind::CaCertificate(filename) => JValue::String(filename.value.clone()),
-            OptionKind::ClientCert(filename) => JValue::String(filename.value.clone()),
-            OptionKind::ClientKey(filename) => JValue::String(filename.value.clone()),
+            OptionKind::CaCertificate(filename) => JValue::String(filename.to_string()),
+            OptionKind::ClientCert(filename) => JValue::String(filename.to_string()),
+            OptionKind::ClientKey(filename) => JValue::String(filename.to_string()),
             OptionKind::Compressed(value) => value.to_json(),
             OptionKind::ConnectTo(value) => JValue::String(value.to_string()),
             OptionKind::Delay(value) => value.to_json(),
@@ -296,7 +296,7 @@ impl ToJson for EntryOption {
             OptionKind::IpV4(value) => value.to_json(),
             OptionKind::IpV6(value) => value.to_json(),
             OptionKind::MaxRedirect(value) => value.to_json(),
-            OptionKind::Output(filename) => JValue::String(filename.value.clone()),
+            OptionKind::Output(filename) => JValue::String(filename.to_string()),
             OptionKind::PathAsIs(value) => value.to_json(),
             OptionKind::Proxy(value) => JValue::String(value.to_string()),
             OptionKind::Resolve(value) => JValue::String(value.to_string()),
