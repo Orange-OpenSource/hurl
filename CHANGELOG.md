@@ -3,7 +3,9 @@
 
 Thanks to
 [@gmetal](https://github.com/gmetal),
+[@mihirn](https://github.com/mihirn),
 [@humphd](https://github.com/humphd),
+[@RickMoynihan](https://github.com/RickMoynihan),
 [@pit1sIBM](https://github.com/pit1sIBM),
 [@janwytze](https://github.com/janwytze),
 [@kingluo](https://github.com/kingluo),
@@ -36,7 +38,7 @@ Bugs Fixed:
 * TAP reports can't be appended if there are failed tests [#2099](https://github.com/Orange-OpenSource/hurl/issues/2099)
 * Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 * Support key password in --cert option (certificate[:password]) [#2047](https://github.com/Orange-OpenSource/hurl/issues/2047)
-
+* Keep initial request headers when following redirects [#1990](https://github.com/Orange-OpenSource/hurl/issues/1990)
 
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
