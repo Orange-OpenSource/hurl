@@ -15,7 +15,7 @@ Thanks to
 
 Enhancements:
 
-* Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
+* Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#1632](https://github.com/Orange-OpenSource/hurl/issues/1632) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
 * Support conda-forge installation [#2018](https://github.com/Orange-OpenSource/hurl/issues/2018)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
