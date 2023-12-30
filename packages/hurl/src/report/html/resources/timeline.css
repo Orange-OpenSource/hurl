@@ -87,12 +87,12 @@ body {
         fill: #1e1e1e;
     }
 
-    .call-detail use text {
-        fill: #fff;
+    .calls svg:first-of-type rect:first-of-type {
+        fill: #1e1e1e;
     }
 
-    .calls > svg:first-of-type rect:first-of-type {
-        fill: #121212;
+    .waterfall svg:first-of-type g:first-of-type g:first-of-type rect {
+        fill: #1e1e1e;
     }
 }
 
