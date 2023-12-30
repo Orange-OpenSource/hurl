@@ -63,3 +63,83 @@ summary {
     line-height: 1.4;
     font-weight: bold;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f5f5f5;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.4;
+    }
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #121212;
+    }
+
+    h4:target {
+        color: #ff62b0;
+    }
+
+    table {
+        display: block;
+        font-size: 15px;
+        width: 100%;
+        max-width: 100%;
+        overflow: auto;
+        border-collapse: collapse;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        background-color: #121212;
+    }
+
+    th, td {
+        border-width: 1px;
+        border-style: solid;
+        border-color: #444;
+        color: #f5f5f5;
+    }
+
+    th {
+        padding: 6px 8px;
+        text-align: left;
+        background: #1e1e1e;
+    }
+
+    td {
+        padding: 6px 8px;
+        vertical-align: text-top;
+    }
+
+    td a {
+        color: #819cff;
+    }
+
+    .name {
+        width: 120px;
+        font-weight: bold;
+        background: #1e1e1e;
+    }
+
+    .value {
+        width: 800px;
+        word-break: break-all;
+        color: #f5f5f5;
+    }
+
+    details {
+        margin-bottom: 20px;
+        color: #f5f5f5;
+    }
+
+    summary {
+        font-size: 1.3rem;
+        line-height: 1.4;
+        font-weight: bold;
+        color: #f5f5f5;
+    }
+}

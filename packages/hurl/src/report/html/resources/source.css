@@ -46,3 +46,62 @@ body {
     overflow: auto;
     overflow-y: hidden;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f5f5f5;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.4;
+    }
+
+    .line-error {
+        border-bottom: red 2px dashed;
+    }
+
+    .line-error::after {
+        content: " ⛔️";
+        color: #ff0000;
+    }
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #121212;
+    }
+
+    .source-container {
+        display: flex;
+        padding: 0;
+        border: solid 1px #444;
+        background-color: #121212;
+        color: #f5f5f5;
+    }
+
+    .line-numbers {
+        text-align: right;
+        padding: 8px 10px;
+        border-right: solid 1px #444;
+        background: #1e1e1e;
+    }
+
+    .line-numbers a {
+        color: #819cff;
+        text-decoration: none;
+    }
+
+    .line-numbers a:hover {
+        text-decoration: underline;
+    }
+
+    .source {
+        padding: 8px 10px;
+        overflow: auto;
+        overflow-y: hidden;
+        color: #f5f5f5;
+        background-color: #121212;
+    }
+}

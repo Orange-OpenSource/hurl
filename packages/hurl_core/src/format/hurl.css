@@ -84,3 +84,50 @@ code {
 .cookie-value {
     color: darkgreen;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f5f5f5;
+    }
+
+    pre {
+        padding: 0;
+        margin: 0;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.825rem;
+        line-height: 1.2rem;
+        color: #f5f5f5;
+    }
+
+    .method, .version {
+        color: #f5f5f5;
+    }
+
+    .url, .filter-type, .not, .predicate-type {
+        color: #819cff;
+    }
+
+    .number {
+        color: #00ff00;
+    }
+
+    .section-header {
+        color: #ff62b0;
+    }
+
+    .query-type {
+        color: #40e0d0;
+    }
+
+    .string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+        color: #00ff00;
+    }
+
+    .comment {
+        color: #696969;
+    }
+}

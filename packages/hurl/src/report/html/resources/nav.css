@@ -58,3 +58,34 @@
 .failure, .failure a {
     color: red;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f5f5f5;
+    }
+
+    .report-nav a {
+        color: #819cff;
+    }
+
+    .report-nav a[aria-selected="true"] {
+        color: #ff62b0;
+    }
+
+    .error {
+        border-left: #ff0000 4px solid;
+    }
+
+    .error-desc {
+        background: #1e1e1e;
+    }
+
+    .success, .success a {
+        color: #00ff00;
+    }
+
+    .failure, .failure a {
+        color: #ff0000;
+    }
+}
