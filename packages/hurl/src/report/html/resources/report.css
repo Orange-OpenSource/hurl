@@ -40,3 +40,38 @@ thead {
 .failure, .failure a {
     color: red;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #19191c;
+        color: #c2c2c2;
+    }
+
+    h2 {
+        color: #ff0288;
+    }
+
+    .summary {
+        color: #c2c2c2;
+    }
+
+    .date {
+        color: #c2c2c2;
+    }
+
+    td {
+        color: #c2c2c2;
+    }
+
+    thead {
+        color: #c2c2c2;
+    }
+
+    .success, .success a {
+        color: lime;
+    }
+
+    .failure, .failure a {
+        color: #ff6e67;
+    }
+}

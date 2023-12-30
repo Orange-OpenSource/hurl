@@ -33,3 +33,50 @@ body {
     overflow-y: hidden;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #19191c;
+        color: #c2c2c2;
+    }
+
+    .container {
+        background-color: #19191c;
+    }
+
+    .timeline-container {
+        border: solid 1px #444;
+        background-color: #19191c;
+    }
+
+    .calls {
+        background-color: #1e1e1e;
+    }
+
+    .waterfall {
+        background-color: #19191c;
+    }
+
+    .call-detail > g text:first-of-type {
+       fill: #fff;
+    }
+
+    .call-detail > g text:nth-of-type(2) {
+       fill: #a7a7a7;
+    }
+    
+    .call-detail rect:nth-of-type(2) {
+        fill: #19191c;
+    }
+
+    .calls svg:first-of-type rect:first-of-type {
+        fill: #19191c;
+    }
+
+    .waterfall svg:first-of-type g:first-of-type g:first-of-type rect {
+        fill: #444;
+    }
+
+    .timeline-container {
+        border-color: #fff;
+    }
+}

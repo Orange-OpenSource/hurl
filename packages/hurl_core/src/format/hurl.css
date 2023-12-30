@@ -84,3 +84,38 @@ code {
 .cookie-value {
     color: darkgreen;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #19191c;
+        color: #c2c2c2;
+    }
+
+    .method, .version {
+        color: #c2c2c2;
+    }
+
+    .url, .filter-type, .not, .predicate-type {
+        color: #34a7ff;
+    }
+
+    .number {
+        color: lime;
+    }
+
+    .section-header {
+        color: #ff0288;
+    }
+
+    .query-type {
+        color: cyan;
+    }
+
+    .string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+        color: lime;
+    }
+
+    .comment {
+        color: #444;
+    }
+}
