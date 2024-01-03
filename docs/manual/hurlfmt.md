@@ -86,7 +86,7 @@ Usage help.
 Specify input format: hurl (default) or curl
 
 
-### --inplace {#inplace}
+### --in-place {#inplace}
 
 Modify file in place.
 
