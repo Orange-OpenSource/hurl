@@ -674,7 +674,7 @@ impl Client {
         if !(300..400).contains(&response_code) {
             return None;
         }
-        let location = match response.get_header_values("Location").get(0) {
+        let location = match response.get_header_values("Location").first() {
             None => return None,
             Some(value) => get_redirect_url(value, base_url),
         };
