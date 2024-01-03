@@ -34,10 +34,11 @@ convert_toml_crates_to_key_value() {
         grep --extended-regexp --invert-match "^\[|path|^$|^#" |
             cut --delimiter ',' --field 1 |
                 sed "s/version//g" |
-                    tr -d '"{=}' |
-                        tr -d "'" |
-                            tr -s ' ' |
-                                sort
+                    sed "s/=/ = /g" |
+                        tr -d '"{=}' |
+                            tr -d "'" |
+                                tr -s ' ' |
+                                    sort
 }
 
 get_crate_latest_version() {
@@ -88,8 +89,8 @@ update_crate_version_in_toml() {
     toml_file="$4"
 
     # update crate version in toml
-    sed -i -- "s/${crate} = { version = \"${actual_version}\"/${crate} = { version = \"${last_version}\"/g" "${toml_file}"
-    sed -i -- "s/${crate} = \"${actual_version}\"/${crate} = \"${last_version}\"/g" "${toml_file}"
+    sed -i -- "s/^${crate}.*=.*{.*version.*=.*\"${actual_version}\"/${crate} = { version = \"${last_version}\"/g" "${toml_file}"
+    sed -i -- "s/^${crate}.*=.*\"${actual_version}\"/${crate} = \"${last_version}\"/g" "${toml_file}"
     if grep --extended-regexp --silent "${crate}.*=.*${last_version}" "${toml_file}"; then
         echo "${color_blue}updated to ${last_version}${color_reset}"
     else
