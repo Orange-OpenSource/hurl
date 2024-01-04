@@ -119,6 +119,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             entries: vec![EntryResult {
                 entry_index: 1,
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 35)),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -158,6 +159,7 @@ HTTP/1.0 200
         let hurl_result = HurlResult {
             entries: vec![EntryResult {
                 entry_index: 1,
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 18)),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],

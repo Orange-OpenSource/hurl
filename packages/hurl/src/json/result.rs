@@ -62,6 +62,10 @@ impl EntryResult {
             "index".to_string(),
             serde_json::Value::Number(serde_json::Number::from(self.entry_index)),
         );
+        map.insert(
+            "line".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(self.source_info.start.line)),
+        );
         let calls = self.calls.iter().map(|c| c.to_json()).collect();
         map.insert("calls".to_string(), calls);
         let captures = self.captures.iter().map(|c| c.to_json()).collect();

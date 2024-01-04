@@ -1,3 +1,3 @@
 #!/bin/bash
 set -Eeuo pipefail
-hurl tests_failed/assert_status.hurl --json
+hurl --json tests_failed/assert_status.hurl

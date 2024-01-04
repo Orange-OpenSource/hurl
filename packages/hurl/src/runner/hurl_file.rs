@@ -168,6 +168,7 @@ pub fn run(
             }
             Err(error) => EntryResult {
                 entry_index,
+                source_info: entry.source_info(),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],

@@ -102,7 +102,7 @@ impl Testcase {
             for (call_entry_index, _) in e.calls.iter().enumerate() {
                 let entry_src_index = e.entry_index - 1;
                 let entry_src = hurl_file.entries.get(entry_src_index).unwrap();
-                let line = entry_src.request.space0.source_info.start.line;
+                let line = entry_src.source_info().start.line;
                 let ctx = CallContext {
                     kind,
                     line,

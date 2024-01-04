@@ -32,6 +32,13 @@ pub struct Entry {
     pub response: Option<Response>,
 }
 
+impl Entry {
+    /// Returns the source information for this entry.
+    pub fn source_info(&self) -> SourceInfo {
+        self.request.space0.source_info
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Request {
     pub line_terminators: Vec<LineTerminator>,

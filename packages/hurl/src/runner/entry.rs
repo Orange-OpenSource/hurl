@@ -50,6 +50,7 @@ pub fn run(
         Err(error) => {
             return EntryResult {
                 entry_index,
+                source_info: entry.source_info(),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -99,10 +100,11 @@ pub fn run(
         Err(http_error) => {
             let start = entry.request.url.source_info.start;
             let end = entry.request.url.source_info.end;
-            let source_info = SourceInfo::new(start, end);
-            let error = Error::new(source_info, http_error.into(), false);
+            let error_source_info = SourceInfo::new(start, end);
+            let error = Error::new(error_source_info, http_error.into(), false);
             return EntryResult {
                 entry_index,
+                source_info: entry.source_info(),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
@@ -137,6 +139,7 @@ pub fn run(
                 logger.debug("");
                 return EntryResult {
                     entry_index,
+                    source_info: entry.source_info(),
                     calls,
                     captures: vec![],
                     asserts,
@@ -156,6 +159,7 @@ pub fn run(
             Err(e) => {
                 return EntryResult {
                     entry_index,
+                    source_info: entry.source_info(),
                     calls,
                     captures: vec![],
                     asserts: all_asserts,
@@ -187,6 +191,7 @@ pub fn run(
 
     EntryResult {
         entry_index,
+        source_info: entry.source_info(),
         calls,
         captures,
         asserts: all_asserts,

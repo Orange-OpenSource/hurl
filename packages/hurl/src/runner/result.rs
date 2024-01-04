@@ -56,6 +56,7 @@ impl HurlResult {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntryResult {
     pub entry_index: usize,
+    pub source_info: SourceInfo,
     pub calls: Vec<Call>,
     pub captures: Vec<CaptureResult>,
     pub asserts: Vec<AssertResult>,

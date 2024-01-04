@@ -329,6 +329,7 @@ fn get_summary(runs: &[HurlRun], duration: u128) -> String {
 #[cfg(test)]
 pub mod tests {
     use hurl::runner::EntryResult;
+    use hurl_core::ast::{Pos, SourceInfo};
 
     use super::*;
 
@@ -337,6 +338,7 @@ pub mod tests {
         fn new_run(success: bool, entries_count: usize) -> HurlRun {
             let dummy_entry = EntryResult {
                 entry_index: 0,
+                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1)),
                 calls: vec![],
                 captures: vec![],
                 asserts: vec![],
