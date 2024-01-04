@@ -2,6 +2,8 @@
 ========================================================================================================================
 
 Thanks to
+[@lambrospetrou](https://github.com/lambrospetrou),
+[@moono](https://github.com/moono),
 [@gmetal](https://github.com/gmetal),
 [@mihirn](https://github.com/mihirn),
 [@humphd](https://github.com/humphd),
@@ -15,6 +17,8 @@ Thanks to
 
 Enhancements:
 
+* Export entry source line number in JSON output [#2273](https://github.com/Orange-OpenSource/hurl/issues/2273)
+* Add --output option per request [#2184](https://github.com/Orange-OpenSource/hurl/issues/2184) [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#1632](https://github.com/Orange-OpenSource/hurl/issues/1632) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
 * Support conda-forge installation [#2018](https://github.com/Orange-OpenSource/hurl/issues/2018)
@@ -23,7 +27,6 @@ Enhancements:
 * Support template in key string [#1877](https://github.com/Orange-OpenSource/hurl/issues/1877) [#1710](https://github.com/Orange-OpenSource/hurl/issues/1710) [#898](https://github.com/Orange-OpenSource/hurl/issues/898)
 * Add skip option [#1815](https://github.com/Orange-OpenSource/hurl/issues/1815)
 * Add --ipv4/--ipv6 option [#1727](https://github.com/Orange-OpenSource/hurl/issues/1727)
-* Add --output option per request [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add --http3 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http2 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
 * Add --http1.0/-0 option [#1155](https://github.com/Orange-OpenSource/hurl/issues/1155)
@@ -39,7 +42,6 @@ Bugs Fixed:
 * Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 * Support key password in --cert option (certificate[:password]) [#2047](https://github.com/Orange-OpenSource/hurl/issues/2047)
 * Keep initial request headers when following redirects [#1990](https://github.com/Orange-OpenSource/hurl/issues/1990)
-
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
