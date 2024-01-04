@@ -21,7 +21,8 @@ use std::path::{Component, Path, PathBuf};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ContextDir {
     /// The current working directory.
-    /// If current directory is a relative path, the `is_allowed` is not guaranteed to be correct.
+    /// If current directory is a relative path, the `is_access_allowed` method
+    /// is not guaranteed to be correct.
     current_dir: PathBuf,
     /// The file root, either inferred or explicitly positioned by the user.
     /// As a consequence, it is always defined (and can't be replaced by a `Option<PathBuf>`).
