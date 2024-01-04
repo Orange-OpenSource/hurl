@@ -44,6 +44,7 @@ pub struct ClientOptions {
     pub retry: Retry,
     pub ssl_no_revoke: bool,
     pub timeout: Duration,
+    pub unix_socket: Option<String>,
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub verbosity: Option<Verbosity>,
@@ -79,6 +80,7 @@ impl Default for ClientOptions {
             retry: Retry::None,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
+            unix_socket: None,
             user: None,
             user_agent: None,
             verbosity: None,
@@ -163,6 +165,10 @@ impl ClientOptions {
             arguments.push("--timeout".to_string());
             arguments.push(self.timeout.as_secs().to_string());
         }
+        if let Some(ref unix_socket) = self.unix_socket {
+            arguments.push("--unix-socket".to_string());
+            arguments.push(format!("'{unix_socket}'"))
+        }
         if let Some(ref user) = self.user {
             arguments.push("--user".to_string());
             arguments.push(format!("'{user}'"));
@@ -208,6 +214,7 @@ mod tests {
                 retry: Retry::None,
                 ssl_no_revoke: false,
                 timeout: Duration::from_secs(10),
+                unix_socket: Some("/var/run/example.sock".to_string()),
                 user: Some("user:password".to_string()),
                 user_agent: Some("my-useragent".to_string()),
                 verbosity: None,
@@ -236,6 +243,8 @@ mod tests {
                 "bar.com:443:127.0.0.1",
                 "--timeout",
                 "10",
+                "--unix-socket",
+                "'/var/run/example.sock'",
                 "--user",
                 "'user:password'",
                 "--user-agent",

@@ -892,6 +892,7 @@ impl Tokenizable for OptionKind {
             OptionKind::Retry(value) => value.tokenize(),
             OptionKind::RetryInterval(value) => value.tokenize(),
             OptionKind::Skip(value) => value.tokenize(),
+            OptionKind::UnixSocket(value) => value.tokenize(),
             OptionKind::Variable(value) => value.tokenize(),
             OptionKind::Verbose(value) => value.tokenize(),
             OptionKind::VeryVerbose(value) => value.tokenize(),

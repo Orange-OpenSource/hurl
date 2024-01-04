@@ -62,6 +62,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "retry" => option_retry(reader)?,
         "retry-interval" => option_retry_interval(reader)?,
         "skip" => option_skip(reader)?,
+        "unix-socket" => option_unix_socket(reader)?,
         "variable" => option_variable(reader)?,
         "verbose" => option_verbose(reader)?,
         "very-verbose" => option_very_verbose(reader)?,
@@ -198,6 +199,11 @@ fn option_retry_interval(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_skip(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::Skip(value))
+}
+
+fn option_unix_socket(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::UnixSocket(value))
 }
 
 fn option_variable(reader: &mut Reader) -> ParseResult<OptionKind> {

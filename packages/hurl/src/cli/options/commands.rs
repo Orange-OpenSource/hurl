@@ -405,6 +405,14 @@ pub fn to_entry() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn unix_socket() -> clap::Arg {
+    clap::Arg::new("unix_socket")
+        .long("unix-socket")
+        .value_name("PATH")
+        .help("(HTTP) Connect through this Unix domain socket, instead of using the network.")
+        .num_args(1)
+}
+
 pub fn user() -> clap::Arg {
     clap::Arg::new("user")
         .long("user")

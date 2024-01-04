@@ -303,6 +303,7 @@ impl ToJson for EntryOption {
             OptionKind::Retry(value) => value.to_json(),
             OptionKind::RetryInterval(value) => value.to_json(),
             OptionKind::Skip(value) => value.to_json(),
+            OptionKind::UnixSocket(value) => JValue::String(value.to_string()),
             OptionKind::Variable(value) => {
                 JValue::String(format!("{}={}", value.name, value.value))
             }

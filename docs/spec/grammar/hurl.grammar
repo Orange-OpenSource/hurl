@@ -139,6 +139,7 @@ option:
   | retry-option
   | retry-interval-option
   | skip-option
+  | unix-socket-option
   | variable-option
   | verbose-option
   | very-verbose-option
@@ -189,6 +190,8 @@ retry-option: "retry" ":" integer-option lt
 retry-interval-option: "retry-interval" ":" integer-option lt
 
 skip-option: "skip" ":" boolean-option lt
+
+unix-socket-option: "unix-socket" ":" value-string lt
 
 variable-option: "variable" ":" variable-definition lt
 

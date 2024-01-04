@@ -1,0 +1,1 @@
+{"entries":[{"request":{"method":"GET","url":"http://example/hello","options":[{"name":"unix-socket","value":"build/unix_socket.sock"}]},"response":{"status":200,"body":{"type":"text","value":"Hello World!"}}}]}

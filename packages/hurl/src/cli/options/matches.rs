@@ -320,6 +320,10 @@ pub fn to_entry(arg_matches: &ArgMatches) -> Option<usize> {
     get::<u32>(arg_matches, "to_entry").map(|x| x as usize)
 }
 
+pub fn unix_socket(arg_matches: &ArgMatches) -> Option<String> {
+    get::<String>(arg_matches, "unix_socket")
+}
+
 pub fn user(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "user")
 }

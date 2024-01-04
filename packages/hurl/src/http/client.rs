@@ -442,6 +442,9 @@ impl Client {
         if let Some(s) = options.no_proxy.clone() {
             self.handle.noproxy(s.as_str())?;
         }
+        if let Some(unix_socket) = &options.unix_socket {
+            self.handle.unix_socket(unix_socket)?;
+        }
         self.handle.timeout(options.timeout)?;
         self.handle.connect_timeout(options.connect_timeout)?;
 
@@ -1123,6 +1126,7 @@ mod tests {
             path_as_is: true,
             proxy: Some("localhost:3128".to_string()),
             no_proxy: None,
+            unix_socket: Some("/var/run/example.sock".to_string()),
             user: Some("user:password".to_string()),
             user_agent: Some("my-useragent".to_string()),
             verbosity: Some(Verbosity::VeryVerbose),
@@ -1141,6 +1145,7 @@ mod tests {
          --max-redirs 10 \
          --path-as-is \
          --proxy 'localhost:3128' \
+         --unix-socket '/var/run/example.sock' \
          --user 'user:password' \
          --user-agent 'my-useragent' \
          --output /tmp/foo.bin \

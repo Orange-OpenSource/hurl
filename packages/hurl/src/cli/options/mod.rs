@@ -75,6 +75,7 @@ pub struct Options {
     pub test: bool,
     pub timeout: Duration,
     pub to_entry: Option<usize>,
+    pub unix_socket: Option<String>,
     pub user: Option<String>,
     pub user_agent: Option<String>,
     pub variables: HashMap<String, Value>,
@@ -210,6 +211,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::ssl_no_revoke())
         .arg(commands::test())
         .arg(commands::to_entry())
+        .arg(commands::unix_socket())
         .arg(commands::user_agent())
         .arg(commands::user())
         .arg(commands::variable())
@@ -275,6 +277,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let test = matches::test(arg_matches);
     let timeout = matches::timeout(arg_matches);
     let to_entry = matches::to_entry(arg_matches);
+    let unix_socket = matches::unix_socket(arg_matches);
     let user = matches::user(arg_matches);
     let user_agent = matches::user_agent(arg_matches);
     let variables = matches::variables(arg_matches)?;
@@ -320,6 +323,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         test,
         timeout,
         to_entry,
+        unix_socket,
         user,
         user_agent,
         variables,
@@ -421,6 +425,7 @@ impl Options {
         let ssl_no_revoke = self.ssl_no_revoke;
         let timeout = self.timeout;
         let to_entry = self.to_entry;
+        let unix_socket = self.unix_socket.clone();
         let user = self.user.clone();
         let user_agent = self.user_agent.clone();
 
@@ -454,6 +459,7 @@ impl Options {
             .ssl_no_revoke(ssl_no_revoke)
             .timeout(timeout)
             .to_entry(to_entry)
+            .unix_socket(unix_socket)
             .user(user)
             .user_agent(user_agent)
             .build()

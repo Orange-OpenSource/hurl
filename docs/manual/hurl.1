@@ -332,6 +332,10 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
+.IP "--unix-socket <PATH> "
+
+(HTTP) Connect through this Unix domain socket, instead of using the network.
+
 .IP "--test "
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.

@@ -1,0 +1,1 @@
+curl --unix-socket 'build/unix_socket.sock' 'http://example/hello'

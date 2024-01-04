@@ -168,6 +168,7 @@ impl crate::error::Error for Error {
                     "retry",
                     "retry-interval",
                     "skip",
+                    "unix-socket",
                     "variable",
                     "verbose",
                     "very-verbose",

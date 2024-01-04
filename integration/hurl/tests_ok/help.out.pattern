@@ -97,6 +97,8 @@ Options:
           Activate test mode
       --to-entry <ENTRY_NUMBER>
           Execute Hurl file to ENTRY_NUMBER (starting at 1)
+      --unix-socket <PATH>
+          (HTTP) Connect through this Unix domain socket, instead of using the network.
   -A, --user-agent <NAME>
           Specify the User-Agent string to send to the HTTP server
   -u, --user <USER:PASSWORD>

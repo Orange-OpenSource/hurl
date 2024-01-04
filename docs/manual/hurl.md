@@ -361,6 +361,10 @@ Activate test mode: with this, the HTTP response is not outputted anymore, progr
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
 
+### --unix-socket <PATH> {#unix-socket}
+
+(HTTP) Connect through this Unix domain socket, instead of using the network.
+
 ### -u, --user <USER:PASSWORD> {#user}
 
 Add basic Authentication header to each request.

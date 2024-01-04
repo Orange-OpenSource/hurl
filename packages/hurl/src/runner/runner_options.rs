@@ -53,6 +53,7 @@ pub struct RunnerOptionsBuilder {
     ssl_no_revoke: bool,
     timeout: Duration,
     to_entry: Option<usize>,
+    unix_socket: Option<String>,
     user: Option<String>,
     user_agent: Option<String>,
 }
@@ -90,6 +91,7 @@ impl Default for RunnerOptionsBuilder {
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             to_entry: None,
+            unix_socket: None,
             user: None,
             user_agent: None,
         }
@@ -312,6 +314,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the specified unix domain socket to connect through, instead of using the network.
+    pub fn unix_socket(&mut self, unix_socket: Option<String>) -> &mut Self {
+        self.unix_socket = unix_socket;
+        self
+    }
+
     /// Adds basic Authentication header to each request.
     pub fn user(&mut self, user: Option<String>) -> &mut Self {
         self.user = user;
@@ -357,6 +365,7 @@ impl RunnerOptionsBuilder {
             ssl_no_revoke: self.ssl_no_revoke,
             timeout: self.timeout,
             to_entry: self.to_entry,
+            unix_socket: self.unix_socket.clone(),
             user: self.user.clone(),
             user_agent: self.user_agent.clone(),
         }
@@ -395,6 +404,7 @@ pub struct RunnerOptions {
     pub(crate) ssl_no_revoke: bool,
     pub(crate) timeout: Duration,
     pub(crate) to_entry: Option<usize>,
+    pub(crate) unix_socket: Option<String>,
     pub(crate) user: Option<String>,
     pub(crate) user_agent: Option<String>,
 }

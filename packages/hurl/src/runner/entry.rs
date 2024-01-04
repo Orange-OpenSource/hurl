@@ -237,6 +237,7 @@ impl ClientOptions {
             retry: runner_options.retry,
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
+            unix_socket: runner_options.unix_socket.clone(),
             user: runner_options.user.clone(),
             user_agent: runner_options.user_agent.clone(),
             verbosity: match verbosity {

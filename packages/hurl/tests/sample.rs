@@ -114,6 +114,7 @@ fn simple_sample() {
         .retry_interval(Duration::from_secs(1))
         .timeout(Duration::from_secs(300))
         .to_entry(None)
+        .unix_socket(None)
         .user(None)
         .user_agent(None)
         .build();

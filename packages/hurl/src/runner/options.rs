@@ -187,6 +187,10 @@ pub fn get_entry_options(
                         let value = eval_boolean_option(value, variables)?;
                         runner_options.skip = value
                     }
+                    OptionKind::UnixSocket(value) => {
+                        let value = eval_template(value, variables)?;
+                        runner_options.unix_socket = Some(value.to_string())
+                    }
                     OptionKind::Variable(VariableDefinition { name, value, .. }) => {
                         let value = eval_variable_value(value, variables)?;
                         variables.insert(name.clone(), value);

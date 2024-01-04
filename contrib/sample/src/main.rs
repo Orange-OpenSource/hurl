@@ -76,6 +76,7 @@ fn main() {
         .retry(Retry::None)
         .retry_interval(Duration::from_secs(1))
         .ssl_no_revoke(false)
+        .unix_socket(None)
         .timeout(Duration::from_secs(300))
         .to_entry(None)
         .user(None)

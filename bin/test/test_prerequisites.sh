@@ -61,6 +61,9 @@ echo -e "\n------------------ Starting ssl/server.py (Self-signed certificate + 
 nohup python3 ssl/server.py 8003 ssl/server/cert.selfsigned.pem true > build/server-ssl-client-authent.log 2>&1 &
 check_listen_port "ssl/server.py" 8003 || cat_and_exit_err build/server-ssl-client-authent.log
 
+echo -e "\n------------------ Starting unix_socket/server.py"
+python3 unix_socket/server.py > build/server-unix-socket.log 2>&1 &
+
 echo -e "\n------------------ Starting squid (proxy)"
 if [ -f /var/run/squid.pid ] ; then
   sudo squid -k shutdown || true
