@@ -18,6 +18,7 @@ Thanks to
 Enhancements:
 
 * Export entry source line number in JSON output [#2273](https://github.com/Orange-OpenSource/hurl/issues/2273)
+* Add dark mode support for HTML report [#2254](https://github.com/Orange-OpenSource/hurl/issues/2254)
 * Add --output option per request [#2184](https://github.com/Orange-OpenSource/hurl/issues/2184) [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#1632](https://github.com/Orange-OpenSource/hurl/issues/1632) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
