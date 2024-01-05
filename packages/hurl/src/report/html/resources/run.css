@@ -70,35 +70,19 @@ summary {
         color: #c2c2c2;
     }
 
-    h4:target {
-        color: #ff0288;
-    }
-
-    table {
+    th, td {
         border-color: #444;
     }
 
-    th {
-        background: #19191c;
+    th, table tr:nth-child(2n) {
+        background-color: #27272c;
     }
 
-    td a {
-        color: #34a7ff;
+    table tr:nth-child(2n+1) {
+        background-color: #19191c;
     }
 
     .name {
-        background: #19191c;
-    }
-
-    .value {
-        color: #c2c2c2;
-    }
-
-    details {
-        color: #c2c2c2;
-    }
-
-    summary {
-        color: #c2c2c2;
+        background-color: #19191c;
     }
 }

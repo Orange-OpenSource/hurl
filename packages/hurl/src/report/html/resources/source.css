@@ -47,41 +47,25 @@ body {
     overflow-y: hidden;
 }
 
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #19191c;
         color: #c2c2c2;
     }
 
-    .line-error {
-        border-bottom: #ff0288 2px dashed;
-    }
-
-    .line-error::after {
-        color: #ff0288;
-    }
-
-    .container {
-        background-color: #19191c;
-    }
-
     .source-container {
         border-color: #444;
-        background-color: #19191c;
-        color: #c2c2c2;
+        background-color: #27272c;
     }
 
     .line-numbers {
+        padding: 8px 10px;
         border-right-color: #444;
         background: #19191c;
     }
 
     .line-numbers a {
-        color: #34a7ff;
-    }
-
-    .source {
-        color: #c2c2c2;
-        background-color: #19191c;
+        color: dimgray;
     }
 }

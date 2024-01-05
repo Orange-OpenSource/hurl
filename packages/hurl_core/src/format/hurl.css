@@ -9,6 +9,10 @@ code {
     line-height: 1.2rem;
 }
 
+.comment {
+    color: dimgray;
+}
+
 .method {
     color: black;
 }
@@ -21,7 +25,7 @@ code {
     color: black;
 }
 
-.number {
+.number, boolean {
     color: blue;
 }
 
@@ -33,89 +37,50 @@ code {
     color: teal;
 }
 
-.filter-type {
+.filter-type, .not, .predicate-type {
     color: darkblue;
 }
 
-.not {
-    color: darkblue;
-}
 
-.predicate-type {
-    color: darkblue;
-}
-
-.string {
-    color: darkgreen;
-}
-
-.multiline {
-    color: darkgreen;
-}
-
-.comment {
-    color: dimgray;
-}
-
-.name {
-    color: darkgreen;
-}
-
-.json {
-    color: darkgreen;
-}
-
-.xml {
-    color: darkgreen;
-}
-
-.base64 {
-    color: darkgreen;
-}
-
-.hex {
-    color: darkgreen;
-}
-
-.filename {
-    color: darkgreen;
-}
-
-.cookie-value {
+.string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
     color: darkgreen;
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        background-color: #19191c;
-        color: #c2c2c2;
+
+    .comment {
+        color: dimgray;
     }
 
-    .method, .version {
-        color: #c2c2c2;
+    .method {
+        color: orange;
     }
 
-    .url, .filter-type, .not, .predicate-type {
-        color: #34a7ff;
+    .url {
+        color: cyan;
     }
 
-    .number {
-        color: lime;
+    .version {
+        color: white;
+    }
+
+    .number, .boolean {
+        color: dodgerblue;
     }
 
     .section-header {
-        color: #ff0288;
+        color: magenta;
     }
 
     .query-type {
         color: cyan;
     }
 
-    .string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
-        color: lime;
+    .filter-type, .not, .predicate-type {
+        color: orange;
     }
 
-    .comment {
-        color: #444;
+    .string, .multiline, .name, .json, .xml, .base64, .hex, .filename, .cookie-value {
+        color: forestgreen;
     }
 }

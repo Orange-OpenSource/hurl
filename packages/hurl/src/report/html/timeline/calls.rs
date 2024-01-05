@@ -19,7 +19,7 @@ use std::iter::zip;
 
 use crate::http::Call;
 use crate::report::html::timeline::svg::Attribute::{
-    Fill, FontFamily, FontSize, Height, Href, TextDecoration, ViewBox, Width, X, Y,
+    Class, Fill, FontFamily, FontSize, Height, Href, TextDecoration, ViewBox, Width, X, Y,
 };
 use crate::report::html::timeline::svg::{Element, ElementKind};
 use crate::report::html::timeline::unit::{Pixel, Px};
@@ -45,7 +45,10 @@ impl Testcase {
         root.add_attr(Width(width.0.to_string()));
         root.add_attr(Height(height.0.to_string()));
 
-        // Add symbols for success and failure icons:
+        // Add styles, symbols for success and failure icons:
+        let elt = svg::new_style(include_str!("../resources/calls.css"));
+        root.add_child(elt);
+
         let symbol = new_success_icon("success");
         root.add_child(symbol);
         let symbol = new_failure_icon("failure");
@@ -55,6 +58,7 @@ impl Testcase {
 
         // Add a flat background.
         let mut elt = Element::new(ElementKind::Rect);
+        elt.add_attr(Class("calls-back".to_string()));
         elt.add_attr(X(0.0));
         elt.add_attr(Y(0.0));
         elt.add_attr(Width("100%".to_string()));
@@ -89,6 +93,7 @@ fn new_calls(
     offset_y: Pixel,
 ) -> Element {
     let mut group = svg::new_group();
+    group.add_attr(Class("calls-list".to_string()));
     group.add_attr(FontSize("13px".to_string()));
     group.add_attr(FontFamily("sans-serif".to_string()));
     group.add_attr(Fill("#777".to_string()));
@@ -158,6 +163,7 @@ fn new_calls(
 /// Returns a SVG view of the grid calls.
 fn new_grid(calls: &[&Call], offset_y: Pixel, width: Pixel, height: Pixel) -> Element {
     let mut group = svg::new_group();
+    group.add_attr(Class("calls-grid".to_string()));
     let nb_lines = 2 * (calls.len() / 2) + 2;
     (0..nb_lines).for_each(|index| {
         let y = CALL_HEIGHT * index + offset_y - (index % 2).px();

@@ -16,7 +16,7 @@
  *
  */
 use crate::report::html::timeline::svg;
-use crate::report::html::timeline::svg::Attribute::{Fill, Id, ViewBox};
+use crate::report::html::timeline::svg::Attribute::{Class, Fill, Id, ViewBox};
 use crate::report::html::timeline::svg::Element;
 use crate::report::html::timeline::unit::{Interval, Pixel, Px};
 
@@ -38,6 +38,7 @@ pub fn new_stripes(
     color: &str,
 ) -> Element {
     let mut group = svg::new_group();
+    group.add_attr(Class("grid-strip".to_string()));
     let x = pixels_x.start;
     let width = pixels_x.end - pixels_x.start;
 
@@ -106,7 +107,7 @@ mod tests {
         );
         assert_eq!(
             elt.to_string(),
-            "<g>\
+            "<g class=\"grid-strip\">\
                 <rect x=\"0\" y=\"0\" width=\"10\" height=\"1\" fill=\"green\" />\
                 <rect x=\"0\" y=\"2\" width=\"10\" height=\"1\" fill=\"green\" />\
                 <rect x=\"0\" y=\"4\" width=\"10\" height=\"1\" fill=\"green\" />\

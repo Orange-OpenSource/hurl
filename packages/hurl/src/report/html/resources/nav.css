@@ -59,21 +59,12 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        background-color: #19191c;
-        color: #c2c2c2;
-    }
-
     .report-nav a {
         color: #34a7ff;
     }
 
     .report-nav a[aria-selected="true"] {
         color: #ff0288;
-    }
-
-    .error {
-        border-left: #ff0288 4px solid;
     }
 
     .error-desc {
