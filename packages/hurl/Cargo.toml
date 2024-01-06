@@ -35,7 +35,7 @@ libxml = "0.3.3"
 md5 = "0.7.0"
 percent-encoding = "2.3.1"
 regex = "1.10.2"
-serde = "1.0.194"
+serde = "1.0.195"
 serde_json = { version = "1.0.111", features = ["arbitrary_precision"] }
 sha2 = "0.10.8"
 url = "2.5.0"
@@ -45,7 +45,7 @@ lazy_static = "1.4.0"
 uuid = { version = "1.6.1", features = ["v4" , "fast-rng"] }
 
 [target.'cfg(unix)'.dependencies]
-termion = "2.0.3"
+termion = "3.0.0"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.12"
