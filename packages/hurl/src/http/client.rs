@@ -127,13 +127,16 @@ impl Client {
                 }
             }
             let redirect_method = get_redirect_method(status, request_spec.method);
-            // TODO: add --location-trusted option to forward Authorization header explicitly
-            let headers = request_spec
-                .headers
-                .iter()
-                .filter(|header| header.name.to_lowercase() != "authorization")
-                .cloned()
-                .collect::<Vec<Header>>();
+            let headers = if options.follow_location_trusted {
+                request_spec.headers
+            } else {
+                request_spec
+                    .headers
+                    .iter()
+                    .filter(|header| header.name.to_lowercase() != "authorization")
+                    .cloned()
+                    .collect::<Vec<Header>>()
+            };
             request_spec = RequestSpec {
                 method: redirect_method,
                 url: redirect_url,

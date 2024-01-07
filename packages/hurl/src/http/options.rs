@@ -33,6 +33,7 @@ pub struct ClientOptions {
     pub connects_to: Vec<String>,
     pub cookie_input_file: Option<String>,
     pub follow_location: bool,
+    pub follow_location_trusted: bool,
     pub http_version: RequestedHttpVersion,
     pub insecure: bool,
     pub ip_resolve: IpResolve,
@@ -69,6 +70,7 @@ impl Default for ClientOptions {
             connects_to: vec![],
             cookie_input_file: None,
             follow_location: false,
+            follow_location_trusted: false,
             http_version: RequestedHttpVersion::default(),
             insecure: false,
             ip_resolve: IpResolve::default(),
@@ -139,7 +141,9 @@ impl ClientOptions {
             IpResolve::IpV4 => arguments.push("--ipv4".to_string()),
             IpResolve::IpV6 => arguments.push("--ipv6".to_string()),
         }
-        if self.follow_location {
+        if self.follow_location_trusted {
+            arguments.push("--location-trusted".to_string());
+        } else if self.follow_location {
             arguments.push("--location".to_string());
         }
         if self.max_redirect != ClientOptions::default().max_redirect {
@@ -200,6 +204,7 @@ mod tests {
                 connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
                 cookie_input_file: Some("cookie_file".to_string()),
                 follow_location: true,
+                follow_location_trusted: false,
                 http_version: RequestedHttpVersion::Http10,
                 insecure: true,
                 ip_resolve: IpResolve::IpV6,

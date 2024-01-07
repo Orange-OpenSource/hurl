@@ -143,8 +143,11 @@ pub fn file_root(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "file_root")
 }
 
-pub fn follow_location(arg_matches: &ArgMatches) -> bool {
-    has_flag(arg_matches, "follow_location")
+pub fn follow_location(arg_matches: &ArgMatches) -> (bool, bool) {
+    let follow_location = has_flag(arg_matches, "follow_location")
+        || has_flag(arg_matches, "follow_location_trusted");
+    let follow_location_trusted = has_flag(arg_matches, "follow_location_trusted");
+    (follow_location, follow_location_trusted)
 }
 
 pub fn html_dir(arg_matches: &ArgMatches) -> Result<Option<PathBuf>, OptionsError> {

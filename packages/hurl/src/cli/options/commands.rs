@@ -163,6 +163,13 @@ pub fn follow_location() -> clap::Arg {
         .action(ArgAction::SetTrue)
 }
 
+pub fn follow_location_trusted() -> clap::Arg {
+    clap::Arg::new("follow_location_trusted")
+        .long("location-trusted")
+        .help("Follow redirects but allows sending the name + password to all hosts that the site may redirect to.")
+        .action(ArgAction::SetTrue)
+}
+
 pub fn glob() -> clap::Arg {
     clap::Arg::new("glob")
         .long("glob")
@@ -408,8 +415,8 @@ pub fn to_entry() -> clap::Arg {
 pub fn unix_socket() -> clap::Arg {
     clap::Arg::new("unix_socket")
         .long("unix-socket")
-        .value_name("PATH")
-        .help("(HTTP) Connect through this Unix domain socket, instead of using the network.")
+        .value_name("path")
+        .help("(HTTP) Connect through this Unix domain socket, instead of using the network")
         .num_args(1)
 }
 

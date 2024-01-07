@@ -1,6 +1,6 @@
 name: unix_socket
 long: unix-socket
-value: <path>
+value: path
 help: (HTTP) Connect through this Unix domain socket, instead of using the network
 ---
 (HTTP) Connect through this Unix domain socket, instead of using the network.

@@ -54,6 +54,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "ipv6" => option_ipv6(reader)?,
         "key" => option_key(reader)?,
         "location" => option_follow_location(reader)?,
+        "location-trusted" => option_follow_location_trusted(reader)?,
         "max-redirs" => option_max_redirect(reader)?,
         "output" => option_output(reader)?,
         "path-as-is" => option_path_as_is(reader)?,
@@ -119,6 +120,11 @@ fn option_delay(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_follow_location(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = nonrecover(boolean_option, reader)?;
     Ok(OptionKind::FollowLocation(value))
+}
+
+fn option_follow_location_trusted(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = nonrecover(boolean_option, reader)?;
+    Ok(OptionKind::FollowLocationTrusted(value))
 }
 
 fn option_http_10(reader: &mut Reader) -> ParseResult<OptionKind> {

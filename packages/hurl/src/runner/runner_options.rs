@@ -35,6 +35,7 @@ pub struct RunnerOptionsBuilder {
     cookie_input_file: Option<String>,
     delay: Duration,
     follow_location: bool,
+    follow_location_trusted: bool,
     http_version: RequestedHttpVersion,
     ignore_asserts: bool,
     insecure: bool,
@@ -73,6 +74,7 @@ impl Default for RunnerOptionsBuilder {
             cookie_input_file: None,
             delay: Duration::from_millis(0),
             follow_location: false,
+            follow_location_trusted: false,
             http_version: RequestedHttpVersion::default(),
             ignore_asserts: false,
             insecure: false,
@@ -198,6 +200,14 @@ impl RunnerOptionsBuilder {
     /// To limit the amount of redirects to follow use [`self.max_redirect()`]
     pub fn follow_location(&mut self, follow_location: bool) -> &mut Self {
         self.follow_location = follow_location;
+        self
+    }
+
+    /// Sets follow redirect with trust.
+    ///
+    /// To limit the amount of redirects to follow use [`self.max_redirect()`]
+    pub fn follow_location_trusted(&mut self, follow_location_trusted: bool) -> &mut Self {
+        self.follow_location_trusted = follow_location_trusted;
         self
     }
 
@@ -347,6 +357,7 @@ impl RunnerOptionsBuilder {
             continue_on_error: self.continue_on_error,
             cookie_input_file: self.cookie_input_file.clone(),
             follow_location: self.follow_location,
+            follow_location_trusted: self.follow_location_trusted,
             http_version: self.http_version,
             ignore_asserts: self.ignore_asserts,
             insecure: self.insecure,
@@ -386,6 +397,7 @@ pub struct RunnerOptions {
     pub(crate) continue_on_error: bool,
     pub(crate) cookie_input_file: Option<String>,
     pub(crate) follow_location: bool,
+    pub(crate) follow_location_trusted: bool,
     pub(crate) http_version: RequestedHttpVersion,
     pub(crate) ignore_asserts: bool,
     pub(crate) ip_resolve: IpResolve,

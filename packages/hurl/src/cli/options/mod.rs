@@ -51,6 +51,7 @@ pub struct Options {
     pub error_format: ErrorFormat,
     pub file_root: Option<String>,
     pub follow_location: bool,
+    pub follow_location_trusted: bool,
     pub html_dir: Option<PathBuf>,
     pub http_version: Option<HttpVersion>,
     pub ignore_asserts: bool,
@@ -181,6 +182,7 @@ pub fn parse() -> Result<Options, OptionsError> {
         .arg(commands::fail_at_end())
         .arg(commands::file_root())
         .arg(commands::follow_location())
+        .arg(commands::follow_location_trusted())
         .arg(commands::glob())
         .arg(commands::http10())
         .arg(commands::http11())
@@ -252,7 +254,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
     let delay = matches::delay(arg_matches);
     let error_format = matches::error_format(arg_matches);
     let file_root = matches::file_root(arg_matches);
-    let follow_location = matches::follow_location(arg_matches);
+    let (follow_location, follow_location_trusted) = matches::follow_location(arg_matches);
     let html_dir = matches::html_dir(arg_matches)?;
     let http_version = matches::http_version(arg_matches);
     let ignore_asserts = matches::ignore_asserts(arg_matches);
@@ -299,6 +301,7 @@ fn parse_matches(arg_matches: &ArgMatches) -> Result<Options, OptionsError> {
         error_format,
         file_root,
         follow_location,
+        follow_location_trusted,
         html_dir,
         http_version,
         ignore_asserts,
@@ -364,6 +367,7 @@ impl Options {
         let cookie_input_file = self.cookie_input_file.clone();
         let delay = self.delay;
         let follow_location = self.follow_location;
+        let follow_location_trusted = self.follow_location_trusted;
         let http_version = match self.http_version {
             Some(version) => version.into(),
             None => RequestedHttpVersion::default(),
@@ -442,6 +446,7 @@ impl Options {
             .context_dir(&context_dir)
             .cookie_input_file(cookie_input_file)
             .follow_location(follow_location)
+            .follow_location_trusted(follow_location_trusted)
             .http_version(http_version)
             .ignore_asserts(ignore_asserts)
             .insecure(insecure)

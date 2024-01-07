@@ -124,6 +124,7 @@ option:
   | connect-to-option
   | delay-option
   | follow-redirect-option
+  | follow-redirect-trusted-option
   | http10-option
   | http11-option
   | http2-option
@@ -160,6 +161,8 @@ connect-to-option: "connect-to" ":" value-string lt
 delay-option: "delay" ":" integer-option lt
 
 follow-redirect-option: "location" ":" boolean-option lt
+
+follow-redirect-trusted-option: "location-trusted" ":" boolean-option lt
 
 http10-option: "http1.0" ":" boolean-option lt
 

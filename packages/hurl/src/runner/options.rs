@@ -135,6 +135,13 @@ pub fn get_entry_options(
                         let value = eval_boolean_option(value, variables)?;
                         runner_options.follow_location = value;
                     }
+                    OptionKind::FollowLocationTrusted(value) => {
+                        let value = eval_boolean_option(value, variables)?;
+                        if value {
+                            runner_options.follow_location = true;
+                        }
+                        runner_options.follow_location_trusted = value;
+                    }
                     OptionKind::Insecure(value) => {
                         let value = eval_boolean_option(value, variables)?;
                         runner_options.insecure = value

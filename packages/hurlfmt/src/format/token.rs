@@ -877,6 +877,7 @@ impl Tokenizable for OptionKind {
             OptionKind::ConnectTo(value) => value.tokenize(),
             OptionKind::Delay(value) => value.tokenize(),
             OptionKind::FollowLocation(value) => value.tokenize(),
+            OptionKind::FollowLocationTrusted(value) => value.tokenize(),
             OptionKind::Http10(value) => value.tokenize(),
             OptionKind::Http11(value) => value.tokenize(),
             OptionKind::Http2(value) => value.tokenize(),
