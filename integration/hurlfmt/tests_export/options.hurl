@@ -8,6 +8,7 @@ compressed: false
 connect-to: example.com:443:example.net:8443
 delay: 1000
 location: false
+location-trusted: false
 http1.0: false
 http1.1: false
 http2: false

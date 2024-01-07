@@ -45,11 +45,21 @@ HTTP 200
 header "Location" not exists
 `Followed redirect POST!`
 
-# Do not forward authorization header by default toa different host
+# Do not forward authorization header by default to a different host
 GET http://localhost:8000/follow-redirect-basic-auth
 Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
 [Options]
 location: true
+HTTP 200
+[Asserts]
+header "Location" not exists
+`Followed redirect Basic Auth!`
+
+# Forward authorization header to a different host explicitly
+GET http://localhost:8000/follow-redirect-basic-auth-trusted
+Authorization: Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ=
+[Options]
+location-trusted: true
 HTTP 200
 [Asserts]
 header "Location" not exists

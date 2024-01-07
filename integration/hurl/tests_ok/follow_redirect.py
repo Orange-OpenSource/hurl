@@ -48,3 +48,14 @@ def follow_redirect_basic_auth():
 def followed_redirect_basic_auth():
     assert "Authorization" not in request.headers
     return "Followed redirect Basic Auth!"
+
+
+@app.route("/follow-redirect-basic-auth-trusted")
+def follow_redirect_basic_auth_trusted():
+    return redirect("http://127.0.0.1:8000/followed-redirect-basic-auth-trusted")
+
+
+@app.route("/followed-redirect-basic-auth-trusted")
+def followed_redirect_basic_auth_trusted():
+    assert request.headers["Authorization"] == "Basic Ym9iQGVtYWlsLmNvbTpzZWNyZXQ="
+    return "Followed redirect Basic Auth!"
