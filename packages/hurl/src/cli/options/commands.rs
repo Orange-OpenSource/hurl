@@ -151,7 +151,7 @@ pub fn file_root() -> clap::Arg {
     clap::Arg::new("file_root")
         .long("file-root")
         .value_name("DIR")
-        .help("Set root filesystem to import files [default: current directory]")
+        .help("Set root directory to import files [default: current directory]")
         .num_args(1)
 }
 
@@ -415,7 +415,7 @@ pub fn to_entry() -> clap::Arg {
 pub fn unix_socket() -> clap::Arg {
     clap::Arg::new("unix_socket")
         .long("unix-socket")
-        .value_name("path")
+        .value_name("PATH")
         .help("(HTTP) Connect through this Unix domain socket, instead of using the network")
         .num_args(1)
 }

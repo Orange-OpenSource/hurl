@@ -33,12 +33,11 @@ Options:
       --error-format <FORMAT>
           Control the format of error messages [default: short] [possible values: short, long]
       --file-root <DIR>
-          Set root filesystem to import files [default: current directory]
+          Set root directory to import files [default: current directory]
   -L, --location
           Follow redirects
       --location-trusted
-          Follow redirects but allows sending the name + password to all hosts that the site may
-          redirect to.
+          Follow redirects but allows sending the name + password to all hosts that the site may redirect to.
       --glob <GLOB>
           Specify input files that match the given GLOB. Multiple glob flags may be used
   -0, --http1.0
@@ -58,11 +57,9 @@ Options:
       --interactive
           Turn on interactive mode
   -4, --ipv4
-          Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try
-          IPv6
+          Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6
   -6, --ipv6
-          Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try
-          IPv4
+          Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4
       --json
           Output each Hurl file result to JSON
       --max-redirs <NUM>
@@ -94,13 +91,13 @@ Options:
       --retry-interval <MILLISECONDS>
           Interval in milliseconds before a retry [default: 1000]
       --ssl-no-revoke
-          (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens
-          the SSL security, and by using this flag you ask for exactly that.
+          (Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for
+          exactly that.
       --test
           Activate test mode
       --to-entry <ENTRY_NUMBER>
           Execute Hurl file to ENTRY_NUMBER (starting at 1)
-      --unix-socket <path>
+      --unix-socket <PATH>
           (HTTP) Connect through this Unix domain socket, instead of using the network
   -A, --user-agent <NAME>
           Specify the User-Agent string to send to the HTTP server

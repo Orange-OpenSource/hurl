@@ -214,8 +214,8 @@ Control the format of error message (short by default or long)
 
 ### --file-root <DIR> {#file-root}
 
-Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
-When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
+Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
+When it is not explicitly defined, files are relative to the current directory in which Hurl is running.
 
 ### --glob <GLOB> {#glob}
 
@@ -279,6 +279,11 @@ Private key file name.
 ### -L, --location {#location}
 
 Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option
+
+### --location-trusted {#location-trusted}
+
+Like [`-L, --location`](#location), but allows sending the name + password to all hosts that the site may redirect to.
+This may or may not introduce a security breach if the site redirects you to a site to which you send your authentication info (which is plaintext in the case of HTTP Basic authentication).
 
 ### --max-redirs <NUM> {#max-redirs}
 
