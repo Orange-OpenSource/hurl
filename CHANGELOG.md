@@ -21,6 +21,7 @@ Thanks to
 Enhancements:
 
 * Add --location-trusted option [#2296](https://github.com/Orange-OpenSource/hurl/issues/2296)
+* Add --unix-socket option [#2291](https://github.com/Orange-OpenSource/hurl/issues/2291)
 * Export entry source line number in JSON output [#2273](https://github.com/Orange-OpenSource/hurl/issues/2273)
 * Use Template for filename type [#2259](https://github.com/Orange-OpenSource/hurl/issues/2259) [#1731](https://github.com/Orange-OpenSource/hurl/issues/1731) [#464](https://github.com/Orange-OpenSource/hurl/issues/464)
 * Add dark mode support for HTML report [#2254](https://github.com/Orange-OpenSource/hurl/issues/2254)
@@ -48,6 +49,7 @@ Bugs Fixed:
 * Support HTTP/2 on Windows [#2072](https://github.com/Orange-OpenSource/hurl/issues/2072)
 * Support key password in --cert option (certificate[:password]) [#2047](https://github.com/Orange-OpenSource/hurl/issues/2047)
 * Keep initial request headers when following redirects [#1990](https://github.com/Orange-OpenSource/hurl/issues/1990)
+
 
 [4.1.0 (2023-09-21)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.1.0)
 ========================================================================================================================
