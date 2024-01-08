@@ -3,6 +3,7 @@
 
 Thanks to
 [@lambrospetrou](https://github.com/lambrospetrou),
+[@glb-cblin](https://github.com/glb-cblin),
 [@moono](https://github.com/moono),
 [@gmetal](https://github.com/gmetal),
 [@mihirn](https://github.com/mihirn),
@@ -11,13 +12,17 @@ Thanks to
 [@pit1sIBM](https://github.com/pit1sIBM),
 [@janwytze](https://github.com/janwytze),
 [@kingluo](https://github.com/kingluo),
+[@teto](https://github.com/teto),
 [@khimaros](https://github.com/khimaros),
 [@iredmail](https://github.com/iredmail),
 [@andres-lowrie](https://github.com/andres-lowrie),
+[@nikeee](https://github.com/nikeee),
 
 Enhancements:
 
+* Add --location-trusted option [#2296](https://github.com/Orange-OpenSource/hurl/issues/2296)
 * Export entry source line number in JSON output [#2273](https://github.com/Orange-OpenSource/hurl/issues/2273)
+* Use Template for filename type [#2259](https://github.com/Orange-OpenSource/hurl/issues/2259) [#1731](https://github.com/Orange-OpenSource/hurl/issues/1731) [#464](https://github.com/Orange-OpenSource/hurl/issues/464)
 * Add dark mode support for HTML report [#2254](https://github.com/Orange-OpenSource/hurl/issues/2254)
 * Add --output option per request [#2184](https://github.com/Orange-OpenSource/hurl/issues/2184) [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#1632](https://github.com/Orange-OpenSource/hurl/issues/1632) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
