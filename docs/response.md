@@ -108,8 +108,8 @@ On each response, libcurl response timings are available:
 All timings are in microsecond.
 
 <div class="picture">
-    <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/timings-light.svg" alt="Response timings explanation"/>
-    <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/timings-dark.svg" alt="Response timings explanation"/>
+    <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/timings-light.svg" alt="Response timings explanation"/>
+    <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/timings-dark.svg" alt="Response timings explanation"/>
     <a href="https://blog.cloudflare.com/a-question-of-timing/"><small>Courtesy of CloudFlare</small></a>
 </div>
 

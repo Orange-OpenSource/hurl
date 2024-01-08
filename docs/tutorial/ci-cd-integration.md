@@ -216,13 +216,13 @@ to create a [GitHub Action]. You can also see how to integrate your tests in [Gi
         <source srcset="/docs/assets/img/github-new-repository-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/github-new-repository-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/github-new-repository-light.png" type="image/png">
-       <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-light.png" width="680" alt="Create new GitHub repository"/>
+       <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-light.png" width="680" alt="Create new GitHub repository"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/github-new-repository-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/github-new-repository-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/github-new-repository-dark.png" type="image/png">
-       <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-dark.png" width="680" alt="Create new GitHub repository"/>
+       <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-new-repository-dark.png" width="680" alt="Create new GitHub repository"/>
    </picture>
 </div>
 
@@ -297,13 +297,13 @@ Finally, you can check on GitHub that our action is running:
         <source srcset="/docs/assets/img/github-action-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/github-action-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/github-action-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-light.png" width="680" alt="GitHub Action"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-light.png" width="680" alt="GitHub Action"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/github-action-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/github-action-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/github-action-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-dark.png" width="680" alt="GitHub Action"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/github-action-dark.png" width="680" alt="GitHub Action"/>
    </picture>
 </div>
 
@@ -316,13 +316,13 @@ Finally, you can check on GitHub that our action is running:
         <source srcset="/docs/assets/img/gitlab-new-repository-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/gitlab-new-repository-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/gitlab-new-repository-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-light.png" width="680" alt="Create new GitLab repository"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-light.png" width="680" alt="Create new GitLab repository"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/gitlab-new-repository-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/gitlab-new-repository-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/gitlab-new-repository-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-dark.png" width="680" alt="Create new GitLab repository"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-new-repository-dark.png" width="680" alt="Create new GitLab repository"/>
    </picture>
 </div>
 
@@ -389,13 +389,13 @@ Finally, you can check on GitLab that our pipeline is running:
         <source srcset="/docs/assets/img/gitlab-pipeline-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/gitlab-pipeline-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/gitlab-pipeline-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-light.png" width="680" alt="GitHub Action"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-light.png" width="680" alt="GitHub Action"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/gitlab-pipeline-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/gitlab-pipeline-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/gitlab-pipeline-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-dark.png" width="680" alt="GitHub Action"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/gitlab-pipeline-dark.png" width="680" alt="GitHub Action"/>
     </picture>
 </div>
 

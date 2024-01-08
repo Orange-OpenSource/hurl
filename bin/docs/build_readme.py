@@ -53,13 +53,17 @@ def build_installation_md(text: str) -> MarkdownDoc:
 def replace(text: str, dest: str) -> str:
     # Do some replacements
 
-    # Replace canonical links to hurl.dev links
+    # Replace canonical links to hurl.dev links:
     text = re.sub(
         r"/docs/(.*)\.md",
         r"https://hurl.dev/docs/\1.html",
         text,
     )
 
+    # Change some text snippets for GitHub and crates.io
+    # - first param: pattern to look for in Markdown file
+    # - second param: pattern to replace in GitHub README
+    # - third param: pattern to replace in crates.io README
     snippets = [
         ("blog.md", "https://hurl.dev/blog/", "https://hurl.dev/blog/"),
         (
@@ -104,13 +108,13 @@ def replace(text: str, dest: str) -> str:
         <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
     </picture>
 </div>
 """,

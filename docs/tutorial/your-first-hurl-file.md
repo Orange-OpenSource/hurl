@@ -67,13 +67,13 @@ typing the URL <http://localhost:3000>:
         <source srcset="/docs/assets/img/movies-box-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/movies-box-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/movies-box-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-light.png" width="600" alt="Movies Box home page"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-light.png" width="600" alt="Movies Box home page"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/movies-box-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/movies-box-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/movies-box-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-dark.png" width="600" alt="Movies Box home page"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/movies-box-dark.png" width="600" alt="Movies Box home page"/>
     </picture>
 </div>
 

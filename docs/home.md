@@ -131,13 +131,13 @@ Finally, Hurl is easy to <b>integrate in CI/CD</b>, with text, JUnit, TAP and HT
         <source srcset="/docs/assets/img/home-waterfall-light.avif" type="image/avif">
         <source srcset="/docs/assets/img/home-waterfall-light.webp" type="image/webp">
         <source srcset="/docs/assets/img/home-waterfall-light.png" type="image/png">
-        <img class="light-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
+        <img class="u-theme-light u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-light.png" width="480" alt="HTML report"/>
     </picture>
     <picture>
         <source srcset="/docs/assets/img/home-waterfall-dark.avif" type="image/avif">
         <source srcset="/docs/assets/img/home-waterfall-dark.webp" type="image/webp">
         <source srcset="/docs/assets/img/home-waterfall-dark.png" type="image/png">
-        <img class="dark-img u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
+        <img class="u-theme-dark u-drop-shadow u-border u-max-width-100" src="/docs/assets/img/home-waterfall-dark.png" width="480" alt="HTML report"/>
     </picture>
 </div>
 
