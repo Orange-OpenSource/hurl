@@ -17,7 +17,6 @@ Hurl makes it easy to work with <b>HTML</b> content, <b>REST / SOAP / GraphQL</b
 ```hurl
 # Get home:
 GET https://example.org
-
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
@@ -55,7 +54,6 @@ POST https://example.org/api/tests
     "id": "4568",
     "evaluate": true
 }
-
 HTTP 200
 [Asserts]
 header "X-Frame-Options" == "SAMEORIGIN"
@@ -68,7 +66,6 @@ jsonpath "$.id" matches /\d{4}/     # Check the format of the id
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Asserts]
 xpath "normalize-space(//head/title)" == "Hello world!"
@@ -111,7 +108,6 @@ Hurl can also be used to test the <b>performance</b> of HTTP endpoints
 
 ```hurl
 GET https://example.org/api/v1/pets
-
 HTTP 200
 [Asserts]
 duration < 1000  # Duration in ms
@@ -121,7 +117,6 @@ And check response bytes
 
 ```hurl
 GET https://example.org/data.tar.gz
-
 HTTP 200
 [Asserts]
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
@@ -515,7 +510,6 @@ Use implicit response asserts to test header values:
 
 ```hurl
 GET https://example.org/index.html
-
 HTTP 200
 Set-Cookie: theme=light
 Set-Cookie: sessionToken=abc123; Expires=Wed, 09 Jun 2021 10:18:14 GMT
@@ -528,7 +522,6 @@ Or use explicit response asserts with [predicates]:
 
 ```hurl
 GET https://example.org
-
 HTTP 302
 [Asserts]
 header "Location" contains "www.example.net"
@@ -544,7 +537,6 @@ Asserting JSON body response (node values, collection count etc...) with [JSONPa
 ```hurl
 GET https://example.org/order
 screencapability: low
-
 HTTP 200
 [Asserts]
 jsonpath "$.validated" == true
@@ -564,7 +556,6 @@ Testing status code:
 
 ```hurl
 GET https://example.org/order/435
-
 HTTP 200
 ```
 
@@ -572,7 +563,6 @@ HTTP 200
 
 ```hurl
 GET https://example.org/order/435
-
 # Testing status code is in a 200-300 range
 HTTP *
 [Asserts]
@@ -587,10 +577,8 @@ status < 300
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 Content-Type: text/html; charset=UTF-8
-
 [Asserts]
 xpath "string(/html/head/title)" contains "Example" # Check title
 xpath "count(//p)" == 2  # Check the number of p
@@ -606,7 +594,6 @@ xpath "string(//div[1])" matches /Hello.*/
 
 ```hurl
 GET https://example.org/home
-
 HTTP 200
 [Asserts]
 cookie "JSESSIONID" == "8400BAFE2F66443613DC38AE3D9D6239"
@@ -625,7 +612,6 @@ Check the SHA-256 response body hash:
 
 ```hurl
 GET https://example.org/data.tar.gz
-
 HTTP 200
 [Asserts]
 sha256 == hex,039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81;
@@ -639,7 +625,6 @@ Check the properties of a SSL certificate:
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Asserts]
 certificate "Subject" == "CN=example.org"
@@ -671,7 +656,6 @@ Retry request on any errors (asserts, captures, status code, runtime etc...):
 ```hurl
 # Create a new job
 POST https://api.example.org/jobs
-
 HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
@@ -683,7 +667,6 @@ jsonpath "$.state" == "RUNNING"
 GET https://api.example.org/jobs/{{job_id}}
 [Options]
 retry: 10   # maximum number of retry, -1 for unlimited
-
 HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
@@ -697,7 +680,6 @@ jsonpath "$.state" == "COMPLETED"
 
 ```hurl
 GET https://sample.org/helloworld
-
 HTTP *
 [Asserts]
 duration < 1000   # Check that response time is less than one second
@@ -720,7 +702,6 @@ SOAPAction: "http://www.w3.org/2003/05/soap-envelope"
     </m:GetStockPrice>
   </soap:Body>
 </soap:Envelope>
-
 HTTP 200
 ```
 
@@ -730,7 +711,6 @@ HTTP 200
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Captures]
 csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
@@ -747,7 +727,6 @@ HTTP 302
 
 ```hurl
 GET https://example.org/data.bin
-
 HTTP 200
 [Asserts]
 bytes startsWith hex,efbbbf;
@@ -946,7 +925,7 @@ will follow a redirection only for the second entry.
 | <a href="#interactive" id="interactive"><code>--interactive</code></a>                                            | Stop between requests.<br><br>This is similar to a break point, You can then continue (Press C) or quit (Press Q).<br>                                                                                                                                                                                                                                                                             |
 | <a href="#ipv4" id="ipv4"><code>-4, --ipv4</code></a>                                                             | This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.<br>                                                                                                                                                                                                                                                                                     |
 | <a href="#ipv6" id="ipv6"><code>-6, --ipv6</code></a>                                                             | This option tells Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4.<br>                                                                                                                                                                                                                                                                                     |
-| <a href="#json" id="json"><code>--json</code></a>                                                                 | Output each hurl file result to JSON. The format is very closed to HAR format.<br>                                                                                                                                                                                                                                                                                                                 |
+| <a href="#json" id="json"><code>--json</code></a>                                                                 | Output each Hurl file result to JSON. The format is very closed to HAR format.<br>                                                                                                                                                                                                                                                                                                                 |
 | <a href="#key" id="key"><code>--key &lt;KEY&gt;</code></a>                                                        | Private key file name.<br>                                                                                                                                                                                                                                                                                                                                                                         |
 | <a href="#location" id="location"><code>-L, --location</code></a>                                                 | Follow redirect. To limit the amount of redirects to follow use the [`--max-redirs`](#max-redirs) option<br>                                                                                                                                                                                                                                                                                       |
 | <a href="#location-trusted" id="location-trusted"><code>--location-trusted</code></a>                             | Like [`-L, --location`](#location), but allows sending the name + password to all hosts that the site may redirect to.<br>This may or may not introduce a security breach if the site redirects you to a site to which you send your authentication info (which is plaintext in the case of HTTP Basic authentication).<br>                                                                        |
@@ -972,7 +951,7 @@ will follow a redirection only for the second entry.
 | <a href="#user-agent" id="user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a>                              | Specify the User-Agent string to send to the HTTP server.<br>                                                                                                                                                                                                                                                                                                                                      |
 | <a href="#variable" id="variable"><code>--variable &lt;NAME=VALUE&gt;</code></a>                                  | Define variable (name/value) to be used in Hurl templates.<br>                                                                                                                                                                                                                                                                                                                                     |
 | <a href="#variables-file" id="variables-file"><code>--variables-file &lt;FILE&gt;</code></a>                      | Set properties file in which your define your variables.<br><br>Each variable is defined as name=value exactly as with [`--variable`](#variable) option.<br><br>Note that defining a variable twice produces an error.<br>                                                                                                                                                                         |
-| <a href="#verbose" id="verbose"><code>--verbose</code></a>                                                        | Turn on verbose output on standard error stream.<br>Useful for debugging.<br><br>A line starting with '>' means data sent by Hurl.<br>A line staring with '<' means data received by Hurl.<br>A line starting with '*' means additional info provided by Hurl.<br><br>If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.<br>         |
+| <a href="#verbose" id="verbose"><code>-v, --verbose</code></a>                                                    | Turn on verbose output on standard error stream.<br>Useful for debugging.<br><br>A line starting with '>' means data sent by Hurl.<br>A line staring with '<' means data received by Hurl.<br>A line starting with '*' means additional info provided by Hurl.<br><br>If you only want HTTP headers in the output, [`-i, --include`](#include) might be the option you're looking for.<br>         |
 | <a href="#very-verbose" id="very-verbose"><code>--very-verbose</code></a>                                         | Turn on more verbose output on standard error stream.<br><br>In contrast to  [`--verbose`](#verbose) option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.<br>                                                                                                                                      |
 | <a href="#help" id="help"><code>-h, --help</code></a>                                                             | Usage help. This lists all current command line options with a short description.<br>                                                                                                                                                                                                                                                                                                              |
 | <a href="#version" id="version"><code>-V, --version</code></a>                                                    | Prints version information<br>                                                                                                                                                                                                                                                                                                                                                                     |

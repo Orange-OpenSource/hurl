@@ -19,7 +19,6 @@ a documentation for HTTP based workflows so it can be useful to be very descript
 # with tasty comments...
 GET https://www.sample.net
 x-app: MY_APP  # Add a dummy header
-
 HTTP 302       # Check that we have a redirection
 [Asserts]
 header "Location" exists
@@ -36,7 +35,6 @@ String can include the following special characters:
 
 ```hurl
 GET https://example.org/api
-
 HTTP 200
 # The following assert are equivalent:
 [Asserts]

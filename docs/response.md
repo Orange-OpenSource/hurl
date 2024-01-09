@@ -14,7 +14,6 @@ in the following entries.
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT
 [Asserts]

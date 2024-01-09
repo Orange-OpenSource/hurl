@@ -1,7 +1,8 @@
-[4.2.0 (TO BE RELEASED)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)
+[4.2.0 (2024-01-11)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#4.2.0)
 ========================================================================================================================
 
 Thanks to
+[@hi2code](https://github.com/hi2code),
 [@lambrospetrou](https://github.com/lambrospetrou),
 [@glb-cblin](https://github.com/glb-cblin),
 [@moono](https://github.com/moono),
@@ -44,6 +45,7 @@ Enhancements:
 
 Bugs Fixed:
 
+* Add short name -v for verbose option [#2310](https://github.com/Orange-OpenSource/hurl/issues/2310)
 * Fix unicode surrogate pair decoding in JSON request body [#2235](https://github.com/Orange-OpenSource/hurl/issues/2235)
 * Better error description for some parse error [#2187](https://github.com/Orange-OpenSource/hurl/issues/2187)
 * Fix undefined error for various I/O error using --output. [#2156](https://github.com/Orange-OpenSource/hurl/issues/2156)

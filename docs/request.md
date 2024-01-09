@@ -638,12 +638,16 @@ GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
 aws-sigv4: aws:amz:sts  # generate AWS SigV4 Authorization header
-cacert: /etc/cert.pem   # a custom certificate file
+cacert: /etc/cert.pem   # custom certificate file
 compressed: true        # request a compressed response
-insecure: true          # allows insecure SSL connections and transfers
+http3: true             # use HTTP/3 protocol version
+insecure: true          # allow insecure SSL connections and transfers
+ipv6: true              # use IPv6 addresses
 location: true          # follow redirection for this request
 max-redirs: 10          # maximum number of redirections
-path-as-is: true        # tell curl to not handle sequences of /../ or /./ in the given URL path
+output: out.html        # dump the response to this file
+path-as-is: true        # do not handle sequences of /../ or /./ in URL path
+unix-socket: sock       # use Unix socket for transfer
 variable: country=Italy # define variable country
 variable: planet=Earth  # define variable planet
 verbose: true           # allow verbose output

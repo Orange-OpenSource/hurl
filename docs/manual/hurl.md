@@ -270,7 +270,7 @@ This option tells Hurl to use IPv6 addresses only when resolving host names, and
 
 ### --json {#json}
 
-Output each hurl file result to JSON. The format is very closed to HAR format.
+Output each Hurl file result to JSON. The format is very closed to HAR format.
 
 ### --key <KEY> {#key}
 
@@ -390,7 +390,7 @@ Each variable is defined as name=value exactly as with [`--variable`](#variable)
 
 Note that defining a variable twice produces an error.
 
-### --verbose {#verbose}
+### -v, --verbose {#verbose}
 
 Turn on verbose output on standard error stream.
 Useful for debugging.

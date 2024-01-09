@@ -177,8 +177,21 @@ HTTP 200
 
 ## Templating Body
 
-Using templates with [JSON body] or [XML body] is not currently supported in Hurl.
-Besides, you can use templates in [multiline string body] with variables to send a JSON or XML body:
+Variables can be used in [JSON body]:
+
+~~~hurl
+PUT https://example.org/api/hits
+{
+    "key0": "{{a_string}}",
+    "key1": {{a_bool}},
+    "key2": {{a_null}},
+    "key3": {{a_number}}
+}
+~~~
+
+Note that [XML body] can't use variables directly, for the moment. In order to templatize a XML body, you can use 
+[multiline string body] with variables. The multiline string body allows to templatize any text based body (JSON, XML, 
+CSV etc...):
 
 ~~~hurl
 PUT https://example.org/api/hits

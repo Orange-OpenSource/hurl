@@ -12,7 +12,6 @@ to [capture values] to perform subsequent requests, or [add asserts to HTTP resp
 ```hurl
 # First, test home title.
 GET https://acmecorp.net
-
 HTTP 200
 [Asserts]
 xpath "normalize-space(//head/title)" == "Hello world!"
@@ -83,7 +82,6 @@ of the redirection, allowing insertion of asserts in each response.
 ```hurl
 # First entry, test the redirection (status code and 'Location' header)
 GET https://google.fr
-
 HTTP 301
 Location: https://www.google.fr/
 
@@ -92,7 +90,7 @@ GET https://www.google.fr
 HTTP 200
 ```
 
-Alternatively, one can use [`--location`] option to force redirection
+Alternatively, one can use [`--location`] / [`--location-trusted`] options to force redirection
 to be followed. In this case, asserts are executed on the last received response. Optionally, the number of
 redirections can be limited with [`--max-redirs`].
 
@@ -102,12 +100,13 @@ GET https://google.fr
 HTTP 200
 ```
 
-Finally, you can force redirection on a particular request with an [`[Options]` section][options] and the [`--location` option]:
+Finally, you can force redirection on a particular request with an [`[Options]` section][options] and the[`--location`] 
+/ [`--location-trusted`] options:
 
 ```hurl
 GET https://google.fr
 [Options]
-location: true
+location-trusted: true
 HTTP 200
 ```
 
@@ -124,7 +123,6 @@ For example, in this Hurl file, first we create a new job, then we poll the new 
 ```hurl
 # Create a new job
 POST http://api.example.org/jobs
-
 HTTP 201
 [Captures]
 job_id: jsonpath "$.id"
@@ -136,7 +134,6 @@ jsonpath "$.state" == "RUNNING"
 GET http://api.example.org/jobs/{{job_id}}
 [Options]
 retry: 10   # maximum number of retry, -1 for unlimited
-
 HTTP 200
 [Asserts]
 jsonpath "$.state" == "COMPLETED"
@@ -148,10 +145,10 @@ jsonpath "$.state" == "COMPLETED"
 [capture values]: /docs/capturing-response.md
 [add asserts to HTTP responses]: /docs/asserting-response.md
 [`--location`]: /docs/manual.md#location
+[`--location-trusted`]: /docs/manual.md#location-trusted
 [`--max-redirs`]: /docs/manual.md#max-redirs
 [Options]: /docs/manual.md#options
 [options]: /docs/request.md#options
-[`--location` option]: /docs/manual.md#location
 [headers]: /docs/response.md#headers
 [status code]: /docs/response.md#version-status
 [asserts]: /docs/response.md#asserts

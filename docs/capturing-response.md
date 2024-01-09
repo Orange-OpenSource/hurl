@@ -16,12 +16,10 @@ Variables in a Hurl file can be created from captures or [injected into the sess
 
 # First GET request to get CSRF token value:
 GET https://example.org
-
 HTTP 200
 # Capture the CSRF token value from html body.
 [Captures]
 csrf_token: xpath "normalize-space(//meta[@name='_csrf_token']/@content)"
-
 
 # Do the login !
 POST https://acmecorp.net/login?user=toto&password=1234
@@ -71,7 +69,6 @@ keyword `status`.
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Captures]
 my_status: status
@@ -87,7 +84,6 @@ POST https://example.org/login
 [FormParams]
 user: toto
 password: 12345678
-
 HTTP 302
 [Captures]
 next_url: header "Location"
@@ -102,7 +98,6 @@ Capture the last fetched URL. This is most meaningful if you have told Hurl to f
 GET https://example.org/redirecting
 [Options]
 location: true
-
 HTTP 200
 [Captures]
 landing_url: url
@@ -116,7 +111,6 @@ and a cookie name.
 
 ```hurl
 GET https://example.org/cookies/set
-
 HTTP 200
 [Captures]
 session-id: cookie "LSID"
@@ -128,7 +122,6 @@ Cookie attributes value can also be captured by using the following format:
 
 ```hurl
 GET https://example.org/cookies/set
-
 HTTP 200
 [Captures]
 value1: cookie "LSID"
@@ -150,7 +143,6 @@ is based on the `charset` value in the `Content-Type` header response.
 
 ```hurl
 GET https://example.org/home
-
 HTTP 200
 [Captures]
 my_body: body
@@ -164,7 +156,6 @@ bytes.
 # But, the 'Content-Type' HTTP response header doesn't precise any charset,
 # so we decode explicitly the bytes.
 GET https://example.org/cn
-
 HTTP 200
 [Captures]
 my_body: bytes decode "gb2312"
@@ -177,7 +168,6 @@ Capture the entire body (as a raw bytestream) from the received HTTP response
 
 ```hurl
 GET https://example.org/data.bin
-
 HTTP 200
 [Captures]
 my_data: bytes
@@ -191,7 +181,6 @@ Currently, only XPath 1.0 expression can be used.
 
 ```hurl
 GET https://example.org/home
-
 # Capture the identifier from the dom node <div id="pet0">5646eaf23</div
 HTTP 200
 [Captures]
@@ -208,7 +197,6 @@ valid XPath can be captured and asserted with variable asserts.
 ```hurl
 # Test that the XML endpoint return 200 pets
 GET https://example.org/api/pets
-
 HTTP 200
 [Captures]
 pets: xpath "//pets"
@@ -220,7 +208,6 @@ XPath expression can also be evaluated against part of the body with a [`xpath` 
 
 ```hurl
 GET https://example.org/home_cn
-
 HTTP 200
 [Captures]
 ped-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
@@ -236,7 +223,6 @@ POST https://example.org/api/contact
 [FormParams]
 token: {{token}}
 email: toto@rookie.net
-
 HTTP 200
 [Captures]
 contact-id: jsonpath "$['id']"
@@ -269,7 +255,6 @@ We can capture the following paths:
 
 ```hurl
 GET https://example.org/captures-json
-
 HTTP 200
 [Captures]
 an_object:  jsonpath "$['an_object']"
@@ -289,7 +274,6 @@ Capture a regex pattern from the HTTP received body, decoded as text.
 
 ```hurl
 GET https://example.org/helloworld
-
 HTTP 200
 [Captures]
 id_a: regex "id_a:([0-9]+)"
@@ -309,7 +293,6 @@ Capture the value of a variable into another.
 
 ```hurl
 GET https://example.org/helloworld
-
 HTTP 200
 [Captures]
 in: body
@@ -322,7 +305,6 @@ Capture the response time of the request in ms.
 
 ```hurl
 GET https://example.org/helloworld
-
 HTTP 200
 [Captures]
 duration_in_ms: duration
@@ -336,7 +318,6 @@ The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expi
 
 ```hurl
 GET https://example.org
-
 HTTP 200
 [Captures]
 cert_subject: certificate "Subject"
