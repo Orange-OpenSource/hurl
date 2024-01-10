@@ -17,6 +17,7 @@ Thanks to
 [@iredmail](https://github.com/iredmail),
 [@andres-lowrie](https://github.com/andres-lowrie),
 [@nikeee](https://github.com/nikeee),
+[@ztittle](https://github.com/ztittle)
 
 Enhancements:
 
@@ -27,6 +28,7 @@ Enhancements:
 * Add dark mode support for HTML report [#2254](https://github.com/Orange-OpenSource/hurl/issues/2254)
 * Add --output option per request [#2184](https://github.com/Orange-OpenSource/hurl/issues/2184) [#1326](https://github.com/Orange-OpenSource/hurl/issues/1326)
 * Add filter jsonpath [#2134](https://github.com/Orange-OpenSource/hurl/issues/2134) [#1632](https://github.com/Orange-OpenSource/hurl/issues/1632) [#440](https://github.com/Orange-OpenSource/hurl/issues/440)
+* Improve JSON body parsing error reporting [#2056](https://github.com/Orange-OpenSource/hurl/issues/2056)
 * Support template in option values [#2041](https://github.com/Orange-OpenSource/hurl/issues/2041)
 * Support conda-forge installation [#2018](https://github.com/Orange-OpenSource/hurl/issues/2018)
 * Add timestamps to the HTML reports [#1983](https://github.com/Orange-OpenSource/hurl/issues/1983)
