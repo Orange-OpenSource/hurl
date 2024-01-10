@@ -110,7 +110,7 @@ Options:
           Define a variable
       --variables-file <FILE>
           Define a properties file in which you define your variables
-      --verbose
+  -v, --verbose
           Turn on verbose
       --very-verbose
           Turn on verbose output, including HTTP response and libcurl logs

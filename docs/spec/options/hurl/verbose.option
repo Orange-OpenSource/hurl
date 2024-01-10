@@ -1,5 +1,6 @@
 name: verbose
 long: verbose
+short: v
 help: Turn on verbose
 ---
 Turn on verbose output on standard error stream.

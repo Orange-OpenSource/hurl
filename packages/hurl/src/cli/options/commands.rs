@@ -459,6 +459,7 @@ pub fn variables_file() -> clap::Arg {
 pub fn verbose() -> clap::Arg {
     clap::Arg::new("verbose")
         .long("verbose")
+        .short('v')
         .help("Turn on verbose")
         .action(ArgAction::SetTrue)
 }
