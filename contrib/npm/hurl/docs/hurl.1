@@ -1,4 +1,4 @@
-.TH hurl 1 "21 Sep 2023" "hurl 4.1.0" " Hurl Manual"
+.TH hurl 1 "11 Jan 2024" "hurl 4.2.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -145,7 +145,7 @@ See also \fI--key\fP.
 
 .IP "--color "
 
-Colorize debug output (the HTTP response output is not colorized). 
+Colorize debug output (the HTTP response output is not colorized).
 
 .IP "--compressed "
 
@@ -189,35 +189,47 @@ Combined with \fI-b, --cookie\fP, you can simulate a cookie storage between succ
 
 Sets delay before each request.
 
-
 .IP "--error-format <FORMAT> "
 
 Control the format of error message (short by default or long)
 
-
 .IP "--file-root <DIR> "
 
-Set root file system to import files in Hurl. This is used for both files in multipart form data and request body.
-When this is not explicitly defined, the files are relative to the current directory in which Hurl is running.
-
-.IP "-L, --location "
-
-Follow redirect. To limit the amount of redirects to follow use the \fI--max-redirs\fP option
+Set root directory to import files in Hurl. This is used for files in multipart form data, request body and response output.
+When it is not explicitly defined, files are relative to the current directory in which Hurl is running.
 
 .IP "--glob <GLOB> "
 
 Specify input files that match the given glob pattern.
 
-Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and []. 
+Multiple glob flags may be used. This flag supports common Unix glob patterns like *, ? and [].
 However, to avoid your shell accidentally expanding glob patterns before Hurl handles them, you must use single quotes or double quotes around each pattern.
 
-.IP "-i, --include "
+.IP "-0, --http1.0 "
 
-Include the HTTP headers in the output (last entry).
+Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.
+
+.IP "--http1.1 "
+
+Tells Hurl to use HTTP version 1.1.
+
+.IP "--http2 "
+
+Tells Hurl to use HTTP version 2.
+For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.
+For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.
+
+.IP "--http3 "
+
+Tells Hurl to try HTTP/3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.
 
 .IP "--ignore-asserts "
 
 Ignore all asserts defined in the Hurl file.
+
+.IP "-i, --include "
+
+Include the HTTP headers in the output
 
 .IP "-k, --insecure "
 
@@ -226,19 +238,38 @@ This option explicitly allows Hurl to perform "insecure" SSL connections and tra
 .IP "--interactive "
 
 Stop between requests.
+
 This is similar to a break point, You can then continue (Press C) or quit (Press Q).
+
+.IP "-4, --ipv4 "
+
+This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.
+
+.IP "-6, --ipv6 "
+
+This option tells Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4.
 
 .IP "--json "
 
-Output each hurl file result to JSON. The format is very closed to HAR format. 
+Output each Hurl file result to JSON. The format is very closed to HAR format.
 
 .IP "--key <KEY> "
 
 Private key file name.
 
+.IP "-L, --location "
+
+Follow redirect. To limit the amount of redirects to follow use the \fI--max-redirs\fP option
+
+.IP "--location-trusted "
+
+Like \fI-L, --location\fP, but allows sending the name + password to all hosts that the site may redirect to.
+This may or may not introduce a security breach if the site redirects you to a site to which you send your authentication info (which is plaintext in the case of HTTP Basic authentication).
+
 .IP "--max-redirs <NUM> "
 
 Set maximum number of redirection-followings allowed
+
 By default, the limit is set to 50 redirections. Set this option to -1 to make it unlimited.
 
 .IP "-m, --max-time <SECONDS> "
@@ -258,6 +289,7 @@ Suppress output. By default, Hurl outputs the body of the last response.
 .IP "--noproxy <HOST(S)> "
 
 Comma-separated list of hosts which do not use a proxy.
+
 Override value from Environment variable no_proxy.
 
 .IP "-o, --output <FILE> "
@@ -272,17 +304,17 @@ Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally
 
 Use the specified proxy.
 
-.IP "--report-junit <FILE> "
-
-Generate JUnit File.
-
-If the FILE report already exists, it will be updated with the new test results.
-
 .IP "--report-html <DIR> "
 
 Generate HTML report in DIR.
 
 If the HTML report already exists, it will be updated with the new test results.
+
+.IP "--report-junit <FILE> "
+
+Generate JUnit File.
+
+If the FILE report already exists, it will be updated with the new test results.
 
 .IP "--report-tap <FILE> "
 
@@ -290,11 +322,11 @@ Generate TAP report.
 
 If the FILE report already exists, it will be updated with the new test results.
 
-.IP "--resolve <HOST:PORT:ADDR>  <HOST:PORT:ADDR>"
+.IP "--resolve <HOST:PORT:ADDR> "
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
 
-.IP "--retry  <NUM> "
+.IP "--retry <NUM> "
 
 Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).
 
@@ -306,10 +338,6 @@ Duration in milliseconds between each retry. Default is 1000 ms.
 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
-.IP "--unix-socket <PATH> "
-
-(HTTP) Connect through this Unix domain socket, instead of using the network.
-
 .IP "--test "
 
 Activate test mode: with this, the HTTP response is not outputted anymore, progress is reported for each Hurl file tested, and a text summary is displayed when all files have been run.
@@ -318,6 +346,10 @@ Activate test mode: with this, the HTTP response is not outputted anymore, progr
 
 Execute Hurl file to ENTRY_NUMBER (starting at 1).
 Ignore the remaining of the file. It is useful for debugging a session.
+
+.IP "--unix-socket <PATH> "
+
+(HTTP) Connect through this Unix domain socket, instead of using the network.
 
 .IP "-u, --user <USER:PASSWORD> "
 
@@ -355,7 +387,6 @@ If you only want HTTP headers in the output, \fI-i, --include\fP might be the op
 Turn on more verbose output on standard error stream.
 
 In contrast to  \fI--verbose\fP option, this option outputs the full HTTP body request and response on standard error. In addition, lines starting with '**' are libcurl debug logs.
-
 
 .IP "-h, --help "
 
