@@ -19,6 +19,7 @@ Thanks to
 [@andres-lowrie](https://github.com/andres-lowrie),
 [@nikeee](https://github.com/nikeee),
 [@ztittle](https://github.com/ztittle)
+[@legzo](https://github.com/legzo)
 
 Enhancements:
 
