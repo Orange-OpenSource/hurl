@@ -50,7 +50,7 @@ jobs:
         bin/release/man.sh
         bin/release/create_tarball.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload/*
@@ -64,7 +64,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -99,7 +99,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-ubuntu-x64-artifacts
@@ -115,7 +115,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -150,7 +150,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-debian-x64-artifacts
@@ -166,7 +166,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -201,7 +201,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-archlinux-x64-artifacts
@@ -217,7 +217,7 @@ jobs:
       with:
         ref: ${{ inputs.branch }}
     - name: Retrieve release-generic-linux-x64-artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.1
       with:
         name: release-generic-linux-x64-artifacts
         path: target/upload
@@ -252,7 +252,7 @@ jobs:
             bin/test/test_integ.sh
           echo "::endgroup::"
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       if: ${{ always() }}
       with:
         name: test-generic-linux-package-docker-fedora-x64-artifacts
@@ -326,7 +326,7 @@ jobs:
 #       pwd
 #       find . -name "*.log"
 #   - name: Archive production artifacts
-#     uses: actions/upload-artifact@v3
+#     uses: actions/upload-artifact@v4.0.0
 #     if: ${{ always() }}
 #     with:
 #       name: test-docker-arm64-package-artifacts
@@ -397,7 +397,7 @@ jobs:
        pwd
        find . -name "*.log"
    - name: Archive production artifacts
-     uses: actions/upload-artifact@v3
+     uses: actions/upload-artifact@v4.0.0
      if: ${{ always() }}
      with:
        name: test-docker-amd64-package-artifacts
@@ -449,7 +449,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       with:
         name: release-deb-x64-artifacts
         path: target/upload/*
@@ -495,7 +495,7 @@ jobs:
         bin/test/test_prerequisites.sh
         bin/test/test_integ.sh
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       with:
         name: release-macos-x64-artifacts
         path: target/upload/*
@@ -546,7 +546,7 @@ jobs:
         .\bin\test\test_prerequisites.ps1
         .\bin\test\test_integ.ps1
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.0.0
       with:
         name: release-windows-x64-artifacts
         path: |
