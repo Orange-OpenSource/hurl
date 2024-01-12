@@ -19,11 +19,18 @@ docker buildx inspect --bootstrap
 docker buildx ls
 ```
 
+## Choose desired tag
+
+```
+echo -n "tag: "
+read -r tag
+export tag
+echo "tag=${tag}"
+```
+
 ## Clone desired tag
 
 ```
-tag=<desired tag, ex: 4.0.0>
-echo "tag=${tag}"
 git clone --depth 1 https://github.com/Orange-OpenSource/hurl.git --branch "${tag}" /tmp/hurl-"${tag}"
 cd /tmp/hurl-"${tag}"
 ```
@@ -36,13 +43,18 @@ echo "ubuntu_docker_image=${ubuntu_docker_image}"
 docker run --platform linux/arm64 --volume /tmp/hurl-"${tag}":/hurl --workdir /hurl -it --rm "${ubuntu_docker_image}" bash
 ```
 
-## Build
+## Install system prerequisistes
 
 ```
 uname -m
 export DEBIAN_FRONTEND=noninteractive
 apt update
 bin/install_prerequisites_docker_ubuntu.sh
+```
+
+## Build
+
+```
 bin/install_rust.sh
 export PKG_CONFIG_ALLOW_CROSS=1
 export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
