@@ -1,4 +1,4 @@
-# Build amd64 generic binary
+# Build arm64 generic binary
 
 ## Prepare docker build env
 
