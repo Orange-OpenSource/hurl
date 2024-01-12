@@ -1,4 +1,4 @@
-# Build arm64 generic binary
+# Create generic arm64 linux package
 
 ## Prepare docker build env
 
@@ -55,15 +55,12 @@ bin/install_prerequisites_docker_ubuntu.sh
 ## Build
 
 ```
+source bin/export_cross_compile_env.sh
 bin/install_rust.sh
-export PKG_CONFIG_ALLOW_CROSS=1
-export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
-export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
-export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 bin/release/release.sh
 ```
 
-## Create generic linux arm64 package
+## Create generic arm64 linux tarball
 
 ```
 export PATH="${PWD}/target/release:${PATH}"
@@ -72,7 +69,7 @@ bin/release/man.sh
 bin/release/create_tarball.sh linux
 ```
 
-## Test generic linux arm64 package
+## Test generic arm64 linux binary
 
 ```
 bin/release/install_generic_linux_package.sh
@@ -83,7 +80,7 @@ bin/test/test_prerequisites.sh
 bin/test/test_integ.sh
 ```
 
-## List package
+## List generic arm64 linux package
 
 ```
 exit
