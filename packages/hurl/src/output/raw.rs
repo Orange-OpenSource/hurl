@@ -38,6 +38,15 @@ pub fn write_body(
     if let Some(entry_result) = hurl_result.entries.last() {
         if let Some(call) = entry_result.calls.last() {
             let response = &call.response;
+
+            let is_binary = response.body.iter().any(|&byte| byte < 32 || byte > 126);
+
+            // If the response is binary, we do not output the body response
+            if is_binary {
+                logger.info("Warning: Binary output detected.");
+                return Ok(());
+            }
+
             let mut output = vec![];
 
             // If include options is set, we output the HTTP response headers
