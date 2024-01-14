@@ -39,7 +39,7 @@ pub fn write_body(
         if let Some(call) = entry_result.calls.last() {
             let response = &call.response;
 
-            let is_binary = response.body.iter().any(|&byte| byte < 32 || byte > 126);
+            let is_binary = response.body.iter().any(|&byte| !(32..=126).contains(&byte));
 
             // If the response is binary, we do not output the body response
             if is_binary {
