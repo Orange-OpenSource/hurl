@@ -20,6 +20,7 @@ use std::time::Duration;
 use hurl_core::ast::{Entry, Retry};
 
 use crate::http::{IpResolve, RequestedHttpVersion};
+use crate::runner::Output;
 use crate::util::path::ContextDir;
 
 pub struct RunnerOptionsBuilder {
@@ -42,7 +43,7 @@ pub struct RunnerOptionsBuilder {
     ip_resolve: IpResolve,
     max_redirect: Option<usize>,
     no_proxy: Option<String>,
-    output: Option<String>,
+    output: Option<Output>,
     path_as_is: bool,
     post_entry: Option<fn() -> bool>,
     pre_entry: Option<fn(Entry) -> bool>,
@@ -256,7 +257,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Specifies the file to output the HTTP response instead of stdout.
-    pub fn output(&mut self, output: Option<String>) -> &mut Self {
+    pub fn output(&mut self, output: Option<Output>) -> &mut Self {
         self.output = output;
         self
     }
@@ -404,7 +405,7 @@ pub struct RunnerOptions {
     pub(crate) insecure: bool,
     pub(crate) max_redirect: Option<usize>,
     pub(crate) no_proxy: Option<String>,
-    pub(crate) output: Option<String>,
+    pub(crate) output: Option<Output>,
     pub(crate) path_as_is: bool,
     pub(crate) post_entry: Option<fn() -> bool>,
     pub(crate) pre_entry: Option<fn(Entry) -> bool>,

@@ -27,15 +27,15 @@ pub fn write_json(
     hurl_result: &HurlResult,
     content: &str,
     filename_in: &str,
-    filename_out: &Option<String>,
+    filename_out: &Option<Output>,
 ) -> Result<(), Error> {
     let json_result = hurl_result.to_json(content, filename_in);
     let serialized = serde_json::to_string(&json_result).unwrap();
     let s = format!("{serialized}\n");
     let bytes = s.into_bytes();
     match filename_out {
-        Some(file) => Output::File(file.to_string()).write(&bytes)?,
-        None => Output::StdOut.write(&bytes)?,
+        Some(Output::File(file)) => Output::File(file.to_string()).write(&bytes)?,
+        _ => Output::StdOut.write(&bytes)?,
     }
     Ok(())
 }

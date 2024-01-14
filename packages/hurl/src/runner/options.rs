@@ -25,7 +25,7 @@ use hurl_core::ast::{
 
 use crate::http::{IpResolve, RequestedHttpVersion};
 use crate::runner::template::{eval_expression, eval_template};
-use crate::runner::{Error, Number, RunnerError, RunnerOptions, Value};
+use crate::runner::{Error, Number, Output, RunnerError, RunnerOptions, Value};
 use crate::util::logger::{Logger, Verbosity};
 
 /// Returns a new [`RunnerOptions`] based on the `entry` optional Options section
@@ -166,9 +166,14 @@ pub fn get_entry_options(
                         let value = eval_natural_option(value, variables)?;
                         runner_options.max_redirect = Some(value as usize)
                     }
-                    OptionKind::Output(filename) => {
-                        let value = eval_template(filename, variables)?;
-                        runner_options.output = Some(value)
+                    OptionKind::Output(output) => {
+                        let filename = eval_template(output, variables)?;
+                        let output = if filename == "-" {
+                            Output::StdOut
+                        } else {
+                            Output::File(filename)
+                        };
+                        runner_options.output = Some(output)
                     }
                     OptionKind::PathAsIs(value) => {
                         let value = eval_boolean_option(value, variables)?;

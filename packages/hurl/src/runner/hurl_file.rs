@@ -28,7 +28,7 @@ use hurl_core::parser;
 
 use crate::http::Call;
 use crate::runner::runner_options::RunnerOptions;
-use crate::runner::{entry, options, EntryResult, HurlResult, RunnerError, Value};
+use crate::runner::{entry, options, EntryResult, HurlResult, Output, RunnerError, Value};
 use crate::util::logger::{ErrorFormat, Logger, LoggerOptions, LoggerOptionsBuilder};
 use crate::{http, runner};
 
@@ -220,14 +220,25 @@ pub fn run(
                 // an error. If we want to treat it as an error, we've to add it to the current
                 // `entry_result` errors, and optionally deals with retry if we can't write to the
                 // specified path.
-                if !runner_options.context_dir.is_access_allowed(&output) {
-                    let inner = RunnerError::UnauthorizedFileAccess {
-                        path: PathBuf::from(output.clone()),
-                    };
-                    let error = runner::Error::new(entry.request.source_info, inner, false);
-                    logger.warning(&error.fixme());
-                } else if let Err(error) = entry_result.write_response(output) {
-                    logger.warning(&error.fixme());
+
+                let authorized = if let Output::File(filename) = &output {
+                    if !runner_options.context_dir.is_access_allowed(filename) {
+                        let inner = RunnerError::UnauthorizedFileAccess {
+                            path: PathBuf::from(filename.clone()),
+                        };
+                        let error = runner::Error::new(entry.request.source_info, inner, false);
+                        logger.warning(&error.fixme());
+                        false
+                    } else {
+                        true
+                    }
+                } else {
+                    true
+                };
+                if authorized {
+                    if let Err(error) = entry_result.write_response(&output) {
+                        logger.warning(&error.fixme());
+                    }
                 }
             }
         }
@@ -508,7 +519,7 @@ mod test {
         let non_default_options = get_non_default_options(&options);
         assert_eq!(non_default_options.len(), 1);
 
-        let first_non_default = non_default_options.get(0).unwrap();
+        let first_non_default = non_default_options.first().unwrap();
 
         assert_eq!(first_non_default.0, "delay");
         assert_eq!(first_non_default.1, "500ms");

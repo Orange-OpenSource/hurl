@@ -31,7 +31,7 @@ pub fn write_body(
     filename_in: &str,
     include_headers: bool,
     color: bool,
-    filename_out: &Option<String>,
+    filename_out: &Option<Output>,
     logger: &Logger,
 ) -> Result<(), Error> {
     // By default, we output the body response bytes of the last entry
@@ -65,8 +65,8 @@ pub fn write_body(
                 output.extend(bytes);
             }
             match filename_out {
-                Some(file) => Output::File(file.to_string()).write(&output)?,
-                None => Output::StdOut.write(&output)?,
+                Some(Output::File(file)) => Output::File(file.to_string()).write(&output)?,
+                _ => runner::Output::StdOut.write(&output)?,
             }
         } else {
             logger.info("No response has been received");

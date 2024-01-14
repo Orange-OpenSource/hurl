@@ -27,6 +27,7 @@ use std::time::Duration;
 use clap::ArgMatches;
 use hurl::http;
 use hurl::http::RequestedHttpVersion;
+use hurl::runner::Output;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder, Verbosity};
 use hurl::util::path::ContextDir;
 use hurl_core::ast::{Entry, Retry};
@@ -63,7 +64,7 @@ pub struct Options {
     pub junit_file: Option<String>,
     pub max_redirect: Option<usize>,
     pub no_proxy: Option<String>,
-    pub output: Option<String>,
+    pub output: Option<Output>,
     pub output_type: OutputType,
     pub path_as_is: bool,
     pub progress_bar: bool,

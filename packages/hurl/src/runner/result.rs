@@ -108,7 +108,7 @@ pub type PredicateResult = Result<(), Error>;
 impl EntryResult {
     /// Writes the last HTTP response of this entry result to the file `filename`.
     /// The HTTP response can be decompressed if the entry's `compressed` option has been set.
-    pub fn write_response(&self, filename: String) -> Result<(), Error> {
+    pub fn write_response(&self, output: &Output) -> Result<(), Error> {
         match self.calls.last() {
             Some(call) => {
                 let response = &call.response;
@@ -124,9 +124,9 @@ impl EntryResult {
                             return Err(Error::new(source_info, e.into(), false));
                         }
                     };
-                    Output::File(filename).write(&bytes)
+                    output.write(&bytes)
                 } else {
-                    Output::File(filename).write(&response.body)
+                    output.write(&response.body)
                 }
             }
             None => Ok(()),

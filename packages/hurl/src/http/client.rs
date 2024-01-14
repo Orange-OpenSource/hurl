@@ -35,6 +35,7 @@ use crate::http::request_spec::*;
 use crate::http::response::*;
 use crate::http::timings::Timings;
 use crate::http::{easy_ext, Call, Header, HttpError, Verbosity};
+use crate::runner::Output;
 use crate::util::logger::Logger;
 use crate::util::path::ContextDir;
 
@@ -737,7 +738,7 @@ impl Client {
         &mut self,
         request_spec: &RequestSpec,
         context_dir: &ContextDir,
-        output: Option<&str>,
+        output: Option<&Output>,
         options: &ClientOptions,
     ) -> String {
         let mut arguments = vec!["curl".to_string()];
@@ -973,7 +974,7 @@ mod tests {
         let data = b"GET /hello HTTP/1.1\r\nHost: localhost:8000\r\n\r\n";
         let lines = split_lines(data);
         assert_eq!(lines.len(), 3);
-        assert_eq!(lines.get(0).unwrap().as_str(), "GET /hello HTTP/1.1");
+        assert_eq!(lines.first().unwrap().as_str(), "GET /hello HTTP/1.1");
         assert_eq!(lines.get(1).unwrap().as_str(), "Host: localhost:8000");
         assert_eq!(lines.get(2).unwrap().as_str(), "");
     }
@@ -1118,7 +1119,8 @@ mod tests {
             ..Default::default()
         };
         let context_dir = ContextDir::default();
-        let output = Some("/tmp/foo.bin");
+        let file = Output::File("/tmp/foo.bin".to_string());
+        let output = Some(&file);
         let options = ClientOptions {
             aws_sigv4: Some("aws:amz:sts".to_string()),
             cacert_file: Some("/etc/cert.pem".to_string()),

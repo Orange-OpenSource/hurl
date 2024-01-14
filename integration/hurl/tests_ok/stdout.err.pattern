@@ -1,0 +1,30 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Entry options:
+* output: -
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/stdout/text
+*
+* Request can be run with the following curl command:
+* curl --output - 'http://localhost:8000/stdout/text'
+*
+> GET /stdout/text HTTP/1.1
+> Host: localhost:8000
+> Accept: */*
+> User-Agent: hurl/~~~
+>
+* Response: (received 5 bytes in ~~~ ms)
+*
+< HTTP/1.1 200 OK
+< Server: Werkzeug/~~~
+< Date: ~~~
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 5
+< Server: Flask Server
+< Connection: close
+<
+*

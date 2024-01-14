@@ -84,13 +84,9 @@ pub fn run(
     log_request_spec(&http_request, logger);
 
     logger.debug("Request can be run with the following curl command:");
-    let output = &runner_options.output;
-    let curl_command = http_client.curl_command_line(
-        &http_request,
-        context_dir,
-        output.as_deref(),
-        &client_options,
-    );
+    let output = runner_options.output.clone();
+    let curl_command =
+        http_client.curl_command_line(&http_request, context_dir, output.as_ref(), &client_options);
     logger.debug(curl_command.as_str());
     logger.debug("");
 

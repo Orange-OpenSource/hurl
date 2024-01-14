@@ -28,7 +28,7 @@ use hurl_core::ast::Retry;
 
 use super::variables::{parse as parse_variable, parse_value};
 use super::OptionsError;
-use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve};
+use crate::cli::options::{ErrorFormat, HttpVersion, IpResolve, Output};
 use crate::cli::OutputType;
 
 pub fn cacert_file(arg_matches: &ArgMatches) -> Result<Option<String>, OptionsError> {
@@ -254,8 +254,14 @@ pub fn no_proxy(arg_matches: &ArgMatches) -> Option<String> {
     get::<String>(arg_matches, "noproxy")
 }
 
-pub fn output(arg_matches: &ArgMatches) -> Option<String> {
-    get::<String>(arg_matches, "output")
+pub fn output(arg_matches: &ArgMatches) -> Option<Output> {
+    get::<String>(arg_matches, "output").map(|filename| {
+        if filename == "-" {
+            Output::StdOut
+        } else {
+            Output::File(filename)
+        }
+    })
 }
 
 pub fn output_type(arg_matches: &ArgMatches) -> OutputType {

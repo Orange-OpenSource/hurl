@@ -16,18 +16,29 @@
  *
  */
 use std::fs::File;
-use std::io;
 #[cfg(target_family = "windows")]
 use std::io::IsTerminal;
 use std::io::Write;
+use std::{fmt, io};
 
 use crate::runner::{Error, RunnerError};
 use hurl_core::ast::{Pos, SourceInfo};
 
 /// Represents the output of write operation: can be either a file or stdout.
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Output {
     StdOut,
     File(String),
+}
+
+impl fmt::Display for Output {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let output = match self {
+            Output::StdOut => "-".to_string(),
+            Output::File(file) => file.to_string(),
+        };
+        write!(f, "{output}")
+    }
 }
 
 impl Output {
