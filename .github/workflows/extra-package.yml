@@ -1,0 +1,83 @@
+name: extra-package
+
+on:
+  workflow_dispatch:
+    inputs:
+      set-release-version:
+        description: 'Desired release version (x.y.z)'
+        required: true
+        type: string
+      push-to-chocolatey:
+        description: 'Push to chocolatey'
+        type: boolean
+        default: false
+      push-to-winget:
+        description: 'Push to winget'
+        type: boolean
+        default: false
+
+concurrency: extra-package
+
+jobs:
+  check-release:
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
+    name: Check-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.inputs.set-release-version }}
+      - name: Check if branch is a published release
+        run: |
+          if gh release list --exclude-drafts --exclude-pre-releases | grep -E "^${RELEASE_VERSION}" ; then
+              echo "✅ Desired release ${RELEASE_VERSION} is a published release"
+          else
+              echo "❌ You have to run this workflow for a published release (excluding draft and pre-release), but the desired one [${RELEASE_VERSION}] is not."
+              exit 1
+          fi
+
+  push-to-chocolatey:
+    if: github.event.inputs.push-to-chocolatey == 'true'
+    needs: check-release
+    env:
+      RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
+      CHOCOLATEY_TOKEN: ${{ secrets.LEPAPAREIL_CHOCOLATEY_TOKEN }}
+    name: Push to chocolatey
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.inputs.set-release-version }}
+      - name: Push to chocolatey
+        run: .\bin\release\push_package_to_chocolatey.ps1 $env:RELEASE_VERSION $env:CHOCOLATEY_TOKEN
+
+  push-to-winget:
+    if: github.event.inputs.push-to-winget == 'true'
+    needs: check-release
+    env:
+      RELEASE_VERSION: ${{ github.event.inputs.set-release-version }}
+      WINGET_TOKEN: ${{ secrets.LEPAPAREIL_WINGET_TOKEN }}
+    name: Push to winget
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.inputs.set-release-version }}
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+      - name: Install wingetcreate
+        run: |
+          winget install wingetcreate --disable-interactivity --accept-source-agreements --silent
+          winget --info
+          wingetcreate info
+      - name: Push to winget
+        run: .\bin\release\push_package_to_winget.ps1 $env:RELEASE_VERSION $env:WINGET_TOKEN
+
