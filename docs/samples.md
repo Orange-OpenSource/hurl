@@ -434,6 +434,40 @@ jsonpath "$.state" == "COMPLETED"
 
 [Doc](/docs/entry.md#retry)
 
+### Delaying Requests
+
+Add delay for every request, or a particular requests:
+
+```hurl
+# Delaying this request by 5s
+GET https://example.org/turtle
+[Options]
+delay: 5000
+HTTP 200
+
+# No delay!
+GET https://example.org/turtle
+HTTP 200
+```
+
+[Doc](/docs/manual.md#delay)
+
+### Skipping Requests
+
+```hurl
+# a, b, d are runner, c is skipped
+GET https://example.org/a
+
+GET https://example.org/b
+[Options]
+skip: true
+
+GET https://example.org/c
+
+GET https://example.org/d
+```
+
+[Doc](/docs/manual.md#skip)
 
 
 ### Testing Endpoint Performance
