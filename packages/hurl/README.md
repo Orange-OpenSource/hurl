@@ -192,6 +192,8 @@ Table of Contents
       * [Others](#others)
          * [HTTP Version](#http-version)
          * [Polling and Retry](#polling-and-retry)
+         * [Delaying Requests](#delaying-requests)
+         * [Skipping Requests](#skipping-requests)
          * [Testing Endpoint Performance](#testing-endpoint-performance)
          * [Using SOAP APIs](#using-soap-apis)
          * [Capturing and Using a CSRF Token](#capturing-and-using-a-csrf-token)
@@ -674,6 +676,40 @@ jsonpath "$.state" == "COMPLETED"
 
 [Doc](https://hurl.dev/docs/entry.html#retry)
 
+### Delaying Requests
+
+Add delay for every request, or a particular requests:
+
+```hurl
+# Delaying this request by 5s
+GET https://example.org/turtle
+[Options]
+delay: 5000
+HTTP 200
+
+# No delay!
+GET https://example.org/turtle
+HTTP 200
+```
+
+[Doc](https://hurl.dev/docs/manual.html#delay)
+
+### Skipping Requests
+
+```hurl
+# a, b, d are runner, c is skipped
+GET https://example.org/a
+
+GET https://example.org/b
+[Options]
+skip: true
+
+GET https://example.org/c
+
+GET https://example.org/d
+```
+
+[Doc](https://hurl.dev/docs/manual.html#skip)
 
 
 ### Testing Endpoint Performance
