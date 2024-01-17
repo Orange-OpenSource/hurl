@@ -17,10 +17,10 @@ name = "hurl"
 vendored-openssl = ["curl/static-ssl", "curl-sys/static-ssl"]
 
 [dependencies]
-base64 = "0.21.6"
+base64 = "0.21.7"
 brotli = "3.4.0"
 chrono = { version = "0.4.31", default-features = false, features = ["clock"] }
-clap = { version = "4.4.14", features = ["cargo", "string", "wrap_help"] }
+clap = { version = "4.4.18", features = ["cargo", "string", "wrap_help"] }
 colored = "2.1.0"
 curl = "0.4.44"
 curl-sys = "0.4.70"

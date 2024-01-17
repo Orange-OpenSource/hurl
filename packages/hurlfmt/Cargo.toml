@@ -11,8 +11,8 @@ repository = "https://github.com/Orange-OpenSource/hurl"
 rust-version = "1.73.0"
 
 [dependencies]
-base64 = "0.21.6"
-clap = { version = "4.4.14", features = ["cargo", "wrap_help"] }
+base64 = "0.21.7"
+clap = { version = "4.4.18", features = ["cargo", "wrap_help"] }
 colored = "2.1.0"
 hurl_core = { version = "4.2.0", path = "../hurl_core" }
 regex = "1.10.2"
