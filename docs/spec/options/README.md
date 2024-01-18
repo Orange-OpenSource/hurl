@@ -18,6 +18,7 @@ This script insures that all `.option` files are well formatted.
 
 ```shell
 $ bin/spec/options/generate_source.py docs/spec/options/hurl/*.option > packages/hurl/src/cli/options/commands.rs
+$ bin/spec/options/generate_source.py docs/spec/options/hurlfmt/*.option >packages/hurlfmt/src/cli/options/commands.rs
 ```
 
 This script generates Rust source file for parsing command line option.
@@ -26,6 +27,7 @@ This script generates Rust source file for parsing command line option.
 
 ```shell
 $ bin/spec/options/generate_man.py docs/spec/options/hurl/*.option
+$ bin/spec/options/generate_man.py docs/spec/options/hurlfmt/*.option
 ```
 
 This script generates (part of) man file for `hurl` / `hurlfmt`.

@@ -15,75 +15,70 @@
  * limitations under the License.
  *
  */
-use clap::ArgAction;
+// Generated - Do not modify
+
+pub fn input_files() -> clap::Arg {
+    clap::Arg::new("input_files")
+        .value_name("FILES")
+        .help("Set the input file to use")
+        .required(false)
+        .index(1)
+        .num_args(1..)
+}
 
 pub fn check() -> clap::Arg {
     clap::Arg::new("check")
         .long("check")
         .help("Run in 'check' mode")
-        .action(ArgAction::SetTrue)
-        .conflicts_with("format")
-        .conflicts_with("output")
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn color() -> clap::Arg {
     clap::Arg::new("color")
         .long("color")
         .help("Colorize Output")
-        .action(ArgAction::SetTrue)
         .conflicts_with("no_color")
         .conflicts_with("in_place")
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn format() -> clap::Arg {
     clap::Arg::new("format")
         .long("format")
         .value_name("FORMAT")
-        .help("Specify output format: hurl, json or html (DEPRECATED)")
-        .conflicts_with("check")
-        .default_value("hurl")
+        .help("Specify output format: hurl, json or html")
         .num_args(1)
+        .hide(true)
 }
 
 pub fn in_place() -> clap::Arg {
     clap::Arg::new("in_place")
         .long("in-place")
-        .help("Modify file in place")
-        .action(ArgAction::SetTrue)
-        .conflicts_with("output")
-        .conflicts_with("color")
-}
-
-pub fn input_files() -> clap::Arg {
-    clap::Arg::new("input_files")
-        .value_name("FILES")
-        .help("Sets the input file to use")
-        .required(false)
-        .index(1)
-        .num_args(1..)
+        .help("Modify files in place")
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn input_format() -> clap::Arg {
     clap::Arg::new("input_format")
         .long("in")
         .value_name("FORMAT")
-        .help("Specify input format: hurl or curl")
-        .conflicts_with("check")
         .default_value("hurl")
+        .help("Specify input format: hurl or curl")
         .num_args(1)
 }
+
 pub fn no_color() -> clap::Arg {
     clap::Arg::new("no_color")
         .long("no-color")
         .help("Do not colorize output")
-        .action(ArgAction::SetTrue)
         .conflicts_with("color")
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn output() -> clap::Arg {
     clap::Arg::new("output")
-        .short('o')
         .long("output")
+        .short('o')
         .value_name("FILE")
         .help("Write to FILE instead of stdout")
         .num_args(1)
@@ -93,9 +88,8 @@ pub fn output_format() -> clap::Arg {
     clap::Arg::new("output_format")
         .long("out")
         .value_name("FORMAT")
-        .help("Specify output format: hurl, json or html")
-        .conflicts_with("check")
         .default_value("hurl")
+        .help("Specify output format: hurl, json or html")
         .num_args(1)
 }
 
@@ -103,5 +97,6 @@ pub fn standalone() -> clap::Arg {
     clap::Arg::new("standalone")
         .long("standalone")
         .help("Standalone HTML")
-        .action(ArgAction::SetTrue)
+        .conflicts_with("no_color")
+        .action(clap::ArgAction::SetTrue)
 }

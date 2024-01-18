@@ -1,0 +1,7 @@
+name: input_format
+long: in
+value: FORMAT
+value_default: hurl
+help: Specify input format: hurl or curl
+---
+Specify input format: hurl or curl.

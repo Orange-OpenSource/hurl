@@ -1,0 +1,6 @@
+name: no_color
+long: no-color
+help: Do not colorize output
+conflict: color
+---
+Do not colorize output.

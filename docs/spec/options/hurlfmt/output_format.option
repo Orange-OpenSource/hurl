@@ -1,0 +1,7 @@
+name: output_format
+long: out
+value: FORMAT
+value_default: hurl
+help: Specify output format: hurl, json or html
+---
+Specify output format: hurl, json or html.

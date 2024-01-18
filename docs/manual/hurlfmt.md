@@ -63,56 +63,50 @@ Fruit: Raspberry
 
 ### --check {#check}
 
-Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise. 
+Run in 'check' mode. Exits with 0 if input is formatted correctly, 1 otherwise.
 
 This can not be used with [--output](#output).
 
 This option is not stable yet.
 
-
 ### --color {#color}
 
 Colorize Output.
- 
+
 This can not be used [--in-place](#inplace).
 
+### --in <FORMAT> {#in}
 
-### -h, --help {#help}
+Specify input format: hurl or curl.
 
-Usage help.
-
-### --in {#input-format}
-
-Specify input format: hurl (default) or curl
-
-
-### --in-place {#inplace}
+### --in-place {#in-place}
 
 Modify file in place.
 
 This can be used only with text output.
 
+### --no-color {#no-color}
 
-### --no-color {#nocolor}
+Do not colorize output.
 
-Do not colorize Output.
+### --out <FORMAT> {#out}
 
+Specify output format: hurl, json or html.
 
-### --out {#output-format}
+### -o, --output <FILE> {#output}
 
-
-Specify output format: hurl (default), json or html
-
-### -o, --output <file> {#output}
-
-Write output to <file> instead of stdout.
-
+Write output to FILE instead of stdout.
 
 ### --standalone {#standalone}
 
 Output full html file with css instead of html fragment (default).
-     
+
 This can be used only with html output.
+
+
+### -h, --help {#help}
+
+Usage help.
 
 
 ### -V, --version {#version}

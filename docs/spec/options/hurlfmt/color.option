@@ -1,0 +1,8 @@
+name: color
+long: color
+help: Colorize Output
+conflict: no_color, in_place
+---
+Colorize Output.
+
+This can not be used [--in-place](#inplace).
