@@ -1,6 +1,6 @@
 # Supporting Parallel Execution of Hurl Files
 
-## Usage
+## Run Execution Diagram
 
 ### Default Run
 
@@ -42,6 +42,143 @@ stateDiagram-v2
     join --> [*]
 ```
 
+## Tools
+
+### GNU parallel
+
+[GNU parallel](https://www.gnu.org/software/parallel/)
+
+`parallel` buffers stdout/stderr and postpones the command until the command completes. So the command outputs as soon
+as it completes, not necessary in the same order:
+
+```shell
+$ parallel echo ::: A B C D
+A
+C
+B
+D
+$ parallel echo ::: A B C D
+B
+A
+C
+D
+```
+
+With Hurl:
+
+```shell
+$ parallel hurl ::: a.hurl b.hurl c.hurl d.hurl
+ABCD%
+$ parallel hurl ::: a.hurl b.hurl c.hurl d.hurl
+BACD%
+```
+
+> The last test has been executed with the Flask instance. If we block in the /a endpoint, we have the direct response
+> from /b, /c, /d and then /a. By default, Flask can handle concurrent requests with thread.
+
+Regarding stderr, we can see that stdout is flush, then stderr. In the next test, we have the response before the stderr:
+
+
+```shell
+$ parallel hurl --verbose ::: a.hurl b.hurl c.hurl d.hurl
+A* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/a
+*
+...
+< Connection: close
+<
+*
+B* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/b
+*
+...
+< Connection: close
+<
+*
+C* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/c
+*
+...
+< Connection: close
+<
+*
+D* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/d
+*
+...
+< Connection: close
+<
+*
+```
+
+#### Interesting option
+
+- `--tag`: add the parameter value before each call:
+
+```shell
+$ parallel --tag echo ::: A B C D
+A	A
+B	B
+C	C
+D	D
+```
+
+```shell
+$ parallel --tag hurl ::: a.hurl b.hurl c.hurl d.hurl
+a.hurl	Ab.hurl	Bc.hurl	Cd.hurl	D%
+```
+
+The tag value is configurable.
+
+- `--color`: add colors, each job gets its own colour combination.
+
+![color option](parallel-color.png)
+
+
+
+
+
+
+#### From Hurl issues/discussions:
+
+From [#87]():
+
+```shell
+$ parallel -j $(ls -1 *.hurl | wc -l) -i sh -c "hurl {} --test" -- *.hurl
+$ echo "retval: $?"
+```
+
+### wrk2
+
+[wrk2](https://github.com/giltene/wrk2), a HTTP benchmarking tool based mostly on wrk.
+
+
+## How to Test
+
+Flask `run` method [takes a `threaded` option] to handle concurrent requests using thread or not (`True` by default).  
+
+
+
 
 ## Related Issues 
 
@@ -71,23 +208,6 @@ example of parallel execution from cargo issue [Console output should better ref
 TODO: make asciinema for different options. 
 
 
-## Tools 
-
-### wrk2 
-
-[wrk2](https://github.com/giltene/wrk2), a HTTP benchmarking tool based mostly on wrk.
-
-### GNU parallel
-
-[GNU parallel](https://www.gnu.org/software/parallel/)
-
-From [#87]():
-
-```shell
-$ parallel -j $(ls -1 *.hurl | wc -l) -i sh -c "hurl {} --test" -- *.hurl
-$ echo "retval: $?"
-```
-
 ## Backlog
 
 - What options do we expose?
@@ -100,3 +220,4 @@ files are run sequentially or run in parallel.
 to runs multiple files
 
 
+[takes a `threaded` option]: https://werkzeug.palletsprojects.com/en/3.0.x/serving/#werkzeug.serving.run_simple
