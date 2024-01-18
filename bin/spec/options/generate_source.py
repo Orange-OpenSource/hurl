@@ -32,7 +32,7 @@ import sys
 def generate_source(options: List[Option]):
     s = COPYRIGHT
     s += "\n" + "// Generated - Do not modify"
-    s += "\nuse clap::{value_parser, ArgAction};"
+    # s += "\nuse clap::{value_parser, ArgAction};"
     s += """\n\npub fn input_files() -> clap::Arg {
     clap::Arg::new("input_files")
         .value_name("FILES")
@@ -63,13 +63,14 @@ def generate_source_option(option: Option):
             s += f"\n        .allow_hyphen_values(true)"
     s += f'\n        .help("{option.help}")'
     if option.conflict is not None:
-        s += f'\n        .conflicts_with("{option.conflict}")'
+        for conflict in option.conflict:
+            s += f'\n        .conflicts_with("{conflict}")'
     if option.value is not None:
         s += f"\n        .num_args(1)"
     else:
-        s += f"\n        .action(ArgAction::SetTrue)"
+        s += f"\n        .action(clap::ArgAction::SetTrue)"
     if option.append:
-        s += f"\n        .action(ArgAction::Append)"
+        s += f"\n        .action(clap::ArgAction::Append)"
     if option.deprecated:
         s += f"\n        .hide(true)"
     s += "\n}"

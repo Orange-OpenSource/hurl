@@ -1,7 +1,7 @@
 name: to_entry
 long: to-entry
 value: ENTRY_NUMBER
-value_parser: value_parser!(u32).range(1..)
+value_parser: clap::value_parser!(u32).range(1..)
 help: Execute Hurl file to ENTRY_NUMBER (starting at 1)
 conflict: interactive
 ---

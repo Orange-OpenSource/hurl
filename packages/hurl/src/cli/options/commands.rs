@@ -16,7 +16,6 @@
  *
  */
 // Generated - Do not modify
-use clap::{value_parser, ArgAction};
 
 pub fn input_files() -> clap::Arg {
     clap::Arg::new("input_files")
@@ -65,14 +64,14 @@ pub fn color() -> clap::Arg {
         .long("color")
         .help("Colorize output")
         .conflicts_with("no_color")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn compressed() -> clap::Arg {
     clap::Arg::new("compressed")
         .long("compressed")
         .help("Request compressed response (using deflate or gzip)")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn connect_timeout() -> clap::Arg {
@@ -80,7 +79,7 @@ pub fn connect_timeout() -> clap::Arg {
         .long("connect-timeout")
         .value_name("SECONDS")
         .default_value("300")
-        .value_parser(value_parser!(u64))
+        .value_parser(clap::value_parser!(u64))
         .help("Maximum time allowed for connection")
         .num_args(1)
 }
@@ -91,14 +90,14 @@ pub fn connect_to() -> clap::Arg {
         .value_name("HOST1:PORT1:HOST2:PORT2")
         .help("For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead")
         .num_args(1)
-        .action(ArgAction::Append)
+        .action(clap::ArgAction::Append)
 }
 
 pub fn continue_on_error() -> clap::Arg {
     clap::Arg::new("continue_on_error")
         .long("continue-on-error")
         .help("Continue executing requests even if an error occurs")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn cookies_input_file() -> clap::Arg {
@@ -124,7 +123,7 @@ pub fn delay() -> clap::Arg {
         .long("delay")
         .value_name("MILLISECONDS")
         .default_value("0")
-        .value_parser(value_parser!(u64))
+        .value_parser(clap::value_parser!(u64))
         .help("Sets delay before each request.")
         .num_args(1)
 }
@@ -143,7 +142,7 @@ pub fn fail_at_end() -> clap::Arg {
     clap::Arg::new("fail_at_end")
         .long("fail-at-end")
         .help("Fail at end")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
         .hide(true)
 }
 
@@ -160,14 +159,14 @@ pub fn follow_location() -> clap::Arg {
         .long("location")
         .short('L')
         .help("Follow redirects")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn follow_location_trusted() -> clap::Arg {
     clap::Arg::new("follow_location_trusted")
         .long("location-trusted")
         .help("Follow redirects but allows sending the name + password to all hosts that the site may redirect to.")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn glob() -> clap::Arg {
@@ -176,7 +175,7 @@ pub fn glob() -> clap::Arg {
         .value_name("GLOB")
         .help("Specify input files that match the given GLOB. Multiple glob flags may be used")
         .num_args(1)
-        .action(ArgAction::Append)
+        .action(clap::ArgAction::Append)
 }
 
 pub fn http10() -> clap::Arg {
@@ -184,35 +183,35 @@ pub fn http10() -> clap::Arg {
         .long("http1.0")
         .short('0')
         .help("Tell Hurl to use HTTP version 1.0")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn http11() -> clap::Arg {
     clap::Arg::new("http11")
         .long("http1.1")
         .help("Tell Hurl to use HTTP version 1.1")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn http2() -> clap::Arg {
     clap::Arg::new("http2")
         .long("http2")
         .help("Tell Hurl to use HTTP version 2")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn http3() -> clap::Arg {
     clap::Arg::new("http3")
         .long("http3")
         .help("Tell Hurl to use HTTP version 3")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn ignore_asserts() -> clap::Arg {
     clap::Arg::new("ignore_asserts")
         .long("ignore-asserts")
         .help("Ignore asserts defined in the Hurl file")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn include() -> clap::Arg {
@@ -220,7 +219,7 @@ pub fn include() -> clap::Arg {
         .long("include")
         .short('i')
         .help("Include the HTTP headers in the output")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn insecure() -> clap::Arg {
@@ -228,7 +227,7 @@ pub fn insecure() -> clap::Arg {
         .long("insecure")
         .short('k')
         .help("Allow insecure SSL connections")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn interactive() -> clap::Arg {
@@ -236,7 +235,7 @@ pub fn interactive() -> clap::Arg {
         .long("interactive")
         .help("Turn on interactive mode")
         .conflicts_with("to_entry")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn ipv4() -> clap::Arg {
@@ -244,7 +243,7 @@ pub fn ipv4() -> clap::Arg {
         .long("ipv4")
         .short('4')
         .help("Tell Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn ipv6() -> clap::Arg {
@@ -252,7 +251,7 @@ pub fn ipv6() -> clap::Arg {
         .long("ipv6")
         .short('6')
         .help("Tell Hurl to use IPv6 addresses only when resolving host names, and not for example try IPv4")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn json() -> clap::Arg {
@@ -260,7 +259,7 @@ pub fn json() -> clap::Arg {
         .long("json")
         .help("Output each Hurl file result to JSON")
         .conflicts_with("no_output")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn max_redirects() -> clap::Arg {
@@ -268,7 +267,7 @@ pub fn max_redirects() -> clap::Arg {
         .long("max-redirs")
         .value_name("NUM")
         .default_value("50")
-        .value_parser(value_parser!(i32).range(-1..))
+        .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
         .help("Maximum number of redirects allowed, -1 for unlimited redirects")
         .num_args(1)
@@ -280,7 +279,7 @@ pub fn max_time() -> clap::Arg {
         .short('m')
         .value_name("SECONDS")
         .default_value("300")
-        .value_parser(value_parser!(u64))
+        .value_parser(clap::value_parser!(u64))
         .help("Maximum time allowed for the transfer")
         .num_args(1)
 }
@@ -290,7 +289,7 @@ pub fn no_color() -> clap::Arg {
         .long("no-color")
         .help("Do not colorize output")
         .conflicts_with("color")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn no_output() -> clap::Arg {
@@ -298,7 +297,7 @@ pub fn no_output() -> clap::Arg {
         .long("no-output")
         .help("Suppress output. By default, Hurl outputs the body of the last response")
         .conflicts_with("json")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn noproxy() -> clap::Arg {
@@ -322,7 +321,7 @@ pub fn path_as_is() -> clap::Arg {
     clap::Arg::new("path_as_is")
         .long("path-as-is")
         .help("Tell Hurl to not handle sequences of /../ or /./ in the given URL path")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn proxy() -> clap::Arg {
@@ -364,7 +363,7 @@ pub fn resolve() -> clap::Arg {
         .value_name("HOST:PORT:ADDR")
         .help("Provide a custom address for a specific HOST and PORT pair")
         .num_args(1)
-        .action(ArgAction::Append)
+        .action(clap::ArgAction::Append)
 }
 
 pub fn retry() -> clap::Arg {
@@ -372,7 +371,7 @@ pub fn retry() -> clap::Arg {
         .long("retry")
         .value_name("NUM")
         .default_value("0")
-        .value_parser(value_parser!(i32).range(-1..))
+        .value_parser(clap::value_parser!(i32).range(-1..))
         .allow_hyphen_values(true)
         .help("Maximum number of retries, 0 for no retries, -1 for unlimited retries")
         .num_args(1)
@@ -383,7 +382,7 @@ pub fn retry_interval() -> clap::Arg {
         .long("retry-interval")
         .value_name("MILLISECONDS")
         .default_value("1000")
-        .value_parser(value_parser!(u64))
+        .value_parser(clap::value_parser!(u64))
         .help("Interval in milliseconds before a retry")
         .num_args(1)
 }
@@ -392,21 +391,21 @@ pub fn ssl_no_revoke() -> clap::Arg {
     clap::Arg::new("ssl_no_revoke")
         .long("ssl-no-revoke")
         .help("(Windows) Tell Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn test() -> clap::Arg {
     clap::Arg::new("test")
         .long("test")
         .help("Activate test mode")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn to_entry() -> clap::Arg {
     clap::Arg::new("to_entry")
         .long("to-entry")
         .value_name("ENTRY_NUMBER")
-        .value_parser(value_parser!(u32).range(1..))
+        .value_parser(clap::value_parser!(u32).range(1..))
         .help("Execute Hurl file to ENTRY_NUMBER (starting at 1)")
         .conflicts_with("interactive")
         .num_args(1)
@@ -444,7 +443,7 @@ pub fn variable() -> clap::Arg {
         .value_name("NAME=VALUE")
         .help("Define a variable")
         .num_args(1)
-        .action(ArgAction::Append)
+        .action(clap::ArgAction::Append)
 }
 
 pub fn variables_file() -> clap::Arg {
@@ -453,7 +452,7 @@ pub fn variables_file() -> clap::Arg {
         .value_name("FILE")
         .help("Define a properties file in which you define your variables")
         .num_args(1)
-        .action(ArgAction::Append)
+        .action(clap::ArgAction::Append)
 }
 
 pub fn verbose() -> clap::Arg {
@@ -461,12 +460,12 @@ pub fn verbose() -> clap::Arg {
         .long("verbose")
         .short('v')
         .help("Turn on verbose")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }
 
 pub fn very_verbose() -> clap::Arg {
     clap::Arg::new("very_verbose")
         .long("very-verbose")
         .help("Turn on verbose output, including HTTP response and libcurl logs")
-        .action(ArgAction::SetTrue)
+        .action(clap::ArgAction::SetTrue)
 }

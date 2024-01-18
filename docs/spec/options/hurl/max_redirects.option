@@ -2,7 +2,7 @@ name: max_redirects
 long: max-redirs
 value: NUM
 value_default: 50
-value_parser: value_parser!(i32).range(-1..)
+value_parser: clap::value_parser!(i32).range(-1..)
 help: Maximum number of redirects allowed, -1 for unlimited redirects
 ---
 Set maximum number of redirection-followings allowed

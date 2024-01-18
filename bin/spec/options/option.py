@@ -60,7 +60,7 @@ class Option:
         if self.help is not None:
             s += "\nhelp: " + self.help
         if self.conflict is not None:
-            s += "\nconflict: " + self.conflict
+            s += "\nconflict: " + ", ".join(self.conflict)
         if self.append:
             s += "\nmulti: append"
         if self.deprecated:
@@ -122,7 +122,7 @@ class Option:
                 elif key == "help":
                     help = v
                 elif key == "conflict":
-                    conflict = v
+                    conflict = [a.strip() for a in v.split(",")]
                 elif key == "multi":
                     if v == "append":
                         append = True

@@ -2,7 +2,7 @@ name: retry_interval
 long: retry-interval
 value: MILLISECONDS
 value_default: 1000
-value_parser: value_parser!(u64)
+value_parser: clap::value_parser!(u64)
 help: Interval in milliseconds before a retry
 ---
 Duration in milliseconds between each retry. Default is 1000 ms.

@@ -30,6 +30,8 @@ pub fn check() -> clap::Arg {
     clap::Arg::new("check")
         .long("check")
         .help("Run in 'check' mode")
+        .conflicts_with("format")
+        .conflicts_with("output")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -55,6 +57,8 @@ pub fn in_place() -> clap::Arg {
     clap::Arg::new("in_place")
         .long("in-place")
         .help("Modify files in place")
+        .conflicts_with("output")
+        .conflicts_with("color")
         .action(clap::ArgAction::SetTrue)
 }
 
@@ -90,6 +94,7 @@ pub fn output_format() -> clap::Arg {
         .value_name("FORMAT")
         .default_value("hurl")
         .help("Specify output format: hurl, json or html")
+        .conflicts_with("check")
         .num_args(1)
 }
 
